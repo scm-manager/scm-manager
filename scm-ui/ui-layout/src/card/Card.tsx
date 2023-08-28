@@ -28,6 +28,7 @@ import CSS from "csstype";
 
 type Props = HTMLAttributes<HTMLElement> & {
   action?: React.ReactElement;
+  avatar?: React.ReactElement;
   /**
    * @default "div"
    */
@@ -48,7 +49,7 @@ type Props = HTMLAttributes<HTMLElement> & {
  * @since 2.44.0
  */
 const Card = React.forwardRef<HTMLElement, Props>(
-  ({ className, rowGap = "0.5rem", children, as: Comp = "div", action, ...props }, ref) =>
+  ({ className, avatar, rowGap = "0.5rem", children, as: Comp = "div", action, ...props }, ref) =>
     React.createElement(
       Comp,
       {
@@ -56,13 +57,14 @@ const Card = React.forwardRef<HTMLElement, Props>(
         ref,
         ...props,
       },
+      avatar ? avatar : null,
       <div
-        className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1"
+        className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-clipped"
         style={{ gap: rowGap }}
       >
         {children}
       </div>,
-      action ? <span className="ml-2">{action}</span> : null
+      action ? action : null
     )
 );
 

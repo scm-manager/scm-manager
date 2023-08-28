@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 
 import { NamespaceCollection, Repository } from "@scm-manager/ui-types";
 
@@ -33,19 +33,12 @@ type Props = {
   namespaces: NamespaceCollection;
 };
 
-class RepositoryList extends React.Component<Props> {
-  render() {
-    const { repositories, namespaces } = this.props;
-
-    const groups = groupByNamespace(repositories, namespaces);
-    return (
-      <div className="content">
-        {groups.map((group) => {
-          return <RepositoryGroupEntry group={group} key={group.name} />;
-        })}
-      </div>
-    );
-  }
-}
+const RepositoryList: FC<Props> = ({ repositories, namespaces }) => (
+  <>
+    {groupByNamespace(repositories, namespaces).map((group) => (
+      <RepositoryGroupEntry group={group} key={group.name} />
+    ))}
+  </>
+);
 
 export default RepositoryList;

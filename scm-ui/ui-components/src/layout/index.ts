@@ -36,3 +36,4 @@ export { default as CustomQueryFlexWrappedColumns } from "./CustomQueryFlexWrapp
 export { default as PrimaryContentColumn } from "./PrimaryContentColumn";
 export { default as SecondaryNavigationColumn } from "./SecondaryNavigationColumn";
 export { default as GroupEntries } from "./GroupEntries";
+export { default as NamespaceEntries } from "./NamespaceEntries";

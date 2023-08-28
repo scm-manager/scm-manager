@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-import React, { ComponentProps, ReactNode, useState } from "react";
+import React, { ComponentProps, ReactNode, useEffect, useState } from "react";
 import * as RadixCollapsible from "@radix-ui/react-collapsible";
 import { Icon } from "@scm-manager/ui-buttons";
 import styled from "styled-components";
 import { useGeneratedId } from "@scm-manager/ui-components";
+import classNames from "classnames";
 
 const StyledTrigger = styled(RadixCollapsible.Trigger)`
   margin-right: 0.5rem;
@@ -38,28 +39,49 @@ const StyledCollapsibleHeader = styled.div`
 
 type Props = {
   header: ReactNode;
-} & Pick<ComponentProps<typeof RadixCollapsible.Root>, "defaultOpen">;
+  defaultCollapsed?: boolean;
+  collapsed?: boolean;
+  onCollapsedChange?: (collapsed: boolean) => void;
+} & Pick<ComponentProps<typeof RadixCollapsible.Root>, "className" | "children">;
 
 /**
  * @beta
  * @since 2.46.0
  */
-const Collapsible = React.forwardRef<HTMLButtonElement, Props>(({ children, header, defaultOpen }, ref) => {
-  const [open, setOpen] = useState(defaultOpen);
-  const titleId = useGeneratedId();
-  return (
-    <RadixCollapsible.Root className="card" open={open} onOpenChange={setOpen} defaultOpen={defaultOpen}>
-      <StyledCollapsibleHeader className="card-header is-flex is-justify-content-space-between is-shadowless">
-        <span id={titleId} className="card-header-title">
-          {header}
-        </span>
-        <StyledTrigger aria-labelledby={titleId} className="card-header-icon" ref={ref}>
-          <Icon>{open ? "angle-up" : "angle-down"}</Icon>
-        </StyledTrigger>
-      </StyledCollapsibleHeader>
-      <RadixCollapsible.Content className="card-content p-2">{children}</RadixCollapsible.Content>
-    </RadixCollapsible.Root>
-  );
-});
+const Collapsible = React.forwardRef<HTMLButtonElement, Props>(
+  ({ children, header, className, defaultCollapsed, collapsed, onCollapsedChange }, ref) => {
+    const [isCollapsed, setCollapsed] = useState(defaultCollapsed);
+    const titleId = useGeneratedId();
+    useEffect(() => {
+      if (collapsed !== undefined) {
+        setCollapsed(collapsed);
+      }
+    }, [collapsed]);
+
+    return (
+      <RadixCollapsible.Root
+        className={classNames("card", className)}
+        open={!isCollapsed}
+        onOpenChange={(o) => {
+          setCollapsed(!o);
+          if (onCollapsedChange) {
+            onCollapsedChange(!o);
+          }
+        }}
+        defaultOpen={!defaultCollapsed}
+      >
+        <StyledCollapsibleHeader className="card-header is-flex is-justify-content-space-between is-shadowless">
+          <span id={titleId} className="card-header-title">
+            {header}
+          </span>
+          <StyledTrigger aria-labelledby={titleId} className="card-header-icon" ref={ref}>
+            <Icon>{isCollapsed ? "angle-left" : "angle-down"}</Icon>
+          </StyledTrigger>
+        </StyledCollapsibleHeader>
+        <RadixCollapsible.Content className="card-content p-2">{children}</RadixCollapsible.Content>
+      </RadixCollapsible.Root>
+    );
+  }
+);
 
 export default Collapsible;

@@ -24,8 +24,9 @@
 
 import React, { FC } from "react";
 import { Color, Size } from "../styleConstants";
-import Tooltip, { TooltipLocation } from "../Tooltip";
-import Tag from "../Tag";
+import { Card } from "@scm-manager/ui-layout";
+import { Tooltip } from "@scm-manager/ui-overlays";
+import { TooltipLocation } from "../Tooltip";
 
 type Props = {
   color?: Color;
@@ -36,10 +37,10 @@ type Props = {
 };
 
 const RepositoryFlag: FC<Props> = ({ children, title, size = "small", tooltipLocation = "bottom", ...props }) => (
-  <Tooltip location={tooltipLocation} message={title}>
-    <Tag size={size} {...props}>
+  <Tooltip side={tooltipLocation} message={title}>
+    <Card.Details.Detail.Tag {...props} className={`is-${size} is-relative`}>
       {children}
-    </Tag>
+    </Card.Details.Detail.Tag>
   </Tooltip>
 );
 

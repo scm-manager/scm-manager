@@ -4450,158 +4450,6 @@ Array [
 ]
 `;
 
-exports[`Storyshots GroupEntry Default 1`] = `
-<div
-  className="m-5"
->
-  <div
-    className="is-relative"
-  >
-    <a
-      aria-label="overview.ariaLabel"
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 gmDjMM has-hover-background-blue"
-      href="/foo/bar"
-      onClick={[Function]}
-    />
-    <div
-      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 dOqUmL is-flex is-justify-content-space-between is-align-items-center p-2"
-    >
-      <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 dcjjKg is-flex is-flex-grow-1 is-align-items-center"
-      >
-        <div
-          className="GroupEntry__Avatar-sc-1f902yu-2 jCymZj mr-4"
-        >
-          <i
-            aria-label="avatar"
-            className="fas fa-fw fa-icons fa-2x fa-fw has-text-secondary"
-            onKeyPress={[Function]}
-          />
-        </div>
-        <div
-          className="is-flex-grow-1 is-clipped"
-        >
-          <div
-            className="mx-1"
-          >
-            <strong
-              className="m-0"
-            >
-              main content
-            </strong>
-          </div>
-          <p
-            className="GroupEntry__Description-sc-1f902yu-3 jAbhKI mx-1"
-          >
-            <small>
-              more text
-            </small>
-          </p>
-        </div>
-      </div>
-      <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 enUoHi is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
-      >
-        <div
-          className="buttons"
-        >
-          <button
-            className="button is-default"
-            onClick={[Function]}
-            title="Copy clone command to clipboard"
-            type="button"
-          >
-            <span>
-              <i
-                className="fas fa-fw fa-download has-text-inherit is-medium"
-                onKeyPress={[Function]}
-              />
-               
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Storyshots GroupEntry With long texts 1`] = `
-<div
-  className="m-5"
->
-  <div
-    className="is-relative"
-  >
-    <a
-      aria-label="overview.ariaLabel"
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 gmDjMM has-hover-background-blue"
-      href="/foo/bar"
-      onClick={[Function]}
-    />
-    <div
-      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 dOqUmL is-flex is-justify-content-space-between is-align-items-center p-2"
-    >
-      <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 dcjjKg is-flex is-flex-grow-1 is-align-items-center"
-      >
-        <div
-          className="GroupEntry__Avatar-sc-1f902yu-2 jCymZj mr-4"
-        >
-          <i
-            aria-label="avatar"
-            className="fas fa-fw fa-icons fa-2x fa-fw has-text-secondary"
-            onKeyPress={[Function]}
-          />
-        </div>
-        <div
-          className="is-flex-grow-1 is-clipped"
-        >
-          <div
-            className="mx-1"
-          >
-            <strong
-              className="m-0"
-            >
-              Very-important-repository-with-a-particular-long-but-easily-rememberable-name-which-also-is-written-in-kebab-case
-            </strong>
-          </div>
-          <p
-            className="GroupEntry__Description-sc-1f902yu-3 jAbhKI mx-1"
-          >
-            <small>
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-            </small>
-          </p>
-        </div>
-      </div>
-      <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 enUoHi is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
-      >
-        <div
-          className="buttons"
-        >
-          <button
-            className="button is-default"
-            onClick={[Function]}
-            title="Copy clone command to clipboard"
-            type="button"
-          >
-            <span>
-              <i
-                className="fas fa-fw fa-download has-text-inherit is-medium"
-                onKeyPress={[Function]}
-              />
-               
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`Storyshots Help Default 1`] = `
 <div
   className="m-6"
@@ -71077,137 +70925,122 @@ exports[`Storyshots Repositories/RepositoryEntry Archived 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-sc-toppdg-0 fDFvWg"
 >
-  <div
-    className="is-relative"
+  <li
+    aria-label="overview.ariaLabel"
+    className="is-relative is-flex scmm-card"
   >
-    <a
-      aria-label="overview.ariaLabel"
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 gmDjMM has-hover-background-blue"
-      href="/repo/hitchhiker/heartOfGold/"
-      onClick={[Function]}
-    />
     <div
-      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 dOqUmL is-flex is-justify-content-space-between is-align-items-center p-2"
+      className="RepositoryEntry__Avatar-sc-6jys82-0 OJkVA is-align-self-flex-start"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 dcjjKg is-flex is-flex-grow-1 is-align-items-center"
+        className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
       >
-        <div
-          className="GroupEntry__Avatar-sc-1f902yu-2 jCymZj mr-4"
-        >
-          <div
-            className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
+        <img
+          alt="Logo"
+          src="test-file-stub"
+        />
+      </div>
+    </div>
+    <div
+      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-clipped"
+      style={
+        Object {
+          "gap": "0.25rem",
+        }
+      }
+    >
+      <div
+        className="is-flex"
+      >
+        <h4>
+          <a
+            className="RepositoryEntry__StyledLink-sc-6jys82-1 JSZXO"
+            href="/repo/hitchhiker/heartOfGold/"
+            onClick={[Function]}
           >
-            <img
-              alt="Logo"
-              src="test-file-stub"
-            />
-          </div>
-        </div>
-        <div
-          className="is-flex-grow-1 is-clipped"
-        >
-          <div
-            className="mx-1"
-          >
-            <div
-              className="is-flex"
-            >
-              <strong
-                className="RepositoryEntry__Name-sc-6jys82-4 fAfLpj"
-              >
-                heartOfGold
-              </strong>
-               
-              <div
-                className="is-flex is-align-items-center is-hidden-mobile"
-              >
-                <div />
-                <div
-                  style={
-                    Object {
-                      "borderWidth": "0",
-                      "clip": "rect(0, 0, 0, 0)",
-                      "display": "none",
-                      "height": 1,
-                      "margin": -1,
-                      "overflow": "hidden",
-                      "padding": 0,
-                      "position": "absolute",
-                      "whiteSpace": "nowrap",
-                      "width": 1,
-                    }
-                  }
-                />
-                <div
-                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-0 dcQivR"
-                >
-                  <div
-                    className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
-                    onClick={[Function]}
-                    onMouseEnter={[Function]}
-                    onMouseLeave={[Function]}
-                  >
-                    <span
-                      className="tag is-light is-small p-1 is-size-7 has-text-weight-bold"
-                    >
-                      repository.archived
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <p
-            className="GroupEntry__Description-sc-1f902yu-3 jAbhKI mx-1"
-          >
-            The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
-          </p>
-        </div>
+            heartOfGold
+             
+          </a>
+        </h4>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 enUoHi is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
       >
-        <div
-          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 huFTcO is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
+        The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
+      </div>
+      <div
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+      >
+        <span
+          className="is-size-7 has-text-secondary is-relative"
         >
+          overview.lastModified
+           
+          <time
+            className="DateElement-sc-1schp8c-0 cTawvL"
+            dateTime="2020-03-23 09:26:01"
+            title="2020-03-23 09:26:01"
+          >
+            3 days ago
+          </time>
+        </span>
+        <div
+          className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
+        >
+          <div />
+          <div
+            style={
+              Object {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "display": "none",
+                "height": 1,
+                "margin": -1,
+                "overflow": "hidden",
+                "padding": 0,
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": 1,
+              }
+            }
+          />
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-center"
+            className="tag is-rounded is-light is-small is-relative"
+            data-state="closed"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onPointerDown={[Function]}
+            onPointerLeave={[Function]}
+            onPointerMove={[Function]}
           >
-            <a
-              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
-              href="mailto:heart-of-gold@hitchhiker.com"
-              target="_blank"
-              title="overview.contact"
-            >
-              <i
-                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable has-hover-visible"
-                onKeyPress={[Function]}
-              />
-            </a>
-            <i
-              aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable is-size-5 has-hover-visible"
-              onClick={[Function]}
-              onKeyPress={[Function]}
-              title="overview.clone"
-            />
+            repository.archived
           </span>
-          <small
-            className="pb-1"
-          >
-            <time
-              className="DateElement-sc-1schp8c-0 cTawvL"
-              dateTime="2020-03-23 09:26:01"
-              title="2020-03-23 09:26:01"
-            >
-              3 days ago
-            </time>
-          </small>
         </div>
       </div>
     </div>
-  </div>
+    <button
+      aria-expanded={false}
+      aria-haspopup="menu"
+      aria-label="menu.defaultTriggerLabel"
+      className="button is-borderless has-background-transparent has-hover-color-blue px-2"
+      data-state="closed"
+      disabled={false}
+      id="radix-178"
+      onKeyDown={[Function]}
+      onPointerDown={[Function]}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        className="icon"
+      >
+        <i
+          className="fas fa-fw fa-ellipsis-v"
+        />
+      </span>
+    </button>
+  </li>
 </div>
 `;
 
@@ -71215,124 +71048,110 @@ exports[`Storyshots Repositories/RepositoryEntry Avatar EP 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-sc-toppdg-0 fDFvWg"
 >
-  <div
-    className="is-relative"
+  <li
+    aria-label="overview.ariaLabel"
+    className="is-relative is-flex scmm-card"
   >
-    <a
-      aria-label="overview.ariaLabel"
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 gmDjMM has-hover-background-blue"
-      href="/repo/hitchhiker/heartOfGold/"
-      onClick={[Function]}
-    />
     <div
-      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 dOqUmL is-flex is-justify-content-space-between is-align-items-center p-2"
+      className="RepositoryEntry__Avatar-sc-6jys82-0 OJkVA is-align-self-flex-start"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 dcjjKg is-flex is-flex-grow-1 is-align-items-center"
+        className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
       >
-        <div
-          className="GroupEntry__Avatar-sc-1f902yu-2 jCymZj mr-4"
-        >
-          <div
-            className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
+        <img
+          alt="Logo"
+          src="test-file-stub"
+        />
+      </div>
+    </div>
+    <div
+      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-clipped"
+      style={
+        Object {
+          "gap": "0.25rem",
+        }
+      }
+    >
+      <div
+        className="is-flex"
+      >
+        <h4>
+          <a
+            className="RepositoryEntry__StyledLink-sc-6jys82-1 JSZXO"
+            href="/repo/hitchhiker/heartOfGold/"
+            onClick={[Function]}
           >
-            <img
-              alt="Logo"
-              src="test-file-stub"
-            />
-          </div>
-        </div>
-        <div
-          className="is-flex-grow-1 is-clipped"
-        >
-          <div
-            className="mx-1"
-          >
-            <div
-              className="is-flex"
-            >
-              <strong
-                className="RepositoryEntry__Name-sc-6jys82-4 fAfLpj"
-              >
-                heartOfGold
-              </strong>
-               
-              <div
-                className="is-flex is-align-items-center is-hidden-mobile"
-              >
-                <div />
-                <div
-                  style={
-                    Object {
-                      "borderWidth": "0",
-                      "clip": "rect(0, 0, 0, 0)",
-                      "display": "none",
-                      "height": 1,
-                      "margin": -1,
-                      "overflow": "hidden",
-                      "padding": 0,
-                      "position": "absolute",
-                      "whiteSpace": "nowrap",
-                      "width": 1,
-                    }
-                  }
-                />
-                <div
-                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-0 dcQivR"
-                />
-              </div>
-            </div>
-          </div>
-          <p
-            className="GroupEntry__Description-sc-1f902yu-3 jAbhKI mx-1"
-          >
-            The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
-          </p>
-        </div>
+            heartOfGold
+             
+          </a>
+        </h4>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 enUoHi is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
       >
-        <div
-          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 huFTcO is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
+        The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
+      </div>
+      <div
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+      >
+        <span
+          className="is-size-7 has-text-secondary is-relative"
         >
-          <span
-            className="is-flex is-justify-content-flex-end is-align-items-center"
+          overview.lastModified
+           
+          <time
+            className="DateElement-sc-1schp8c-0 cTawvL"
+            dateTime="2020-03-23 09:26:01"
+            title="2020-03-23 09:26:01"
           >
-            <a
-              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
-              href="mailto:heart-of-gold@hitchhiker.com"
-              target="_blank"
-              title="overview.contact"
-            >
-              <i
-                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable has-hover-visible"
-                onKeyPress={[Function]}
-              />
-            </a>
-            <i
-              aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable is-size-5 has-hover-visible"
-              onClick={[Function]}
-              onKeyPress={[Function]}
-              title="overview.clone"
-            />
-          </span>
-          <small
-            className="pb-1"
-          >
-            <time
-              className="DateElement-sc-1schp8c-0 cTawvL"
-              dateTime="2020-03-23 09:26:01"
-              title="2020-03-23 09:26:01"
-            >
-              3 days ago
-            </time>
-          </small>
+            3 days ago
+          </time>
+        </span>
+        <div
+          className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
+        >
+          <div />
+          <div
+            style={
+              Object {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "display": "none",
+                "height": 1,
+                "margin": -1,
+                "overflow": "hidden",
+                "padding": 0,
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": 1,
+              }
+            }
+          />
         </div>
       </div>
     </div>
-  </div>
+    <button
+      aria-expanded={false}
+      aria-haspopup="menu"
+      aria-label="menu.defaultTriggerLabel"
+      className="button is-borderless has-background-transparent has-hover-color-blue px-2"
+      data-state="closed"
+      disabled={false}
+      id="radix-174"
+      onKeyDown={[Function]}
+      onPointerDown={[Function]}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        className="icon"
+      >
+        <i
+          className="fas fa-fw fa-ellipsis-v"
+        />
+      </span>
+    </button>
+  </li>
 </div>
 `;
 
@@ -71340,127 +71159,113 @@ exports[`Storyshots Repositories/RepositoryEntry Before Title EP 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-sc-toppdg-0 fDFvWg"
 >
-  <div
-    className="is-relative"
+  <li
+    aria-label="overview.ariaLabel"
+    className="is-relative is-flex scmm-card"
   >
-    <a
-      aria-label="overview.ariaLabel"
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 gmDjMM has-hover-background-blue"
-      href="/repo/hitchhiker/heartOfGold/"
-      onClick={[Function]}
-    />
     <div
-      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 dOqUmL is-flex is-justify-content-space-between is-align-items-center p-2"
+      className="RepositoryEntry__Avatar-sc-6jys82-0 OJkVA is-align-self-flex-start"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 dcjjKg is-flex is-flex-grow-1 is-align-items-center"
+        className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
       >
-        <div
-          className="GroupEntry__Avatar-sc-1f902yu-2 jCymZj mr-4"
-        >
-          <div
-            className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
+        <img
+          alt="Logo"
+          src="/images/blib.jpg"
+        />
+      </div>
+    </div>
+    <div
+      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-clipped"
+      style={
+        Object {
+          "gap": "0.25rem",
+        }
+      }
+    >
+      <div
+        className="is-flex"
+      >
+        <i
+          className="far fa-star"
+        />
+        <h4>
+          <a
+            className="RepositoryEntry__StyledLink-sc-6jys82-1 JSZXO"
+            href="/repo/hitchhiker/heartOfGold/"
+            onClick={[Function]}
           >
-            <img
-              alt="Logo"
-              src="/images/blib.jpg"
-            />
-          </div>
-        </div>
-        <div
-          className="is-flex-grow-1 is-clipped"
-        >
-          <div
-            className="mx-1"
-          >
-            <div
-              className="is-flex"
-            >
-              <i
-                className="far fa-star"
-              />
-              <strong
-                className="RepositoryEntry__Name-sc-6jys82-4 fAfLpj"
-              >
-                heartOfGold
-              </strong>
-               
-              <div
-                className="is-flex is-align-items-center is-hidden-mobile"
-              >
-                <div />
-                <div
-                  style={
-                    Object {
-                      "borderWidth": "0",
-                      "clip": "rect(0, 0, 0, 0)",
-                      "display": "none",
-                      "height": 1,
-                      "margin": -1,
-                      "overflow": "hidden",
-                      "padding": 0,
-                      "position": "absolute",
-                      "whiteSpace": "nowrap",
-                      "width": 1,
-                    }
-                  }
-                />
-                <div
-                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-0 dcQivR"
-                />
-              </div>
-            </div>
-          </div>
-          <p
-            className="GroupEntry__Description-sc-1f902yu-3 jAbhKI mx-1"
-          >
-            The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
-          </p>
-        </div>
+            heartOfGold
+             
+          </a>
+        </h4>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 enUoHi is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
       >
-        <div
-          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 huFTcO is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
+        The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
+      </div>
+      <div
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+      >
+        <span
+          className="is-size-7 has-text-secondary is-relative"
         >
-          <span
-            className="is-flex is-justify-content-flex-end is-align-items-center"
+          overview.lastModified
+           
+          <time
+            className="DateElement-sc-1schp8c-0 cTawvL"
+            dateTime="2020-03-23 09:26:01"
+            title="2020-03-23 09:26:01"
           >
-            <a
-              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
-              href="mailto:heart-of-gold@hitchhiker.com"
-              target="_blank"
-              title="overview.contact"
-            >
-              <i
-                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable has-hover-visible"
-                onKeyPress={[Function]}
-              />
-            </a>
-            <i
-              aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable is-size-5 has-hover-visible"
-              onClick={[Function]}
-              onKeyPress={[Function]}
-              title="overview.clone"
-            />
-          </span>
-          <small
-            className="pb-1"
-          >
-            <time
-              className="DateElement-sc-1schp8c-0 cTawvL"
-              dateTime="2020-03-23 09:26:01"
-              title="2020-03-23 09:26:01"
-            >
-              3 days ago
-            </time>
-          </small>
+            3 days ago
+          </time>
+        </span>
+        <div
+          className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
+        >
+          <div />
+          <div
+            style={
+              Object {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "display": "none",
+                "height": 1,
+                "margin": -1,
+                "overflow": "hidden",
+                "padding": 0,
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": 1,
+              }
+            }
+          />
         </div>
       </div>
     </div>
-  </div>
+    <button
+      aria-expanded={false}
+      aria-haspopup="menu"
+      aria-label="menu.defaultTriggerLabel"
+      className="button is-borderless has-background-transparent has-hover-color-blue px-2"
+      data-state="closed"
+      disabled={false}
+      id="radix-176"
+      onKeyDown={[Function]}
+      onPointerDown={[Function]}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        className="icon"
+      >
+        <i
+          className="fas fa-fw fa-ellipsis-v"
+        />
+      </span>
+    </button>
+  </li>
 </div>
 `;
 
@@ -71468,124 +71273,110 @@ exports[`Storyshots Repositories/RepositoryEntry Default 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-sc-toppdg-0 fDFvWg"
 >
-  <div
-    className="is-relative"
+  <li
+    aria-label="overview.ariaLabel"
+    className="is-relative is-flex scmm-card"
   >
-    <a
-      aria-label="overview.ariaLabel"
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 gmDjMM has-hover-background-blue"
-      href="/repo/hitchhiker/heartOfGold/"
-      onClick={[Function]}
-    />
     <div
-      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 dOqUmL is-flex is-justify-content-space-between is-align-items-center p-2"
+      className="RepositoryEntry__Avatar-sc-6jys82-0 OJkVA is-align-self-flex-start"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 dcjjKg is-flex is-flex-grow-1 is-align-items-center"
+        className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
       >
-        <div
-          className="GroupEntry__Avatar-sc-1f902yu-2 jCymZj mr-4"
-        >
-          <div
-            className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
+        <img
+          alt="Logo"
+          src="/images/blib.jpg"
+        />
+      </div>
+    </div>
+    <div
+      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-clipped"
+      style={
+        Object {
+          "gap": "0.25rem",
+        }
+      }
+    >
+      <div
+        className="is-flex"
+      >
+        <h4>
+          <a
+            className="RepositoryEntry__StyledLink-sc-6jys82-1 JSZXO"
+            href="/repo/hitchhiker/heartOfGold/"
+            onClick={[Function]}
           >
-            <img
-              alt="Logo"
-              src="/images/blib.jpg"
-            />
-          </div>
-        </div>
-        <div
-          className="is-flex-grow-1 is-clipped"
-        >
-          <div
-            className="mx-1"
-          >
-            <div
-              className="is-flex"
-            >
-              <strong
-                className="RepositoryEntry__Name-sc-6jys82-4 fAfLpj"
-              >
-                heartOfGold
-              </strong>
-               
-              <div
-                className="is-flex is-align-items-center is-hidden-mobile"
-              >
-                <div />
-                <div
-                  style={
-                    Object {
-                      "borderWidth": "0",
-                      "clip": "rect(0, 0, 0, 0)",
-                      "display": "none",
-                      "height": 1,
-                      "margin": -1,
-                      "overflow": "hidden",
-                      "padding": 0,
-                      "position": "absolute",
-                      "whiteSpace": "nowrap",
-                      "width": 1,
-                    }
-                  }
-                />
-                <div
-                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-0 dcQivR"
-                />
-              </div>
-            </div>
-          </div>
-          <p
-            className="GroupEntry__Description-sc-1f902yu-3 jAbhKI mx-1"
-          >
-            The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
-          </p>
-        </div>
+            heartOfGold
+             
+          </a>
+        </h4>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 enUoHi is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
       >
-        <div
-          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 huFTcO is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
+        The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
+      </div>
+      <div
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+      >
+        <span
+          className="is-size-7 has-text-secondary is-relative"
         >
-          <span
-            className="is-flex is-justify-content-flex-end is-align-items-center"
+          overview.lastModified
+           
+          <time
+            className="DateElement-sc-1schp8c-0 cTawvL"
+            dateTime="2020-03-23 09:26:01"
+            title="2020-03-23 09:26:01"
           >
-            <a
-              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
-              href="mailto:heart-of-gold@hitchhiker.com"
-              target="_blank"
-              title="overview.contact"
-            >
-              <i
-                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable has-hover-visible"
-                onKeyPress={[Function]}
-              />
-            </a>
-            <i
-              aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable is-size-5 has-hover-visible"
-              onClick={[Function]}
-              onKeyPress={[Function]}
-              title="overview.clone"
-            />
-          </span>
-          <small
-            className="pb-1"
-          >
-            <time
-              className="DateElement-sc-1schp8c-0 cTawvL"
-              dateTime="2020-03-23 09:26:01"
-              title="2020-03-23 09:26:01"
-            >
-              3 days ago
-            </time>
-          </small>
+            3 days ago
+          </time>
+        </span>
+        <div
+          className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
+        >
+          <div />
+          <div
+            style={
+              Object {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "display": "none",
+                "height": 1,
+                "margin": -1,
+                "overflow": "hidden",
+                "padding": 0,
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": 1,
+              }
+            }
+          />
         </div>
       </div>
     </div>
-  </div>
+    <button
+      aria-expanded={false}
+      aria-haspopup="menu"
+      aria-label="menu.defaultTriggerLabel"
+      className="button is-borderless has-background-transparent has-hover-color-blue px-2"
+      data-state="closed"
+      disabled={false}
+      id="radix-172"
+      onKeyDown={[Function]}
+      onPointerDown={[Function]}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        className="icon"
+      >
+        <i
+          className="fas fa-fw fa-ellipsis-v"
+        />
+      </span>
+    </button>
+  </li>
 </div>
 `;
 
@@ -71593,137 +71384,122 @@ exports[`Storyshots Repositories/RepositoryEntry Exporting 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-sc-toppdg-0 fDFvWg"
 >
-  <div
-    className="is-relative"
+  <li
+    aria-label="overview.ariaLabel"
+    className="is-relative is-flex scmm-card"
   >
-    <a
-      aria-label="overview.ariaLabel"
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 gmDjMM has-hover-background-blue"
-      href="/repo/hitchhiker/heartOfGold/"
-      onClick={[Function]}
-    />
     <div
-      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 dOqUmL is-flex is-justify-content-space-between is-align-items-center p-2"
+      className="RepositoryEntry__Avatar-sc-6jys82-0 OJkVA is-align-self-flex-start"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 dcjjKg is-flex is-flex-grow-1 is-align-items-center"
+        className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
       >
-        <div
-          className="GroupEntry__Avatar-sc-1f902yu-2 jCymZj mr-4"
-        >
-          <div
-            className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
+        <img
+          alt="Logo"
+          src="test-file-stub"
+        />
+      </div>
+    </div>
+    <div
+      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-clipped"
+      style={
+        Object {
+          "gap": "0.25rem",
+        }
+      }
+    >
+      <div
+        className="is-flex"
+      >
+        <h4>
+          <a
+            className="RepositoryEntry__StyledLink-sc-6jys82-1 JSZXO"
+            href="/repo/hitchhiker/heartOfGold/"
+            onClick={[Function]}
           >
-            <img
-              alt="Logo"
-              src="test-file-stub"
-            />
-          </div>
-        </div>
-        <div
-          className="is-flex-grow-1 is-clipped"
-        >
-          <div
-            className="mx-1"
-          >
-            <div
-              className="is-flex"
-            >
-              <strong
-                className="RepositoryEntry__Name-sc-6jys82-4 fAfLpj"
-              >
-                heartOfGold
-              </strong>
-               
-              <div
-                className="is-flex is-align-items-center is-hidden-mobile"
-              >
-                <div />
-                <div
-                  style={
-                    Object {
-                      "borderWidth": "0",
-                      "clip": "rect(0, 0, 0, 0)",
-                      "display": "none",
-                      "height": 1,
-                      "margin": -1,
-                      "overflow": "hidden",
-                      "padding": 0,
-                      "position": "absolute",
-                      "whiteSpace": "nowrap",
-                      "width": 1,
-                    }
-                  }
-                />
-                <div
-                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-0 dcQivR"
-                >
-                  <div
-                    className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
-                    onClick={[Function]}
-                    onMouseEnter={[Function]}
-                    onMouseLeave={[Function]}
-                  >
-                    <span
-                      className="tag is-light is-small p-1 is-size-7 has-text-weight-bold"
-                    >
-                      repository.exporting
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <p
-            className="GroupEntry__Description-sc-1f902yu-3 jAbhKI mx-1"
-          >
-            The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
-          </p>
-        </div>
+            heartOfGold
+             
+          </a>
+        </h4>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 enUoHi is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
       >
-        <div
-          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 huFTcO is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
+        The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
+      </div>
+      <div
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+      >
+        <span
+          className="is-size-7 has-text-secondary is-relative"
         >
+          overview.lastModified
+           
+          <time
+            className="DateElement-sc-1schp8c-0 cTawvL"
+            dateTime="2020-03-23 09:26:01"
+            title="2020-03-23 09:26:01"
+          >
+            3 days ago
+          </time>
+        </span>
+        <div
+          className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
+        >
+          <div />
+          <div
+            style={
+              Object {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "display": "none",
+                "height": 1,
+                "margin": -1,
+                "overflow": "hidden",
+                "padding": 0,
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": 1,
+              }
+            }
+          />
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-center"
+            className="tag is-rounded is-light is-small is-relative"
+            data-state="closed"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onPointerDown={[Function]}
+            onPointerLeave={[Function]}
+            onPointerMove={[Function]}
           >
-            <a
-              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
-              href="mailto:heart-of-gold@hitchhiker.com"
-              target="_blank"
-              title="overview.contact"
-            >
-              <i
-                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable has-hover-visible"
-                onKeyPress={[Function]}
-              />
-            </a>
-            <i
-              aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable is-size-5 has-hover-visible"
-              onClick={[Function]}
-              onKeyPress={[Function]}
-              title="overview.clone"
-            />
+            repository.exporting
           </span>
-          <small
-            className="pb-1"
-          >
-            <time
-              className="DateElement-sc-1schp8c-0 cTawvL"
-              dateTime="2020-03-23 09:26:01"
-              title="2020-03-23 09:26:01"
-            >
-              3 days ago
-            </time>
-          </small>
         </div>
       </div>
     </div>
-  </div>
+    <button
+      aria-expanded={false}
+      aria-haspopup="menu"
+      aria-label="menu.defaultTriggerLabel"
+      className="button is-borderless has-background-transparent has-hover-color-blue px-2"
+      data-state="closed"
+      disabled={false}
+      id="radix-181"
+      onKeyDown={[Function]}
+      onPointerDown={[Function]}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        className="icon"
+      >
+        <i
+          className="fas fa-fw fa-ellipsis-v"
+        />
+      </span>
+    </button>
+  </li>
 </div>
 `;
 
@@ -71731,138 +71507,123 @@ exports[`Storyshots Repositories/RepositoryEntry HealthCheck Failure 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-sc-toppdg-0 fDFvWg"
 >
-  <div
-    className="is-relative"
+  <li
+    aria-label="overview.ariaLabel"
+    className="is-relative is-flex scmm-card"
   >
-    <a
-      aria-label="overview.ariaLabel"
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 gmDjMM has-hover-background-blue"
-      href="/repo/hitchhiker/heartOfGold/"
-      onClick={[Function]}
-    />
     <div
-      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 dOqUmL is-flex is-justify-content-space-between is-align-items-center p-2"
+      className="RepositoryEntry__Avatar-sc-6jys82-0 OJkVA is-align-self-flex-start"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 dcjjKg is-flex is-flex-grow-1 is-align-items-center"
+        className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
       >
-        <div
-          className="GroupEntry__Avatar-sc-1f902yu-2 jCymZj mr-4"
-        >
-          <div
-            className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
+        <img
+          alt="Logo"
+          src="test-file-stub"
+        />
+      </div>
+    </div>
+    <div
+      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-clipped"
+      style={
+        Object {
+          "gap": "0.25rem",
+        }
+      }
+    >
+      <div
+        className="is-flex"
+      >
+        <h4>
+          <a
+            className="RepositoryEntry__StyledLink-sc-6jys82-1 JSZXO"
+            href="/repo/hitchhiker/heartOfGold/"
+            onClick={[Function]}
           >
-            <img
-              alt="Logo"
-              src="test-file-stub"
-            />
-          </div>
-        </div>
-        <div
-          className="is-flex-grow-1 is-clipped"
-        >
-          <div
-            className="mx-1"
-          >
-            <div
-              className="is-flex"
-            >
-              <strong
-                className="RepositoryEntry__Name-sc-6jys82-4 fAfLpj"
-              >
-                heartOfGold
-              </strong>
-               
-              <div
-                className="is-flex is-align-items-center is-hidden-mobile"
-              >
-                <div />
-                <div
-                  style={
-                    Object {
-                      "borderWidth": "0",
-                      "clip": "rect(0, 0, 0, 0)",
-                      "display": "none",
-                      "height": 1,
-                      "margin": -1,
-                      "overflow": "hidden",
-                      "padding": 0,
-                      "position": "absolute",
-                      "whiteSpace": "nowrap",
-                      "width": 1,
-                    }
-                  }
-                />
-                <div
-                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-0 dcQivR"
-                >
-                  <div
-                    className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
-                    onClick={[Function]}
-                    onMouseEnter={[Function]}
-                    onMouseLeave={[Function]}
-                  >
-                    <span
-                      className="tag is-danger is-small is-clickable p-1 is-size-7 has-text-weight-bold"
-                      onClick={[Function]}
-                    >
-                      repository.healthCheckFailure
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <p
-            className="GroupEntry__Description-sc-1f902yu-3 jAbhKI mx-1"
-          >
-            The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
-          </p>
-        </div>
+            heartOfGold
+             
+          </a>
+        </h4>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 enUoHi is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
       >
-        <div
-          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 huFTcO is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
+        The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
+      </div>
+      <div
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+      >
+        <span
+          className="is-size-7 has-text-secondary is-relative"
         >
+          overview.lastModified
+           
+          <time
+            className="DateElement-sc-1schp8c-0 cTawvL"
+            dateTime="2020-03-23 09:26:01"
+            title="2020-03-23 09:26:01"
+          >
+            3 days ago
+          </time>
+        </span>
+        <div
+          className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
+        >
+          <div />
+          <div
+            style={
+              Object {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "display": "none",
+                "height": 1,
+                "margin": -1,
+                "overflow": "hidden",
+                "padding": 0,
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": 1,
+              }
+            }
+          />
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-center"
+            className="tag is-rounded is-light is-small is-relative"
+            color="danger"
+            data-state="closed"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onPointerDown={[Function]}
+            onPointerLeave={[Function]}
+            onPointerMove={[Function]}
           >
-            <a
-              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
-              href="mailto:heart-of-gold@hitchhiker.com"
-              target="_blank"
-              title="overview.contact"
-            >
-              <i
-                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable has-hover-visible"
-                onKeyPress={[Function]}
-              />
-            </a>
-            <i
-              aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable is-size-5 has-hover-visible"
-              onClick={[Function]}
-              onKeyPress={[Function]}
-              title="overview.clone"
-            />
+            repository.healthCheckFailure
           </span>
-          <small
-            className="pb-1"
-          >
-            <time
-              className="DateElement-sc-1schp8c-0 cTawvL"
-              dateTime="2020-03-23 09:26:01"
-              title="2020-03-23 09:26:01"
-            >
-              3 days ago
-            </time>
-          </small>
         </div>
       </div>
     </div>
-  </div>
+    <button
+      aria-expanded={false}
+      aria-haspopup="menu"
+      aria-label="menu.defaultTriggerLabel"
+      className="button is-borderless has-background-transparent has-hover-color-blue px-2"
+      data-state="closed"
+      disabled={false}
+      id="radix-184"
+      onKeyDown={[Function]}
+      onPointerDown={[Function]}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        className="icon"
+      >
+        <i
+          className="fas fa-fw fa-ellipsis-v"
+        />
+      </span>
+    </button>
+  </li>
 </div>
 `;
 
@@ -71870,149 +71631,134 @@ exports[`Storyshots Repositories/RepositoryEntry MultiRepositoryTags 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-sc-toppdg-0 fDFvWg"
 >
-  <div
-    className="is-relative"
+  <li
+    aria-label="overview.ariaLabel"
+    className="is-relative is-flex scmm-card"
   >
-    <a
-      aria-label="overview.ariaLabel"
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 gmDjMM has-hover-background-blue"
-      href="/repo/hitchhiker/heartOfGold/"
-      onClick={[Function]}
-    />
     <div
-      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 dOqUmL is-flex is-justify-content-space-between is-align-items-center p-2"
+      className="RepositoryEntry__Avatar-sc-6jys82-0 OJkVA is-align-self-flex-start"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 dcjjKg is-flex is-flex-grow-1 is-align-items-center"
+        className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
       >
-        <div
-          className="GroupEntry__Avatar-sc-1f902yu-2 jCymZj mr-4"
-        >
-          <div
-            className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
+        <img
+          alt="Logo"
+          src="test-file-stub"
+        />
+      </div>
+    </div>
+    <div
+      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-clipped"
+      style={
+        Object {
+          "gap": "0.25rem",
+        }
+      }
+    >
+      <div
+        className="is-flex"
+      >
+        <h4>
+          <a
+            className="RepositoryEntry__StyledLink-sc-6jys82-1 JSZXO"
+            href="/repo/hitchhiker/heartOfGold/"
+            onClick={[Function]}
           >
-            <img
-              alt="Logo"
-              src="test-file-stub"
-            />
-          </div>
-        </div>
-        <div
-          className="is-flex-grow-1 is-clipped"
-        >
-          <div
-            className="mx-1"
-          >
-            <div
-              className="is-flex"
-            >
-              <strong
-                className="RepositoryEntry__Name-sc-6jys82-4 fAfLpj"
-              >
-                heartOfGold
-              </strong>
-               
-              <div
-                className="is-flex is-align-items-center is-hidden-mobile"
-              >
-                <div />
-                <div
-                  style={
-                    Object {
-                      "borderWidth": "0",
-                      "clip": "rect(0, 0, 0, 0)",
-                      "display": "none",
-                      "height": 1,
-                      "margin": -1,
-                      "overflow": "hidden",
-                      "padding": 0,
-                      "position": "absolute",
-                      "whiteSpace": "nowrap",
-                      "width": 1,
-                    }
-                  }
-                />
-                <div
-                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-0 dcQivR"
-                >
-                  <div
-                    className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
-                    onClick={[Function]}
-                    onMouseEnter={[Function]}
-                    onMouseLeave={[Function]}
-                  >
-                    <span
-                      className="tag is-light is-small p-1 is-size-7 has-text-weight-bold"
-                    >
-                      repository.archived
-                    </span>
-                  </div>
-                  <div
-                    className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
-                    onClick={[Function]}
-                    onMouseEnter={[Function]}
-                    onMouseLeave={[Function]}
-                  >
-                    <span
-                      className="tag is-light is-small p-1 is-size-7 has-text-weight-bold"
-                    >
-                      repository.exporting
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <p
-            className="GroupEntry__Description-sc-1f902yu-3 jAbhKI mx-1"
-          >
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-          </p>
-        </div>
+            heartOfGold
+             
+          </a>
+        </h4>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 enUoHi is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
       >
-        <div
-          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 huFTcO is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
+        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+      </div>
+      <div
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+      >
+        <span
+          className="is-size-7 has-text-secondary is-relative"
         >
+          overview.lastModified
+           
+          <time
+            className="DateElement-sc-1schp8c-0 cTawvL"
+            dateTime="2020-03-23 09:26:01"
+            title="2020-03-23 09:26:01"
+          >
+            3 days ago
+          </time>
+        </span>
+        <div
+          className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
+        >
+          <div />
+          <div
+            style={
+              Object {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "display": "none",
+                "height": 1,
+                "margin": -1,
+                "overflow": "hidden",
+                "padding": 0,
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": 1,
+              }
+            }
+          />
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-center"
+            className="tag is-rounded is-light is-small is-relative"
+            data-state="closed"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onPointerDown={[Function]}
+            onPointerLeave={[Function]}
+            onPointerMove={[Function]}
           >
-            <a
-              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
-              href="mailto:heart-of-gold@hitchhiker.com"
-              target="_blank"
-              title="overview.contact"
-            >
-              <i
-                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable has-hover-visible"
-                onKeyPress={[Function]}
-              />
-            </a>
-            <i
-              aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable is-size-5 has-hover-visible"
-              onClick={[Function]}
-              onKeyPress={[Function]}
-              title="overview.clone"
-            />
+            repository.archived
           </span>
-          <small
-            className="pb-1"
+          <span
+            className="tag is-rounded is-light is-small is-relative"
+            data-state="closed"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onPointerDown={[Function]}
+            onPointerLeave={[Function]}
+            onPointerMove={[Function]}
           >
-            <time
-              className="DateElement-sc-1schp8c-0 cTawvL"
-              dateTime="2020-03-23 09:26:01"
-              title="2020-03-23 09:26:01"
-            >
-              3 days ago
-            </time>
-          </small>
+            repository.exporting
+          </span>
         </div>
       </div>
     </div>
-  </div>
+    <button
+      aria-expanded={false}
+      aria-haspopup="menu"
+      aria-label="menu.defaultTriggerLabel"
+      className="button is-borderless has-background-transparent has-hover-color-blue px-2"
+      data-state="closed"
+      disabled={false}
+      id="radix-190"
+      onKeyDown={[Function]}
+      onPointerDown={[Function]}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        className="icon"
+      >
+        <i
+          className="fas fa-fw fa-ellipsis-v"
+        />
+      </span>
+    </button>
+  </li>
 </div>
 `;
 
@@ -72020,138 +71766,123 @@ exports[`Storyshots Repositories/RepositoryEntry RepositoryFlag EP 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-sc-toppdg-0 fDFvWg"
 >
-  <div
-    className="is-relative"
+  <li
+    aria-label="overview.ariaLabel"
+    className="is-relative is-flex scmm-card"
   >
-    <a
-      aria-label="overview.ariaLabel"
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 gmDjMM has-hover-background-blue"
-      href="/repo/hitchhiker/heartOfGold/"
-      onClick={[Function]}
-    />
     <div
-      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 dOqUmL is-flex is-justify-content-space-between is-align-items-center p-2"
+      className="RepositoryEntry__Avatar-sc-6jys82-0 OJkVA is-align-self-flex-start"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 dcjjKg is-flex is-flex-grow-1 is-align-items-center"
+        className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
       >
-        <div
-          className="GroupEntry__Avatar-sc-1f902yu-2 jCymZj mr-4"
-        >
-          <div
-            className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
+        <img
+          alt="Logo"
+          src="test-file-stub"
+        />
+      </div>
+    </div>
+    <div
+      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-clipped"
+      style={
+        Object {
+          "gap": "0.25rem",
+        }
+      }
+    >
+      <div
+        className="is-flex"
+      >
+        <h4>
+          <a
+            className="RepositoryEntry__StyledLink-sc-6jys82-1 JSZXO"
+            href="/repo/hitchhiker/heartOfGold/"
+            onClick={[Function]}
           >
-            <img
-              alt="Logo"
-              src="test-file-stub"
-            />
-          </div>
-        </div>
-        <div
-          className="is-flex-grow-1 is-clipped"
-        >
-          <div
-            className="mx-1"
-          >
-            <div
-              className="is-flex"
-            >
-              <strong
-                className="RepositoryEntry__Name-sc-6jys82-4 fAfLpj"
-              >
-                heartOfGold
-              </strong>
-               
-              <div
-                className="is-flex is-align-items-center is-hidden-mobile"
-              >
-                <div />
-                <div
-                  style={
-                    Object {
-                      "borderWidth": "0",
-                      "clip": "rect(0, 0, 0, 0)",
-                      "display": "none",
-                      "height": 1,
-                      "margin": -1,
-                      "overflow": "hidden",
-                      "padding": 0,
-                      "position": "absolute",
-                      "whiteSpace": "nowrap",
-                      "width": 1,
-                    }
-                  }
-                />
-                <div
-                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-0 dcQivR"
-                >
-                  <div
-                    className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
-                    onClick={[Function]}
-                    onMouseEnter={[Function]}
-                    onMouseLeave={[Function]}
-                  >
-                    <span
-                      className="tag is-danger is-small is-clickable p-1 is-size-7 has-text-weight-bold"
-                      onClick={[Function]}
-                    >
-                      repository.healthCheckFailure
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <p
-            className="GroupEntry__Description-sc-1f902yu-3 jAbhKI mx-1"
-          >
-            The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
-          </p>
-        </div>
+            heartOfGold
+             
+          </a>
+        </h4>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 enUoHi is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
       >
-        <div
-          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 huFTcO is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
+        The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
+      </div>
+      <div
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+      >
+        <span
+          className="is-size-7 has-text-secondary is-relative"
         >
+          overview.lastModified
+           
+          <time
+            className="DateElement-sc-1schp8c-0 cTawvL"
+            dateTime="2020-03-23 09:26:01"
+            title="2020-03-23 09:26:01"
+          >
+            3 days ago
+          </time>
+        </span>
+        <div
+          className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
+        >
+          <div />
+          <div
+            style={
+              Object {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "display": "none",
+                "height": 1,
+                "margin": -1,
+                "overflow": "hidden",
+                "padding": 0,
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": 1,
+              }
+            }
+          />
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-center"
+            className="tag is-rounded is-light is-small is-relative"
+            color="danger"
+            data-state="closed"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onPointerDown={[Function]}
+            onPointerLeave={[Function]}
+            onPointerMove={[Function]}
           >
-            <a
-              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
-              href="mailto:heart-of-gold@hitchhiker.com"
-              target="_blank"
-              title="overview.contact"
-            >
-              <i
-                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable has-hover-visible"
-                onKeyPress={[Function]}
-              />
-            </a>
-            <i
-              aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable is-size-5 has-hover-visible"
-              onClick={[Function]}
-              onKeyPress={[Function]}
-              title="overview.clone"
-            />
+            repository.healthCheckFailure
           </span>
-          <small
-            className="pb-1"
-          >
-            <time
-              className="DateElement-sc-1schp8c-0 cTawvL"
-              dateTime="2020-03-23 09:26:01"
-              title="2020-03-23 09:26:01"
-            >
-              3 days ago
-            </time>
-          </small>
         </div>
       </div>
     </div>
-  </div>
+    <button
+      aria-expanded={false}
+      aria-haspopup="menu"
+      aria-label="menu.defaultTriggerLabel"
+      className="button is-borderless has-background-transparent has-hover-color-blue px-2"
+      data-state="closed"
+      disabled={false}
+      id="radix-187"
+      onKeyDown={[Function]}
+      onPointerDown={[Function]}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        className="icon"
+      >
+        <i
+          className="fas fa-fw fa-ellipsis-v"
+        />
+      </span>
+    </button>
+  </li>
 </div>
 `;
 
@@ -72159,124 +71890,110 @@ exports[`Storyshots Repositories/RepositoryEntry With long texts 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-sc-toppdg-0 fDFvWg"
 >
-  <div
-    className="is-relative"
+  <li
+    aria-label="overview.ariaLabel"
+    className="is-relative is-flex scmm-card"
   >
-    <a
-      aria-label="overview.ariaLabel"
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 gmDjMM has-hover-background-blue"
-      href="/repo/hitchhiker/veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery-loooooooooooooooooooooooooooooooooooooooooooooooooooong-repooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame/"
-      onClick={[Function]}
-    />
     <div
-      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 dOqUmL is-flex is-justify-content-space-between is-align-items-center p-2"
+      className="RepositoryEntry__Avatar-sc-6jys82-0 OJkVA is-align-self-flex-start"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 dcjjKg is-flex is-flex-grow-1 is-align-items-center"
+        className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
       >
-        <div
-          className="GroupEntry__Avatar-sc-1f902yu-2 jCymZj mr-4"
-        >
-          <div
-            className="RepositoryAvatar__Avatar-sc-uh53vb-0 hUnsfF image is-48x48"
+        <img
+          alt="Logo"
+          src="/images/blib.jpg"
+        />
+      </div>
+    </div>
+    <div
+      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-clipped"
+      style={
+        Object {
+          "gap": "0.25rem",
+        }
+      }
+    >
+      <div
+        className="is-flex"
+      >
+        <h4>
+          <a
+            className="RepositoryEntry__StyledLink-sc-6jys82-1 JSZXO"
+            href="/repo/hitchhiker/veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery-loooooooooooooooooooooooooooooooooooooooooooooooooooong-repooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame/"
+            onClick={[Function]}
           >
-            <img
-              alt="Logo"
-              src="/images/blib.jpg"
-            />
-          </div>
-        </div>
-        <div
-          className="is-flex-grow-1 is-clipped"
-        >
-          <div
-            className="mx-1"
-          >
-            <div
-              className="is-flex"
-            >
-              <strong
-                className="RepositoryEntry__Name-sc-6jys82-4 fAfLpj"
-              >
-                veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery-loooooooooooooooooooooooooooooooooooooooooooooooooooong-repooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame
-              </strong>
-               
-              <div
-                className="is-flex is-align-items-center is-hidden-mobile"
-              >
-                <div />
-                <div
-                  style={
-                    Object {
-                      "borderWidth": "0",
-                      "clip": "rect(0, 0, 0, 0)",
-                      "display": "none",
-                      "height": 1,
-                      "margin": -1,
-                      "overflow": "hidden",
-                      "padding": 0,
-                      "position": "absolute",
-                      "whiteSpace": "nowrap",
-                      "width": 1,
-                    }
-                  }
-                />
-                <div
-                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-0 dcQivR"
-                />
-              </div>
-            </div>
-          </div>
-          <p
-            className="GroupEntry__Description-sc-1f902yu-3 jAbhKI mx-1"
-          >
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-          </p>
-        </div>
+            veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery-loooooooooooooooooooooooooooooooooooooooooooooooooooong-repooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame
+             
+          </a>
+        </h4>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 enUoHi is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
       >
-        <div
-          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 huFTcO is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
+        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+      </div>
+      <div
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+      >
+        <span
+          className="is-size-7 has-text-secondary is-relative"
         >
-          <span
-            className="is-flex is-justify-content-flex-end is-align-items-center"
+          overview.lastModified
+           
+          <time
+            className="DateElement-sc-1schp8c-0 cTawvL"
+            dateTime="2020-03-23 09:26:01"
+            title="2020-03-23 09:26:01"
           >
-            <a
-              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
-              href="mailto:heart-of-gold@hitchhiker.com"
-              target="_blank"
-              title="overview.contact"
-            >
-              <i
-                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable has-hover-visible"
-                onKeyPress={[Function]}
-              />
-            </a>
-            <i
-              aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 gkmNjW is-clickable is-size-5 has-hover-visible"
-              onClick={[Function]}
-              onKeyPress={[Function]}
-              title="overview.clone"
-            />
-          </span>
-          <small
-            className="pb-1"
-          >
-            <time
-              className="DateElement-sc-1schp8c-0 cTawvL"
-              dateTime="2020-03-23 09:26:01"
-              title="2020-03-23 09:26:01"
-            >
-              3 days ago
-            </time>
-          </small>
+            3 days ago
+          </time>
+        </span>
+        <div
+          className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
+        >
+          <div />
+          <div
+            style={
+              Object {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "display": "none",
+                "height": 1,
+                "margin": -1,
+                "overflow": "hidden",
+                "padding": 0,
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": 1,
+              }
+            }
+          />
         </div>
       </div>
     </div>
-  </div>
+    <button
+      aria-expanded={false}
+      aria-haspopup="menu"
+      aria-label="menu.defaultTriggerLabel"
+      className="button is-borderless has-background-transparent has-hover-color-blue px-2"
+      data-state="closed"
+      disabled={false}
+      id="radix-194"
+      onKeyDown={[Function]}
+      onPointerDown={[Function]}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        className="icon"
+      >
+        <i
+          className="fas fa-fw fa-ellipsis-v"
+        />
+      </span>
+    </button>
+  </li>
 </div>
 `;
 

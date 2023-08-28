@@ -22,35 +22,18 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Link } from "react-router-dom";
-import { Icon, RepositoryEntry, GroupEntries } from "@scm-manager/ui-components";
+import { NamespaceEntries, RepositoryEntry } from "@scm-manager/ui-components";
 import { RepositoryGroup } from "@scm-manager/ui-types";
-import { useTranslation } from "react-i18next";
 
 type Props = {
   group: RepositoryGroup;
 };
 
 const RepositoryGroupEntry: FC<Props> = ({ group }) => {
-  const [t] = useTranslation("namespaces");
-
-  const settingsLink = group.namespace?._links?.permissions && (
-    <Link to={`/namespace/${group.name}/settings`} aria-label={t("repositoryOverview.settings.tooltip")}>
-      <Icon color="inherit" name="cog" title={t("repositoryOverview.settings.tooltip")} className="is-size-6 ml-2" />
-    </Link>
-  );
-  const namespaceHeader = (
-    <>
-      <Link to={`/repos/${group.name}/`} className="has-text-inherit">
-        {group.name}
-      </Link>{" "}
-      {settingsLink}
-    </>
-  );
-  const entries = group.repositories.map((repository, index) => {
-    return <RepositoryEntry repository={repository} key={index} />;
+  const entries = group.repositories.map((repository) => {
+    return <RepositoryEntry repository={repository} key={repository.name} />;
   });
-  return <GroupEntries namespaceHeader={namespaceHeader} elements={entries} />;
+  return <NamespaceEntries group={group} elements={entries} />;
 };
 
 export default RepositoryGroupEntry;

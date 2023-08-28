@@ -96,7 +96,7 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
       <BranchListWrapper className="is-flex is-flex-direction-column">
         <KeyboardIterator>
           {activeBranches.length > 0 ? (
-            <Collapsible header={t("branches.table.branches.active")} defaultOpen>
+            <Collapsible header={t("branches.table.branches.active")}>
               <BranchList
                 repository={repository}
                 baseUrl={baseUrl}
@@ -106,7 +106,7 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
             </Collapsible>
           ) : null}
           {staleBranches.length > 0 ? (
-            <Collapsible header={t("branches.table.branches.stale")}>
+            <Collapsible header={t("branches.table.branches.stale")} defaultCollapsed>
               <BranchList
                 repository={repository}
                 baseUrl={baseUrl}

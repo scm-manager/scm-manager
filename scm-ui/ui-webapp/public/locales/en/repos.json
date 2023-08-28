@@ -65,7 +65,9 @@
     "allNamespaces": "All namespaces",
     "clone": "Clone/Checkout",
     "contact": "Send mail to {{contact}}",
-    "ariaLabel": "Repository {{name}}"
+    "ariaLabel": "Repository {{name}}",
+    "lastModified": "Last modified",
+    "sendMailToContact": "Send mail to contact"
   },
   "create": {
     "title": "Add Repository",

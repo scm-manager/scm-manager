@@ -21,18 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { Repository } from "@scm-manager/ui-types";
-import { DateFromNow, Modal } from "@scm-manager/ui-components";
+import { DateFromNow } from "@scm-manager/ui-components";
 import RepositoryAvatar from "./RepositoryAvatar";
-import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import GroupEntry from "../layout/GroupEntry";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import RepositoryFlags from "./RepositoryFlags";
 import styled from "styled-components";
-import Icon from "../Icon";
 import { useTranslation } from "react-i18next";
-import classNames from "classnames";
-import { EXTENSION_POINT } from "../avatar/Avatar";
+import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
+import { Card } from "@scm-manager/ui-layout";
+import { Link } from "react-router-dom";
+import { Menu } from "@scm-manager/ui-overlays";
+import { Icon } from "@scm-manager/ui-buttons";
 
 type DateProp = Date | string;
 
@@ -43,125 +44,97 @@ type Props = {
   baseDate?: DateProp;
 };
 
-const ContentRightContainer = styled.div`
-  height: calc(80px - 1.5rem);
+const Avatar = styled.div`
+  .predefined-avatar {
+    height: 48px;
+    width: 48px;
+    font-size: 1.75rem;
+  }
 `;
 
-const QuickAction = styled(Icon)`
-  margin-top: 0.2rem;
+const StyledLink = styled(Link)`
+  overflow-wrap: anywhere;
 `;
 
-const ContactAvatar = styled.img`
-  max-width: 20px;
-`;
-
-const ContactActionWrapper = styled.a`
-  height: 20px;
-  width: 20px;
-  padding-right: 2rem;
-`;
-
-const Name = styled.strong`
+const DescriptionRow = styled(Card.Row)`
+  text-wrap: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
-  overflow-x: hidden;
-  overflow-y: visible;
-  white-space: nowrap;
+`;
+
+const DetailsRow = styled(Card.Row)`
+  gap: 0.5rem;
 `;
 
 const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   const [t] = useTranslation("repos");
-  const [openCloneModal, setOpenCloneModal] = useState(false);
+  const ref = useKeyboardIteratorTarget();
 
-  const avatarFactory = binder.getExtension(EXTENSION_POINT);
-
-  const renderContactIcon = () => {
-    if (avatarFactory) {
-      return (
-        <ContactAvatar
-          className="has-rounded-border"
-          src={avatarFactory({ mail: repository.contact })}
-          alt={repository.contact}
-        />
-      );
-    }
-    return <QuickAction className={classNames("is-clickable", "has-hover-visible")} name="envelope" color="info" />;
-  };
-
-  const createContentRight = () => (
-    <ContentRightContainer
-      className={classNames(
-        "is-flex",
-        "is-flex-direction-column",
-        "is-justify-content-space-between",
-        "is-relative",
-        "mr-4"
-      )}
-    >
-      {openCloneModal && (
-        <Modal
-          size="L"
-          active={openCloneModal}
-          title={t("overview.clone")}
-          body={
-            <ExtensionPoint<extensionPoints.RepositoryDetailsInformation>
-              name="repos.repository-details.information"
-              renderAll={true}
-              props={{
-                repository
-              }}
-            />
-          }
-          closeFunction={() => setOpenCloneModal(false)}
-        />
-      )}
-      <span className={classNames("is-flex", "is-justify-content-flex-end", "is-align-items-center")}>
-        {repository.contact ? (
-          <ContactActionWrapper
-            href={`mailto:${repository.contact}`}
-            target="_blank"
-            className={"is-size-5"}
-            title={t("overview.contact", { contact: repository.contact })}
-          >
-            {renderContactIcon()}
-          </ContactActionWrapper>
-        ) : null}
-        <QuickAction
-          className={classNames("is-clickable", "is-size-5", "has-hover-visible")}
-          name="download"
-          color="info"
-          onClick={() => setOpenCloneModal(true)}
-          title={t("overview.clone")}
-        />
-      </span>
-      <small className="pb-1">
-        <DateFromNow baseDate={baseDate} date={repository.lastModified || repository.creationDate} />
-      </small>
-    </ContentRightContainer>
+  const actions = () => (
+    <Menu>
+      <Menu.DialogButton
+        title={t("overview.clone")}
+        description={
+          <ExtensionPoint<extensionPoints.RepositoryDetailsInformation>
+            name="repos.repository-details.information"
+            renderAll={true}
+            props={{
+              repository,
+            }}
+          />
+        }
+      >
+        <Icon>download</Icon>
+        {t("overview.clone")}
+      </Menu.DialogButton>
+      {repository.contact ? (
+        <Menu.ExternalLink
+          href={`mailto:${repository.contact}`}
+          target="_blank"
+          rel="noreferrer"
+          title={t("overview.contact", { contact: repository.contact })}
+        >
+          <Icon>envelope</Icon>
+          {t("overview.sendMailToContact")}
+        </Menu.ExternalLink>
+      ) : null}
+    </Menu>
   );
 
   const repositoryLink = `/repo/${repository.namespace}/${repository.name}/`;
-  const actions = createContentRight();
-  const name = (
-    <div className="is-flex">
-      <ExtensionPoint<extensionPoints.RepositoryCardBeforeTitle>
-        name="repository.card.beforeTitle"
-        props={{ repository }}
-      />
-      <Name>{repository.name}</Name> <RepositoryFlags repository={repository} className="is-hidden-mobile" />
-    </div>
-  );
 
   return (
-    <>
-      <GroupEntry
-        avatar={<RepositoryAvatar repository={repository} size={48} />}
-        name={name}
-        description={repository.description}
-        contentRight={actions}
-        link={repositoryLink}
-        ariaLabel={repository.name}
-      />
-    </>
+    <Card
+      as="li"
+      aria-label={t("overview.ariaLabel", { name: repository.name })}
+      action={<>{actions()}</>}
+      rowGap="0.25rem"
+      avatar={
+        <Avatar className="is-align-self-flex-start">
+          <RepositoryAvatar repository={repository} size={48} />
+        </Avatar>
+      }
+    >
+      <Card.Row className="is-flex">
+        <ExtensionPoint<extensionPoints.RepositoryCardBeforeTitle>
+          name="repository.card.beforeTitle"
+          props={{ repository }}
+        />
+        <Card.Title level={4}>
+          <StyledLink to={repositoryLink} ref={ref}>
+            {repository.name}{" "}
+          </StyledLink>
+        </Card.Title>
+      </Card.Row>
+      <DescriptionRow className="is-size-7">{repository.description}</DescriptionRow>
+      <DetailsRow className="is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap">
+        <span className="is-size-7 has-text-secondary is-relative">
+          {t("overview.lastModified")}{" "}
+          <DateFromNow baseDate={baseDate} date={repository.lastModified ?? repository.creationDate} />
+        </span>
+        <RepositoryFlags repository={repository} />
+      </DetailsRow>
+    </Card>
   );
 };
 

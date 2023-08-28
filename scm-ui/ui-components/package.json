@@ -28,6 +28,8 @@
     "@scm-manager/ui-syntaxhighlighting": "2.46.1-SNAPSHOT",
     "@scm-manager/ui-tests": "2.46.1-SNAPSHOT",
     "@scm-manager/ui-text": "2.46.1-SNAPSHOT",
+    "@scm-manager/ui-layout": "2.46.1-SNAPSHOT",
+    "@scm-manager/ui-overlays": "2.46.1-SNAPSHOT",
     "@storybook/addon-actions": "^6.4.20",
     "@storybook/addon-essentials": "^6.4.20",
     "@storybook/addon-interactions": "^6.4.20",

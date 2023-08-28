@@ -22,19 +22,45 @@
  * SOFTWARE.
  */
 import React, { FC, ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocalStorage } from "@scm-manager/ui-api";
 import { CardList, Collapsible } from "@scm-manager/ui-layout";
+import { RepositoryGroup } from "@scm-manager/ui-types";
+import { Link } from "react-router-dom";
+import { Icon } from "../index";
 
 type Props = {
-  namespaceHeader: ReactNode;
   elements: ReactNode[];
-  collapsed?: boolean;
-  onCollapsedChange?: (collapsed: boolean) => void;
+  group: RepositoryGroup;
 };
 
-const GroupEntries: FC<Props> = ({ namespaceHeader, elements, collapsed, onCollapsedChange }) => (
-  <Collapsible className="mb-5" header={namespaceHeader} collapsed={collapsed} onCollapsedChange={onCollapsedChange}>
-    <CardList>{elements}</CardList>
-  </Collapsible>
-);
+const DefaultGroupHeader: FC<{ group: RepositoryGroup }> = ({ group }) => {
+  const [t] = useTranslation("namespaces");
+  return (
+    <>
+      <Link to={`/repos/${group.name}/`} className="has-text-inherit">
+        <h3 className="has-text-weight-bold">{group.name}</h3>
+      </Link>{" "}
+      <Link to={`/namespace/${group.name}/settings`} aria-label={t("repositoryOverview.settings.tooltip")}>
+        <Icon color="inherit" name="cog" title={t("repositoryOverview.settings.tooltip")} className="is-size-6 ml-2" />
+      </Link>
+    </>
+  );
+};
 
-export default GroupEntries;
+const NamespaceEntries: FC<Props> = ({ elements, group }) => {
+  const [collapsed, setCollapsed] = useLocalStorage<boolean | null>(`repoNamespace.${group.name}.collapsed`, null);
+
+  return (
+    <Collapsible
+      collapsed={collapsed ?? false}
+      onCollapsedChange={setCollapsed}
+      className="mb-5"
+      header={<DefaultGroupHeader group={group} />}
+    >
+      <CardList>{elements}</CardList>
+    </Collapsible>
+  );
+};
+
+export default NamespaceEntries;
