@@ -29,34 +29,43 @@ import {
   useDateHitFieldValue,
   useStringHitFieldValue,
   TextHitField,
-  Hit,
-  HitProps
+  HitProps,
 } from "@scm-manager/ui-components";
+import { CardList } from "@scm-manager/ui-layout";
+import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 
 const UserHit: FC<HitProps> = ({ hit }) => {
+  const ref = useKeyboardIteratorTarget();
   const name = useStringHitFieldValue(hit, "name");
+  const mail = useStringHitFieldValue(hit, "mail");
   const lastModified = useDateHitFieldValue(hit, "lastModified");
   const creationDate = useDateHitFieldValue(hit, "creationDate");
   const date = lastModified || creationDate;
 
   return (
-    <Hit>
-      <Hit.Content>
-        <Link to={`/user/${name}`}>
-          <Hit.Title>
+    <CardList.Card key={name}>
+      <CardList.Card.Row>
+        <CardList.Card.Title>
+          <Link ref={ref} to={`/user/${name}`}>
             <TextHitField hit={hit} field="name" />
-          </Hit.Title>
-        </Link>
-        <p>
-          <TextHitField hit={hit} field="displayName" /> &lt;
-          <TextHitField hit={hit} field="mail" />
-          &gt;
-        </p>
-      </Hit.Content>
-      <Hit.Right>
+          </Link>
+        </CardList.Card.Title>
+      </CardList.Card.Row>
+      <CardList.Card.Row className="is-size-7 has-text-secondary">
+        <TextHitField hit={hit} field="displayName" />
+        {mail && (
+          <>
+            {" "}
+            &lt;
+            <TextHitField hit={hit} field="mail" />
+            &gt;
+          </>
+        )}
+      </CardList.Card.Row>
+      <CardList.Card.Row className="is-size-7 has-text-secondary">
         <DateFromNow date={date} />
-      </Hit.Right>
-    </Hit>
+      </CardList.Card.Row>
+    </CardList.Card>
   );
 };
 

@@ -24,37 +24,43 @@
 
 import React, { FC } from "react";
 import {
-  Hit,
   HitProps,
   DateFromNow,
   TextHitField,
   useDateHitFieldValue,
-  useStringHitFieldValue
+  useStringHitFieldValue,
 } from "@scm-manager/ui-components";
 import { Link } from "react-router-dom";
+import { CardList } from "@scm-manager/ui-layout";
+import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
+import { HighlightedHitField, ValueHitField } from "@scm-manager/ui-types";
 
 const GroupHit: FC<HitProps> = ({ hit }) => {
+  const ref = useKeyboardIteratorTarget();
   const name = useStringHitFieldValue(hit, "name");
   const lastModified = useDateHitFieldValue(hit, "lastModified");
   const creationDate = useDateHitFieldValue(hit, "creationDate");
   const date = lastModified || creationDate;
+  const description = hit.fields["description"];
 
   return (
-    <Hit>
-      <Hit.Content>
-        <Link to={`/group/${name}`}>
-          <Hit.Title>
+    <CardList.Card key={name}>
+      <CardList.Card.Row>
+        <CardList.Card.Title>
+          <Link ref={ref} to={`/group/${name}`}>
             <TextHitField hit={hit} field="name" />
-          </Hit.Title>
-        </Link>
-        <p>
+          </Link>
+        </CardList.Card.Title>
+      </CardList.Card.Row>
+      {((description as ValueHitField).value || (description as HighlightedHitField).fragments) && (
+        <CardList.Card.Row className="is-size-7 has-text-secondary">
           <TextHitField hit={hit} field="description" />
-        </p>
-      </Hit.Content>
-      <Hit.Right>
+        </CardList.Card.Row>
+      )}
+      <CardList.Card.Row className="is-size-7 has-text-secondary">
         <DateFromNow date={date} />
-      </Hit.Right>
-    </Hit>
+      </CardList.Card.Row>
+    </CardList.Card>
   );
 };
 

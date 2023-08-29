@@ -40,7 +40,7 @@ type Props = {
 const hitComponents: { [name: string]: FC<HitProps> } = {
   repository: RepositoryHit,
   user: UserHit,
-  group: GroupHit
+  group: GroupHit,
 };
 
 const findComponent = (type: string) => {
@@ -73,13 +73,13 @@ const NoHits: FC = () => {
 };
 
 const Hits: FC<Props> = ({ type, hits }) => (
-  <div className="panel-block">
+  <>
     {hits && hits.length > 0 ? (
       hits.map((hit, c) => <HitComponent key={`${type}_${c}_${hit.score}`} hit={hit} type={type} />)
     ) : (
       <NoHits />
     )}
-  </div>
+  </>
 );
 
 export default Hits;

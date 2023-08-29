@@ -27,6 +27,8 @@ import { QueryResult } from "@scm-manager/ui-types";
 import Hits from "./Hits";
 import { LinkPaginator } from "@scm-manager/ui-components";
 import { Redirect, useLocation } from "react-router-dom";
+import { CardListBox } from "@scm-manager/ui-layout";
+import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   result: QueryResult;
@@ -50,9 +52,11 @@ const Results: FC<Props> = ({ result, type, page, query }) => {
 
   return (
     <>
-      <div className="panel">
-        <Hits type={type} hits={hits} />
-      </div>
+      <CardListBox>
+        <KeyboardIterator>
+          <Hits type={type} hits={hits} />
+        </KeyboardIterator>
+      </CardListBox>
       <LinkPaginator collection={result} page={page} filter={query} />
     </>
   );
