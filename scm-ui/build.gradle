@@ -136,7 +136,7 @@ yarn_install {
 }
 
 task build {
-  dependsOn 'check', 'bundle'
+  dependsOn 'check', 'bundle', 'cleanTurboRepo'
 }
 
 task bundle(type: YarnTask) {
@@ -200,6 +200,14 @@ task publish(type: YarnTask) {
   }
   finalizedBy 'cleanUpAfterPublishing'
   dependsOn 'yarn_install'
+}
+
+task cleanTurboRepo(type: YarnTask) {
+  doFirst {
+    if (project.gradle.startParameter.taskNames.contains "clean") {
+      args = ['turbo', 'run', 'build', '--force']
+    }
+  }
 }
 
 task cleanUpAfterPublishing {
