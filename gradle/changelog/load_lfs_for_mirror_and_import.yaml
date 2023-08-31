@@ -1,4 +1,0 @@
-- type: fixed
-  description: Loading LFS files for imports and mirrors
-- type: fixed
-  description: Handling of submodules in imports and mirrors

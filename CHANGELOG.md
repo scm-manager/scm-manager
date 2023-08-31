@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.44.3] - 2023-08-31
+### Fixed
+- Loading LFS files for imports and mirrors
+- Handling of submodules in imports and mirrors
+
 ## [2.44.2] - 2023-06-23
 ### Fixed
 - Internal server error with external groups in permission overview
@@ -1301,3 +1306,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.44.0]: https://scm-manager.org/download/2.44.0
 [2.44.1]: https://scm-manager.org/download/2.44.1
 [2.44.2]: https://scm-manager.org/download/2.44.2
+[2.44.3]: https://scm-manager.org/download/2.44.3
