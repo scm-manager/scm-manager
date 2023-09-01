@@ -134,7 +134,7 @@ of the hotfix has been updated to the new release version. So you have to merge 
 
 ```
 git checkout develop
-git merge 2.30.1
+git merge main
 ```
 
 How these conflicts should be merged depends on the version that has been released:
