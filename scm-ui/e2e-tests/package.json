@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/e2e-tests",
-  "version": "2.46.1-SNAPSHOT",
+  "version": "2.46.1",
   "description": "End to end Tests for SCM-Manager",
   "main": "index.js",
   "author": "Eduard Heimbuch <eduard.heimbuch@cloudogu.com>",

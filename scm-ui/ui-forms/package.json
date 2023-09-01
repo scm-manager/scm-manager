@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/ui-forms",
   "private": false,
-  "version": "2.46.1-SNAPSHOT",
+  "version": "2.46.1",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "module": "build/index.mjs",
@@ -16,7 +16,7 @@
     "@scm-manager/eslint-config": "^2.16.0",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
-    "@scm-manager/ui-styles": "2.46.1-SNAPSHOT",
+    "@scm-manager/ui-styles": "2.46.1",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-interactions": "^6.5.10",
@@ -32,7 +32,7 @@
     "tsup": "^6.2.3"
   },
   "peerDependencies": {
-    "@scm-manager/ui-components": "2.46.1-SNAPSHOT",
+    "@scm-manager/ui-components": "2.46.1",
     "classnames": "^2.3.1",
     "react": "17",
     "react-hook-form": "7",
@@ -41,9 +41,9 @@
     "styled-components": "5"
   },
   "dependencies": {
-    "@scm-manager/ui-buttons": "2.46.1-SNAPSHOT",
-    "@scm-manager/ui-overlays": "2.46.1-SNAPSHOT",
-    "@scm-manager/ui-api": "2.46.1-SNAPSHOT",
+    "@scm-manager/ui-buttons": "2.46.1",
+    "@scm-manager/ui-overlays": "2.46.1",
+    "@scm-manager/ui-api": "2.46.1",
     "@headlessui/react": "^1.7.15",
     "@radix-ui/react-slot": "^1.0.1",
     "@radix-ui/react-visually-hidden": "^1.0.3"
