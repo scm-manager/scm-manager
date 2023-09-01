@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lfs.Lfs;
 import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lfs.Protocol;
@@ -32,6 +33,7 @@ import org.eclipse.jgit.lfs.lib.AnyLongObjectId;
 import org.eclipse.jgit.lfs.lib.LfsPointerFilter;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.FileMode;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -85,7 +87,8 @@ class LfsLoader {
         .setString(ConfigConstants.CONFIG_SECTION_LFS, null, ConfigConstants.CONFIG_KEY_URL, computeLfsUrl(sourceUrl));
 
       TreeWalk treeWalk = new TreeWalk(gitRepository);
-      treeWalk.setFilter(new LfsPointerFilter());
+      treeWalk.setFilter(new ScmLfsPointerFilter());
+      treeWalk.setRecursive(true);
 
       RevWalk revWalk = new RevWalk(gitRepository);
       revWalk.markStart(revWalk.parseCommit(newObjectId));
@@ -183,5 +186,25 @@ class LfsLoader {
     void failed(Exception e);
 
     void loading(String name);
+  }
+
+  /**
+   * Fixes a bug in {@link org.eclipse.jgit.lfs.lib.LfsPointerFilter} for repositories containing submodules.
+   * These result in a {@link MissingObjectException} when the original class is used, because the filter tries
+   * to load the sha hash for the submodule as a simple file. To prevent this, this extension overrides
+   * {@link #include(TreeWalk)} and checks first, whether the walk points to a regular file before proceeding
+   * with the original implemantation.
+   *
+   * In later implementations this fix should be implemented in JGit directly. This subclass can then be removed.
+   */
+  private static class ScmLfsPointerFilter extends LfsPointerFilter {
+
+    @Override
+    public boolean include(TreeWalk walk) throws IOException {
+      if (walk.getFileMode().equals(FileMode.GITLINK)) {
+        return false;
+      }
+      return super.include(walk);
+    }
   }
 }
