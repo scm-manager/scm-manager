@@ -59,6 +59,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change `myCloudogu` to new brand name `cloudogu platform`
 - Use Java 17 for Docker containers
 
+## [2.44.3] - 2023-08-31
+### Fixed
+- Loading LFS files for imports and mirrors
+- Handling of submodules in imports and mirrors
+
 ## [2.44.2] - 2023-06-23
 ### Fixed
 - Internal server error with external groups in permission overview
@@ -1355,6 +1360,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.44.0]: https://scm-manager.org/download/2.44.0
 [2.44.1]: https://scm-manager.org/download/2.44.1
 [2.44.2]: https://scm-manager.org/download/2.44.2
-[2.45.0]: https://scm-manager.org/download/2.45.0
-[2.45.1]: https://scm-manager.org/download/2.45.1
-[2.46.0]: https://scm-manager.org/download/2.46.0
