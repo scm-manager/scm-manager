@@ -1,0 +1,2 @@
+- type: fixed
+  description: Clean up old installation directories when installing plugins

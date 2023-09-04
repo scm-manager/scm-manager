@@ -26,6 +26,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
@@ -117,18 +118,21 @@ public final class PluginProcessor
    * @param classLoaderLifeCycle
    * @param pluginDirectory
    */
-  public PluginProcessor(ClassLoaderLifeCycle classLoaderLifeCycle, Path pluginDirectory)
-  {
+  public PluginProcessor(ClassLoaderLifeCycle classLoaderLifeCycle, Path pluginDirectory){
+    this(classLoaderLifeCycle, pluginDirectory, new PluginArchiveCleaner());
+  }
+
+  @VisibleForTesting
+  PluginProcessor(ClassLoaderLifeCycle classLoaderLifeCycle, Path pluginDirectory, PluginArchiveCleaner pluginArchiveCleaner) {
     this.classLoaderLifeCycle = classLoaderLifeCycle;
     this.pluginDirectory = pluginDirectory;
+    this.pluginArchiveCleaner = pluginArchiveCleaner;
+    this.installedRootDirectory = pluginDirectory.resolve(DIRECTORY_INSTALLED);
     this.installedDirectory = findInstalledDirectory();
 
-    try
-    {
+    try {
       this.context = JAXBContext.newInstance(InstalledPluginDescriptor.class);
-    }
-    catch (JAXBException ex)
-    {
+    } catch (JAXBException ex) {
       throw new PluginLoadException("could not create jaxb context", ex);
     }
   }
@@ -571,6 +575,8 @@ public final class PluginProcessor
       extracted.add(ExplodedSmp.create(directory.toPath()));
     }
 
+    pluginArchiveCleaner.cleanup(installedRootDirectory);
+
     return extracted.build();
   }
 
@@ -583,7 +589,7 @@ public final class PluginProcessor
   private Path findInstalledDirectory()
   {
     Path directory = null;
-    Path installed = pluginDirectory.resolve(DIRECTORY_INSTALLED);
+    Path installed = installedRootDirectory;
     Path date = installed.resolve(createDate());
 
     for (int i = 0; i < 999; i++)
@@ -707,9 +713,12 @@ public final class PluginProcessor
   /** Field description */
   private final JAXBContext context;
 
+  private final Path installedRootDirectory;
+
   /** Field description */
   private final Path installedDirectory;
 
   /** Field description */
   private final Path pluginDirectory;
+  private final PluginArchiveCleaner pluginArchiveCleaner;
 }

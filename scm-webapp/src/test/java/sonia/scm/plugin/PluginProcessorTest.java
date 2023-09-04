@@ -31,7 +31,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.io.Resources;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
 
 import javax.xml.bind.JAXB;
@@ -53,6 +57,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @author Sebastian Sdorra
  */
+
+@ExtendWith(MockitoExtension.class)
 class PluginProcessorTest {
 
   private static final PluginResource PLUGIN_A =
@@ -90,10 +96,13 @@ class PluginProcessorTest {
   private File pluginDirectory;
   private PluginProcessor processor;
 
+  @Mock
+  private PluginArchiveCleaner pluginArchiveCleaner;
+
   @BeforeEach
   void setUp(@TempDir Path tempDirectoryPath) {
     pluginDirectory = tempDirectoryPath.toFile();
-    processor = new PluginProcessor(ClassLoaderLifeCycle.create(), tempDirectoryPath);
+    processor = new PluginProcessor(ClassLoaderLifeCycle.create(), tempDirectoryPath, pluginArchiveCleaner);
   }
 
 
@@ -169,6 +178,14 @@ class PluginProcessorTest {
 
     InstalledPlugin plugin = collectAndGetFirst();
     assertThat(plugin.getId()).isEqualTo(PLUGIN_A.id);
+  }
+
+  @Test
+  void shouldCleanupAfterCollectingPlugins() throws IOException {
+    copySmp(PLUGIN_A);
+
+    collectAndGetFirst();
+    Mockito.verify(pluginArchiveCleaner).cleanup(pluginDirectory.toPath().resolve(".installed"));
   }
 
   @Test
