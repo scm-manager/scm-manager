@@ -16928,33 +16928,41 @@ exports[`Storyshots Modal/ConfirmAlert Autofocus 1`] = `
 Array [
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
     }
     type="button"
   />,
-  <div>
+  <div
+    onBlur={[Function]}
+    onKeyDown={[Function]}
+  >
     <div
       aria-labelledby="headlessui-dialog-title-6"
       aria-modal={true}
       className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+      data-headlessui-state="open"
       id="headlessui-dialog-4"
       role="dialog"
     >
       <div
         aria-hidden={true}
         className="modal-background"
+        data-headlessui-state="open"
         id="headlessui-dialog-overlay-5"
         onClick={[Function]}
       />
@@ -16964,6 +16972,7 @@ Array [
       >
         <header
           className="modal-card-head has-background-secondary-less"
+          data-headlessui-state="open"
           id="headlessui-dialog-title-6"
         >
           <h2
@@ -17022,16 +17031,19 @@ Array [
   </div>,
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17044,11 +17056,13 @@ Array [
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
         "display": "none",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17061,33 +17075,41 @@ exports[`Storyshots Modal/ConfirmAlert Default 1`] = `
 Array [
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
     }
     type="button"
   />,
-  <div>
+  <div
+    onBlur={[Function]}
+    onKeyDown={[Function]}
+  >
     <div
       aria-labelledby={null}
       aria-modal={true}
       className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+      data-headlessui-state="open"
       id="headlessui-dialog-1"
       role="dialog"
     >
       <div
         aria-hidden={true}
         className="modal-background"
+        data-headlessui-state="open"
         id="headlessui-dialog-overlay-2"
         onClick={[Function]}
       />
@@ -17097,6 +17119,7 @@ Array [
       >
         <header
           className="modal-card-head has-background-secondary-less"
+          data-headlessui-state="open"
           id="headlessui-dialog-title-3"
         >
           <h2
@@ -17155,16 +17178,19 @@ Array [
   </div>,
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17177,11 +17203,13 @@ Array [
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
         "display": "none",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17207,33 +17235,41 @@ exports[`Storyshots Modal/Modal Closeable 1`] = `
 Array [
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
     }
     type="button"
   />,
-  <div>
+  <div
+    onBlur={[Function]}
+    onKeyDown={[Function]}
+  >
     <div
       aria-labelledby="headlessui-dialog-title-12"
       aria-modal={true}
       className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+      data-headlessui-state="open"
       id="headlessui-dialog-10"
       role="dialog"
     >
       <div
         aria-hidden={true}
         className="modal-background"
+        data-headlessui-state="open"
         id="headlessui-dialog-overlay-11"
         onClick={[Function]}
       />
@@ -17243,6 +17279,7 @@ Array [
       >
         <header
           className="modal-card-head has-background-secondary-less"
+          data-headlessui-state="open"
           id="headlessui-dialog-title-12"
         >
           <h2
@@ -17271,16 +17308,19 @@ Array [
   </div>,
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17293,11 +17333,13 @@ Array [
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
         "display": "none",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17310,33 +17352,41 @@ exports[`Storyshots Modal/Modal Default 1`] = `
 Array [
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
     }
     type="button"
   />,
-  <div>
+  <div
+    onBlur={[Function]}
+    onKeyDown={[Function]}
+  >
     <div
       aria-labelledby="headlessui-dialog-title-9"
       aria-modal={true}
       className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+      data-headlessui-state="open"
       id="headlessui-dialog-7"
       role="dialog"
     >
       <div
         aria-hidden={true}
         className="modal-background"
+        data-headlessui-state="open"
         id="headlessui-dialog-overlay-8"
         onClick={[Function]}
       />
@@ -17346,6 +17396,7 @@ Array [
       >
         <header
           className="modal-card-head has-background-secondary-less"
+          data-headlessui-state="open"
           id="headlessui-dialog-title-9"
         >
           <h2
@@ -17374,16 +17425,19 @@ Array [
   </div>,
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17396,11 +17450,13 @@ Array [
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
         "display": "none",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17413,33 +17469,41 @@ exports[`Storyshots Modal/Modal Long content 1`] = `
 Array [
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
     }
     type="button"
   />,
-  <div>
+  <div
+    onBlur={[Function]}
+    onKeyDown={[Function]}
+  >
     <div
       aria-labelledby="headlessui-dialog-title-30"
       aria-modal={true}
       className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+      data-headlessui-state="open"
       id="headlessui-dialog-28"
       role="dialog"
     >
       <div
         aria-hidden={true}
         className="modal-background"
+        data-headlessui-state="open"
         id="headlessui-dialog-overlay-29"
         onClick={[Function]}
       />
@@ -17449,6 +17513,7 @@ Array [
       >
         <header
           className="modal-card-head has-background-secondary-less"
+          data-headlessui-state="open"
           id="headlessui-dialog-title-30"
         >
           <h2
@@ -17550,16 +17615,19 @@ Array [
   </div>,
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17572,11 +17640,13 @@ Array [
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
         "display": "none",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17589,33 +17659,41 @@ exports[`Storyshots Modal/Modal Nested 1`] = `
 Array [
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
     }
     type="button"
   />,
-  <div>
+  <div
+    onBlur={[Function]}
+    onKeyDown={[Function]}
+  >
     <div
       aria-labelledby="headlessui-dialog-title-15"
       aria-modal={true}
       className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+      data-headlessui-state="open"
       id="headlessui-dialog-13"
       role="dialog"
     >
       <div
         aria-hidden={true}
         className="modal-background"
+        data-headlessui-state="open"
         id="headlessui-dialog-overlay-14"
         onClick={[Function]}
       />
@@ -17626,6 +17704,7 @@ Array [
       >
         <header
           className="modal-card-head has-background-secondary-less"
+          data-headlessui-state="open"
           id="headlessui-dialog-title-15"
         >
           <h2
@@ -17660,16 +17739,19 @@ Array [
   </div>,
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17682,11 +17764,13 @@ Array [
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
         "display": "none",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17699,33 +17783,41 @@ exports[`Storyshots Modal/Modal With form elements 1`] = `
 Array [
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
     }
     type="button"
   />,
-  <div>
+  <div
+    onBlur={[Function]}
+    onKeyDown={[Function]}
+  >
     <div
       aria-labelledby="headlessui-dialog-title-18"
       aria-modal={true}
       className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+      data-headlessui-state="open"
       id="headlessui-dialog-16"
       role="dialog"
     >
       <div
         aria-hidden={true}
         className="modal-background"
+        data-headlessui-state="open"
         id="headlessui-dialog-overlay-17"
         onClick={[Function]}
       />
@@ -17735,6 +17827,7 @@ Array [
       >
         <header
           className="modal-card-head has-background-secondary-less"
+          data-headlessui-state="open"
           id="headlessui-dialog-title-18"
         >
           <h2
@@ -17893,16 +17986,19 @@ Array [
   </div>,
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17915,11 +18011,13 @@ Array [
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
         "display": "none",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -17932,33 +18030,41 @@ exports[`Storyshots Modal/Modal With initial button focus 1`] = `
 Array [
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
     }
     type="button"
   />,
-  <div>
+  <div
+    onBlur={[Function]}
+    onKeyDown={[Function]}
+  >
     <div
       aria-labelledby="headlessui-dialog-title-24"
       aria-modal={true}
       className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+      data-headlessui-state="open"
       id="headlessui-dialog-22"
       role="dialog"
     >
       <div
         aria-hidden={true}
         className="modal-background"
+        data-headlessui-state="open"
         id="headlessui-dialog-overlay-23"
         onClick={[Function]}
       />
@@ -17968,6 +18074,7 @@ Array [
       >
         <header
           className="modal-card-head has-background-secondary-less"
+          data-headlessui-state="open"
           id="headlessui-dialog-title-24"
         >
           <h2
@@ -18023,16 +18130,19 @@ Array [
   </div>,
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -18045,11 +18155,13 @@ Array [
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
         "display": "none",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -18062,33 +18174,41 @@ exports[`Storyshots Modal/Modal With initial input field focus 1`] = `
 Array [
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
     }
     type="button"
   />,
-  <div>
+  <div
+    onBlur={[Function]}
+    onKeyDown={[Function]}
+  >
     <div
       aria-labelledby="headlessui-dialog-title-21"
       aria-modal={true}
       className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+      data-headlessui-state="open"
       id="headlessui-dialog-19"
       role="dialog"
     >
       <div
         aria-hidden={true}
         className="modal-background"
+        data-headlessui-state="open"
         id="headlessui-dialog-overlay-20"
         onClick={[Function]}
       />
@@ -18098,6 +18218,7 @@ Array [
       >
         <header
           className="modal-card-head has-background-secondary-less"
+          data-headlessui-state="open"
           id="headlessui-dialog-title-21"
         >
           <h2
@@ -18167,16 +18288,19 @@ Array [
   </div>,
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -18189,11 +18313,13 @@ Array [
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
         "display": "none",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -18206,33 +18332,41 @@ exports[`Storyshots Modal/Modal With long tooltips 1`] = `
 Array [
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
     }
     type="button"
   />,
-  <div>
+  <div
+    onBlur={[Function]}
+    onKeyDown={[Function]}
+  >
     <div
       aria-labelledby="headlessui-dialog-title-27"
       aria-modal={true}
       className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+      data-headlessui-state="open"
       id="headlessui-dialog-25"
       role="dialog"
     >
       <div
         aria-hidden={true}
         className="modal-background"
+        data-headlessui-state="open"
         id="headlessui-dialog-overlay-26"
         onClick={[Function]}
       />
@@ -18242,6 +18376,7 @@ Array [
       >
         <header
           className="modal-card-head has-background-secondary-less"
+          data-headlessui-state="open"
           id="headlessui-dialog-title-27"
         >
           <h2
@@ -18442,16 +18577,19 @@ Array [
   </div>,
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -18464,11 +18602,13 @@ Array [
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
         "display": "none",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -18481,33 +18621,41 @@ exports[`Storyshots Modal/Modal With overflow 1`] = `
 Array [
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
     }
     type="button"
   />,
-  <div>
+  <div
+    onBlur={[Function]}
+    onKeyDown={[Function]}
+  >
     <div
       aria-labelledby="headlessui-dialog-title-33"
       aria-modal={true}
       className="modal is-active is-overflow-visible is-border-bottom-radius-inherit"
+      data-headlessui-state="open"
       id="headlessui-dialog-31"
       role="dialog"
     >
       <div
         aria-hidden={true}
         className="modal-background"
+        data-headlessui-state="open"
         id="headlessui-dialog-overlay-32"
         onClick={[Function]}
       />
@@ -18517,6 +18665,7 @@ Array [
       >
         <header
           className="modal-card-head has-background-secondary-less"
+          data-headlessui-state="open"
           id="headlessui-dialog-title-33"
         >
           <h2
@@ -18656,16 +18805,19 @@ Array [
   </div>,
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -18678,11 +18830,13 @@ Array [
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
         "display": "none",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -18695,33 +18849,41 @@ exports[`Storyshots Modal/Modal With overflow and footer 1`] = `
 Array [
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
     }
     type="button"
   />,
-  <div>
+  <div
+    onBlur={[Function]}
+    onKeyDown={[Function]}
+  >
     <div
       aria-labelledby="headlessui-dialog-title-36"
       aria-modal={true}
       className="modal is-active is-overflow-visible is-border-bottom-radius-unset"
+      data-headlessui-state="open"
       id="headlessui-dialog-34"
       role="dialog"
     >
       <div
         aria-hidden={true}
         className="modal-background"
+        data-headlessui-state="open"
         id="headlessui-dialog-overlay-35"
         onClick={[Function]}
       />
@@ -18731,6 +18893,7 @@ Array [
       >
         <header
           className="modal-card-head has-background-secondary-less"
+          data-headlessui-state="open"
           id="headlessui-dialog-title-36"
         >
           <h2
@@ -18900,16 +19063,19 @@ Array [
   </div>,
   <button
     aria-hidden={true}
+    data-headlessui-focus-guard={true}
     onFocus={[Function]}
     style={
       Object {
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -18922,11 +19088,13 @@ Array [
         "borderWidth": "0",
         "clip": "rect(0, 0, 0, 0)",
         "display": "none",
-        "height": 1,
+        "height": 0,
+        "left": 1,
         "margin": -1,
         "overflow": "hidden",
         "padding": 0,
-        "position": "absolute",
+        "position": "fixed",
+        "top": 1,
         "whiteSpace": "nowrap",
         "width": 1,
       }
@@ -70987,18 +71155,23 @@ exports[`Storyshots Repositories/RepositoryEntry Archived 1`] = `
         <div
           className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
         >
-          <div />
+          <div
+            onBlur={[Function]}
+            onKeyDown={[Function]}
+          />
           <div
             style={
               Object {
                 "borderWidth": "0",
                 "clip": "rect(0, 0, 0, 0)",
                 "display": "none",
-                "height": 1,
+                "height": 0,
+                "left": 1,
                 "margin": -1,
                 "overflow": "hidden",
                 "padding": 0,
-                "position": "absolute",
+                "position": "fixed",
+                "top": 1,
                 "whiteSpace": "nowrap",
                 "width": 1,
               }
@@ -71110,18 +71283,23 @@ exports[`Storyshots Repositories/RepositoryEntry Avatar EP 1`] = `
         <div
           className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
         >
-          <div />
+          <div
+            onBlur={[Function]}
+            onKeyDown={[Function]}
+          />
           <div
             style={
               Object {
                 "borderWidth": "0",
                 "clip": "rect(0, 0, 0, 0)",
                 "display": "none",
-                "height": 1,
+                "height": 0,
+                "left": 1,
                 "margin": -1,
                 "overflow": "hidden",
                 "padding": 0,
-                "position": "absolute",
+                "position": "fixed",
+                "top": 1,
                 "whiteSpace": "nowrap",
                 "width": 1,
               }
@@ -71224,18 +71402,23 @@ exports[`Storyshots Repositories/RepositoryEntry Before Title EP 1`] = `
         <div
           className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
         >
-          <div />
+          <div
+            onBlur={[Function]}
+            onKeyDown={[Function]}
+          />
           <div
             style={
               Object {
                 "borderWidth": "0",
                 "clip": "rect(0, 0, 0, 0)",
                 "display": "none",
-                "height": 1,
+                "height": 0,
+                "left": 1,
                 "margin": -1,
                 "overflow": "hidden",
                 "padding": 0,
-                "position": "absolute",
+                "position": "fixed",
+                "top": 1,
                 "whiteSpace": "nowrap",
                 "width": 1,
               }
@@ -71335,18 +71518,23 @@ exports[`Storyshots Repositories/RepositoryEntry Default 1`] = `
         <div
           className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
         >
-          <div />
+          <div
+            onBlur={[Function]}
+            onKeyDown={[Function]}
+          />
           <div
             style={
               Object {
                 "borderWidth": "0",
                 "clip": "rect(0, 0, 0, 0)",
                 "display": "none",
-                "height": 1,
+                "height": 0,
+                "left": 1,
                 "margin": -1,
                 "overflow": "hidden",
                 "padding": 0,
-                "position": "absolute",
+                "position": "fixed",
+                "top": 1,
                 "whiteSpace": "nowrap",
                 "width": 1,
               }
@@ -71446,18 +71634,23 @@ exports[`Storyshots Repositories/RepositoryEntry Exporting 1`] = `
         <div
           className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
         >
-          <div />
+          <div
+            onBlur={[Function]}
+            onKeyDown={[Function]}
+          />
           <div
             style={
               Object {
                 "borderWidth": "0",
                 "clip": "rect(0, 0, 0, 0)",
                 "display": "none",
-                "height": 1,
+                "height": 0,
+                "left": 1,
                 "margin": -1,
                 "overflow": "hidden",
                 "padding": 0,
-                "position": "absolute",
+                "position": "fixed",
+                "top": 1,
                 "whiteSpace": "nowrap",
                 "width": 1,
               }
@@ -71569,18 +71762,23 @@ exports[`Storyshots Repositories/RepositoryEntry HealthCheck Failure 1`] = `
         <div
           className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
         >
-          <div />
+          <div
+            onBlur={[Function]}
+            onKeyDown={[Function]}
+          />
           <div
             style={
               Object {
                 "borderWidth": "0",
                 "clip": "rect(0, 0, 0, 0)",
                 "display": "none",
-                "height": 1,
+                "height": 0,
+                "left": 1,
                 "margin": -1,
                 "overflow": "hidden",
                 "padding": 0,
-                "position": "absolute",
+                "position": "fixed",
+                "top": 1,
                 "whiteSpace": "nowrap",
                 "width": 1,
               }
@@ -71693,18 +71891,23 @@ exports[`Storyshots Repositories/RepositoryEntry MultiRepositoryTags 1`] = `
         <div
           className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
         >
-          <div />
+          <div
+            onBlur={[Function]}
+            onKeyDown={[Function]}
+          />
           <div
             style={
               Object {
                 "borderWidth": "0",
                 "clip": "rect(0, 0, 0, 0)",
                 "display": "none",
-                "height": 1,
+                "height": 0,
+                "left": 1,
                 "margin": -1,
                 "overflow": "hidden",
                 "padding": 0,
-                "position": "absolute",
+                "position": "fixed",
+                "top": 1,
                 "whiteSpace": "nowrap",
                 "width": 1,
               }
@@ -71828,18 +72031,23 @@ exports[`Storyshots Repositories/RepositoryEntry RepositoryFlag EP 1`] = `
         <div
           className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
         >
-          <div />
+          <div
+            onBlur={[Function]}
+            onKeyDown={[Function]}
+          />
           <div
             style={
               Object {
                 "borderWidth": "0",
                 "clip": "rect(0, 0, 0, 0)",
                 "display": "none",
-                "height": 1,
+                "height": 0,
+                "left": 1,
                 "margin": -1,
                 "overflow": "hidden",
                 "padding": 0,
-                "position": "absolute",
+                "position": "fixed",
+                "top": 1,
                 "whiteSpace": "nowrap",
                 "width": 1,
               }
@@ -71952,18 +72160,23 @@ exports[`Storyshots Repositories/RepositoryEntry With long texts 1`] = `
         <div
           className="RepositoryFlags__GapedContainer-sc-1swhx1t-0 jRZPLm is-flex is-align-items-center is-flex-wrap-wrap"
         >
-          <div />
+          <div
+            onBlur={[Function]}
+            onKeyDown={[Function]}
+          />
           <div
             style={
               Object {
                 "borderWidth": "0",
                 "clip": "rect(0, 0, 0, 0)",
                 "display": "none",
-                "height": 1,
+                "height": 0,
+                "left": 1,
                 "margin": -1,
                 "overflow": "hidden",
                 "padding": 0,
-                "position": "absolute",
+                "position": "fixed",
+                "top": 1,
                 "whiteSpace": "nowrap",
                 "width": 1,
               }
