@@ -50,6 +50,9 @@ type BaseProps = {
   ariaLabelledby?: string;
 };
 
+/**
+ * @deprecated
+ */
 const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   value,
   defaultValue,
@@ -69,7 +72,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   const field = useInnerRef(props.innerRef);
 
   let opts = options;
-  if (value && addValueToOptions && !options.some(o => o.value === value)) {
+  if (value && addValueToOptions && !options.some((o) => o.value === value)) {
     opts = [{ label: value, value }, ...options];
   }
 
@@ -128,7 +131,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
           aria-describedby={helpText ? helpId : undefined}
           {...createAttributesForTesting(testId)}
         >
-          {opts.map(opt => {
+          {opts.map((opt) => {
             return (
               <option value={opt.value} key={"KEY_" + opt.value}>
                 {opt.label}
@@ -141,6 +144,9 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   );
 };
 
+/**
+ * @deprecated
+ */
 const Select: FieldType<BaseProps, HTMLSelectElement, string> = createFormFieldWrapper(InnerSelect);
 
 export default Select;

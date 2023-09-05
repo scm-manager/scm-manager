@@ -40,4 +40,7 @@ const useInnerRef = <T extends HTMLElement | null>(innerRef?: React.ForwardedRef
   return ref;
 };
 
+/**
+ * @deprecated
+ */
 export default useInnerRef;

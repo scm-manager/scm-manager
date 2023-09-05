@@ -38,6 +38,9 @@ type Props = {
   alt?: string;
 };
 
+/**
+ * @deprecated
+ */
 const Icon: FC<Props> = ({
   iconStyle = "fas",
   color = "secondary",
@@ -48,12 +51,12 @@ const Icon: FC<Props> = ({
   testId,
   tabIndex,
   onEnter,
-  alt = title
+  alt = title,
 }) => {
   return (
     <i
       onClick={onClick}
-      onKeyPress={event => event.key === "Enter" && onEnter && onEnter(event)}
+      onKeyPress={(event) => event.key === "Enter" && onEnter && onEnter(event)}
       title={title}
       className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)}
       tabIndex={tabIndex}

@@ -101,6 +101,9 @@ const PasswordConfirmation: FC<InnerProps> = ({ passwordChanged, passwordValidat
   );
 };
 
+/**
+ * @deprecated
+ */
 export default React.forwardRef<HTMLInputElement, BaseProps>((props, ref) => (
   <PasswordConfirmation {...props} innerRef={ref} />
 ));

@@ -35,6 +35,9 @@ type Props = {
   className?: string;
 };
 
+/**
+ * @deprecated
+ */
 const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className }) => {
   const [tableData, setTableData] = useState(data);
   useEffect(() => {
@@ -63,7 +66,9 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
         {React.Children.map(children, (child, columnIndex) => {
           const { className: columnClassName, ...childProperties } = (child as ReactElement).props;
           return (
-            <td className={columnClassName}>{React.cloneElement((child as ReactElement), { ...childProperties, columnIndex, rowIndex, row })}</td>
+            <td className={columnClassName}>
+              {React.cloneElement(child as ReactElement, { ...childProperties, columnIndex, rowIndex, row })}
+            </td>
           );
         })}
       </tr>
@@ -112,14 +117,15 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
         <tr>
           {React.Children.map(children, (child, index) => (
             <th
-              className={isSortable((child as ReactElement)) && "is-clickable"}
-              onClick={isSortable((child as ReactElement)) ? () => tableSort(index) : undefined}
+              className={isSortable(child as ReactElement) && "is-clickable"}
+              onClick={isSortable(child as ReactElement) ? () => tableSort(index) : undefined}
               onMouseEnter={() => setHoveredColumnIndex(index)}
               onMouseLeave={() => setHoveredColumnIndex(undefined)}
               key={index}
             >
               {(child as ReactElement).props.header}
-              {isSortable((child as ReactElement)) && renderSortIcon((child as ReactElement), ascending, shouldShowIcon(index))}
+              {isSortable(child as ReactElement) &&
+                renderSortIcon(child as ReactElement, ascending, shouldShowIcon(index))}
             </th>
           ))}
         </tr>
@@ -130,7 +136,7 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
 };
 
 Table.defaultProps = {
-  sortable: true
+  sortable: true,
 };
 
 const renderSortIcon = (child: ReactElement, ascending: boolean, showIcon: boolean) => {

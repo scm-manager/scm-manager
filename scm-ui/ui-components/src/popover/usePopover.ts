@@ -100,6 +100,9 @@ const dispatchDeferred = (dispatch: Dispatch<Action>, action: Action) => {
   setTimeout(() => dispatch(action), 250);
 };
 
+/**
+ * @deprecated
+ */
 const usePopover = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const triggerRef = useRef<HTMLElement | null>(null);

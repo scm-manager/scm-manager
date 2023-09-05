@@ -41,6 +41,9 @@ type Props = {
   onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
 };
 
+/**
+ * @deprecated
+ */
 const FileInput = React.forwardRef<HTMLInputElement, Props>(
   ({ name, filenamePlaceholder, testId, helpText, placeholder, disabled, label, className, onBlur, onChange }, ref) => {
     const [t] = useTranslation("commons");

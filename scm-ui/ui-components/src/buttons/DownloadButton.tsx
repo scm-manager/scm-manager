@@ -30,6 +30,9 @@ type Props = {
   onClick?: () => void;
 };
 
+/**
+ * @deprecated
+ */
 class DownloadButton extends React.Component<Props> {
   render() {
     const { displayName, url, disabled, onClick } = this.props;

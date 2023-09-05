@@ -25,6 +25,9 @@
 import styled from "styled-components";
 import NoStyleButton from "./NoStyleButton";
 
+/**
+ * @deprecated Use {@link ui-buttons/src/Button.tsx} instead
+ */
 const LinkStyleButton = styled(NoStyleButton)`
   text-decoration: underline;
 `;

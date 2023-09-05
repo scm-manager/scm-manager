@@ -34,6 +34,9 @@ type Props = {
 
 type State = {};
 
+/**
+ * @deprecated
+ */
 class RemoveEntryOfTableButton extends React.Component<Props, State> {
   render() {
     const { label, entryname, removeEntry, disabled } = this.props;

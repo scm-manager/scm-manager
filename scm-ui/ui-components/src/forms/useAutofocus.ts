@@ -47,4 +47,7 @@ const useAutofocus = <T extends HTMLElement | null>(enabled?: boolean, innerRef?
   return ref;
 };
 
+/**
+ * @deprecated
+ */
 export default useAutofocus;

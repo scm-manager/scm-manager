@@ -24,6 +24,9 @@
 
 import styled from "styled-components";
 
+/**
+ * @deprecated
+ */
 const NoStyleButton = styled.button`
   background: none;
   color: inherit;

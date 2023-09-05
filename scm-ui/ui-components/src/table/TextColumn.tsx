@@ -29,6 +29,9 @@ type Props = ColumnProps & {
   dataKey: string;
 };
 
+/**
+ * @deprecated
+ */
 const TextColumn: FC<Props> = ({ row, dataKey }) => {
   return row[dataKey];
 };

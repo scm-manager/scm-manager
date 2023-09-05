@@ -51,6 +51,9 @@ const StyledTable = styled.table`
   }
 `;
 
+/**
+ * @deprecated
+ */
 const InfoTable: FC<Props> = ({ className, children, ...rest }) => (
   <StyledTable className={classNames("table", className)} {...rest}>
     {children}

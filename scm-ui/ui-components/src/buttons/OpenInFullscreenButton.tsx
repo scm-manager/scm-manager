@@ -41,6 +41,9 @@ const Button = styled.button`
   }
 `;
 
+/**
+ * @deprecated
+ */
 const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody, tooltipStyle = "tooltipComponent" }) => {
   const [t] = useTranslation("repos");
   const [showModal, setShowModal] = useState(false);

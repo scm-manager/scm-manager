@@ -30,6 +30,9 @@ type Props = {
   isVisible: boolean;
 };
 
+/**
+ * @deprecated
+ */
 const SortIcon: FC<Props> = (props: Props) => {
   return (
     <Icon

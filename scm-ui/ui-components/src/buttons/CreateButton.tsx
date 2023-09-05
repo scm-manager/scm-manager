@@ -30,6 +30,9 @@ const Wrapper = styled.div`
   border: var(--scm-border);
 `;
 
+/**
+ * @deprecated Use {@link ui-buttons/src/Button.tsx} instead
+ */
 export default class CreateButton extends React.Component<ButtonProps> {
   render() {
     return (

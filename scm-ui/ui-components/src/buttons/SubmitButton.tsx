@@ -29,6 +29,9 @@ type SubmitButtonProps = ButtonProps & {
   testId?: string;
 };
 
+/**
+ * @deprecated Use {@link ui-buttons/src/Button.tsx} instead
+ */
 class SubmitButton extends React.Component<SubmitButtonProps> {
   static defaultProps = {
     scrollToTop: true,

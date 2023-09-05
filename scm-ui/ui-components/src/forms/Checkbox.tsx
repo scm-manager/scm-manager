@@ -132,6 +132,9 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
   );
 };
 
+/**
+ * @deprecated
+ */
 const Checkbox: FieldType<BaseProps, HTMLInputElement, boolean> = createFormFieldWrapper(InnerCheckbox);
 
 export default Checkbox;

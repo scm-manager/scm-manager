@@ -32,6 +32,9 @@ type Props = {
   onRemove: (p: DisplayedUser[]) => void;
 };
 
+/**
+ * @deprecated
+ */
 export default class TagGroup extends React.Component<Props> {
   render() {
     const { items, label, helpText } = this.props;

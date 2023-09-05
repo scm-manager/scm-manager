@@ -45,6 +45,9 @@ type BaseProps = {
   readOnly?: boolean;
 };
 
+/**
+ * @deprecated
+ */
 const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
   placeholder,
   value,
@@ -130,6 +133,9 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
   );
 };
 
+/**
+ * @deprecated
+ */
 const Textarea: FieldType<BaseProps, HTMLTextAreaElement, string> = createFormFieldWrapper(InnerTextarea);
 
 export default Textarea;

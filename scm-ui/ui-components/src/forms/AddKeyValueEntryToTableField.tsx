@@ -54,6 +54,9 @@ const MobileWrappedDiv = styled.div`
   }
 `;
 
+/**
+ * @deprecated
+ */
 const AddKeyValueEntryToTableField: FC<Props> = ({
   keyFieldLabel,
   valueFieldLabel,
@@ -63,7 +66,7 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
   valueHelpText,
   validateEntry,
   errorMessage,
-  addEntry
+  addEntry,
 }) => {
   const [key, setKey] = useState("");
   const [value, setValue] = useState("");

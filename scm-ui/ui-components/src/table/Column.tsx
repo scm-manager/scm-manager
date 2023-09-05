@@ -28,6 +28,9 @@ type Props = ColumnProps & {
   children: (row: any, columnIndex: number, rowIndex: number) => ReactNode;
 };
 
+/**
+ * @deprecated
+ */
 const Column: FC<Props> = ({ row, columnIndex, rowIndex, children }) => {
   if (row === undefined) {
     throw new Error("missing row, use column only as child of Table");

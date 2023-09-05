@@ -31,6 +31,9 @@ type Props = {
   disabled?: boolean;
 };
 
+/**
+ * @deprecated
+ */
 const FileUpload: FC<Props> = ({ handleFile, filenamePlaceholder = "", disabled = false }) => {
   const [t] = useTranslation("commons");
   const [file, setFile] = useState<File | null>(null);

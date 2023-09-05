@@ -31,6 +31,9 @@ type Props = {
   helpId?: string;
 };
 
+/**
+ * @deprecated
+ */
 class LabelWithHelpIcon extends React.Component<Props> {
   renderHelp() {
     const { helpText, helpId } = this.props;

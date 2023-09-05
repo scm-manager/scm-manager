@@ -32,6 +32,9 @@ type Props = {
   testId?: string;
 };
 
+/**
+ * @deprecated
+ */
 const TriStateCheckbox: FC<Props> = ({ checked, indeterminate, disabled, label, testId }) => {
   let icon;
   if (indeterminate) {

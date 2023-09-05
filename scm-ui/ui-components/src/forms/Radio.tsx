@@ -107,6 +107,9 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
   );
 };
 
+/**
+ * @deprecated
+ */
 const Radio: FieldType<BaseProps, HTMLInputElement, boolean> = createFormFieldWrapper(InnerRadio);
 
 export default Radio;

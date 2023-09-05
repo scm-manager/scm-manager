@@ -36,6 +36,9 @@ type Props = {
   children: ReactNode;
 };
 
+/**
+ * @deprecated
+ */
 class ButtonAddons extends React.Component<Props> {
   render() {
     const { className, children } = this.props;

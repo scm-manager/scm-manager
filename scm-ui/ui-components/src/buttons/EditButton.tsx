@@ -24,6 +24,9 @@
 import React from "react";
 import Button, { ButtonProps } from "./Button";
 
+/**
+ * @deprecated Use {@link ui-buttons/src/Button.tsx} instead
+ */
 class EditButton extends React.Component<ButtonProps> {
   render() {
     return <Button color="default" {...this.props} />;

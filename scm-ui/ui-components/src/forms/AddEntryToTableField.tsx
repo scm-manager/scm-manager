@@ -41,6 +41,10 @@ const FullWidthInputField = styled(InputField)`
   width: 100%;
 `;
 
+/**
+ *
+ * @deprecated
+ */
 const AddEntryToTableField: FC<Props> = ({
   addEntry,
   disabled,

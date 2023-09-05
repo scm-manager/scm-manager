@@ -44,6 +44,9 @@ const FullWidthAutocomplete = styled(Autocomplete)`
   width: 100%;
 `;
 
+/**
+ * @deprecated
+ */
 const AutocompleteAddEntryToTableField: FC<Props> = ({
   addEntry,
   disabled,

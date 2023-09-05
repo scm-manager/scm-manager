@@ -33,6 +33,9 @@ type Props = WithTranslation & {
   helpText?: string;
 };
 
+/**
+ * @deprecated
+ */
 class MemberNameTagGroup extends React.Component<Props> {
   render() {
     const { members, label, helpText, t } = this.props;
@@ -61,4 +64,7 @@ class MemberNameTagGroup extends React.Component<Props> {
   };
 }
 
+/**
+ * @deprecated
+ */
 export default withTranslation("groups")(MemberNameTagGroup);

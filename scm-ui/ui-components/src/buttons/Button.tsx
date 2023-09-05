@@ -47,6 +47,9 @@ type Props = ButtonProps & {
   color?: string;
 };
 
+/**
+ * @deprecated Use {@link ui-buttons/src/Button.tsx} instead
+ */
 const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Props>(
   (
     {

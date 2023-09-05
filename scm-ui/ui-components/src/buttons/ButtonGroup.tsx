@@ -29,6 +29,9 @@ type Props = {
   children: ReactNode;
 };
 
+/**
+ * @deprecated
+ */
 class ButtonGroup extends React.Component<Props> {
   render() {
     const { className, children } = this.props;

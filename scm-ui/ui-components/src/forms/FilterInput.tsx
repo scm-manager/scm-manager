@@ -41,6 +41,9 @@ const FixedHeightInput = styled.input`
   height: 2.5rem;
 `;
 
+/**
+ * @deprecated
+ */
 const FilterInput: FC<Props> = ({ filter, value, testId, placeholder, autoFocus, className, id }) => {
   const [stateValue, setStateValue] = useState(value || "");
   const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout>>();
@@ -74,7 +77,7 @@ const FilterInput: FC<Props> = ({ filter, value, testId, placeholder, autoFocus,
           type="search"
           placeholder={placeholder || t("filterEntries")}
           value={stateValue}
-          onChange={event => setStateValue(event.target.value)}
+          onChange={(event) => setStateValue(event.target.value)}
           autoFocus={autoFocus || false}
           aria-describedby={id}
           aria-label={t("filterEntries")}
