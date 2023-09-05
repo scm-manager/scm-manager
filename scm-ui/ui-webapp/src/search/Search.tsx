@@ -35,17 +35,51 @@ import {
   urls,
 } from "@scm-manager/ui-components";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { useNamespaceAndNameContext, useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
+import { useIndex, useNamespaceAndNameContext, useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
 import Results from "./Results";
 import { Trans, useTranslation } from "react-i18next";
 import SearchErrorNotification from "./SearchErrorNotification";
 import SyntaxModal from "./SyntaxModal";
 import type { TFunction } from "i18next";
 import styled from "styled-components";
+import OmniSearch from "../containers/OmniSearch";
+import { Links } from "@scm-manager/ui-types";
 
 const DisabledNavLink = styled.div`
   opacity: 0.4;
   cursor: not-allowed;
+`;
+
+const OmniSearchWrapper = styled.div`
+  .omni-search-bar {
+    width: 100% !important;
+    font-size: 1rem !important;
+  }
+
+  .icon {
+    font-size: 1rem !important;
+  }
+
+  .navbar-item {
+    padding: 0 !important;
+  }
+
+  .dropdown {
+    width: 100% !important;
+  }
+
+  .dropdown-trigger {
+    width: 100% !important;
+  }
+
+  .control {
+    width: 100% !important;
+  }
+
+  .dropdown-menu {
+    width: 100% !important;
+    max-width: none !important;
+  }
 `;
 
 type PathParams = {
@@ -103,27 +137,29 @@ export const orderTypes = (t: TFunction) => (a: string, b: string) => {
 type Props = {
   selectedType: string;
   query: string;
+  links: Links;
 };
 
 const SyntaxHelpLink: FC = ({ children }) => <Link to="/help/search-syntax">{children}</Link>;
 
-const SearchSubTitle: FC<Props> = ({ selectedType, query }) => {
+const SearchSubTitle: FC<Props> = ({ selectedType, query, links }) => {
   const [t] = useTranslation("commons");
   const context = useNamespaceAndNameContext();
   return (
     <>
       {context.namespace
         ? t("search.subtitleWithContext", {
-            query,
             type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType),
             context: `${context.namespace}${context.name ? `/${context.name}` : ""}`,
           })
         : t("search.subtitle", {
-            query,
             type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType),
           })}
       <br />
       <Trans i18nKey="search.syntaxHelp" components={[<SyntaxHelpLink />]} />
+      <OmniSearchWrapper className={"mt-4 mb-2"}>
+        <OmniSearch links={links} shouldClear={false} ariaId={"searchPage"} />
+      </OmniSearchWrapper>
     </>
   );
 };
@@ -134,6 +170,7 @@ const InvalidSearch: FC = () => {
 };
 
 const Search: FC = () => {
+  const { data: index } = useIndex();
   const [t] = useTranslation(["commons", "plugins"]);
   const [showHelp, setShowHelp] = useState(false);
   const { query, selectedType, page, namespace, name } = usePageParams();
@@ -179,7 +216,7 @@ const Search: FC = () => {
   return (
     <Page
       title={t("search.title")}
-      subtitle={<SearchSubTitle query={query} selectedType={selectedType} />}
+      subtitle={<SearchSubTitle query={query} selectedType={selectedType} links={index?._links || {}} />}
       loading={isLoading}
     >
       {showHelp ? <SyntaxModal close={() => setShowHelp(false)} /> : null}

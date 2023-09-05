@@ -139,7 +139,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
           </div>
           <div className="is-active navbar-header-actions">
             <Alerts className="navbar-item" />
-            <OmniSearch links={links} />
+            <OmniSearch links={links} shouldClear={true} ariaId="navbar" />
             <Notifications className="navbar-item" />
           </div>
           <div className="navbar-end">

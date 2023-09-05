@@ -53,6 +53,11 @@ const Input = styled.input`
 `;
 
 type Props = {
+  shouldClear: boolean;
+  ariaId: string;
+};
+
+type GuardProps = Props & {
   links: Links;
 };
 
@@ -67,6 +72,7 @@ type HitsProps = {
   entries: ReactElement<ExtractProps<typeof HitEntry>>[];
   hits: Hit[];
   showHelp: () => void;
+  ariaId: string;
 };
 
 const QuickSearchNotification: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
@@ -97,21 +103,22 @@ const AvatarSection: FC<{ repository: Repository }> = ({ repository }) => {
   );
 };
 
-const HitList: FC<Omit<HitsProps, "showHelp" | "hits">> = ({ entries }) => {
+const HitList: FC<Omit<HitsProps, "showHelp" | "hits">> = ({ entries, ariaId }) => {
   return (
-    <ul id="omni-search-results" aria-expanded="true" role="listbox">
+    <ul id={`omni-search-results-${ariaId}`} aria-expanded="true" role="listbox">
       {entries}
     </ul>
   );
 };
 
-const HitEntry: FC<{ selected: boolean; link: string; label: string; clear: () => void; repository?: Repository }> = ({
-  selected,
-  link,
-  label,
-  clear,
-  repository,
-}) => {
+const HitEntry: FC<{
+  selected: boolean;
+  link: string;
+  label: string;
+  clear: () => void;
+  repository?: Repository;
+  ariaId: string;
+}> = ({ selected, link, label, clear, repository, ariaId }) => {
   return (
     <li
       key={label}
@@ -119,7 +126,7 @@ const HitEntry: FC<{ selected: boolean; link: string; label: string; clear: () =
       onClick={clear}
       role="option"
       aria-selected={selected}
-      id={selected ? "omni-search-selected-option" : undefined}
+      id={selected ? `omni-search-selected-option-${ariaId}` : undefined}
     >
       <Link
         className={classNames("is-flex", "dropdown-item", "has-text-weight-medium", "is-ellipsis-overflow", {
@@ -327,7 +334,7 @@ const useSearchParams = () => {
   };
 };
 
-const OmniSearch: FC = () => {
+const OmniSearch: FC<Props> = ({ shouldClear, ariaId }) => {
   const [t] = useTranslation("commons");
   const { searchType, initialQuery } = useSearchParams();
   const [query, setQuery] = useState(initialQuery);
@@ -345,9 +352,17 @@ const OmniSearch: FC = () => {
     setIndex(-1);
   }, []);
 
+  useEffect(() => {
+    setQuery(shouldClear ? "" : initialQuery);
+  }, [shouldClear, initialQuery]);
+
   const openHelp = () => setShowHelp(true);
   const closeHelp = () => setShowHelp(false);
-  const clearQuery = useCallback(() => setQuery(""), []);
+  const clearQuery = useCallback(() => {
+    if (shouldClear) {
+      setQuery("");
+    }
+  }, [shouldClear]);
 
   const hits = data?._embedded?.hits || [];
   const searchTypes = useSearchTypes({
@@ -375,6 +390,7 @@ const OmniSearch: FC = () => {
           link={`/search/${searchTypes[0]}/?q=${encodeURIComponent(query)}&namespace=${context.namespace}&name=${
             context.name
           }`}
+          ariaId={ariaId}
         />
       );
     }
@@ -386,6 +402,7 @@ const OmniSearch: FC = () => {
           clear={clearQuery}
           label={t("search.quickSearch.searchNamespace")}
           link={`/search/repository/?q=${encodeURIComponent(query)}&namespace=${context.namespace}`}
+          ariaId={ariaId}
         />
       );
     }
@@ -396,6 +413,7 @@ const OmniSearch: FC = () => {
         clear={clearQuery}
         label={t("search.quickSearch.searchEverywhere")}
         link={`/search/repository/?q=${encodeURIComponent(query)}`}
+        ariaId={ariaId}
       />
     );
     const length = newEntries.length;
@@ -408,11 +426,12 @@ const OmniSearch: FC = () => {
           label={id(hit)}
           link={`/repo/${id(hit)}`}
           repository={hit._embedded?.repository}
+          ariaId={ariaId}
         />
       );
     });
     return newEntries;
-  }, [clearQuery, context.name, context.namespace, hits, id, index, query, searchTypes, t]);
+  }, [ariaId, clearQuery, context.name, context.namespace, hits, id, index, query, searchTypes, t]);
 
   const defaultLink = `/search/${searchType}/?q=${encodeURIComponent(query)}`;
   const { onKeyDown } = useKeyBoardNavigation(entries, clearQuery, hideResults, index, setIndex, defaultLink);
@@ -428,7 +447,7 @@ const OmniSearch: FC = () => {
         <div className={classNames("dropdown", { "is-active": (!!data || error) && showResults })}>
           <div className="dropdown-trigger">
             <SearchInput
-              className="input is-small"
+              className="input is-small omni-search-bar"
               type="text"
               placeholder={t("search.placeholder")}
               onChange={(e) => setQuery(e.target.value)}
@@ -439,8 +458,8 @@ const OmniSearch: FC = () => {
               data-omnisearch="true"
               aria-expanded={query.length > 2}
               aria-label={t("search.ariaLabel")}
-              aria-owns="omni-search-results"
-              aria-activedescendant={index >= 0 ? "omni-search-selected-option" : undefined}
+              aria-owns={`omni-search-results-${ariaId}`}
+              aria-activedescendant={index >= 0 ? `omni-search-selected-option-${ariaId}` : undefined}
               ref={searchInputRef}
               {...handlers}
             />
@@ -456,7 +475,7 @@ const OmniSearch: FC = () => {
                 <SearchErrorNotification error={error} showHelp={openHelp} />
               </QuickSearchNotification>
             ) : null}
-            {!error && data ? <Hits showHelp={openHelp} hits={hits} entries={entries} /> : null}
+            {!error && data ? <Hits showHelp={openHelp} hits={hits} entries={entries} ariaId={ariaId} /> : null}
           </DropdownMenu>
         </div>
       </div>
@@ -464,11 +483,11 @@ const OmniSearch: FC = () => {
   );
 };
 
-const OmniSearchGuard: FC<Props> = ({ links }) => {
+const OmniSearchGuard: FC<GuardProps> = ({ links, shouldClear, ariaId }) => {
   if (!links.search) {
     return null;
   }
-  return <OmniSearch />;
+  return <OmniSearch shouldClear={shouldClear} ariaId={ariaId} />;
 };
 
 export default OmniSearchGuard;
