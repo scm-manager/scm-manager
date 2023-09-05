@@ -115,5 +115,11 @@ class PluginArchiveCleanerTest {
     assertThat(tmp).exists();
     assertThat(tmp).isEmptyDirectory();
   }
+
+  @Test
+  void shouldNotFailWhenDirectoryDoesNotExists(@TempDir Path tmp) throws IOException {
+    Path notExistingPath = tmp.resolve(".installed");
+    cleaner.cleanup(notExistingPath);
+  }
 }
 

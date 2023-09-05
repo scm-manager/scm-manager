@@ -42,15 +42,17 @@ public class PluginArchiveCleaner {
 
   public void cleanup(Path archivePath) throws IOException {
 
-    try (Stream<Path> pathStream = Files.list(archivePath)) {
-      List<Path> pathList = pathStream
-        .filter(PluginArchiveCleaner::isAnInstalledPluginDirectory)
-        .sorted()
-        .collect(Collectors.toList());
+    if (Files.exists(archivePath)) {
+      try (Stream<Path> pathStream = Files.list(archivePath)) {
+        List<Path> pathList = pathStream
+          .filter(PluginArchiveCleaner::isAnInstalledPluginDirectory)
+          .sorted()
+          .collect(Collectors.toList());
 
-      for (int i = 0; i <= pathList.size() - MAX_ARCHIVE_COUNT; i++) {
-        LOG.debug("Delete old installation directory {}", pathList.get(i));
-        IOUtil.deleteSilently(pathList.get(i).toFile());
+        for (int i = 0; i <= pathList.size() - MAX_ARCHIVE_COUNT; i++) {
+          LOG.debug("Delete old installation directory {}", pathList.get(i));
+          IOUtil.deleteSilently(pathList.get(i).toFile());
+        }
       }
     }
   }
