@@ -39,7 +39,7 @@ export const CardDetail = React.forwardRef<HTMLSpanElement, CardDetailProps>(
   ({ children, className, ...props }, ref) => {
     const labelId = useGeneratedId();
     return (
-      <span {...props} className={classNames("is-flex is-align-items-center", className)} ref={ref}>
+      <span {...props} className={classNames("is-flex is-align-items-center has-gap-1", className)} ref={ref}>
         {typeof children === "function" ? children({ labelId }) : children}
       </span>
     );
@@ -52,7 +52,7 @@ export const CardDetail = React.forwardRef<HTMLSpanElement, CardDetailProps>(
  */
 export const CardDetailLabel = React.forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
   ({ children, className, ...props }, ref) => (
-    <span {...props} className={classNames("has-text-secondary is-size-7 mr-1", className)} ref={ref}>
+    <span {...props} className={classNames("has-text-secondary is-size-7", className)} ref={ref}>
       {children}
     </span>
   )

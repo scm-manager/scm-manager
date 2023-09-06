@@ -22,6 +22,9 @@
  * SOFTWARE.
  */
 
+import React, { ComponentProps } from "react";
+import classNames from "classnames";
+
 /**
  * @beta
  * @since 2.44.0
@@ -29,3 +32,13 @@
 const CardRow = "div" as const;
 
 export default CardRow;
+
+export const SecondaryRow = React.forwardRef<HTMLDivElement, ComponentProps<typeof CardRow>>(
+  ({ className, ...props }, ref) => <CardRow className={classNames(className, "is-size-7")} {...props} ref={ref} />
+);
+
+export const TertiaryRow = React.forwardRef<HTMLDivElement, ComponentProps<typeof CardRow>>(
+  ({ className, ...props }, ref) => (
+    <CardRow className={classNames(className, "is-size-7", "has-text-secondary")} {...props} ref={ref} />
+  )
+);

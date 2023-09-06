@@ -21,11 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@import "bulma/bulma";
-@import "../variables/_derived.scss";
-@import "bulma-popover/css/bulma-popover";
-@import "../components/_main.scss";
-@import "../components/_gap.scss";
-@import "../components/_flex.scss";
-@import "../components/_tooltip.scss";
-@import "../components/_card.scss";
+
+import React, { ComponentProps, ElementRef, ForwardRefExoticComponent, ReactElement } from "react";
+import classNames from "classnames";
+import { Slot } from "@radix-ui/react-slot";
+
+const withClasses = <Element extends React.ElementType | ForwardRefExoticComponent<any>>(
+  typ: Element,
+  additionalClassNames: string[],
+  additionalProps?: Partial<ComponentProps<Element>>
+) =>
+  React.forwardRef<
+    ElementRef<Element>,
+    | (ComponentProps<Element> & { asChild?: false; className?: string })
+    | { asChild: true; children: ReactElement<{ className?: string }> }
+  >((props, ref) => {
+    // @ts-ignore Typescript doesn't get it for some reason
+    if (props.asChild) {
+      return <Slot {...props} className={classNames(...additionalClassNames)} />;
+    } else {
+      return React.createElement(typ, {
+        ...additionalProps,
+        ...props,
+        className: classNames((props as any).className, ...additionalClassNames),
+        ref,
+      });
+    }
+  });
+
+export default withClasses;

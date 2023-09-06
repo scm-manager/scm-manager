@@ -59,7 +59,7 @@ const Card = React.forwardRef<HTMLElement, Props>(
       },
       avatar ? avatar : null,
       <div
-        className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-clipped"
+        className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-wrap-anywhere"
         style={{ gap: rowGap }}
       >
         {children}

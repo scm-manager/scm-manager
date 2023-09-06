@@ -27,7 +27,7 @@ import classNames from "classnames";
 type NotificationType = "primary" | "info" | "success" | "warning" | "danger" | "inherit";
 
 type Props = {
-  type: NotificationType;
+  type?: NotificationType;
   onClose?: () => void;
   className?: string;
   children?: ReactNode;

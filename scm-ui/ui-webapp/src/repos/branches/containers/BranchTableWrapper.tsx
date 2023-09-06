@@ -30,19 +30,9 @@ import { useTranslation } from "react-i18next";
 import { useBranchDetailsCollection } from "@scm-manager/ui-api";
 import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 import BranchList from "../components/BranchList";
-import { Collapsible } from "@scm-manager/ui-layout";
-import { LinkButton } from "@scm-manager/ui-buttons";
+import { Collapsible, DataPageHeader } from "@scm-manager/ui-layout";
 import { Select } from "@scm-manager/ui-forms";
 import { SORT_OPTIONS, SortOption } from "../../tags/orderTags";
-import styled from "styled-components";
-
-const BranchListWrapper = styled.div`
-  gap: 1rem;
-`;
-
-const HeaderWrapper = styled.div`
-  gap: 0.5rem 1rem;
-`;
 
 type Props = {
   repository: Repository;
@@ -74,26 +64,32 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
     <>
       <Subtitle subtitle={t("branches.overview.title")} />
       <ErrorNotification error={error} />
-      <HeaderWrapper className="is-flex is-flex-wrap-wrap is-justify-content-space-between mb-3">
-        <div className="is-flex is-align-items-center">
-          <label className="mr-2" htmlFor="branches-overview-sort">
-            {t("branches.overview.sort.label")}
-          </label>
-          <Select id="branches-overview-sort" onChange={(e) => setSort(e.target.value as SortOption)}>
-            {SORT_OPTIONS.map((sortOption) => (
-              <option key={sortOption} value={sortOption}>
-                {t(`branches.overview.sort.option.${sortOption}`)}
-              </option>
-            ))}
-          </Select>
-        </div>
+      <DataPageHeader>
+        <DataPageHeader.Settings className="is-flex is-align-items-center">
+          <DataPageHeader.Settings.Setting>
+            {({ formFieldId }) => (
+              <>
+                <DataPageHeader.Settings.Setting.Label htmlFor={formFieldId}>
+                  {t("branches.overview.sort.label")}
+                </DataPageHeader.Settings.Setting.Label>
+                <DataPageHeader.Settings.Setting.Field>
+                  <Select id={formFieldId} onChange={(e) => setSort(e.target.value as SortOption)}>
+                    {SORT_OPTIONS.map((sortOption) => (
+                      <option key={sortOption} value={sortOption}>
+                        {t(`branches.overview.sort.option.${sortOption}`)}
+                      </option>
+                    ))}
+                  </Select>
+                </DataPageHeader.Settings.Setting.Field>
+              </>
+            )}
+          </DataPageHeader.Settings.Setting>
+        </DataPageHeader.Settings>
         {showCreateButton ? (
-          <LinkButton variant="primary" to="./create">
-            {t("branches.overview.createButton")}
-          </LinkButton>
+          <DataPageHeader.CreateButton to="./create">{t("branches.overview.createButton")}</DataPageHeader.CreateButton>
         ) : null}
-      </HeaderWrapper>
-      <BranchListWrapper className="is-flex is-flex-direction-column">
+      </DataPageHeader>
+      <div className="is-flex is-flex-direction-column has-gap-4">
         <KeyboardIterator>
           {activeBranches.length > 0 ? (
             <Collapsible header={t("branches.table.branches.active")}>
@@ -116,7 +112,7 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
             </Collapsible>
           ) : null}
         </KeyboardIterator>
-      </BranchListWrapper>
+      </div>
     </>
   );
 };

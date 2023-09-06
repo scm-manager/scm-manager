@@ -53,7 +53,13 @@
   }
 }
 
+.is-overflow-wrap-anywhere {
+  overflow-wrap: anywhere;
+}
 
+.is-text-wrap-no-wrap {
+  text-wrap: nowrap;
+}
 
 .is-absolute {
   position: absolute;

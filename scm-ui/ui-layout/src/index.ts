@@ -24,15 +24,25 @@
 
 import CardListComponent, { CardListBox as CardListBoxComponent, CardListCard } from "./card-list/CardList";
 import CardTitle from "./card/CardTitle";
-import CardRow from "./card/CardRow";
+import CardRow, { SecondaryRow, TertiaryRow } from "./card/CardRow";
 import { CardDetail, CardDetailLabel, CardDetails, CardDetailTag } from "./card/CardDetail";
 import CardComponent from "./card/Card";
+import {
+  DataPageHeader as DataPageHeaderComponent,
+  DataPageHeaderCreateButton,
+  DataPageHeaderSetting,
+  DataPageHeaderSettingField,
+  DataPageHeaderSettingLabel,
+  DataPageHeaderSettings,
+} from "./templates/data-page/DataPageHeader";
 
 export { default as Collapsible } from "./collapsible/Collapsible";
 
 const CardExport = {
   Title: CardTitle,
   Row: CardRow,
+  SecondaryRow: SecondaryRow,
+  TertiaryRow: TertiaryRow,
   Details: Object.assign(CardDetails, {
     Detail: Object.assign(CardDetail, {
       Label: CardDetailLabel,
@@ -49,3 +59,13 @@ const CardListExport = {
 
 export const CardList = Object.assign(CardListComponent, CardListExport);
 export const CardListBox = Object.assign(CardListBoxComponent, CardListExport);
+
+export const DataPageHeader = Object.assign(DataPageHeaderComponent, {
+  Settings: Object.assign(DataPageHeaderSettings, {
+    Setting: Object.assign(DataPageHeaderSetting, {
+      Label: DataPageHeaderSettingLabel,
+      Field: DataPageHeaderSettingField,
+    }),
+  }),
+  CreateButton: DataPageHeaderCreateButton,
+});

@@ -18,6 +18,7 @@
     "@scm-manager/tsconfig": "^2.13.0",
     "@scm-manager/ui-styles": "2.46.2-SNAPSHOT",
     "@scm-manager/ui-overlays": "2.46.2-SNAPSHOT",
+    "@scm-manager/ui-forms": "2.46.2-SNAPSHOT",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-docs": "^6.5.14",
     "@storybook/addon-essentials": "^6.5.10",
@@ -48,6 +49,7 @@
   },
   "dependencies": {
     "@radix-ui/react-collapsible": "^1.0.3",
+    "@radix-ui/react-slot": "^1.0.1",
     "@scm-manager/ui-buttons": "2.46.2-SNAPSHOT"
   }
 }

@@ -21,11 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@import "bulma/bulma";
-@import "../variables/_derived.scss";
-@import "bulma-popover/css/bulma-popover";
-@import "../components/_main.scss";
-@import "../components/_gap.scss";
-@import "../components/_flex.scss";
-@import "../components/_tooltip.scss";
-@import "../components/_card.scss";
+
+@each $size, $value in $spacing-values {
+  .has-gap-#{$size} {
+    gap: $value;
+  }
+  .has-row-gap-#{$size} {
+    row-gap: $value;
+  }
+  .has-column-gap-#{$size} {
+    column-gap: $value;
+  }
+}
