@@ -50,15 +50,17 @@ public class GitRepositoryConfigInitializer {
 
   @Subscribe
   public void initConfig(PostReceiveRepositoryHookEvent event) {
-    ConfigurationStore<GitRepositoryConfig> store = storeProvider.get(event.getRepository());
-    GitRepositoryConfig repositoryConfig = store.get();
-    if (repositoryConfig == null || Strings.isNullOrEmpty(repositoryConfig.getDefaultBranch())) {
-      List<String> defaultBranchCandidates = event.getContext().getBranchProvider().getCreatedOrModified();
+    if (GitRepositoryHandler.TYPE_NAME.equals(event.getRepository().getType())) {
+      ConfigurationStore<GitRepositoryConfig> store = storeProvider.get(event.getRepository());
+      GitRepositoryConfig repositoryConfig = store.get();
+      if (repositoryConfig == null || Strings.isNullOrEmpty(repositoryConfig.getDefaultBranch())) {
+        List<String> defaultBranchCandidates = event.getContext().getBranchProvider().getCreatedOrModified();
 
-      String defaultBranch = determineDefaultBranch(defaultBranchCandidates);
+        String defaultBranch = determineDefaultBranch(defaultBranchCandidates);
 
-      GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig(defaultBranch);
-      store.set(gitRepositoryConfig);
+        GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig(defaultBranch);
+        store.set(gitRepositoryConfig);
+      }
     }
   }
 
