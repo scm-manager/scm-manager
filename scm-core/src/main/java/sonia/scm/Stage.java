@@ -43,7 +43,13 @@ public enum Stage
   /**
    * This value indicates SCM-Manager is right now productive.
    */
-  PRODUCTION(com.google.inject.Stage.PRODUCTION);
+  PRODUCTION(com.google.inject.Stage.PRODUCTION),
+
+  /**
+   * This value indicates SCM-Manager is right now in development but specifically configured for testing.
+   * @since 2.47.0
+   */
+  TESTING(com.google.inject.Stage.DEVELOPMENT);
 
   /**
    * Constructs a new Stage

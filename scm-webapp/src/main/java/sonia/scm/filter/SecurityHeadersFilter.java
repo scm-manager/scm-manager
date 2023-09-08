@@ -25,8 +25,11 @@
 package sonia.scm.filter;
 
 import sonia.scm.Priority;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.Stage;
 import sonia.scm.web.filter.HttpFilter;
 
+import javax.inject.Inject;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,47 +39,57 @@ import java.io.IOException;
 @Priority(7000)
 @WebElement("*")
 public class SecurityHeadersFilter extends HttpFilter {
+
+  private final SCMContextProvider contextProvider;
+
+  @Inject
+  public SecurityHeadersFilter(SCMContextProvider contextProvider) {
+    this.contextProvider = contextProvider;
+  }
+
   @Override
   protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-    response.setHeader("X-Frame-Options", "deny");
-    response.setHeader("X-Content-Type-Options", "nosniff");
-    response.setHeader("Content-Security-Policy",
+    if (contextProvider.getStage() != Stage.TESTING) {
+      response.setHeader("X-Frame-Options", "deny");
+      response.setHeader("X-Content-Type-Options", "nosniff");
+      response.setHeader("Content-Security-Policy",
         "form-action 'self'; " +
-        "object-src 'none'; " +
-        "frame-ancestors 'none'; " +
-        "block-all-mixed-content"
-    );
-    response.setHeader("Permissions-Policy",
-      "accelerometer=()," +
-        "ambient-light-sensor=()," +
-        "autoplay=()," +
-        "battery=()," +
-        "camera=()," +
-        "display-capture=()," +
-        "document-domain=()," +
-        "encrypted-media=()," +
-        "fullscreen=()," +
-        "gamepad=()," +
-        "geolocation=()," +
-        "gyroscope=()," +
-        "layout-animations=(self)," +
-        "legacy-image-formats=(self)," +
-        "magnetometer=()," +
-        "microphone=()," +
-        "midi=()," +
-        "oversized-images=(self)," +
-        "payment=()," +
-        "picture-in-picture=()," +
-        "publickey-credentials-get=()," +
-        "speaker-selection=()," +
-        "sync-xhr=(self)," +
-        "unoptimized-images=(self)," +
-        "unsized-media=(self)," +
-        "usb=()," +
-        "screen-wake-lock=()," +
-        "web-share=()," +
-        "xr-spatial-tracking=()"
-    );
+          "object-src 'none'; " +
+          "frame-ancestors 'none'; " +
+          "block-all-mixed-content"
+      );
+      response.setHeader("Permissions-Policy",
+        "accelerometer=()," +
+          "ambient-light-sensor=()," +
+          "autoplay=()," +
+          "battery=()," +
+          "camera=()," +
+          "display-capture=()," +
+          "document-domain=()," +
+          "encrypted-media=()," +
+          "fullscreen=()," +
+          "gamepad=()," +
+          "geolocation=()," +
+          "gyroscope=()," +
+          "layout-animations=(self)," +
+          "legacy-image-formats=(self)," +
+          "magnetometer=()," +
+          "microphone=()," +
+          "midi=()," +
+          "oversized-images=(self)," +
+          "payment=()," +
+          "picture-in-picture=()," +
+          "publickey-credentials-get=()," +
+          "speaker-selection=()," +
+          "sync-xhr=(self)," +
+          "unoptimized-images=(self)," +
+          "unsized-media=(self)," +
+          "usb=()," +
+          "screen-wake-lock=()," +
+          "web-share=()," +
+          "xr-spatial-tracking=()"
+      );
+    }
     chain.doFilter(request, response);
   }
 }

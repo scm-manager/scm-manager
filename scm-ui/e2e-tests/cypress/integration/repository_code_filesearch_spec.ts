@@ -34,6 +34,7 @@ describe("Repository File Search", () => {
     // Create user and login
     username = hri.random();
     password = hri.random();
+    cy.restSetConfig({ enabledFileSearch: true });
     cy.restCreateUser(username, password);
     cy.restLogin(username, password);
 
