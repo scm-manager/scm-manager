@@ -158,6 +158,7 @@ function ComboboxComponent<T>(props: ComboboxProps<T>, ref: ForwardedRef<HTMLInp
         id={props.id}
         placeholder={props.placeholder}
         onBlur={props.onBlur}
+        autoComplete="off"
         {...createAttributesForTesting(props.testId)}
       />
       <OptionsWrapper className="is-absolute">{options}</OptionsWrapper>
