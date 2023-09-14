@@ -21,26 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.spi;
 
-import lombok.Getter;
-import lombok.Setter;
+package sonia.scm.repository.api;
 
-/**
- * Request object for {@link PushCommand}.
- *
- * @author Sebastian Sdorra
- * @since 1.31
- */
-@Getter
-@Setter
-public final class PushCommandRequest extends RemoteCommandRequest {
-  private boolean force = false;
+import sonia.scm.ContextEntry;
+import sonia.scm.ExceptionWithContext;
+import sonia.scm.repository.Repository;
+
+public class PushFailedException extends ExceptionWithContext {
+
+  public static final String CODE = "dnWjIroRhT";
+
+  public PushFailedException(Repository repository) {
+    super(ContextEntry.ContextBuilder.entity(repository).build(), "Failed to push");
+  }
 
   @Override
-  public void reset() {
-    force = false;
-    super.reset();
+  public String getCode() {
+    return CODE;
   }
 }

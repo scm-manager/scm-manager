@@ -32,19 +32,26 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
-import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.api.PushFailedException;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 
 public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand {
 
+  private static final List<RemoteRefUpdate.Status> REJECTED_STATUSES = List.of(
+    RemoteRefUpdate.Status.REJECTED_NODELETE,
+    RemoteRefUpdate.Status.REJECTED_NONFASTFORWARD,
+    RemoteRefUpdate.Status.REJECTED_REMOTE_CHANGED,
+    RemoteRefUpdate.Status.REJECTED_OTHER_REASON
+  );
   private static final Logger LOG = LoggerFactory.getLogger(AbstractGitPushOrPullCommand.class);
 
   protected GitRepositoryHandler handler;
@@ -54,7 +61,7 @@ public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand {
     this.handler = handler;
   }
 
-  protected long push(Repository source, String remoteUrl, String username, String password) {
+  protected long push(Repository source, String remoteUrl, String username, String password, boolean force) {
     Git git = Git.wrap(source);
     org.eclipse.jgit.api.PushCommand push = git.push();
 
@@ -63,24 +70,44 @@ public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand {
     }
     push.setPushAll().setPushTags();
     push.setRemote(remoteUrl);
+    push.setForce(force);
 
-    long counter = -1;
+    long counter;
 
     try {
       Iterable<PushResult> results = push.call();
-
-      if (results != null) {
-        counter = 0;
-
-        for (PushResult result : results) {
-          counter += count(git, result);
-        }
+      if (hasPushFailed(results)) {
+        throw new PushFailedException(repository);
       }
+
+      counter = 0;
+
+      for (PushResult result : results) {
+        counter += count(git, result);
+      }
+    } catch (PushFailedException ex) {
+      throw ex;
     } catch (Exception ex) {
       throw new InternalRepositoryException(repository, "could not execute push/pull command", ex);
     }
 
     return counter;
+  }
+
+  private boolean hasPushFailed(Iterable<PushResult> pushResults) {
+    if (pushResults == null) {
+      return true;
+    }
+
+    for (PushResult nextResult : pushResults) {
+      for(RemoteRefUpdate remoteUpdate : nextResult.getRemoteUpdates()) {
+        if(REJECTED_STATUSES.contains(remoteUpdate.getStatus())) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   protected String getRemoteUrl(RemoteCommandRequest request) {

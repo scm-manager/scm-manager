@@ -28,6 +28,8 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.FeatureNotSupportedException;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.PushCommand;
@@ -35,6 +37,7 @@ import sonia.scm.repository.spi.PushCommandRequest;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Set;
 
 /**
  * The push command push changes to a other repository.
@@ -48,9 +51,11 @@ public final class PushCommandBuilder {
 
   private final PushCommand command;
   private final PushCommandRequest request = new PushCommandRequest();
+  private final Set<Feature> supportedFeatures;
 
-  PushCommandBuilder(PushCommand command) {
+  PushCommandBuilder(PushCommand command, Set<Feature> supportedFeatures) {
     this.command = command;
+    this.supportedFeatures = supportedFeatures;
   }
 
   /**
@@ -67,12 +72,22 @@ public final class PushCommandBuilder {
     return this;
   }
 
+  public PushCommandBuilder withForce(boolean force) {
+    if (!supportedFeatures.contains(Feature.FORCE_PUSH)) {
+      throw new FeatureNotSupportedException(Feature.FORCE_PUSH.name());
+    }
+
+    request.setForce(force);
+    return this;
+  }
+
   /**
    * Push all changes to the given remote repository.
    *
    * @param remoteRepository remote repository
    * @return informations of the executed push command
    * @throws IOException
+   * @throws PushFailedException when the push (maybe just partially) failed (since 2.47.0)
    */
   public PushResponse push(Repository remoteRepository) throws IOException {
     Subject subject = SecurityUtils.getSubject();
@@ -95,6 +110,7 @@ public final class PushCommandBuilder {
    * @param url url of a remote repository
    * @return informations of the executed push command
    * @throws IOException
+   * @throws PushFailedException when the push (maybe just partially) failed (since 2.47.0)
    * @since 1.43
    */
   public PushResponse push(String url) throws IOException {

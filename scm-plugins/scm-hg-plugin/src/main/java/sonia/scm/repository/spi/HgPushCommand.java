@@ -26,25 +26,22 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import org.javahg.Changeset;
 import org.javahg.commands.ExecutionException;
-import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.api.ImportFailedException;
+import sonia.scm.repository.api.PushFailedException;
 import sonia.scm.repository.api.PushResponse;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
-
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 public class HgPushCommand extends AbstractHgPushOrPullCommand implements PushCommand {
@@ -74,9 +71,17 @@ public class HgPushCommand extends AbstractHgPushOrPullCommand implements PushCo
     List<Changeset> result;
 
     try {
-      result = org.javahg.commands.PushCommand.on(open()).execute(url);
+      result = builder.call(() -> {
+        org.javahg.commands.PushCommand hgPush = org.javahg.commands.PushCommand.on(open());
+
+        if (request.isForce()) {
+          hgPush.force();
+        }
+
+        return hgPush.execute(url);
+      });
     } catch (ExecutionException ex) {
-      throw new ImportFailedException(entity(getRepository()).build(), "could not execute pull command", ex);
+      throw new PushFailedException(getRepository());
     }
 
     return new PushResponse(result.size());

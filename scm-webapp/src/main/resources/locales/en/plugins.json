@@ -197,6 +197,10 @@
     "transactionId": "Transaction ID",
     "moreInfo": "For more information, see",
     "violations": "Violations:",
+    "dnWjIroRhT": {
+      "displayName": "Push failed",
+      "description": "Pushing the repository has failed"
+    },
     "AGR7UzkhA1": {
       "displayName": "Not found",
       "description": "The requested entity could not be found. It may have been deleted in another session."

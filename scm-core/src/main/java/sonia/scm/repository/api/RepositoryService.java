@@ -346,7 +346,7 @@ public final class RepositoryService implements Closeable {
   public PushCommandBuilder getPushCommand() {
     LOG.debug("create push command for repository {}", repository);
 
-    return new PushCommandBuilder(provider.getPushCommand());
+    return new PushCommandBuilder(provider.getPushCommand(), provider.getSupportedFeatures());
   }
 
   /**

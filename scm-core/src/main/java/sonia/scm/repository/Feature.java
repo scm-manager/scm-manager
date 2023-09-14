@@ -48,5 +48,11 @@ public enum Feature
    *
    * @since 2.23.0
    */
-  MODIFICATIONS_BETWEEN_REVISIONS
+  MODIFICATIONS_BETWEEN_REVISIONS,
+  /**
+   * The repository supports pushing with a force flag.
+   *
+   * @since 2.47.0
+   */
+  FORCE_PUSH
 }

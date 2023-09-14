@@ -49,6 +49,6 @@ public class GitPushCommand extends AbstractGitPushOrPullCommand implements Push
 
     LOG.debug("push changes from {} to {}", repository, remoteUrl);
 
-    return new PushResponse(push(open(), remoteUrl, request.getUsername(), request.getPassword()));
+    return new PushResponse(push(open(), remoteUrl, request.getUsername(), request.getPassword(), request.isForce()));
   }
 }

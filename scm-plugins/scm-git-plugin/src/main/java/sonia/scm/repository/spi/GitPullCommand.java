@@ -166,7 +166,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
     try (Git git = Git.open(sourceDirectory)) {
       source = git.getRepository();
-      response = new PullResponse(push(source, getRemoteUrl(targetDirectory), username, password));
+      response = new PullResponse(push(source, getRemoteUrl(targetDirectory), username, password, false));
     } finally {
       GitUtil.close(source);
     }

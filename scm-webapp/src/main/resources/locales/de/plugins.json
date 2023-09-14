@@ -197,6 +197,10 @@
     "transactionId": "Transaktions-ID",
     "moreInfo": "Für mehr Informationen, siehe",
     "violations": "Ungültige Werte:",
+    "dnWjIroRhT": {
+      "displayName": "Push fehlgeschlagen",
+      "description": "Das Pushen des Repositorys ist fehlgeschlagen"
+    },
     "AGR7UzkhA1": {
       "displayName": "Nicht gefunden",
       "description": "Der gewünschte Datensatz konnte nicht gefunden werden. Möglicherweise wurde er in einer weiteren Session gelöscht."
