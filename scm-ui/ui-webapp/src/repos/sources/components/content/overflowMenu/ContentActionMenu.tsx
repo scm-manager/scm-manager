@@ -78,7 +78,7 @@ const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
   return (
     <>
       {Object.values(loadingExtension).some((isLoading) => isLoading) ? (
-        <StyledLoadingButton>
+        <StyledLoadingButton disabled>
           <SmallLoadingSpinner />
         </StyledLoadingButton>
       ) : extensions.length === 1 ? (
