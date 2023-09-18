@@ -640,6 +640,7 @@ export type ContentActionExtensionProps = {
   revision: string;
   handleExtensionError: React.Dispatch<React.SetStateAction<Error | undefined>>;
   contentType?: ContentType;
+  setLoading?: (isLoading: boolean) => void;
 };
 
 type BaseActionBarOverflowMenuProps = {

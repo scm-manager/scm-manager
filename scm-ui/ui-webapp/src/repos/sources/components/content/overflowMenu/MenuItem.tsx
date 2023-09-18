@@ -32,8 +32,9 @@ const MenuItem: FC<
   extensionPoints.FileViewActionBarOverflowMenu["type"] & {
     setSelectedModal: (element: ReactElement | undefined) => void;
     extensionProps: extensionPoints.ContentActionExtensionProps;
+    setLoading?: (isLoading: boolean) => void;
   }
-> = ({ extensionProps, label, icon, props, category, setSelectedModal, ...rest }) => {
+> = ({ extensionProps, label, icon, props, category, setSelectedModal, setLoading, ...rest }) => {
   if ("action" in rest) {
     return (
       <ActionMenuItem
@@ -66,6 +67,7 @@ const MenuItem: FC<
         icon={icon}
         extensionProps={extensionProps}
         setSelectedModal={setSelectedModal}
+        setLoading={setLoading}
         props={props}
         {...rest}
       />

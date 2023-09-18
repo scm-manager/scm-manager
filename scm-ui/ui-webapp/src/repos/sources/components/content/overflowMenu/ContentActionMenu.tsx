@@ -23,17 +23,23 @@
  */
 
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
-import React, { FC, ReactElement, useState } from "react";
+import React, { FC, ReactElement, useCallback, useState } from "react";
 import styled from "styled-components";
 import { Menu } from "@scm-manager/ui-overlays";
 import FallbackMenuButton from "./FallbackMenuButton";
 import MenuItem from "./MenuItem";
-import { Icon } from "@scm-manager/ui-buttons";
+import { Button, Icon } from "@scm-manager/ui-buttons";
 import { useTranslation } from "react-i18next";
+import { SmallLoadingSpinner } from "@scm-manager/ui-components";
 
 const HR = styled.hr`
   margin: 0.25rem;
   background: var(--scm-border-color);
+`;
+
+const StyledLoadingButton = styled(Button)`
+  padding-left: 1rem;
+  padding-right: 1rem;
 `;
 
 type Props = {
@@ -47,6 +53,13 @@ const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
     "repos.sources.content.actionbar.menu",
     extensionProps
   );
+
+  const [loadingExtension, setLoadingExtensions] = useState<Record<string, boolean>>({});
+
+  const setLoading = useCallback((isLoading: boolean, extension: string) => {
+    setLoadingExtensions((prevState) => ({ ...prevState, [extension]: isLoading }));
+  }, []);
+
   const categories = extensions.reduce<Record<string, extensionPoints.FileViewActionBarOverflowMenu["type"][]>>(
     (result, extension) => {
       if (!(extension.category in result)) {
@@ -64,7 +77,11 @@ const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
 
   return (
     <>
-      {extensions.length === 1 ? (
+      {Object.values(loadingExtension).some((isLoading) => isLoading) ? (
+        <StyledLoadingButton>
+          <SmallLoadingSpinner />
+        </StyledLoadingButton>
+      ) : extensions.length === 1 ? (
         <FallbackMenuButton
           extension={extensions[0]}
           extensionProps={extensionProps}
@@ -88,6 +105,7 @@ const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
                   key={extension.label}
                   extensionProps={extensionProps}
                   setSelectedModal={setSelectedModal}
+                  setLoading={(isLoading: boolean) => setLoading(isLoading, extension.label)}
                   {...extension}
                 />
               ))}

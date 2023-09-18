@@ -32,15 +32,16 @@ const ModalMenuItem: FC<
   extensionPoints.ModalMenuProps & {
     setSelectedModal: (element: ReactElement | undefined) => void;
     extensionProps: extensionPoints.ContentActionExtensionProps;
+    setLoading?: (isLoading: boolean) => void;
   }
-> = ({ modalElement, label, icon, props, extensionProps, setSelectedModal }) => {
+> = ({ modalElement, label, icon, props, extensionProps, setSelectedModal, setLoading }) => {
   const [t] = useTranslation("plugins");
 
   return (
     <Menu.Button
       onSelect={() =>
         setSelectedModal(
-          React.createElement(modalElement, { ...extensionProps, close: () => setSelectedModal(undefined) })
+          React.createElement(modalElement, { ...extensionProps, close: () => setSelectedModal(undefined), setLoading })
         )
       }
       {...props}
