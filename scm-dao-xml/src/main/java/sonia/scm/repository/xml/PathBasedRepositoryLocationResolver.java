@@ -97,7 +97,7 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
         if (pathById.containsKey(repositoryId)) {
           return (T) contextProvider.resolve(pathById.get(repositoryId));
         } else {
-          throw new IllegalStateException("location for repository " + repositoryId + " does not exist");
+          throw new LocationNotFoundException(repositoryId);
         }
       }
 

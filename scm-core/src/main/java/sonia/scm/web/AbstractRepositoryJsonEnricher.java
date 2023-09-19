@@ -21,16 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 import static java.util.Collections.singletonMap;
 import static sonia.scm.web.VndMediaType.REPOSITORY;
 import static sonia.scm.web.VndMediaType.REPOSITORY_COLLECTION;
 
+@Slf4j
 public abstract class AbstractRepositoryJsonEnricher extends JsonEnricherBase {
 
   public AbstractRepositoryJsonEnricher(ObjectMapper objectMapper) {
@@ -52,7 +54,11 @@ public abstract class AbstractRepositoryJsonEnricher extends JsonEnricherBase {
     String namespace = repositoryNode.get("namespace").asText();
     String name = repositoryNode.get("name").asText();
 
-    enrichRepositoryNode(repositoryNode, namespace, name);
+    try {
+      enrichRepositoryNode(repositoryNode, namespace, name);
+    } catch (Exception e) {
+      log.warn("failed to enrich repository; it might be, that the repository has been deleted in the meantime", e);
+    }
   }
 
   protected abstract void enrichRepositoryNode(JsonNode repositoryNode, String namespace, String name);

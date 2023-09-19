@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import java.util.function.BiConsumer;
@@ -44,7 +44,7 @@ public abstract class RepositoryLocationResolver {
     /**
      * Get the existing location for the repository.
      * @param repositoryId The id of the repository.
-     * @throws IllegalStateException when there is no known location for the given repository.
+     * @throws LocationNotFoundException when there is no known location for the given repository.
      */
     T getLocation(String repositoryId);
 
@@ -68,5 +68,11 @@ public abstract class RepositoryLocationResolver {
      * @param consumer This callback will be called for each repository with the repository id and its location.
      */
     void forAllLocations(BiConsumer<String, T> consumer);
+  }
+
+  public class LocationNotFoundException extends IllegalStateException {
+    public LocationNotFoundException(String repositoryId) {
+      super("location for repository " + repositoryId + " does not exist");
+    }
   }
 }

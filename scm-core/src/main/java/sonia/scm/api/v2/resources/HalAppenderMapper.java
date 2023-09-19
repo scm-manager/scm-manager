@@ -25,9 +25,11 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.common.annotations.VisibleForTesting;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 
+@Slf4j
 public class HalAppenderMapper {
 
   @Inject
@@ -56,7 +58,11 @@ public class HalAppenderMapper {
   protected void applyEnrichers(HalEnricherContext context, HalAppender appender, Class<?> type) {
     Iterable<HalEnricher> enrichers = registry.allByType(type);
     for (HalEnricher enricher : enrichers) {
-      enricher.enrich(context, appender);
+      try {
+        enricher.enrich(context, appender);
+      } catch (Exception e) {
+        log.warn("failed to enrich repository; it might be, that the repository has been deleted in the meantime", e);
+      }
     }
   }
 

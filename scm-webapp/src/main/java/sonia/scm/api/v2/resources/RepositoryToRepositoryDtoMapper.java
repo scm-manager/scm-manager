@@ -27,6 +27,7 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -34,13 +35,13 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.admin.ScmConfigurationStore;
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.HealthCheckFailure;
 import sonia.scm.repository.HealthCheckService;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
@@ -52,7 +53,6 @@ import sonia.scm.web.EdisonHalAppender;
 import sonia.scm.web.api.RepositoryToHalMapper;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -66,6 +66,7 @@ import static java.util.stream.Collectors.toList;
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
 @Mapper
+@Slf4j
 public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Repository, RepositoryDto> implements RepositoryToHalMapper {
 
   @Inject
@@ -169,6 +170,10 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
           linksBuilder.single(link("incomingDiffParsed", resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName())));
         }
       }
+    } catch (RepositoryLocationResolver.LocationNotFoundException e) {
+      // This might happen, when the repository has been deleted in the meantime
+      // There is nothing we can do here, so we just log this
+      log.warn("could not create repository service for repository; the repository might have been deleted", e);
     }
     linksBuilder.single(link("changesets", resourceLinks.changeset().all(repository.getNamespace(), repository.getName())));
     linksBuilder.single(link("sources", resourceLinks.source().selfWithoutRevision(repository.getNamespace(), repository.getName())));

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -90,9 +90,19 @@ class HalAppenderMapperTest {
       appender.appendLink(String.valueOf(rel.get()), href.get());
     });
 
-    mapper.applyEnrichers(appender, Integer.valueOf(42), "https://hitchhiker.com");
+    mapper.applyEnrichers(appender, 42, "https://hitchhiker.com");
 
     verify(appender).appendLink("42", "https://hitchhiker.com");
   }
 
+  @Test
+  void shouldHandleExceptionFromEnricher() {
+    registry.register(String.class, (ctx, appender) -> {
+      throw new RuntimeException("test");
+    });
+
+    mapper.applyEnrichers(appender, "hello");
+
+    // no exception has been thrown
+  }
 }
