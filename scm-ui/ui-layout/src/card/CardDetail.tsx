@@ -27,8 +27,25 @@ import classNames from "classnames";
 import { useGeneratedId } from "@scm-manager/ui-components";
 import styled from "styled-components";
 
+export const CardVariants = {
+  LIGHT: "light",
+  INFO: "info",
+} as const;
+
+type CardVariant = typeof CardVariants[keyof typeof CardVariants];
+
+const createCardVariantClasses = (variant?: string | undefined) =>
+  classNames({
+    "is-light": variant === "light" || !variant,
+    "is-info": variant === "info",
+  });
+
 type CardDetailProps = HTMLAttributes<HTMLSpanElement> & {
   children: ReactNode | ((props: { labelId: string }) => ReactNode);
+};
+
+type CardVariantProps = {
+  cardVariant?: CardVariant;
 };
 
 /**
@@ -62,9 +79,13 @@ export const CardDetailLabel = React.forwardRef<HTMLSpanElement, HTMLAttributes<
  * @beta
  * @since 2.46.0
  */
-export const CardDetailTag = React.forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
+export const CardDetailTag = React.forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement> & CardVariantProps>(
   ({ children, className, ...props }, ref) => (
-    <span {...props} className={classNames("tag is-rounded is-light", className)} ref={ref}>
+    <span
+      {...props}
+      className={classNames("tag is-rounded", createCardVariantClasses(props.cardVariant), className)}
+      ref={ref}
+    >
       {children}
     </span>
   )
