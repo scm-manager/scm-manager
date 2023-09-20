@@ -1,0 +1,2 @@
+- type: fixed
+  description: Numerous IllegalArgumentExceptions and ConcurrentModificationExceptoins in log file

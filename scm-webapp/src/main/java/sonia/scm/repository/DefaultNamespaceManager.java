@@ -29,6 +29,7 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
+@Singleton
 public class DefaultNamespaceManager implements NamespaceManager {
 
   private final RepositoryManager repositoryManager;
