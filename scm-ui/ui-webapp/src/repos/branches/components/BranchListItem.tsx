@@ -122,12 +122,8 @@ const BranchListItem: FC<Props> = ({ branch, remove, isLoading, branchesDetails,
           <Card.Details>
             {!branch.defaultBranch ? (
               <Card.Details.Detail>
-                {({ labelId }) => (
-                  <>
-                    <Card.Details.Detail.Label id={labelId}>{t("branch.aheadBehind.label")}</Card.Details.Detail.Label>
-                    <AheadBehindTag branch={branch} details={branchDetails} labelId={labelId} />
-                  </>
-                )}
+                <Card.Details.Detail.Label>{t("branch.aheadBehind.label")}</Card.Details.Detail.Label>
+                <AheadBehindTag branch={branch} details={branchDetails} />
               </Card.Details.Detail>
             ) : null}
             <ExtensionPoint<extensionPoints.BranchListDetail>

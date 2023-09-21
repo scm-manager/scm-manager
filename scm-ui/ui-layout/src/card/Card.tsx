@@ -25,6 +25,11 @@
 import React, { ComponentType, HTMLAttributes, ReactHTML, Ref } from "react";
 import classNames from "classnames";
 import CSS from "csstype";
+import styled from "styled-components";
+
+const RowsContainer = styled.div`
+  margin-left: -0.25rem;
+`;
 
 type Props = HTMLAttributes<HTMLElement> & {
   action?: React.ReactElement;
@@ -49,7 +54,7 @@ type Props = HTMLAttributes<HTMLElement> & {
  * @since 2.44.0
  */
 const Card = React.forwardRef<HTMLElement, Props>(
-  ({ className, avatar, rowGap = "0.5rem", children, as: Comp = "div", action, ...props }, ref) =>
+  ({ className, avatar, rowGap = "0.25rem", children, as: Comp = "div", action, ...props }, ref) =>
     React.createElement(
       Comp,
       {
@@ -58,12 +63,12 @@ const Card = React.forwardRef<HTMLElement, Props>(
         ...props,
       },
       avatar ? avatar : null,
-      <div
-        className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-wrap-anywhere"
+      <RowsContainer
+        className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
         style={{ gap: rowGap }}
       >
         {children}
-      </div>,
+      </RowsContainer>,
       action ? action : null
     )
 );

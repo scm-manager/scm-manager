@@ -25,11 +25,6 @@
 import StoryRouter from "storybook-react-router";
 import { ComponentMeta, StoryFn } from "@storybook/react";
 import React, { ComponentProps } from "react";
-import { ExtractProps } from "@scm-manager/ui-extensions";
-import { Link } from "react-router-dom";
-import { Menu } from "@scm-manager/ui-overlays";
-import { Icon } from "@scm-manager/ui-buttons";
-import CardRow from "../card/CardRow";
 import Collapsible from "./Collapsible";
 
 export default {
@@ -38,7 +33,7 @@ export default {
   decorators: [StoryRouter()],
 } as ComponentMeta<typeof Collapsible>;
 
-const Template: StoryFn<ExtractProps<typeof Collapsible>> = (args) => <Collapsible {...args} />;
+const Template: StoryFn<ComponentProps<typeof Collapsible>> = (args) => <Collapsible {...args} />;
 
 export const Default = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args

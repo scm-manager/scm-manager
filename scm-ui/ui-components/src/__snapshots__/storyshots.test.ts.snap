@@ -71110,7 +71110,7 @@ exports[`Storyshots Repositories/RepositoryEntry Archived 1`] = `
       </div>
     </div>
     <div
-      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-wrap-anywhere"
+      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71118,7 +71118,7 @@ exports[`Storyshots Repositories/RepositoryEntry Archived 1`] = `
       }
     >
       <div
-        className="is-flex"
+        className="is-flex ml-1"
       >
         <h4>
           <a
@@ -71132,12 +71132,12 @@ exports[`Storyshots Repositories/RepositoryEntry Archived 1`] = `
         </h4>
       </div>
       <div
-        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7 ml-1"
       >
         The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
       </div>
       <div
-        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap ml-1"
       >
         <span
           className="is-size-7 has-text-secondary is-relative"
@@ -71238,7 +71238,7 @@ exports[`Storyshots Repositories/RepositoryEntry Avatar EP 1`] = `
       </div>
     </div>
     <div
-      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-wrap-anywhere"
+      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71246,7 +71246,7 @@ exports[`Storyshots Repositories/RepositoryEntry Avatar EP 1`] = `
       }
     >
       <div
-        className="is-flex"
+        className="is-flex ml-1"
       >
         <h4>
           <a
@@ -71260,12 +71260,12 @@ exports[`Storyshots Repositories/RepositoryEntry Avatar EP 1`] = `
         </h4>
       </div>
       <div
-        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7 ml-1"
       >
         The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
       </div>
       <div
-        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap ml-1"
       >
         <span
           className="is-size-7 has-text-secondary is-relative"
@@ -71354,7 +71354,7 @@ exports[`Storyshots Repositories/RepositoryEntry Before Title EP 1`] = `
       </div>
     </div>
     <div
-      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-wrap-anywhere"
+      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71362,7 +71362,7 @@ exports[`Storyshots Repositories/RepositoryEntry Before Title EP 1`] = `
       }
     >
       <div
-        className="is-flex"
+        className="is-flex ml-1"
       >
         <i
           className="far fa-star"
@@ -71379,12 +71379,12 @@ exports[`Storyshots Repositories/RepositoryEntry Before Title EP 1`] = `
         </h4>
       </div>
       <div
-        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7 ml-1"
       >
         The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
       </div>
       <div
-        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap ml-1"
       >
         <span
           className="is-size-7 has-text-secondary is-relative"
@@ -71473,7 +71473,7 @@ exports[`Storyshots Repositories/RepositoryEntry Default 1`] = `
       </div>
     </div>
     <div
-      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-wrap-anywhere"
+      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71481,7 +71481,7 @@ exports[`Storyshots Repositories/RepositoryEntry Default 1`] = `
       }
     >
       <div
-        className="is-flex"
+        className="is-flex ml-1"
       >
         <h4>
           <a
@@ -71495,12 +71495,12 @@ exports[`Storyshots Repositories/RepositoryEntry Default 1`] = `
         </h4>
       </div>
       <div
-        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7 ml-1"
       >
         The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
       </div>
       <div
-        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap ml-1"
       >
         <span
           className="is-size-7 has-text-secondary is-relative"
@@ -71589,7 +71589,7 @@ exports[`Storyshots Repositories/RepositoryEntry Exporting 1`] = `
       </div>
     </div>
     <div
-      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-wrap-anywhere"
+      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71597,7 +71597,7 @@ exports[`Storyshots Repositories/RepositoryEntry Exporting 1`] = `
       }
     >
       <div
-        className="is-flex"
+        className="is-flex ml-1"
       >
         <h4>
           <a
@@ -71611,12 +71611,12 @@ exports[`Storyshots Repositories/RepositoryEntry Exporting 1`] = `
         </h4>
       </div>
       <div
-        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7 ml-1"
       >
         The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
       </div>
       <div
-        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap ml-1"
       >
         <span
           className="is-size-7 has-text-secondary is-relative"
@@ -71717,7 +71717,7 @@ exports[`Storyshots Repositories/RepositoryEntry HealthCheck Failure 1`] = `
       </div>
     </div>
     <div
-      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-wrap-anywhere"
+      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71725,7 +71725,7 @@ exports[`Storyshots Repositories/RepositoryEntry HealthCheck Failure 1`] = `
       }
     >
       <div
-        className="is-flex"
+        className="is-flex ml-1"
       >
         <h4>
           <a
@@ -71739,12 +71739,12 @@ exports[`Storyshots Repositories/RepositoryEntry HealthCheck Failure 1`] = `
         </h4>
       </div>
       <div
-        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7 ml-1"
       >
         The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
       </div>
       <div
-        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap ml-1"
       >
         <span
           className="is-size-7 has-text-secondary is-relative"
@@ -71846,7 +71846,7 @@ exports[`Storyshots Repositories/RepositoryEntry MultiRepositoryTags 1`] = `
       </div>
     </div>
     <div
-      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-wrap-anywhere"
+      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71854,7 +71854,7 @@ exports[`Storyshots Repositories/RepositoryEntry MultiRepositoryTags 1`] = `
       }
     >
       <div
-        className="is-flex"
+        className="is-flex ml-1"
       >
         <h4>
           <a
@@ -71868,12 +71868,12 @@ exports[`Storyshots Repositories/RepositoryEntry MultiRepositoryTags 1`] = `
         </h4>
       </div>
       <div
-        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7 ml-1"
       >
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
       </div>
       <div
-        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap ml-1"
       >
         <span
           className="is-size-7 has-text-secondary is-relative"
@@ -71986,7 +71986,7 @@ exports[`Storyshots Repositories/RepositoryEntry RepositoryFlag EP 1`] = `
       </div>
     </div>
     <div
-      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-wrap-anywhere"
+      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71994,7 +71994,7 @@ exports[`Storyshots Repositories/RepositoryEntry RepositoryFlag EP 1`] = `
       }
     >
       <div
-        className="is-flex"
+        className="is-flex ml-1"
       >
         <h4>
           <a
@@ -72008,12 +72008,12 @@ exports[`Storyshots Repositories/RepositoryEntry RepositoryFlag EP 1`] = `
         </h4>
       </div>
       <div
-        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7 ml-1"
       >
         The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
       </div>
       <div
-        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap ml-1"
       >
         <span
           className="is-size-7 has-text-secondary is-relative"
@@ -72115,7 +72115,7 @@ exports[`Storyshots Repositories/RepositoryEntry With long texts 1`] = `
       </div>
     </div>
     <div
-      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-wrap-anywhere"
+      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -72123,7 +72123,7 @@ exports[`Storyshots Repositories/RepositoryEntry With long texts 1`] = `
       }
     >
       <div
-        className="is-flex"
+        className="is-flex ml-1"
       >
         <h4>
           <a
@@ -72137,12 +72137,12 @@ exports[`Storyshots Repositories/RepositoryEntry With long texts 1`] = `
         </h4>
       </div>
       <div
-        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7"
+        className="RepositoryEntry__DescriptionRow-sc-6jys82-2 dzxasi is-size-7 ml-1"
       >
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
       </div>
       <div
-        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap"
+        className="RepositoryEntry__DetailsRow-sc-6jys82-3 kXjiC is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap ml-1"
       >
         <span
           className="is-size-7 has-text-secondary is-relative"

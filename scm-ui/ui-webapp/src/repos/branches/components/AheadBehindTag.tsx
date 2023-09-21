@@ -33,7 +33,6 @@ import { SmallLoadingSpinner } from "@scm-manager/ui-components";
 type Props = {
   branch: Branch;
   details?: BranchDetails;
-  labelId?: string;
 };
 
 const Count = styled.span`
@@ -41,7 +40,7 @@ const Count = styled.span`
   width: max-content;
 `;
 
-const AheadBehindTag: FC<Props> = ({ branch, details, labelId }) => {
+const AheadBehindTag: FC<Props> = ({ branch, details }) => {
   const [t] = useTranslation("repos");
 
   if (branch.defaultBranch) {
@@ -56,7 +55,7 @@ const AheadBehindTag: FC<Props> = ({ branch, details, labelId }) => {
     <Tooltip
       message={t("branch.aheadBehind.tooltip", { ahead: details.changesetsAhead, behind: details.changesetsBehind })}
     >
-      <span aria-labelledby={labelId} className="is-inline-flex is-align-items-center">
+      <span className="is-inline-flex is-align-items-center">
         <Icon className={details.changesetsAhead > 0 ? "has-text-success" : "has-text-grey-light"}>arrow-up</Icon>
         <Count aria-label={t("branch.aheadBehind.ahead")} className="is-size-7 pl-0">
           {details.changesetsAhead}

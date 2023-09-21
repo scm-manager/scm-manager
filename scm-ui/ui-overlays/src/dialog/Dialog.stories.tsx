@@ -25,7 +25,6 @@
 import StoryRouter from "storybook-react-router";
 import { ComponentMeta, StoryFn } from "@storybook/react";
 import React, { ComponentProps } from "react";
-import { ExtractProps } from "@scm-manager/ui-extensions";
 import { Button } from "@scm-manager/ui-buttons";
 import Dialog from "./Dialog";
 
@@ -36,7 +35,7 @@ export default {
   render: (story) => <div style={{ height: "100vh" }}>{story}</div>,
 } as ComponentMeta<typeof Dialog>;
 
-const Template: StoryFn<ExtractProps<typeof Dialog>> = (args) => <Dialog {...args} />;
+const Template: StoryFn<ComponentProps<typeof Dialog>> = (args) => <Dialog {...args} />;
 
 export const Default = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React from "react";
+import React, { ComponentProps } from "react";
 
 import {
   Button as ButtonComponent,
@@ -33,8 +33,6 @@ import {
 } from "./Button";
 import StoryRouter from "storybook-react-router";
 import { StoryFn } from "@storybook/react";
-
-type ExtractProps<T> = T extends React.ComponentType<infer U> ? U : never;
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -58,11 +56,11 @@ export default {
 };
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const ButtonTemplate: StoryFn<ExtractProps<typeof ButtonComponent>> = (args) => <ButtonComponent {...args} />;
-const LinkButtonTemplate: StoryFn<ExtractProps<typeof LinkButtonComponent>> = (args) => (
+const ButtonTemplate: StoryFn<ComponentProps<typeof ButtonComponent>> = (args) => <ButtonComponent {...args} />;
+const LinkButtonTemplate: StoryFn<ComponentProps<typeof LinkButtonComponent>> = (args) => (
   <LinkButtonComponent {...args} />
 );
-const ExternalLinkButtonTemplate: StoryFn<ExtractProps<typeof ExternalLinkButtonComponent>> = (args) => (
+const ExternalLinkButtonTemplate: StoryFn<ComponentProps<typeof ExternalLinkButtonComponent>> = (args) => (
   <ExternalLinkButtonComponent {...args} />
 );
 

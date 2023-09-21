@@ -22,14 +22,16 @@
  * SOFTWARE.
  */
 
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, HTMLAttributes } from "react";
 import classNames from "classnames";
 
 /**
  * @beta
  * @since 2.44.0
  */
-const CardRow = "div" as const;
+const CardRow = React.forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
+  <div className={classNames(className, "ml-1")} {...props} ref={ref} />
+));
 
 export default CardRow;
 

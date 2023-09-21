@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { ComponentType, FC, ReactNode } from "react";
+import React, { ComponentProps, ComponentType, FC, ReactNode } from "react";
 import {
   Branch,
   BranchDetails,
@@ -49,8 +49,6 @@ import {
 } from "@scm-manager/ui-types";
 import { ExtensionPointDefinition } from "./binder";
 import { RenderableExtensionPointDefinition, SimpleRenderableDynamicExtensionPointDefinition } from "./ExtensionPoint";
-import ExtractProps from "./extractProps";
-import { useGeneratedId } from "@scm-manager/ui-components";
 
 type RepositoryCreatorSubFormProps = {
   repository: RepositoryCreation;
@@ -59,7 +57,7 @@ type RepositoryCreatorSubFormProps = {
   disabled?: boolean;
 };
 
-export type RepositoryCreatorComponentProps = ExtractProps<RepositoryCreator["type"]["component"]>;
+export type RepositoryCreatorComponentProps = ComponentProps<RepositoryCreator["type"]["component"]>;
 
 /**
  * @deprecated use {@link RepositoryCreator}`["type"]` instead

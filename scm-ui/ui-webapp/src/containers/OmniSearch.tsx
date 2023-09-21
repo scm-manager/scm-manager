@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 import React, {
+  ComponentProps,
   Dispatch,
   FC,
   KeyboardEvent as ReactKeyboardEvent,
@@ -66,10 +67,9 @@ const namespaceAndName = (hit: Hit) => {
   const name = (hit.fields["name"] as ValueHitField).value as string;
   return `${namespace}/${name}`;
 };
-type ExtractProps<T> = T extends React.ComponentType<infer U> ? U : never;
 
 type HitsProps = {
-  entries: ReactElement<ExtractProps<typeof HitEntry>>[];
+  entries: ReactElement<ComponentProps<typeof HitEntry>>[];
   hits: Hit[];
   showHelp: () => void;
   ariaId: string;

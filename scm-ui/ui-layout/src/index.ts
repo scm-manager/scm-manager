@@ -25,7 +25,14 @@
 import CardListComponent, { CardListBox as CardListBoxComponent, CardListCard } from "./card-list/CardList";
 import CardTitle from "./card/CardTitle";
 import CardRow, { SecondaryRow, TertiaryRow } from "./card/CardRow";
-import { CardDetail, CardDetailLabel, CardDetails, CardDetailTag } from "./card/CardDetail";
+import {
+  CardButtonDetail,
+  CardDetail,
+  CardDetailLabel,
+  CardDetails,
+  CardDetailTag,
+  CardLinkDetail,
+} from "./card/CardDetail";
 import CardComponent from "./card/Card";
 import {
   DataPageHeader as DataPageHeaderComponent,
@@ -38,16 +45,20 @@ import {
 
 export { default as Collapsible } from "./collapsible/Collapsible";
 
+const CardDetailExports = {
+  Label: CardDetailLabel,
+  Tag: CardDetailTag,
+};
+
 const CardExport = {
   Title: CardTitle,
   Row: CardRow,
   SecondaryRow: SecondaryRow,
   TertiaryRow: TertiaryRow,
   Details: Object.assign(CardDetails, {
-    Detail: Object.assign(CardDetail, {
-      Label: CardDetailLabel,
-      Tag: CardDetailTag,
-    }),
+    Detail: Object.assign(CardDetail, CardDetailExports),
+    ButtonDetail: Object.assign(CardButtonDetail, CardDetailExports),
+    LinkDetail: Object.assign(CardLinkDetail, CardDetailExports),
   }),
 };
 

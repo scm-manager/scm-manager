@@ -21,8 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import { ComponentProps, JSXElementConstructor } from "react";
 
-type ExtractProps<T> = T extends React.ComponentType<infer U> ? U : never;
+/**
+ * @deprecated Use {@link ComponentProps} directly instead
+ */
+type ExtractProps<T extends keyof JSX.IntrinsicElements | JSXElementConstructor<any>> = ComponentProps<T>;
 
 export default ExtractProps;

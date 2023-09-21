@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { extensionPoints, ExtractProps } from "@scm-manager/ui-extensions";
+import { extensionPoints } from "@scm-manager/ui-extensions";
+import { ComponentProps } from "react";
 
-export type ProtocolLinkRendererProps<Protocol extends string | undefined = undefined> = ExtractProps<
+export type ProtocolLinkRendererProps<Protocol extends string | undefined = undefined> = ComponentProps<
   extensionPoints.MarkdownLinkProtocolRenderer<Protocol>["type"]["renderer"]
 >;
 
