@@ -36,7 +36,7 @@
     "@storybook/manager-webpack5": "^6.4.20",
     "@storybook/react": "^6.4.20",
     "@types/classnames": "^2.2.9",
-    "@types/css": "^0.0.31",
+    "@types/css": "^0.0.34",
     "@types/enzyme": "^3.10.3",
     "@types/fetch-mock": "^7.3.1",
     "@types/jest": "^24.0.19",
