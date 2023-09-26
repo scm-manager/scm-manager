@@ -1,0 +1,2 @@
+- type: fixed
+  description: Bump JGit to version 6.7.0.202309050840-r to fix CVE-2023-4759
