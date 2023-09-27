@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
-    "bulma": "^0.9.3",
+    "bulma": "https://github.com/scm-manager/bulma#bbe5bdb66fce67e2513ab8caefb1eac5504e1402",
     "bulma-popover": "^1.0.0",
     "react-diff-view": "^2.4.10"
   },

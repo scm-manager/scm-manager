@@ -27,9 +27,13 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Repository } from "@scm-manager/ui-types";
-import { devices, Icon } from "@scm-manager/ui-components";
-import CompareSelectorList from "./CompareSelectorList";
+import { devices } from "@scm-manager/ui-components";
+import { Tabs } from "@scm-manager/ui-layout";
+import { Icon } from "@scm-manager/ui-buttons";
 import { CompareFunction, CompareProps, CompareTypes } from "./CompareSelectBar";
+import BranchTab from "./BranchTab";
+import TagTab from "./TagTab";
+import RevisionTab from "./RevisionTab";
 
 type Props = {
   onSelect: CompareFunction;
@@ -114,7 +118,7 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
                 <strong>{getActionTypeName(selection.type)}:</strong> {selection.name}
               </span>
               <span className="icon is-small">
-                <Icon name="angle-down" color="inherit" />
+                <Icon>angle-down</Icon>
               </span>
             </button>
           </MaxWidthDiv>
@@ -128,15 +132,25 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
                 <input
                   className="input is-small"
                   placeholder={t("compare.selector.filter")}
-                  onChange={e => setFilter(e.target.value)}
+                  onChange={(e) => setFilter(e.target.value)}
                   type="search"
                 />
-                <CompareSelectorList
-                  onSelect={onSelectEntry}
-                  selected={selected}
-                  repository={repository}
-                  filter={filter}
-                />
+                <Tabs className="is-small mt-3 mb-0" defaultValue="branch">
+                  <Tabs.List aria-label={t("compare.selector.title")}>
+                    <Tabs.List.Trigger value="branch">{t("compare.selector.tabs.b")}</Tabs.List.Trigger>
+                    <Tabs.List.Trigger value="tag">{t("compare.selector.tabs.t")}</Tabs.List.Trigger>
+                    <Tabs.List.Trigger value="revision">{t("compare.selector.tabs.r")}</Tabs.List.Trigger>
+                  </Tabs.List>
+                  <Tabs.Content value="branch">
+                    <BranchTab onSelect={onSelectEntry} selected={selected} repository={repository} filter={filter} />
+                  </Tabs.Content>
+                  <Tabs.Content value="tag">
+                    <TagTab onSelect={onSelectEntry} selected={selected} repository={repository} filter={filter} />
+                  </Tabs.Content>
+                  <Tabs.Content value="revision">
+                    <RevisionTab onSelect={onSelectEntry} selected={selected} />
+                  </Tabs.Content>
+                </Tabs>
               </div>
             </BorderedMenu>
           </div>

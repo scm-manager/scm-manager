@@ -42,6 +42,7 @@ export { default as ConfigurationForm } from "./ConfigurationForm";
 export { default as SelectField } from "./select/SelectField";
 export { default as ChipInputField } from "./chip-input/ChipInputField";
 export { default as ComboboxField } from "./combobox/ComboboxField";
+export { default as Input } from "./input/Input";
 export { default as Select } from "./select/Select";
 export * from "./resourceHooks";
 

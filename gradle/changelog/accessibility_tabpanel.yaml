@@ -1,0 +1,4 @@
+- type: fixed
+  description: Make compare accessible
+- type: fixed
+  description: Compare target when default branch contains slash

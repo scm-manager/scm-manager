@@ -51,6 +51,7 @@
   "dependencies": {
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.1",
+    "@radix-ui/react-tabs": "^1.0.4",
     "@scm-manager/ui-buttons": "2.46.2-SNAPSHOT"
   }
 }

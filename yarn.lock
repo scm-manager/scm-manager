@@ -2929,6 +2929,21 @@
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-compose-refs" "1.0.1"
 
+"@radix-ui/react-tabs@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-tabs/-/react-tabs-1.0.4.tgz#993608eec55a5d1deddd446fa9978d2bc1053da2"
+  integrity sha512-egZfYY/+wRNCflXNHx+dePvnz9FbmssDTJBtgRfDY7e8SE5oIo3Py2eCB1ckAbh1Q7cQ/6yJZThJ++sgbxibog==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/primitive" "1.0.1"
+    "@radix-ui/react-context" "1.0.1"
+    "@radix-ui/react-direction" "1.0.1"
+    "@radix-ui/react-id" "1.0.1"
+    "@radix-ui/react-presence" "1.0.1"
+    "@radix-ui/react-primitive" "1.0.3"
+    "@radix-ui/react-roving-focus" "1.0.4"
+    "@radix-ui/react-use-controllable-state" "1.0.1"
+
 "@radix-ui/react-tooltip@1.0.2":
   version "1.0.2"
   resolved "https://registry.npmjs.org/@radix-ui/react-tooltip/-/react-tooltip-1.0.2.tgz"
@@ -8107,10 +8122,9 @@ bulma-popover@^1.0.0:
   resolved "https://registry.npmjs.org/bulma-popover/-/bulma-popover-1.1.1.tgz"
   integrity sha512-QvYJq04usgiCvTwnEZr/xtStkKRTToO/tc7JVcdtRBIBBWNaUu4tfHAOFXDMav8NFIvN8JOiQEtHO1dHNvVr1Q==
 
-bulma@^0.9.3:
+"bulma@https://github.com/scm-manager/bulma#bbe5bdb66fce67e2513ab8caefb1eac5504e1402":
   version "0.9.4"
-  resolved "https://registry.npmjs.org/bulma/-/bulma-0.9.4.tgz"
-  integrity sha512-86FlT5+1GrsgKbPLRRY7cGDg8fsJiP/jzTqXXVqiUZZ2aZT8uemEOHlU1CDU+TxklPEZ11HZNNWclRBBecP4CQ==
+  resolved "https://github.com/scm-manager/bulma#bbe5bdb66fce67e2513ab8caefb1eac5504e1402"
 
 bundle-require@^3.0.2:
   version "3.0.4"
@@ -18132,7 +18146,7 @@ react-transition-group@^2.2.1:
 
 react@17, react@17.0.2, react@^16.8.3, react@^17.0.1:
   version "17.0.2"
-  resolved "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
+  resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
   integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
   dependencies:
     loose-envify "^1.1.0"

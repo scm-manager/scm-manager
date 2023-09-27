@@ -42,6 +42,10 @@ import {
   DataPageHeaderSettingLabel,
   DataPageHeaderSettings,
 } from "./templates/data-page/DataPageHeader";
+import TabsComponent from "./tabs/Tabs";
+import TabsContent from "./tabs/TabsContent";
+import TabsList from "./tabs/TabsList";
+import TabTrigger from "./tabs/TabTrigger";
 
 export { default as Collapsible } from "./collapsible/Collapsible";
 
@@ -79,4 +83,11 @@ export const DataPageHeader = Object.assign(DataPageHeaderComponent, {
     }),
   }),
   CreateButton: DataPageHeaderCreateButton,
+});
+
+export const Tabs = Object.assign(TabsComponent, {
+  List: Object.assign(TabsList, {
+    Trigger: TabTrigger,
+  }),
+  Content: TabsContent,
 });
