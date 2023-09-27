@@ -35,6 +35,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.util.Map;
+import java.util.Objects;
 
 import static sonia.scm.store.CopyOnWrite.compute;
 
@@ -101,8 +102,10 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
 
     Builder<String, T> builder = ImmutableMap.builder();
 
-    for (File file : directory.listFiles()) {
-      builder.put(getId(file), read(file));
+    for (File file : Objects.requireNonNull(directory.listFiles())) {
+      if (file.isFile() && file.getName().endsWith(StoreConstants.FILE_EXTENSION)) {
+        builder.put(getId(file), read(file));
+      }
     }
 
     return builder.build();
@@ -120,7 +123,7 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
       compute(() -> {
         if (file.exists()) {
           LOG.trace("try to read {}", file);
-          return context.unmarshall(file);
+          return context.unmarshal(file);
         }
         return null;
       }).withLockedFileForRead(file)

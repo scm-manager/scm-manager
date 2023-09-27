@@ -75,7 +75,7 @@ public class JAXBConfigurationStore<T> extends AbstractStore<T> {
     return compute(
       () -> {
         if (configFile.exists()) {
-          return context.unmarshall(configFile);
+          return context.unmarshal(configFile);
         }
         return null;
       }

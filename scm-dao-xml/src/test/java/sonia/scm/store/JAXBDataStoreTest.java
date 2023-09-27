@@ -25,10 +25,13 @@
 package sonia.scm.store;
 
 import org.junit.Test;
-import sonia.scm.cache.MapCache;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.UUIDKeyGenerator;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -87,5 +90,18 @@ public class JAXBDataStoreTest extends DataStoreTestBase {
   {
     when(readOnlyChecker.isReadOnly(repository.getId())).thenReturn(true);
     getDataStore(StoreObject.class, repository).put("abc", new StoreObject("abc_value"));
+  }
+
+  @Test
+  public void testGetAllWithNonXmlFile() throws IOException {
+    StoreObject obj1 = new StoreObject("test-1");
+
+    store.put("1", obj1);
+
+    new File(getTempDirectory(), "var/data/test/no-xml").createNewFile();
+
+    Map<String, StoreObject> map = store.getAll();
+
+    assertEquals(obj1, map.get("1"));
   }
 }

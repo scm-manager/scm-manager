@@ -243,4 +243,7 @@ public class AbstractTestBase
     subjectThreadState.bind();
   }
 
+  protected File getTempDirectory() {
+    return tempDirectory;
+  }
 }

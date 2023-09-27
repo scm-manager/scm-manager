@@ -55,7 +55,7 @@ class TypedStoreContextTest {
 
     File file = tempDir.resolve("test.xml").toFile();
     context.marshal(new Sample("awesome"), file);
-    Sample sample = context.unmarshall(file);
+    Sample sample = context.unmarshal(file);
 
     assertThat(sample.value).isEqualTo("awesome");
   }
@@ -109,7 +109,7 @@ class TypedStoreContextTest {
 
     File file = tempDir.resolve("test.xml").toFile();
     context.marshal(new SampleWithAdapter("awesome"), file);
-    SampleWithAdapter sample = context.unmarshall(file);
+    SampleWithAdapter sample = context.unmarshal(file);
 
     // one ! should be added for marshal and one for unmarshal
     assertThat(sample.value).isEqualTo("awesome!!");

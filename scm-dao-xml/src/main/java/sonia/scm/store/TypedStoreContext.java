@@ -24,6 +24,7 @@
 
 package sonia.scm.store;
 
+import lombok.extern.slf4j.Slf4j;
 import sonia.scm.xml.XmlStreams;
 
 import javax.xml.bind.JAXBContext;
@@ -37,6 +38,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Slf4j
 final class TypedStoreContext<T> {
 
   private final JAXBContext jaxbContext;
@@ -65,7 +67,8 @@ final class TypedStoreContext<T> {
     }
   }
 
-  T unmarshall(File file) {
+  T unmarshal(File file) {
+    log.trace("unmarshal file {}", file);
     AtomicReference<T> ref = new AtomicReference<>();
     withUnmarshaller(unmarshaller -> {
       T value = parameters.getType().cast(unmarshaller.unmarshal(file));
@@ -75,6 +78,7 @@ final class TypedStoreContext<T> {
   }
 
   void marshal(Object object, File file) {
+    log.trace("marshal file {}", file);
     withMarshaller(marshaller -> marshaller.marshal(object, XmlStreams.createWriter(file)));
   }
 

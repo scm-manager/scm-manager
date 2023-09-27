@@ -1,0 +1,2 @@
+- type: fixed
+  description: Ignore non-XML files in data store directories
