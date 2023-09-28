@@ -27,6 +27,7 @@ import React, { Fragment, useState } from "react";
 import Combobox from "./Combobox";
 import { Combobox as HeadlessCombobox } from "@headlessui/react";
 import { Option } from "@scm-manager/ui-types";
+import { Link, BrowserRouter } from "react-router-dom";
 
 const waitFor = (ms: number) =>
   function <T>(result: T) {
@@ -38,6 +39,8 @@ const data = [
   { label: "Arthur", value: "2" },
   { label: "Zaphod", value: "3" },
 ];
+
+const linkData = [{ label: "Link111111111111111111111111111111111111", value: "1" }];
 
 storiesOf("Combobox", module)
   .add("Options array", () => {
@@ -92,5 +95,31 @@ storiesOf("Combobox", module)
           </HeadlessCombobox.Option>
         )}
       </Combobox>
+    );
+  })
+  .add("Links as render props", () => {
+    const [value, setValue] = useState<Option<string>>();
+    const [query, setQuery] = useState("Hello");
+    return (
+      <BrowserRouter>
+        <Combobox
+          className="input is-small omni-search-bar"
+          placeholder={"Placeholder"}
+          value={value}
+          options={linkData}
+          onChange={setValue}
+          onQueryChange={setQuery}
+        >
+          {(o) => (
+            <HeadlessCombobox.Option value={{ label: o.label, value: query, displayValue: o.value }} key={o.value} as={Fragment}>
+              {({ active }) => (
+                <Combobox.Option isActive={active}>
+                  <Link to={o.label}>{o.label}</Link>
+                </Combobox.Option>
+              )}
+            </HeadlessCombobox.Option>
+          )}
+        </Combobox>
+      </BrowserRouter>
     );
   });

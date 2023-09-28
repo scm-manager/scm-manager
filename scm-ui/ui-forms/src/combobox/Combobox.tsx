@@ -25,7 +25,6 @@
 import React, {
   ForwardedRef,
   Fragment,
-  KeyboardEvent,
   KeyboardEventHandler,
   ReactElement,
   Ref,
@@ -48,7 +47,8 @@ const OptionsWrapper = styled(HeadlessCombobox.Options).attrs({
   border: var(--scm-border);
   background-color: var(--scm-secondary-background);
   max-width: 35ch;
-
+  width: 35ch;
+  
   &:empty {
     border: 0;
     clip: rect(0 0 0 0);
@@ -72,6 +72,9 @@ const StyledComboboxOption = styled.li.attrs({
     color: unset !important;
     opacity: 40%;
     cursor: unset !important;
+  }
+  > a {
+    color: inherit !important;
   }
 `;
 
@@ -138,7 +141,6 @@ function ComboboxComponent<T>(props: ComboboxProps<T>, ref: ForwardedRef<HTMLInp
       value={props.value}
       onChange={(e?: Option<T>) => props.onChange && props.onChange(e)}
       disabled={props.disabled || props.readOnly}
-      onKeyDown={(e: KeyboardEvent<HTMLElement>) => props.onKeyDown && props.onKeyDown(e)}
       name={props.name}
       form={props.form}
       defaultValue={props.defaultValue}
@@ -159,6 +161,9 @@ function ComboboxComponent<T>(props: ComboboxProps<T>, ref: ForwardedRef<HTMLInp
         placeholder={props.placeholder}
         onBlur={props.onBlur}
         autoComplete="off"
+        onKeyDown={(e) => {
+          props.onKeyDown && props.onKeyDown(e)
+          }}
         {...createAttributesForTesting(props.testId)}
       />
       <OptionsWrapper className="is-absolute">{options}</OptionsWrapper>

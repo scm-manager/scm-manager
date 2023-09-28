@@ -45,6 +45,7 @@ export { default as ComboboxField } from "./combobox/ComboboxField";
 export { default as Input } from "./input/Input";
 export { default as Select } from "./select/Select";
 export * from "./resourceHooks";
+export { default as Label } from "./base/label/Label";
 
 export const Form = Object.assign(FormCmp, {
   Row: FormRow,

@@ -43,7 +43,7 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
   }
 
   @media screen and (max-width: ${devices.mobile.width}px) {
-    ${props =>
+    ${(props) =>
       props.mobilePosition === "right" &&
       css`
         right: -1.5rem;
@@ -84,7 +84,7 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
       right: 1.375rem;
     }
 
-    ${props =>
+    ${(props) =>
       props.mobilePosition === "right" &&
       css`
         @media screen and (max-width: ${devices.mobile.width}px) {
@@ -143,7 +143,7 @@ type CounterProps = {
 const Counter = styled.span<CounterProps>`
   position: absolute;
   top: -0.75rem;
-  right: ${props => (props.count.length <= 1 ? "-0.25" : "-0.50")}rem;
+  right: ${(props) => (props.count.length <= 1 ? "-0.25" : "-0.50")}rem;
 `;
 
 type IconWrapperProps = {
@@ -158,46 +158,52 @@ const IconWrapper: FC<IconWrapperProps> = ({ icon, count }) => (
   </IconContainer>
 );
 
-type Props = DropDownMenuProps & {
-  className?: string;
-  icon: React.ReactNode;
-  count?: string;
-  error?: Error | null;
-  isLoading?: boolean;
-};
+type Props = React.PropsWithChildren<
+  DropDownMenuProps & {
+    className?: string;
+    icon: React.ReactNode;
+    count?: string;
+    error?: Error | null;
+    isLoading?: boolean;
+  }
+>;
 
 const DropDownTrigger = styled.div`
   padding: 0.65rem 0.75rem;
 `;
 
-const HeaderDropDown: FC<Props> = ({ className, icon, count, error, isLoading, mobilePosition, children }) => {
-  const [open, setOpen] = useState(false);
+const HeaderDropDown = React.forwardRef<HTMLButtonElement, Props>(
+  ({ className, icon, count, error, isLoading, mobilePosition, children }, ref) => {
+    const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const close = () => setOpen(false);
-    window.addEventListener("click", close);
-    return () => window.removeEventListener("click", close);
-  }, []);
+    useEffect(() => {
+      const close = () => setOpen(false);
+      window.addEventListener("click", close);
+      return () => window.removeEventListener("click", close);
+    }, []);
 
-  return (
-    <>
-      <div
+    return (
+      <button
+        type="button"
         className={classNames(
           "notifications",
           "dropdown",
           "is-hoverable",
           "p-0",
+          "is-borderless",
+          "has-background-transparent",
           {
-            "is-active": open
+            "is-active": open,
           },
           className
         )}
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
         tabIndex={0}
+        ref={ref}
       >
         <DropDownTrigger
           className={classNames("is-flex", "dropdown-trigger", "is-clickable")}
-          onClick={() => setOpen(o => !o)}
+          onClick={() => setOpen((o) => !o)}
         >
           <IconWrapper icon={icon} count={count} />
         </DropDownTrigger>
@@ -206,9 +212,9 @@ const HeaderDropDown: FC<Props> = ({ className, icon, count, error, isLoading, m
           {isLoading ? <LoadingBox /> : null}
           {children}
         </DropDownMenu>
-      </div>
-    </>
-  );
-};
+      </button>
+    );
+  }
+);
 
 export default HeaderDropDown;

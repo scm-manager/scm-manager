@@ -247,11 +247,11 @@ const count = (data?: NotificationCollection) => {
   }
 };
 
-type NotificationProps = {
+type NotificationProps = React.PropsWithChildren<{
   className?: string;
-};
+}>;
 
-const Notifications: FC<NotificationProps> = ({ className }) => {
+const Notifications = React.forwardRef<HTMLButtonElement, NotificationProps>(({ className }, ref) => {
   const { data, isLoading, error, refetch } = useNotifications();
   const { notifications, remove, clear } = useNotificationSubscription(refetch, data);
 
@@ -265,11 +265,12 @@ const Notifications: FC<NotificationProps> = ({ className }) => {
         icon={<BellNotificationIcon data={data} />}
         count={count(data)}
         mobilePosition="left"
+        ref={ref}
       >
         {data ? <NotificationDropDown data={data} remove={remove} clear={clear} /> : null}
       </HeaderDropDown>
     </>
   );
-};
+});
 
 export default Notifications;

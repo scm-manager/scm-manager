@@ -28,13 +28,14 @@ import { HelpIcon, NoStyleButton } from "@scm-manager/ui-components";
 
 type Props = {
   onClick: () => void;
+  className?: string
 };
 
-const SyntaxHelp: FC<Props> = ({ onClick }) => {
+const SyntaxHelp: FC<Props> = ({ onClick, className }) => {
   const [t] = useTranslation("commons");
   return (
     <>
-      <NoStyleButton title={t("search.quickSearch.hintsIcon")} onClick={onClick}>
+      <NoStyleButton className={className} title={t("search.quickSearch.hintsIcon")} onClick={onClick}>
         <HelpIcon />
       </NoStyleButton>
     </>

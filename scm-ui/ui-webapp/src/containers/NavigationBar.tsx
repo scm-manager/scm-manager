@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC, useEffect, useState } from "react";
+import React, {FC, useEffect, useRef, useState} from "react";
 import { Links } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -105,6 +105,7 @@ type Props = {
 const NavigationBar: FC<Props> = ({ links }) => {
   const [burgerActive, setBurgerActive] = useState(false);
   const [t] = useTranslation("commons");
+  const notificationsRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     const close = () => {
       if (burgerActive) {
@@ -114,7 +115,6 @@ const NavigationBar: FC<Props> = ({ links }) => {
     window.addEventListener("click", close);
     return () => window.removeEventListener("click", close);
   }, [burgerActive]);
-
   return (
     <StyledNavBar className="navbar is-fixed-top has-scm-background" aria-label="main navigation">
       <div className="container">
@@ -139,8 +139,8 @@ const NavigationBar: FC<Props> = ({ links }) => {
           </div>
           <div className="is-active navbar-header-actions">
             <Alerts className="navbar-item" />
-            <OmniSearch links={links} shouldClear={true} ariaId="navbar" />
-            <Notifications className="navbar-item" />
+            <OmniSearch links={links} shouldClear={true} ariaId="navbar" nextFocusRef={notificationsRef} />
+            <Notifications ref={notificationsRef} className="navbar-item" />
           </div>
           <div className="navbar-end">
             <LogoutButton burgerMode={burgerActive} links={links} />

@@ -21,41 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {
-  ComponentProps,
-  Dispatch,
-  FC,
-  KeyboardEvent as ReactKeyboardEvent,
-  MouseEvent,
-  ReactElement,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { Hit, Links, Repository, ValueHitField } from "@scm-manager/ui-types";
+import React, { FC, Fragment, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Hit, Links, Repository, ValueHitField, Option } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import { useNamespaceAndNameContext, useOmniSearch, useSearchTypes } from "@scm-manager/ui-api";
 import classNames from "classnames";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { devices, Icon, RepositoryAvatar } from "@scm-manager/ui-components";
-import SyntaxHelp from "../search/SyntaxHelp";
+import { RepositoryAvatar, Icon } from "@scm-manager/ui-components";
 import SyntaxModal from "../search/SyntaxModal";
-import SearchErrorNotification from "../search/SearchErrorNotification";
 import queryString from "query-string";
 import { orderTypes } from "../search/Search";
 import { useShortcut } from "@scm-manager/ui-shortcuts";
+import { Label, Combobox } from "@scm-manager/ui-forms";
+import { Combobox as HeadlessCombobox } from "@headlessui/react";
 
-const Input = styled.input`
-  border-radius: 4px !important;
+const ResultHeading = styled.div`
+  border-top: 1px solid lightgray;
 `;
 
 type Props = {
   shouldClear: boolean;
   ariaId: string;
+  nextFocusRef: RefObject<HTMLElement>;
 };
 
 type GuardProps = Props & {
@@ -67,29 +55,6 @@ const namespaceAndName = (hit: Hit) => {
   const name = (hit.fields["name"] as ValueHitField).value as string;
   return `${namespace}/${name}`;
 };
-
-type HitsProps = {
-  entries: ReactElement<ComponentProps<typeof HitEntry>>[];
-  hits: Hit[];
-  showHelp: () => void;
-  ariaId: string;
-};
-
-const QuickSearchNotification: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
-
-const ResultHeading = styled.h3`
-  border-top: 1px solid lightgray;
-`;
-
-const DropdownMenu = styled.div`
-  max-width: 20rem;
-`;
-
-const SearchInput = styled(Input)`
-  @media screen and (max-width: ${devices.mobile.width}px) {
-    width: 9rem;
-  }
-`;
 
 const AvatarSection: FC<{ repository: Repository }> = ({ repository }) => {
   if (!repository) {
@@ -103,150 +68,29 @@ const AvatarSection: FC<{ repository: Repository }> = ({ repository }) => {
   );
 };
 
-const HitList: FC<Omit<HitsProps, "showHelp" | "hits">> = ({ entries, ariaId }) => {
-  return (
-    <ul id={`omni-search-results-${ariaId}`} aria-expanded="true" role="listbox">
-      {entries}
-    </ul>
-  );
-};
-
 const HitEntry: FC<{
-  selected: boolean;
   link: string;
   label: string;
-  clear: () => void;
   repository?: Repository;
-  ariaId: string;
-}> = ({ selected, link, label, clear, repository, ariaId }) => {
-  return (
-    <li
-      key={label}
-      onMouseDown={(e) => e.preventDefault()}
-      onClick={clear}
-      role="option"
-      aria-selected={selected}
-      id={selected ? `omni-search-selected-option-${ariaId}` : undefined}
-    >
-      <Link
-        className={classNames("is-flex", "dropdown-item", "has-text-weight-medium", "is-ellipsis-overflow", {
-          "is-active": selected,
-        })}
-        title={label}
-        to={link}
-        data-omnisearch="true"
-      >
-        {repository ? <AvatarSection repository={repository} /> : <Icon name="search" className="mr-3 ml-1 mt-1" />}
-        {label}
-      </Link>
-    </li>
-  );
-};
-
-type ScreenReaderHitSummaryProps = {
-  hits: Hit[];
-};
-
-const ScreenReaderHitSummary: FC<ScreenReaderHitSummaryProps> = ({ hits }) => {
-  const [t] = useTranslation("commons");
-  const key = hits.length > 0 ? "screenReaderHint" : "screenReaderHintNoResult";
-  return (
-    <span aria-live="assertive" className="is-sr-only">
-      {t(`search.quickSearch.${key}`, { count: hits.length })}
-    </span>
-  );
-};
-
-const Hits: FC<HitsProps> = ({ entries, hits, showHelp, ...rest }) => {
-  const [t] = useTranslation("commons");
-
-  return (
-    <>
-      <div className="dropdown-content p-0">
-        <ScreenReaderHitSummary hits={hits} />
-        <HitList entries={entries} {...rest} />
-        <ResultHeading
-          className={classNames(
-            "dropdown-item",
-            "is-flex",
-            "is-justify-content-space-between",
-            "is-align-items-center",
-            "mx-2",
-            "px-2",
-            "py-1",
-            "mt-1",
-            "has-text-weight-bold"
-          )}
-        >
-          <span>{t("search.quickSearch.resultHeading")}</span>
-          <SyntaxHelp onClick={showHelp} />
-        </ResultHeading>
-      </div>
-    </>
-  );
-};
-
-const useKeyBoardNavigation = (
-  entries: HitsProps["entries"],
-  clear: () => void,
-  hideResults: () => void,
-  index: number,
-  setIndex: Dispatch<SetStateAction<number>>,
-  defaultLink: string
-) => {
+  query: string;
+}> = ({ link, label, repository, query }) => {
   const history = useHistory();
-
-  const onKeyDown = (e: ReactKeyboardEvent<HTMLInputElement>) => {
-    // We use e.which, because ie 11 does not support e.code
-    // https://caniuse.com/keyboardevent-code
-    switch (e.which) {
-      case 40: // e.code: ArrowDown
-        e.preventDefault();
-        setIndex((idx) => {
-          if (idx < entries.length - 1) {
-            return idx + 1;
-          }
-          return idx;
-        });
-        break;
-      case 38: // e.code: ArrowUp
-        e.preventDefault();
-        setIndex((idx) => {
-          if (idx > 0) {
-            return idx - 1;
-          }
-          return idx;
-        });
-        break;
-      case 13: // e.code: Enter
-        if ((e.target as HTMLInputElement).value.length >= 2) {
-          if (index < 0) {
-            history.push(defaultLink);
-          } else {
-            const entry = entries[index];
-            if (entry?.props.link) {
-              history.push(entry.props.link);
-            }
-          }
-          clear();
-          hideResults();
-        }
-
-        break;
-      case 27: // e.code: Escape
-        if (index >= 0) {
-          setIndex(-1);
-        } else {
-          clear();
-        }
-        break;
-    }
-  };
-
-  return {
-    onKeyDown,
-    index,
-  };
+  return (
+    <HeadlessCombobox.Option
+      value={{ label: query, value: () => history.push(link), displayValue: label }}
+      key={label}
+      as={Fragment}
+    >
+      {({ active }) => (
+        <Combobox.Option isActive={active}>
+          <div className="is-flex">
+            {repository ? <AvatarSection repository={repository} /> : <Icon name="search" className="mr-2 ml-1 mt-1" />}
+            <Label className="has-text-weight-normal is-size-6">{label}</Label>
+          </div>
+        </Combobox.Option>
+      )}
+    </HeadlessCombobox.Option>
+  );
 };
 
 const useDebounce = (value: string, delay: number) => {
@@ -260,48 +104,6 @@ const useDebounce = (value: string, delay: number) => {
     };
   }, [value, delay]);
   return debouncedValue;
-};
-
-const isOnmiSearchElement = (element: Element) => {
-  return element.getAttribute("data-omnisearch");
-};
-
-const useShowResultsOnFocus = () => {
-  const [showResults, setShowResults] = useState(false);
-  useEffect(() => {
-    if (showResults) {
-      const close = () => {
-        setShowResults(false);
-      };
-
-      const onKeyUp = (e: KeyboardEvent) => {
-        if (e.which === 9) {
-          // tab
-          const element = document.activeElement;
-          if (!element || !isOnmiSearchElement(element)) {
-            close();
-          }
-        }
-      };
-
-      window.addEventListener("click", close);
-      window.addEventListener("keyup", onKeyUp);
-      return () => {
-        window.removeEventListener("click", close);
-        window.removeEventListener("keyup", onKeyUp);
-      };
-    }
-  }, [showResults]);
-  return {
-    showResults,
-    onClick: (e: MouseEvent<HTMLInputElement>) => {
-      e.stopPropagation();
-      setShowResults(true);
-    },
-    onKeyPress: () => setShowResults(true),
-    onFocus: () => setShowResults(true),
-    hideResults: () => setShowResults(false),
-  };
 };
 
 const useSearchParams = () => {
@@ -334,35 +136,42 @@ const useSearchParams = () => {
   };
 };
 
-const OmniSearch: FC<Props> = ({ shouldClear, ariaId }) => {
+const OmniSearch: FC<Props> = ({ shouldClear, ariaId, nextFocusRef, ...props }) => {
   const [t] = useTranslation("commons");
-  const { searchType, initialQuery } = useSearchParams();
+  const { initialQuery } = useSearchParams();
   const [query, setQuery] = useState(initialQuery);
+  const [value, setValue] = useState<Option<(() => void) | undefined> | undefined>({ label: query, value: query });
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debouncedQuery = useDebounce(query, 250);
+  const [showDropdown, setDropdown] = useState(true);
   const context = useNamespaceAndNameContext();
-  const { data, isLoading, error } = useOmniSearch(debouncedQuery, {
+  const comboBoxRef = useRef(null);
+  const { data, isLoading } = useOmniSearch(debouncedQuery, {
     type: "repository",
     pageSize: 5,
   });
-  const { showResults, hideResults, ...handlers } = useShowResultsOnFocus();
   const [showHelp, setShowHelp] = useState(false);
-  const [index, setIndex] = useState(-1);
-  useEffect(() => {
-    setIndex(-1);
+  const handleChange = useCallback((value: Option<(() => void) | undefined>) => {
+    setValue(value);
+    value.value && value.value();
+    setDropdown(true);
   }, []);
 
   useEffect(() => {
     setQuery(shouldClear ? "" : initialQuery);
+    setValue(shouldClear ? { label: "", value: undefined } : { label: initialQuery, value: undefined });
   }, [shouldClear, initialQuery]);
 
+  const clearInput = () => {
+    shouldClear = true;
+    setValue({ label: "", value: undefined });
+    setQuery("");
+    setDropdown(false);
+  };
+
   const openHelp = () => setShowHelp(true);
+
   const closeHelp = () => setShowHelp(false);
-  const clearQuery = useCallback(() => {
-    if (shouldClear) {
-      setQuery("");
-    }
-  }, [shouldClear]);
 
   const hits = data?._embedded?.hits || [];
   const searchTypes = useSearchTypes({
@@ -384,13 +193,11 @@ const OmniSearch: FC<Props> = ({ shouldClear, ariaId }) => {
       newEntries.push(
         <HitEntry
           key="search.quickSearch.searchRepo"
-          selected={newEntries.length === index}
-          clear={clearQuery}
           label={t("search.quickSearch.searchRepo")}
           link={`/search/${searchTypes[0]}/?q=${encodeURIComponent(query)}&namespace=${context.namespace}&name=${
             context.name
           }`}
-          ariaId={ariaId}
+          query={query}
         />
       );
     }
@@ -398,44 +205,33 @@ const OmniSearch: FC<Props> = ({ shouldClear, ariaId }) => {
       newEntries.push(
         <HitEntry
           key="search.quickSearch.searchNamespace"
-          selected={newEntries.length === index}
-          clear={clearQuery}
           label={t("search.quickSearch.searchNamespace")}
           link={`/search/repository/?q=${encodeURIComponent(query)}&namespace=${context.namespace}`}
-          ariaId={ariaId}
+          query={query}
         />
       );
     }
     newEntries.push(
       <HitEntry
         key="search.quickSearch.searchEverywhere"
-        selected={newEntries.length === index}
-        clear={clearQuery}
         label={t("search.quickSearch.searchEverywhere")}
         link={`/search/repository/?q=${encodeURIComponent(query)}`}
-        ariaId={ariaId}
+        query={query}
       />
     );
-    const length = newEntries.length;
     hits?.forEach((hit, idx) => {
       newEntries.push(
         <HitEntry
           key={`search.quickSearch.hit${idx}`}
-          selected={length + idx === index}
-          clear={clearQuery}
           label={id(hit)}
           link={`/repo/${id(hit)}`}
           repository={hit._embedded?.repository}
-          ariaId={ariaId}
+          query={query}
         />
       );
     });
     return newEntries;
-  }, [ariaId, clearQuery, context.name, context.namespace, hits, id, index, query, searchTypes, t]);
-
-  const defaultLink = `/search/${searchType}/?q=${encodeURIComponent(query)}`;
-  const { onKeyDown } = useKeyBoardNavigation(entries, clearQuery, hideResults, index, setIndex, defaultLink);
-
+  }, [context.name, context.namespace, hits, id, query, searchTypes, t]);
   return (
     <div className={classNames("navbar-item", "field", "mb-0")}>
       {showHelp ? <SyntaxModal close={closeHelp} /> : null}
@@ -444,50 +240,55 @@ const OmniSearch: FC<Props> = ({ shouldClear, ariaId }) => {
           "is-loading": isLoading,
         })}
       >
-        <div className={classNames("dropdown", { "is-active": (!!data || error) && showResults })}>
-          <div className="dropdown-trigger">
-            <SearchInput
-              className="input is-small omni-search-bar"
-              type="text"
-              placeholder={t("search.placeholder")}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={onKeyDown}
-              value={query}
-              role="combobox"
-              aria-autocomplete="both"
-              data-omnisearch="true"
-              aria-expanded={query.length > 2}
-              aria-label={t("search.ariaLabel")}
-              aria-owns={`omni-search-results-${ariaId}`}
-              aria-activedescendant={index >= 0 ? `omni-search-selected-option-${ariaId}` : undefined}
-              ref={searchInputRef}
-              {...handlers}
-            />
-            {isLoading ? null : (
-              <span className="icon is-right">
-                <i className="fas fa-search" />
-              </span>
-            )}
-          </div>
-          <DropdownMenu className="dropdown-menu" onMouseDown={(e) => e.preventDefault()}>
-            {error ? (
-              <QuickSearchNotification>
-                <SearchErrorNotification error={error} showHelp={openHelp} />
-              </QuickSearchNotification>
-            ) : null}
-            {!error && data ? <Hits showHelp={openHelp} hits={hits} entries={entries} ariaId={ariaId} /> : null}
-          </DropdownMenu>
-        </div>
+        <Combobox
+          className="input is-small"
+          placeholder={t("search.placeholder")}
+          value={value}
+          onChange={handleChange}
+          ref={comboBoxRef}
+          onQueryChange={setQuery}
+          onKeyDown={(e) => {
+            // This is hacky but it seems to be one of the only solutions right now
+            if (e.key === "Tab") {
+              nextFocusRef?.current?.focus();
+              e.preventDefault();
+              clearInput();
+              comboBoxRef.current.value = "";
+            } else {
+              setDropdown(true);
+            }
+          }}
+        >
+          {showDropdown ? entries : null}
+          {showDropdown ? (
+            <HeadlessCombobox.Option
+              value={{ label: query, value: openHelp, displayValue: query }}
+              key={query}
+              as={Fragment}
+            >
+              {({ active }) => (
+                <ResultHeading>
+                  <Combobox.Option isActive={active}>
+                    <div className=" is-flex">
+                      <Icon name="question-circle" color="blue-light" className="pt-1 pl-1"></Icon>
+                      <Label className="has-text-weight-normal pl-3">{t("search.quickSearch.resultHeading")}</Label>
+                    </div>
+                  </Combobox.Option>
+                </ResultHeading>
+              )}
+            </HeadlessCombobox.Option>
+          ) : null}
+        </Combobox>
       </div>
     </div>
   );
 };
 
-const OmniSearchGuard: FC<GuardProps> = ({ links, shouldClear, ariaId }) => {
+const OmniSearchGuard: FC<GuardProps> = ({ links, ...props }) => {
   if (!links.search) {
     return null;
   }
-  return <OmniSearch shouldClear={shouldClear} ariaId={ariaId} />;
+  return <OmniSearch {...props} />;
 };
 
 export default OmniSearchGuard;
