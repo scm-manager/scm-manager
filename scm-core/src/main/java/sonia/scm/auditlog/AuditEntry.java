@@ -38,4 +38,5 @@ public @interface AuditEntry {
   String[] maskedFields() default {};
   String[] ignoredFields() default {};
   boolean ignore() default false;
+  boolean autoMask() default true;
 }
