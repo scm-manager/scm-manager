@@ -46,6 +46,8 @@ public class InMemoryByteConfigurationStoreFactory implements ConfigurationStore
 
   @SuppressWarnings("unchecked")
   public <T> ConfigurationStore<T> getStore(Class<T> type, String name) {
-    return stores.computeIfAbsent(name, n -> new InMemoryByteConfigurationStore<>(type));
+    InMemoryByteConfigurationStore<T> store = stores.computeIfAbsent(name, n -> new InMemoryByteConfigurationStore<>(type));
+    store.overrideType(type);
+    return store;
   }
 }

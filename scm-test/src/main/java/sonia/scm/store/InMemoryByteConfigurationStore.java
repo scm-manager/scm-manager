@@ -34,7 +34,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class InMemoryByteConfigurationStore<T> implements ConfigurationStore<T> {
 
-  private final Class<T> type;
+  private Class<T> type;
   byte[] store;
 
   public InMemoryByteConfigurationStore(Class<T> type) {
@@ -72,5 +72,9 @@ public class InMemoryByteConfigurationStore<T> implements ConfigurationStore<T> 
    */
   public void setRawXml(String xml) {
     store = xml.getBytes(StandardCharsets.UTF_8);
+  }
+
+  void overrideType(Class<T> type) {
+    this.type = type;
   }
 }

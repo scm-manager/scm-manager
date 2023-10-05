@@ -26,6 +26,8 @@ package sonia.scm.update;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.migration.NamespaceUpdateContext;
+import sonia.scm.migration.NamespaceUpdateStep;
 import sonia.scm.migration.RepositoryUpdateContext;
 import sonia.scm.migration.RepositoryUpdateStep;
 import sonia.scm.migration.UpdateException;
@@ -46,28 +48,33 @@ public class UpdateEngine {
 
   public static final Logger LOG = LoggerFactory.getLogger(UpdateEngine.class);
 
-
   private final List<UpdateStepWrapper> steps;
   private final RepositoryUpdateIterator repositoryUpdateIterator;
+  private final NamespaceUpdateIterator namespaceUpdateIterator;
   private final UpdateStepStore updateStepStore;
 
   @Inject
   public UpdateEngine(
     Set<UpdateStep> globalSteps,
     Set<RepositoryUpdateStep> repositorySteps,
+    Set<NamespaceUpdateStep> namespaceSteps,
     RepositoryUpdateIterator repositoryUpdateIterator,
-    UpdateStepStore updateStepStore) {
+    NamespaceUpdateIterator namespaceUpdateIterator, UpdateStepStore updateStepStore) {
     this.repositoryUpdateIterator = repositoryUpdateIterator;
+    this.namespaceUpdateIterator = namespaceUpdateIterator;
     this.updateStepStore = updateStepStore;
-    this.steps = sortSteps(globalSteps, repositorySteps);
+    this.steps = sortSteps(globalSteps, repositorySteps, namespaceSteps);
   }
 
-  private List<UpdateStepWrapper> sortSteps(Set<UpdateStep> globalSteps, Set<RepositoryUpdateStep> repositorySteps) {
+  private List<UpdateStepWrapper> sortSteps(Set<UpdateStep> globalSteps, Set<RepositoryUpdateStep> repositorySteps, Set<NamespaceUpdateStep> namespaceSteps) {
     LOG.trace("sorting available update steps:");
     List<UpdateStepWrapper> sortedSteps =
       concat(
-        globalSteps.stream().filter(this::notRunYet).map(GlobalUpdateStepWrapper::new),
-        repositorySteps.stream().map(RepositoryUpdateStepWrapper::new))
+        concat(
+          globalSteps.stream().filter(this::notRunYet).map(GlobalUpdateStepWrapper::new),
+          repositorySteps.stream().map(RepositoryUpdateStepWrapper::new)),
+        namespaceSteps.stream().map(NamespaceUpdateStepWrapper::new)
+      )
       .sorted(
         Comparator
           .comparing(UpdateStepWrapper::getTargetVersion)
@@ -246,6 +253,54 @@ public class UpdateEngine {
         repositoryId
       );
       return updateStepStore.notRunYet(repositoryId, delegate);
+    }
+  }
+
+  private class NamespaceUpdateStepWrapper extends UpdateStepWrapper {
+
+    private final NamespaceUpdateStep delegate;
+
+    public NamespaceUpdateStepWrapper(NamespaceUpdateStep delegate) {
+      super(delegate);
+      this.delegate = delegate;
+    }
+
+    @Override
+    public boolean isGlobalUpdateStep() {
+      return false;
+    }
+
+    @Override
+    boolean isCoreUpdate() {
+      return false;
+    }
+
+    @Override
+    void doUpdate() {
+      namespaceUpdateIterator.updateEachNamespace(this::doUpdate);
+    }
+
+    @Override
+    void doUpdate(String namespace) throws Exception {
+      if (notRunYet(namespace)) {
+        LOG.info("running update step for type {} and version {} (class {}) for namespace {}",
+          delegate.getAffectedDataType(),
+          delegate.getTargetVersion(),
+          delegate.getClass().getName(),
+          namespace
+        );
+        delegate.doUpdate(new NamespaceUpdateContext(namespace));
+        updateStepStore.storeExecutedUpdate(namespace, delegate);
+      }
+    }
+
+    private boolean notRunYet(String namespace) {
+      LOG.trace("checking whether to run update step for type {} and version {} on namespace {}",
+        delegate.getAffectedDataType(),
+        delegate.getTargetVersion(),
+        namespace
+      );
+      return updateStepStore.notRunYet(namespace, delegate);
     }
   }
 }

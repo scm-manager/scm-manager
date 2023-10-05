@@ -26,6 +26,7 @@ package sonia.scm.lifecycle.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
+import sonia.scm.migration.NamespaceUpdateStep;
 import sonia.scm.migration.RepositoryUpdateStep;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.PluginLoader;
@@ -41,7 +42,8 @@ public class UpdateStepModule extends AbstractModule {
   @Override
   protected void configure() {
     Multibinder<UpdateStep> updateStepBinder = Multibinder.newSetBinder(binder(), UpdateStep.class);
-    Multibinder<RepositoryUpdateStep> repositoryUdateStepBinder = Multibinder.newSetBinder(binder(), RepositoryUpdateStep.class);
+    Multibinder<RepositoryUpdateStep> repositoryUpdateStepBinder = Multibinder.newSetBinder(binder(), RepositoryUpdateStep.class);
+    Multibinder<NamespaceUpdateStep> namespaceUpdateStepBinder = Multibinder.newSetBinder(binder(), NamespaceUpdateStep.class);
     pluginLoader
       .getExtensionProcessor()
       .byExtensionPoint(UpdateStep.class)
@@ -49,6 +51,10 @@ public class UpdateStepModule extends AbstractModule {
     pluginLoader
       .getExtensionProcessor()
       .byExtensionPoint(RepositoryUpdateStep.class)
-      .forEach(stepClass -> repositoryUdateStepBinder.addBinding().to(stepClass));
+      .forEach(stepClass -> repositoryUpdateStepBinder.addBinding().to(stepClass));
+    pluginLoader
+      .getExtensionProcessor()
+      .byExtensionPoint(NamespaceUpdateStep.class)
+      .forEach(stepClass -> namespaceUpdateStepBinder.addBinding().to(stepClass));
   }
 }

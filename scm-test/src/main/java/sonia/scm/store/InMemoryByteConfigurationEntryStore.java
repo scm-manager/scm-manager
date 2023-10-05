@@ -37,7 +37,7 @@ import java.util.Map;
 
 public class InMemoryByteConfigurationEntryStore<V> implements ConfigurationEntryStore<V> {
 
-  private final Class<V> type;
+  private Class<V> type;
   private final KeyGenerator generator = new UUIDKeyGenerator();
   private final Map<String, byte[]> store = new HashMap<>();
 
@@ -103,5 +103,9 @@ public class InMemoryByteConfigurationEntryStore<V> implements ConfigurationEntr
       return JAXB.unmarshal(new ByteArrayInputStream(bytes), type);
     }
     return null;
+  }
+
+  void overrideType(Class<V> type) {
+    this.type = type;
   }
 }

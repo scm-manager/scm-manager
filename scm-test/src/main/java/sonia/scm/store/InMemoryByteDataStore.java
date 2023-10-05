@@ -37,7 +37,7 @@ import java.util.Map;
 
 public class InMemoryByteDataStore<T> implements DataStore<T> {
 
-  private final Class<T> type;
+  private Class<T> type;
   private final KeyGenerator generator = new UUIDKeyGenerator();
   private final Map<String, byte[]> store = new HashMap<>();
 
@@ -103,5 +103,9 @@ public class InMemoryByteDataStore<T> implements DataStore<T> {
       return JAXB.unmarshal(new ByteArrayInputStream(bytes), type);
     }
     return null;
+  }
+
+  void overrideType(Class<T> type) {
+    this.type = type;
   }
 }

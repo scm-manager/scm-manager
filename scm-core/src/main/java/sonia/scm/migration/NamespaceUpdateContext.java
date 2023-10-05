@@ -22,33 +22,25 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
-
-import java.util.HashMap;
-import java.util.Map;
+package sonia.scm.migration;
 
 /**
- * Stores data in memory but in contrast to {@link InMemoryDataStoreFactory}
- * it uses jaxb to marshal and unmarshall the objects.
+ * Data for the namespace, whose data that should be migrated.
  *
- * @since 2.18.0
+ * @since 2.47.0
  */
-public class InMemoryByteDataStoreFactory implements DataStoreFactory, InMemoryStoreParameterNameComputer {
+public final class NamespaceUpdateContext {
 
-  @SuppressWarnings("rawtypes")
-  private final Map<String, InMemoryByteDataStore> stores = new HashMap<>();
+  private final String namespace;
 
-  @Override
-  public <T> DataStore<T> getStore(TypedStoreParameters<T> storeParameters) {
-    String name = computeKey(storeParameters);
-    Class<T> type = storeParameters.getType();
-    return getStore(type, name);
+  public NamespaceUpdateContext(String namespace) {
+    this.namespace = namespace;
   }
 
-  @SuppressWarnings("unchecked")
-  public  <T> DataStore<T> getStore(Class<T> type, String name) {
-    InMemoryByteDataStore<T> store = stores.computeIfAbsent(name, n -> new InMemoryByteDataStore<>(type));
-    store.overrideType(type);
-    return store;
+  /**
+   * The name of the namespace, whose data should be migrated.
+   */
+  public String getNamespace() {
+    return namespace;
   }
 }
