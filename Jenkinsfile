@@ -10,7 +10,7 @@ pipeline {
     docker {
       image 'scmmanager/java-build:11.0.15_10-2'
       args '-v /var/run/docker.sock:/var/run/docker.sock --group-add 998'
-      label 'scmm'
+      label 'scmm-core'
     }
   }
 
