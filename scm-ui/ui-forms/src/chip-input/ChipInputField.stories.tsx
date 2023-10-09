@@ -23,22 +23,28 @@
  */
 
 import { storiesOf } from "@storybook/react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ChipInputField from "./ChipInputField";
 import Combobox from "../combobox/Combobox";
 import { Option } from "@scm-manager/ui-types";
+import ChipInput from "../headless-chip-input/ChipInput";
 
 storiesOf("Chip Input Field", module)
   .add("Default", () => {
     const [value, setValue] = useState<Option<string>[]>([]);
+    const ref = useRef<HTMLInputElement>(null);
     return (
-      <ChipInputField
-        value={value}
-        onChange={setValue}
-        label="Test Chips"
-        placeholder="Type a new chip name and press enter to add"
-        aria-label="My personal chip list"
-      />
+      <>
+        <ChipInputField
+          value={value}
+          onChange={setValue}
+          label="Test Chips"
+          placeholder="Type a new chip name and press enter to add"
+          aria-label="My personal chip list"
+          ref={ref}
+        />
+        <ChipInput.AddButton inputRef={ref}>Add</ChipInput.AddButton>
+      </>
     );
   })
   .add("With Autocomplete", () => {

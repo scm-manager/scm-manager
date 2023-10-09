@@ -28,6 +28,17 @@ import useInnerRef from "./useInnerRef";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
 import classNames from "classnames";
 import { createA11yId } from "../createA11yId";
+import styled from "styled-components";
+
+const StyledInput = styled.input`
+  height: 1rem;
+  width: 1rem;
+`;
+
+const StyledLabel = styled.label`
+  margin-left: -0.75rem;
+  display: inline-flex;
+`;
 
 export interface CheckboxElement extends HTMLElement {
   value: boolean;
@@ -109,11 +120,11 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
             because jsx label does not the custom disabled attribute
             but bulma does.
             // @ts-ignore */}
-        <label className="checkbox" disabled={disabled}>
-          <input
+        <StyledLabel className="checkbox is-align-items-center" disabled={disabled}>
+          <StyledInput
             type="checkbox"
             name={name}
-            className={classNames("checkbox", className)}
+            className={classNames("m-3", className)}
             onChange={handleChange}
             onBlur={handleBlur}
             ref={field}
@@ -126,7 +137,7 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
           />{" "}
           {label}
           {renderHelp()}
-        </label>
+        </StyledLabel>
       </div>
     </fieldset>
   );

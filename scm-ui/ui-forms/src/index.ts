@@ -36,16 +36,22 @@ import ControlledColumn from "./table/ControlledColumn";
 import AddListEntryForm from "./AddListEntryForm";
 import { ScmNestedFormPathContextProvider } from "./FormPathContext";
 import ControlledComboboxField from "./combobox/ControlledComboboxField";
+import ChipInputFieldComponent from "./chip-input/ChipInputField";
+import ChipInput from "./headless-chip-input/ChipInput";
 
+export { default as Checkbox } from "./checkbox/Checkbox";
 export { default as Combobox } from "./combobox/Combobox";
 export { default as ConfigurationForm } from "./ConfigurationForm";
 export { default as SelectField } from "./select/SelectField";
-export { default as ChipInputField } from "./chip-input/ChipInputField";
 export { default as ComboboxField } from "./combobox/ComboboxField";
 export { default as Input } from "./input/Input";
 export { default as Select } from "./select/Select";
 export * from "./resourceHooks";
 export { default as Label } from "./base/label/Label";
+
+export const ChipInputField = Object.assign(ChipInputFieldComponent, {
+  AddButton: ChipInput.AddButton,
+});
 
 export const Form = Object.assign(FormCmp, {
   Row: FormRow,

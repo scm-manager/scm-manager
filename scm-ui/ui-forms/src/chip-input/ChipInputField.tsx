@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { KeyboardEventHandler, ReactElement, useCallback } from "react";
+import React, { KeyboardEventHandler, PropsWithRef, ReactElement, Ref, RefObject, useCallback } from "react";
 import { createAttributesForTesting, useGeneratedId } from "@scm-manager/ui-components";
 import Field from "../base/Field";
 import Label from "../base/label/Label";
@@ -81,6 +81,7 @@ type InputFieldProps<T> = {
   className?: string;
   isLoading?: boolean;
   isNewItemDuplicate?: (existingItem: Option<T>, newItem: Option<T>) => boolean;
+  ref?: Ref<HTMLInputElement>;
 };
 
 /**
@@ -105,7 +106,7 @@ const ChipInputField = function ChipInputField<T>(
     isLoading,
     isNewItemDuplicate,
     ...props
-  }: InputFieldProps<T>,
+  }: PropsWithRef<InputFieldProps<T>>,
   ref: React.ForwardedRef<HTMLInputElement>
 ) {
   const [t] = useTranslation("commons", { keyPrefix: "form.chipList" });

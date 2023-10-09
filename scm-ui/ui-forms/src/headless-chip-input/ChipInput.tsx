@@ -24,6 +24,7 @@
 
 import React, {
   ButtonHTMLAttributes,
+  ComponentProps,
   ComponentType,
   Context,
   createContext,
@@ -40,6 +41,7 @@ import React, {
 import { Slot } from "@radix-ui/react-slot";
 import { Option } from "@scm-manager/ui-types";
 import { mergeRefs, withForwardRef } from "../helpers";
+import { Button } from "@scm-manager/ui-buttons";
 
 type ChipInputContextType<T> = {
   add(newValue: Option<T>): void;
@@ -215,8 +217,21 @@ const ChipInput = withForwardRef(function ChipInput<T>(
   );
 });
 
+const AddButton = React.forwardRef<
+  HTMLButtonElement,
+  Omit<ComponentProps<typeof Button>, "onClick"> & { inputRef: RefObject<HTMLInputElement | null> }
+>(({ inputRef, children, ...props }, ref) => (
+  <Button
+    {...props}
+    onClick={() => inputRef.current?.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }))}
+  >
+    {children}
+  </Button>
+));
+
 export default Object.assign(ChipInput, {
   Chip: Object.assign(Chip, {
     Delete: ChipDelete,
   }),
+  AddButton,
 });

@@ -2478,13 +2478,13 @@ exports[`Storyshots Forms/Checkbox Default 1`] = `
       className="control"
     >
       <label
-        className="checkbox"
+        className="Checkbox__StyledLabel-sc-r42kwe-1 ZZdrN checkbox is-align-items-center"
       >
         <input
           aria-describedby="checkbox_11"
           aria-labelledby="checkbox_10"
           checked={false}
-          className="checkbox"
+          className="Checkbox__StyledInput-sc-r42kwe-0 kCgKZT m-3"
           onBlur={[Function]}
           onChange={[Function]}
           type="checkbox"
@@ -2501,13 +2501,13 @@ exports[`Storyshots Forms/Checkbox Default 1`] = `
       className="control"
     >
       <label
-        className="checkbox"
+        className="Checkbox__StyledLabel-sc-r42kwe-1 ZZdrN checkbox is-align-items-center"
       >
         <input
           aria-describedby="checkbox_13"
           aria-labelledby="checkbox_12"
           checked={true}
-          className="checkbox"
+          className="Checkbox__StyledInput-sc-r42kwe-0 kCgKZT m-3"
           onBlur={[Function]}
           onChange={[Function]}
           type="checkbox"
@@ -2524,13 +2524,13 @@ exports[`Storyshots Forms/Checkbox Default 1`] = `
       className="control"
     >
       <label
-        className="checkbox"
+        className="Checkbox__StyledLabel-sc-r42kwe-1 ZZdrN checkbox is-align-items-center"
       >
         <input
           aria-describedby="checkbox_15"
           aria-labelledby="checkbox_14"
           checked={true}
-          className="checkbox"
+          className="Checkbox__StyledInput-sc-r42kwe-0 kCgKZT m-3"
           onBlur={[Function]}
           onChange={[Function]}
           type="checkbox"
@@ -2554,14 +2554,14 @@ exports[`Storyshots Forms/Checkbox Disabled 1`] = `
       className="control"
     >
       <label
-        className="checkbox"
+        className="Checkbox__StyledLabel-sc-r42kwe-1 ZZdrN checkbox is-align-items-center"
         disabled={true}
       >
         <input
           aria-describedby="checkbox_17"
           aria-labelledby="checkbox_16"
           checked={true}
-          className="checkbox"
+          className="Checkbox__StyledInput-sc-r42kwe-0 kCgKZT m-3"
           disabled={true}
           onBlur={[Function]}
           onChange={[Function]}
@@ -2584,13 +2584,13 @@ Array [
       className="control"
     >
       <label
-        className="checkbox"
+        className="Checkbox__StyledLabel-sc-r42kwe-1 ZZdrN checkbox is-align-items-center"
       >
         <input
           aria-describedby="checkbox_25"
           aria-labelledby="checkbox_24"
           checked={false}
-          className="checkbox"
+          className="Checkbox__StyledInput-sc-r42kwe-0 kCgKZT m-3"
           onBlur={[Function]}
           onChange={[Function]}
           type="checkbox"
@@ -2618,12 +2618,12 @@ exports[`Storyshots Forms/Checkbox ReactHookForm 1`] = `
       className="control"
     >
       <label
-        className="checkbox"
+        className="Checkbox__StyledLabel-sc-r42kwe-1 ZZdrN checkbox is-align-items-center"
       >
         <input
           aria-describedby="checkbox_27"
           aria-labelledby="checkbox_26"
-          className="checkbox"
+          className="Checkbox__StyledInput-sc-r42kwe-0 kCgKZT m-3"
           name="rememberMe"
           onBlur={[Function]}
           onChange={[Function]}
@@ -2641,12 +2641,12 @@ exports[`Storyshots Forms/Checkbox ReactHookForm 1`] = `
       className="control"
     >
       <label
-        className="checkbox"
+        className="Checkbox__StyledLabel-sc-r42kwe-1 ZZdrN checkbox is-align-items-center"
       >
         <input
           aria-describedby="checkbox_29"
           aria-labelledby="checkbox_28"
-          className="checkbox"
+          className="Checkbox__StyledInput-sc-r42kwe-0 kCgKZT m-3"
           name="scramblePassword"
           onBlur={[Function]}
           onChange={[Function]}
@@ -2664,13 +2664,13 @@ exports[`Storyshots Forms/Checkbox ReactHookForm 1`] = `
       className="control"
     >
       <label
-        className="checkbox"
+        className="Checkbox__StyledLabel-sc-r42kwe-1 ZZdrN checkbox is-align-items-center"
         disabled={true}
       >
         <input
           aria-describedby="checkbox_31"
           aria-labelledby="checkbox_30"
-          className="checkbox"
+          className="Checkbox__StyledInput-sc-r42kwe-0 kCgKZT m-3"
           disabled={true}
           name="disabled"
           onBlur={[Function]}
@@ -2690,12 +2690,12 @@ exports[`Storyshots Forms/Checkbox ReactHookForm 1`] = `
       className="control"
     >
       <label
-        className="checkbox"
+        className="Checkbox__StyledLabel-sc-r42kwe-1 ZZdrN checkbox is-align-items-center"
       >
         <input
           aria-describedby="checkbox_33"
           aria-labelledby="checkbox_32"
-          className="checkbox"
+          className="Checkbox__StyledInput-sc-r42kwe-0 kCgKZT m-3"
           name="readonly"
           onBlur={[Function]}
           onChange={[Function]}
@@ -2735,13 +2735,13 @@ Array [
       className="control"
     >
       <label
-        className="checkbox"
+        className="Checkbox__StyledLabel-sc-r42kwe-1 ZZdrN checkbox is-align-items-center"
       >
         <input
           aria-describedby="checkbox_23"
           aria-labelledby="checkbox_22"
           checked={false}
-          className="checkbox"
+          className="Checkbox__StyledInput-sc-r42kwe-0 kCgKZT m-3"
           onBlur={[Function]}
           onChange={[Function]}
           type="checkbox"
@@ -2776,13 +2776,13 @@ exports[`Storyshots Forms/Checkbox With HelpText 1`] = `
       className="control"
     >
       <label
-        className="checkbox"
+        className="Checkbox__StyledLabel-sc-r42kwe-1 ZZdrN checkbox is-align-items-center"
       >
         <input
           aria-describedby="checkbox_19"
           aria-labelledby="checkbox_18"
           checked={false}
-          className="checkbox"
+          className="Checkbox__StyledInput-sc-r42kwe-0 kCgKZT m-3"
           onBlur={[Function]}
           onChange={[Function]}
           type="checkbox"
@@ -2811,13 +2811,13 @@ exports[`Storyshots Forms/Checkbox With HelpText 1`] = `
       className="control"
     >
       <label
-        className="checkbox"
+        className="Checkbox__StyledLabel-sc-r42kwe-1 ZZdrN checkbox is-align-items-center"
       >
         <input
           aria-describedby="checkbox_21"
           aria-labelledby="checkbox_20"
           checked={true}
-          className="checkbox"
+          className="Checkbox__StyledInput-sc-r42kwe-0 kCgKZT m-3"
           onBlur={[Function]}
           onChange={[Function]}
           type="checkbox"
@@ -18413,13 +18413,13 @@ Array [
                 className="control"
               >
                 <label
-                  className="checkbox"
+                  className="Checkbox__StyledLabel-sc-r42kwe-1 ZZdrN checkbox is-align-items-center"
                 >
                   <input
                     aria-describedby="checkbox_130"
                     aria-labelledby="checkbox_129"
                     checked={true}
-                    className="checkbox"
+                    className="Checkbox__StyledInput-sc-r42kwe-0 kCgKZT m-3"
                     onBlur={[Function]}
                     onChange={[Function]}
                     type="checkbox"
