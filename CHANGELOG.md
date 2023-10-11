@@ -5,10 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.47.0] - 2023-10-11
+### Added
+- Atomic design page template simple data pages
+- Force option to internal push command api
+- Update steps for namespaces
+- Fields can now get automatically masked, if the field name contains certain phrases
+- Textarea component
+- The search page now contains another search bar within, that persists the current query
+- New api for interactive card details
+- Cardtags can now be colored according to 3 distinct styles
+
+### Fixed
+- Ignore non-XML files in data store directories
+- Bump JGit to version 6.7.0.202309050840-r to fix CVE-2023-4759
+- Exception in SVN repositories due to incorrect git initialization
+- Numerous IllegalArgumentExceptions and ConcurrentModificationExceptoins in log file
+- Make compare accessible
+- Compare target when default branch contains slash
+- Disable combobox autocomplete
+- Update to svnkit 1.10.10-scm2
+- Clean up old installation directories when installing plugins
+- Make search accessible
+- Catch different exceptions after repositories are deleted
+
+### Changed
+- The internal API for content action menus were changed, to handle loading states of extensions
+- Use card layout for repository overview
+- The checkbox now has a bigger click target
+- The chip input api now provides an external add button
+- OmniSearchbar now makes use of the Combobox
+
 ## [2.46.1] - 2023-09-01
 ### Fixed
 - Loading LFS files for imports and mirrors (from 2.44.3)
-- Handling of submodules in imports and mirrors (from 2.44.3) 
+- Handling of submodules in imports and mirrors (from 2.44.3)
 
 ## [2.46.0] - 2023-08-24
 ### Added
@@ -1365,3 +1396,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.44.0]: https://scm-manager.org/download/2.44.0
 [2.44.1]: https://scm-manager.org/download/2.44.1
 [2.44.2]: https://scm-manager.org/download/2.44.2
+[2.47.0]: https://scm-manager.org/download/2.47.0

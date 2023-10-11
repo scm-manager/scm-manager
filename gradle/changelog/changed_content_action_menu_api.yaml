@@ -1,2 +1,0 @@
-- type: changed
-  description: The internal API for content action menus were changed, to handle loading states of extensions

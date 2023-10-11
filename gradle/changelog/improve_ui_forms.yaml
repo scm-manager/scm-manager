@@ -1,4 +1,0 @@
-- type: changed
-  description: The checkbox now has a bigger click target
-- type: changed
-  description: The chip input api now provides an external add button
