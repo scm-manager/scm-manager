@@ -1,0 +1,28 @@
+import { Meta, Story } from "@storybook/addon-docs";
+import Textarea from "./Textarea"
+
+<Meta title="Textarea" />
+
+This will be our latest Textarea component
+
+<Story name="Default">
+  <Textarea />
+</Story>
+
+<Story name="With Variant">
+  <Textarea variant="danger" />
+</Story>
+
+<Story name="With Custom Class">
+  <Textarea className="is-warning" />
+</Story>
+
+<Story name="With Ref">
+  <Textarea ref={r => {r.focus()}} />
+</Story>
+
+<Story name="With Default Value">
+  <Textarea>
+  value
+  </Textarea>
+</Story>

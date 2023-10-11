@@ -39,12 +39,14 @@ import ControlledComboboxField from "./combobox/ControlledComboboxField";
 import ChipInputFieldComponent from "./chip-input/ChipInputField";
 import ChipInput from "./headless-chip-input/ChipInput";
 
+export { default as Field } from "./base/Field";
 export { default as Checkbox } from "./checkbox/Checkbox";
 export { default as Combobox } from "./combobox/Combobox";
 export { default as ConfigurationForm } from "./ConfigurationForm";
 export { default as SelectField } from "./select/SelectField";
 export { default as ComboboxField } from "./combobox/ComboboxField";
 export { default as Input } from "./input/Input";
+export { default as Textarea } from "./input/Textarea";
 export { default as Select } from "./select/Select";
 export * from "./resourceHooks";
 export { default as Label } from "./base/label/Label";
