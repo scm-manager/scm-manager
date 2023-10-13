@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { define, defineLazy, defineStatic, load } from "@scm-manager/ui-modules";
+import { defineLazy, defineStatic } from "./define";
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -41,13 +41,7 @@ import * as UIOverlays from "@scm-manager/ui-overlays";
 import * as UILayout from "@scm-manager/ui-layout";
 import * as UIApi from "@scm-manager/ui-api";
 
-declare global {
-  interface Window {
-    define: typeof define;
-  }
-}
-
-window.define = define;
+// This module has side effects and is required to be imported unconditionally into the application at all times.
 
 defineStatic("react", React);
 defineStatic("react-dom", ReactDOM);
@@ -67,7 +61,5 @@ defineStatic("@scm-manager/ui-layout", UILayout);
 defineStatic("@scm-manager/ui-api", UIApi);
 
 // redux is deprecated in favor of ui-api
-defineLazy("redux", () => import("@scm-manager/ui-legacy").then(legacy => legacy.Redux));
-defineLazy("react-redux", () => import("@scm-manager/ui-legacy").then(legacy => legacy.ReactRedux));
-
-export default load;
+defineLazy("redux", () => import("@scm-manager/ui-legacy").then((legacy) => legacy.Redux));
+defineLazy("react-redux", () => import("@scm-manager/ui-legacy").then((legacy) => legacy.ReactRedux));

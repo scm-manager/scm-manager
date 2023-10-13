@@ -39,11 +39,11 @@ const yarn = (args, cwd) => {
   }
 };
 
-const version = v => {
+const version = (v) => {
   yarn(["version", "--no-git-tag-version", "--new-version", v]);
 };
 
-const publish = v => {
+const publish = (v) => {
   yarn(["publish", "--new-version", v]);
 };
 
@@ -54,7 +54,7 @@ const findWorkspaces = () => {
 
 const updateDependencies = (workspaces, dependencies, v) => {
   if (dependencies) {
-    Object.keys(dependencies).forEach(dep => {
+    Object.keys(dependencies).forEach((dep) => {
       if (workspaces[dep]) {
         dependencies[dep] = v;
       }
@@ -62,9 +62,9 @@ const updateDependencies = (workspaces, dependencies, v) => {
   }
 };
 
-const workspaceVersion = v => {
+const workspaceVersion = (v) => {
   const workspaces = findWorkspaces();
-  Object.keys(workspaces).forEach(name => {
+  Object.keys(workspaces).forEach((name) => {
     const workspace = workspaces[name];
     const packageJsonPath = path.join(process.cwd(), workspace.location, "package.json");
 
@@ -79,23 +79,23 @@ const workspaceVersion = v => {
   });
 };
 
-const forEachModule = fn => {
+const forEachModule = (fn) => {
   const workspaces = findWorkspaces();
-  Object.keys(workspaces).forEach(name => {
+  Object.keys(workspaces).forEach((name) => {
     const workspace = workspaces[name];
     const cwd = path.join(process.cwd(), workspace.location);
     const packageJson = JSON.parse(fs.readFileSync(path.join(cwd, "package.json"), { encoding: "utf8" }));
-    fn(packageJson, cwd)
+    fn(packageJson, cwd);
   });
 };
 
-const workspacePublish = v => {
+const workspacePublish = (v) => {
   forEachModule((module, cwd) => {
     if (!module.private) {
-      console.log(`publish module ${module.name}`)
-      yarn(["publish", "--new-version", v], cwd)
+      console.log(`publish module ${module.name}`);
+      yarn(["publish", "--new-version", v], cwd);
     } else {
-      console.log(`skip private module ${module.name}`)
+      console.log(`skip private module ${module.name}`);
     }
   });
 };
@@ -105,5 +105,5 @@ module.exports = {
   publish,
   yarn,
   workspaceVersion,
-  workspacePublish
+  workspacePublish,
 };

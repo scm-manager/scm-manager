@@ -30,7 +30,7 @@ const createIndexMiddleware = require("./middleware/IndexMiddleware");
 const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
 
 const isDevelopment = process.env.NODE_ENV === "development";
-const root = path.resolve(process.cwd(), "..");
+const root = path.resolve(__dirname, "..", "..");
 
 const babelPlugins = [];
 const webpackPlugins = [];
@@ -67,7 +67,7 @@ const base = {
   context: root,
   target: "web",
   resolveLoader: {
-    modules: [path.join(__dirname, "..", "node_modules"), "node_modules"],
+    modules: [path.join(__dirname, "..", "..", "..", "node_modules"), "node_modules"],
     extensions: [".js", ".json"],
     mainFields: ["loader", "main"],
   },
@@ -81,7 +81,7 @@ module.exports = [
         path.resolve(__dirname, "webpack-public-path.js"),
         // enable async/await
         "regenerator-runtime/runtime",
-        "./ui-webapp/src/index.tsx"
+        "./ui-webapp/src/index.tsx",
       ],
     },
     devtool: "eval-cheap-module-source-map",
@@ -206,6 +206,22 @@ module.exports = [
     module: {
       rules: [
         {
+          test: /\.(ttf|eot|svg|png|jpg|gif|ico)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          use: [
+            {
+              loader: "file-loader",
+            },
+          ],
+        },
+        {
+          test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+          use: [
+            {
+              loader: "file-loader",
+            },
+          ],
+        },
+        {
           test: /\.(css|scss|sass)$/i,
           use: [
             {
@@ -230,16 +246,6 @@ module.exports = [
     output: {
       path: path.join(root, "build", "webapp", "assets"),
       filename: "ui-theme-[name].bundle.js",
-    },
-  },
-  {
-    ...base,
-    entry: {
-      polyfills: "./ui-polyfill/src/index.js",
-    },
-    output: {
-      path: path.resolve(root, "build", "webapp", "assets"),
-      filename: "[name].bundle.js",
     },
   },
 ];

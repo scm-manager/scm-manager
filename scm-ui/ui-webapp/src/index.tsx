@@ -38,6 +38,9 @@ import "./tokenExpired";
 import { ApiProvider } from "@scm-manager/ui-api";
 import { ShortcutDocsContextProvider } from "@scm-manager/ui-shortcuts";
 
+// Makes sure that the global `define` function is registered and all provided modules are included in the final bundle at all times
+import "./_modules/provided-modules";
+
 binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);
 
 const root = document.getElementById("root");

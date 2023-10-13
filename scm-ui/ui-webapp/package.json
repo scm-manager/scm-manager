@@ -7,7 +7,6 @@
     "@scm-manager/ui-components": "2.47.1-SNAPSHOT",
     "@scm-manager/ui-api": "2.47.1-SNAPSHOT",
     "@scm-manager/ui-extensions": "2.47.1-SNAPSHOT",
-    "@scm-manager/ui-modules": "2.47.1-SNAPSHOT",
     "@scm-manager/ui-syntaxhighlighting": "2.47.1-SNAPSHOT",
     "@scm-manager/ui-text": "2.47.1-SNAPSHOT",
     "@scm-manager/ui-shortcuts": "2.47.1-SNAPSHOT",
@@ -37,8 +36,8 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint src",
-    "serve": "ui-scripts serve development",
-    "build": "webpack-cli --mode=production --config=../ui-scripts/src/webpack.config.js"
+    "serve": "node ./webpack/serve.js development",
+    "build": "webpack-cli --mode=production --config=./webpack/webpack.config.js"
   },
   "devDependencies": {
     "@scm-manager/eslint-config": "^2.17.0",
@@ -56,7 +55,26 @@
     "@types/systemjs": "^0.20.6",
     "@types/ua-parser-js": "^0.7.36",
     "fetch-mock": "^7.5.1",
-    "react-test-renderer": "^17.0.1"
+    "react-test-renderer": "^17.0.1",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.5",
+    "webpack-bundle-analyzer": "^4.5.0",
+    "babel-loader": "^8.2.3",
+    "css-loader": "^6.5.0",
+    "file-loader": "^6.2.0",
+    "mini-css-extract-plugin": "^2.4.3",
+    "mustache": "^3.1.0",
+    "optimize-css-assets-webpack-plugin": "^6.0.1",
+    "react-refresh": "^0.14.0",
+    "sass": "^1.43.4",
+    "sass-loader": "^12.3.0",
+    "script-loader": "^0.7.2",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.60.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.4.0",
+    "postcss": "^8.4.12",
+    "postcss-loader": "^6.2.1",
+    "autoprefixer": "^10.4.4"
   },
   "babel": {
     "presets": [
@@ -74,3 +92,4 @@
     "access": "public"
   }
 }
+

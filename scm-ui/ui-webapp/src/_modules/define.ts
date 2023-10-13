@@ -128,28 +128,21 @@ export const define = (name: string, dependencies: string[], fn: (...args: unkno
 };
 
 /**
- * Asynchronously loads and executes a given resource bundle.
- *
- * If a module name is supplied, the bundle is expected to contain a single (AMD)[https://github.com/amdjs/amdjs-api/blob/master/AMD.md]
- * module matching the provided module name.
- *
- * The promise will only resolve once the bundle loaded and, if it is a module,
- * all dependencies are resolved and the module executed.
+ * As amd modules are loaded asynchronously using the global {@link define} function,
+ * we need to register a callback for the loader to notify us when the bundle has been loaded and executed.
+ * This has to be done **BEFORE** the bundle's javascript is loaded.
  */
-export const load = (resource: string, moduleName?: string) =>
-  new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = resource;
+export const registerModuleLoadingCallback = (
+  moduleName: string,
+  resolve: (value: unknown) => void,
+  reject: (reason?: unknown) => void
+) => (bundleLoaderPromises[moduleName] = { resolve, reject });
 
-    if (moduleName) {
-      bundleLoaderPromises[moduleName] = { resolve, reject };
-    } else {
-      script.onload = resolve;
-    }
+// This module has a side effect and is required to be imported unconditionally into the application at all times.
+declare global {
+  interface Window {
+    define: typeof define;
+  }
+}
 
-    script.onerror = reject;
-
-    const body = document.querySelector("body");
-    body?.appendChild(script);
-    body?.removeChild(script);
-  });
+window.define = define;

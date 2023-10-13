@@ -141,7 +141,7 @@ class RunTask extends DefaultTask {
 
   private Closure<Void> createFrontend() {
     def frontend = project.tasks.create('boot-frontend', NodeTask) {
-      script = new File(project.rootProject.projectDir, 'scm-ui/ui-scripts/bin/turbo-runner.js')
+      script = new File(project.rootProject.projectDir, 'scripts/turbo-runner.js')
       args = ['run', 'serve', '--filter=@scm-manager/ui-webapp']
       environment = [
         'NODE_ENV': 'development',

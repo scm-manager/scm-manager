@@ -21,24 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const yarn = require("../yarn");
-const versions = require("../versions");
 
-module.exports = args => {
-  if (args.length < 1) {
-    console.log("usage ui-scripts publish <version>");
-    process.exit(1);
-  }
+const Webpack = require("webpack");
+const WebpackDevServer = require("webpack-dev-server");
+const webpackConfig = require("./webpack.config");
 
-  const version = args[0];
-  const index = version.indexOf("-SNAPSHOT");
-  if (index > 0) {
-    const snapshotVersion = `${version.substring(0, index)}-${versions.createSnapshotVersion()}`;
-    console.log(`publish snapshot release ${snapshotVersion}`);
-    yarn.workspaceVersion(snapshotVersion);
-    yarn.workspacePublish(snapshotVersion);
-    yarn.workspaceVersion(version);
-  } else {
-    yarn.workspacePublish(version);
-  }
-};
+const compiler = Webpack(webpackConfig);
+const devServerConfig = webpackConfig[0].devServer;
+const server = new WebpackDevServer(devServerConfig, compiler);
+
+server.startCallback(() => {
+  console.log(`Starting server on http://localhost:${devServerConfig.port}`);
+});
+
+// if we could access the parent id of our current process
+// we start watching it, because a changing parent id means
+// that the parent process has died.
+// On linux our process does not receive any signal if our parent dies,
+// e.g.: ctrl+c in gradle
+if (process.ppid) {
+  const { ppid } = process;
+  setInterval(() => {
+    if (ppid !== process.ppid) {
+      server.close();
+      process.exit();
+    }
+  }, 500);
+}

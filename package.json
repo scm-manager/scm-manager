@@ -14,8 +14,8 @@
     "typecheck": "turbo run typecheck --filter=\"@scm-manager/ui-*\"",
     "lint": "turbo run lint --filter=\"@scm-manager/ui-*\"",
     "predeploy": "turbo run build --filter=\"@scm-manager/ui-*\"",
-    "deploy": "ui-scripts publish",
-    "set-version": "ui-scripts version"
+    "deploy": "node ./scripts/publish.js",
+    "set-version": "node ./scripts/version.js"
   },
   "dependencies": {
     "@scm-manager/eslint-config": "2.17.0"

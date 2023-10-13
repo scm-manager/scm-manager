@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
  * MIT License
  *
@@ -21,5 +22,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import "@babel/polyfill";
-import "whatwg-fetch";
+
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { generateBinPath } = require("turbo/node-platform");
+const { spawn } = require("child_process");
+
+const turbo = spawn(generateBinPath(), process.argv.slice(2), { stdio: "inherit" });
+
+turbo.on("close", (code) => {
+  process.exit(code);
+});
+
+process.once("SIGTERM", () => {
+  turbo.kill();
+});
+
+if (process.ppid) {
+  const { ppid } = process;
+  setInterval(() => {
+    if (ppid !== process.ppid) {
+      turbo.kill();
+    }
+  }, 500);
+}

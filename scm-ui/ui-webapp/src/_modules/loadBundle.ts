@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
  * MIT License
  *
@@ -22,25 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-// eslint-disable-next-line import/no-extraneous-dependencies
-const { generateBinPath } = require("turbo/node-platform");
-const { spawn } = require("child_process");
 
-const turbo = spawn(generateBinPath(), process.argv.slice(2), { stdio: "inherit" });
+import { registerModuleLoadingCallback } from "./define";
 
-turbo.on("close", (code) => {
-  process.exit(code);
-});
+/**
+ * Asynchronously loads and executes a given resource bundle.
+ *
+ * If a module name is supplied, the bundle is expected to contain a single (AMD)[https://github.com/amdjs/amdjs-api/blob/master/AMD.md]
+ * module matching the provided module name.
+ *
+ * The promise will only resolve once the bundle loaded and, if it is a module,
+ * all dependencies are resolved and the module executed.
+ */
+export default (resource: string, moduleName?: string) =>
+  new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = resource;
 
-process.once("SIGTERM", () => {
-  turbo.kill();
-});
-
-if (process.ppid) {
-  const { ppid } = process;
-  setInterval(() => {
-    if (ppid !== process.ppid) {
-      turbo.kill();
+    if (moduleName) {
+      registerModuleLoadingCallback(moduleName, resolve, reject);
+    } else {
+      script.onload = resolve;
     }
-  }, 500);
-}
+
+    script.onerror = reject;
+
+    const body = document.querySelector("body");
+    body?.appendChild(script);
+    body?.removeChild(script);
+  });

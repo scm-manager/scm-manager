@@ -22,31 +22,14 @@
  * SOFTWARE.
  */
 
-const Webpack = require("webpack");
-const WebpackDevServer = require("webpack-dev-server");
-const webpackConfig = require("../webpack.config");
+const yarn = require("./lib/yarn");
 
-module.exports = () => {
-  const compiler = Webpack(webpackConfig);
-  const devServerConfig = webpackConfig[0].devServer;
-  const server = new WebpackDevServer(devServerConfig, compiler);
-
-  server.startCallback(() => {
-    console.log(`Starting server on http://localhost:${devServerConfig.port}`);
-  });
-
-  // if we could access the parent id of our current process
-  // we start watching it, because a changing parent id means
-  // that the parent process has died.
-  // On linux our process does not receive any signal if our parent dies,
-  // e.g.: ctrl+c in gradle
-  if (process.ppid) {
-    const { ppid } = process;
-    setInterval(() => {
-      if (ppid !== process.ppid) {
-        server.close();
-        process.exit();
-      }
-    }, 500);
+module.exports = (args) => {
+  if (args.length < 1) {
+    console.log("usage ui-scripts version <new-version>");
+    process.exit(1);
   }
+
+  const version = args[0];
+  yarn.workspaceVersion(version);
 };

@@ -1,10 +1,8 @@
 {
   "name": "@scm-manager/ui-plugins",
+  "description": "Defines the versions of SCM-Manager plugin dependencies provided by the core webapp. Exclusively used by the postinstall command of @scm-manager/plugin-scripts.",
   "version": "2.47.1-SNAPSHOT",
   "license": "MIT",
-  "bin": {
-    "ui-plugins": "./bin/ui-plugins.js"
-  },
   "dependencies": {
     "react": "17",
     "react-dom": "17",
@@ -33,7 +31,6 @@
     "@scm-manager/plugin-scripts": "^1.2.2",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
-    "@scm-manager/ui-scripts": "2.47.1-SNAPSHOT",
     "@scm-manager/ui-tests": "2.47.1-SNAPSHOT",
     "@scm-manager/ui-types": "2.47.1-SNAPSHOT",
     "@types/classnames": "^2.2.9",
