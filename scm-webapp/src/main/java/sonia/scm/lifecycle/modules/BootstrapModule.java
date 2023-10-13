@@ -46,6 +46,7 @@ import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.EventDrivenRepositoryArchiveCheck;
 import sonia.scm.repository.RepositoryArchivedCheck;
 import sonia.scm.repository.RepositoryExportingCheck;
+import sonia.scm.repository.RepositoryLocationOverride;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.xml.MetadataStore;
 import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
@@ -133,6 +134,7 @@ public class BootstrapModule extends AbstractModule {
     // bind metrics
     bind(MeterRegistry.class).toProvider(MeterRegistryProvider.class).asEagerSingleton();
     Multibinder.newSetBinder(binder(), MonitoringSystem.class);
+    Multibinder.newSetBinder(binder(), RepositoryLocationOverride.class);
 
     // bind cache
     bind(CacheManager.class, GuavaCacheManager.class);

@@ -483,6 +483,10 @@
     "5FSV2kreE1": {
       "summary": "'svn verify' fehlgeschlagen",
       "description": "Die Prüfung 'svn verify' ist für das Repository fehlgeschlagen."
+    },
+    "E4TrutUSv1": {
+      "summary": "Speicherung des Repositories fehlgeschlagen",
+      "description": "Beim Speichern des Repositories ist ein Fehler aufgetreten. Weitere Hinweise finden sich im Server Log."
     }
   },
   "namespaceStrategies": {

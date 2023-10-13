@@ -22,21 +22,13 @@
  * SOFTWARE.
  */
 
-plugins {
-  id 'java-library'
-  id 'org.scm-manager.java'
-}
+package sonia.scm.repository;
 
-dependencies {
-  implementation libraries.commonsIo
-  implementation libraries.commonsLang3
+import sonia.scm.plugin.ExtensionPoint;
 
-  api platform(project(':'))
+import java.nio.file.Path;
 
-  api project(':scm-core')
-  testImplementation project(':scm-test')
-
-  // lombok
-  compileOnly libraries.lombok
-  annotationProcessor libraries.lombok
+@ExtensionPoint
+public interface RepositoryLocationOverride {
+  Path overrideLocation(Repository repository, Path defaultPath);
 }

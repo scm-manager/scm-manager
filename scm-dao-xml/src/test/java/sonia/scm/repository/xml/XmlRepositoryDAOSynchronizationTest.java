@@ -43,6 +43,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -75,7 +76,7 @@ class XmlRepositoryDAOSynchronizationTest {
     fileSystem = new DefaultFileSystem();
 
     resolver = new PathBasedRepositoryLocationResolver(
-      provider, new InitialRepositoryLocationResolver(), fileSystem
+      provider, new InitialRepositoryLocationResolver(emptySet()), fileSystem
     );
 
     repositoryDAO = new XmlRepositoryDAO(resolver, fileSystem, repositoryExportingCheck);

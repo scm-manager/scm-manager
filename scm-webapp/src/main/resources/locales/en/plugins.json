@@ -424,6 +424,10 @@
     "3ITWbABz91": {
       "displayName": "API keys disabled",
       "description": "The usage of API keys has been disabled in the global configuration. To use API keys, this has to be enabled again."
+    },
+    "E4TrutUSv1": {
+      "displayName": "Failed to store the repository",
+      "description": "An error occurred while storing the repository. Further information can be found in the server log."
     }
   },
   "healthChecksFailures": {

@@ -94,6 +94,8 @@ ext {
     guava: 'com.google.guava:guava:32.0.1-jre',
     commonsLang: 'commons-lang:commons-lang:2.6',
     commonsCompress: 'org.apache.commons:commons-compress:1.23.0',
+    commonsIo: 'commons-io:commons-io:2.13.0',
+    commonsLang3: 'org.apache.commons:commons-lang3:3.13.0',
 
     // security
     shiroCore: "org.apache.shiro:shiro-core:${shiroVersion}",

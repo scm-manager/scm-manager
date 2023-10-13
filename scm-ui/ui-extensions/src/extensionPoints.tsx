@@ -667,6 +667,11 @@ export type RepositoryDeleteButton = RenderableExtensionPointDefinition<
   { repository: Repository }
 >;
 
+export type RepositoryDangerZone = RenderableExtensionPointDefinition<
+  "repository.dangerZone",
+  { repository: Repository }
+>;
+
 export type RepositoryInformationTableBottom = RenderableExtensionPointDefinition<
   "repository.information.table.bottom",
   { repository: Repository }

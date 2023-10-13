@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update;
 
 import sonia.scm.repository.Repository;
@@ -31,5 +31,11 @@ import sonia.scm.repository.Repository;
  * {@link sonia.scm.repository.RepositoryLocationResolver}.
  */
 public interface UpdateStepRepositoryMetadataAccess<T> {
+  /**
+   * Reads the repository from the given location.
+   * @param location the location to read from
+   * @return the repository
+   * @throws sonia.scm.repository.InternalRepositoryException if the repository could not be read
+   */
   Repository read(T location);
 }

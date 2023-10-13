@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -38,17 +39,25 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
+import sonia.scm.repository.RepositoryLocationResolver;
+import sonia.scm.repository.RepositoryLocationResolver.RepositoryLocationResolverInstance;
+import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver.DownForMaintenanceContext;
+import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver.UpAfterMaintenanceContext;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
 import java.time.Clock;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -88,6 +97,16 @@ class PathBasedRepositoryLocationResolverTest {
 
     assertThat(path).isEqualTo(basePath.resolve("newId"));
     assertThat(path).isDirectory();
+  }
+
+  @Test
+  void shouldFailIfDirectoryExists() throws IOException {
+    Files.createDirectories(basePath.resolve("newId"));
+
+    RepositoryLocationResolverInstance<Path> resolverInstance = resolver.forClass(Path.class);
+
+    assertThatThrownBy(() -> resolverInstance.createLocation("newId"))
+      .isInstanceOf(RepositoryLocationResolver.RepositoryStorageException.class);
   }
 
   @Test
@@ -133,11 +152,15 @@ class PathBasedRepositoryLocationResolverTest {
 
     private PathBasedRepositoryLocationResolver resolverWithExistingData;
 
+    @Spy
+    private PathBasedRepositoryLocationResolver.MaintenanceCallback maintenanceCallback;
+
     @BeforeEach
     void createExistingDatabase() {
       resolver.forClass(Path.class).createLocation("existingId_1");
       resolver.forClass(Path.class).createLocation("existingId_2");
       resolverWithExistingData = createResolver();
+      resolverWithExistingData.registerMaintenanceCallback(maintenanceCallback);
     }
 
     @Test
@@ -175,6 +198,51 @@ class PathBasedRepositoryLocationResolverTest {
       Path path = resolverWithExistingData.create(Path.class).getLocation("existingId_1");
 
       assertThat(path).doesNotExist();
+    }
+
+    @Test
+    void shouldModifyLocation() throws IOException {
+      Path oldPath = resolverWithExistingData.create(Path.class).getLocation("existingId_1");
+      Path newPath = basePath.resolve("modified_location");
+
+      resolverWithExistingData.create(Path.class).modifyLocation("existingId_1", newPath);
+
+      assertThat(newPath).exists();
+      assertThat(oldPath).doesNotExist();
+      assertThat(resolverWithExistingData.create(Path.class).getLocation("existingId_1")).isEqualTo(newPath);
+      verify(maintenanceCallback).downForMaintenance(new DownForMaintenanceContext("existingId_1"));
+      verify(maintenanceCallback).upAfterMaintenance(new UpAfterMaintenanceContext("existingId_1", newPath));
+    }
+
+    @Test
+    void shouldModifyLocationAndKeepOld() throws IOException {
+      Path oldPath = resolverWithExistingData.create(Path.class).getLocation("existingId_1");
+      Path newPath = basePath.resolve("modified_location");
+
+      resolverWithExistingData.create(Path.class).modifyLocationAndKeepOld("existingId_1", newPath);
+
+      assertThat(newPath).exists();
+      assertThat(oldPath).exists();
+      assertThat(resolverWithExistingData.create(Path.class).getLocation("existingId_1")).isEqualTo(newPath);
+      verify(maintenanceCallback).downForMaintenance(new DownForMaintenanceContext("existingId_1"));
+      verify(maintenanceCallback).upAfterMaintenance(new UpAfterMaintenanceContext("existingId_1", newPath));
+    }
+
+    @Test
+    void shouldHandleErrorOnModifyLocation() throws IOException {
+      Path oldPath = resolverWithExistingData.create(Path.class).getLocation("existingId_1");
+      Path newPath = basePath.resolve("thou").resolve("shall").resolve("not").resolve("move").resolve("here");
+      Files.createDirectories(newPath);
+      Files.setPosixFilePermissions(newPath, Set.of(PosixFilePermission.OWNER_READ));
+
+      assertThatThrownBy(() -> resolverWithExistingData.create(Path.class).modifyLocationAndKeepOld("existingId_1", newPath))
+        .isInstanceOf(RepositoryLocationResolver.RepositoryStorageException.class);
+
+      assertThat(newPath).exists();
+      assertThat(oldPath).exists();
+      assertThat(resolverWithExistingData.create(Path.class).getLocation("existingId_1")).isEqualTo(oldPath);
+      verify(maintenanceCallback).downForMaintenance(new DownForMaintenanceContext("existingId_1"));
+      verify(maintenanceCallback).upAfterMaintenance(new UpAfterMaintenanceContext("existingId_1", oldPath));
     }
   }
 

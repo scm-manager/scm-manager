@@ -38,9 +38,7 @@ import org.junit.Before;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
-import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.MockUtil;
@@ -50,8 +48,8 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 
 /**
  *
@@ -76,7 +74,7 @@ public class AbstractTestBase
       UUID.randomUUID().toString());
     assertTrue(tempDirectory.mkdirs());
     contextProvider = MockUtil.getSCMContextProvider(tempDirectory);
-    InitialRepositoryLocationResolver initialRepoLocationResolver = new InitialRepositoryLocationResolver();
+    InitialRepositoryLocationResolver initialRepoLocationResolver = new InitialRepositoryLocationResolver(emptySet());
     repositoryLocationResolver = new TempDirRepositoryLocationResolver(tempDirectory);
     postSetUp();
   }

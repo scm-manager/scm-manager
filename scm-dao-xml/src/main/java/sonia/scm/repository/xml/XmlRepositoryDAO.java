@@ -28,6 +28,7 @@ package sonia.scm.repository.xml;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
@@ -35,6 +36,8 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
+import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver.DownForMaintenanceContext;
+import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver.UpAfterMaintenanceContext;
 import sonia.scm.store.StoreReadOnlyException;
 
 import javax.inject.Inject;
@@ -55,6 +58,7 @@ import java.util.stream.Collectors;
  * @author Sebastian Sdorra
  */
 @Singleton
+@Slf4j
 public class XmlRepositoryDAO implements RepositoryDAO {
 
   private final MetadataStore metadataStore = new MetadataStore();
@@ -77,15 +81,35 @@ public class XmlRepositoryDAO implements RepositoryDAO {
     this.byNamespaceAndName = new TreeMap<>();
 
     init();
+
+    this.repositoryLocationResolver.registerMaintenanceCallback(new PathBasedRepositoryLocationResolver.MaintenanceCallback() {
+      @Override
+      public void downForMaintenance(DownForMaintenanceContext context) {
+        Repository repository = byId.get(context.getRepositoryId());
+        byNamespaceAndName.remove(repository.getNamespaceAndName());
+        byId.remove(context.getRepositoryId());
+      }
+
+      @Override
+      public void upAfterMaintenance(UpAfterMaintenanceContext context) {
+        Repository repository = metadataStore.read(context.getLocation());
+        byNamespaceAndName.put(repository.getNamespaceAndName(), repository);
+        byId.put(context.getRepositoryId(), repository);
+      }
+    });
   }
 
   private void init() {
     withWriteLockedMaps(() -> {
       RepositoryLocationResolver.RepositoryLocationResolverInstance<Path> pathRepositoryLocationResolverInstance = repositoryLocationResolver.create(Path.class);
       pathRepositoryLocationResolverInstance.forAllLocations((repositoryId, repositoryPath) -> {
-        Repository repository = metadataStore.read(repositoryPath);
-        byNamespaceAndName.put(repository.getNamespaceAndName(), repository);
-        byId.put(repositoryId, repository);
+        try {
+          Repository repository = metadataStore.read(repositoryPath);
+          byNamespaceAndName.put(repository.getNamespaceAndName(), repository);
+          byId.put(repositoryId, repository);
+        } catch (InternalRepositoryException e) {
+          log.error("could not read repository metadata from {}", repositoryPath, e);
+        }
       });
     });
   }
@@ -97,7 +121,7 @@ public class XmlRepositoryDAO implements RepositoryDAO {
 
   @Override
   public synchronized void add(Repository repository) {
-    add(repository, repositoryLocationResolver.create(repository.getId()));
+    add(repository, repositoryLocationResolver.create(repository));
   }
 
   public synchronized void add(Repository repository, Object location) {

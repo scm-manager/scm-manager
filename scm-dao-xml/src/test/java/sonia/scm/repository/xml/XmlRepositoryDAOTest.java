@@ -32,8 +32,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -44,6 +45,8 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver.DownForMaintenanceContext;
+import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver.UpAfterMaintenanceContext;
 import sonia.scm.store.StoreReadOnlyException;
 
 import java.io.IOException;
@@ -59,7 +62,9 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -104,12 +109,13 @@ class XmlRepositoryDAOTest {
         }
       }
     );
-    when(locationResolver.create(anyString())).thenAnswer(invocation -> createMockedRepoPath(basePath, invocation));
+    when(locationResolver.create(any(Repository.class))).thenAnswer(invocation -> createMockedRepoPath(basePath, invocation.getArgument(0, Repository.class).getId()));
+    when(locationResolver.create(anyString())).thenAnswer(invocation -> createMockedRepoPath(basePath, invocation.getArgument(0, String.class)));
     when(locationResolver.remove(anyString())).thenAnswer(invocation -> basePath.resolve(invocation.getArgument(0).toString()));
   }
 
-  private Path createMockedRepoPath(@TempDir Path basePath, InvocationOnMock invocation) {
-    Path resolvedPath = basePath.resolve(invocation.getArgument(0).toString());
+  private static Path createMockedRepoPath(Path basePath, String repositoryId) {
+    Path resolvedPath = basePath.resolve(repositoryId);
     try {
       Files.createDirectories(resolvedPath);
     } catch (IOException e) {
@@ -378,6 +384,8 @@ class XmlRepositoryDAOTest {
   class WithExistingRepositories {
 
     private Path repositoryPath;
+    @Captor
+    private ArgumentCaptor<PathBasedRepositoryLocationResolver.MaintenanceCallback> callbackArgumentCaptor;
 
     @BeforeEach
     void createMetadataFileForRepository(@TempDir Path basePath) throws IOException {
@@ -413,6 +421,26 @@ class XmlRepositoryDAOTest {
       // then
       verify(locationResolver).refresh();
       assertThat(dao.contains(new NamespaceAndName("space", "existing"))).isTrue();
+    }
+
+    @Test
+    void shouldHandleMaintenanceEvents() {
+      doNothing().when(locationResolver).registerMaintenanceCallback(callbackArgumentCaptor.capture());
+      mockExistingPath();
+
+      XmlRepositoryDAO dao = new XmlRepositoryDAO(locationResolver, fileSystem, repositoryExportingCheck);
+
+      callbackArgumentCaptor.getValue().downForMaintenance(new DownForMaintenanceContext("existing"));
+
+      assertThat(dao.contains("existing")).isFalse();
+      assertThat(dao.contains(new NamespaceAndName("space", "existing"))).isFalse();
+      assertThat(dao.getAll()).isEmpty();
+
+      callbackArgumentCaptor.getValue().upAfterMaintenance(new UpAfterMaintenanceContext("existing", repositoryPath));
+
+      assertThat(dao.contains("existing")).isTrue();
+      assertThat(dao.contains(new NamespaceAndName("space", "existing"))).isTrue();
+      assertThat(dao.getAll()).hasSize(1);
     }
 
     private void mockExistingPath() {

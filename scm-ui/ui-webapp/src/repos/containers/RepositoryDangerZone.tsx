@@ -57,6 +57,14 @@ const RepositoryDangerZone: FC<Props> = ({ repository }) => {
   if (repository?._links?.unarchive) {
     dangerZone.push(<UnarchiveRepo repository={repository} />);
   }
+  dangerZone.push(
+    <ExtensionPoint<extensionPoints.RepositoryDangerZone>
+      name="repository.dangerZone"
+      props={{ repository }}
+      renderAll={true}
+    />
+  );
+
   if (dangerZone.length === 0) {
     return null;
   }

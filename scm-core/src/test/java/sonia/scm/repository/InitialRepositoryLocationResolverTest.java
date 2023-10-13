@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import org.junit.jupiter.api.Assertions;
@@ -32,19 +32,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.File;
 import java.nio.file.Path;
 
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith({MockitoExtension.class})
 class InitialRepositoryLocationResolverTest {
 
-  private InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver();
+  private final InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver(emptySet());
 
   @Test
   void shouldComputeInitialPath() {
     Path path = resolver.getPath("42");
 
-    assertThat(path).isRelative();
-    assertThat(path.toString()).isEqualTo("repositories" + File.separator + "42");
+    assertThat(path)
+      .isRelative()
+      .hasToString("repositories" + File.separator + "42");
   }
 
   @Test
@@ -65,5 +68,17 @@ class InitialRepositoryLocationResolverTest {
   @Test
   void shouldThrowIllegalArgumentExceptionIfIdIsDot() {
     Assertions.assertThrows(IllegalArgumentException.class, () -> resolver.getPath("."));
+  }
+
+  @Test
+  void shouldUseOverrideForRepository() {
+    InitialRepositoryLocationResolver resolver = new InitialRepositoryLocationResolver(
+      singleton((repository, defaultPath) -> defaultPath.resolve(repository.getId()))
+    );
+    Path path = resolver.getPath(new Repository("42", "git", "space", "X"));
+
+    assertThat(path)
+      .isRelative()
+      .hasToString("repositories" + File.separator + "42" + File.separator + "42");
   }
 }

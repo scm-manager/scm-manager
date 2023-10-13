@@ -54,12 +54,13 @@ public class MetadataStore implements UpdateStepRepositoryMetadataAccess<Path> {
     }
   }
 
+  @Override
   public Repository read(Path path) {
     LOG.trace("read repository metadata from {}", path);
     return compute(() -> {
       try {
         return (Repository) jaxbContext.createUnmarshaller().unmarshal(resolveDataPath(path).toFile());
-      } catch (JAXBException ex) {
+      } catch (JAXBException | IllegalArgumentException ex) {
         throw new InternalRepositoryException(
           ContextEntry.ContextBuilder.entity(Path.class, path.toString()).build(), "failed read repository metadata", ex
         );
@@ -67,6 +68,9 @@ public class MetadataStore implements UpdateStepRepositoryMetadataAccess<Path> {
     }).withLockedFileForRead(path);
   }
 
+  /**
+   * Write the repository metadata to the given path.
+   */
   void write(Path path, Repository repository) {
     LOG.trace("write repository metadata of {} to {}", repository, path);
     try {

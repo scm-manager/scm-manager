@@ -21,13 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import com.google.common.base.CharMatcher;
 
+import javax.inject.Inject;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -49,6 +51,13 @@ public class InitialRepositoryLocationResolver {
 
   private static final CharMatcher ID_MATCHER = CharMatcher.anyOf("/\\.");
 
+  private final Set<RepositoryLocationOverride> repositoryLocationOverrides;
+
+  @Inject
+  public InitialRepositoryLocationResolver(Set<RepositoryLocationOverride> repositoryLocationOverrides) {
+    this.repositoryLocationOverrides = repositoryLocationOverrides;
+  }
+
   /**
    * Returns the initial path to repository.
    *
@@ -63,4 +72,11 @@ public class InitialRepositoryLocationResolver {
     return Paths.get(DEFAULT_REPOSITORY_PATH, repositoryId);
   }
 
+  public Path getPath(Repository repository) {
+    Path path = getPath(repository.getId());
+    for (RepositoryLocationOverride o : repositoryLocationOverrides) {
+      path = o.overrideLocation(repository, path);
+    }
+    return path;
+  }
 }

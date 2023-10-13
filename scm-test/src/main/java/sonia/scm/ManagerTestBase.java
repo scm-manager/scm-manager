@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import org.junit.After;
@@ -36,6 +36,7 @@ import sonia.scm.util.MockUtil;
 import java.io.File;
 import java.io.IOException;
 
+import static java.util.Collections.emptySet;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -49,7 +50,7 @@ public abstract class ManagerTestBase<T extends ModelObject>
 
   @Rule
   public TemporaryFolder tempFolder = new TemporaryFolder();
-  
+
   protected SCMContextProvider contextProvider;
   protected RepositoryLocationResolver locationResolver;
 
@@ -63,18 +64,18 @@ public abstract class ManagerTestBase<T extends ModelObject>
       temp = tempFolder.newFolder();
     }
     contextProvider = MockUtil.getSCMContextProvider(temp);
-    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver();
+    InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver(emptySet());
     RepositoryDAO repoDao = mock(RepositoryDAO.class);
     locationResolver = new TempDirRepositoryLocationResolver(temp);
     manager = createManager();
     manager.init(contextProvider);
   }
-  
+
   @After
   public void tearDown() throws IOException {
     manager.close();
   }
-  
+
   /**
    * Method description
    *

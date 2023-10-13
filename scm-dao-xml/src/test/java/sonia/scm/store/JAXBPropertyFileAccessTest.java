@@ -44,6 +44,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
@@ -69,7 +70,7 @@ class JAXBPropertyFileAccessTest {
     lenient().when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
     lenient().when(contextProvider.resolve(any())).thenAnswer(invocation -> tempDir.resolve(invocation.getArgument(0).toString()));
 
-    locationResolver = new PathBasedRepositoryLocationResolver(contextProvider, new InitialRepositoryLocationResolver(), new DefaultFileSystem());
+    locationResolver = new PathBasedRepositoryLocationResolver(contextProvider, new InitialRepositoryLocationResolver(emptySet()), new DefaultFileSystem());
 
     fileAccess = new JAXBPropertyFileAccess(contextProvider, locationResolver);
   }
