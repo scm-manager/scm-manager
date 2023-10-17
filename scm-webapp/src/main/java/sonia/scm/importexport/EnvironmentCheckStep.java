@@ -28,6 +28,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.IncompatibleEnvironmentForImportException;
+import sonia.scm.web.security.AdministrationContext;
 
 import javax.inject.Inject;
 import javax.xml.bind.JAXB;
@@ -41,10 +42,12 @@ class EnvironmentCheckStep implements ImportStep {
   private static final int _1_MB = 1024*1024;
 
   private final ScmEnvironmentCompatibilityChecker compatibilityChecker;
+  private final AdministrationContext administrationContext;
 
   @Inject
-  EnvironmentCheckStep(ScmEnvironmentCompatibilityChecker compatibilityChecker) {
+  EnvironmentCheckStep(ScmEnvironmentCompatibilityChecker compatibilityChecker, AdministrationContext administrationContext) {
     this.compatibilityChecker = compatibilityChecker;
+    this.administrationContext = administrationContext;
   }
 
   @Override
@@ -56,10 +59,12 @@ class EnvironmentCheckStep implements ImportStep {
           "Invalid import format. SCM-Manager environment description file 'scm-environment.xml' too big."
         );
       }
-      boolean validEnvironment = compatibilityChecker.check(JAXB.unmarshal(new NoneClosingInputStream(inputStream), ScmEnvironment.class));
-      if (!validEnvironment) {
-        throw new IncompatibleEnvironmentForImportException();
-      }
+      administrationContext.runAsAdmin(() -> {
+        boolean validEnvironment = compatibilityChecker.check(JAXB.unmarshal(new NoneClosingInputStream(inputStream), ScmEnvironment.class));
+        if (!validEnvironment) {
+          throw new IncompatibleEnvironmentForImportException();
+        }
+      });
       state.getLogger().step("checked environment");
       state.environmentChecked();
       return true;

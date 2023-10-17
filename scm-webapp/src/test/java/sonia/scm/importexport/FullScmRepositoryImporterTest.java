@@ -54,6 +54,8 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.UnbundleCommandBuilder;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.update.UpdateEngine;
+import sonia.scm.web.security.AdministrationContext;
+import sonia.scm.web.security.PrivilegedAction;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -68,6 +70,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
@@ -76,7 +79,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class})
 @SuppressWarnings("UnstableApiUsage")
 class FullScmRepositoryImporterTest {
 
@@ -108,6 +111,8 @@ class FullScmRepositoryImporterTest {
   private Subject subject;
   @Mock
   private ScmEventBus eventBus;
+  @Mock
+  private AdministrationContext administrationContext;
 
   @InjectMocks
   private EnvironmentCheckStep environmentCheckStep;
@@ -140,6 +145,14 @@ class FullScmRepositoryImporterTest {
   }
 
   @BeforeEach
+  void mockAdminContext() {
+    lenient().doAnswer(invocation -> {
+      invocation.getArgument(0, PrivilegedAction.class).run();
+      return null;
+    }).when(administrationContext).runAsAdmin(any(PrivilegedAction.class));
+  }
+
+  @BeforeEach
   void initRepositoryService() {
     lenient().when(serviceFactory.create(REPOSITORY)).thenReturn(service);
     lenient().when(service.getUnbundleCommand()).thenReturn(unbundleCommandBuilder);
@@ -149,6 +162,7 @@ class FullScmRepositoryImporterTest {
   @BeforeEach
   void initSubject() {
     ThreadContext.bind(subject);
+    lenient().when(subject.getPrincipal()).thenReturn("Trillian");
   }
 
   @BeforeEach
@@ -171,7 +185,6 @@ class FullScmRepositoryImporterTest {
   @Test
   void shouldFailIfScmEnvironmentIsIncompatible() throws IOException {
     when(compatibilityChecker.check(any())).thenReturn(false);
-
     InputStream importStream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
     assertThrows(
       IncompatibleEnvironmentForImportException.class,
@@ -222,7 +235,7 @@ class FullScmRepositoryImporterTest {
       verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class), eq(logger));
       verify(repositoryManager).modify(REPOSITORY);
       Collection<RepositoryPermission> updatedPermissions = REPOSITORY.getPermissions();
-      assertThat(updatedPermissions).hasSize(2);
+      assertThat(updatedPermissions).hasSize(3);
       verify(unbundleCommandBuilder).unbundle((InputStream) argThat(argument -> argument.getClass().equals(NoneClosingInputStream.class)));
       verify(workdirProvider, times(1)).createNewWorkdir(REPOSITORY.getId());
     }
@@ -267,7 +280,6 @@ class FullScmRepositoryImporterTest {
     @Test
     void shouldTriggerUpdateForImportedRepository() throws IOException {
       InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
-
       fullImporter.importFromStream(REPOSITORY, stream, "");
 
       verify(updateEngine).update(REPOSITORY.getId());

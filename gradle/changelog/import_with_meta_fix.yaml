@@ -1,0 +1,2 @@
+- type: fixed
+  description: Set repository importer as owner on metadata import

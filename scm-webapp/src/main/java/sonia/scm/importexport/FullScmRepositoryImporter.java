@@ -28,6 +28,7 @@ import com.google.common.base.Strings;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
@@ -41,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static java.util.Arrays.stream;
+import static java.util.Collections.singletonList;
 import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 import static sonia.scm.importexport.RepositoryImportLogger.ImportType.FULL;
 import static sonia.scm.util.Archives.createTarInputStream;
@@ -113,7 +115,11 @@ public class FullScmRepositoryImporter implements FullRepositoryImporter {
   }
 
   private Repository run(Repository repository, TarArchiveInputStream tais) throws IOException {
+    repository.setPermissions(singletonList(
+      new RepositoryPermission(SecurityUtils.getSubject().getPrincipal().toString(), "OWNER", false)
+    ));
     Repository createdRepository = repositoryManager.create(repository);
+
     RepositoryImportLogger logger = startLogger(repository);
     ImportState state = new ImportState(createdRepository, logger);
     logger.repositoryCreated(state.getRepository());
