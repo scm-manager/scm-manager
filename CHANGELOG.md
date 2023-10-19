@@ -69,10 +69,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Chromatic integration
 
 ## [2.45.1] - 2023-07-18
-### Fixed
-- Re-Release of 2.45.0 due to errors during release
-
-## 2.45.0 - 2023-07-14
 ### Added
 - Optional caching for stores and data files
 - Add variables for liveness probe and readiness probe delay in helm chart
@@ -81,6 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Architecture documentation for integration and tech stack
 
 ### Fixed
+- Re-Release of 2.45.0 due to errors during release
 - Internal server error with external groups in permission overview
 - Svn external contains sub directory
 - Security findings (security headers and jetty server information)
