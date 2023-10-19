@@ -72,7 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Re-Release of 2.45.0 due to errors during release
 
-## [2.45.0] - 2023-07-14
+## 2.45.0 - 2023-07-14
 ### Added
 - Optional caching for stores and data files
 - Add variables for liveness probe and readiness probe delay in helm chart
@@ -1397,7 +1397,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.44.1]: https://scm-manager.org/download/2.44.1
 [2.44.2]: https://scm-manager.org/download/2.44.2
 [2.44.3]: https://scm-manager.org/download/2.44.3
-[2.45.0]: https://scm-manager.org/download/2.45.0
 [2.45.1]: https://scm-manager.org/download/2.45.1
 [2.46.0]: https://scm-manager.org/download/2.46.0
 [2.46.1]: https://scm-manager.org/download/2.46.1
