@@ -25,12 +25,12 @@
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import {
-  useDateHitFieldValue,
-  useStringHitFieldValue,
   DateFromNow,
+  HitProps,
   RepositoryAvatar,
   TextHitField,
-  HitProps,
+  useDateHitFieldValue,
+  useStringHitFieldValue,
 } from "@scm-manager/ui-components";
 import { CardList } from "@scm-manager/ui-layout";
 import classNames from "classnames";
@@ -74,11 +74,11 @@ const RepositoryHit: FC<HitProps> = ({ hit }) => {
           </StyledLink>
         </CardList.Card.Title>
       </CardList.Card.Row>
-      {((description as ValueHitField).value || (description as HighlightedHitField).fragments) && (
+      {description && ((description as ValueHitField).value || (description as HighlightedHitField).fragments) ? (
         <CardList.Card.Row className="is-size-7 has-text-secondary">
           <TextHitField hit={hit} field="description" />
         </CardList.Card.Row>
-      )}
+      ) : null}
       <CardList.Card.Row className="is-size-7 has-text-secondary">
         <DateFromNow date={date} />
       </CardList.Card.Row>
