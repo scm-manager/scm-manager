@@ -136,7 +136,7 @@ const useSearchParams = () => {
   };
 };
 
-const OmniSearch: FC<Props> = ({ shouldClear, ariaId, nextFocusRef, ...props }) => {
+const OmniSearch: FC<Props> = ({ shouldClear, nextFocusRef }) => {
   const [t] = useTranslation("commons");
   const { initialQuery } = useSearchParams();
   const [query, setQuery] = useState(initialQuery);
@@ -145,7 +145,6 @@ const OmniSearch: FC<Props> = ({ shouldClear, ariaId, nextFocusRef, ...props }) 
   const debouncedQuery = useDebounce(query, 250);
   const [showDropdown, setDropdown] = useState(true);
   const context = useNamespaceAndNameContext();
-  const comboBoxRef = useRef(null);
   const { data, isLoading } = useOmniSearch(debouncedQuery, {
     type: "repository",
     pageSize: 5,
@@ -153,7 +152,7 @@ const OmniSearch: FC<Props> = ({ shouldClear, ariaId, nextFocusRef, ...props }) 
   const [showHelp, setShowHelp] = useState(false);
   const handleChange = useCallback((value: Option<(() => void) | undefined>) => {
     setValue(value);
-    value.value && value.value();
+    value.value?.();
     setDropdown(true);
   }, []);
 
@@ -245,7 +244,7 @@ const OmniSearch: FC<Props> = ({ shouldClear, ariaId, nextFocusRef, ...props }) 
           placeholder={t("search.placeholder")}
           value={value}
           onChange={handleChange}
-          ref={comboBoxRef}
+          ref={searchInputRef}
           onQueryChange={setQuery}
           onKeyDown={(e) => {
             // This is hacky but it seems to be one of the only solutions right now
@@ -253,7 +252,7 @@ const OmniSearch: FC<Props> = ({ shouldClear, ariaId, nextFocusRef, ...props }) 
               nextFocusRef?.current?.focus();
               e.preventDefault();
               clearInput();
-              comboBoxRef.current.value = "";
+              searchInputRef.current.value = "";
             } else {
               setDropdown(true);
             }
