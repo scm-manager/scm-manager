@@ -35,10 +35,8 @@ import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink";
 
 import "./tokenExpired";
-import { ApiProvider } from "@scm-manager/ui-api";
-import { ShortcutDocsContextProvider } from "@scm-manager/ui-shortcuts";
-
-// Makes sure that the global `define` function is registered and all provided modules are included in the final bundle at all times
+import { ApiProvider, LocalStorageProvider } from "@scm-manager/ui-api";
+import { ShortcutDocsContextProvider } from "@scm-manager/ui-shortcuts"; // Makes sure that the global `define` function is registered and all provided modules are included in the final bundle at all times
 import "./_modules/provided-modules";
 
 binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);
@@ -51,13 +49,15 @@ if (!root) {
 ReactDOM.render(
   <ApiProvider>
     <I18nextProvider i18n={i18n}>
-      <ShortcutDocsContextProvider>
-        <ActiveModalCountContextProvider>
-          <Router basename={urls.contextPath}>
-            <Index />
-          </Router>
-        </ActiveModalCountContextProvider>
-      </ShortcutDocsContextProvider>
+      <LocalStorageProvider>
+        <ShortcutDocsContextProvider>
+          <ActiveModalCountContextProvider>
+            <Router basename={urls.contextPath}>
+              <Index />
+            </Router>
+          </ActiveModalCountContextProvider>
+        </ShortcutDocsContextProvider>
+      </LocalStorageProvider>
     </I18nextProvider>
   </ApiProvider>,
   root

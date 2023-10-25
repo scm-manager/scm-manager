@@ -1,0 +1,2 @@
+- type: fixed
+  description: The useLocalStorage hook in @scm-manager/ui-api now correctly causes a re-render on write
