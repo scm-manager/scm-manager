@@ -55,16 +55,17 @@ const AheadBehindTag: FC<Props> = ({ branch, details }) => {
     <Tooltip
       message={t("branch.aheadBehind.tooltip", { ahead: details.changesetsAhead, behind: details.changesetsBehind })}
     >
-      <span className="is-inline-flex is-align-items-center">
-        <Icon className={details.changesetsAhead > 0 ? "has-text-success" : "has-text-grey-light"}>arrow-up</Icon>
-        <Count aria-label={t("branch.aheadBehind.ahead")} className="is-size-7 pl-0">
-          {details.changesetsAhead}
-        </Count>
-        <Icon className={details.changesetsBehind > 0 ? "has-text-warning" : "has-text-grey-light"}>arrow-down</Icon>
-        <Count aria-label={t("branch.aheadBehind.behind")} className="is-size-7 pr-1">
-          {details.changesetsBehind}
-        </Count>
-      </span>
+      <>
+        <span className="is-sr-only">
+          {t("branch.aheadBehind.tooltip", { ahead: details.changesetsAhead, behind: details.changesetsBehind })}
+        </span>
+        <span className="is-inline-flex is-align-items-center" aria-hidden="true">
+          <Icon className={details.changesetsAhead > 0 ? "has-text-success" : "has-text-grey-light"}>arrow-up</Icon>
+          <Count className="is-size-7 pl-0">{details.changesetsAhead}</Count>
+          <Icon className={details.changesetsBehind > 0 ? "has-text-warning" : "has-text-grey-light"}>arrow-down</Icon>
+          <Count className="is-size-7 pr-1">{details.changesetsBehind}</Count>
+        </span>
+      </>
     </Tooltip>
   );
 };

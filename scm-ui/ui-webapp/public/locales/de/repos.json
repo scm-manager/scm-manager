@@ -160,9 +160,7 @@
     "dangerZone": "Branch löschen",
     "aheadBehind": {
       "tooltip": "{{ahead}} Commit(s) vor, {{behind}} Commit(s) hinter dem Default Branch",
-      "label": "Voraus / Hinterher",
-      "ahead": "Voraus",
-      "behind": "Hinterher"
+      "label": "Voraus / Hinterher"
     },
     "delete": {
       "button": "Löschen",
