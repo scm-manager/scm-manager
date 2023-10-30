@@ -22,14 +22,21 @@
  * SOFTWARE.
  */
 
-import React, { FC, HTMLProps } from "react";
-import classNames from "classnames";
+import React, { createContext, FC, useContext } from "react";
+import { TFunction } from "i18next";
 
-const Field: FC<HTMLProps<HTMLDivElement> | ({ as: keyof JSX.IntrinsicElements } & HTMLProps<HTMLElement>)> = ({
-  as = "div",
-  className,
-  children,
-  ...rest
-}) => React.createElement(as, { className: classNames("field", className), ...rest }, children);
+type ContextType = {
+  t: TFunction;
+  prefix: string;
+  formId?: string;
+};
 
-export default Field;
+const RadioButtonContext = createContext<ContextType | null>(null);
+
+export function useRadioButtonContext() {
+  return useContext(RadioButtonContext);
+}
+
+export const RadioButtonContextProvider: FC<ContextType> = ({ children, ...props }) => (
+  <RadioButtonContext.Provider value={props}>{children}</RadioButtonContext.Provider>
+);

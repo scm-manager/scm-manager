@@ -25,9 +25,11 @@
 import React, { FC, HTMLProps } from "react";
 import classNames from "classnames";
 
-const Label: FC<HTMLProps<HTMLLabelElement>> = ({ className, children, ...rest }) => (
-  <label className={classNames("label", className)} {...rest}>
-    {children}
-  </label>
-);
+const Label: FC<HTMLProps<HTMLLabelElement> | ({ as: keyof JSX.IntrinsicElements } & HTMLProps<HTMLElement>)> = ({
+  as = "label",
+  className,
+  children,
+  ...rest
+}) => React.createElement(as, { className: classNames("label", className), ...rest }, children);
+
 export default Label;

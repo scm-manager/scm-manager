@@ -26,7 +26,7 @@ import React, { ComponentProps } from "react";
 import { Controller, ControllerRenderProps, Path } from "react-hook-form";
 import { useScmFormContext } from "../ScmFormContext";
 import { useScmFormPathContext } from "../FormPathContext";
-import { defaultOptionFactory, prefixWithoutIndices } from "../helpers";
+import { defaultOptionFactory, prefixWithoutIndices, withForwardRef } from "../helpers";
 import classNames from "classnames";
 import ChipInputField from "./ChipInputField";
 import { Option } from "@scm-manager/ui-types";
@@ -41,27 +41,31 @@ type Props<T extends Record<string, unknown>> = Omit<
   defaultValue?: string[];
   createDeleteText?: (value: string) => string;
   optionFactory?: (val: any) => Option<unknown>;
+  ref?: React.ForwardedRef<HTMLInputElement>;
 };
 
 /**
  * @beta
  * @since 2.44.0
  */
-function ControlledChipInputField<T extends Record<string, unknown>>({
-  name,
-  label,
-  helpText,
-  rules,
-  testId,
-  defaultValue,
-  readOnly,
-  placeholder,
-  className,
-  createDeleteText,
-  children,
-  optionFactory = defaultOptionFactory,
-  ...props
-}: Props<T>) {
+function ControlledChipInputField<T extends Record<string, unknown>>(
+  {
+    name,
+    label,
+    helpText,
+    rules,
+    testId,
+    defaultValue,
+    readOnly,
+    placeholder,
+    className,
+    createDeleteText,
+    children,
+    optionFactory = defaultOptionFactory,
+    ...props
+  }: Props<T>,
+  ref: React.ForwardedRef<HTMLInputElement>
+) {
   const { control, t, readOnly: formReadonly } = useScmFormContext();
   const formPathPrefix = useScmFormPathContext();
 
@@ -95,6 +99,7 @@ function ControlledChipInputField<T extends Record<string, unknown>>({
               : undefined
           }
           testId={testId ?? `input-${nameWithPrefix}`}
+          ref={ref}
         >
           {children}
         </ChipInputField>
@@ -103,4 +108,4 @@ function ControlledChipInputField<T extends Record<string, unknown>>({
   );
 }
 
-export default ControlledChipInputField;
+export default withForwardRef(ControlledChipInputField);

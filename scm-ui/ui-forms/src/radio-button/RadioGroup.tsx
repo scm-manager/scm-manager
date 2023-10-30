@@ -22,14 +22,24 @@
  * SOFTWARE.
  */
 
-import React, { FC, HTMLProps } from "react";
-import classNames from "classnames";
+import React, { ComponentProps } from "react";
+import Control from "../base/Control";
+import * as RadixRadio from "@radix-ui/react-radio-group";
+import RadioButton from "./RadioButton";
 
-const Field: FC<HTMLProps<HTMLDivElement> | ({ as: keyof JSX.IntrinsicElements } & HTMLProps<HTMLElement>)> = ({
-  as = "div",
-  className,
-  children,
-  ...rest
-}) => React.createElement(as, { className: classNames("field", className), ...rest }, children);
+type Props = {
+  options?: { value: string; label?: string; helpText?: string }[];
+} & ComponentProps<typeof RadixRadio.Root>;
 
-export default Field;
+const RadioGroup = React.forwardRef<HTMLDivElement, Props>(({ options, children, className, ...props }, ref) => (
+  <RadixRadio.Root {...props} asChild>
+    <Control ref={ref} className={className}>
+      {children ??
+        options?.map((option) => (
+          <RadioButton key={option.value} value={option.value} label={option.label} helpText={option.helpText} />
+        ))}
+    </Control>
+  </RadixRadio.Root>
+));
+
+export default RadioGroup;

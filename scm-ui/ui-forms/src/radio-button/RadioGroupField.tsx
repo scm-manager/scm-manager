@@ -22,14 +22,33 @@
  * SOFTWARE.
  */
 
-import React, { FC, HTMLProps } from "react";
-import classNames from "classnames";
+import React, { ComponentProps } from "react";
+import Field from "../base/Field";
+import Label from "../base/label/Label";
+import Help from "../base/help/Help";
+import RadioGroup from "./RadioGroup";
 
-const Field: FC<HTMLProps<HTMLDivElement> | ({ as: keyof JSX.IntrinsicElements } & HTMLProps<HTMLElement>)> = ({
-  as = "div",
-  className,
-  children,
-  ...rest
-}) => React.createElement(as, { className: classNames("field", className), ...rest }, children);
+type Props = {
+  fieldClassName?: string;
+  labelClassName?: string;
+  label: string;
+  helpText?: string;
+} & ComponentProps<typeof RadioGroup>;
 
-export default Field;
+const RadioGroupField = React.forwardRef<HTMLDivElement, Props>(
+  ({ fieldClassName, labelClassName, label, helpText, children, ...props }, ref) => {
+    return (
+      <Field className={fieldClassName} as="fieldset">
+        <Label className={labelClassName} as="legend">
+          {label}
+          {helpText ? <Help className="ml-1" text={helpText} /> : null}
+        </Label>
+        <RadioGroup ref={ref} {...props}>
+          {children}
+        </RadioGroup>
+      </Field>
+    );
+  }
+);
+
+export default RadioGroupField;

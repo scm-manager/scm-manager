@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-import React, { FC, HTMLProps } from "react";
+import React, { HTMLProps } from "react";
 import classNames from "classnames";
 
-const Control: FC<HTMLProps<HTMLDivElement>> = ({ className, children, ...rest }) => (
-  <div className={classNames("control", className)} {...rest}>
+const Control = React.forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(({ className, children, ...rest }, ref) => (
+  <div className={classNames("control", className)} {...rest} ref={ref}>
     {children}
   </div>
-);
+));
 
 export default Control;

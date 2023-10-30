@@ -38,6 +38,10 @@ import { ScmNestedFormPathContextProvider } from "./FormPathContext";
 import ControlledComboboxField from "./combobox/ControlledComboboxField";
 import ChipInputFieldComponent from "./chip-input/ChipInputField";
 import ChipInput from "./headless-chip-input/ChipInput";
+import ControlledRadioGroupField from "./radio-button/ControlledRadioGroupField";
+import RadioGroupComponent from "./radio-button/RadioGroup";
+import RadioButton from "./radio-button/RadioButton";
+import RadioGroupFieldComponent from "./radio-button/RadioGroupField";
 
 export { default as Field } from "./base/Field";
 export { default as Checkbox } from "./checkbox/Checkbox";
@@ -50,6 +54,13 @@ export { default as Textarea } from "./input/Textarea";
 export { default as Select } from "./select/Select";
 export * from "./resourceHooks";
 export { default as Label } from "./base/label/Label";
+
+const RadioGroupExport = {
+  Option: RadioButton,
+};
+
+export const RadioGroup = Object.assign(RadioGroupComponent, RadioGroupExport);
+export const RadioGroupField = Object.assign(RadioGroupFieldComponent, RadioGroupExport);
 
 export const ChipInputField = Object.assign(ChipInputFieldComponent, {
   AddButton: ChipInput.AddButton,
@@ -70,4 +81,5 @@ export const Form = Object.assign(FormCmp, {
   }),
   ChipInput: ControlledChipInputField,
   Combobox: ControlledComboboxField,
+  RadioGroup: Object.assign(ControlledRadioGroupField, RadioGroupExport),
 });

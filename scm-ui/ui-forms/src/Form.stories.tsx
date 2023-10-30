@@ -40,6 +40,7 @@ import ControlledChipInputField from "./chip-input/ControlledChipInputField";
 import Combobox from "./combobox/Combobox";
 import ControlledComboboxField from "./combobox/ControlledComboboxField";
 import { defaultOptionFactory } from "./helpers";
+import ChipInput from "./headless-chip-input/ChipInput";
 
 export type SimpleWebHookConfiguration = {
   urlPattern: string;
@@ -430,4 +431,23 @@ storiesOf("Forms", module)
         </ControlledList>
       </ScmFormListContextProvider>
     </Form>
-  ));
+  ))
+  .add("Controlled Chip Input with add", () => {
+    const ref = useRef<HTMLInputElement>(null);
+    return (
+      <Form
+        onSubmit={console.log}
+        translationPath={["sample", "form"]}
+        defaultValues={{
+          branches: ["main", "develop"],
+        }}
+      >
+        <FormRow>
+          <ControlledChipInputField name="branches" ref={ref} />
+        </FormRow>
+        <FormRow>
+          <ChipInput.AddButton inputRef={ref}>Add</ChipInput.AddButton>
+        </FormRow>
+      </Form>
+    );
+  });
