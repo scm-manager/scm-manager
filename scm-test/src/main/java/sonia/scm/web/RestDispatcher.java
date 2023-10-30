@@ -33,8 +33,6 @@ import org.jboss.resteasy.spi.Dispatcher;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.HttpResponse;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.BadRequestException;
 import sonia.scm.BranchAlreadyExistsException;
@@ -53,8 +51,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RestDispatcher {
-
-  private static final Logger LOG = LoggerFactory.getLogger(RestDispatcher.class);
 
   private final Dispatcher dispatcher;
   private final EnhanceableExceptionMapper exceptionMapper;
@@ -125,7 +121,8 @@ public class RestDispatcher {
     }
 
     private Integer handleUnknownException(Exception ex) {
-      LOG.info("got unknown exception in rest api test", ex);
+      System.err.println("got unknown exception in rest api test");
+      ex.printStackTrace();
       return 500;
     }
   }
