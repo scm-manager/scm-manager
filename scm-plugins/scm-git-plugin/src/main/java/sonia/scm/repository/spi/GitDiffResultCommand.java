@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
+import org.eclipse.jgit.lib.ObjectId;
 import sonia.scm.NotUniqueRevisionException;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
@@ -88,6 +89,10 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
 
     @Override
     public String getOldRevision() {
+      ObjectId commonAncestor = diff.getCommonAncestor();
+      if (commonAncestor != null) {
+        return commonAncestor.name();
+      }
       return diff.getCommit().getParentCount() > 0 ? GitUtil.getId(diff.getCommit().getParent(0).getId()) : null;
     }
 

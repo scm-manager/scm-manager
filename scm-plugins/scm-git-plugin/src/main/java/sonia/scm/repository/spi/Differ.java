@@ -52,17 +52,19 @@ final class Differ implements AutoCloseable {
   private final TreeWalk treeWalk;
   private final RevCommit commit;
   private final PathFilter pathFilter;
+  private final ObjectId commonAncestor;
 
-  private Differ(RevCommit commit, RevWalk walk, TreeWalk treeWalk, PathFilter pathFilter) {
+  private Differ(RevCommit commit, RevWalk walk, TreeWalk treeWalk, PathFilter pathFilter, ObjectId commonAncestor) {
     this.commit = commit;
     this.walk = walk;
     this.treeWalk = treeWalk;
     this.pathFilter = pathFilter;
+    this.commonAncestor = commonAncestor;
   }
 
   static Diff diff(Repository repository, DiffCommandRequest request) throws IOException {
     try (Differ differ = create(repository, request)) {
-      return differ.diff(repository);
+      return differ.diff(repository, differ.commonAncestor);
     }
   }
 
@@ -91,12 +93,13 @@ final class Differ implements AutoCloseable {
       pathFilter = PathFilter.create(request.getPath());
     }
 
+    ObjectId ancestorId = null;
     if (!Strings.isNullOrEmpty(request.getAncestorChangeset())) {
       ObjectId otherRevision = repository.resolve(request.getAncestorChangeset());
       if (otherRevision == null) {
         throw notFound(entity("Revision", request.getAncestorChangeset()));
       }
-      ObjectId ancestorId = GitUtil.computeCommonAncestor(repository, revision, otherRevision);
+      ancestorId = GitUtil.computeCommonAncestor(repository, revision, otherRevision);
       RevTree tree = walk.parseCommit(ancestorId).getTree();
       treeWalk.addTree(tree);
     } else if (commit.getParentCount() > 0) {
@@ -113,12 +116,12 @@ final class Differ implements AutoCloseable {
 
     treeWalk.addTree(commit.getTree());
 
-    return new Differ(commit, walk, treeWalk, pathFilter);
+    return new Differ(commit, walk, treeWalk, pathFilter, ancestorId);
   }
 
-  private Diff diff(Repository repository) throws IOException {
+  private Diff diff(Repository repository, ObjectId ancestorChangeset) throws IOException {
     List<DiffEntry> entries = scanWithRename(repository, pathFilter, treeWalk);
-    return new Diff(commit, entries);
+    return new Diff(commit, entries, ancestorChangeset);
   }
 
   static List<DiffEntry> scanWithRename(Repository repository, PathFilter pathFilter, TreeWalk treeWalk) throws IOException {
@@ -146,10 +149,12 @@ final class Differ implements AutoCloseable {
 
     private final RevCommit commit;
     private final List<DiffEntry> entries;
+    private final ObjectId commonAncestor;
 
-    private Diff(RevCommit commit, List<DiffEntry> entries) {
+    private Diff(RevCommit commit, List<DiffEntry> entries, ObjectId commonAncestor) {
       this.commit = commit;
       this.entries = entries;
+      this.commonAncestor = commonAncestor;
     }
 
     public RevCommit getCommit() {
@@ -158,6 +163,10 @@ final class Differ implements AutoCloseable {
 
     public List<DiffEntry> getEntries() {
       return entries;
+    }
+
+    public ObjectId getCommonAncestor() {
+      return commonAncestor;
     }
   }
 
