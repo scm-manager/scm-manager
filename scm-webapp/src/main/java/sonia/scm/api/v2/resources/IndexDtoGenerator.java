@@ -135,6 +135,10 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       }
       if (ConfigurationPermissions.list().isPermitted()) {
         builder.single(link("config", resourceLinks.config().self()));
+        if (ConfigurationPermissions.write(configuration.getId()).isPermitted()) {
+          builder.single(link("invalidateCaches", resourceLinks.invalidationLinks().caches()));
+          builder.single(link("invalidateSearchIndex", resourceLinks.invalidationLinks().searchIndex()));
+        }
         if (!Strings.isNullOrEmpty(configuration.getReleaseFeedUrl())) {
           builder.single(link("updateInfo", resourceLinks.adminInfo().updateInfo()));
         }

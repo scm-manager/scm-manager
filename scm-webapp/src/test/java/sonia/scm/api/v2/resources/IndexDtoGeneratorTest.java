@@ -155,6 +155,68 @@ class IndexDtoGeneratorTest {
         Link.linkBuilder("search", "/api/v2/search/query/group").withName("group").build()
       );
     }
+
+    @Nested
+    class InvalidationLinks {
+      @Test
+      void shouldAppendInvalidationLinks() {
+        when(subject.isAuthenticated()).thenReturn(true);
+        when(subject.isPermitted("configuration:list")).thenReturn(true);
+        when(subject.isPermitted("configuration:write:1")).thenReturn(true);
+        mockOtherPermissions();
+        when(configuration.getId()).thenReturn("1");
+
+        IndexDto dto = generator.generate();
+        assertThat(dto.getLinks().getLinkBy("invalidateCaches")).contains(
+          Link.linkBuilder("invalidateCaches", "/api/v2/invalidations/caches").build()
+        );
+        assertThat(dto.getLinks().getLinkBy("invalidateSearchIndex")).contains(
+          Link.linkBuilder("invalidateSearchIndex", "/api/v2/invalidations/search-index").build()
+        );
+      }
+
+      @Test
+      void shouldNotAppendInvalidationsIfWritePermissionIsMissing() {
+        when(subject.isAuthenticated()).thenReturn(true);
+        when(subject.isPermitted("configuration:list")).thenReturn(true);
+        when(subject.isPermitted("configuration:write:1")).thenReturn(false);
+        mockOtherPermissions();
+        when(configuration.getId()).thenReturn("1");
+
+        IndexDto dto = generator.generate();
+        assertThat(dto.getLinks().getLinkBy("invalidateCaches")).isEmpty();
+        assertThat(dto.getLinks().getLinkBy("invalidateSearchIndex")).isEmpty();
+      }
+
+      @Test
+      void shouldNotAppendInvalidationsIfListPermissionIsMissing() {
+        when(subject.isAuthenticated()).thenReturn(true);
+        when(subject.isPermitted("configuration:list")).thenReturn(false);
+        mockOtherPermissions();
+
+        IndexDto dto = generator.generate();
+        assertThat(dto.getLinks().getLinkBy("invalidateCaches")).isEmpty();
+        assertThat(dto.getLinks().getLinkBy("invalidateSearchIndex")).isEmpty();
+      }
+
+      @Test
+      void shouldNotAppendInvalidationsIfUnauthenticated() {
+        when(subject.isAuthenticated()).thenReturn(false);
+
+        IndexDto dto = generator.generate();
+        assertThat(dto.getLinks().getLinkBy("invalidateCaches")).isEmpty();
+        assertThat(dto.getLinks().getLinkBy("invalidateSearchIndex")).isEmpty();
+      }
+
+      private void mockOtherPermissions() {
+        when(subject.isPermitted("plugin:read")).thenReturn(false);
+        when(subject.isPermitted("plugin:write")).thenReturn(false);
+        when(subject.isPermitted("user:list")).thenReturn(false);
+        when(subject.isPermitted("user:autocomplete")).thenReturn(false);
+        when(subject.isPermitted("group:autocomplete")).thenReturn(false);
+        when(subject.isPermitted("group:list")).thenReturn(false);
+      }
+    }
   }
 
   private SearchableType searchableType(String name) {

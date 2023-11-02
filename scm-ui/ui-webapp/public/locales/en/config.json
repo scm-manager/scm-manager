@@ -93,6 +93,18 @@
     "login-attempt-limit-invalid": "This is not a number",
     "plugin-url-invalid": "This is not a valid url"
   },
+  "invalidateCaches": {
+    "success": "Successfully invalidated caches",
+    "subtitle": "Invalidate Caches",
+    "description": "Invalidate caches manually to fix certain issues. Warning: After invalidation the SCM-Manager is slowed down.",
+    "button": "Start cache invalidation"
+  },
+  "invalidateSearchIndex": {
+    "success": "Rebuild of the search index has been triggered",
+    "subtitle": "Rebuild Search Index",
+    "description": "Rebuild the search index to fix certain issues with search results. Warning: While rebuilding the search index the SCM-Manager is slowed down.",
+    "button": "Start recreation of search index"
+  },
   "help": {
     "realmDescriptionHelpText": "Enter authentication realm description.",
     "dateFormatHelpText": "Moments date format. Please have a look at the MomentJS documentation.",

@@ -80,6 +80,13 @@ public class GuavaCacheManager implements CacheManager, org.apache.shiro.cache.C
   }
 
   @Override
+  public void clearAllCaches() {
+    for(GuavaCache<?, ?> cache : caches.values()) {
+      cache.clear();
+    }
+  }
+
+  @Override
   public void close() throws IOException {
     LOG.info("close guava cache manager");
 

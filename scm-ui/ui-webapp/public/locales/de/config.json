@@ -93,6 +93,18 @@
     "login-attempt-limit-invalid": "Dies ist keine Zahl",
     "plugin-url-invalid": "Dies ist keine gültige URL"
   },
+  "invalidateCaches": {
+    "success": "Invalidierung von Caches war erfolgreich",
+    "subtitle": "Caches invalidieren",
+    "description": "Invalidieren sie Caches manuell, um bestimmte Probleme zu beheben. Achtung: Nach der Invalidierung ist der SCM-Manager verlangsamt.",
+    "button": "Invalidierung von Caches starten"
+  },
+  "invalidateSearchIndex": {
+    "success": "Neuaufbau vom Suchindex erfolgreich angestoßen",
+    "subtitle": "Suchindex neu aufbauen",
+    "description": "Bauen Sie den Suchindex neu auf, um Probleme mit den Suchergebnissen zu beheben. Achtung: während des Neuaufbaus ist der SCM-Manager verlangsamt.",
+    "button": "Neuaufbau vom Suchindex starten"
+  },
   "help": {
     "realmDescriptionHelpText": "Beschreibung des Authentication Realm.",
     "dateFormatHelpText": "Moments Datumsformat. Zulässige Formate sind in der MomentJS Dokumentation beschrieben.",

@@ -347,6 +347,27 @@ class ResourceLinks {
     }
   }
 
+  InvalidationLinks invalidationLinks() {
+    return new InvalidationLinks(accessScmPathInfoStore().get());
+  }
+
+  static class InvalidationLinks {
+    private final LinkBuilder invalidationLinkBuilder;
+
+    InvalidationLinks(ScmPathInfo pathInfo) {
+      this.invalidationLinkBuilder = new LinkBuilder(pathInfo, InvalidationResource.class);
+    }
+
+    String caches() {
+      return invalidationLinkBuilder.method("invalidateCaches").parameters().href();
+    }
+
+
+    String searchIndex() {
+      return invalidationLinkBuilder.method("invalidateSearchIndex").parameters().href();
+    }
+  }
+
   AdminInfoLinks adminInfo() {
     return new AdminInfoLinks(accessScmPathInfoStore().get());
   }

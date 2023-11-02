@@ -75,6 +75,13 @@ public class MapCacheManager
     return (MapCache<K, V>) cacheMap.computeIfAbsent(name, k -> new MapCache<K, V>());
   }
 
+  @Override
+  public void clearAllCaches() {
+    for(MapCache<?, ?> cache : cacheMap.values()) {
+      cache.clear();
+    }
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */

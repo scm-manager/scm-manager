@@ -87,6 +87,20 @@ public abstract class CacheManagerTestBase<C extends Cache>
     assertIsSame(c1, c2);
   }
 
+  @Test
+  public void shouldClearCache() {
+    Cache<String, String> c1 = cacheManager.getCache("test-1");
+    c1.put("key1", "value1");
+
+    Cache<String, String> c2 = cacheManager.getCache("test-2");
+    c2.put("key2", "value2");
+
+    cacheManager.clearAllCaches();
+
+    assertEquals(c1.size(), 0);
+    assertEquals(c2.size(), 0);
+  }
+
   /**
    * Method description
    *

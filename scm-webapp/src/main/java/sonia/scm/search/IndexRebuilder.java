@@ -22,36 +22,25 @@
  * SOFTWARE.
  */
 
-package sonia.scm.cache;
+package sonia.scm.search;
 
-//~--- JDK imports ------------------------------------------------------------
+import javax.inject.Inject;
+import java.util.Set;
 
-import java.io.Closeable;
+public class IndexRebuilder {
 
-/**
- * The {@link CacheManager} holds references to {@link Cache}
- * and manages their creation.
- * This class is a singleton which can be retrieved via injection.
- *
- * @author Sebastian Sdorra
- */
-public interface CacheManager extends Closeable {
+  private final SearchEngine searchEngine;
+  private final Set<Indexer> indexers;
 
-  /**
-   * Returns the cache with the specified types and name.
-   * If the cache does not exist, a new cache is created.
-   *
-   * @param name - The name of the cache
-   * @param <K> - The type of the keys for the cache
-   * @param <V>  - The type of cache elements
-   *
-   * @return the cache with the specified types and name
-   */
-  <K, V> Cache<K, V> getCache(String name);
+  @Inject
+  public IndexRebuilder(SearchEngine searchEngine, Set<Indexer> indexers) {
+    this.searchEngine = searchEngine;
+    this.indexers = indexers;
+  }
 
-  /**
-   * Clears (aka invalidates) all caches.
-   * @since 2.48.0
-   */
-  void clearAllCaches();
+  public void rebuildAll() {
+    for (Indexer indexer : indexers) {
+      searchEngine.forType(indexer.getType()).update(indexer.getReIndexAllTask());
+    }
+  }
 }

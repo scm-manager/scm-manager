@@ -26,15 +26,16 @@ import { useTranslation } from "react-i18next";
 import { Link } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, Title } from "@scm-manager/ui-components";
 import ConfigForm from "../components/form/ConfigForm";
-import { useConfig, useNamespaceStrategies, useUpdateConfig } from "@scm-manager/ui-api";
+import { useConfig, useIndexLinks, useNamespaceStrategies, useUpdateConfig } from "@scm-manager/ui-api";
 
 const GlobalConfig: FC = () => {
+  const indexLinks = useIndexLinks();
   const { data: config, error: configLoadingError, isLoading: isLoadingConfig } = useConfig();
   const { isLoading: isUpdating, error: updateError, isUpdated, update, reset } = useUpdateConfig();
   const {
     data: namespaceStrategies,
     error: namespaceStrategiesLoadingError,
-    isLoading: isLoadingNamespaceStrategies
+    isLoading: isLoadingNamespaceStrategies,
   } = useNamespaceStrategies();
   const [t] = useTranslation("config");
   const error = configLoadingError || namespaceStrategiesLoadingError || updateError || undefined;
@@ -67,6 +68,8 @@ const GlobalConfig: FC = () => {
         namespaceStrategies={namespaceStrategies}
         configUpdatePermission={canUpdateConfig}
         configReadPermission={!!config}
+        invalidateCachesLink={indexLinks.invalidateCaches as Link | undefined}
+        invalidateSearchIndexLink={indexLinks.invalidateSearchIndex as Link | undefined}
       />
     </>
   );

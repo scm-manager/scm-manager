@@ -23,7 +23,7 @@
  */
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Config, ConfigChangeHandler, NamespaceStrategies } from "@scm-manager/ui-types";
+import { Config, ConfigChangeHandler, Link, NamespaceStrategies } from "@scm-manager/ui-types";
 import { Level, Notification, SubmitButton } from "@scm-manager/ui-components";
 import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
@@ -31,6 +31,8 @@ import BaseUrlSettings from "./BaseUrlSettings";
 import LoginAttempt from "./LoginAttempt";
 import PluginSettings from "./PluginSettings";
 import FunctionSettings from "./FunctionSettings";
+import InvalidateCaches from "./InvalidateCaches";
+import InvalidateSearchIndex from "./InvalidateSearchIndex";
 
 type Props = {
   submitForm: (p: Config) => void;
@@ -39,6 +41,8 @@ type Props = {
   configReadPermission: boolean;
   configUpdatePermission: boolean;
   namespaceStrategies?: NamespaceStrategies;
+  invalidateCachesLink?: Link;
+  invalidateSearchIndexLink?: Link;
 };
 
 const ConfigForm: FC<Props> = ({
@@ -48,6 +52,8 @@ const ConfigForm: FC<Props> = ({
   configReadPermission,
   configUpdatePermission,
   namespaceStrategies,
+  invalidateCachesLink,
+  invalidateSearchIndexLink,
 }) => {
   const [t] = useTranslation("config");
   const [innerConfig, setInnerConfig] = useState<Config>({
@@ -196,6 +202,18 @@ const ConfigForm: FC<Props> = ({
         hasUpdatePermission={configUpdatePermission}
       />
       <hr />
+      {invalidateCachesLink ? (
+        <>
+          <InvalidateCaches />
+          <hr />
+        </>
+      ) : null}
+      {invalidateSearchIndexLink ? (
+        <>
+          <InvalidateSearchIndex />
+          <hr />
+        </>
+      ) : null}
       <Level
         right={
           <SubmitButton
