@@ -27,6 +27,8 @@ package sonia.scm.repository.spi;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -59,6 +61,7 @@ class GitRepositoryServiceProviderTest {
   }
 
   private GitRepositoryServiceProvider createProvider() {
+
     return new GitRepositoryServiceProvider(createParentInjector(), context);
   }
 
@@ -67,6 +70,9 @@ class GitRepositoryServiceProviderTest {
       @Override
       protected void configure() {
         bind(GitRepositoryHandler.class).toInstance(handler);
+        FactoryModuleBuilder builder = new FactoryModuleBuilder();
+        Module module = builder.implement(PushCommand.class, GitPushCommand.class).build(GitPushCommand.Factory.class);
+        install(module);
       }
     });
   }

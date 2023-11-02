@@ -23,10 +23,12 @@
  */
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.api.BundleResponse;
 import sonia.scm.repository.api.ExportFailedException;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -38,7 +40,8 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
 
   private static final String TAR_ARCHIVE = "tar";
 
-  public GitBundleCommand(GitContext context) {
+  @Inject
+  public GitBundleCommand(@Assisted GitContext context) {
     super(context);
   }
 
@@ -66,4 +69,9 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
   private boolean shouldIncludeFile(Path filePath) {
     return !filePath.getFileName().toString().equals("config");
   }
+
+  public interface Factory {
+    BundleCommand create(GitContext context);
+  }
+
 }

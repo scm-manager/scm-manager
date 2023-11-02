@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.javahg.Changeset;
 import org.javahg.commands.CommitCommand;
 import com.google.common.annotations.VisibleForTesting;
@@ -49,7 +50,7 @@ public class HgBranchCommand extends AbstractWorkingCopyCommand implements Branc
   private static final Logger LOG = LoggerFactory.getLogger(HgBranchCommand.class);
 
   @Inject
-  HgBranchCommand(HgCommandContext context, HgRepositoryHandler handler) {
+  HgBranchCommand(@Assisted HgCommandContext context, HgRepositoryHandler handler) {
     this(context, handler.getWorkingCopyFactory());
   }
 
@@ -107,4 +108,7 @@ public class HgBranchCommand extends AbstractWorkingCopyCommand implements Branc
       .execute();
   }
 
+  public interface Factory {
+    HgBranchCommand create(HgCommandContext context);
+  }
 }

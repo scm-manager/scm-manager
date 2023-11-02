@@ -26,11 +26,13 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.assistedinject.Assisted;
 import org.javahg.Changeset;
 import com.google.common.collect.Lists;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Person;
 
+import javax.inject.Inject;
 import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -51,7 +53,8 @@ public class HgBranchesCommand extends AbstractCommand
    *  @param context
    *
    */
-  public HgBranchesCommand(HgCommandContext context)
+  @Inject
+  public HgBranchesCommand(@Assisted HgCommandContext context)
   {
     super(context);
   }
@@ -82,4 +85,9 @@ public class HgBranchesCommand extends AbstractCommand
         }
       });
   }
+
+  public interface Factory {
+    HgBranchesCommand create(HgCommandContext context);
+  }
+
 }

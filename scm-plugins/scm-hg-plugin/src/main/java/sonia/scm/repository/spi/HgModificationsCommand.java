@@ -24,17 +24,20 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import sonia.scm.repository.Modification;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 import sonia.scm.repository.spi.javahg.StateCommand;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Collection;
 
 public class HgModificationsCommand extends AbstractCommand implements ModificationsCommand {
 
-  HgModificationsCommand(HgCommandContext context) {
+  @Inject
+  HgModificationsCommand(@Assisted HgCommandContext context) {
     super(context);
   }
 
@@ -52,4 +55,9 @@ public class HgModificationsCommand extends AbstractCommand implements Modificat
     StateCommand stateCommand = new StateCommand(repository);
     return new Modifications(baseRevision, revision, stateCommand.call(baseRevision, revision));
   }
+
+  public interface Factory {
+    HgModificationsCommand create(HgCommandContext context);
+  }
+
 }

@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -67,8 +68,8 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
   @Inject
   public GitPullCommand(GitRepositoryHandler handler,
-                        GitContext context,
-                        PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory,
+                        @Assisted GitContext context,
+                        @Assisted PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory,
                         LfsLoader lfsLoader,
                         PullHttpConnectionProvider pullHttpConnectionProvider,
                         GitRepositoryConfigStoreProvider storeProvider, GitHeadModifier gitHeadModifier) {
@@ -266,4 +267,9 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
       return failureCount;
     }
   }
+
+  public interface Factory {
+    PullCommand create(GitContext context, PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory);
+  }
+
 }

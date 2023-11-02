@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.lib.ObjectId;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -45,7 +46,7 @@ public class GitIncomingCommand extends AbstractGitIncomingOutgoingCommand
   implements IncomingCommand {
 
   @Inject
-  GitIncomingCommand(GitContext context, GitRepositoryHandler handler, GitChangesetConverterFactory converterFactory) {
+  GitIncomingCommand(@Assisted GitContext context, GitRepositoryHandler handler, GitChangesetConverterFactory converterFactory) {
     super(context, handler, converterFactory);
   }
 
@@ -95,4 +96,9 @@ public class GitIncomingCommand extends AbstractGitIncomingOutgoingCommand
   {
     return remoteId != null;
   }
+
+  public interface Factory {
+    IncomingCommand create(GitContext context);
+  }
+
 }

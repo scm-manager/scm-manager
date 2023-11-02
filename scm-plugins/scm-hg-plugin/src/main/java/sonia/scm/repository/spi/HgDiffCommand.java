@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.javahg.Repository;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
@@ -33,6 +34,7 @@ import sonia.scm.repository.spi.javahg.HgDiffInternalCommand;
 import sonia.scm.web.HgUtil;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -42,7 +44,8 @@ import java.io.OutputStream;
  */
 public class HgDiffCommand extends AbstractCommand implements DiffCommand {
 
-  HgDiffCommand(HgCommandContext context) {
+  @Inject
+  HgDiffCommand(@Assisted HgCommandContext context) {
     super(context);
   }
 
@@ -97,4 +100,9 @@ public class HgDiffCommand extends AbstractCommand implements DiffCommand {
       return cmd.stream();
     }
   }
+
+  public interface Factory {
+    HgDiffCommand create(HgCommandContext context);
+  }
+
 }

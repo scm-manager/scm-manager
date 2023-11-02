@@ -28,6 +28,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -66,7 +67,7 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
   //~--- constructors ---------------------------------------------------------
 
   @Inject
-  public GitBlameCommand(GitContext context)
+  public GitBlameCommand(@Assisted GitContext context)
   {
     super(context);
   }
@@ -148,4 +149,9 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
 
     return result;
   }
+
+  public interface Factory {
+    BlameCommand create(GitContext context);
+  }
+
 }

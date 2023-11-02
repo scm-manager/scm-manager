@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
@@ -54,7 +55,7 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
    * @param context
    */
   @Inject
-  public GitTagsCommand(GitContext context, GitTagConverter gitTagConverter) {
+  public GitTagsCommand(@Assisted GitContext context, GitTagConverter gitTagConverter) {
     super(context);
     this.gitTagConverter = gitTagConverter;
   }
@@ -73,4 +74,9 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
       throw new InternalRepositoryException(repository, "could not read tags from repository", ex);
     }
   }
+
+  public interface Factory {
+    TagsCommand create(GitContext context);
+  }
+
 }

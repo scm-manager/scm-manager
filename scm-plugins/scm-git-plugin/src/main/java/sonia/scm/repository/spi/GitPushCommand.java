@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitRepositoryHandler;
@@ -37,7 +38,7 @@ public class GitPushCommand extends AbstractGitPushOrPullCommand implements Push
   private static final Logger LOG = LoggerFactory.getLogger(GitPushCommand.class);
 
   @Inject
-  public GitPushCommand(GitRepositoryHandler handler, GitContext context) {
+  public GitPushCommand(GitRepositoryHandler handler, @Assisted GitContext context) {
     super(handler, context);
     this.handler = handler;
   }
@@ -51,4 +52,9 @@ public class GitPushCommand extends AbstractGitPushOrPullCommand implements Push
 
     return new PushResponse(push(open(), remoteUrl, request.getUsername(), request.getPassword(), request.isForce()));
   }
+
+  public interface Factory {
+    PushCommand create(GitContext context);
+  }
+
 }

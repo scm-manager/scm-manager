@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.javahg.Changeset;
 import org.javahg.Repository;
 import org.javahg.commands.AddCommand;
@@ -54,7 +55,7 @@ public class HgModifyCommand extends AbstractWorkingCopyCommand implements Modif
   private static final Logger LOG = LoggerFactory.getLogger(HgModifyCommand.class);
 
   @Inject
-  public HgModifyCommand(HgCommandContext context, HgRepositoryHandler handler) {
+  public HgModifyCommand(@Assisted HgCommandContext context, HgRepositoryHandler handler) {
     super(context, handler.getWorkingCopyFactory());
   }
 
@@ -144,4 +145,9 @@ public class HgModifyCommand extends AbstractWorkingCopyCommand implements Modif
   private void throwInternalRepositoryException(String message, Exception e) {
     throw new InternalRepositoryException(context.getScmRepository(), message, e);
   }
+
+  public interface Factory {
+    HgModifyCommand create(HgCommandContext context);
+  }
+
 }

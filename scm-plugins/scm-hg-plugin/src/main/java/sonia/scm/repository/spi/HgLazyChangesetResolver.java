@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.javahg.commands.LogCommand;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgRepositoryFactory;
@@ -34,13 +35,13 @@ import javax.inject.Inject;
 import java.util.Iterator;
 import java.util.concurrent.Callable;
 
-class HgLazyChangesetResolver implements Callable<Iterable<Changeset>> {
+public class HgLazyChangesetResolver implements Callable<Iterable<Changeset>> {
 
   private final HgRepositoryFactory factory;
   private final Repository repository;
 
   @Inject
-  HgLazyChangesetResolver(HgRepositoryFactory factory, HgCommandContext context) {
+  HgLazyChangesetResolver(HgRepositoryFactory factory, @Assisted HgCommandContext context) {
     this.factory = factory;
     this.repository = context.getScmRepository();
   }
@@ -57,4 +58,9 @@ class HgLazyChangesetResolver implements Callable<Iterable<Changeset>> {
       .iterator();
     return () -> iterator;
   }
+
+  public interface Factory {
+    HgLazyChangesetResolver create(HgCommandContext context);
+  }
+
 }

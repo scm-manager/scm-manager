@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.api.LockCommandResult;
 import sonia.scm.repository.api.UnlockCommandResult;
@@ -39,7 +40,7 @@ public class GitFileLockCommand implements FileLockCommand {
   private final GitFileLockStoreFactory lockStoreFactory;
 
   @Inject
-  public GitFileLockCommand(GitContext context, GitFileLockStoreFactory lockStoreFactory) {
+  public GitFileLockCommand(@Assisted GitContext context, GitFileLockStoreFactory lockStoreFactory) {
     this.context = context;
     this.lockStoreFactory = lockStoreFactory;
   }
@@ -73,4 +74,9 @@ public class GitFileLockCommand implements FileLockCommand {
   private GitFileLockStore getLockStore() {
     return lockStoreFactory.create(context.getRepository());
   }
+
+  public interface Factory {
+    FileLockCommand create(GitContext context);
+  }
+
 }

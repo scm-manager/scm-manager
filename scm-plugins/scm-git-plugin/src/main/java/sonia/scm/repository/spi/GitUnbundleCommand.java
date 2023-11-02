@@ -24,6 +24,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.io.ByteSource;
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
@@ -52,7 +53,7 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
   private final GitRepositoryHookEventFactory eventFactory;
 
   @Inject
-  GitUnbundleCommand(GitContext context, GitRepositoryHookEventFactory eventFactory) {
+  GitUnbundleCommand(@Assisted GitContext context, GitRepositoryHookEventFactory eventFactory) {
     super(context);
     this.eventFactory = eventFactory;
   }
@@ -107,4 +108,9 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
   private void unbundleRepositoryFromRequest(UnbundleCommandRequest request, Path repositoryDir) throws IOException {
     extractTar(request.getArchive().openBufferedStream(), repositoryDir).run();
   }
+
+  public interface Factory {
+    UnbundleCommand create(GitContext context);
+  }
+
 }

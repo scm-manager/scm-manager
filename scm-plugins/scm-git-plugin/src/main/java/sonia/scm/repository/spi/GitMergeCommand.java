@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.Status;
@@ -65,11 +66,11 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   );
 
   @Inject
-  GitMergeCommand(GitContext context, GitRepositoryHandler handler) {
+  GitMergeCommand(@Assisted GitContext context, GitRepositoryHandler handler) {
     this(context, handler.getWorkingCopyFactory());
   }
 
-  GitMergeCommand(GitContext context, GitWorkingCopyFactory workingCopyFactory) {
+  GitMergeCommand(@Assisted GitContext context, GitWorkingCopyFactory workingCopyFactory) {
     super(context);
     this.workingCopyFactory = workingCopyFactory;
   }
@@ -214,4 +215,9 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       return status;
     }
   }
+
+  public interface Factory {
+    MergeCommand create(GitContext context);
+  }
+
 }

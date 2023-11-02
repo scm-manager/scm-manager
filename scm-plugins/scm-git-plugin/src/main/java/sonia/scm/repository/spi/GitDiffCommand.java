@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.util.QuotedString;
@@ -43,7 +44,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
 
   @Inject
-  GitDiffCommand(GitContext context) {
+  GitDiffCommand(@Assisted GitContext context) {
     super(context);
   }
 
@@ -185,4 +186,9 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
       target.flush();
     }
   }
+
+  public interface Factory {
+    DiffCommand create(GitContext context);
+  }
+
 }

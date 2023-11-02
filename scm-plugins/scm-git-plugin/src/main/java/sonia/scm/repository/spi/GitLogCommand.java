@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -74,7 +75,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    *
    */
   @Inject
-  GitLogCommand(GitContext context, GitChangesetConverterFactory converterFactory)
+  GitLogCommand(@Assisted GitContext context, GitChangesetConverterFactory converterFactory)
   {
     super(context);
     this.converterFactory = converterFactory;
@@ -188,4 +189,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
   }
 
+  public interface Factory {
+    LogCommand create(GitContext context);
+  }
 }

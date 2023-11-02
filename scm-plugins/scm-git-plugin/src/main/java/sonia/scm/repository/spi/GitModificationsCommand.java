@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.ObjectId;
@@ -57,7 +58,7 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
 public class GitModificationsCommand extends AbstractGitCommand implements ModificationsCommand {
 
   @Inject
-  GitModificationsCommand(GitContext context) {
+  GitModificationsCommand(@Assisted GitContext context) {
     super(context);
   }
 
@@ -156,4 +157,9 @@ public class GitModificationsCommand extends AbstractGitCommand implements Modif
         throw new UnsupportedModificationTypeException(entity(repository), MessageFormat.format("The modification type: {0} is not supported.", type));
     }
   }
+
+  public interface Factory {
+    ModificationsCommand create(GitContext context);
+  }
+
 }

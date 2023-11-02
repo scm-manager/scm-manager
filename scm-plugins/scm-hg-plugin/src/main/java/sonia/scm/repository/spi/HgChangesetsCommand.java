@@ -24,16 +24,19 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 import static sonia.scm.repository.spi.javahg.HgLogChangesetCommand.on;
 
 public class HgChangesetsCommand extends AbstractCommand implements ChangesetsCommand {
 
-  public HgChangesetsCommand(HgCommandContext context) {
+  @Inject
+  public HgChangesetsCommand(@Assisted HgCommandContext context) {
     super(context);
   }
 
@@ -56,4 +59,9 @@ public class HgChangesetsCommand extends AbstractCommand implements ChangesetsCo
     }
     return Optional.empty();
   }
+
+  public interface Factory {
+    HgChangesetsCommand create(HgCommandContext context);
+  }
+
 }

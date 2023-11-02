@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.api.Command;
@@ -68,16 +67,11 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
     Feature.FORCE_PUSH
   );
 
-  private final Injector commandInjector;
   private final HgCommandContext context;
+   private final Injector injector;
 
   HgRepositoryServiceProvider(Injector injector, HgCommandContext context) {
-    this.commandInjector = injector.createChildInjector(new AbstractModule() {
-      @Override
-      protected void configure() {
-        bind(HgCommandContext.class).toInstance(context);
-      }
-    });
+    this.injector = injector;
     this.context = context;
   }
 
@@ -88,42 +82,42 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public HgBlameCommand getBlameCommand() {
-    return new HgBlameCommand(context);
+    return injector.getInstance(HgBlameCommand.Factory.class).create(context);
   }
 
   @Override
   public BranchesCommand getBranchesCommand() {
-    return new HgBranchesCommand(context);
+    return injector.getInstance(HgBranchesCommand.Factory.class).create(context);
   }
 
   @Override
   public BranchCommand getBranchCommand() {
-    return commandInjector.getInstance(HgBranchCommand.class);
+    return injector.getInstance(HgBranchCommand.Factory.class).create(context);
   }
 
   @Override
   public HgBrowseCommand getBrowseCommand() {
-    return new HgBrowseCommand(context);
+    return injector.getInstance(HgBrowseCommand.Factory.class).create(context);
   }
 
   @Override
   public HgCatCommand getCatCommand() {
-    return new HgCatCommand(context);
+    return injector.getInstance(HgCatCommand.Factory.class).create(context);
   }
 
   @Override
   public HgDiffCommand getDiffCommand() {
-    return new HgDiffCommand(context);
+    return injector.getInstance(HgDiffCommand.Factory.class).create(context);
   }
 
   @Override
   public IncomingCommand getIncomingCommand() {
-    return commandInjector.getInstance(HgIncomingCommand.class);
+    return injector.getInstance(HgIncomingCommand.Factory.class).create(context);
   }
 
   @Override
   public HgLogCommand getLogCommand() {
-    return new HgLogCommand(context);
+    return injector.getInstance(HgLogCommand.Factory.class).create(context);
   }
 
   /**
@@ -134,27 +128,29 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
    */
   @Override
   public ModificationsCommand getModificationsCommand() {
-    return new HgModificationsCommand(context);
+    return injector.getInstance(HgModificationsCommand.Factory.class).create(context);
   }
 
   @Override
   public OutgoingCommand getOutgoingCommand() {
-    return commandInjector.getInstance(HgOutgoingCommand.class);
+    return injector.getInstance(HgOutgoingCommand.Factory.class).create(context);
   }
 
   @Override
   public PullCommand getPullCommand() {
-    return commandInjector.getInstance(HgPullCommand.class);
+    HgLazyChangesetResolver hgLazyChangesetResolver = injector.getInstance(HgLazyChangesetResolver.Factory.class).create(context);
+    HgRepositoryHookEventFactory hgRepositoryHookEventFactory = injector.getInstance(HgRepositoryHookEventFactory.Factory.class).create(context);
+    return injector.getInstance(HgPullCommand.Factory.class).create(context, hgLazyChangesetResolver, hgRepositoryHookEventFactory);
   }
 
   @Override
   public PushCommand getPushCommand() {
-    return commandInjector.getInstance(HgPushCommand.class);
+    return injector.getInstance(HgPushCommand.Factory.class).create(context);
   }
 
   @Override
   public ModifyCommand getModifyCommand() {
-    return commandInjector.getInstance(HgModifyCommand.class);
+    return injector.getInstance(HgModifyCommand.Factory.class).create(context);
   }
 
   @Override
@@ -169,36 +165,36 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public TagsCommand getTagsCommand() {
-    return new HgTagsCommand(context);
+    return injector.getInstance(HgTagsCommand.Factory.class).create(context);
   }
 
   @Override
   public TagCommand getTagCommand() {
-    return commandInjector.getInstance(HgTagCommand.class);
+    return injector.getInstance(HgTagCommand.Factory.class).create(context);
   }
 
   @Override
   public BundleCommand getBundleCommand() {
-    return new HgBundleCommand(context);
+    return injector.getInstance(HgBundleCommand.Factory.class).create(context);
   }
 
   @Override
   public UnbundleCommand getUnbundleCommand() {
-    return commandInjector.getInstance(HgUnbundleCommand.class);
+    return injector.getInstance(HgUnbundleCommand.Factory.class).create(context);
   }
 
   @Override
   public FullHealthCheckCommand getFullHealthCheckCommand() {
-    return new HgFullHealthCheckCommand(context);
+    return injector.getInstance(HgFullHealthCheckCommand.Factory.class).create(context);
   }
 
   @Override
   public BranchDetailsCommand getBranchDetailsCommand() {
-    return new HgBranchDetailsCommand(context);
+    return injector.getInstance(HgBranchDetailsCommand.Factory.class).create(context);
   }
 
   @Override
   public ChangesetsCommand getChangesetsCommand() {
-    return new HgChangesetsCommand(context);
+    return injector.getInstance(HgChangesetsCommand.Factory.class).create(context);
   }
 }

@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
@@ -50,7 +51,7 @@ import static java.util.Optional.ofNullable;
 public class GitDiffResultCommand extends AbstractGitCommand implements DiffResultCommand {
 
   @Inject
-  GitDiffResultCommand(GitContext context) {
+  GitDiffResultCommand(@Assisted GitContext context) {
     super(context);
   }
 
@@ -197,4 +198,9 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
 
     }
   }
+
+  public interface Factory {
+    DiffResultCommand create(GitContext context);
+  }
+
 }

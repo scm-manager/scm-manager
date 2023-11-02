@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
+import com.google.inject.assistedinject.Assisted;
 import org.javahg.Changeset;
 import org.javahg.commands.ExecutionException;
 import org.slf4j.Logger;
@@ -51,7 +52,7 @@ public class HgPushCommand extends AbstractHgPushOrPullCommand implements PushCo
   private final TemporaryConfigFactory configFactory;
 
   @Inject
-  public HgPushCommand(HgRepositoryHandler handler, HgCommandContext context, TemporaryConfigFactory configFactory) {
+  public HgPushCommand(HgRepositoryHandler handler, @Assisted HgCommandContext context, TemporaryConfigFactory configFactory) {
     super(handler, context);
     this.configFactory = configFactory;
   }
@@ -86,4 +87,9 @@ public class HgPushCommand extends AbstractHgPushOrPullCommand implements PushCo
 
     return new PushResponse(result.size());
   }
+
+  public interface Factory {
+    HgPushCommand create(HgCommandContext context);
+  }
+
 }

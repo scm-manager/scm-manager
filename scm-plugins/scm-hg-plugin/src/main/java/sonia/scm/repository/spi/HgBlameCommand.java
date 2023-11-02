@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.assistedinject.Assisted;
 import org.javahg.Changeset;
 import org.javahg.commands.AnnotateCommand;
 import org.javahg.AnnotateLine;
@@ -38,6 +39,7 @@ import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Person;
 import sonia.scm.web.HgUtil;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 
@@ -64,7 +66,9 @@ public class HgBlameCommand extends AbstractCommand implements BlameCommand
    *  @param context
    *
    */
-  HgBlameCommand(HgCommandContext context)
+
+  @Inject
+  HgBlameCommand(@Assisted HgCommandContext context)
   {
     super(context);
   }
@@ -129,4 +133,9 @@ public class HgBlameCommand extends AbstractCommand implements BlameCommand
 
     return blameLine;
   }
+
+  public interface Factory {
+    HgBlameCommand create(HgCommandContext context);
+  }
+
 }

@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
+import com.google.inject.assistedinject.Assisted;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
@@ -113,7 +114,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   private final LfsLoader lfsLoader;
 
   @Inject
-  GitMirrorCommand(GitContext context,
+  GitMirrorCommand(@Assisted GitContext context,
                    MirrorHttpConnectionProvider mirrorHttpConnectionProvider,
                    GitChangesetConverterFactory converterFactory,
                    GitTagConverter gitTagConverter,
@@ -799,4 +800,9 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       this.typeForLog = typeForLog;
     }
   }
+
+  public interface Factory {
+    MirrorCommand create(GitContext context);
+  }
+
 }

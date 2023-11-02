@@ -25,7 +25,6 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.api.Command;
@@ -69,134 +68,130 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
     Feature.FORCE_PUSH
   );
 
+  private final Injector injector;
   private final GitContext context;
-  private final Injector commandInjector;
 
   //~--- constructors ---------------------------------------------------------
 
   GitRepositoryServiceProvider(Injector injector, GitContext context) {
+    this.injector = injector;
     this.context = context;
-    commandInjector = injector.createChildInjector(new AbstractModule() {
-      @Override
-      protected void configure() {
-        bind(GitContext.class).toInstance(context);
-      }
-    });
   }
 
   @Override
   public BlameCommand getBlameCommand() {
-    return new GitBlameCommand(context);
+    return injector.getInstance(GitBlameCommand.Factory.class).create(context);
   }
 
   @Override
   public BranchesCommand getBranchesCommand() {
-    return new GitBranchesCommand(context);
+    return injector.getInstance(GitBranchesCommand.Factory.class).create(context);
   }
 
   @Override
   public BranchCommand getBranchCommand() {
-    return commandInjector.getInstance(GitBranchCommand.class);
+    return injector.getInstance(GitBranchCommand.Factory.class).create(context);
   }
 
   @Override
   public BrowseCommand getBrowseCommand() {
-    return commandInjector.getInstance(GitBrowseCommand.class);
+    return injector.getInstance(GitBrowseCommand.Factory.class).create(context);
   }
 
   @Override
   public CatCommand getCatCommand() {
-    return commandInjector.getInstance(GitCatCommand.class);
+    return injector.getInstance(GitCatCommand.Factory.class).create(context);
   }
 
   @Override
   public DiffCommand getDiffCommand() {
-    return new GitDiffCommand(context);
+    return injector.getInstance(GitDiffCommand.Factory.class).create(context);
   }
 
   @Override
   public DiffResultCommand getDiffResultCommand() {
-    return new GitDiffResultCommand(context);
+    return injector.getInstance(GitDiffResultCommand.Factory.class).create(context);
   }
 
   @Override
   public IncomingCommand getIncomingCommand() {
-    return commandInjector.getInstance(GitIncomingCommand.class);
+    return injector.getInstance(GitIncomingCommand.Factory.class).create(context);
   }
 
   @Override
   public LogCommand getLogCommand() {
-    return commandInjector.getInstance(GitLogCommand.class);
+    return injector.getInstance(GitLogCommand.Factory.class).create(context);
   }
 
   @Override
   public ModificationsCommand getModificationsCommand() {
-    return new GitModificationsCommand(context);
+    return injector.getInstance(GitModificationsCommand.Factory.class).create(context);
   }
 
   @Override
   public OutgoingCommand getOutgoingCommand() {
-    return commandInjector.getInstance(GitOutgoingCommand.class);
+    return injector.getInstance(GitOutgoingCommand.Factory.class).create(context);
   }
 
   @Override
   public PullCommand getPullCommand() {
-    return commandInjector.getInstance(GitPullCommand.class);
+    PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory = injector.getInstance(PostReceiveRepositoryHookEventFactory.Factory.class).create(context);
+    return injector.getInstance(GitPullCommand.Factory.class).create(context, postReceiveRepositoryHookEventFactory);
   }
 
   @Override
   public PushCommand getPushCommand() {
-    return commandInjector.getInstance(GitPushCommand.class);
+    return injector.getInstance(GitPushCommand.Factory.class).create(context);
   }
 
   @Override
   public TagsCommand getTagsCommand() {
-    return commandInjector.getInstance(GitTagsCommand.class);
+    return injector.getInstance(GitTagsCommand.Factory.class).create(context);
   }
 
   @Override
   public TagCommand getTagCommand() {
-    return commandInjector.getInstance(GitTagCommand.class);
+    return injector.getInstance(GitTagCommand.Factory.class).create(context);
   }
 
   @Override
   public MergeCommand getMergeCommand() {
-    return commandInjector.getInstance(GitMergeCommand.class);
+    return injector.getInstance(GitMergeCommand.Factory.class).create(context);
   }
 
   @Override
   public ModifyCommand getModifyCommand() {
-    return commandInjector.getInstance(GitModifyCommand.class);
+    return injector.getInstance(GitModifyCommand.Factory.class).create(context);
   }
 
   @Override
   public BundleCommand getBundleCommand() {
-    return new GitBundleCommand(context);
+    return injector.getInstance(GitBundleCommand.Factory.class).create(context);
   }
 
   @Override
   public UnbundleCommand getUnbundleCommand() {
-    return commandInjector.getInstance(GitUnbundleCommand.class);
+    return injector.getInstance(GitUnbundleCommand.Factory.class).create(context);
   }
 
   @Override
   public MirrorCommand getMirrorCommand() {
-    return commandInjector.getInstance(GitMirrorCommand.class);
+    return injector.getInstance(GitMirrorCommand.Factory.class).create(context);
   }
 
   @Override
   public FileLockCommand getFileLockCommand() {
-    return commandInjector.getInstance(GitFileLockCommand.class);
+    return injector.getInstance(GitFileLockCommand.Factory.class).create(context);
   }
 
   @Override
   public BranchDetailsCommand getBranchDetailsCommand() {
-    return commandInjector.getInstance(GitBranchDetailsCommand.class);
+    return injector.getInstance(GitBranchDetailsCommand.Factory.class).create(context);
   }
 
   @Override
   public ChangesetsCommand getChangesetsCommand() {
-    return commandInjector.getInstance(GitChangesetsCommand.class);
+    return injector.getInstance(GitChangesetsCommand.Factory.class).create(context);
   }
 
   @Override

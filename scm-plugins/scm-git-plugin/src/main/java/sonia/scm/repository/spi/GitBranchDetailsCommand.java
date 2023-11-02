@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -46,7 +47,7 @@ import static sonia.scm.NotFoundException.notFound;
 public class GitBranchDetailsCommand extends AbstractGitCommand implements BranchDetailsCommand {
 
   @Inject
-  GitBranchDetailsCommand(GitContext context) {
+  GitBranchDetailsCommand(@Assisted GitContext context) {
     super(context);
   }
 
@@ -97,4 +98,9 @@ public class GitBranchDetailsCommand extends AbstractGitCommand implements Branc
       throw new InternalRepositoryException(context.getRepository(), "could not compute ahead/behind", e);
     }
   }
+
+  public interface Factory {
+    BranchDetailsCommand create(GitContext context);
+  }
+
 }

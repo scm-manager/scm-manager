@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.util.concurrent.Striped;
+import com.google.inject.assistedinject.Assisted;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -57,11 +58,11 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
   private final GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider;
 
   @Inject
-  GitModifyCommand(GitContext context, GitRepositoryHandler repositoryHandler, LfsBlobStoreFactory lfsBlobStoreFactory, GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
+  GitModifyCommand(@Assisted GitContext context, GitRepositoryHandler repositoryHandler, LfsBlobStoreFactory lfsBlobStoreFactory, GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
     this(context, repositoryHandler.getWorkingCopyFactory(), lfsBlobStoreFactory, gitRepositoryConfigStoreProvider);
   }
 
-  GitModifyCommand(GitContext context, GitWorkingCopyFactory workingCopyFactory, LfsBlobStoreFactory lfsBlobStoreFactory, GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
+  GitModifyCommand(@Assisted GitContext context, GitWorkingCopyFactory workingCopyFactory, LfsBlobStoreFactory lfsBlobStoreFactory, GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
     super(context);
     this.workingCopyFactory = workingCopyFactory;
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
@@ -217,4 +218,9 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       throw new InternalRepositoryException(context.getRepository(), message, e);
     }
   }
+
+  public interface Factory {
+    ModifyCommand create(GitContext context);
+  }
+
 }

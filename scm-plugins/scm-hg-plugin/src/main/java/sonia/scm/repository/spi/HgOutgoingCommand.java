@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.assistedinject.Assisted;
 import org.javahg.commands.ExecutionException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -60,7 +61,7 @@ public class HgOutgoingCommand extends AbstractCommand
    * @param handler
    */
   @Inject
-  HgOutgoingCommand(HgCommandContext context, HgRepositoryHandler handler)
+  HgOutgoingCommand(@Assisted HgCommandContext context, HgRepositoryHandler handler)
   {
     super(context);
     this.handler = handler;
@@ -120,4 +121,8 @@ public class HgOutgoingCommand extends AbstractCommand
 
   /** Field description */
   private HgRepositoryHandler handler;
+
+  public interface Factory {
+    HgOutgoingCommand create(HgCommandContext context);
+  }
 }

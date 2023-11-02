@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -47,7 +48,7 @@ public class GitChangesetsCommand extends AbstractGitCommand implements Changese
   private final GitChangesetConverterFactory converterFactory;
 
   @Inject
-  GitChangesetsCommand(GitContext context, GitChangesetConverterFactory converterFactory) {
+  GitChangesetsCommand(@Assisted GitContext context, GitChangesetConverterFactory converterFactory) {
     super(context);
     this.converterFactory = converterFactory;
   }
@@ -122,4 +123,9 @@ public class GitChangesetsCommand extends AbstractGitCommand implements Changese
       return Long.compare(commitTime1, commitTime2);
     }
   }
+
+  public interface Factory {
+    ChangesetsCommand create(GitContext context);
+  }
+
 }

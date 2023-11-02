@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.javahg.Repository;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
@@ -44,7 +45,7 @@ public class HgTagCommand extends AbstractWorkingCopyCommand implements TagComma
   public static final String DEFAULT_BRANCH_NAME = "default";
 
   @Inject
-  public HgTagCommand(HgCommandContext context, HgRepositoryHandler handler) {
+  public HgTagCommand(@Assisted HgCommandContext context, HgRepositoryHandler handler) {
     this(context, handler.getWorkingCopyFactory());
   }
 
@@ -81,4 +82,9 @@ public class HgTagCommand extends AbstractWorkingCopyCommand implements TagComma
       pullChangesIntoCentralRepository(workingCopy, DEFAULT_BRANCH_NAME);
     }
   }
+
+  public interface Factory {
+    HgTagCommand create(HgCommandContext context);
+  }
+
 }

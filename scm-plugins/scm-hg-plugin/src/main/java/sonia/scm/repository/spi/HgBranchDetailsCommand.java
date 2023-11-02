@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.javahg.Changeset;
 import org.javahg.commands.ExecutionException;
 import org.javahg.commands.LogCommand;
@@ -46,7 +47,7 @@ public class HgBranchDetailsCommand implements BranchDetailsCommand {
   private final HgCommandContext context;
 
   @Inject
-  HgBranchDetailsCommand(HgCommandContext context) {
+  HgBranchDetailsCommand(@Assisted HgCommandContext context) {
     this.context = context;
   }
 
@@ -82,4 +83,7 @@ public class HgBranchDetailsCommand implements BranchDetailsCommand {
     return logCommand.execute();
   }
 
+  public interface Factory {
+    HgBranchDetailsCommand create(HgCommandContext context);
+  }
 }

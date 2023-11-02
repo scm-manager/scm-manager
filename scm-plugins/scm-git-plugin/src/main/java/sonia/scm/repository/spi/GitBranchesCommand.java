@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import com.google.inject.assistedinject.Assisted;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -55,7 +56,7 @@ public class GitBranchesCommand extends AbstractGitCommand implements BranchesCo
   private static final Logger LOG = LoggerFactory.getLogger(GitBranchesCommand.class);
 
   @Inject
-  public GitBranchesCommand(GitContext context) {
+  public GitBranchesCommand(@Assisted GitContext context) {
     super(context);
   }
 
@@ -120,5 +121,10 @@ public class GitBranchesCommand extends AbstractGitCommand implements BranchesCo
   Optional<Ref> getRepositoryHeadRef(Git git) {
     return GitUtil.getRepositoryHeadRef(git.getRepository());
   }
+
+  public interface Factory {
+    BranchesCommand create(GitContext context);
+  }
+
 }
 

@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookContext;
@@ -36,7 +37,7 @@ import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
 import static sonia.scm.repository.spi.HgBranchesTagsExtractor.extractBranches;
 import static sonia.scm.repository.spi.HgBranchesTagsExtractor.extractTags;
 
-class HgRepositoryHookEventFactory {
+public class HgRepositoryHookEventFactory {
 
   private final HookContextFactory hookContextFactory;
 
@@ -45,11 +46,16 @@ class HgRepositoryHookEventFactory {
     this.hookContextFactory = hookContextFactory;
   }
 
-  RepositoryHookEvent createEvent(HgCommandContext hgContext, HgLazyChangesetResolver changesetResolver) {
+  RepositoryHookEvent createEvent(@Assisted HgCommandContext hgContext, HgLazyChangesetResolver changesetResolver) {
     List<String> branches = extractBranches(hgContext);
     List<Tag> tags = extractTags(hgContext);
     HgImportHookContextProvider contextProvider = new HgImportHookContextProvider(branches, tags, changesetResolver);
     HookContext context = hookContextFactory.createContext(contextProvider, hgContext.getScmRepository());
     return new RepositoryHookEvent(context, hgContext.getScmRepository(), POST_RECEIVE);
   }
+
+  public interface Factory {
+    HgRepositoryHookEventFactory create(HgCommandContext context);
+  }
+
 }

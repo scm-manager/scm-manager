@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
+import com.google.inject.assistedinject.Assisted;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.eclipse.jgit.api.Git;
@@ -80,7 +81,7 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
   private final GitChangesetConverterFactory converterFactory;
 
   @Inject
-  GitTagCommand(GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus, GitChangesetConverterFactory converterFactory) {
+  GitTagCommand(@Assisted GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus, GitChangesetConverterFactory converterFactory) {
     super(context);
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
@@ -254,4 +255,9 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
       };
     }
   }
+
+  public interface Factory {
+    TagCommand create(GitContext context);
+  }
+
 }

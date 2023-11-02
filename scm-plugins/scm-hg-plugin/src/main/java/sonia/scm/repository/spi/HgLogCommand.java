@@ -26,17 +26,20 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.inject.assistedinject.Assisted;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class HgLogCommand extends AbstractCommand implements LogCommand {
 
-  HgLogCommand(HgCommandContext context) {
+  @Inject
+  HgLogCommand(@Assisted HgCommandContext context) {
     super(context);
   }
 
@@ -189,4 +192,9 @@ public class HgLogCommand extends AbstractCommand implements LogCommand {
   private HgLogChangesetCommand on(org.javahg.Repository repository) {
     return HgLogChangesetCommand.on(repository, getContext().getConfig());
   }
+
+  public interface Factory {
+    HgLogCommand create(HgCommandContext context);
+  }
+
 }

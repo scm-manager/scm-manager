@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.assistedinject.Assisted;
 import org.javahg.Changeset;
 import org.javahg.commands.LogCommand;
 import com.google.common.base.MoreObjects;
@@ -34,6 +35,7 @@ import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.spi.javahg.HgFileviewCommand;
 
+import javax.inject.Inject;
 import java.io.IOException;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -55,7 +57,9 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
    *  @param context
    *
    */
-  public HgBrowseCommand(HgCommandContext context)
+
+  @Inject
+  public HgBrowseCommand(@Assisted HgCommandContext context)
   {
     super(context);
   }
@@ -100,4 +104,9 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
       .orElseThrow(() -> notFound(entity("File", request.getPath()).in("Revision", revision).in(getRepository())));
     return new BrowserResult(c == null? "tip": c.getNode(), revision, file);
   }
+
+  public interface Factory {
+    HgBrowseCommand create(HgCommandContext context);
+  }
+
 }

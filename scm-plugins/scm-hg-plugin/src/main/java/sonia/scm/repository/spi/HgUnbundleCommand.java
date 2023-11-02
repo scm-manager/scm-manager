@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.io.ByteSource;
+import com.google.inject.assistedinject.Assisted;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.RepositoryHookEvent;
@@ -46,7 +47,7 @@ public class HgUnbundleCommand implements UnbundleCommand {
   private final HgRepositoryHookEventFactory eventFactory;
 
   @Inject
-  HgUnbundleCommand(HgCommandContext context,
+  HgUnbundleCommand(@Assisted HgCommandContext context,
                     HgLazyChangesetResolver changesetResolver,
                     HgRepositoryHookEventFactory eventFactory
   ) {
@@ -80,4 +81,9 @@ public class HgUnbundleCommand implements UnbundleCommand {
   private void unbundleRepositoryFromRequest(UnbundleCommandRequest request, Path repositoryDir) throws IOException {
     extractTar(request.getArchive().openBufferedStream(), repositoryDir).run();
   }
+
+  public interface Factory {
+    HgUnbundleCommand create(HgCommandContext context);
+  }
+
 }

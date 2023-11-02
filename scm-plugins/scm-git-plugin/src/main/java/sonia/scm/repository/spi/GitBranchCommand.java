@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException;
@@ -71,7 +72,10 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
   private final GitChangesetConverterFactory converterFactory;
 
   @Inject
-  GitBranchCommand(GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus, GitChangesetConverterFactory converterFactory) {
+  GitBranchCommand(@Assisted GitContext context,
+                   HookContextFactory hookContextFactory,
+                   ScmEventBus eventBus,
+                   GitChangesetConverterFactory converterFactory) {
     super(context);
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
@@ -200,5 +204,9 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
         return new HookChangesetResponse(collector.getAddedChangesets(), collector.getRemovedChangesets());
       };
     }
+  }
+
+  public interface Factory {
+    BranchCommand create(GitContext context);
   }
 }

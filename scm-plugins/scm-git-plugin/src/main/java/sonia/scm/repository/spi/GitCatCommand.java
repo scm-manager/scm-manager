@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lib.Constants;
@@ -63,7 +64,7 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
   @Inject
-  public GitCatCommand(GitContext context, LfsBlobStoreFactory lfsBlobStoreFactory) {
+  public GitCatCommand(@Assisted GitContext context, LfsBlobStoreFactory lfsBlobStoreFactory) {
     super(context);
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
   }
@@ -225,4 +226,9 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
       }
     }
   }
+
+  public interface Factory {
+    CatCommand create(GitContext context);
+  }
+
 }

@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.javahg.Changeset;
 import org.javahg.commands.ExecutionException;
 import com.google.common.base.Strings;
@@ -50,10 +51,10 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
 
   @Inject
   public HgPullCommand(HgRepositoryHandler handler,
-                       HgCommandContext context,
+                       @Assisted HgCommandContext context,
                        ScmEventBus eventBus,
-                       HgLazyChangesetResolver changesetResolver,
-                       HgRepositoryHookEventFactory eventFactory,
+                       @Assisted HgLazyChangesetResolver changesetResolver,
+                       @Assisted HgRepositoryHookEventFactory eventFactory,
                        TemporaryConfigFactory configFactory
   ) {
     super(handler, context);
@@ -92,4 +93,7 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
     eventBus.post(eventFactory.createEvent(context, changesetResolver));
   }
 
+  public interface Factory {
+    HgPullCommand create(HgCommandContext context, HgLazyChangesetResolver hgLazyChangesetResolver, HgRepositoryHookEventFactory hgRepositoryHookEventFactory);
+  }
 }

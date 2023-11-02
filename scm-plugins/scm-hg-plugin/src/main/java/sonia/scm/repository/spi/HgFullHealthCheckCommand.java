@@ -24,19 +24,22 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.javahg.commands.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.HealthCheckFailure;
 import sonia.scm.repository.HealthCheckResult;
 
+import javax.inject.Inject;
 import java.io.IOException;
 
 public class HgFullHealthCheckCommand extends AbstractCommand implements FullHealthCheckCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgFullHealthCheckCommand.class);
 
-  public HgFullHealthCheckCommand(HgCommandContext context) {
+  @Inject
+  public HgFullHealthCheckCommand(@Assisted HgCommandContext context) {
     super(context);
   }
 
@@ -52,4 +55,9 @@ public class HgFullHealthCheckCommand extends AbstractCommand implements FullHea
         "hg verify failed", "The check 'hg verify' failed for the repository."));
     }
   }
+
+  public interface Factory {
+    HgFullHealthCheckCommand create(HgCommandContext context);
+  }
+
 }

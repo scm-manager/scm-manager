@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.transport.FetchResult;
 import sonia.scm.ContextEntry;
@@ -38,14 +39,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class PostReceiveRepositoryHookEventFactory {
+public class PostReceiveRepositoryHookEventFactory {
 
   private final ScmEventBus eventBus;
   private final GitRepositoryHookEventFactory eventFactory;
   private final GitContext context;
 
   @Inject
-  PostReceiveRepositoryHookEventFactory(ScmEventBus eventBus, GitRepositoryHookEventFactory eventFactory, GitContext context) {
+  PostReceiveRepositoryHookEventFactory(ScmEventBus eventBus, GitRepositoryHookEventFactory eventFactory, @Assisted GitContext context) {
     this.eventBus = eventBus;
     this.eventFactory = eventFactory;
     this.context = context;
@@ -81,4 +82,9 @@ class PostReceiveRepositoryHookEventFactory {
       .map(r -> r.getLeaf().getName().substring("refs/heads/".length()))
       .collect(Collectors.toList());
   }
+
+  public interface Factory {
+    PostReceiveRepositoryHookEventFactory create(GitContext context);
+  }
+
 }

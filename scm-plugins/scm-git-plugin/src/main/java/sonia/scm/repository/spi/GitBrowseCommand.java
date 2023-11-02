@@ -28,6 +28,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.inject.assistedinject.Assisted;
 import org.eclipse.jgit.attributes.Attributes;
 import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lib.Constants;
@@ -113,7 +114,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   private int resultCount = 0;
 
   @Inject
-  public GitBrowseCommand(GitContext context, LfsBlobStoreFactory lfsBlobStoreFactory, SyncAsyncExecutorProvider executorProvider) {
+  public GitBrowseCommand(@Assisted GitContext context, LfsBlobStoreFactory lfsBlobStoreFactory, SyncAsyncExecutorProvider executorProvider) {
     this(context, lfsBlobStoreFactory, executorProvider.createExecutorWithDefaultTimeout());
   }
 
@@ -560,4 +561,9 @@ public class GitBrowseCommand extends AbstractGitCommand
       children.add(treeEntry);
     }
   }
+
+  public interface Factory {
+    BrowseCommand create(GitContext context);
+  }
+
 }
