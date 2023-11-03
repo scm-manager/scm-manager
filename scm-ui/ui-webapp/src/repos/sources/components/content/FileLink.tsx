@@ -36,6 +36,9 @@ type Props = {
 };
 
 const getHostname = (repositoryUrl: string) => {
+  if (!repositoryUrl.startsWith("http://") && !repositoryUrl.startsWith("https://")) {
+    return undefined;
+  }
   let host = repositoryUrl.split("/")[2];
   if (host.includes("@")) {
     // remove prefix
