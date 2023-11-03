@@ -31,6 +31,10 @@ type Props = {
   options?: { value: string; label?: string; helpText?: string }[];
 } & ComponentProps<typeof RadixRadio.Root>;
 
+/**
+ * @beta
+ * @since 2.48.0
+ */
 const RadioGroup = React.forwardRef<HTMLDivElement, Props>(({ options, children, className, ...props }, ref) => (
   <RadixRadio.Root {...props} asChild>
     <Control ref={ref} className={className}>

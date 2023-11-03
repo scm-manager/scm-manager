@@ -35,6 +35,10 @@ type Props = {
   helpText?: string;
 } & ComponentProps<typeof RadioGroup>;
 
+/**
+ * @beta
+ * @since 2.48.0
+ */
 const RadioGroupField = React.forwardRef<HTMLDivElement, Props>(
   ({ fieldClassName, labelClassName, label, helpText, children, ...props }, ref) => {
     return (

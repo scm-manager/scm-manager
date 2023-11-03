@@ -83,6 +83,10 @@ type Props = {
   helpText?: string;
 } & ComponentProps<typeof RadioGroup.Item>;
 
+/**
+ * @beta
+ * @since 2.48.0
+ */
 const RadioButton = React.forwardRef<HTMLButtonElement, Props>(
   ({ id, testId, indicatorClassName, label, labelClassName, className, helpText, value, ...props }, ref) => {
     const context = useRadioButtonContext();

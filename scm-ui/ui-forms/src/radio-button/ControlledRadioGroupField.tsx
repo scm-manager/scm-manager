@@ -41,6 +41,10 @@ type Props<T extends Record<string, unknown>> = Omit<
   readOnly?: boolean;
 };
 
+/**
+ * @beta
+ * @since 2.48.0
+ */
 function ControlledRadioGroupField<T extends Record<string, unknown>>({
   name,
   label,
