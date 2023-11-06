@@ -28,6 +28,7 @@ import sonia.scm.EagerSingleton;
 import sonia.scm.schedule.Scheduler;
 
 import javax.inject.Inject;
+import java.util.Random;
 
 /**
  * Refresh plugin center cache and refresh the token of plugin center authentication.
@@ -40,7 +41,8 @@ public class PluginCenterRefresh {
   @Inject
   @SuppressWarnings("java:S1118") // could not hide constructor
   public PluginCenterRefresh(Scheduler scheduler) {
-    scheduler.schedule("42 42 0/6 * * ?", RefreshTask.class);
+    Random random = new Random();
+    scheduler.schedule(String.format("%02d %02d 0/6 * * ?", random.nextInt(60), random.nextInt(60)), RefreshTask.class);
   }
 
   public static class RefreshTask implements Runnable {
