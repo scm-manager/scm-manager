@@ -97,6 +97,7 @@ public class InvalidationResource {
   )
   public void invalidateSearchIndex() {
     ConfigurationPermissions.write("global").check();
+    invalidateCaches();
     indexRebuilder.rebuildAll();
   }
 }

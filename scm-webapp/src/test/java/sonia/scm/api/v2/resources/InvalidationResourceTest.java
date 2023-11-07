@@ -107,12 +107,13 @@ class InvalidationResourceTest {
 
     @Test
     @SubjectAware(permissions = {"configuration:write:global"})
-    void shouldReIndexAll() throws URISyntaxException {
+    void shouldReIndexAllWithClearedCaches() throws URISyntaxException {
       MockHttpResponse response = invokeReIndex();
 
       assertThat(response.getStatus()).isEqualTo(204);
 
       verify(indexRebuilder).rebuildAll();
+      verify(cacheManager).clearAllCaches();
     }
 
     private MockHttpResponse invokeReIndex() throws URISyntaxException {

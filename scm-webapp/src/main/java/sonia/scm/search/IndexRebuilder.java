@@ -24,6 +24,9 @@
 
 package sonia.scm.search;
 
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.RepositoryManager;
+
 import javax.inject.Inject;
 import java.util.Set;
 
@@ -31,16 +34,21 @@ public class IndexRebuilder {
 
   private final SearchEngine searchEngine;
   private final Set<Indexer> indexers;
+  private final RepositoryManager repositoryManager;
 
   @Inject
-  public IndexRebuilder(SearchEngine searchEngine, Set<Indexer> indexers) {
+  public IndexRebuilder(SearchEngine searchEngine, Set<Indexer> indexers, RepositoryManager repositoryManager) {
     this.searchEngine = searchEngine;
     this.indexers = indexers;
+    this.repositoryManager = repositoryManager;
   }
 
   public void rebuildAll() {
     for (Indexer indexer : indexers) {
       searchEngine.forType(indexer.getType()).update(indexer.getReIndexAllTask());
+      repositoryManager.getAll().forEach(
+        repository -> ScmEventBus.getInstance().post(new ReindexRepositoryEvent(repository))
+      );
     }
   }
 }
