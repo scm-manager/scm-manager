@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-export default `diff --git a/src/main/java/com/cloudogu/scm/review/events/EventListener.java b/src/main/java/com/cloudogu/scm/review/events/EventListener.java
+export default `diff --git a/src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java b/src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
 index f889f9c..95e3b10 100644
---- a/src/main/java/com/cloudogu/scm/review/events/EventListener.java
-+++ b/src/main/java/com/cloudogu/scm/review/events/EventListener.java
+--- a/src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
++++ b/src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
 @@ -1,20 +1,12 @@
  package com.cloudogu.scm.review.events;
  

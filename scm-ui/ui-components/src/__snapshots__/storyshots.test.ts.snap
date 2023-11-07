@@ -22832,7 +22832,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               Main.java
             </h4>
@@ -23047,7 +23047,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
             title="conflict.png"
           >
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               conflict.png
             </h4>
@@ -23090,7 +23090,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
     <div>
       <div
         className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
-        id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+        id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
       >
         <div
           className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
@@ -23100,9 +23100,9 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
           >
             <div
               className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
-              id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+              id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
               onClick={[Function]}
-              title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+              title="src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java"
             >
               <i
                 aria-label="diff.hideContent"
@@ -23110,9 +23110,9 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 onKeyPress={[Function]}
               />
               <h4
-                className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+                className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
               >
-                src/main/java/com/cloudogu/scm/review/events/EventListener.java
+                src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
               </h4>
               <span
                 className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
@@ -23726,7 +23726,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 onKeyPress={[Function]}
               />
               <h4
-                className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+                className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
               >
                 src/main/js/ChangeNotification.tsx
               </h4>
@@ -24679,7 +24679,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 onKeyPress={[Function]}
               />
               <h4
-                className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+                className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
               >
                 src/main/resources/locales/de/plugins.json
               </h4>
@@ -25203,7 +25203,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 onKeyPress={[Function]}
               />
               <h4
-                className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+                className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
               >
                 src/main/resources/locales/en/plugins.json
               </h4>
@@ -25727,7 +25727,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 onKeyPress={[Function]}
               />
               <h4
-                className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+                className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
               >
                 src/test/java/com/cloudogu/scm/review/events/ClientTest.java
               </h4>
@@ -26941,7 +26941,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 onKeyPress={[Function]}
               />
               <h4
-                className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+                className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
               >
                 Main.java
               </h4>
@@ -27495,7 +27495,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
   <div>
     <div
       className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
-      id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+      id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
     >
       <div
         className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
@@ -27505,9 +27505,9 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
         >
           <div
             className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
-            id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+            id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
             onClick={[Function]}
-            title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+            title="src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java"
           >
             <i
               aria-label="diff.showContent"
@@ -27515,9 +27515,9 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
-              src/main/java/com/cloudogu/scm/review/events/EventListener.java
+              src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
             </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
@@ -27565,7 +27565,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
                 aria-label="Jump to source"
                 className="JumpToFileButton__Button-sc-72e4b2-0 cdirHm button is-clickable"
                 data-state="closed"
-                href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/src/main/java/com/cloudogu/scm/review/events/EventListener.java/"
+                href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java/"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onFocus={[Function]}
@@ -27583,7 +27583,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
                 aria-label="Jump to target"
                 className="JumpToFileButton__Button-sc-72e4b2-0 cdirHm button is-clickable"
                 data-state="closed"
-                href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+                href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onFocus={[Function]}
@@ -27624,7 +27624,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
             </h4>
@@ -27733,7 +27733,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
             </h4>
@@ -27842,7 +27842,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
             </h4>
@@ -27951,7 +27951,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </h4>
@@ -28060,7 +28060,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               Main.java
             </h4>
@@ -28158,7 +28158,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
   <div>
     <div
       className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
-      id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+      id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
     >
       <div
         className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
@@ -28168,9 +28168,9 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
         >
           <div
             className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
-            id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+            id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
             onClick={[Function]}
-            title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+            title="src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java"
           >
             <i
               aria-label="diff.showContent"
@@ -28178,9 +28178,9 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
-              src/main/java/com/cloudogu/scm/review/events/EventListener.java
+              src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
             </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
@@ -28251,7 +28251,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
             </h4>
@@ -29107,7 +29107,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
             </h4>
@@ -29559,7 +29559,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
             </h4>
@@ -30011,7 +30011,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </h4>
@@ -30084,7 +30084,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               Main.java
             </h4>
@@ -30227,7 +30227,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
   <div>
     <div
       className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
-      id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+      id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
     >
       <div
         className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
@@ -30237,9 +30237,9 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
         >
           <div
             className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
-            id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+            id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
             onClick={[Function]}
-            title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+            title="src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java"
           >
             <i
               aria-label="diff.hideContent"
@@ -30247,9 +30247,9 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
-              src/main/java/com/cloudogu/scm/review/events/EventListener.java
+              src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
             </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
@@ -30863,7 +30863,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
             </h4>
@@ -31816,7 +31816,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
             </h4>
@@ -32340,7 +32340,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
             </h4>
@@ -32864,7 +32864,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </h4>
@@ -34078,7 +34078,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               Main.java
             </h4>
@@ -34631,7 +34631,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
   <div>
     <div
       className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
-      id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+      id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
     >
       <div
         className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
@@ -34641,9 +34641,9 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
         >
           <div
             className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
-            id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+            id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
             onClick={[Function]}
-            title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+            title="src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java"
           >
             <i
               aria-label="diff.hideContent"
@@ -34651,9 +34651,9 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
-              src/main/java/com/cloudogu/scm/review/events/EventListener.java
+              src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
             </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
@@ -35267,7 +35267,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
             </h4>
@@ -36220,7 +36220,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
             </h4>
@@ -36744,7 +36744,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
             </h4>
@@ -37268,7 +37268,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </h4>
@@ -38482,7 +38482,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               Main.java
             </h4>
@@ -39035,7 +39035,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
   <div>
     <div
       className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
-      id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+      id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
     >
       <div
         className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
@@ -39045,9 +39045,9 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
         >
           <div
             className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
-            id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+            id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
             onClick={[Function]}
-            title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+            title="src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java"
           >
             <i
               aria-label="diff.hideContent"
@@ -39055,9 +39055,9 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
-              src/main/java/com/cloudogu/scm/review/events/EventListener.java
+              src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
             </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
@@ -39110,7 +39110,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       >
         <p>
           Custom File annotation for 
-          src/main/java/com/cloudogu/scm/review/events/EventListener.java
+          src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
         </p>
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -39638,7 +39638,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
             </h4>
@@ -40498,7 +40498,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
             </h4>
@@ -40954,7 +40954,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
             </h4>
@@ -41410,7 +41410,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </h4>
@@ -42473,7 +42473,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               Main.java
             </h4>
@@ -42993,7 +42993,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
   <div>
     <div
       className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
-      id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+      id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
     >
       <div
         className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
@@ -43003,9 +43003,9 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
         >
           <div
             className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
-            id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+            id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
             onClick={[Function]}
-            title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+            title="src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java"
           >
             <i
               aria-label="diff.hideContent"
@@ -43013,9 +43013,9 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
-              src/main/java/com/cloudogu/scm/review/events/EventListener.java
+              src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
             </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
@@ -43607,7 +43607,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
             </h4>
@@ -44478,7 +44478,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
             </h4>
@@ -44945,7 +44945,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
             </h4>
@@ -45412,7 +45412,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </h4>
@@ -46486,7 +46486,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               Main.java
             </h4>
@@ -47037,7 +47037,7 @@ exports[`Storyshots Repositories/Diff Highlight line on hover 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java
             </h4>
@@ -47880,7 +47880,7 @@ exports[`Storyshots Repositories/Diff Hunk gutter hover icon 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java
             </h4>
@@ -48723,7 +48723,7 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java
             </h4>
@@ -49561,7 +49561,7 @@ exports[`Storyshots Repositories/Diff Images 1`] = `
             title="test.png"
           >
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               test.png
             </h4>
@@ -49598,7 +49598,7 @@ exports[`Storyshots Repositories/Diff Images 1`] = `
             title="test.png"
           >
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               test.png
             </h4>
@@ -49635,7 +49635,7 @@ exports[`Storyshots Repositories/Diff Images 1`] = `
             title="test.png"
           >
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               test.png
             </h4>
@@ -49672,7 +49672,7 @@ exports[`Storyshots Repositories/Diff Images 1`] = `
             title="newFileName.png > test.png"
           >
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               newFileName.png
                
@@ -49717,7 +49717,7 @@ exports[`Storyshots Repositories/Diff Images 1`] = `
             title="newFileName.png > test.png"
           >
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               newFileName.png
                
@@ -49756,7 +49756,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
   <div>
     <div
       className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
-      id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+      id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
     >
       <div
         className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
@@ -49766,9 +49766,9 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
         >
           <div
             className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
-            id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+            id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
             onClick={[Function]}
-            title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+            title="src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java"
           >
             <i
               aria-label="diff.hideContent"
@@ -49776,9 +49776,9 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
-              src/main/java/com/cloudogu/scm/review/events/EventListener.java
+              src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
             </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
@@ -50367,7 +50367,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
             </h4>
@@ -51235,7 +51235,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
             </h4>
@@ -51687,7 +51687,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
             </h4>
@@ -52139,7 +52139,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </h4>
@@ -53198,7 +53198,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               Main.java
             </h4>
@@ -53726,7 +53726,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
   <div>
     <div
       className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
-      id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+      id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
     >
       <div
         className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
@@ -53736,9 +53736,9 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
         >
           <div
             className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
-            id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+            id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
             onClick={[Function]}
-            title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+            title="src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java"
           >
             <i
               aria-label="diff.hideContent"
@@ -53746,9 +53746,9 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
-              src/main/java/com/cloudogu/scm/review/events/EventListener.java
+              src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
             </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
@@ -54365,7 +54365,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
             </h4>
@@ -55283,7 +55283,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
             </h4>
@@ -55765,7 +55765,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
             </h4>
@@ -56247,7 +56247,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </h4>
@@ -57382,7 +57382,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               Main.java
             </h4>
@@ -57934,7 +57934,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
   <div>
     <div
       className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
-      id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+      id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
     >
       <div
         className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
@@ -57944,9 +57944,9 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
         >
           <div
             className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
-            id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+            id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
             onClick={[Function]}
-            title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+            title="src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java"
           >
             <i
               aria-label="diff.hideContent"
@@ -57954,9 +57954,9 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
-              src/main/java/com/cloudogu/scm/review/events/EventListener.java
+              src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
             </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
@@ -58626,7 +58626,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
             </h4>
@@ -59572,7 +59572,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
             </h4>
@@ -60076,7 +60076,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
             </h4>
@@ -60580,7 +60580,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </h4>
@@ -61808,7 +61808,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               Main.java
             </h4>
@@ -62417,7 +62417,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               CHANGELOG.md
             </h4>
@@ -62758,7 +62758,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
   <div>
     <div
       className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
-      id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+      id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
     >
       <div
         className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
@@ -62768,9 +62768,9 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
         >
           <div
             className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
-            id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+            id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
             onClick={[Function]}
-            title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+            title="src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java"
           >
             <i
               aria-label="diff.hideContent"
@@ -62778,9 +62778,9 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
-              src/main/java/com/cloudogu/scm/review/events/EventListener.java
+              src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
             </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
@@ -63357,7 +63357,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
             </h4>
@@ -64213,7 +64213,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
             </h4>
@@ -64665,7 +64665,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
             </h4>
@@ -65117,7 +65117,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </h4>
@@ -66176,7 +66176,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               Main.java
             </h4>
@@ -66692,7 +66692,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
   <div>
     <div
       className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
-      id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+      id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
     >
       <div
         className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
@@ -66702,9 +66702,9 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
         >
           <div
             className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
-            id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
+            id="src-main-java-com-cloudogu-scm-review-importantevents-eventlistener-java"
             onClick={[Function]}
-            title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+            title="src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java"
           >
             <i
               aria-label="diff.hideContent"
@@ -66712,9 +66712,9 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
-              src/main/java/com/cloudogu/scm/review/events/EventListener.java
+              src/main/java/com/cloudogu/scm/review/importantevents/EventListener.java
             </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
@@ -67328,7 +67328,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
             </h4>
@@ -68281,7 +68281,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
             </h4>
@@ -68805,7 +68805,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
             </h4>
@@ -69329,7 +69329,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </h4>
@@ -70543,7 +70543,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               onKeyPress={[Function]}
             />
             <h4
-              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+              className="LazyDiffFile__Filepath-sc-1lbgfup-0 bJuqqW has-text-weight-bold is-size-6 ml-1"
             >
               Main.java
             </h4>

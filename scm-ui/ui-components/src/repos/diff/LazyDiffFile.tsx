@@ -41,8 +41,13 @@ import DiffFileHunk from "./DiffFileHunk";
 import { DiffFileProps } from "./types";
 import { useContentType } from "@scm-manager/ui-api";
 import BinaryDiffFileContent, { canDisplayBinaryFile } from "./BinaryDiffFileContent";
+import styled from "styled-components";
 
 type Props = DiffFileProps;
+
+const Filepath = styled.h4`
+  word-break: break-all;
+`;
 
 const DiffFile: FC<Props> = ({
   file: fileProp,
@@ -266,9 +271,9 @@ const DiffFile: FC<Props> = ({
             id={getAnchorId(file)}
           >
             {canRenderContent ? collapseIcon : null}
-            <h4 className={classNames("has-text-weight-bold", "is-ellipsis-overflow", "is-size-6", "ml-1")}>
+            <Filepath className={classNames("has-text-weight-bold", "is-size-6", "ml-1")}>
               <FileTitle file={file} />
-            </h4>
+            </Filepath>
             <ChangeTag file={file} />
           </FullWidthTitleHeader>
           <div className={classNames("level-right", "is-flex", "ml-auto")}>
