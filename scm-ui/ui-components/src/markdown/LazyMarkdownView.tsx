@@ -101,6 +101,7 @@ const MarkdownErrorNotification: FC = () => {
 
 const HorizontalScrollDiv = styled.div`
   overflow-x: auto;
+  overflow-y: hidden;
 `;
 
 class LazyMarkdownView extends React.Component<Props, State> {

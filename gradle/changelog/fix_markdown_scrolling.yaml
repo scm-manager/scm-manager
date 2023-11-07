@@ -1,0 +1,2 @@
+- type: fixed
+  description: Unnecessary scrollbar showing up in markdown views with code tags for certain resolutions
