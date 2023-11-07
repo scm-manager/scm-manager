@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
@@ -31,6 +31,7 @@ import org.mapstruct.ObjectFactory;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.security.PermissionPermissions;
+import sonia.scm.user.UserManager;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
@@ -48,6 +49,8 @@ public abstract class GroupToGroupDtoMapper extends BaseMapper<Group, GroupDto> 
 
   @Inject
   private ResourceLinks resourceLinks;
+  @Inject
+  private UserManager userManager;
 
   @ObjectFactory
   GroupDto createDto(Group group) {
@@ -72,9 +75,11 @@ public abstract class GroupToGroupDtoMapper extends BaseMapper<Group, GroupDto> 
   }
 
   private MemberDto createMember(String name) {
-    Links.Builder linksBuilder = linkingTo().self(resourceLinks.user().self(name));
     MemberDto memberDto = new MemberDto(name);
-    memberDto.add(linksBuilder.build());
+    if (userManager.contains(name)) {
+      Links.Builder linksBuilder = linkingTo().self(resourceLinks.user().self(name));
+      memberDto.add(linksBuilder.build());
+    }
     return memberDto;
   }
 }

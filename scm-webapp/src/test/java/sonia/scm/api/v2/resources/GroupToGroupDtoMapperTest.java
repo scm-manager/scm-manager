@@ -21,24 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
+import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import sonia.scm.group.Group;
+import sonia.scm.user.User;
+import sonia.scm.user.UserManager;
 
 import java.net.URI;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -49,6 +56,8 @@ public class GroupToGroupDtoMapperTest {
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
+  @Mock
+  private UserManager userManager;
   @InjectMocks
   private GroupToGroupDtoMapperImpl mapper;
 
@@ -100,9 +109,10 @@ public class GroupToGroupDtoMapperTest {
   }
 
   @Test
-  public void shouldCreateMemberDtos() {
+  public void shouldCreateMemberDtosWithLinksForExistingUsers() {
     Group group = createDefaultGroup();
     group.setMembers(IntStream.range(0, 10).mapToObj(n -> "user" + n).collect(toList()));
+    when(userManager.contains(any())).thenReturn(true);
 
     GroupDto groupDto = mapper.map(group);
 
@@ -110,6 +120,20 @@ public class GroupToGroupDtoMapperTest {
     MemberDto actualMember = (MemberDto) groupDto.getEmbedded().getItemsBy("members").iterator().next();
     assertEquals("user0", actualMember.getName());
     assertEquals("http://example.com/base/v2/users/user0", actualMember.getLinks().getLinkBy("self").get().getHref());
+  }
+
+  @Test
+  public void shouldCreateMemberDtosWithoutLinksForMissingUsers() {
+    Group group = createDefaultGroup();
+    group.setMembers(IntStream.range(0, 10).mapToObj(n -> "user" + n).collect(toList()));
+    when(userManager.contains(any())).thenReturn(false);
+
+    GroupDto groupDto = mapper.map(group);
+
+    assertEquals(10, groupDto.getEmbedded().getItemsBy("members").size());
+    MemberDto actualMember = (MemberDto) groupDto.getEmbedded().getItemsBy("members").iterator().next();
+    assertEquals("user0", actualMember.getName());
+    assertThat(actualMember.getLinks().getLinkBy("self")).isEmpty();
   }
 
   @Test

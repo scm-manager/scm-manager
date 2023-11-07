@@ -38,19 +38,16 @@ const StyledMember = styled.li`
 `;
 
 export default class GroupMember extends React.Component<Props> {
-  renderLink(to: string, label: string) {
-    return (
-      <Link to={to}>
-        <Icon name="user" color="inherit" alt="" /> {label}
-      </Link>
-    );
-  }
-
   showName(to: string, member: Member) {
-    if (member._links.self) {
-      return this.renderLink(to, member.name);
+    const userComponent = (
+      <>
+        <Icon name="user" color="inherit" alt="" /> {member.name}
+      </>
+    );
+    if (member._links?.self) {
+      return <Link to={to}>{userComponent}</Link>;
     } else {
-      return member.name;
+      return userComponent;
     }
   }
 

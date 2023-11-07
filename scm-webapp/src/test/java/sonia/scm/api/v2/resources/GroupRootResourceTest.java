@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
@@ -42,6 +42,7 @@ import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
+import sonia.scm.user.UserManager;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
@@ -84,6 +85,8 @@ public class GroupRootResourceTest {
   private GroupManager groupManager;
   @Mock
   private PermissionAssigner permissionAssigner;
+  @Mock
+  private UserManager userManager;
   @InjectMocks
   private GroupDtoToGroupMapperImpl dtoToGroupMapper;
   @InjectMocks
