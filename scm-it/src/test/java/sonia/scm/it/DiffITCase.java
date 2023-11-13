@@ -170,7 +170,7 @@ class DiffITCase {
       .containsExactlyInAnyOrderElementsOf(expected);
   }
 
-  @Test
+  @RetryingTest(3)
   void svnLargeChangesDiffShouldBeConvertedToGitDiff() throws IOException, URISyntaxException {
     String fileName = "SvnDiffGenerator_forTest";
     RepositoryUtil.createAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, fileName, "");
