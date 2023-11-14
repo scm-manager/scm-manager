@@ -49,6 +49,9 @@
       "title": {
         "label": "Neuen {{entity}} hinzufügen"
       }
+    },
+    "searchBox": {
+      "noOptions": "Keine Ergebnisse"
     }
   },
   "login": {

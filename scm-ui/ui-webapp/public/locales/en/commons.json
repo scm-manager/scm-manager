@@ -49,6 +49,9 @@
       "title": {
         "label": "Add new {{entity}}"
       }
+    },
+    "searchBox": {
+      "noOptions": "No results"
     }
   },
   "login": {

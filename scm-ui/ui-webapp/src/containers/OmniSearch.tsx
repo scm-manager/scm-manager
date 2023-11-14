@@ -21,24 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, Fragment, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Hit, Links, Repository, ValueHitField, Option } from "@scm-manager/ui-types";
-import styled from "styled-components";
+import React, { FC, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Hit, Links, Repository, ValueHitField } from "@scm-manager/ui-types";
 import { useNamespaceAndNameContext, useOmniSearch, useSearchTypes } from "@scm-manager/ui-api";
 import classNames from "classnames";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { RepositoryAvatar, Icon } from "@scm-manager/ui-components";
+import { RepositoryAvatar } from "@scm-manager/ui-components";
 import SyntaxModal from "../search/SyntaxModal";
 import queryString from "query-string";
 import { orderTypes } from "../search/Search";
 import { useShortcut } from "@scm-manager/ui-shortcuts";
-import { Label, Combobox } from "@scm-manager/ui-forms";
-import { Combobox as HeadlessCombobox } from "@headlessui/react";
-
-const ResultHeading = styled.div`
-  border-top: 1px solid lightgray;
-`;
+import SearchBox from "../search/search-box/SearchBox";
+import { Icon } from "@scm-manager/ui-buttons";
 
 type Props = {
   shouldClear: boolean;
@@ -72,24 +67,14 @@ const HitEntry: FC<{
   link: string;
   label: string;
   repository?: Repository;
-  query: string;
-}> = ({ link, label, repository, query }) => {
-  const history = useHistory();
+}> = ({ link, label, repository }) => {
   return (
-    <HeadlessCombobox.Option
-      value={{ label: query, value: () => history.push(link), displayValue: label }}
-      key={label}
-      as={Fragment}
-    >
-      {({ active }) => (
-        <Combobox.Option isActive={active}>
-          <div className="is-flex">
-            {repository ? <AvatarSection repository={repository} /> : <Icon name="search" className="mr-2 ml-1 mt-1" />}
-            <Label className="has-text-weight-normal is-size-6">{label}</Label>
-          </div>
-        </Combobox.Option>
-      )}
-    </HeadlessCombobox.Option>
+    <SearchBox.Options.Option to={link}>
+      <div className="is-flex is-align-items-center">
+        {repository ? <AvatarSection repository={repository} /> : <Icon className="mr-2">search</Icon>}
+        {label}
+      </div>
+    </SearchBox.Options.Option>
   );
 };
 
@@ -136,39 +121,23 @@ const useSearchParams = () => {
   };
 };
 
-const OmniSearch: FC<Props> = ({ shouldClear, nextFocusRef }) => {
+const OmniSearch: FC<Props> = ({ shouldClear }) => {
   const [t] = useTranslation("commons");
   const { initialQuery } = useSearchParams();
-  const [query, setQuery] = useState(initialQuery);
-  const [value, setValue] = useState<Option<(() => void) | undefined> | undefined>({ label: query, value: query });
+  const [query, setQuery] = useState(shouldClear ? "" : initialQuery);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debouncedQuery = useDebounce(query, 250);
-  const [showDropdown, setDropdown] = useState(true);
   const context = useNamespaceAndNameContext();
   const { data, isLoading } = useOmniSearch(debouncedQuery, {
     type: "repository",
     pageSize: 5,
   });
   const [showHelp, setShowHelp] = useState(false);
-  const handleChange = useCallback((value: Option<(() => void) | undefined>) => {
-    setValue(value);
-    value.value?.();
-    setDropdown(true);
-  }, []);
-
   useEffect(() => {
-    setQuery(shouldClear ? "" : initialQuery);
-    setValue(shouldClear ? { label: "", value: undefined } : { label: initialQuery, value: undefined });
-  }, [shouldClear, initialQuery]);
-
-  const clearInput = () => {
-    shouldClear = true;
-    setValue({ label: "", value: undefined });
-    setQuery("");
-    setDropdown(false);
-  };
-
-  const openHelp = () => setShowHelp(true);
+    if (!shouldClear) {
+      setQuery(initialQuery);
+    }
+  }, [initialQuery, shouldClear]);
 
   const closeHelp = () => setShowHelp(false);
 
@@ -196,7 +165,6 @@ const OmniSearch: FC<Props> = ({ shouldClear, nextFocusRef }) => {
           link={`/search/${searchTypes[0]}/?q=${encodeURIComponent(query)}&namespace=${context.namespace}&name=${
             context.name
           }`}
-          query={query}
         />
       );
     }
@@ -206,7 +174,6 @@ const OmniSearch: FC<Props> = ({ shouldClear, nextFocusRef }) => {
           key="search.quickSearch.searchNamespace"
           label={t("search.quickSearch.searchNamespace")}
           link={`/search/repository/?q=${encodeURIComponent(query)}&namespace=${context.namespace}`}
-          query={query}
         />
       );
     }
@@ -215,7 +182,6 @@ const OmniSearch: FC<Props> = ({ shouldClear, nextFocusRef }) => {
         key="search.quickSearch.searchEverywhere"
         label={t("search.quickSearch.searchEverywhere")}
         link={`/search/repository/?q=${encodeURIComponent(query)}`}
-        query={query}
       />
     );
     hits?.forEach((hit, idx) => {
@@ -225,7 +191,6 @@ const OmniSearch: FC<Props> = ({ shouldClear, nextFocusRef }) => {
           label={id(hit)}
           link={`/repo/${id(hit)}`}
           repository={hit._embedded?.repository}
-          query={query}
         />
       );
     });
@@ -239,45 +204,10 @@ const OmniSearch: FC<Props> = ({ shouldClear, nextFocusRef }) => {
           "is-loading": isLoading,
         })}
       >
-        <Combobox
-          className="input is-small"
-          placeholder={t("search.placeholder")}
-          value={value}
-          onChange={handleChange}
-          ref={searchInputRef}
-          onQueryChange={setQuery}
-          onKeyDown={(e) => {
-            // This is hacky but it seems to be one of the only solutions right now
-            if (e.key === "Tab") {
-              nextFocusRef?.current?.focus();
-              e.preventDefault();
-              clearInput();
-              searchInputRef.current.value = "";
-            } else {
-              setDropdown(true);
-            }
-          }}
-        >
-          {showDropdown ? entries : null}
-          {showDropdown ? (
-            <HeadlessCombobox.Option
-              value={{ label: query, value: openHelp, displayValue: query }}
-              key={query}
-              as={Fragment}
-            >
-              {({ active }) => (
-                <ResultHeading>
-                  <Combobox.Option isActive={active}>
-                    <div className=" is-flex">
-                      <Icon name="question-circle" color="blue-light" className="pt-1 pl-1"></Icon>
-                      <Label className="has-text-weight-normal pl-3">{t("search.quickSearch.resultHeading")}</Label>
-                    </div>
-                  </Combobox.Option>
-                </ResultHeading>
-              )}
-            </HeadlessCombobox.Option>
-          ) : null}
-        </Combobox>
+        <SearchBox query={query} onQueryChange={setQuery} shouldClear={shouldClear}>
+          <SearchBox.Input className="is-small" placeholder={t("search.placeholder")} ref={searchInputRef} />
+          <SearchBox.Options>{entries}</SearchBox.Options>
+        </SearchBox>
       </div>
     </div>
   );
