@@ -9350,9 +9350,9 @@ bulma-popover@^1.0.0:
   resolved "https://registry.npmjs.org/bulma-popover/-/bulma-popover-1.1.1.tgz"
   integrity sha512-QvYJq04usgiCvTwnEZr/xtStkKRTToO/tc7JVcdtRBIBBWNaUu4tfHAOFXDMav8NFIvN8JOiQEtHO1dHNvVr1Q==
 
-"bulma@https://github.com/scm-manager/bulma#bbe5bdb66fce67e2513ab8caefb1eac5504e1402":
+"bulma@https://github.com/scm-manager/bulma#3ae8dbdd13196d472ab5fbec543d0c649c149e5a":
   version "0.9.4"
-  resolved "https://github.com/scm-manager/bulma#bbe5bdb66fce67e2513ab8caefb1eac5504e1402"
+  resolved "https://github.com/scm-manager/bulma#3ae8dbdd13196d472ab5fbec543d0c649c149e5a"
 
 bundle-require@^3.0.2:
   version "3.0.4"
