@@ -47,4 +47,14 @@ public interface ScmProtocol {
   default boolean isAnonymousEnabled() {
     return true;
   }
+
+  /**
+   * Priority for frontend evaluation order
+   *
+   * @return priority number
+   * @since 2.48.0
+   */
+  default int getPriority() {
+    return 100;
+  }
 }

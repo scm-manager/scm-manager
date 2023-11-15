@@ -494,7 +494,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(SC_OK, response.getStatus());
-    assertTrue(response.getContentAsString().contains("\"protocol\":[{\"href\":\"http://\",\"name\":\"http\"},{\"href\":\"ssh://\",\"name\":\"ssh\"}]"));
+    assertTrue(response.getContentAsString().contains("\"protocol\":[{\"href\":\"http://\",\"name\":\"http\",\"profile\":\"100\"},{\"href\":\"ssh://\",\"name\":\"ssh\",\"profile\":\"100\"}]"));
   }
 
   @Test

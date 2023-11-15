@@ -55,6 +55,11 @@ public abstract class HttpScmProtocol implements ScmProtocol {
     return URI.create(basePath + "/").resolve(String.format("repo/%s/%s", HttpUtil.encode(repository.getNamespace()), HttpUtil.encode(repository.getName()))).toASCIIString();
   }
 
+  @Override
+  public int getPriority() {
+    return 150;
+  }
+
   public final void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) throws ServletException, IOException {
     serve(request, response, repository, config);
   }

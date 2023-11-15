@@ -21,21 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC, useState } from "react";
+import classNames from "classnames";
 import styled from "styled-components";
 import { Repository, Link } from "@scm-manager/ui-types";
-import { ButtonAddons, Button } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-buttons";
 import CloneInformation from "./CloneInformation";
 
-const Switcher = styled(ButtonAddons)`
+const TopRightContainer = styled.div`
   position: absolute;
   top: 0;
   right: 0;
 `;
 
-const SmallButton = styled(Button).attrs((props) => ({
-  className: "is-small",
-}))`
+const SmallButton = styled(Button)`
   height: inherit;
 `;
 
@@ -43,79 +42,59 @@ type Props = {
   repository: Repository;
 };
 
-type State = {
-  selected?: Link;
+type Protocol = Link & {
+  profile: string;
 };
 
-function selectHttpOrFirst(repository: Repository) {
-  const protocols = (repository._links["protocol"] as Link[]) || [];
+function selectPreferredProtocolFirst(repository: Repository) {
+  const protocols = (repository._links["protocol"] as Protocol[]) || [];
 
-  for (const protocol of protocols) {
-    if (protocol.name === "http") {
-      return protocol;
-    }
+  if (protocols.length === 0) {
+    return undefined;
   }
 
-  if (protocols.length > 0) {
-    return protocols[0];
-  }
-  return undefined;
+  protocols.sort((a, b) => Number(b.profile) - Number(a.profile));
+  return protocols[0];
 }
 
-export default class ProtocolInformation extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      selected: selectHttpOrFirst(props.repository),
-    };
+const ProtocolInformation: FC<Props> = ({ repository }) => {
+  const [selected, setSelected] = useState<Protocol | undefined>(selectPreferredProtocolFirst(repository));
+
+  const protocols = repository._links["protocol"] as Protocol[];
+  if (!protocols || protocols.length === 0) {
+    return null;
   }
 
-  selectProtocol = (protocol: Link) => {
-    this.setState({
-      selected: protocol,
-    });
-  };
-
-  renderProtocolButton = (protocol: Link) => {
-    const name = protocol.name || "unknown";
-
-    let color;
-
-    const { selected } = this.state;
-    if (selected && protocol.name === selected.name) {
-      color = "link is-selected";
-    }
-
-    return (
-      <SmallButton color={color} action={() => this.selectProtocol(protocol)}>
-        {name.toUpperCase()}
-      </SmallButton>
-    );
-  };
-
-  render() {
-    const { repository } = this.props;
-
-    const protocols = repository._links["protocol"] as Link[];
-    if (!protocols || protocols.length === 0) {
-      return null;
-    }
-
-    if (protocols.length === 1) {
-      return <CloneInformation url={protocols[0].href} repository={repository} />;
-    }
-
-    const { selected } = this.state;
-    let cloneInformation = null;
-    if (selected) {
-      cloneInformation = <CloneInformation repository={repository} url={selected.href} />;
-    }
-
-    return (
-      <div className="content is-relative">
-        <Switcher>{protocols.map(this.renderProtocolButton)}</Switcher>
-        {cloneInformation}
-      </div>
-    );
+  if (protocols.length === 1) {
+    return <CloneInformation url={protocols[0].href} repository={repository} />;
   }
-}
+
+  let cloneInformation = null;
+  if (selected) {
+    cloneInformation = <CloneInformation url={selected?.href} repository={repository} />;
+  }
+
+  return (
+    <div className="content is-relative">
+      <TopRightContainer className="field has-addons">
+        {protocols.map((protocol, index) => {
+          return (
+            <div className="control" key={protocol.name || index}>
+              <SmallButton
+                className={classNames("is-small", {
+                  "is-link is-selected": selected && protocol.name === selected.name,
+                })}
+                onClick={() => setSelected(protocol)}
+              >
+                {(protocol.name || "unknown").toUpperCase()}
+              </SmallButton>
+            </div>
+          );
+        })}
+      </TopRightContainer>
+      {cloneInformation}
+    </div>
+  );
+};
+
+export default ProtocolInformation;

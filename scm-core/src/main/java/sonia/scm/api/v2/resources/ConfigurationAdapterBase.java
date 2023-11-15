@@ -34,6 +34,7 @@ import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
+import javax.annotation.Nullable;
 import javax.inject.Provider;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -143,7 +144,10 @@ public abstract class ConfigurationAdapterBase<DAO, DTO extends HalRepresentatio
   @Produces(MediaType.APPLICATION_JSON)
   @Path("")
   public DTO get(@Context UriInfo uriInfo) {
-    getReadPermission().check();
+    PermissionCheck readPermission = getReadPermission();
+    if (readPermission != null) {
+      readPermission.check();
+    }
     return daoToDtoMapper.mapDaoToDto(getConfiguration(), createDtoLinks());
   }
 
@@ -163,14 +167,18 @@ public abstract class ConfigurationAdapterBase<DAO, DTO extends HalRepresentatio
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("")
   public void update(@NotNull @Valid DTO payload) {
-    getWritePermission().check();
+    PermissionCheck writePermission = getWritePermission();
+    if (writePermission != null) {
+      writePermission.check();
+    }
     getConfigStore().set(dtoToDaoMapper.mapDtoToDao(payload));
   }
 
   private Links.Builder createDtoLinks() {
     Links.Builder builder = Links.linkingTo();
     builder.single(Link.link("self", getReadLink()));
-    if (getWritePermission().isPermitted()) {
+    PermissionCheck writePermission = getWritePermission();
+    if (writePermission == null || writePermission.isPermitted()) {
       builder.single(Link.link("update", getUpdateLink()));
     }
 
@@ -189,15 +197,18 @@ public abstract class ConfigurationAdapterBase<DAO, DTO extends HalRepresentatio
 
   @Override
   public final void enrich(HalEnricherContext context, HalAppender appender) {
-    if (getReadPermission().isPermitted()) {
+    PermissionCheck readPermission = getReadPermission();
+    if (readPermission == null || readPermission.isPermitted()) {
       appender.appendLink(getName(), getReadLink());
     }
   }
 
+  @Nullable
   protected PermissionCheck getReadPermission() {
     return ConfigurationPermissions.read(getName());
   }
 
+  @Nullable
   protected PermissionCheck getWritePermission() {
     return ConfigurationPermissions.write(getName());
   }
