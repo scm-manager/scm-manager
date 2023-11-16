@@ -24,44 +24,40 @@
 
 package sonia.scm.repository.spi;
 
-import com.google.inject.assistedinject.Assisted;
-import lombok.extern.slf4j.Slf4j;
-import sonia.scm.repository.InternalRepositoryException;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.TreeWalk;
+import sonia.scm.repository.Modification;
 import sonia.scm.repository.Modifications;
 
-import javax.inject.Inject;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.function.Function;
 
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
+public class BranchBasedModificationsComputer {
 
+  private final Repository repository;
 
-@Slf4j
-public class GitModificationsCommand extends AbstractGitCommand implements ModificationsCommand {
-
-  @Inject
-  public GitModificationsCommand(@Assisted GitContext context) {
-    super(context);
+  public BranchBasedModificationsComputer(Repository repository) {
+    this.repository = repository;
   }
 
-  @Override
-  @SuppressWarnings("java:S2093")
-  public Modifications getModifications(String baseRevision, String revision) {
-    try {
-      return new ModificationsComputer(open()).compute(baseRevision, revision);
-    } catch (IOException ex) {
-      log.error("could not open repository: " + repository.getNamespaceAndName(), ex);
-      throw new InternalRepositoryException(entity(repository), "could not open repository: " + repository.getNamespaceAndName(), ex);
+  public Modifications createModifications(ObjectId revision, Function<String, Modification> modificationFactory) throws IOException {
+    Collection<Modification> modifications = new ArrayList<>();
+    try (RevWalk revWalk = new RevWalk(repository); TreeWalk treeWalk = new TreeWalk(repository)) {
+      RevTree tree = revWalk.parseTree(revision);
+      treeWalk.addTree(tree);
+      while (treeWalk.next()) {
+        if (treeWalk.isSubtree()) {
+          treeWalk.enterSubtree();
+        } else {
+          modifications.add(modificationFactory.apply(treeWalk.getPathString()));
+        }
+      }
     }
+    return new Modifications(revision.name(), modifications);
   }
-
-
-  @Override
-  public Modifications getModifications(String revision) {
-    return getModifications(null, revision);
-  }
-
-  public interface Factory {
-    ModificationsCommand create(GitContext context);
-  }
-
 }

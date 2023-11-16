@@ -43,6 +43,7 @@ import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.api.HookChangesetBuilder;
 import sonia.scm.repository.api.HookContextFactory;
+import sonia.scm.repository.api.HookModificationsProvider;
 
 import java.io.IOException;
 import java.util.List;
@@ -164,6 +165,11 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
     PreReceiveRepositoryHookEvent event = (PreReceiveRepositoryHookEvent) events.get(0);
     assertThat(event.getContext().getBranchProvider().getCreatedOrModified()).containsExactly("new_branch");
     assertThat(event.getContext().getBranchProvider().getDeletedOrClosed()).isEmpty();
+    HookModificationsProvider modificationsProvider = event.getContext().getModificationsProvider();
+    assertThat(modificationsProvider.getModifications("new_branch"))
+      .extracting("modifications")
+      .asList()
+      .hasSize(4);
   }
 
   @Test
@@ -190,5 +196,10 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
         "f360a8738e4a29333786c5817f97a2c912814536",
         "d1dfecbfd5b4a2f77fe40e1bde29e640f7f944be"
       );
+    HookModificationsProvider modificationsProvider = event.getContext().getModificationsProvider();
+    assertThat(modificationsProvider.getModifications("squash"))
+      .extracting("modifications")
+      .asList()
+      .hasSize(8);
   }
 }

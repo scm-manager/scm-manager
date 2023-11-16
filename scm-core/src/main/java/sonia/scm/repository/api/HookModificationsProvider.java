@@ -22,13 +22,22 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository.api;
+
+import sonia.scm.repository.Modifications;
 
 /**
- * @author Sebastian Sdorra
- * @since 1.33
+ * The HookDiffProvider returns modifications of branches that have been changed during the current hook.
+ *
+ * @since 2.48.0
  */
-public interface HookChangesetProvider {
-
-  HookChangesetResponse handleRequest(HookChangesetRequest request);
+public interface HookModificationsProvider {
+  /**
+   * If the given branch has been updated during the current hook, this method returns an {@link Modifications} instance
+   * with the modifications of the branch.
+   * If the branch has been deleted, this will return {@link sonia.scm.repository.Removed} modifications for all paths.
+   * Accordingly, if the branch has been created, this will return {@link sonia.scm.repository.Added} modifications
+   * for all paths.
+   */
+  Modifications getModifications(String branchName);
 }

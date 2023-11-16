@@ -21,17 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.collect.ImmutableSet;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.RepositoryHookType;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.api.HookChangesetProvider;
 
 import java.util.Collections;
 

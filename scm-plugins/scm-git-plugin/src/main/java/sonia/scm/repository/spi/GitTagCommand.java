@@ -48,6 +48,7 @@ import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.Tag;
+import sonia.scm.repository.api.HookChangesetProvider;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.HookFeature;

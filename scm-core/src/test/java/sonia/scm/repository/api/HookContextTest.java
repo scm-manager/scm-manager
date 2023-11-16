@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import com.google.common.collect.Lists;
@@ -36,7 +36,6 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.spi.HookChangesetProvider;
 import sonia.scm.repository.spi.HookChangesetRequest;
 import sonia.scm.repository.spi.HookChangesetResponse;
 import sonia.scm.repository.spi.HookContextProvider;
@@ -53,7 +52,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link HookContext}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -61,19 +60,19 @@ public class HookContextTest {
 
   @Mock
   private HookContextProvider provider;
-  
+
   @Mock
   private Repository repository;
 
   @Mock
   private PreProcessorUtil preProcessorUtil;
-  
+
   @Mock
   private HookChangesetProvider changesetProvider;
-  
+
   @InjectMocks
   private HookContext context;
-  
+
   /**
    * Set up mocks for upcoming test.
    */
@@ -81,19 +80,19 @@ public class HookContextTest {
   public void setUpMocks(){
     when(provider.getChangesetProvider()).thenReturn(changesetProvider);
     when(provider.getSupportedFeatures()).thenReturn(Sets.newHashSet(HookFeature.CHANGESET_PROVIDER));
-    
+
     List<Changeset> changesets = Lists.newArrayList(new Changeset("1", Long.MIN_VALUE, new Person("Trillian")));
     HookChangesetResponse response = new HookChangesetResponse(changesets);
     when(changesetProvider.handleRequest(any(HookChangesetRequest.class))).thenReturn(response);
   }
-  
+
   /**
    * Tests {@link HookContext#getBranchProvider()}.
    */
   @Test
   public void testGetBranchProvider() {
     context.getBranchProvider();
-    
+
     verify(provider).getBranchProvider();
   }
 
@@ -103,20 +102,20 @@ public class HookContextTest {
   @Test
   public void testGetTagProvider() {
     context.getTagProvider();
-    
+
     verify(provider).getTagProvider();
   }
-  
+
   /**
    * Tests {@link HookContext#getMessageProvider()}.
    */
   @Test
   public void testGetMessageProvider() {
     context.getMessageProvider();
-    
+
     verify(provider).getMessageProvider();
   }
-  
+
   /**
    * Tests {@link HookContext#getChangesetProvider()}.
    */
@@ -127,7 +126,7 @@ public class HookContextTest {
     assertNotNull(changesets);
     assertEquals("1", changesets.get(0).getId());
   }
-  
+
   /**
    * Tests {@link HookContext#isFeatureSupported(sonia.scm.repository.api.HookFeature)}.
    */
@@ -136,5 +135,5 @@ public class HookContextTest {
     assertTrue(context.isFeatureSupported(HookFeature.CHANGESET_PROVIDER));
     assertFalse(context.isFeatureSupported(HookFeature.BRANCH_PROVIDER));
   }
-  
+
 }

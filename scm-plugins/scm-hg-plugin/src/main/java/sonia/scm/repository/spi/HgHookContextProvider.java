@@ -24,8 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.Repository;
@@ -33,6 +31,7 @@ import sonia.scm.repository.api.HgHookBranchProvider;
 import sonia.scm.repository.api.HgHookMessageProvider;
 import sonia.scm.repository.api.HgHookTagProvider;
 import sonia.scm.repository.api.HookBranchProvider;
+import sonia.scm.repository.api.HookChangesetProvider;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookMessageProvider;
 import sonia.scm.repository.api.HookTagProvider;

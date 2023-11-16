@@ -31,10 +31,13 @@ import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
 import sonia.scm.repository.api.GitHookBranchProvider;
 import sonia.scm.repository.GitChangesetConverterFactory;
+import sonia.scm.repository.api.GitHookModificationsProvider;
 import sonia.scm.repository.api.GitHookMessageProvider;
 import sonia.scm.repository.api.GitHookTagProvider;
 import sonia.scm.repository.api.GitReceiveHookMergeDetectionProvider;
 import sonia.scm.repository.api.HookBranchProvider;
+import sonia.scm.repository.api.HookChangesetProvider;
+import sonia.scm.repository.api.HookModificationsProvider;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookMessageProvider;
 import sonia.scm.repository.api.HookTagProvider;
@@ -58,6 +61,7 @@ public class GitHookContextProvider extends HookContextProvider
     HookFeature.CHANGESET_PROVIDER,
     HookFeature.BRANCH_PROVIDER,
     HookFeature.TAG_PROVIDER,
+    HookFeature.MODIFICATIONS_PROVIDER,
     HookFeature.MERGE_DETECTION_PROVIDER
   );
 
@@ -115,6 +119,11 @@ public class GitHookContextProvider extends HookContextProvider
   @Override
   public HookMergeDetectionProvider getMergeDetectionProvider() {
     return new GitReceiveHookMergeDetectionProvider(repository, repositoryId, receiveCommands, converterFactory);
+  }
+
+  @Override
+  public HookModificationsProvider getModificationsProvider() {
+    return new GitHookModificationsProvider(receiveCommands, repository);
   }
 
   @Override

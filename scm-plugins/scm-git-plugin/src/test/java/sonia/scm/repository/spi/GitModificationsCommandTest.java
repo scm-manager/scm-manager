@@ -76,7 +76,7 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
 
     command.getModifications(revision);
 
-    Mockito.verify(command.context, times(3)).open();
+    Mockito.verify(command.context, times(2)).open();
     Mockito.verify(repository, never()).close();
 
   }

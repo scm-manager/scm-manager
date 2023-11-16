@@ -24,17 +24,15 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import sonia.scm.repository.api.HookBranchProvider;
+import sonia.scm.repository.api.HookChangesetProvider;
+import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookException;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookFeatureIsNotSupportedException;
 import sonia.scm.repository.api.HookMessageProvider;
-import sonia.scm.repository.api.HookContext;
+import sonia.scm.repository.api.HookModificationsProvider;
 import sonia.scm.repository.api.HookTagProvider;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Set;
 
@@ -126,6 +124,10 @@ public abstract class HookContextProvider
   public HookMergeDetectionProvider getMergeDetectionProvider()
   {
     throw new HookFeatureIsNotSupportedException(HookFeature.MERGE_DETECTION_PROVIDER);
+  }
+
+  public HookModificationsProvider getModificationsProvider() {
+    throw new HookFeatureIsNotSupportedException(HookFeature.MODIFICATIONS_PROVIDER);
   }
 
   //~--- methods --------------------------------------------------------------

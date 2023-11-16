@@ -34,7 +34,6 @@ import sonia.scm.io.DeepCopy;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.spi.HookChangesetProvider;
 import sonia.scm.repository.spi.HookChangesetRequest;
 import sonia.scm.repository.spi.HookChangesetResponse;
 

@@ -46,7 +46,7 @@ import java.util.List;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
-final class Differ implements AutoCloseable {
+public final class Differ implements AutoCloseable {
 
   private final RevWalk walk;
   private final TreeWalk treeWalk;
@@ -62,7 +62,7 @@ final class Differ implements AutoCloseable {
     this.commonAncestor = commonAncestor;
   }
 
-  static Diff diff(Repository repository, DiffCommandRequest request) throws IOException {
+  public static Diff diff(Repository repository, DiffCommandRequest request) throws IOException {
     try (Differ differ = create(repository, request)) {
       return differ.diff(repository, differ.commonAncestor);
     }

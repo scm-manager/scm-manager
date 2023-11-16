@@ -21,14 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.spi;
 
-import sonia.scm.ContextEntry;
-import sonia.scm.repository.InternalRepositoryException;
+package sonia.scm.repository.api;
 
-public class UnsupportedModificationTypeException extends InternalRepositoryException {
-  public UnsupportedModificationTypeException(ContextEntry.ContextBuilder entity, String message) {
-    super(entity, message);
-  }
+import sonia.scm.repository.spi.HookChangesetRequest;
+import sonia.scm.repository.spi.HookChangesetResponse;
+
+/**
+ * @author Sebastian Sdorra
+ * @since 1.33
+ */
+public interface HookChangesetProvider {
+
+  HookChangesetResponse handleRequest(HookChangesetRequest request);
 }

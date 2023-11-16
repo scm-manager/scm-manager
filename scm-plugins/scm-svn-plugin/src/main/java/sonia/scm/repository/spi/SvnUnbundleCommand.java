@@ -37,6 +37,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.SvnUtil;
+import sonia.scm.repository.api.HookChangesetProvider;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.HookFeature;

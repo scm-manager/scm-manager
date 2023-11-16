@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import com.google.common.collect.ImmutableList;
@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Tag;
-import sonia.scm.repository.spi.HookChangesetProvider;
 import sonia.scm.repository.spi.HookChangesetRequest;
 import sonia.scm.repository.spi.HookChangesetResponse;
 
@@ -44,7 +43,7 @@ import sonia.scm.repository.spi.HookChangesetResponse;
 public class HgHookTagProvider implements HookTagProvider {
 
   private static final Logger logger = LoggerFactory.getLogger(HgHookTagProvider.class);
-  
+
   private static final HookChangesetRequest REQUEST = new HookChangesetRequest();
 
   private final HookChangesetProvider changesetProvider;
@@ -77,16 +76,16 @@ public class HgHookTagProvider implements HookTagProvider {
 
   private void collect() {
     ImmutableList.Builder<Tag> createdTagsBuilder = ImmutableList.builder();
-    
+
     logger.trace("collecting tags from hook changesets");
     HookChangesetResponse response = changesetProvider.handleRequest(REQUEST);
     for ( Changeset c : response.getChangesets() ){
       appendTags(createdTagsBuilder, c);
     }
-    
+
     createdTags = createdTagsBuilder.build();
   }
-  
+
   private void appendTags(ImmutableList.Builder<Tag> tags, Changeset c){
     List<String> tagNames = c.getTags();
     if (tagNames != null){

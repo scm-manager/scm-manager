@@ -21,35 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.repository.api;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.spi.HookChangesetProvider;
 import sonia.scm.repository.spi.HookChangesetRequest;
 import sonia.scm.repository.spi.javahg.AbstractChangesetCommand;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Mercurial hook branch provider implementation.
- * 
+ *
  * @author Sebastian Sdorra
  */
 public class HgHookBranchProvider implements HookBranchProvider
 {
-  
+
   private static final Logger logger = LoggerFactory.getLogger(HgHookBranchProvider.class);
 
   private static final HookChangesetRequest REQUEST =
@@ -121,7 +114,7 @@ public class HgHookBranchProvider implements HookBranchProvider
     Builder<String> deletedOrClosedBuilder = ImmutableList.builder();
 
     logger.trace("collecting branches from hook changesets");
-    
+
     for (Changeset c : changesets())
     {
       if (c.getProperty(AbstractChangesetCommand.PROPERTY_CLOSE) != null)

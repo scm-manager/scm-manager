@@ -62,5 +62,12 @@ public enum HookFeature
    *
    * @since 2.4.0
    */
-  MERGE_DETECTION_PROVIDER
+  MERGE_DETECTION_PROVIDER,
+
+  /**
+   * Provider to compute modifications
+   *
+   * @since 2.48.0
+   */
+  MODIFICATIONS_PROVIDER
 }

@@ -80,8 +80,7 @@ public final class HookContext {
    * @since 1.45
    */
   public HookBranchProvider getBranchProvider() {
-    logger.debug("create branch provider for repository {}",
-      repository.getName());
+    logger.debug("create branch provider for repository {}", repository);
 
     return provider.getBranchProvider();
   }
@@ -98,8 +97,7 @@ public final class HookContext {
    * @since 1.50
    */
   public HookTagProvider getTagProvider() {
-    logger.debug("create tag provider for repository {}",
-      repository.getName());
+    logger.debug("create tag provider for repository {}", repository);
 
     return provider.getTagProvider();
   }
@@ -115,14 +113,29 @@ public final class HookContext {
    *  by the underlying provider
    */
   public HookChangesetBuilder getChangesetProvider() {
-    logger.debug("create changeset provider for repository {}",
-      repository.getName());
+    logger.debug("create changeset provider for repository {}", repository);
 
     return new HookChangesetBuilder(
       repository,
       preProcessorUtil,
       provider.getChangesetProvider()
     );
+  }
+
+  /**
+   * Returns a {@link HookChangesetBuilder} which is able to return all
+   * {@link Changeset}'s during this push/commit.
+   *
+   *
+   * @return {@link HookChangesetBuilder}
+   *
+   * @throws HookFeatureIsNotSupportedException if the feature is not supported
+   *  by the underlying provider
+   */
+  public HookModificationsProvider getModificationsProvider() {
+    logger.debug("create diff provider for repository {}", repository);
+
+    return provider.getModificationsProvider();
   }
 
   /**
@@ -139,8 +152,7 @@ public final class HookContext {
    *  by the underlying provider
    */
   public HookMessageProvider getMessageProvider() {
-    logger.debug("create message provider for repository {}",
-      repository.getName());
+    logger.debug("create message provider for repository {}", repository);
 
     return provider.getMessageProvider();
   }
@@ -155,8 +167,7 @@ public final class HookContext {
    *  by the underlying provider
    */
   public HookMergeDetectionProvider getMergeDetectionProvider() {
-    logger.debug("create merge detection provider for repository {}",
-      repository.getName());
+    logger.debug("create merge detection provider for repository {}", repository);
 
     return provider.getMergeDetectionProvider();
   }

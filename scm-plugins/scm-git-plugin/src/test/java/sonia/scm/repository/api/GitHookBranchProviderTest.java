@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import com.google.common.collect.Lists;
@@ -40,7 +40,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Unit tests for {@link GitHookBranchProvider}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -48,9 +48,9 @@ public class GitHookBranchProviderTest {
 
   @Mock
   private ReceiveCommand command;
-  
+
   private List<ReceiveCommand> commands;
-  
+
   /**
    * Prepare mocks for upcoming test.
    */
@@ -58,37 +58,37 @@ public class GitHookBranchProviderTest {
   public void setUpMocks(){
     commands = Lists.newArrayList(command);
   }
-  
+
   /**
    * Tests {@link GitHookBranchProvider#getCreatedOrModified()}.
    */
   @Test
   public void testGetCreatedOrModified(){
-    List<ReceiveCommand.Type> types = Arrays.asList( 
-      ReceiveCommand.Type.CREATE, ReceiveCommand.Type.UPDATE, ReceiveCommand.Type.UPDATE_NONFASTFORWARD 
+    List<ReceiveCommand.Type> types = Arrays.asList(
+      ReceiveCommand.Type.CREATE, ReceiveCommand.Type.UPDATE, ReceiveCommand.Type.UPDATE_NONFASTFORWARD
     );
     for ( ReceiveCommand.Type type : types ){
       checkCreatedOrModified(type);
     }
   }
-  
+
   private void checkCreatedOrModified(ReceiveCommand.Type type){
     GitHookBranchProvider provider = createGitHookBranchProvider(type, "refs/heads/hello");
     assertThat(provider.getCreatedOrModified(), Matchers.contains("hello"));
-    assertThat(provider.getDeletedOrClosed(), empty());    
+    assertThat(provider.getDeletedOrClosed(), empty());
   }
 
-  
+
   /**
    * Tests {@link GitHookBranchProvider#getDeletedOrClosed()}.
-   */  
+   */
   @Test
   public void testGetDeletedOrClosed(){
     GitHookBranchProvider provider = createGitHookBranchProvider(ReceiveCommand.Type.DELETE, "refs/heads/hello");
     assertThat(provider.getDeletedOrClosed(), Matchers.contains("hello"));
     assertThat(provider.getCreatedOrModified(), empty());
   }
-  
+
   /**
    * Tests {@link GitHookBranchProvider} with a tag instead of a branch.
    */
@@ -98,7 +98,7 @@ public class GitHookBranchProviderTest {
     assertThat(provider.getCreatedOrModified(), empty());
     assertThat(provider.getDeletedOrClosed(), empty());
   }
-  
+
   private GitHookBranchProvider createGitHookBranchProvider(ReceiveCommand.Type type, String refName){
     when(command.getType()).thenReturn(type);
     when(command.getRefName()).thenReturn(refName);

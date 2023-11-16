@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
+import sonia.scm.repository.api.HookChangesetProvider;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 import sonia.scm.web.HgUtil;
 

@@ -33,7 +33,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Tag;
-import sonia.scm.repository.spi.HookChangesetProvider;
 import sonia.scm.repository.spi.HookChangesetRequest;
 import sonia.scm.repository.spi.HookChangesetResponse;
 

@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableSet;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookBranchProvider;
+import sonia.scm.repository.api.HookChangesetProvider;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookTagProvider;
 

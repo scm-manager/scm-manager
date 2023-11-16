@@ -35,31 +35,36 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.ReceiveCommand;
+import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.Added;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.Modification;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreReceiveRepositoryHookEvent;
+import sonia.scm.repository.Removed;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.api.HookBranchProvider;
+import sonia.scm.repository.api.HookChangesetProvider;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.HookFeature;
+import sonia.scm.repository.api.HookModificationsProvider;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
 import static org.eclipse.jgit.lib.ObjectId.zeroId;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
@@ -138,43 +143,29 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
   }
 
   private BranchHookContextProvider createHookEvent(String newBranch, ObjectId objectId) {
-    return new BranchHookContextProvider(singletonList(newBranch), emptyList(), objectId);
+    return new CreatedBranchHookContextProvider(newBranch, objectId);
   }
 
   private BranchHookContextProvider deleteHookEvent(String deletedBranch, ObjectId oldObjectId) {
-    return new BranchHookContextProvider(emptyList(), singletonList(deletedBranch), oldObjectId);
+    return new DeletedBranchHookContextProvider(deletedBranch, oldObjectId);
   }
 
-  private class BranchHookContextProvider extends HookContextProvider {
-    private final List<String> newBranches;
-    private final List<String> deletedBranches;
-    private final ObjectId objectId;
+  private abstract class BranchHookContextProvider extends HookContextProvider {
+    final String branchName;
+    final ObjectId objectId;
 
-    private BranchHookContextProvider(List<String> newBranches, List<String> deletedBranches, ObjectId objectId) {
-      this.newBranches = newBranches;
-      this.deletedBranches = deletedBranches;
+    private BranchHookContextProvider(String branchName, ObjectId objectId) {
+      this.branchName = branchName;
       this.objectId = objectId;
     }
 
     @Override
     public Set<HookFeature> getSupportedFeatures() {
-      return singleton(HookFeature.BRANCH_PROVIDER);
+      return Set.of(HookFeature.BRANCH_PROVIDER, HookFeature.MODIFICATIONS_PROVIDER, HookFeature.CHANGESET_PROVIDER);
     }
 
     @Override
-    public HookBranchProvider getBranchProvider() {
-      return new HookBranchProvider() {
-        @Override
-        public List<String> getCreatedOrModified() {
-          return newBranches;
-        }
-
-        @Override
-        public List<String> getDeletedOrClosed() {
-          return deletedBranches;
-        }
-      };
-    }
+    public abstract HookBranchProvider getBranchProvider();
 
     @Override
     public HookChangesetProvider getChangesetProvider() {
@@ -185,13 +176,7 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
         throw new InternalRepositoryException(repository, "failed to open repository for post receive hook after internal change", e);
       }
 
-      Collection<ReceiveCommand> receiveCommands = new ArrayList<>();
-      newBranches.stream()
-        .map(branch -> new ReceiveCommand(zeroId(), objectId, "refs/heads/" + branch))
-        .forEach(receiveCommands::add);
-      deletedBranches.stream()
-        .map(branch -> new ReceiveCommand(objectId, zeroId(), "refs/heads/" + branch))
-        .forEach(receiveCommands::add);
+      Collection<ReceiveCommand> receiveCommands = asList(createReceiveCommand());
       return x -> {
         GitHookChangesetCollector collector =
           GitHookChangesetCollector.collectChangesets(
@@ -203,6 +188,83 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
           );
         return new HookChangesetResponse(collector.getAddedChangesets(), collector.getRemovedChangesets());
       };
+    }
+
+    abstract ReceiveCommand createReceiveCommand();
+
+    @Override
+    public HookModificationsProvider getModificationsProvider() {
+      return branchName -> {
+        try {
+          return new BranchBasedModificationsComputer(context.open()).createModifications(objectId, getModificationFactory());
+        } catch (IOException ex) {
+          throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("Git Repository", repository.toString()), "could not compute diff for branch " + branchName, ex);
+        }
+      };
+    }
+
+    abstract Function<String, Modification> getModificationFactory();
+  }
+
+  private class CreatedBranchHookContextProvider extends BranchHookContextProvider {
+    public CreatedBranchHookContextProvider(String branchName, ObjectId objectId) {
+      super(branchName, objectId);
+    }
+
+    @Override
+    public HookBranchProvider getBranchProvider() {
+      return new HookBranchProvider() {
+        @Override
+        public List<String> getCreatedOrModified() {
+          return asList(branchName);
+        }
+
+        @Override
+        public List<String> getDeletedOrClosed() {
+          return emptyList();
+        }
+      };
+    }
+
+    @Override
+    ReceiveCommand createReceiveCommand() {
+      return new ReceiveCommand(zeroId(), objectId, "refs/heads/" + branchName);
+    }
+
+    @Override
+    Function<String, Modification> getModificationFactory() {
+      return Added::new;
+    }
+  }
+
+  private class DeletedBranchHookContextProvider extends BranchHookContextProvider {
+    public DeletedBranchHookContextProvider(String branchName, ObjectId objectId) {
+      super(branchName, objectId);
+    }
+
+    @Override
+    public HookBranchProvider getBranchProvider() {
+      return new HookBranchProvider() {
+        @Override
+        public List<String> getCreatedOrModified() {
+          return emptyList();
+        }
+
+        @Override
+        public List<String> getDeletedOrClosed() {
+          return asList(branchName);
+        }
+      };
+    }
+
+    @Override
+    ReceiveCommand createReceiveCommand() {
+      return new ReceiveCommand(objectId, zeroId(), "refs/heads/" + branchName);
+    }
+
+    @Override
+    Function<String, Modification> getModificationFactory() {
+      return Removed::new;
     }
   }
 
