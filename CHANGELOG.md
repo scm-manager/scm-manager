@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.48.0] - 2023-11-16
+### Added
+- Internal API to modify repository storage locations
+- Invalidation of caches and search index
+- Radiobutton components are now available in the ui-forms module
+- Modifications in hook provider
+- Protocol priority order by user preferences
+
+### Fixed
+- Display error when the description of a repository is not stored
+- Tabs overlapping other elements
+- Show real image diff between ancestor and current branch head
+- Links to not-existing users in groups
+- Remove bottleneck by switching to assisted injection for command
+- The useLocalStorage hook in @scm-manager/ui-api now correctly causes a re-render on write
+- Set repository importer as owner on metadata import
+- Unnecessary scrollbar showing up in markdown views with code tags for certain resolutions
+- Use a random time for plugin center updates
+- Ahead and behind tag of a branch to screen reader
+- Source view with submodules without http or https URL
+- Some chip inputs not correctly passing the ref
+- Broken global search shortcut
+
+### Changed
+- Break paths in diff
+- Remove mail for anonymous user
+- Improve global search accessibility
+
 ## [2.47.0] - 2023-10-11
 ### Added
 - Atomic design page template simple data pages
@@ -1398,3 +1426,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.46.0]: https://scm-manager.org/download/2.46.0
 [2.46.1]: https://scm-manager.org/download/2.46.1
 [2.47.0]: https://scm-manager.org/download/2.47.0
+[2.48.0]: https://scm-manager.org/download/2.48.0
