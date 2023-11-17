@@ -21,15 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-const yarn = require("./lib/yarn");
+const yarn = require("../lib/yarn");
+const versions = require("../lib/versions");
 
 module.exports = (args) => {
   if (args.length < 1) {
-    console.log("usage ui-scripts version <new-version>");
+    console.log("usage ui-scripts publish <version>");
     process.exit(1);
   }
 
   const version = args[0];
-  yarn.workspaceVersion(version);
+  const index = version.indexOf("-SNAPSHOT");
+  if (index > 0) {
+    const snapshotVersion = `${version.substring(0, index)}-${versions.createSnapshotVersion()}`;
+    console.log(`publish snapshot release ${snapshotVersion}`);
+    yarn.workspaceVersion(snapshotVersion);
+    yarn.workspacePublish(snapshotVersion);
+    yarn.workspaceVersion(version);
+  } else {
+    yarn.workspacePublish(version);
+  }
 };

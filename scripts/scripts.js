@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
  * MIT License
  *
@@ -21,24 +22,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const yarn = require("./lib/yarn");
-const versions = require("./lib/versions");
 
-module.exports = (args) => {
-  if (args.length < 1) {
-    console.log("usage ui-scripts publish <version>");
-    process.exit(1);
-  }
+const fs = require("fs");
+const path = require("path");
 
-  const version = args[0];
-  const index = version.indexOf("-SNAPSHOT");
-  if (index > 0) {
-    const snapshotVersion = `${version.substring(0, index)}-${versions.createSnapshotVersion()}`;
-    console.log(`publish snapshot release ${snapshotVersion}`);
-    yarn.workspaceVersion(snapshotVersion);
-    yarn.workspacePublish(snapshotVersion);
-    yarn.workspaceVersion(version);
-  } else {
-    yarn.workspacePublish(version);
-  }
-};
+const commandDir = path.join(__dirname, "commands");
+const commands = fs
+  .readdirSync(commandDir)
+  .map(script => {
+    if (script.endsWith(".js")) {
+      return script.replace(".js", "");
+    }
+    return undefined;
+  })
+  .filter(cmd => !!cmd);
+
+const args = process.argv.slice(2);
+
+const commandIndex = args.findIndex(arg => {
+  return commands.includes(arg);
+});
+
+const commandName = commandIndex === -1 ? args[0] : args[commandIndex];
+if (!commandName) {
+  console.log(`Use plugin-scripts [${commands.join(", ")}]`);
+} else if (commands.includes(commandName)) {
+  // eslint-disable-next-line
+  const command = require(path.join(commandDir, `${commandName}.js`));
+  command(args.slice(commandIndex + 1));
+} else {
+  console.log(`Unknown script "${commandName}".`);
+  console.log("Perhaps you need to update plugin-scripts?");
+}
