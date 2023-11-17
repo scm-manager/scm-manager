@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Source view with submodules without http or https URL
 - Some chip inputs not correctly passing the ref
 - Broken global search shortcut
+- Accept file names with semicolons
 
 ### Changed
 - Break paths in diff
