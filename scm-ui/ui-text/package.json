@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-text",
-  "version": "2.47.1-SNAPSHOT",
+  "version": "2.48.0",
   "private": true,
   "main": "build/index.js",
   "module": "build/index.mjs",
