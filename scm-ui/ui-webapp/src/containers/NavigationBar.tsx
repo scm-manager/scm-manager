@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, {FC, useEffect, useRef, useState} from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { Links } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -107,8 +107,13 @@ const NavigationBar: FC<Props> = ({ links }) => {
   const [t] = useTranslation("commons");
   const notificationsRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    const close = () => {
-      if (burgerActive) {
+    const close = (event: MouseEvent) => {
+      const classList = event.target.classList.value;
+      if (
+        !classList.includes("navbar-burger") &&
+        !classList.includes("navbar-brand") &&
+        !classList.includes("search-box")
+      ) {
         setBurgerActive(false);
       }
     };

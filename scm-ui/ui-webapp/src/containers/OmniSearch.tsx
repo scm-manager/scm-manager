@@ -205,7 +205,7 @@ const OmniSearch: FC<Props> = ({ shouldClear }) => {
         })}
       >
         <SearchBox query={query} onQueryChange={setQuery} shouldClear={shouldClear}>
-          <SearchBox.Input className="is-small" placeholder={t("search.placeholder")} ref={searchInputRef} />
+          <SearchBox.Input className="is-small search-box" placeholder={t("search.placeholder")} ref={searchInputRef} />
           <SearchBox.Options>{entries}</SearchBox.Options>
         </SearchBox>
       </div>
