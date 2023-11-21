@@ -85,8 +85,9 @@ public class ApiKeyRealm extends AuthenticatingRealm {
       token instanceof BearerToken || token instanceof UsernamePasswordToken,
       "%s is required", BearerToken.class);
     String password = getPassword(token);
-    ApiKeyService.CheckResult check = apiKeyService.check(password);
-    return buildAuthenticationInfo(token, check);
+    return apiKeyService.check(password)
+      .map(check -> buildAuthenticationInfo(token, check))
+      .orElse(null);
   }
 
   private AuthenticationInfo buildAuthenticationInfo(AuthenticationToken token, ApiKeyService.CheckResult check) {

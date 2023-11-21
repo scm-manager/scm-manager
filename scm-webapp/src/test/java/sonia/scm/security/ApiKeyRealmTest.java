@@ -38,6 +38,7 @@ import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
 
 import static java.util.Collections.singleton;
+import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -75,7 +76,7 @@ class ApiKeyRealmTest {
 
   @Test
   void shouldCreateAuthenticationWithScope() {
-    when(apiKeyService.check("towel")).thenReturn(new ApiKeyService.CheckResult("ford", "READ"));
+    when(apiKeyService.check("towel")).thenReturn(of(new ApiKeyService.CheckResult("ford", "READ")));
     when(repositoryRoleManager.get("READ")).thenReturn(new RepositoryRole("guide", singleton("read"), "system"));
 
     realm.doGetAuthenticationInfo(valueOf("towel"));
@@ -93,7 +94,7 @@ class ApiKeyRealmTest {
 
   @Test
   void shouldFailWithUnknownRole() {
-    when(apiKeyService.check("towel")).thenReturn(new ApiKeyService.CheckResult("ford", "READ"));
+    when(apiKeyService.check("towel")).thenReturn(of(new ApiKeyService.CheckResult("ford", "READ")));
     when(repositoryRoleManager.get("READ")).thenReturn(null);
 
     BearerToken token = valueOf("towel");

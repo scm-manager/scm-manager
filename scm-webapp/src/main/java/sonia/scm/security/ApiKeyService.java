@@ -43,6 +43,7 @@ import sonia.scm.user.UserPermissions;
 import javax.inject.Inject;
 import java.security.SecureRandom;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.function.Supplier;
@@ -127,9 +128,8 @@ public class ApiKeyService {
     });
   }
 
-  CheckResult check(String tokenAsString) {
-    return check(tokenHandler.readToken(tokenAsString)
-      .orElseThrow(AuthorizationException::new));
+  Optional<CheckResult> check(String tokenAsString) {
+    return tokenHandler.readToken(tokenAsString).map(this::check);
   }
 
   private CheckResult check(ApiKeyTokenHandler.Token token) {

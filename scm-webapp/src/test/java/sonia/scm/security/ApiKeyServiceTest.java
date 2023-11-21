@@ -43,6 +43,7 @@ import sonia.scm.store.InMemoryDataStoreFactory;
 import sonia.scm.user.User;
 import sonia.scm.user.UserEvent;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -109,9 +110,9 @@ class ApiKeyServiceTest {
     void shouldReturnRoleForKey() {
       String newKey = service.createNewKey("dent","1", "READ").getToken();
 
-      ApiKeyService.CheckResult role = service.check(newKey);
+      Optional<ApiKeyService.CheckResult> role = service.check(newKey);
 
-      assertThat(role).extracting("permissionRole").isEqualTo("READ");
+      assertThat(role).get().extracting("permissionRole").isEqualTo("READ");
     }
 
     @Test
@@ -135,8 +136,8 @@ class ApiKeyServiceTest {
 
       assertThat(apiKeys.getKeys()).hasSize(2);
 
-      assertThat(service.check(firstKey.getToken())).extracting("permissionRole").isEqualTo("READ");
-      assertThat(service.check(secondKey.getToken())).extracting("permissionRole").isEqualTo("WRITE");
+      assertThat(service.check(firstKey.getToken())).get().extracting("permissionRole").isEqualTo("READ");
+      assertThat(service.check(secondKey.getToken())).get().extracting("permissionRole").isEqualTo("WRITE");
 
       assertThat(service.getKeys("dent")).extracting("id")
         .contains(firstKey.getId(), secondKey.getId());
@@ -150,7 +151,7 @@ class ApiKeyServiceTest {
       service.remove("dent","1");
 
       assertThrows(AuthorizationException.class, () -> service.check(firstKey));
-      assertThat(service.check(secondKey)).extracting("permissionRole").isEqualTo("WRITE");
+      assertThat(service.check(secondKey)).get().extracting("permissionRole").isEqualTo("WRITE");
     }
 
     @Test
@@ -159,7 +160,7 @@ class ApiKeyServiceTest {
 
       assertThrows(AlreadyExistsException.class, () -> service.createNewKey("dent","1", "WRITE"));
 
-      assertThat(service.check(firstKey)).extracting("permissionRole").isEqualTo("READ");
+      assertThat(service.check(firstKey)).get().extracting("permissionRole").isEqualTo("READ");
     }
 
     @Test
