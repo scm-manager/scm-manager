@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/ui-overlays",
   "private": false,
-  "version": "2.48.1-SNAPSHOT",
+  "version": "2.48.1",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "module": "build/index.mjs",
@@ -16,7 +16,7 @@
     "@scm-manager/eslint-config": "^2.16.0",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
-    "@scm-manager/ui-styles": "2.48.1-SNAPSHOT",
+    "@scm-manager/ui-styles": "2.48.1",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-docs": "^6.5.14",
     "@storybook/addon-essentials": "^6.5.10",
@@ -44,7 +44,7 @@
     "@radix-ui/react-dropdown-menu": "2.0.5",
     "@radix-ui/react-popover": "1.0.6",
     "@radix-ui/react-tooltip": "1.0.2",
-    "@scm-manager/ui-buttons": "2.48.1-SNAPSHOT"
+    "@scm-manager/ui-buttons": "2.48.1"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
