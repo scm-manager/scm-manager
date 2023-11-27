@@ -75,8 +75,9 @@ const SearchBox = React.forwardRef<
         if (indexToInsert === -1) {
           indexToInsert = 0;
         }
-        // @ts-ignore toSpliced is part of modern browser api
-        return prev.toSpliced(indexToInsert, 0, ref);
+        const result = prev.slice();
+        result.splice(indexToInsert, 0, ref);
+        return result;
       }),
     []
   );
