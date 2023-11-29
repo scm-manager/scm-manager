@@ -24,6 +24,8 @@
 
 package sonia.scm.security.gpg;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.bouncycastle.openpgp.PGPPublicKey;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
@@ -35,8 +37,6 @@ import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.user.UserPermissions;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;

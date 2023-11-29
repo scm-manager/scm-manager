@@ -33,13 +33,13 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -176,6 +176,11 @@ public final class PluginProcessor
 
     Set<ExplodedSmp> newlyInstalledPlugins = installPending(installedPlugins);
     logger.debug("finished installation of {} plugins", newlyInstalledPlugins.size());
+
+    for (ExplodedSmp newInstalledSmp : newlyInstalledPlugins) {
+      PluginTransformer.transform(newInstalledSmp.getPath());
+    }
+    logger.debug("finished jakarta transformation of {} plugins", newlyInstalledPlugins.size());
 
     Set<ExplodedSmp> plugins = concat(installedPlugins, newlyInstalledPlugins);
 

@@ -27,27 +27,27 @@ package sonia.scm.api.v2;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerResponseContext;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.UriInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.web.JsonEnricher;
 import sonia.scm.web.VndMediaType;
 
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -132,7 +132,7 @@ public class JsonMarshallingResponseFilterTest {
   @Test
   public void testFilterWithoutEntity() {
     filter.filter(requestContext, responseContext);
-    verify(responseContext, never()).setEntity(Mockito.anyObject());
+    verify(responseContext, never()).setEntity(any());
   }
 
   @Test
@@ -141,7 +141,7 @@ public class JsonMarshallingResponseFilterTest {
     when(responseContext.getMediaType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
 
     filter.filter(requestContext, responseContext);
-    verify(responseContext, never()).setEntity(Mockito.anyObject());
+    verify(responseContext, never()).setEntity(any());
   }
 
   public static class Sample {

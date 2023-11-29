@@ -25,6 +25,7 @@
 package sonia.scm.protocolcommand.git;
 
 import com.google.common.base.Splitter;
+import jakarta.inject.Inject;
 import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.config.ScmConfiguration;
@@ -35,7 +36,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryManager;
 
-import javax.inject.Inject;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.Optional;

@@ -30,14 +30,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.search.IndexRebuilder;
 import sonia.scm.web.VndMediaType;
-
-import javax.inject.Inject;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 
 @OpenAPIDefinition(tags = {
   @Tag(name = "Invalidations", description = "Invalidations of different resources like caches and search index")

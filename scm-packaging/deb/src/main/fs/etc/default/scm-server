@@ -23,15 +23,6 @@
 # SOFTWARE.
 #
 
-# scm-server host interface
-HOST=0.0.0.0
-
-# scm-server port
-PORT=8080
-
-# home of scm-manager
-export SCM_HOME=/var/lib/scm
-
 # force jvm path
 # JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 
@@ -39,4 +30,4 @@ export SCM_HOME=/var/lib/scm
 # EXTRA_JVM_ARGUMENTS="$EXTRA_JVM_ARGUMENTS -Xms1g -Xmx1g"
 
 # pass extra jvm arguments
-EXTRA_JVM_ARGUMENTS="$EXTRA_JVM_ARGUMENTS -Djetty.host=$HOST -Djetty.port=$PORT"
+EXTRA_JVM_ARGUMENTS="$EXTRA_JVM_ARGUMENTS"

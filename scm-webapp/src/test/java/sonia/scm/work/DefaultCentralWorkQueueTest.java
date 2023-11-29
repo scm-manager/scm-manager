@@ -31,8 +31,9 @@ import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import org.apache.shiro.mgt.SecurityManager;
+import jakarta.annotation.Nonnull;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.github.sdorra.jse.ShiroExtension;
@@ -47,7 +48,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
 import sonia.scm.security.Authentications;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -79,7 +79,7 @@ class DefaultCentralWorkQueueTest {
     @BeforeEach
     void setUp() {
       meterRegistry = new SimpleMeterRegistry();
-      queue = new DefaultCentralWorkQueue(Guice.createInjector(new SecurityModule()), persistence, meterRegistry);
+      queue = new DefaultCentralWorkQueue(4, Guice.createInjector(new SecurityModule()), persistence, meterRegistry);
     }
 
     private final AtomicInteger runs = new AtomicInteger();
@@ -302,7 +302,7 @@ class DefaultCentralWorkQueueTest {
     two.restore(42L);
     when(persistence.loadAll()).thenReturn(Arrays.asList(one, two));
 
-    new DefaultCentralWorkQueue(Guice.createInjector(new SecurityModule()), persistence, new SimpleMeterRegistry());
+    new DefaultCentralWorkQueue(4, Guice.createInjector(new SecurityModule()), persistence, new SimpleMeterRegistry());
 
     await().atMost(TIMEOUT, TimeUnit.SECONDS).until(() -> context.value != null);
     assertThat(context.value).isEqualTo("two");
@@ -315,7 +315,7 @@ class DefaultCentralWorkQueueTest {
   @Test
   void shouldRunAsUser() {
     DefaultCentralWorkQueue workQueue = new DefaultCentralWorkQueue(
-      Guice.createInjector(new SecurityModule()), persistence, new SimpleMeterRegistry()
+      4, Guice.createInjector(new SecurityModule()), persistence, new SimpleMeterRegistry()
     );
 
     AtomicReference<Object> ref = new AtomicReference<>();
@@ -326,7 +326,7 @@ class DefaultCentralWorkQueueTest {
   @Test
   void shouldRunAsAdminUser() {
     DefaultCentralWorkQueue workQueue = new DefaultCentralWorkQueue(
-      Guice.createInjector(new SecurityModule()), persistence, new SimpleMeterRegistry()
+      4, Guice.createInjector(new SecurityModule()), persistence, new SimpleMeterRegistry()
     );
 
     AtomicReference<Object> ref = new AtomicReference<>();

@@ -24,12 +24,11 @@
 
 package sonia.scm.user.cli;
 
+import jakarta.inject.Inject;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
-
-import javax.inject.Inject;
 
 @ParentCommand(value = UserCommand.class)
 @CommandLine.Command(name = "activate")

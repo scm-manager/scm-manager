@@ -25,19 +25,18 @@
 package sonia.scm.security;
 
 import com.google.common.annotations.VisibleForTesting;
-
-import java.util.UUID;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.servlet.http.HttpServletRequest;
-
 import com.google.inject.OutOfScopeException;
 import com.google.inject.ProvisionException;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
 import sonia.scm.util.HttpUtil;
+
+import java.util.UUID;
 
 /**
  * Xsrf access token enricher will add an xsrf custom field to the access token. The enricher will only

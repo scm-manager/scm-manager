@@ -24,10 +24,10 @@
 
 package sonia.scm.web;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.plugin.Extension;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Pattern;
 
 @Slf4j

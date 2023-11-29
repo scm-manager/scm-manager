@@ -26,11 +26,11 @@ package sonia.scm.web.cgi;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.OutputStream;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Interface for handling return codes of processes

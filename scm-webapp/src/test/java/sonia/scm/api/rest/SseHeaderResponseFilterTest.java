@@ -24,6 +24,10 @@
 
 package sonia.scm.api.rest;
 
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import org.assertj.core.api.AbstractStringAssert;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -33,10 +37,6 @@ import sonia.scm.api.v2.CacheControlResponseFilter;
 import sonia.scm.sse.SseResponse;
 import sonia.scm.web.RestDispatcher;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;

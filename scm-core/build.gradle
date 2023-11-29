@@ -47,6 +47,9 @@ dependencies {
   annotationProcessor libraries.lombok
   testAnnotationProcessor libraries.lombok
 
+  // jakarta
+  api libraries.jakartaAnnotationApi
+
   // servlet api
   implementation libraries.servletApi
 

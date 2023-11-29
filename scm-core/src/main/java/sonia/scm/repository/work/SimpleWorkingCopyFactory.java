@@ -27,14 +27,14 @@ package sonia.scm.repository.work;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.metrics.Metrics;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import java.io.File;
 
 /**

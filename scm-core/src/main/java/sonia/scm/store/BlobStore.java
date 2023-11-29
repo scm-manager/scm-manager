@@ -55,7 +55,7 @@ public interface BlobStore extends MultiEntryStore<Blob>
    *
    * @return new blob
    *
-   * @throws EntryAllreadyExistsStoreException if a blob with given id already
+   * @throws sonia.scm.store.EntryAlreadyExistsStoreException if a blob with given id already
    *   exists
    */
   public Blob create(String id);

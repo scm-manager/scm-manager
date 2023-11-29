@@ -25,6 +25,7 @@
 package sonia.scm.lifecycle;
 
 import com.google.common.collect.ImmutableSet;
+import jakarta.servlet.ServletContextEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +33,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.web.security.AdministrationContext;
 
-import javax.servlet.ServletContextEvent;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;

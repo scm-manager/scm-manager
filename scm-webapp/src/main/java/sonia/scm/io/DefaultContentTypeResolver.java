@@ -27,8 +27,8 @@ package sonia.scm.io;
 import com.cloudogu.spotter.ContentType;
 import com.cloudogu.spotter.ContentTypeDetector;
 import com.cloudogu.spotter.Language;
+import jakarta.inject.Inject;
 
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;

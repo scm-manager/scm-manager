@@ -27,6 +27,11 @@ package sonia.scm.web;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.core.MediaType;
 import org.eclipse.jgit.http.server.GitServlet;
 import org.eclipse.jgit.lfs.lib.Constants;
 import org.slf4j.Logger;
@@ -36,11 +41,6 @@ import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.lfs.servlet.LfsServletFactory;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.regex.Pattern;
 

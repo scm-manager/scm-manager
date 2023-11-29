@@ -24,6 +24,7 @@
 
 package sonia.scm.metrics;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,8 +33,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

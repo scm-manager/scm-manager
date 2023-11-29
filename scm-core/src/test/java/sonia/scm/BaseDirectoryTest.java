@@ -25,16 +25,24 @@
 package sonia.scm;
 
 import com.google.common.collect.ImmutableMap;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import sonia.scm.config.WebappConfigProvider;
 
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Properties;
 
+import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BaseDirectoryTest {
+
+  @AfterEach
+  void clearConfig() {
+    WebappConfigProvider.setConfigBindings(emptyMap());
+  }
 
   @Test
   void shouldGetFromClassPathResource() {
@@ -43,14 +51,9 @@ class BaseDirectoryTest {
   }
 
   @Test
-  void shouldGetFromSystemProperty() {
-    BaseDirectory directory = builder().withSystemProperty(BaseDirectory.SYSTEM_PROPERTY, "/tmp/scm_home").create();
-    assertThat(directory.find()).isEqualTo(Paths.get("/tmp/scm_home"));
-  }
-
-  @Test
   void shouldGetFromEnvironmentVariable() {
-    BaseDirectory directory = builder().withEnvironment(BaseDirectory.ENVIRONMENT_VARIABLE, "/tmp/scm_home").create();
+    WebappConfigProvider.setConfigBindings(Map.of("homeDir",  "/tmp/scm_home"));
+    BaseDirectory directory = builder().create();
     assertThat(directory.find()).isEqualTo(Paths.get("/tmp/scm_home"));
   }
 

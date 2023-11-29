@@ -25,12 +25,12 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.api.PushResponse;
 
-import javax.inject.Inject;
 import java.io.IOException;
 
 public class GitPushCommand extends AbstractGitPushOrPullCommand implements PushCommand {

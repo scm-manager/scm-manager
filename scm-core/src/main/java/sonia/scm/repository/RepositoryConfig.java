@@ -24,11 +24,10 @@
     
 package sonia.scm.repository;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import sonia.scm.Validateable;
 import sonia.scm.config.Configuration;
-
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Basic {@link Repository} configuration class.

@@ -26,24 +26,22 @@ package sonia.scm.web.filter;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
  *
@@ -345,14 +343,15 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
    * @param sc
    * @param sm
    */
-  @Override
-  @SuppressWarnings("deprecation")
-  public void setStatus(int sc, String sm)
-  {
-    this.statusCode = sc;
-    this.statusMessage = sm;
-    super.setStatus(sc, sm);
-  }
+////  @Override
+//  @SuppressWarnings("deprecation")
+  //TODO What to do?
+//  public void setStatus(int sc, String sm)
+//  {
+//    this.statusCode = sc;
+//    this.statusMessage = sm;
+//    super.setStatus(sc);
+//  }
 
   //~--- inner classes --------------------------------------------------------
 

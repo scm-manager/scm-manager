@@ -24,6 +24,12 @@
 
 package sonia.scm.update.repository;
 
+import jakarta.inject.Inject;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sonia.scm.SCMContextProvider;
@@ -36,12 +42,6 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.StoreConstants;
 import sonia.scm.version.Version;
 
-import javax.inject.Inject;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 

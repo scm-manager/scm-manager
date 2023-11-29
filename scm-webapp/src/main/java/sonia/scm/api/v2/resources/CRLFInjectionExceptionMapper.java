@@ -24,10 +24,9 @@
     
 package sonia.scm.api.v2.resources;
 
+import jakarta.ws.rs.core.Response;
 import sonia.scm.api.rest.StatusExceptionMapper;
 import sonia.scm.util.CRLFInjectionException;
-
-import javax.ws.rs.core.Response;
 
 public class CRLFInjectionExceptionMapper extends StatusExceptionMapper<CRLFInjectionException> {
 

@@ -25,8 +25,8 @@
 package sonia.scm.security;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import jakarta.inject.Singleton;
 
-import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Set;
 

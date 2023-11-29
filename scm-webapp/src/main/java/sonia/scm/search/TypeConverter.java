@@ -24,10 +24,10 @@
 
 package sonia.scm.search;
 
+import jakarta.annotation.Nonnull;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 

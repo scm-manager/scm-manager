@@ -25,12 +25,12 @@
 package sonia.scm.cli;
 
 import com.google.common.io.Resources;
+import jakarta.servlet.ServletContext;
 import picocli.CommandLine;
 import sonia.scm.template.MustacheTemplateTestEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
 
-import javax.servlet.ServletContext;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.util.Locale;

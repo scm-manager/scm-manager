@@ -27,32 +27,31 @@ package sonia.scm.util;
 //~--- non-JDK imports --------------------------------------------------------
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.Subject.Builder;
-
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
 import sonia.scm.SCMContextProvider;
+import sonia.scm.security.Role;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
-
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import sonia.scm.security.Role;
+import static org.mockito.ArgumentMatchers.anyCollection;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -87,7 +86,7 @@ public final class MockUtil
     Subject subject = mock(Subject.class);
 
     when(subject.isAuthenticated()).thenReturn(Boolean.TRUE);
-    when(subject.isPermitted(anyListOf(Permission.class))).then(
+    when(subject.isPermitted(anyList())).then(
       new Answer<Boolean[]>()
     {
 
@@ -105,7 +104,7 @@ public final class MockUtil
     });
     when(subject.isPermitted(any(Permission.class))).thenReturn(Boolean.TRUE);
     when(subject.isPermitted(any(String.class))).thenReturn(Boolean.TRUE);
-    when(subject.isPermittedAll(anyCollectionOf(Permission.class))).thenReturn(
+    when(subject.isPermittedAll(anyCollection())).thenReturn(
       Boolean.TRUE);
     when(subject.isPermittedAll()).thenReturn(Boolean.TRUE);
     when(subject.hasRole(Role.USER)).thenReturn(Boolean.TRUE);

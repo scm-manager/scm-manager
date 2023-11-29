@@ -25,8 +25,8 @@
 package sonia.scm.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.inject.Inject;
 
-import javax.inject.Inject;
 import java.io.IOException;
 
 public final class SecureParameterSerializer {

@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import jakarta.inject.Inject;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lfs.Lfs;
 import org.eclipse.jgit.lfs.LfsPointer;
@@ -46,7 +47,6 @@ import sonia.scm.repository.api.MirrorCommandResult.LfsUpdateResult;
 import sonia.scm.store.BlobStore;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;

@@ -25,6 +25,7 @@
 package sonia.scm.admin;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
@@ -33,7 +34,6 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.version.Version;
 
-import javax.inject.Inject;
 import java.util.Optional;
 
 public class ReleaseVersionChecker {

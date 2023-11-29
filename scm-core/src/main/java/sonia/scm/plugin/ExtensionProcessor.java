@@ -27,8 +27,9 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Binder;
+import sonia.scm.config.ConfigBinding;
 
-import java.util.Collections;
+import static java.util.Collections.emptySet;
 
 /**
  * Process and resolve extensions.
@@ -80,12 +81,19 @@ public interface ExtensionProcessor
   Iterable<WebElementExtension> getWebElements();
 
   /**
+   * @since 3.0.0
+   */
+  default Iterable<ConfigBinding> getConfigBindings() {
+    return emptySet();
+  }
+
+  /**
    * Returns all collected indexable types.
    *
    * @return collected indexable types
    * @since 2.21.0
    */
   default Iterable<Class<?>> getIndexedTypes() {
-    return Collections.emptySet();
+    return emptySet();
   }
 }

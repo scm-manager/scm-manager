@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
@@ -34,7 +35,6 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Tag;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 

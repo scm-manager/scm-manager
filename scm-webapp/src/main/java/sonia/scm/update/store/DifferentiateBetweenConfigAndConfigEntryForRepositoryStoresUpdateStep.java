@@ -24,12 +24,12 @@
 
 package sonia.scm.update.store;
 
+import jakarta.inject.Inject;
 import sonia.scm.migration.RepositoryUpdateContext;
 import sonia.scm.migration.RepositoryUpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.RepositoryLocationResolver;
 
-import javax.inject.Inject;
 import java.nio.file.Path;
 
 @Extension

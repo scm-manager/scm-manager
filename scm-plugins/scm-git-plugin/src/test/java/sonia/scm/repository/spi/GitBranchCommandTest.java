@@ -71,7 +71,7 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
     GitChangesetConverter gitChangesetConverter = mock(GitChangesetConverter.class);
     when(converterFactory.create(any(), any()))
       .thenReturn(gitChangesetConverter);
-    when(gitChangesetConverter.createChangeset(any(), (String[]) any()))
+    when(gitChangesetConverter.createChangeset(any(), any(String[].class)))
       .thenAnswer(invocation -> {
         RevCommit revCommit = invocation.getArgument(0, RevCommit.class);
         Changeset changeset = new Changeset(revCommit.name(), null, null);

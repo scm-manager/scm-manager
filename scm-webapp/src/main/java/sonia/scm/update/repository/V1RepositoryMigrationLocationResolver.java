@@ -24,11 +24,11 @@
 
 package sonia.scm.update.repository;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.migration.UpdateException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.HashMap;

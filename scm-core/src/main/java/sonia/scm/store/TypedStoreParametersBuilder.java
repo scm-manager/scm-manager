@@ -25,6 +25,7 @@
 package sonia.scm.store;
 
 import com.google.common.collect.ImmutableSet;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,7 +34,6 @@ import lombok.Setter;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.Repository;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;

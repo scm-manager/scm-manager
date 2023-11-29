@@ -25,11 +25,11 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Modifications;
 
-import javax.inject.Inject;
 import java.io.IOException;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;

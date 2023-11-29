@@ -56,6 +56,7 @@ public class PercentageJwtAccessTokenRefreshStrategyTest {
   public ShiroRule shiro = new ShiroRule();
 
   private KeyGenerator keyGenerator = () -> "key";
+  private JwtConfig jwtConfig = mock(JwtConfig.class);
 
   private Clock refreshClock = mock(Clock.class);
 
@@ -70,7 +71,7 @@ public class PercentageJwtAccessTokenRefreshStrategyTest {
     Clock creationClock = mock(Clock.class);
     when(creationClock.instant()).thenReturn(TOKEN_CREATION);
 
-    tokenBuilder = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, Collections.emptySet(), creationClock).create();
+    tokenBuilder = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, jwtConfig, Collections.emptySet(), creationClock).create();
     tokenBuilder.expiresIn(1, HOURS);
     tokenBuilder.refreshableFor(1, HOURS);
 

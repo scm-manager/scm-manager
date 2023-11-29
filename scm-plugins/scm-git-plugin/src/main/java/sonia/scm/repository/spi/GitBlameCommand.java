@@ -29,6 +29,7 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -42,7 +43,6 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

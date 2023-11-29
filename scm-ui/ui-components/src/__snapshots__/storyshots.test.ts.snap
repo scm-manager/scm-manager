@@ -12641,7 +12641,7 @@ and this project adheres to
         
 
         <li>
-          Add class to manually validate rest data transfer objects with javax validation annotations (
+          Add class to manually validate rest data transfer objects with jakarta validation annotations (
           <a
             href="https://github.com/scm-manager/scm-manager/pull/1114"
             rel="noopener noreferrer"
@@ -25941,7 +25941,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   onMouseEnter={[Function]}
                   onMouseLeave={[Function]}
                 >
-                  import javax.ws.rs.sse.OutboundSseEvent;
+                  import jakarta.ws.rs.sse.OutboundSseEvent;
                 </td>
               </tr>
               <tr
@@ -25966,7 +25966,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   onMouseEnter={[Function]}
                   onMouseLeave={[Function]}
                 >
-                  import javax.ws.rs.sse.SseEventSink;
+                  import jakarta.ws.rs.sse.SseEventSink;
                 </td>
               </tr>
               <tr
@@ -33078,7 +33078,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.OutboundSseEvent;
+                import jakarta.ws.rs.sse.OutboundSseEvent;
               </td>
             </tr>
             <tr
@@ -33103,7 +33103,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.SseEventSink;
+                import jakarta.ws.rs.sse.SseEventSink;
               </td>
             </tr>
             <tr
@@ -37482,7 +37482,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.OutboundSseEvent;
+                import jakarta.ws.rs.sse.OutboundSseEvent;
               </td>
             </tr>
             <tr
@@ -37507,7 +37507,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.SseEventSink;
+                import jakarta.ws.rs.sse.SseEventSink;
               </td>
             </tr>
             <tr
@@ -41603,7 +41603,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.OutboundSseEvent;
+                import jakarta.ws.rs.sse.OutboundSseEvent;
               </td>
             </tr>
             <tr
@@ -41628,7 +41628,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.SseEventSink;
+                import jakarta.ws.rs.sse.SseEventSink;
               </td>
             </tr>
             <tr
@@ -45616,7 +45616,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.OutboundSseEvent;
+                import jakarta.ws.rs.sse.OutboundSseEvent;
               </td>
             </tr>
             <tr
@@ -45641,7 +45641,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.SseEventSink;
+                import jakarta.ws.rs.sse.SseEventSink;
               </td>
             </tr>
             <tr
@@ -52328,7 +52328,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.OutboundSseEvent;
+                import jakarta.ws.rs.sse.OutboundSseEvent;
               </td>
             </tr>
             <tr
@@ -52353,7 +52353,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.SseEventSink;
+                import jakarta.ws.rs.sse.SseEventSink;
               </td>
             </tr>
             <tr
@@ -56446,7 +56446,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.OutboundSseEvent;
+                import jakarta.ws.rs.sse.OutboundSseEvent;
               </td>
             </tr>
             <tr
@@ -56473,7 +56473,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.SseEventSink;
+                import jakarta.ws.rs.sse.SseEventSink;
               </td>
             </tr>
             <tr
@@ -60785,7 +60785,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.OutboundSseEvent;
+                import jakarta.ws.rs.sse.OutboundSseEvent;
               </td>
               <td
                 className="diff-gutter diff-gutter-normal"
@@ -60799,7 +60799,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.OutboundSseEvent;
+                import jakarta.ws.rs.sse.OutboundSseEvent;
               </td>
             </tr>
             <tr
@@ -60817,7 +60817,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.SseEventSink;
+                import jakarta.ws.rs.sse.SseEventSink;
               </td>
               <td
                 className="diff-gutter diff-gutter-normal"
@@ -60831,7 +60831,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.SseEventSink;
+                import jakarta.ws.rs.sse.SseEventSink;
               </td>
             </tr>
             <tr
@@ -65306,7 +65306,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.OutboundSseEvent;
+                import jakarta.ws.rs.sse.OutboundSseEvent;
               </td>
             </tr>
             <tr
@@ -65331,7 +65331,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.SseEventSink;
+                import jakarta.ws.rs.sse.SseEventSink;
               </td>
             </tr>
             <tr
@@ -69543,7 +69543,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.OutboundSseEvent;
+                import jakarta.ws.rs.sse.OutboundSseEvent;
               </td>
             </tr>
             <tr
@@ -69568,7 +69568,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 onMouseEnter={[Function]}
                 onMouseLeave={[Function]}
               >
-                import javax.ws.rs.sse.SseEventSink;
+                import jakarta.ws.rs.sse.SseEventSink;
               </td>
             </tr>
             <tr
@@ -79544,13 +79544,13 @@ exports[`Storyshots TextHitField Non Content Search 1`] = `
     &lt;!-- fix javadoc --&gt;
 
     &lt;dependency&gt;
-      &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
-      &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+      &lt;groupId&gt;jakarta.servlet&lt;/groupId&gt;
+      &lt;artifactId&gt;jakarta.servlet-api&lt;/artifactId&gt;
       &lt;version&gt;\${servlet.version}&lt;/version&gt;
     &lt;/dependency&gt;
 
     &lt;dependency&gt;
-      &lt;groupId&gt;javax.transaction&lt;/groupId&gt;
+      &lt;groupId&gt;jakarta.transaction&lt;/groupId&gt;
       &lt;artifactId&gt;jta&lt;/artifactId&gt;
       &lt;version&gt;1.1&lt;/version&gt;
       &lt;scope&gt;provided&lt;/scope&gt;
@@ -79666,13 +79666,13 @@ exports[`Storyshots TextHitField Truncate Keep Whole Line 1`] = `
     &lt;!-- fix javadoc --&gt;
 
     &lt;dependency&gt;
-      &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
-      &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+      &lt;groupId&gt;jakarta.servlet&lt;/groupId&gt;
+      &lt;artifactId&gt;jakarta.servlet-api&lt;/artifactId&gt;
       &lt;version&gt;\${servlet.version}&lt;/version&gt;
     &lt;/dependency&gt;
 
     &lt;dependency&gt;
-      &lt;groupId&gt;javax.transaction&lt;/groupId&gt;
+      &lt;groupId&gt;jakarta.transaction&lt;/groupId&gt;
       &lt;artifactId&gt;jta&lt;/artifactId&gt;
       &lt;version&gt;1.1&lt;/version&gt;
       &lt;scope&gt;provided&lt;/scope&gt;

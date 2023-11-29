@@ -24,7 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 interface CreateApiKeyDto {
   @NotEmpty

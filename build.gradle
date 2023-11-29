@@ -52,6 +52,9 @@ dependencies {
     // lombok
     api libraries.lombok
 
+    // jakarta
+    api libraries.jakartaAnnotationApi
+
     // servlet api
     api libraries.servletApi
 

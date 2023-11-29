@@ -27,6 +27,8 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -41,8 +43,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.Extension;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Iterator;
 import java.util.Set;
 

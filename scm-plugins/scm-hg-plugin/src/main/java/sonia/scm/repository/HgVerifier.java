@@ -29,9 +29,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.io.SimpleCommand;
 import sonia.scm.io.SimpleCommandResult;
 
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

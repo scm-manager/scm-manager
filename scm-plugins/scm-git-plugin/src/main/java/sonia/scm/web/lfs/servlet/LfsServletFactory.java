@@ -26,6 +26,10 @@ package sonia.scm.web.lfs.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import org.eclipse.jgit.lfs.server.LargeFileRepository;
 import org.eclipse.jgit.lfs.server.LfsProtocolServlet;
 import org.eclipse.jgit.lfs.server.fs.FileLfsServlet;
@@ -40,11 +44,6 @@ import sonia.scm.web.LfsLockingProtocolServlet;
 import sonia.scm.web.lfs.LfsAccessTokenFactory;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 import sonia.scm.web.lfs.ScmBlobLfsRepository;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * This factory class is a helper class to provide the {@link LfsProtocolServlet} and the {@link FileLfsServlet}

@@ -517,7 +517,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitMergeCommand createCommand(Consumer<Git> interceptor) {
-    return new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver)), new SimpleMeterRegistry())) {
+    return new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)), new SimpleMeterRegistry())) {
       @Override
       <R, W extends GitCloneWorker<R>> R inClone(Function<Git, W> workerSupplier, GitWorkingCopyFactory workingCopyFactory, String initialBranch) {
         Function<Git, W> interceptedWorkerSupplier = git -> {

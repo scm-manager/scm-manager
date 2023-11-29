@@ -28,10 +28,7 @@ package sonia.scm.xml;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * Converts a string to a string array and vice versa. The string is divided by

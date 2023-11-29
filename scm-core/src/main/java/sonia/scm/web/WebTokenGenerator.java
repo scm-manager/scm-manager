@@ -26,13 +26,9 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.shiro.authc.AuthenticationToken;
-
 import sonia.scm.plugin.ExtensionPoint;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Creates an {@link AuthenticationToken} from a {@link HttpServletRequest}.

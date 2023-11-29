@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableMap;
+import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -38,7 +39,6 @@ import org.tmatesoft.svn.core.wc.SVNRevision;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.DiffFormat;
 
-import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;

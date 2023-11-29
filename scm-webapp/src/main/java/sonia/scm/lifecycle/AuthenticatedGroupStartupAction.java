@@ -25,11 +25,10 @@
 package sonia.scm.lifecycle;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.Extension;
-
-import javax.inject.Inject;
 
 import static sonia.scm.group.GroupCollector.AUTHENTICATED;
 

@@ -24,11 +24,10 @@
     
 package sonia.scm.api.v2.resources;
 
+import jakarta.inject.Inject;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
-
-import javax.inject.Inject;
 
 public class ChangesetCollectionToDtoMapper extends ChangesetCollectionToDtoMapperBase {
 

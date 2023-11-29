@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.javahg.commands.ExecutionException;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
@@ -34,7 +35,6 @@ import sonia.scm.ContextEntry;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.web.HgUtil;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

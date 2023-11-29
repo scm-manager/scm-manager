@@ -21,56 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.server;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.server;
 
 import org.eclipse.jetty.server.Server;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class ScmServer extends Thread
-{
-  /** Field description */
+public class ScmServer extends Thread {
   static final int GRACEFUL_TIMEOUT = 2000;
+  private boolean initialized = false;
+  private final Server server;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
-  public ScmServer()
-  {
-    ServerConfiguration config = new ServerConfiguration();
+  public ScmServer() {
     server = new org.eclipse.jetty.server.Server();
-    config.configure(server);
+    ServerConfiguration config = new ServerConfiguration();
+    config.configureServer(server);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
   @Override
-  public void run()
-  {
-    try
-    {
-      if (!initialized)
-      {
+  public void run() {
+    try {
+      if (!initialized) {
         init();
       }
 
       server.join();
-    }
-    catch (InterruptedException ex)
-    {
-      throw new ScmServerException("could not start scm-server", ex);
+    } catch (InterruptedException ex) {
+      System.err.println("server interrupted");
+      ex.printStackTrace();
+      Thread.currentThread().interrupt();
     }
   }
 
@@ -79,43 +57,23 @@ public class ScmServer extends Thread
    *
    * @see <a href="http://goo.gl/Zfy0Ev">http://goo.gl/Zfy0Ev</a>
    */
-  public void stopServer()
-  {
-    try
-    {
+  public void stopServer() {
+    try {
       server.setStopTimeout(GRACEFUL_TIMEOUT);
       server.setStopAtShutdown(true);
       server.stop();
       initialized = false;
-    }
-    catch (Exception ex)
-    {
+    } catch (Exception ex) {
       ex.printStackTrace(System.err);
     }
   }
 
-  /**
-   * Method description
-   *
-   */
-  void init()
-  {
-    try
-    {
+  void init() {
+    try {
       server.start();
       initialized = true;
-    }
-    catch (Exception ex)
-    {
+    } catch (Exception ex) {
       throw new ScmServerException("could not initialize server", ex);
     }
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private boolean initialized = false;
-
-  /** Field description */
-  private Server server = new Server();
 }

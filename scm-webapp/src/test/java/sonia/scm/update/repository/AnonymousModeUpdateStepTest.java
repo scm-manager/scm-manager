@@ -25,6 +25,7 @@
 package sonia.scm.update.repository;
 
 import com.google.common.io.Resources;
+import jakarta.xml.bind.JAXBException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,12 +38,10 @@ import sonia.scm.security.AnonymousMode;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;

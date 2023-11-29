@@ -24,11 +24,10 @@
 
 package sonia.scm.validation;
 
+import jakarta.inject.Inject;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import sonia.scm.repository.RepositoryManager;
-
-import javax.inject.Inject;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 public class RepositoryTypeConstraintValidator implements ConstraintValidator<RepositoryType, String> {
 

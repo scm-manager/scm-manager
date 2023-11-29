@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import jakarta.inject.Inject;
 import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,6 @@ import sonia.scm.repository.api.UsernamePasswordCredential;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.ScmHttpConnectionFactory;
 
-import javax.inject.Inject;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import java.io.ByteArrayInputStream;

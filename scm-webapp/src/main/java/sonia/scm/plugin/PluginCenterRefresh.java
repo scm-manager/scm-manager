@@ -24,10 +24,9 @@
 
 package sonia.scm.plugin;
 
+import jakarta.inject.Inject;
 import sonia.scm.EagerSingleton;
 import sonia.scm.schedule.Scheduler;
-
-import javax.inject.Inject;
 import java.util.Random;
 
 /**

@@ -27,11 +27,11 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

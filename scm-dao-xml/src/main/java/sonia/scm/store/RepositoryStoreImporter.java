@@ -24,10 +24,10 @@
 
 package sonia.scm.store;
 
+import jakarta.inject.Inject;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
 
-import javax.inject.Inject;
 import java.nio.file.Path;
 
 public class RepositoryStoreImporter implements StoreImporter {

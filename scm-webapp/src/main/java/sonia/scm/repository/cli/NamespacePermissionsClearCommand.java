@@ -24,13 +24,12 @@
 
 package sonia.scm.repository.cli;
 
+import jakarta.inject.Inject;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.Namespace;
 import sonia.scm.repository.NamespaceManager;
 import sonia.scm.repository.RepositoryRoleManager;
-
-import javax.inject.Inject;
 
 @CommandLine.Command(name = "clear-permissions")
 @ParentCommand(value = NamespaceCommand.class)

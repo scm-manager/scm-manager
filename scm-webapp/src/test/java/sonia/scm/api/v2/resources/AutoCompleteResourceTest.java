@@ -27,6 +27,7 @@ package sonia.scm.api.v2.resources;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.util.ThreadContext;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -53,7 +54,6 @@ import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 import sonia.scm.xml.XmlDatabase;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -25,9 +25,9 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.Inject;
+import jakarta.inject.Provider;
 import sonia.scm.util.Decorators;
 
-import javax.inject.Provider;
 import java.util.List;
 import java.util.Set;
 

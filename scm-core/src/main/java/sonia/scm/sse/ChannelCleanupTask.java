@@ -24,7 +24,7 @@
 
 package sonia.scm.sse;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class ChannelCleanupTask implements Runnable {
 

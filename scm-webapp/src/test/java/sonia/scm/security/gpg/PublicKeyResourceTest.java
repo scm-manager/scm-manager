@@ -24,13 +24,13 @@
 
 package sonia.scm.security.gpg;
 
+import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Optional;
 

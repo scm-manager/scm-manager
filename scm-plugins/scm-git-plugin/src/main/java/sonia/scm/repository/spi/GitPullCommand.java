@@ -28,6 +28,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -48,7 +49,6 @@ import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.PullResponse;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 

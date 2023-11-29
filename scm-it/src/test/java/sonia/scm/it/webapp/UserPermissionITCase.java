@@ -26,20 +26,16 @@ package sonia.scm.it.webapp;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.sun.jersey.api.client.ClientResponse;
 import de.otto.edison.hal.HalRepresentation;
+import jakarta.ws.rs.core.Response;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.web.VndMediaType;
 
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -148,7 +144,7 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
   }
 
   @Override
-  protected void checkGetAllResponse(ClientResponse response)
+  protected void checkGetAllResponse(Response response)
   {
     Assume.assumeTrue(credentials.getUsername() == null);
     if (!credentials.isAnonymous())
@@ -156,13 +152,7 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
       assertNotNull(response);
       Assert.assertEquals(200, response.getStatus());
 
-      HalRepresentation repositories =
-        null;
-      try {
-        repositories = new ObjectMapperProvider().get().readValue(response.getEntity(String.class), HalRepresentation.class);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      HalRepresentation repositories = (HalRepresentation) response.getEntity();
 
       assertNotNull(repositories);
       assertTrue(repositories.getEmbedded().getItemsBy("users").isEmpty());

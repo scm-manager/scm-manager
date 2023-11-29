@@ -24,6 +24,7 @@
 
 package sonia.scm.update.user;
 
+import jakarta.xml.bind.JAXBException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,6 @@ import sonia.scm.update.V1Properties;
 import sonia.scm.user.User;
 import sonia.scm.user.xml.XmlUserDAO;
 
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;

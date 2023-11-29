@@ -24,6 +24,9 @@
 
 package sonia.scm.repository.api;
 
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.jupiter.api.AfterEach;
@@ -45,9 +48,6 @@ import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.user.EMail;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

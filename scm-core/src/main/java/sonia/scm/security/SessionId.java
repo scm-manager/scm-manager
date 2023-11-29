@@ -26,10 +26,10 @@ package sonia.scm.security;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.EqualsAndHashCode;
 import sonia.scm.util.HttpUtil;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Optional;
 

@@ -24,13 +24,13 @@
 
 package sonia.scm.cli;
 
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.ScmModule;
 
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;

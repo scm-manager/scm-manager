@@ -24,12 +24,11 @@
 
 package sonia.scm.initialization;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.shiro.authc.AuthenticationToken;
 import sonia.scm.plugin.Extension;
 import sonia.scm.web.WebTokenGenerator;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 
 @Extension
 public class InitializationWebTokenGenerator implements WebTokenGenerator {

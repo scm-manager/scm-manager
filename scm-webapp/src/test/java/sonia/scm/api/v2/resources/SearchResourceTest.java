@@ -27,6 +27,8 @@ package sonia.scm.api.v2.resources;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.util.Providers;
 import de.otto.edison.hal.HalRepresentation;
+import jakarta.annotation.Nonnull;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.Setter;
 import org.assertj.core.util.Lists;
@@ -54,8 +56,6 @@ import sonia.scm.web.JsonMockHttpResponse;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
-import javax.annotation.Nonnull;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;

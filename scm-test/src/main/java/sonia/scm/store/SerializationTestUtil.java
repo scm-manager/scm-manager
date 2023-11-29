@@ -26,8 +26,8 @@ package sonia.scm.store;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.xml.bind.JAXB;
 
-import javax.xml.bind.JAXB;
 import java.io.StringReader;
 import java.io.StringWriter;
 

@@ -24,13 +24,13 @@
     
 package sonia.scm.update.repository;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import sonia.scm.migration.MigrationDAO;
 import sonia.scm.migration.MigrationInfo;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Optional;
 

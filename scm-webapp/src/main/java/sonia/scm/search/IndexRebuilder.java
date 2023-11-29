@@ -24,10 +24,10 @@
 
 package sonia.scm.search;
 
+import jakarta.inject.Inject;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.RepositoryManager;
 
-import javax.inject.Inject;
 import java.util.Set;
 
 public class IndexRebuilder {

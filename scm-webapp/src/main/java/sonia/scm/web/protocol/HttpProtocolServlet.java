@@ -26,6 +26,10 @@ package sonia.scm.web.protocol;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.apache.shiro.authz.AuthorizationException;
@@ -44,10 +48,6 @@ import sonia.scm.web.ScmClientDetector;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;

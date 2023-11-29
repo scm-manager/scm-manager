@@ -24,6 +24,8 @@
 
 package sonia.scm.initialization;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -36,9 +38,6 @@ import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenResolver;
 import sonia.scm.security.BearerToken;
 import sonia.scm.user.User;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

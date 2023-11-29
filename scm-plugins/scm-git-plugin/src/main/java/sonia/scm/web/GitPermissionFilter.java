@@ -25,6 +25,8 @@
 package sonia.scm.web;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jgit.http.server.GitSmartHttpTools;
 import sonia.scm.ClientMessages;
 import sonia.scm.config.ScmConfiguration;
@@ -32,8 +34,6 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.web.filter.PermissionFilter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**

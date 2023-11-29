@@ -24,12 +24,11 @@
 
 package sonia.scm.validation;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorFactory;
+import jakarta.validation.Validator;
+import jakarta.validation.constraints.Size;
 import org.junit.jupiter.api.Test;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorFactory;
-import javax.validation.Validator;
-import javax.validation.constraints.Size;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

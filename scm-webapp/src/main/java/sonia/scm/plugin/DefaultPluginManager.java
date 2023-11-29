@@ -27,6 +27,7 @@ package sonia.scm.plugin;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
@@ -34,7 +35,6 @@ import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.Restarter;
 import sonia.scm.version.Version;
 
-import javax.inject.Inject;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;

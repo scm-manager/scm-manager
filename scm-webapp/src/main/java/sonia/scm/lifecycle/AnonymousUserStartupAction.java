@@ -24,13 +24,12 @@
 
 package sonia.scm.lifecycle;
 
+import jakarta.inject.Inject;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.user.UserManager;
-
-import javax.inject.Inject;
 
 @Extension
 public class AnonymousUserStartupAction implements PrivilegedStartupAction {

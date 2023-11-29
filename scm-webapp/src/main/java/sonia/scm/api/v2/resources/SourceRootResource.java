@@ -25,6 +25,13 @@
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.api.BrowseCommandBuilder;
@@ -32,13 +39,6 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
 
-import javax.inject.Inject;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import java.io.IOException;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;

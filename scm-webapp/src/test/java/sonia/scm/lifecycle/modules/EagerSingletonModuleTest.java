@@ -27,11 +27,10 @@ package sonia.scm.lifecycle.modules;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.junit.jupiter.api.Test;
 import sonia.scm.EagerSingleton;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -24,6 +24,7 @@
 
 package sonia.scm.importexport;
 
+import jakarta.inject.Inject;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
@@ -38,7 +39,6 @@ import sonia.scm.util.Archives;
 import sonia.scm.util.IOUtil;
 import sonia.scm.web.security.AdministrationContext;
 
-import javax.inject.Inject;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;

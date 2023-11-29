@@ -24,16 +24,16 @@
 
 package sonia.scm.filter;
 
+import jakarta.inject.Inject;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import sonia.scm.Priority;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Stage;
 import sonia.scm.web.filter.HttpFilter;
 
-import javax.inject.Inject;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Priority(7000)

@@ -24,10 +24,9 @@
 package sonia.scm.lifecycle;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import sonia.scm.event.ScmEventBus;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public class DefaultRestarter implements Restarter {

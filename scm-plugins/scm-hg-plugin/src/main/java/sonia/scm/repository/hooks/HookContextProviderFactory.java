@@ -24,14 +24,13 @@
 
 package sonia.scm.repository.hooks;
 
+import jakarta.inject.Inject;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.spi.HgHookContextProvider;
-
-import javax.inject.Inject;
 
 public class HookContextProviderFactory {
 

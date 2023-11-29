@@ -26,15 +26,13 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import javax.validation.constraints.NotEmpty;
 import sonia.scm.util.ValidationUtil;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import java.util.Collection;
 

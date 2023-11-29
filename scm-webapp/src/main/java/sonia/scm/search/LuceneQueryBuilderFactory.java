@@ -24,7 +24,7 @@
 
 package sonia.scm.search;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class LuceneQueryBuilderFactory {
 

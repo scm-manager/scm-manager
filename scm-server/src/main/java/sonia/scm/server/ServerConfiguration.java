@@ -25,54 +25,155 @@
 package sonia.scm.server;
 
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.ForwardedRequestCustomizer;
 import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.util.resource.ResourceCollection;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.eclipse.jetty.xml.XmlConfiguration;
-import org.xml.sax.SAXException;
 
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class ServerConfiguration {
 
-  private static final String CONFIGURATION = "/server-config.xml";
   @SuppressWarnings("java:S1075") // not a real uri
   private static final String DEFAULT_CONTEXT_PATH = "/scm";
-
-  private final XmlConfiguration jettyConfiguration;
+  private final ServerConfigYaml configYaml;
+  private Path testTempDir;
 
   public ServerConfiguration() {
-    this(CONFIGURATION);
+    this.configYaml = new ServerConfigParser().parse();
   }
 
-  public ServerConfiguration(String configurationUrl) {
-    this.jettyConfiguration = read(configurationUrl);
+  // Visible for testing
+  public ServerConfiguration(URL configFile, Path tempDir) {
+    this.configYaml = new ServerConfigParser().parse(configFile);
+    this.testTempDir = tempDir;
   }
 
-  public ServerConfiguration(Path configurationPath) {
-    this.jettyConfiguration = parse(Resource.newResource(configurationPath));
-  }
-
-  public void configure(Server server) {
+  public void configureServer(Server server) {
     try {
-      jettyConfiguration.configure(server);
+      configureHttp(server);
+      configureHandler(server);
+      if (configYaml.getHttps().getKeyStorePath() != null && !configYaml.getHttps().getKeyStorePath().isEmpty()) {
+        configureSSL(server);
+      }
     } catch (Exception ex) {
       throw new ScmServerException("error during server configuration", ex);
     }
+  }
+
+  private void configureSSL(Server server) {
+    SslContextFactory.Server sslServer = new SslContextFactory.Server();
+    ServerConfigYaml.SSLConfig https = configYaml.getHttps();
+    sslServer.setKeyStorePath(https.getKeyStorePath());
+    sslServer.setKeyStorePassword(https.getKeyStorePassword());
+    sslServer.setKeyStoreType(https.getKeyStoreType());
+
+    sslServer.setIncludeProtocols("TLSv1.2", "TLSv1.3");
+    sslServer.setIncludeCipherSuites(
+      "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+      "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+      "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256");
+    sslServer.setUseCipherSuitesOrder(false);
+    HttpConfiguration sslHttpConfig = new HttpConfiguration(createCustomHttpConfig());
+    sslHttpConfig.addCustomizer(new SecureRequestCustomizer(
+        false,
+        true,
+        -1,
+        false
+      )
+    );
+    ServerConnector sslConnector = new ServerConnector(server, (
+      new SslConnectionFactory(sslServer, "http/1.1")),
+      new HttpConnectionFactory(sslHttpConfig));
+    sslConnector.setHost(configYaml.getAddressBinding());
+    sslConnector.setPort(https.getSslPort());
+    server.addConnector(sslConnector);
+  }
+
+  private void configureHttp(Server server) {
+    HttpConfiguration httpConfig = createCustomHttpConfig();
+    redirectHttpToHttps(httpConfig);
+    ServerConnector connector = new ServerConnector(server, new HttpConnectionFactory(httpConfig));
+    System.out.println("Set http address binding to " + configYaml.getAddressBinding());
+    connector.setHost(configYaml.getAddressBinding());
+    System.out.println("Set http port to " + configYaml.getPort());
+    connector.setPort(configYaml.getPort());
+    server.addConnector(connector);
+  }
+
+  private void redirectHttpToHttps(HttpConfiguration httpConfig) {
+    ServerConfigYaml.SSLConfig https = configYaml.getHttps();
+    if (configYaml.getHttps().isRedirectHttpToHttps()) {
+      httpConfig.setSecurePort(https.getSslPort());
+      httpConfig.setSecureScheme("https");
+    }
+  }
+
+  private void configureHandler(Server server) {
+    HandlerCollection handlerCollection = new HandlerCollection();
+    handlerCollection.setHandlers(new Handler[]{createWebAppContext(), createDocRoot()});
+    server.setHandler(handlerCollection);
+  }
+
+  private WebAppContext createWebAppContext() {
+    WebAppContext webApp = new WebAppContext();
+    webApp.setContextPath(configYaml.getContextPath());
+    // disable directory listings
+    webApp.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
+
+    String baseDir = resolveBaseDir();
+    webApp.setWar(baseDir + "/var/webapp/scm-webapp.war");
+    String tempDir = configYaml.getTempDir();
+    webApp.setTempDirectory(tempDir.startsWith("/") ? Paths.get(tempDir, "webapp").toFile() : Paths.get(baseDir, tempDir).toFile());
+    return webApp;
+  }
+
+  private WebAppContext createDocRoot() {
+    WebAppContext docRoot = new WebAppContext();
+    docRoot.setContextPath("/");
+    String baseDir = resolveBaseDir();
+    docRoot.setBaseResource(new ResourceCollection(new String[]{baseDir + "/var/webapp/docroot"}));
+    String tempDir = configYaml.getTempDir();
+    docRoot.setTempDirectory(tempDir.startsWith("/") ? Paths.get(tempDir, "work/docroot").toFile() : Paths.get(baseDir, tempDir).toFile());
+    return docRoot;
+  }
+
+  private HttpConfiguration createCustomHttpConfig() {
+    HttpConfiguration httpConfig = new HttpConfiguration();
+    System.out.println("Set http request header size to " + configYaml.getHttpHeaderSize());
+    httpConfig.setRequestHeaderSize(configYaml.getHttpHeaderSize());
+    System.out.println("Set http response header size to " + configYaml.getHttpHeaderSize());
+    httpConfig.setResponseHeaderSize(configYaml.getHttpHeaderSize());
+    httpConfig.setSendServerVersion(false);
+    System.out.println("Set forward request customizer: " + configYaml.isForwardHeadersEnabled());
+    if (configYaml.isForwardHeadersEnabled()) {
+      httpConfig.addCustomizer(new ForwardedRequestCustomizer());
+    }
+    return httpConfig;
   }
 
   public List<Listener> getListeners() {
     List<Listener> listeners = new ArrayList<>();
 
     Server server = new Server();
-    configure(server);
+    configureServer(server);
 
     String contextPath = findContextPath(server.getHandlers());
     if (contextPath == null) {
@@ -94,6 +195,11 @@ public final class ServerConfiguration {
     return listeners;
   }
 
+
+  private String resolveBaseDir() {
+    return testTempDir != null ? testTempDir.toString() : System.getProperty("baseDir", ".");
+  }
+
   private String findContextPath(Handler[] handlers) {
     for (Handler handler : handlers) {
       if (handler instanceof WebAppContext) {
@@ -107,23 +213,4 @@ public final class ServerConfiguration {
     }
     return null;
   }
-
-  private static XmlConfiguration read(String configurationUrl) {
-    URL configURL = ScmServer.class.getResource(configurationUrl);
-
-    if (configURL == null) {
-      throw new ScmServerException("could not find server-config.xml");
-    }
-
-    return parse(Resource.newResource(configURL));
-  }
-
-  private static XmlConfiguration parse(Resource resource) {
-    try {
-      return new XmlConfiguration(resource);
-    } catch (IOException | SAXException ex) {
-      throw new ScmServerException("could not read server configuration", ex);
-    }
-  }
-
 }

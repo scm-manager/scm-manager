@@ -25,14 +25,13 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.RepositoryManager;
-
-import javax.inject.Inject;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;

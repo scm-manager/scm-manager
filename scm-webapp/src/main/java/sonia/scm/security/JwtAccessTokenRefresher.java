@@ -24,11 +24,11 @@
 
 package sonia.scm.security;
 
+import jakarta.inject.Inject;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import java.time.Clock;
 import java.util.Date;
 import java.util.Map;

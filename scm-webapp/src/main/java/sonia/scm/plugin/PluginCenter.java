@@ -26,6 +26,8 @@ package sonia.scm.plugin;
 
 import com.github.legman.Subscribe;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
@@ -36,8 +38,6 @@ import sonia.scm.config.ScmConfigurationChangedEvent;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.SystemUtil;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Set;
 
 @Singleton

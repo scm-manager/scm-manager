@@ -28,6 +28,7 @@ package sonia.scm.repository.xml;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
+import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InternalRepositoryException;
@@ -40,7 +41,6 @@ import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver.DownForMaint
 import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver.UpAfterMaintenanceContext;
 import sonia.scm.store.StoreReadOnlyException;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;

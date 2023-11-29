@@ -25,13 +25,13 @@
 package sonia.scm.repository.cli;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 
-import javax.inject.Inject;
 import java.util.Collections;
 
 @CommandLine.Command(name = "delete", aliases = "rm")

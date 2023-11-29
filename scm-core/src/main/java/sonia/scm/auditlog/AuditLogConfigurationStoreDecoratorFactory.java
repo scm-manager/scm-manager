@@ -24,11 +24,11 @@
 
 package sonia.scm.auditlog;
 
+import jakarta.inject.Inject;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreDecoratorFactory;
 
-import javax.inject.Inject;
 import java.util.Set;
 
 public class AuditLogConfigurationStoreDecoratorFactory implements ConfigurationStoreDecoratorFactory {

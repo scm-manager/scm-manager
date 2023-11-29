@@ -28,6 +28,7 @@ package sonia.scm.net.ahc;
 import com.google.common.base.Strings;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
+import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.net.HttpConnectionOptions;
@@ -36,7 +37,6 @@ import sonia.scm.trace.Span;
 import sonia.scm.trace.Tracer;
 import sonia.scm.util.HttpUtil;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;

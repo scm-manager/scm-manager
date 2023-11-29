@@ -24,10 +24,10 @@
     
 package sonia.scm.api.v2.resources;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter

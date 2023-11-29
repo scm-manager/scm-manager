@@ -25,12 +25,12 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
+import jakarta.ws.rs.core.Response;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
 
-import javax.ws.rs.core.Response;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;

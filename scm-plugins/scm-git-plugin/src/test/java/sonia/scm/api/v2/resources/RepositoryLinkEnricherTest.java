@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.util.Providers;
+import jakarta.inject.Provider;
 import org.github.sdorra.jse.ShiroExtension;
 import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +36,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 
-import javax.inject.Provider;
 import java.net.URI;
 
 import static org.mockito.ArgumentMatchers.any;

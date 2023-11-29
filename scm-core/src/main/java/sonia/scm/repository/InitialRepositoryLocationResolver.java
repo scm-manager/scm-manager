@@ -26,7 +26,7 @@ package sonia.scm.repository;
 
 import com.google.common.base.CharMatcher;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;

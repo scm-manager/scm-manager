@@ -26,10 +26,13 @@ package sonia.scm.it.webapp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationIntrospector;
 import com.google.common.base.Charsets;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Response;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.hamcrest.Matchers;
 import org.junit.After;
@@ -39,24 +42,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
-import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.api.v2.resources.RepositoryDto;
 import sonia.scm.api.v2.resources.UserDto;
-import sonia.scm.api.v2.resources.UserToUserDtoMapperImpl;
 import sonia.scm.it.utils.TestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.VndMediaType;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
 import java.net.URI;
 import java.util.UUID;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static sonia.scm.it.webapp.IntegrationTestUtil.BASE_URL;
 import static sonia.scm.it.webapp.IntegrationTestUtil.REST_BASE_URL;
 import static sonia.scm.it.webapp.IntegrationTestUtil.createAdminClient;
@@ -85,7 +84,7 @@ public class GitLfsITCase {
   private RepositoryDto repository;
 
   public GitLfsITCase() {
-    mapper.setAnnotationIntrospector(new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()));
+    mapper.setAnnotationIntrospector(new JakartaXmlBindAnnotationIntrospector(TypeFactory.defaultInstance()));
   }
 
   @BeforeClass
@@ -103,7 +102,11 @@ public class GitLfsITCase {
 
   @After
   public void tearDownTestDependencies() {
-    deleteRepository(adminClient, repository);
+    try {
+      deleteRepository(adminClient, repository);
+    } catch (Exception e) {
+      // ignore error after cleanup
+    }
   }
 
   // tests
@@ -120,11 +123,7 @@ public class GitLfsITCase {
     createUser(trillian);
 
     try {
-      String permissionsUrl = repository.getLinks().getLinkBy("permissions").get().getHref();
-      IntegrationTestUtil.createResource(adminClient, URI.create(permissionsUrl))
-        .accept("*/*")
-        .type(VndMediaType.REPOSITORY_PERMISSION)
-        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"verbs\":[\"*\"]}");
+      setPermissions(trillian.getId(), "*");
 
       ScmClient client = new ScmClient(trillian.getId(), "secret123");
 
@@ -142,10 +141,10 @@ public class GitLfsITCase {
     dto.setType(user.getType());
     dto.setActive(user.isActive());
     dto.setPassword(user.getPassword());
-    createResource(adminClient, "users")
+    Response response = createResource(adminClient, "users", VndMediaType.USER)
       .accept("*/*")
-      .type(VndMediaType.USER)
-      .post(ClientResponse.class, dto);
+      .post(Entity.entity(dto, VndMediaType.USER));
+    assertEquals(201, response.getStatus());
   }
 
   private void removeUser(User user) {
@@ -158,16 +157,11 @@ public class GitLfsITCase {
     trillian.setPassword("secret123");
     createUser(trillian);
 
-    expectedException.expect(UniformInterfaceException.class);
+    expectedException.expect(IllegalStateException.class);
     expectedException.expectMessage(Matchers.containsString("403"));
 
-
     try {
-      String permissionsUrl = repository.getLinks().getLinkBy("permissions").get().getHref();
-      IntegrationTestUtil.createResource(adminClient, URI.create(permissionsUrl))
-        .accept("*/*")
-        .type(VndMediaType.REPOSITORY_PERMISSION)
-        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"verbs\":[\"read\"]}");
+      setPermissions(trillian.getId(), "read");
 
       ScmClient client = new ScmClient(trillian.getId(), "secret123");
       uploadAndDownload(client);
@@ -182,13 +176,8 @@ public class GitLfsITCase {
     trillian.setPassword("secret123");
     createUser(trillian);
 
-
     try {
-      String permissionsUrl = repository.getLinks().getLinkBy("permissions").get().getHref();
-      IntegrationTestUtil.createResource(adminClient, URI.create(permissionsUrl))
-        .accept("*/*")
-        .type(VndMediaType.REPOSITORY_PERMISSION)
-        .post(ClientResponse.class, "{\"name\": \""+ trillian.getId() +"\", \"verbs\":[\"read\",\"pull\"]}");
+      setPermissions(trillian.getId(), "read", "pull");
 
       // upload data as admin
       String data = UUID.randomUUID().toString();
@@ -207,7 +196,13 @@ public class GitLfsITCase {
     }
   }
 
-  // lfs api
+  private void setPermissions(String user, String... verbs) {
+    String permissionsUrl = repository.getLinks().getLinkBy("permissions").get().getHref();
+    String verbsInJson = "\"" + String.join("\",\"", verbs) + "\"";
+    Response response = createResource(adminClient, URI.create(permissionsUrl))
+      .post(Entity.entity("{\"name\": \"" + user + "\", \"verbs\":[" + verbsInJson + "]}", VndMediaType.REPOSITORY_PERMISSION));
+    assertEquals(201, response.getStatus());
+  }
 
   private void uploadAndDownload(ScmClient client) throws IOException {
     String data = UUID.randomUUID().toString();
@@ -217,35 +212,37 @@ public class GitLfsITCase {
     assertArrayEquals(dataAsBytes, downloadedData);
   }
 
-  private LfsObject upload(ScmClient client, byte[] data) throws IOException {
+  private LfsObject upload(ScmClient client, byte[] data) {
     LfsObject lfsObject = createLfsObject(data);
     LfsRequestBody request = LfsRequestBody.createUploadRequest(lfsObject);
     LfsResponseBody response = request(client, request);
 
     String uploadURL = response.objects[0].actions.upload.href;
-    client.resource(uploadURL).header(HttpUtil.HEADER_USERAGENT, "git-lfs/z").put(data);
+    client.resource(uploadURL).header(HttpUtil.HEADER_USERAGENT, "git-lfs/z").put(Entity.json(data));
 
     return lfsObject;
   }
 
-  private LfsResponseBody request(ScmClient client, LfsRequestBody request) throws IOException {
+  private LfsResponseBody request(ScmClient client, LfsRequestBody request) {
     String batchUrl = createBatchUrl();
-    String requestAsString = mapper.writeValueAsString(request);
 
-    String json = client
+    Response response = client
       .resource(batchUrl)
       .accept("application/vnd.git-lfs+json")
       .header(HttpUtil.HEADER_USERAGENT, "git-lfs/z")
-      .header("Content-Type", "application/vnd.git-lfs+json")
-      .post(String.class, requestAsString);
-    return new ObjectMapperProvider().get().readValue(json, LfsResponseBody.class);
+      .post(Entity.entity(request, "application/vnd.git-lfs+json"));
+    if (response.getStatus() > 299) {
+      throw new IllegalStateException("status " + response.getStatus());
+    }
+    return response
+      .readEntity(LfsResponseBody.class);
   }
 
   private String createBatchUrl() {
     return String.format("%srepo/%s/%s/info/lfs/objects/batch", BASE_URL, repository.getNamespace(), repository.getName());
   }
 
-  private byte[] download(ScmClient client, LfsObject lfsObject) throws IOException {
+  private byte[] download(ScmClient client, LfsObject lfsObject) {
     LfsRequestBody request = LfsRequestBody.createDownloadRequest(lfsObject);
     LfsResponseBody response = request(client, request);
 
@@ -285,6 +282,29 @@ public class GitLfsITCase {
       return new LfsRequestBody("download", new LfsObject[]{object});
     }
 
+    public String getOperation() {
+      return operation;
+    }
+
+    public void setOperation(String operation) {
+      this.operation = operation;
+    }
+
+    public String[] getTransfers() {
+      return transfers;
+    }
+
+    public void setTransfers(String[] transfers) {
+      this.transfers = transfers;
+    }
+
+    public LfsObject[] getObjects() {
+      return objects;
+    }
+
+    public void setObjects(LfsObject[] objects) {
+      this.objects = objects;
+    }
   }
 
   @XmlRootElement
@@ -297,6 +317,14 @@ public class GitLfsITCase {
     }
 
     public LfsResponseBody(LfsObject[] objects) {
+      this.objects = objects;
+    }
+
+    public LfsObject[] getObjects() {
+      return objects;
+    }
+
+    public void setObjects(LfsObject[] objects) {
       this.objects = objects;
     }
   }
@@ -323,6 +351,29 @@ public class GitLfsITCase {
       this.actions = actions;
     }
 
+    public String getOid() {
+      return oid;
+    }
+
+    public void setOid(String oid) {
+      this.oid = oid;
+    }
+
+    public long getSize() {
+      return size;
+    }
+
+    public void setSize(long size) {
+      this.size = size;
+    }
+
+    public LfsActions getActions() {
+      return actions;
+    }
+
+    public void setActions(LfsActions actions) {
+      this.actions = actions;
+    }
   }
 
   @XmlRootElement
@@ -333,6 +384,22 @@ public class GitLfsITCase {
     private LfsAction download;
 
     public LfsActions() {
+    }
+
+    public LfsAction getUpload() {
+      return upload;
+    }
+
+    public void setUpload(LfsAction upload) {
+      this.upload = upload;
+    }
+
+    public LfsAction getDownload() {
+      return download;
+    }
+
+    public void setDownload(LfsAction download) {
+      this.download = download;
     }
   }
 
@@ -349,6 +416,13 @@ public class GitLfsITCase {
       this.href = href;
     }
 
+    public String getHref() {
+      return href;
+    }
+
+    public void setHref(String href) {
+      this.href = href;
+    }
   }
 
 }

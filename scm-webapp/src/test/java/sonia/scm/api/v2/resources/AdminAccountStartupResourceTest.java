@@ -25,6 +25,8 @@
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.SubjectAware;
+import jakarta.inject.Provider;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -46,9 +48,6 @@ import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.DefaultAccessTokenCookieIssuer;
 import sonia.scm.web.RestDispatcher;
 
-import javax.inject.Provider;
-import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import static java.lang.String.format;

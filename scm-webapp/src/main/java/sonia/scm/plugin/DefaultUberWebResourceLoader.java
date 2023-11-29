@@ -32,12 +32,12 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import jakarta.servlet.ServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.Stage;
 
-import javax.servlet.ServletContext;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;

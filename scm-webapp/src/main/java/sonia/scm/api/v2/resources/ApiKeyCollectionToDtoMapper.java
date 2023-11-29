@@ -27,9 +27,9 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import sonia.scm.security.ApiKey;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 

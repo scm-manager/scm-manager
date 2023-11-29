@@ -49,16 +49,19 @@ dependencies {
   testImplementation project(':scm-plugins:scm-svn-plugin')
   testImplementation project(path: ':scm-plugins:scm-svn-plugin', configuration: 'tests')
 
-  testImplementation 'io.rest-assured:rest-assured:4.3.0'
+  testImplementation 'io.rest-assured:rest-assured:5.3.2'
   testImplementation 'org.glassfish:javax.json:1.1.4'
+  testImplementation libraries.jacksonDatatypeJsr310
 
   // dependencies for tests in sonia.scm.it.webapp
   testImplementation project(':scm-webapp')
   testImplementation libraries.jerseyClientApi
-  testImplementation libraries.jerseyClientRuntime
+  testImplementation libraries.jerseyCommon
+  testImplementation libraries.jerseyMediaJson
   testImplementation libraries.jacksonJaxbAnnotations
 
   testImplementation libraries.junitPioneer
+  testImplementation 'org.eclipse.parsson:parsson:1.1.5'
 
   itWebApp project(path: ':scm-webapp', configuration: 'webapp')
   itPlugin project(path: ':scm-plugins:scm-integration-test-plugin', configuration: 'smp')

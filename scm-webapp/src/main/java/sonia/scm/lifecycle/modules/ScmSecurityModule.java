@@ -27,6 +27,7 @@ package sonia.scm.lifecycle.modules;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.name.Names;
+import jakarta.servlet.ServletContext;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
@@ -37,18 +38,12 @@ import org.apache.shiro.crypto.hash.DefaultHashService;
 import org.apache.shiro.guice.web.ShiroWebModule;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
+import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.mgt.SubjectDAO;
 import org.apache.shiro.realm.Realm;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.plugin.ExtensionProcessor;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.servlet.ServletContext;
-import org.apache.shiro.mgt.RememberMeManager;
 import sonia.scm.security.DisabledRememberMeManager;
 import sonia.scm.security.ScmAtLeastOneSuccessfulStrategy;
 import sonia.scm.security.ScmPermissionResolver;

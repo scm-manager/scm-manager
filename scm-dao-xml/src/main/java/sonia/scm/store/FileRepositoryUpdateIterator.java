@@ -24,10 +24,10 @@
 
 package sonia.scm.store;
 
+import jakarta.inject.Inject;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.update.RepositoryUpdateIterator;
 
-import javax.inject.Inject;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 

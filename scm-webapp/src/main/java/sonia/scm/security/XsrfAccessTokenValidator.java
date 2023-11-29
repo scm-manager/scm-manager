@@ -25,11 +25,11 @@
 package sonia.scm.security;
 
 import com.google.common.collect.ImmutableSet;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.servlet.http.HttpServletRequest;
 import sonia.scm.plugin.Extension;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;

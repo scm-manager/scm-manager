@@ -24,14 +24,13 @@
 
 package sonia.scm.update.user;
 
+import jakarta.inject.Inject;
 import sonia.scm.SCMContext;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.User;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.version.Version;
-
-import javax.inject.Inject;
 
 @Extension
 public class AnonymousUserEmailUpdateStep implements UpdateStep {

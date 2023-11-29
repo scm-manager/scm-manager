@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException;
@@ -56,7 +57,6 @@ import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookModificationsProvider;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;

@@ -24,13 +24,12 @@
     
 package sonia.scm.web;
 
+import jakarta.inject.Inject;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.repository.spi.ScmProviderHttpServletDecoratorFactory;
-
-import javax.inject.Inject;
 
 @Extension
 public class SvnPermissionFilterFactory implements ScmProviderHttpServletDecoratorFactory {

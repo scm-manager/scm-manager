@@ -24,6 +24,9 @@
 
 package sonia.scm.repository.xml;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
@@ -33,9 +36,6 @@ import sonia.scm.store.CopyOnWrite;
 import sonia.scm.store.StoreConstants;
 import sonia.scm.update.UpdateStepRepositoryMetadataAccess;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.nio.file.Path;
 
 import static sonia.scm.store.CopyOnWrite.compute;

@@ -24,11 +24,11 @@
 
 package sonia.scm.search;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Optional;
 
 @Singleton

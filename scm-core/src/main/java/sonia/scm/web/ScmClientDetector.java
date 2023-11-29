@@ -24,9 +24,8 @@
 
 package sonia.scm.web;
 
+import jakarta.servlet.http.HttpServletRequest;
 import sonia.scm.plugin.ExtensionPoint;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * This can be used to determine, whether a web request should be handled as a scm client request.

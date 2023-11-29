@@ -24,12 +24,12 @@
     
 package sonia.scm.web.lfs;
 
+import jakarta.inject.Inject;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.update.BlobDirectoryAccess;
 import sonia.scm.version.Version;
 
-import javax.inject.Inject;
 import java.nio.file.Path;
 
 @Extension

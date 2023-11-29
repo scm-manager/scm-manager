@@ -24,13 +24,13 @@
 
 package sonia.scm.plugin.cli;
 
+import jakarta.inject.Inject;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.stream.Collectors;
 

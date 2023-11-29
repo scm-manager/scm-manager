@@ -25,6 +25,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.io.ByteSource;
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
@@ -36,7 +37,6 @@ import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.UnbundleResponse;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

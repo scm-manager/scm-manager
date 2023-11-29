@@ -28,19 +28,14 @@ package sonia.scm.plugin;
 
 import com.google.common.collect.Iterables;
 import com.google.common.io.Resources;
-
+import jakarta.xml.bind.JAXB;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.*;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.net.URL;
-import java.util.Collections;
 
-import javax.xml.bind.JAXB;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertThat;
 
 /**
  *

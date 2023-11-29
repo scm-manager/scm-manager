@@ -25,9 +25,9 @@
 package sonia.scm.cli;
 
 import com.google.common.base.Strings;
+import jakarta.annotation.Nullable;
 import lombok.Value;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

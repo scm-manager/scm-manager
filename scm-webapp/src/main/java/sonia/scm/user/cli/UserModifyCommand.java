@@ -25,6 +25,8 @@
 package sonia.scm.user.cli;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
+import jakarta.validation.constraints.Email;
 import org.apache.shiro.authc.credential.PasswordService;
 import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
@@ -32,9 +34,6 @@ import sonia.scm.cli.ParentCommand;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.ValidationUtil;
-
-import javax.inject.Inject;
-import javax.validation.constraints.Email;
 
 @ParentCommand(value = UserCommand.class)
 @CommandLine.Command(name = "modify")

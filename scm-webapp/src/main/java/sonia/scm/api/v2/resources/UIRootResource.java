@@ -24,9 +24,9 @@
     
 package sonia.scm.api.v2.resources;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.ws.rs.Path;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.ws.rs.Path;
 
 @Path("v2/ui")
 public class UIRootResource {

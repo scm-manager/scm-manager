@@ -24,12 +24,12 @@
     
 package sonia.scm.update.repository;
 
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.util.IOUtil;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;

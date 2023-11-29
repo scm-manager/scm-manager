@@ -2,5 +2,4 @@
 exec java -cp "/etc/scm:/opt/scm-server/lib/*" \
   -client -Xmx64m \
   -Djava.awt.headless=true \
-  -Dlogback.configurationFile=logging.xml \
   sonia.scm.server.HealthCheck

@@ -24,6 +24,7 @@
 
 package sonia.scm.update.repository;
 
+import jakarta.xml.bind.JAXBException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,6 @@ import sonia.scm.update.UpdateStepTestUtil;
 import sonia.scm.user.User;
 import sonia.scm.user.xml.XmlUserDAO;
 
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

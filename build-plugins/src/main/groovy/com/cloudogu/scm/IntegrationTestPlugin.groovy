@@ -45,6 +45,7 @@ class IntegrationTestPlugin implements Plugin<Project> {
       it.extension = extension
       it.waitForCompletion = false
       it.frontend = false
+      it.configFileDirectory = './src/main/resources'
       dependsOn 'write-server-config', 'prepare-home'
     }
 

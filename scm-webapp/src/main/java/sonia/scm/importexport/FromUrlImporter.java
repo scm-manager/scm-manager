@@ -25,6 +25,7 @@
 package sonia.scm.importexport;
 
 import com.google.common.base.Strings;
+import jakarta.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.shiro.SecurityUtils;
@@ -46,7 +47,6 @@ import sonia.scm.repository.api.PullResponse;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.function.Consumer;
 

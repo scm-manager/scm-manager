@@ -24,9 +24,9 @@
 
 package sonia.scm.search;
 
+import jakarta.annotation.Nonnull;
 import org.apache.lucene.index.IndexableField;
 
-import javax.annotation.Nonnull;
 import java.time.Instant;
 import java.util.Locale;
 

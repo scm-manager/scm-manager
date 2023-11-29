@@ -32,20 +32,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
-
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationIntrospector;
 import com.google.common.io.ByteSource;
-
+import jakarta.ws.rs.core.MediaType;
 import sonia.scm.plugin.Extension;
 import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import javax.ws.rs.core.MediaType;
 
 /**
  * {@link ContentTransformer} for json. The {@link JsonContentTransformer} uses
@@ -68,7 +63,7 @@ public class JsonContentTransformer implements ContentTransformer
 
     // allow jackson and jaxb annotations
     AnnotationIntrospector jackson = new JacksonAnnotationIntrospector();
-    AnnotationIntrospector jaxb = new JaxbAnnotationIntrospector(TypeFactory.defaultInstance());
+    AnnotationIntrospector jaxb = new JakartaXmlBindAnnotationIntrospector(TypeFactory.defaultInstance());
 
     this.mapper.setAnnotationIntrospector(new AnnotationIntrospectorPair(jackson, jaxb));
 

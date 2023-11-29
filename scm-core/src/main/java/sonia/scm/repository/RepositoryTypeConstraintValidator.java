@@ -24,11 +24,11 @@
 
 package sonia.scm.repository;
 
+import jakarta.inject.Inject;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import sonia.scm.Type;
 
-import javax.inject.Inject;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.util.stream.Collectors;
 
 /**

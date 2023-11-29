@@ -24,10 +24,9 @@
 
 package sonia.scm.repository;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import sonia.scm.auditlog.AuditEntry;
-
-import javax.xml.bind.annotation.XmlRootElement;
 
 @Data
 @XmlRootElement

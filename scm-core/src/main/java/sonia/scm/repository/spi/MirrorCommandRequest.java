@@ -25,13 +25,13 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.annotations.Beta;
+import jakarta.annotation.Nullable;
 import org.apache.commons.lang.StringUtils;
+import sonia.scm.net.ProxyConfiguration;
 import sonia.scm.repository.api.Credential;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.security.PublicKey;
-import sonia.scm.net.ProxyConfiguration;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;

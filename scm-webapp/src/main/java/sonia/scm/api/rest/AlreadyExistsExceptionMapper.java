@@ -24,12 +24,11 @@
     
 package sonia.scm.api.rest;
 
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.ext.Provider;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.api.v2.resources.ExceptionWithContextToErrorDtoMapper;
-
-import javax.inject.Inject;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.Provider;
 
 @Provider
 public class AlreadyExistsExceptionMapper extends ContextualExceptionMapper<AlreadyExistsException> {

@@ -25,6 +25,7 @@
 package sonia.scm.update.security;
 
 import com.google.common.io.Resources;
+import jakarta.xml.bind.JAXBException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,6 @@ import sonia.scm.security.AssignedPermission;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.InMemoryByteConfigurationEntryStoreFactory;
 
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;

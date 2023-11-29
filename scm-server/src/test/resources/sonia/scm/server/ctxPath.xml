@@ -108,10 +108,10 @@
       <Set name="handlers">
         <Array type="org.eclipse.jetty.server.Handler">
           <Item>
-            <Ref id="scm-webapp" />
+            <Ref refid="scm-webapp" />
           </Item>
           <Item>
-            <Ref id="docroot" />
+            <Ref refid="docroot" />
           </Item>
         </Array>
       </Set>

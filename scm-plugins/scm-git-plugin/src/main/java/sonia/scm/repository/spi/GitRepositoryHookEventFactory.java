@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import jakarta.inject.Inject;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.RepositoryHookEvent;
@@ -31,7 +32,6 @@ import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 

@@ -95,7 +95,7 @@ public class AbstractGitCommandTest extends AbstractGitCommandTestBase {
     void doSomething() {
       inClone(
         git -> new Worker(context, repository, git),
-        new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver)), new SimpleMeterRegistry()),
+        new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)), new SimpleMeterRegistry()),
         "master"
       );
     }

@@ -45,11 +45,11 @@ enforce {
     r.version = '6.7'
   }
   rule(enforcer.rules.RequireJavaVersion) { r ->
-    r.version = '11'
+    r.version = '17'
   }
-  rule(enforcer.rules.EnforceBytecodeVersion) { r ->
-    r.maxJdkVersion = '11'
-  }
+//  rule(enforcer.rules.EnforceBytecodeVersion) { r ->
+//    r.maxJdkVersion = '17'
+//  }
 }
 
 includeBuild 'build-plugins'

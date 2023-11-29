@@ -26,11 +26,11 @@ package sonia.scm.net;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Named;
-import javax.inject.Provider;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import java.security.KeyStore;

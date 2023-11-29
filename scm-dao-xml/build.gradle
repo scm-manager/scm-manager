@@ -34,6 +34,7 @@ dependencies {
   api platform(project(':'))
 
   api project(':scm-core')
+  annotationProcessor project(':scm-annotation-processor')
   testImplementation project(':scm-test')
 
   // lombok

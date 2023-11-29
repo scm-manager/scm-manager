@@ -25,11 +25,11 @@
 package sonia.scm.repository.spi;
 
 import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.inject.Inject;
 import sonia.scm.repository.SvnWorkingCopyFactory;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.WorkingCopyPool;
 
-import javax.inject.Inject;
 import java.io.File;
 
 public class SimpleSvnWorkingCopyFactory extends SimpleWorkingCopyFactory<File, File, SvnContext> implements SvnWorkingCopyFactory {

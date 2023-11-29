@@ -24,9 +24,9 @@
 
 package sonia.scm.work;
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 
-import javax.annotation.Nullable;
 import java.io.Serializable;
 
 @EqualsAndHashCode

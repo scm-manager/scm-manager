@@ -24,6 +24,7 @@
 
 package sonia.scm.importexport;
 
+import jakarta.inject.Inject;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import sonia.scm.ContextEntry;
@@ -33,7 +34,6 @@ import sonia.scm.store.RepositoryStoreImporter;
 import sonia.scm.store.StoreEntryMetaData;
 import sonia.scm.store.StoreType;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 

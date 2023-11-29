@@ -27,10 +27,10 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Sets;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.store.ConfigurationStoreFactory;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;

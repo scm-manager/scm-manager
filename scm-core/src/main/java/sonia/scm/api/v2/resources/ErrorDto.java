@@ -25,12 +25,12 @@
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Getter;
 import lombok.Setter;
 import sonia.scm.ContextEntry;
 
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @Getter @Setter

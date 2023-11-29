@@ -25,11 +25,10 @@
 package sonia.scm.notifications;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
 import sonia.scm.sse.Channel;
 import sonia.scm.sse.ChannelRegistry;
 import sonia.scm.sse.Message;
-
-import javax.inject.Inject;
 
 public class DefaultNotificationSender implements NotificationSender {
 

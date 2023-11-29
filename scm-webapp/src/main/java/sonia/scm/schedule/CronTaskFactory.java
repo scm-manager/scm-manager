@@ -26,9 +26,8 @@ package sonia.scm.schedule;
 
 import com.google.inject.Injector;
 import com.google.inject.util.Providers;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 class CronTaskFactory {
 

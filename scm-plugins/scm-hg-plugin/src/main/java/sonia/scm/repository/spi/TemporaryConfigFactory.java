@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.io.INIConfiguration;
@@ -36,7 +37,6 @@ import sonia.scm.net.GlobalProxyConfiguration;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.util.Util;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;

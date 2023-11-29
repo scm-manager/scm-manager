@@ -27,15 +27,16 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.SCMContextProvider;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,19 +46,11 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-
 import java.util.Arrays;
 import java.util.Base64;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Default implementation of the {@link CipherHandler}, which uses AES for
@@ -72,7 +65,7 @@ public class DefaultCipherHandler implements CipherHandler {
    * Cipher type used before v2.
    * @see <a href="https://github.com/scm-manager/scm-manager/issues/1110">Issue 1110</a>
    */
-  public static final String OLD_CIPHER_TYPE = "AES/CTR/PKCS5PADDING";
+  public static final String OLD_CIPHER_TYPE = "AES/CTR/NoPadding";
 
   /** used cipher type for format v2 */
   public static final String CIPHER_TYPE = "AES/GCM/NoPadding";

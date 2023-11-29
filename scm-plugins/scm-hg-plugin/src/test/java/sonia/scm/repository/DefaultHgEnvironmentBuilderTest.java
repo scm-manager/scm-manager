@@ -24,6 +24,7 @@
 
 package sonia.scm.repository;
 
+import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +42,6 @@ import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.security.Xsrf;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
@@ -50,7 +50,13 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static sonia.scm.repository.DefaultHgEnvironmentBuilder.*;
+import static sonia.scm.repository.DefaultHgEnvironmentBuilder.ENV_BEARER_TOKEN;
+import static sonia.scm.repository.DefaultHgEnvironmentBuilder.ENV_CHALLENGE;
+import static sonia.scm.repository.DefaultHgEnvironmentBuilder.ENV_HOOK_PORT;
+import static sonia.scm.repository.DefaultHgEnvironmentBuilder.ENV_REPOSITORY_ID;
+import static sonia.scm.repository.DefaultHgEnvironmentBuilder.ENV_REPOSITORY_NAME;
+import static sonia.scm.repository.DefaultHgEnvironmentBuilder.ENV_REPOSITORY_PATH;
+import static sonia.scm.repository.DefaultHgEnvironmentBuilder.ENV_TRANSACTION_ID;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultHgEnvironmentBuilderTest {

@@ -33,8 +33,9 @@ dependencies {
   implementation libraries.commonsDaemon
   implementation libraries.jettyServer
   implementation libraries.jettyWebapp
-  // TODO do we need jetty jmx?
-  implementation libraries.jettyJmx
+
+  // Server Config
+  implementation libraries.snakeYml
 
   // tests
   testImplementation libraries.junitJupiterApi

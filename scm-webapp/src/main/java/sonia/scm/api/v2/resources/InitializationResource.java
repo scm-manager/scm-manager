@@ -24,12 +24,12 @@
 
 package sonia.scm.api.v2.resources;
 
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import sonia.scm.initialization.InitializationStep;
 import sonia.scm.initialization.InitializationStepResource;
 
-import javax.inject.Inject;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import java.util.Set;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;

@@ -24,6 +24,13 @@
 
 package sonia.scm.search;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.xml.bind.JAXB;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -33,13 +40,6 @@ import org.apache.lucene.store.FSDirectory;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.PluginLoader;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.xml.bind.JAXB;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

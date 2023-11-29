@@ -26,6 +26,7 @@ package sonia.scm.it;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -44,7 +45,6 @@ import sonia.scm.it.utils.RestUtil;
 import sonia.scm.it.utils.TestData;
 import sonia.scm.web.VndMediaType;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;

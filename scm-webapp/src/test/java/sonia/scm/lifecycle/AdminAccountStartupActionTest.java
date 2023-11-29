@@ -75,13 +75,6 @@ class AdminAccountStartupActionTest {
   ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
   @BeforeEach
-  void clearProperties() {
-    System.clearProperty("scm.initialPassword");
-    System.clearProperty("sonia.scm.skipAdminCreation");
-
-  }
-
-  @BeforeEach
   void mockAdminContext() {
     doAnswer(invocation -> {
       invocation.getArgument(0, PrivilegedStartupAction.class).run();
@@ -98,14 +91,12 @@ class AdminAccountStartupActionTest {
   class WithPredefinedPassword {
     @BeforeEach
     void initPasswordGenerator() {
-      System.setProperty("scm.initialPassword", "password");
-      System.clearProperty("scm.initialUser");
       lenient().when(passwordService.encryptPassword("password")).thenReturn("encrypted");
     }
 
     @Test
     void shouldCreateAdminAccountIfNoUserExistsAndAssignPermissions() {
-      createStartupAction();
+      createStartupAction("scmadmin", "password", false);
 
       verifyAdminCreated("scmadmin");
       verifyAdminPermissionsAssigned("scmadmin");
@@ -114,9 +105,7 @@ class AdminAccountStartupActionTest {
 
     @Test
     void shouldUseSpecifiedAdminUsername() {
-      System.setProperty("scm.initialUser", "arthur");
-
-      createStartupAction();
+      createStartupAction("arthur", "password", false);
 
       verifyAdminCreated("arthur");
       verifyAdminPermissionsAssigned("arthur");
@@ -128,7 +117,7 @@ class AdminAccountStartupActionTest {
       when(userManager.getAll()).thenReturn(Lists.newArrayList(SCMContext.ANONYMOUS));
       when(userManager.contains(SCMContext.USER_ANONYMOUS)).thenReturn(true);
 
-      createStartupAction();
+      createStartupAction("scmadmin", "password", false);
 
       verifyAdminCreated("scmadmin");
       verifyAdminPermissionsAssigned("scmadmin");
@@ -140,7 +129,7 @@ class AdminAccountStartupActionTest {
       List<User> users = Lists.newArrayList(UserTestData.createTrillian());
       when(userManager.getAll()).thenReturn(users);
 
-      createStartupAction();
+      createStartupAction("scmadmin", "password", false);
 
       verify(userManager, never()).create(any(User.class));
       verify(permissionAssigner, never()).setPermissionsForUser(anyString(), any());
@@ -153,7 +142,7 @@ class AdminAccountStartupActionTest {
     lenient().when(randomPasswordGenerator.createRandomPassword()).thenReturn("random");
     when(userManager.getAll()).thenReturn(Collections.emptyList());
 
-    createStartupAction();
+    createStartupAction("scmadmin", "", false);
 
     verify(userManager, never()).create(any(User.class));
     verify(permissionAssigner, never()).setPermissionsForUser(anyString(), any());
@@ -165,28 +154,14 @@ class AdminAccountStartupActionTest {
   @Test
   @MockitoSettings(strictness = Strictness.LENIENT)
   void shouldSkipAdminAccountCreationIfPropertyIsSet() {
-    System.setProperty("sonia.scm.skipAdminCreation", "true");
-
-    createStartupAction();
+    createStartupAction("scmadmin", "scmadmin", true);
 
     verify(userManager, never()).create(any());
     verify(permissionAssigner, never()).setPermissionsForUser(anyString(), any());
   }
 
-  @Test
-  void shouldDoNothingOnSecondStart() {
-    List<User> users = Lists.newArrayList(UserTestData.createTrillian());
-    when(userManager.getAll()).thenReturn(users);
-
-    createStartupAction();
-
-    verify(userManager, never()).create(any(User.class));
-    verify(permissionAssigner, never()).setPermissionsForUser(anyString(), any());
-    assertThat(startupAction.done()).isTrue();
-  }
-
-  private void createStartupAction() {
-    startupAction = new AdminAccountStartupAction(passwordService, userManager, permissionAssigner, randomPasswordGenerator, context);
+  private void createStartupAction(String user, String password, boolean skipAdminCreation) {
+    startupAction = new AdminAccountStartupAction(user, password, skipAdminCreation, passwordService, userManager, permissionAssigner, randomPasswordGenerator, context);
   }
 
   private void verifyAdminPermissionsAssigned(String expectedUsername) {

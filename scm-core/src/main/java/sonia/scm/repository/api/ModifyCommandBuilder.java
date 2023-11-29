@@ -28,6 +28,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
+import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Person;
@@ -38,7 +39,6 @@ import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.user.EMail;
 import sonia.scm.util.IOUtil;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

@@ -24,6 +24,7 @@
 
 package sonia.scm.security.gpg;
 
+import jakarta.inject.Inject;
 import org.apache.shiro.SecurityUtils;
 import org.bouncycastle.bcpg.ArmoredInputStream;
 import org.bouncycastle.openpgp.PGPException;
@@ -38,7 +39,6 @@ import sonia.scm.security.GPG;
 import sonia.scm.security.PrivateKey;
 import sonia.scm.security.PublicKey;
 
-import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;

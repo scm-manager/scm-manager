@@ -25,6 +25,7 @@
 package sonia.scm.security;
 
 import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.inject.Inject;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -33,7 +34,6 @@ import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.PrincipalCollection;
 import sonia.scm.metrics.AuthenticationMetrics;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

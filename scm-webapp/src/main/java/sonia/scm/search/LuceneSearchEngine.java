@@ -25,6 +25,7 @@
 package sonia.scm.search;
 
 import com.google.common.base.Joiner;
+import jakarta.inject.Inject;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -33,7 +34,6 @@ import sonia.scm.work.CentralWorkQueue;
 import sonia.scm.work.CentralWorkQueue.Enqueue;
 import sonia.scm.work.Task;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

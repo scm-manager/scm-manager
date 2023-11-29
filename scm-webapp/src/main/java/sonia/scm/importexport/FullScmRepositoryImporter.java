@@ -25,6 +25,7 @@
 package sonia.scm.importexport;
 
 import com.google.common.base.Strings;
+import jakarta.inject.Inject;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -33,10 +34,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.*;
+import sonia.scm.repository.FullRepositoryImporter;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryImportEvent;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.ImportFailedException;
 
-import javax.inject.Inject;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;

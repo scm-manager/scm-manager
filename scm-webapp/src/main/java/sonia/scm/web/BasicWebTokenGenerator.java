@@ -28,6 +28,7 @@ package sonia.scm.web;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.codec.Base64;
@@ -40,7 +41,6 @@ import sonia.scm.security.SessionId;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

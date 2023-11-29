@@ -27,12 +27,12 @@ package sonia.scm.work;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import jakarta.inject.Inject;
 import lombok.Value;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;

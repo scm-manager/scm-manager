@@ -24,11 +24,10 @@
 
 package sonia.scm.log;
 
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import org.javahg.log.LoggerFactory;
 import sonia.scm.plugin.Extension;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 @Extension
 public class HgLoggerFactoryBinder implements ServletContextListener {

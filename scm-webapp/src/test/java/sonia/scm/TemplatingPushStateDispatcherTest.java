@@ -24,6 +24,8 @@
 
 package sonia.scm;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,8 +35,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.template.Template;
 import sonia.scm.template.TemplateEngine;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;

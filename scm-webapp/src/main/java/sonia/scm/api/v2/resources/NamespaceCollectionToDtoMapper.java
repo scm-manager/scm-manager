@@ -26,9 +26,9 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
+import jakarta.inject.Inject;
 import sonia.scm.repository.Namespace;
 
-import javax.inject.Inject;
 import java.util.Collection;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;

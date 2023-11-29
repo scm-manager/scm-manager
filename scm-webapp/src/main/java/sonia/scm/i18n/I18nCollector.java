@@ -26,18 +26,16 @@ package sonia.scm.i18n;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.legman.Subscribe;
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Stage;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.util.JsonMerger;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;

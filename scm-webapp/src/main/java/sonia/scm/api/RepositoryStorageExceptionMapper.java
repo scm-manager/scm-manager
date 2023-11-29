@@ -24,15 +24,14 @@
 
 package sonia.scm.api;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import sonia.scm.api.v2.resources.ErrorDto;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.web.VndMediaType;
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
 
 import static java.util.Arrays.asList;
 

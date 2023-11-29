@@ -25,6 +25,7 @@
 package sonia.scm.repository;
 
 import com.google.common.collect.ImmutableMap;
+import jakarta.annotation.Nonnull;
 import org.javahg.Repository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +36,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.hooks.HookEnvironment;
 
-import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 

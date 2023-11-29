@@ -24,10 +24,10 @@
 
 package sonia.scm.repository;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import sonia.scm.event.ScmEventBus;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;

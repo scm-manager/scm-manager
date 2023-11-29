@@ -28,11 +28,11 @@ package sonia.scm.template;
 
 import com.google.common.collect.ImmutableMap;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import jakarta.servlet.ServletContext;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import sonia.scm.plugin.PluginLoader;
 
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;

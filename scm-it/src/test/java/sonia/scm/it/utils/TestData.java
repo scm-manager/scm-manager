@@ -25,6 +25,8 @@
 package sonia.scm.it.utils;
 
 import io.restassured.response.ValidatableResponse;
+import jakarta.json.Json;
+import jakarta.json.JsonObjectBuilder;
 import org.apache.http.HttpStatus;
 import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.StoredConfig;
@@ -33,8 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.web.VndMediaType;
 
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;

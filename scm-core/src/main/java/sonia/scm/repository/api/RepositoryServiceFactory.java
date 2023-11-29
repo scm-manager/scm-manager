@@ -34,6 +34,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEventType;
@@ -61,7 +62,6 @@ import sonia.scm.security.PublicKeyDeletedEvent;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.user.EMail;
 
-import javax.annotation.Nullable;
 import java.util.Set;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;

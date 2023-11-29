@@ -24,9 +24,8 @@
 
 package sonia.scm.cli;
 
+import jakarta.inject.Inject;
 import picocli.CommandLine;
-
-import javax.inject.Inject;
 
 @CommandLine.Command(name = "ping", hidden = true)
 class PingCommand implements Runnable {

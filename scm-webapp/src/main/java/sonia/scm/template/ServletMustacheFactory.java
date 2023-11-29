@@ -28,10 +28,10 @@ package sonia.scm.template;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.google.common.base.Charsets;
+import jakarta.servlet.ServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;

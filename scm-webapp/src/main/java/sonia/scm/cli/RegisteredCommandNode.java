@@ -24,12 +24,9 @@
 
 package sonia.scm.cli;
 
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 class RegisteredCommandNode {
   private final String name;
   private final Class<?> command;
@@ -38,5 +35,17 @@ class RegisteredCommandNode {
   public RegisteredCommandNode(String name, Class<?> command) {
     this.name = name;
     this.command = command;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public Class<?> getCommand() {
+    return command;
+  }
+
+  public List<RegisteredCommandNode> getChildren() {
+    return children;
   }
 }

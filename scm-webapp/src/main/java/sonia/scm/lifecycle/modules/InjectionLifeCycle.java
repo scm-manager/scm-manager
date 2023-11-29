@@ -27,11 +27,11 @@ package sonia.scm.lifecycle.modules;
 import com.google.inject.Binding;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
 import sonia.scm.Default;
 import sonia.scm.lifecycle.LifeCycle;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
 import java.util.Optional;
 
 public class InjectionLifeCycle implements LifeCycle {

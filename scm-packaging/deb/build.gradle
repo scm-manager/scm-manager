@@ -107,8 +107,7 @@ task deb(type: Deb) {
     expand([version: version])
   }
   // https://github.com/nebula-plugins/gradle-ospackage-plugin/issues/118
-  configurationFile('/etc/scm/server-config.xml')
-  configurationFile('/etc/scm/logging.xml')
+  configurationFile('/etc/scm/config.yml')
 
   from('src/main/fs/etc/systemd') {
     into '/etc/systemd'

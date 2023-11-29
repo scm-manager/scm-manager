@@ -24,12 +24,11 @@
 
 package sonia.scm.api;
 
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 import sonia.scm.api.rest.ContextualExceptionMapper;
 import sonia.scm.api.v2.resources.ExceptionWithContextToErrorDtoMapper;
 import sonia.scm.repository.spi.ModificationFailedException;
-
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
 
 public class ModificationFailedExceptionMapper extends ContextualExceptionMapper<ModificationFailedException> {
 

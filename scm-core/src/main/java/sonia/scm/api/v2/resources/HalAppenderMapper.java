@@ -25,9 +25,8 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.inject.Inject;
 
 @Slf4j
 public class HalAppenderMapper {

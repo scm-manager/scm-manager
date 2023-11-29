@@ -24,12 +24,12 @@
 
 package sonia.scm.api.v2.resources;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.metrics.MonitoringSystem;
 import sonia.scm.plugin.Extension;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -24,7 +24,8 @@
 
 package sonia.scm.store;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
+
 import java.util.Optional;
 import java.util.Set;
 

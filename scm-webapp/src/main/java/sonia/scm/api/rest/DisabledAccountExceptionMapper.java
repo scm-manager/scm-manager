@@ -26,12 +26,9 @@ package sonia.scm.api.rest;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.Provider;
 import org.apache.shiro.authc.DisabledAccountException;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
 
 /**
  *

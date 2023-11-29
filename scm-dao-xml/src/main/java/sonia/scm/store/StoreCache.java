@@ -37,12 +37,11 @@ class StoreCache <S> {
 
   private static final Logger LOG = LoggerFactory.getLogger(StoreCache.class);
 
-  public static final String ENABLE_STORE_CACHE_PROPERTY = "scm.storeCache.enabled";
 
   private final Function<TypedStoreParameters<?>, S> cachingStoreCreator;
 
-  StoreCache(Function<TypedStoreParameters<?>, S> storeCreator) {
-    if (Boolean.getBoolean(ENABLE_STORE_CACHE_PROPERTY)) {
+  StoreCache(Function<TypedStoreParameters<?>, S> storeCreator, Boolean storeCacheEnabled) {
+    if (storeCacheEnabled) {
       LOG.info("store cache enabled");
       Map<TypedStoreParameters<?>, S> storeCache = synchronizedMap(new HashMap<>());
       cachingStoreCreator = storeParameters -> storeCache.computeIfAbsent(storeParameters, storeCreator);

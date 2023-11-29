@@ -29,21 +29,16 @@ package sonia.scm.filter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Ints;
-
+import jakarta.servlet.Filter;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.http.HttpServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.Priorities;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.WebElementExtension;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
-
-import javax.servlet.Filter;
-import javax.servlet.Servlet;
-import javax.servlet.http.HttpServlet;
 
 /**
  *

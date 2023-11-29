@@ -25,6 +25,7 @@
 package sonia.scm.user.cli;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.PermissionDescriptionResolver;
@@ -33,7 +34,6 @@ import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;

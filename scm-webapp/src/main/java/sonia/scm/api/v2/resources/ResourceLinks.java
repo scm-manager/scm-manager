@@ -26,10 +26,10 @@ package sonia.scm.api.v2.resources;
 
 import com.google.inject.OutOfScopeException;
 import com.google.inject.ProvisionException;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import sonia.scm.security.gpg.UserPublicKeyResource;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
 import java.net.URI;
 import java.net.URISyntaxException;
 

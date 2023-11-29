@@ -24,12 +24,12 @@
     
 package sonia.scm.repository;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.Set;
 
 public class NamespaceStrategyProvider implements Provider<NamespaceStrategy> {

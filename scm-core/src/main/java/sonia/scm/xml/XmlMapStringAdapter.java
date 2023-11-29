@@ -26,14 +26,11 @@ package sonia.scm.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  *

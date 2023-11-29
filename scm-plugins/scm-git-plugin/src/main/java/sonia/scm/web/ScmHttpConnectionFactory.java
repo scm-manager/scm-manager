@@ -24,13 +24,13 @@
 
 package sonia.scm.web;
 
+import jakarta.inject.Inject;
 import org.eclipse.jgit.transport.http.HttpConnection;
 import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import org.eclipse.jgit.transport.http.WrappedHttpUrlConnection;
 import sonia.scm.net.HttpConnectionOptions;
 import sonia.scm.net.HttpURLConnectionFactory;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;

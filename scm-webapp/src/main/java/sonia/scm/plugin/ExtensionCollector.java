@@ -31,6 +31,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.ConfigElement;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -53,6 +54,8 @@ public final class ExtensionCollector {
   private final Set<Class> restProviders = Sets.newHashSet();
   private final Set<Class> mappers = Sets.newHashSet();
   private final Set<Class> looseExtensions = Sets.newHashSet();
+
+  private final Set<ConfigElement> configElements = Sets.newHashSet();
   private final Multimap<ExtensionPointElement, Class> extensions = HashMultimap.create();
   private final Map<Class, ExtensionPointElement> extensionPointIndex = Maps.newHashMap();
 
@@ -135,6 +138,10 @@ public final class ExtensionCollector {
 
   public Set<Class> getMappers() {
     return mappers;
+  }
+
+  public Set<ConfigElement> getConfigElements() {
+    return configElements;
   }
 
   public Set<WebElementExtension> getWebElements() {
@@ -233,5 +240,6 @@ public final class ExtensionCollector {
 
     webElements.addAll(collectWebElementExtensions(classLoader, module.getWebElements()));
     indexedTypes.addAll(collectIndexedTypes(classLoader, module.getIndexedTypes()));
+    Iterables.addAll(configElements, module.getConfigElements());
   }
 }

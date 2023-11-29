@@ -26,16 +26,13 @@ package sonia.scm.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.Assert;
 import org.junit.Test;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.ByteArrayOutputStream;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import org.junit.Assert;
+import java.io.ByteArrayOutputStream;
 
 /**
  *

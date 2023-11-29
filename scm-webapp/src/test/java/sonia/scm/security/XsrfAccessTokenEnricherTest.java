@@ -26,6 +26,8 @@ package sonia.scm.security;
 
 import com.google.inject.OutOfScopeException;
 import com.google.inject.ProvisionException;
+import jakarta.inject.Provider;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -35,11 +37,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.HttpUtil;
 
-import javax.inject.Provider;
-import javax.servlet.http.HttpServletRequest;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link XsrfAccessTokenEnricher}.

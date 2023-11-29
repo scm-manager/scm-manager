@@ -25,6 +25,7 @@
 package sonia.scm.repository.api;
 
 import com.google.common.base.Preconditions;
+import jakarta.annotation.Nullable;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.spi.MergeCommand;
 import sonia.scm.repository.spi.MergeCommandRequest;
@@ -33,7 +34,6 @@ import sonia.scm.repository.util.AuthorUtil;
 import sonia.scm.user.DisplayUser;
 import sonia.scm.user.EMail;
 
-import javax.annotation.Nullable;
 import java.util.Set;
 
 /**

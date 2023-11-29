@@ -24,6 +24,9 @@
 
 package sonia.scm.web.filter;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
@@ -39,9 +42,6 @@ import sonia.scm.security.Authentications;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.HttpUtil;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**

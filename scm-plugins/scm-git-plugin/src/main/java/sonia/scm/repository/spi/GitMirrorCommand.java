@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
@@ -63,7 +64,6 @@ import sonia.scm.repository.api.MirrorFilter.Result;
 import sonia.scm.repository.api.UsernamePasswordCredential;
 import sonia.scm.repository.spi.LfsLoader.LfsLoaderLogger;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;

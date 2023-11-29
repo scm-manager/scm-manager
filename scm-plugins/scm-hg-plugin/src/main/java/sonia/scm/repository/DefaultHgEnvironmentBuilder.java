@@ -27,6 +27,8 @@ package sonia.scm.repository;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import sonia.scm.TransactionId;
 import sonia.scm.repository.hooks.HookEnvironment;
 import sonia.scm.repository.hooks.HookServer;
@@ -35,8 +37,6 @@ import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.security.Xsrf;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;

@@ -27,21 +27,19 @@ package sonia.scm.legacy;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.crypto.hash.Sha1Hash;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.DAORealmHelper;
 import sonia.scm.security.DAORealmHelperFactory;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Support for SCM-Manager 1.x password hashes.
@@ -81,7 +79,7 @@ public class LegacyRealm extends AuthenticatingRealm {
 
     HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();
 
-    matcher.setHashAlgorithmName(Sha1Hash.ALGORITHM_NAME);
+    matcher.setHashAlgorithmName("SHA-1");
     matcher.setHashIterations(1);
     matcher.setStoredCredentialsHexEncoded(true);
     setCredentialsMatcher(helper.wrapCredentialsMatcher(matcher));

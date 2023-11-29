@@ -24,9 +24,9 @@
     
 package sonia.scm.repository.xml;
 
+import jakarta.inject.Inject;
 import sonia.scm.repository.RepositoryLocationResolver;
 
-import javax.inject.Inject;
 import java.nio.file.Path;
 import java.util.function.BiConsumer;
 

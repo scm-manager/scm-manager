@@ -24,12 +24,11 @@
 
 package sonia.scm.repository;
 
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import org.eclipse.jgit.lib.GpgSigner;
 import sonia.scm.plugin.Extension;
-
-import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 @Extension
 public class ScmGpgSignerInitializer implements ServletContextListener {

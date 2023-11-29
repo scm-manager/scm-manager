@@ -26,6 +26,8 @@ package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.Path;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,8 +41,6 @@ import sonia.scm.notifications.Type;
 import sonia.scm.sse.ChannelRegistry;
 import sonia.scm.web.RestDispatcher;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Path;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.Instant;

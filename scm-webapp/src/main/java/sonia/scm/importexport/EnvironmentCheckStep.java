@@ -24,14 +24,14 @@
 
 package sonia.scm.importexport;
 
+import jakarta.inject.Inject;
+import jakarta.xml.bind.JAXB;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.IncompatibleEnvironmentForImportException;
 import sonia.scm.web.security.AdministrationContext;
 
-import javax.inject.Inject;
-import javax.xml.bind.JAXB;
 import java.io.InputStream;
 
 import static sonia.scm.importexport.FullScmRepositoryExporter.SCM_ENVIRONMENT_FILE_NAME;

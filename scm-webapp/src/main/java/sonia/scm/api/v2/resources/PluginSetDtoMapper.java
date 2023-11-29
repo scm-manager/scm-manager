@@ -24,10 +24,10 @@
 
 package sonia.scm.api.v2.resources;
 
+import jakarta.inject.Inject;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.PluginSet;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;

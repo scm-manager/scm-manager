@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.inject.util.Providers;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Value;
 import org.github.sdorra.jse.ShiroExtension;
 import org.github.sdorra.jse.SubjectAware;
@@ -52,7 +53,6 @@ import sonia.scm.user.UserDisplayManager;
 import sonia.scm.user.UserTestData;
 import sonia.scm.web.RestDispatcher;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -61,8 +61,19 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
-import static sonia.scm.api.v2.resources.PluginCenterAuthResource.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static sonia.scm.api.v2.resources.PluginCenterAuthResource.AuthParameter;
+import static sonia.scm.api.v2.resources.PluginCenterAuthResource.ChallengeGenerator;
+import static sonia.scm.api.v2.resources.PluginCenterAuthResource.ERROR_ALREADY_AUTHENTICATED;
+import static sonia.scm.api.v2.resources.PluginCenterAuthResource.ERROR_AUTHENTICATION_DISABLED;
+import static sonia.scm.api.v2.resources.PluginCenterAuthResource.ERROR_CHALLENGE_DOES_NOT_MATCH;
+import static sonia.scm.api.v2.resources.PluginCenterAuthResource.ERROR_CHALLENGE_MISSING;
+import static sonia.scm.api.v2.resources.PluginCenterAuthResource.ERROR_PARAMS_MISSING;
+import static sonia.scm.api.v2.resources.PluginCenterAuthResource.ERROR_SOURCE_MISSING;
 
 @ExtendWith({MockitoExtension.class, ShiroExtension.class})
 class PluginCenterAuthResourceTest {

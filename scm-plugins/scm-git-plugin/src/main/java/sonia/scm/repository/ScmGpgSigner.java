@@ -24,6 +24,7 @@
 
 package sonia.scm.repository;
 
+import jakarta.inject.Inject;
 import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.lib.CommitBuilder;
 import org.eclipse.jgit.lib.GpgSignature;
@@ -32,7 +33,6 @@ import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import sonia.scm.security.GPG;
 
-import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
 
 public class ScmGpgSigner extends GpgSigner {

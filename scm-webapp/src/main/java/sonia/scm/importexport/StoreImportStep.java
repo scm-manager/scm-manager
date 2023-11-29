@@ -24,13 +24,13 @@
 
 package sonia.scm.importexport;
 
+import jakarta.inject.Inject;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
 import sonia.scm.update.UpdateEngine;
 
-import javax.inject.Inject;
 import java.io.InputStream;
 
 import static sonia.scm.importexport.FullScmRepositoryExporter.STORE_DATA_FILE_NAME;

@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
@@ -55,7 +56,6 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;

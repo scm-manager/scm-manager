@@ -25,7 +25,12 @@
 package sonia.scm.lifecycle.modules;
 
 import com.google.inject.Injector;
-import org.jboss.resteasy.plugins.guice.ModuleProcessor;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.ws.rs.ext.RuntimeDelegate;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 import org.jboss.resteasy.plugins.server.servlet.ListenerBootstrap;
 import org.jboss.resteasy.spi.Registry;
@@ -34,17 +39,10 @@ import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.jboss.resteasy.spi.statistics.StatisticsController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.ws.rs.ext.RuntimeDelegate;
+import sonia.scm.lifecycle.modules.resteasyguice.ModuleProcessor;
 
 /**
  * Resteasy initialization and dispatching. This servlet combines the initialization of
- * {@link org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener} and the dispatching of
  * {@link HttpServletDispatcher}. The combination is required to fix the initialization order.
  */
 @Singleton

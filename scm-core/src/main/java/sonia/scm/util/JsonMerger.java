@@ -28,9 +28,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import jakarta.inject.Inject;
 import sonia.scm.web.api.DtoValidator;
 
-import javax.inject.Inject;
 import java.util.Iterator;
 
 /**

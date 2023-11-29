@@ -24,11 +24,10 @@
 
 package sonia.scm.repository.spi;
 
+import jakarta.inject.Inject;
 import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.Repository;
-
-import javax.inject.Inject;
 
 public class HgCommandContextFactory {
 

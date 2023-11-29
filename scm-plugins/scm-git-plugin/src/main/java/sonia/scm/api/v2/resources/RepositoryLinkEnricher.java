@@ -24,12 +24,11 @@
 
 package sonia.scm.api.v2.resources;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
 
 @Extension
 @Enrich(Repository.class)

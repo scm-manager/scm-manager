@@ -29,16 +29,12 @@ package sonia.scm.plugin;
 import com.google.common.base.Preconditions;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-
-//~--- JDK imports ------------------------------------------------------------
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.nio.file.Path;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 
 /**
  * Util methods to handle plugins.

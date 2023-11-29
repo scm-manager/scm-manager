@@ -29,6 +29,7 @@ package sonia.scm.plugin;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Resources;
+import jakarta.xml.bind.JAXB;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +39,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
 
-import javax.xml.bind.JAXB;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

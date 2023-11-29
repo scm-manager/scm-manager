@@ -26,11 +26,10 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.base.Strings;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.util.HttpUtil;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
 import java.util.Collections;
 import java.util.Set;

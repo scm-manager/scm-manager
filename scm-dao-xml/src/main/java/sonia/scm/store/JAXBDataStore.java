@@ -26,13 +26,13 @@ package sonia.scm.store;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.xml.XmlStreams;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.util.Map;
 import java.util.Objects;

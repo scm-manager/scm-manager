@@ -162,7 +162,7 @@ function ComboboxComponent<T>(props: ComboboxProps<T>, ref: ForwardedRef<HTMLInp
         onBlur={props.onBlur}
         autoComplete="off"
         onKeyDown={(e) => {
-          props.onKeyDown && props.onKeyDown(e)
+          props.onKeyDown && props.onKeyDown(e);
           }}
         {...createAttributesForTesting(props.testId)}
       />

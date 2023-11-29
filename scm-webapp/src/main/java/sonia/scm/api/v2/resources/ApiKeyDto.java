@@ -26,11 +26,11 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
 
 @Getter

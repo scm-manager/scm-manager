@@ -100,7 +100,7 @@ spec:
           - name: data
             mountPath: /var/lib/scm
           - name: config
-            mountPath: /opt/scm-server/conf
+            mountPath: /etc/scm
           {{- with .Values.extraVolumeMounts }}
           {{- tpl . $ | nindent 10 }}
           {{- end }}

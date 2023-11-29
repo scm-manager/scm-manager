@@ -24,11 +24,10 @@
 
 package sonia.scm.api.v2.resources;
 
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sonia.scm.util.ValidationUtil;
-
-import javax.validation.constraints.Pattern;
 
 @Getter
 @NoArgsConstructor

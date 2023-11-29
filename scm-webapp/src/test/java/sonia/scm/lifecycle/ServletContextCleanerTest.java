@@ -25,12 +25,11 @@
 package sonia.scm.lifecycle;
 
 import com.google.common.collect.ImmutableSet;
+import jakarta.servlet.ServletContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import javax.servlet.ServletContext;
 
 import java.util.Collection;
 import java.util.Enumeration;
@@ -54,7 +53,7 @@ public class ServletContextCleanerTest {
       "resteasy.Deployment",
       "sonia.scm.Context",
       "org.eclipse.jetty.HttpServer",
-      "javax.servlet.Context",
+      "jakarta.servlet.Context",
       "org.apache.shiro.SecurityManager"
     );
 
@@ -66,7 +65,7 @@ public class ServletContextCleanerTest {
     verify(servletContext).removeAttribute("resteasy.Deployment");
     verify(servletContext).removeAttribute("sonia.scm.Context");
     verify(servletContext, never()).removeAttribute("org.eclipse.jetty.HttpServer");
-    verify(servletContext, never()).removeAttribute("javax.servlet.Context");
+    verify(servletContext, never()).removeAttribute("jakarta.servlet.Context");
     verify(servletContext).removeAttribute("org.apache.shiro.SecurityManager");
   }
 

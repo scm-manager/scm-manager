@@ -25,12 +25,12 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 
-import javax.inject.Inject;
 import java.util.List;
 
 import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;

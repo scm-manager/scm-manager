@@ -24,11 +24,10 @@
     
 package sonia.scm.user;
 
+import jakarta.inject.Inject;
 import sonia.scm.GenericDisplayManager;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
-
-import javax.inject.Inject;
 
 public class DefaultUserDisplayManager extends GenericDisplayManager<User, DisplayUser> implements UserDisplayManager {
 

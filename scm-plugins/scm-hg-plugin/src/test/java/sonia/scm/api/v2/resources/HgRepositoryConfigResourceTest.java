@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.util.Providers;
 import de.otto.edison.hal.Links;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -50,13 +51,15 @@ import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.web.HgVndMediaType;
 import sonia.scm.web.RestDispatcher;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class HgRepositoryConfigResourceTest {

@@ -26,9 +26,8 @@ package sonia.scm;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 /**
  * Injection Provider for the {@link PushStateDispatcher}. The provider will return a {@link ProxyPushStateDispatcher}

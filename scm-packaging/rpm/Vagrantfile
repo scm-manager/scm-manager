@@ -32,6 +32,21 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell", inline: <<-SHELL
+    cd /etc/yum.repos.d/
+    sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+
+    cat << EOF | sudo tee /etc/yum.repos.d/SCM-Manager.repo
+[scm-manager]
+name=SCM-Manager Repository
+baseurl=https://packages.scm-manager.org/repository/yum-v2-releases/
+enabled=1
+gpgcheck=1
+priority=1
+gpgkey=file:///etc/pki/rpm-gpg/SCM-Manager
+EOF
+    sudo curl -o /etc/pki/rpm-gpg/SCM-Manager https://packages.scm-manager.org/repository/keys/gpg/oss-cloudogu-com.pub
+
     yum install -y /vagrant/build/distributions/scm-server-*.rpm
   SHELL
 end

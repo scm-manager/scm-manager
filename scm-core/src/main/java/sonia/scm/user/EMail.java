@@ -25,10 +25,9 @@
 package sonia.scm.user;
 
 import com.google.common.base.Strings;
+import jakarta.inject.Inject;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.ValidationUtil;
-
-import javax.inject.Inject;
 
 /**
  * Email is able to resolve email addresses of users.

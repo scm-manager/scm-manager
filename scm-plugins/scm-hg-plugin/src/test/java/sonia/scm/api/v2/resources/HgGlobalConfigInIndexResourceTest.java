@@ -29,12 +29,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.inject.util.Providers;
+import jakarta.ws.rs.core.MediaType;
 import org.junit.Rule;
 import org.junit.Test;
 import sonia.scm.web.JsonEnricherContext;
 import sonia.scm.web.VndMediaType;
 
-import javax.ws.rs.core.MediaType;
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;

@@ -24,11 +24,10 @@
 
 package sonia.scm.plugin.cli;
 
+import jakarta.inject.Inject;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.plugin.PluginManager;
-
-import javax.inject.Inject;
 
 @ParentCommand(value = PluginCommand.class)
 @CommandLine.Command(name = "cancel-pending", aliases = "reset")

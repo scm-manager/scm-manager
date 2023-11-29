@@ -24,13 +24,12 @@
     
 package sonia.scm.repository;
 
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import org.eclipse.jgit.lib.internal.WorkQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.Extension;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 @Extension
 public class GitWorkQueueShutdownListener implements ServletContextListener {

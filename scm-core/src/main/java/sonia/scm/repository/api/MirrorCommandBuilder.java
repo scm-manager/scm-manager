@@ -26,15 +26,15 @@ package sonia.scm.repository.api;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
+import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.net.ProxyConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.MirrorCommand;
 import sonia.scm.repository.spi.MirrorCommandRequest;
 import sonia.scm.security.PublicKey;
-import sonia.scm.net.ProxyConfiguration;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

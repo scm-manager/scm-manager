@@ -22,7 +22,7 @@
 USER=""
 
 # extra jvm arguments
-EXTRA_JVM_ARGUMENTS="-Djava.awt.headless=true -Dlogback.configurationFile=logging.xml"
+EXTRA_JVM_ARGUMENTS="-Djava.awt.headless=true"
 
 BASEDIR=`dirname $0`/..
 BASEDIR=`(cd "$BASEDIR"; pwd)`

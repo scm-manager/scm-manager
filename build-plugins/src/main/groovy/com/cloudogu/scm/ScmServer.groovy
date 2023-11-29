@@ -26,16 +26,15 @@ package com.cloudogu.scm
 
 import com.google.common.base.Strings
 import groovy.json.JsonSlurper
+import org.eclipse.jetty.server.Handler
 import org.eclipse.jetty.server.HttpConfiguration
 import org.eclipse.jetty.server.HttpConnectionFactory
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
-import org.eclipse.jetty.util.component.AbstractLifeCycle
-import org.eclipse.jetty.util.component.LifeCycle
-import org.eclipse.jetty.webapp.WebAppContext
-import org.eclipse.jetty.server.Handler
 import org.eclipse.jetty.server.handler.HandlerList
 import org.eclipse.jetty.server.handler.ShutdownHandler
+import org.eclipse.jetty.util.component.LifeCycle
+import org.eclipse.jetty.webapp.WebAppContext
 
 import java.awt.Desktop
 
@@ -51,16 +50,12 @@ class ScmServer {
   void start() throws Exception {
     info('start scm-server at port %s', configuration.port)
 
-    System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
+    System.setProperty("jakarta.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
 
     System.setProperty('scm.home', configuration.home)
     if (configuration.disableCorePlugins) {
       info('disable core plugin extraction')
       System.setProperty('sonia.scm.boot.disable-core-plugin-extraction', 'true')
-    }
-
-    if (!Strings.isNullOrEmpty(configuration.loggingConfiguration)) {
-      System.setProperty('logback.configurationFile', configuration.loggingConfiguration)
     }
 
     info('set stage %s', configuration.stage)
@@ -80,7 +75,7 @@ class ScmServer {
       createShutdownHandler()
     ] as Handler[])
     server.setHandler(handlerList)
-    server.addLifeCycleListener(new AbstractLifeCycle.AbstractLifeCycleListener() {
+    server.addEventListener(new LifeCycle.Listener() {
       @Override
       void lifeCycleStarted(LifeCycle event) {
 

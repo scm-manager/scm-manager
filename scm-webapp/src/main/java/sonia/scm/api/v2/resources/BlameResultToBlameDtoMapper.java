@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import org.mapstruct.Mapper;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.BlameLine;
@@ -33,7 +34,6 @@ import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 
-import javax.inject.Inject;
 import java.util.stream.Collectors;
 
 @Mapper

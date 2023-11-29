@@ -24,6 +24,10 @@
     
 package sonia.scm.web;
 
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.filter.GZipFilterConfig;
@@ -33,10 +37,6 @@ import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.util.WebUtil;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 class SvnGZipFilter implements ScmProviderHttpServlet {

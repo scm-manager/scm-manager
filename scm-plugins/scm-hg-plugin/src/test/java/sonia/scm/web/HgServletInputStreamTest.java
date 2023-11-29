@@ -26,10 +26,10 @@ package sonia.scm.web;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteStreams;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
 import org.junit.Test;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 

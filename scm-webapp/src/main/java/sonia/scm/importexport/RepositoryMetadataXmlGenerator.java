@@ -24,6 +24,10 @@
 
 package sonia.scm.importexport;
 
+import jakarta.xml.bind.JAXB;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,10 +36,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.api.ExportFailedException;
 
-import javax.xml.bind.JAXB;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collection;

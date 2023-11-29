@@ -26,6 +26,7 @@ package sonia.scm.security;
 
 import com.github.legman.Subscribe;
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.EagerSingleton;
@@ -46,7 +47,6 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserEvent;
 import sonia.scm.user.UserModificationEvent;
 
-import javax.inject.Singleton;
 import java.util.Collection;
 
 /**

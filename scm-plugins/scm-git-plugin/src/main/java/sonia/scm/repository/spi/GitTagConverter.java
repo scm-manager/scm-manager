@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import jakarta.inject.Inject;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -37,7 +38,6 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Tag;
 import sonia.scm.security.GPG;
 
-import javax.inject.Inject;
 import java.io.IOException;
 
 class GitTagConverter {

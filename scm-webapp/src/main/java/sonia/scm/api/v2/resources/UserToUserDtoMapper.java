@@ -26,19 +26,17 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.admin.ScmConfigurationStore;
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.UserPermissions;
 import sonia.scm.web.EdisonHalAppender;
-
-import javax.inject.Inject;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;

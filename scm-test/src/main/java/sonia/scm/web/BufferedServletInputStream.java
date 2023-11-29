@@ -24,8 +24,9 @@
 
 package sonia.scm.web;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
+
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 

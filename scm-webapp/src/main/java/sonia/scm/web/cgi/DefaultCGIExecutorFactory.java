@@ -28,13 +28,13 @@ package sonia.scm.web.cgi;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.metrics.Metrics;
 
-import javax.inject.Inject;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

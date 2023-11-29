@@ -24,6 +24,7 @@
 
 package sonia.scm.importexport;
 
+import jakarta.inject.Inject;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
@@ -32,7 +33,6 @@ import sonia.scm.store.BlobStore;
 import sonia.scm.store.BlobStoreFactory;
 import sonia.scm.util.IOUtil;
 
-import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;

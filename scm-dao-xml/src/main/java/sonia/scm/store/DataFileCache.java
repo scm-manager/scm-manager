@@ -25,13 +25,14 @@
 package sonia.scm.store;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.config.ConfigValue;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.File;
 import java.util.function.Supplier;
 
@@ -39,8 +40,6 @@ import java.util.function.Supplier;
 public class DataFileCache {
 
   private static final String CACHE_NAME = "sonia.cache.dataFileCache";
-  private static final String ENABLE_CACHE_PROPERTY_NAME = "scm.cache.dataFileCache.enabled";
-
   private static final Logger LOG = LoggerFactory.getLogger(DataFileCache.class);
 
   private static final NoDataFileCacheInstance NO_CACHE = new NoDataFileCacheInstance();
@@ -49,8 +48,11 @@ public class DataFileCache {
   private final boolean cacheEnabled;
 
   @Inject
-  DataFileCache(CacheManager cacheManager) {
-    this(cacheManager.getCache(CACHE_NAME), Boolean.getBoolean(ENABLE_CACHE_PROPERTY_NAME));
+  DataFileCache(
+    @ConfigValue(key = "cache.dataFile.enabled", defaultValue = "true", description = "Enabled caching for all read files") Boolean cacheEnabled,
+    CacheManager cacheManager
+    ) {
+    this(cacheManager.getCache(CACHE_NAME), cacheEnabled);
   }
 
   @VisibleForTesting

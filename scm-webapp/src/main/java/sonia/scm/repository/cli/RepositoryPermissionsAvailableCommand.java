@@ -24,13 +24,12 @@
 
 package sonia.scm.repository.cli;
 
+import jakarta.inject.Inject;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.PermissionDescriptionResolver;
 import sonia.scm.repository.RepositoryRoleManager;
 import sonia.scm.security.RepositoryPermissionProvider;
-
-import javax.inject.Inject;
 
 @CommandLine.Command(name = "available-permissions")
 @ParentCommand(value = RepositoryCommand.class)

@@ -60,6 +60,8 @@ class JwtAccessTokenRefresherTest {
   @Mock
   private SecureKeyResolver keyResolver;
   @Mock
+  private JwtConfig jwtConfig;
+  @Mock
   private JwtAccessTokenRefreshStrategy refreshStrategy;
   @Mock
   private Clock refreshClock;
@@ -77,9 +79,9 @@ class JwtAccessTokenRefresherTest {
 
     Clock creationClock = mock(Clock.class);
     when(creationClock.instant()).thenReturn(TOKEN_CREATION);
-    tokenBuilder = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, Collections.emptySet(), creationClock).create();
+    tokenBuilder = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, jwtConfig, Collections.emptySet(), creationClock).create();
 
-    JwtAccessTokenBuilderFactory refreshBuilderFactory = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, Collections.emptySet(), refreshClock);
+    JwtAccessTokenBuilderFactory refreshBuilderFactory = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, jwtConfig, Collections.emptySet(), refreshClock);
     refresher = new JwtAccessTokenRefresher(refreshBuilderFactory, refreshStrategy, refreshClock);
     when(refreshClock.instant()).thenReturn(NOW);
     lenient().when(refreshStrategy.shouldBeRefreshed(any())).thenReturn(true);

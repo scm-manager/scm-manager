@@ -34,9 +34,8 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import sonia.scm.NotFoundException;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
+import sonia.scm.store.StoreCacheConfigProvider;
 import sonia.scm.user.xml.XmlUserDAO;
-
-import java.util.Collections;
 
 import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertEquals;
@@ -164,6 +163,6 @@ public class DefaultUserManagerTest extends UserManagerTestBase {
   }
 
   private XmlUserDAO createXmlUserDAO() {
-    return new XmlUserDAO(new JAXBConfigurationStoreFactory(contextProvider, locationResolver, null, emptySet()));
+    return new XmlUserDAO(new JAXBConfigurationStoreFactory(contextProvider, locationResolver, null, emptySet(), new StoreCacheConfigProvider(false)));
   }
 }

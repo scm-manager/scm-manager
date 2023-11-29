@@ -25,14 +25,13 @@
 package sonia.scm.user.cli;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
 import org.apache.shiro.authc.credential.PasswordService;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.ValidationUtil;
-
-import javax.inject.Inject;
 
 @ParentCommand(value = UserCommand.class)
 @CommandLine.Command(name = "convert-to-internal", aliases = "conv-int")

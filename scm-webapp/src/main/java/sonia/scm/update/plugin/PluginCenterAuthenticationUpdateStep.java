@@ -25,6 +25,7 @@
 package sonia.scm.update.plugin;
 
 import com.google.common.base.Strings;
+import jakarta.inject.Inject;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.plugin.PluginCenterAuthenticator;
@@ -32,8 +33,6 @@ import sonia.scm.security.CipherUtil;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.version.Version;
-
-import javax.inject.Inject;
 
 import static sonia.scm.version.Version.parse;
 

@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -45,7 +46,6 @@ import sonia.scm.security.gpg.PublicKeyStore;
 import sonia.scm.security.gpg.RawGpgKey;
 import sonia.scm.web.EdisonHalAppender;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;

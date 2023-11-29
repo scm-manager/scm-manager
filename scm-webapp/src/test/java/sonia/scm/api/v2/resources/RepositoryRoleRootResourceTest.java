@@ -27,6 +27,7 @@ package sonia.scm.api.v2.resources;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.inject.util.Providers;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -44,7 +45,6 @@ import sonia.scm.repository.RepositoryRoleManager;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.Collections;

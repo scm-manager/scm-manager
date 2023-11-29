@@ -34,7 +34,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.BasicContextProvider;
@@ -70,8 +69,12 @@ class IndexDtoGeneratorTest {
   private InitializationFinisher initializationFinisher;
   @Mock
   private SearchEngine searchEngine;
-  @InjectMocks
   private IndexDtoGenerator generator;
+
+  @BeforeEach
+  void setUp() {
+    generator = new IndexDtoGenerator(resourceLinks, contextProvider, configuration, initializationFinisher, searchEngine, false);
+  }
 
   @Nested
   class WithFullyInitializedSystem {

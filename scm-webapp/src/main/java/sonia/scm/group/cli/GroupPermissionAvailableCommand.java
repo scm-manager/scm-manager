@@ -24,6 +24,7 @@
 
 package sonia.scm.group.cli;
 
+import jakarta.inject.Inject;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.PermissionDescriptionResolver;
@@ -31,7 +32,6 @@ import sonia.scm.cli.Table;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
 

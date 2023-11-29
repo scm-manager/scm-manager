@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.update;
 
+import jakarta.inject.Inject;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import sonia.scm.migration.UpdateException;
 import sonia.scm.migration.UpdateStep;
@@ -35,7 +36,6 @@ import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.update.UpdateStepRepositoryMetadataAccess;
 import sonia.scm.version.Version;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

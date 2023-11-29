@@ -27,8 +27,8 @@ package sonia.scm.api.v2.resources;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import com.google.inject.util.Providers;
 import de.otto.edison.hal.HalRepresentation;
+import jakarta.ws.rs.HttpMethod;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.AuthorizationException;
@@ -56,7 +56,6 @@ import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
-import javax.ws.rs.HttpMethod;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;

@@ -26,8 +26,9 @@ package sonia.scm.it.webapp;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.core.Response;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -40,7 +41,6 @@ import sonia.scm.user.UserTestData;
 import java.util.Collection;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static sonia.scm.it.webapp.IntegrationTestUtil.createAdminClient;
 import static sonia.scm.it.webapp.IntegrationTestUtil.createResource;
@@ -105,7 +105,7 @@ public abstract class AbstractPermissionITCaseBase<T>
 
     ScmClient client = createAdminClient();
 
-    ClientResponse response = UserITUtil.postUser(client, trillian);
+    Response response = UserITUtil.postUser(client, trillian);
 
     assertNotNull(response);
     Assert.assertEquals(201, response.getStatus());
@@ -194,9 +194,9 @@ public abstract class AbstractPermissionITCaseBase<T>
   @Test
   public void delete()
   {
-    WebResource.Builder wr = createResource(client, getDeletePath());
+    Invocation.Builder wr = createResource(client, getDeletePath());
 
-    checkResponse(wr.delete(ClientResponse.class));
+    checkResponse(wr.delete(Response.class));
   }
 
   /**
@@ -206,9 +206,9 @@ public abstract class AbstractPermissionITCaseBase<T>
   @Test
   public void modify()
   {
-    WebResource.Builder wr = createResource(client, getModifyPath());
+    Invocation.Builder wr = createResource(client, getModifyPath(), getMediaType());
 
-    checkResponse(wr.type(getMediaType()).put(ClientResponse.class, getModifyItem()));
+    checkResponse(wr.put(Entity.entity(getModifyItem(), getMediaType()), Response.class));
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -220,9 +220,9 @@ public abstract class AbstractPermissionITCaseBase<T>
   @Test
   public void get()
   {
-    WebResource.Builder wr = createResource(client, getGetPath());
+    Invocation.Builder wr = createResource(client, getGetPath());
 
-    checkGetResponse(wr.get(ClientResponse.class));
+    checkGetResponse(wr.buildGet().invoke());
   }
 
   /**
@@ -232,9 +232,9 @@ public abstract class AbstractPermissionITCaseBase<T>
   @Test
   public void getAll()
   {
-    WebResource.Builder wr = createResource(client, getBasePath());
+    Invocation.Builder wr = createResource(client, getBasePath());
 
-    checkGetAllResponse(wr.get(ClientResponse.class));
+    checkGetAllResponse(wr.buildGet().invoke());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -245,7 +245,7 @@ public abstract class AbstractPermissionITCaseBase<T>
    *
    * @param response
    */
-  protected void checkGetAllResponse(ClientResponse response)
+  protected void checkGetAllResponse(Response response)
   {
     checkResponse(response);
   }
@@ -256,7 +256,7 @@ public abstract class AbstractPermissionITCaseBase<T>
    *
    * @param response
    */
-  protected void checkGetResponse(ClientResponse response)
+  protected void checkGetResponse(Response response)
   {
     checkResponse(response);
   }
@@ -267,7 +267,7 @@ public abstract class AbstractPermissionITCaseBase<T>
    *
    * @param response
    */
-  private void checkResponse(ClientResponse response)
+  private void checkResponse(Response response)
   {
     assertNotNull(response);
 

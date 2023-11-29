@@ -25,10 +25,10 @@
 package sonia.scm.search;
 
 import com.google.common.base.Strings;
+import jakarta.annotation.Nonnull;
 import lombok.Value;
 import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;

@@ -24,21 +24,20 @@
     
 package sonia.scm.api.rest;
 
+import jakarta.inject.Inject;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.ext.Provider;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
-
-import javax.inject.Inject;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.ext.Provider;
 
 @Provider
 public class UriInfoFilter implements ContainerRequestFilter {
 
-  private final javax.inject.Provider<ScmPathInfoStore> storeProvider;
+  private final jakarta.inject.Provider<ScmPathInfoStore> storeProvider;
 
   @Inject
-  public UriInfoFilter(javax.inject.Provider<ScmPathInfoStore> storeProvider) {
+  public UriInfoFilter(jakarta.inject.Provider<ScmPathInfoStore> storeProvider) {
     this.storeProvider = storeProvider;
   }
 

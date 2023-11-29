@@ -26,19 +26,18 @@ package sonia.scm.it.webapp;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.junit.Assert;
-import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.api.v2.resources.ConfigDto;
 import sonia.scm.api.v2.resources.RepositoryDto;
 import sonia.scm.web.VndMediaType;
 
-import java.io.IOException;
 import java.net.URI;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 import static sonia.scm.it.webapp.ConfigUtil.readConfig;
 import static sonia.scm.it.webapp.IntegrationTestUtil.BASE_URL;
 import static sonia.scm.it.webapp.IntegrationTestUtil.createResource;
@@ -62,16 +61,15 @@ public final class RepositoryITUtil
   public static RepositoryDto createRepository(ScmClient client, String repositoryJson) {
     setNamespaceStrategy(client, "UsernameNamespaceStrategy");
 
-    ClientResponse response =
+    Response response =
       createResource(client, "repositories")
         .accept("*/*")
-        .type(VndMediaType.REPOSITORY)
-        .post(ClientResponse.class, repositoryJson);
+        .post(Entity.entity(repositoryJson, MediaType.valueOf(VndMediaType.REPOSITORY)));
 
     assertNotNull(response);
     Assert.assertEquals(201, response.getStatus());
 
-    URI url = URI.create(response.getHeaders().get("Location").get(0));
+    URI url = URI.create(response.getHeaders().get("Location").get(0).toString());
 
     response.close();
 
@@ -88,14 +86,14 @@ public final class RepositoryITUtil
   public static void deleteRepository(ScmClient client, RepositoryDto repository)
   {
     URI deleteUrl = getLink(repository, "delete");
-    ClientResponse response = createResource(client, deleteUrl).delete(ClientResponse.class);
+    Response response = createResource(client, deleteUrl).delete(Response.class);
 
     assertNotNull(response);
     Assert.assertEquals(204, response.getStatus());
     response.close();
 
     URI selfUrl = getLink(repository, "self");
-    response = createResource(client, selfUrl).get(ClientResponse.class);
+    response = createResource(client, selfUrl).get(Response.class);
     assertNotNull(response);
     Assert.assertEquals(404, response.getStatus());
     response.close();
@@ -103,19 +101,13 @@ public final class RepositoryITUtil
 
   public static RepositoryDto getRepository(ScmClient client, URI url)
   {
-    WebResource.Builder wr = createResource(client, url);
-    ClientResponse response = wr.get(ClientResponse.class);
+    Invocation.Builder wr = createResource(client, url);
+    Response response = wr.buildGet().invoke();
 
     assertNotNull(response);
     Assert.assertEquals(200, response.getStatus());
 
-    String json = response.getEntity(String.class);
-    RepositoryDto repository = null;
-    try {
-      repository = new ObjectMapperProvider().get().readerFor(RepositoryDto.class).readValue(json);
-    } catch (IOException e) {
-      fail("could not read json:\n" + json);
-    }
+    RepositoryDto repository = response.readEntity(RepositoryDto.class);
 
     response.close();
     assertNotNull(repository);

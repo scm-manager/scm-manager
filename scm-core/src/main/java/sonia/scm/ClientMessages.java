@@ -26,7 +26,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import sonia.scm.i18n.I18nMessages;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -43,7 +43,7 @@ public final class ClientMessages
 
   /**
    * Constructs a new instance of ClientMessages. This constructor should not be 
-   * used. Use the {@link #get(javax.servlet.http.HttpServletRequest)} method 
+   * used. Use the {@link #get(jakarta.servlet.http.HttpServletRequest)} method
    * instead.
    */
   public ClientMessages() {}

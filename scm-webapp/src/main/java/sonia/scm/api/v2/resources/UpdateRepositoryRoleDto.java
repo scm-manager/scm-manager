@@ -24,7 +24,8 @@
 
 package sonia.scm.api.v2.resources;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
+
 import java.time.Instant;
 import java.util.Collection;
 

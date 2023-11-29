@@ -25,11 +25,10 @@
 package sonia.scm.cli;
 
 import com.google.common.collect.ImmutableMap;
+import jakarta.inject.Inject;
 import lombok.Value;
 import picocli.CommandLine;
 import sonia.scm.SCMContextProvider;
-
-import javax.inject.Inject;
 
 @CommandLine.Command(name = "version")
 class VersionCommand implements Runnable{

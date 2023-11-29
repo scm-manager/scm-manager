@@ -24,12 +24,12 @@
 
 package sonia.scm.repository.cli;
 
+import jakarta.inject.Inject;
 import picocli.CommandLine;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissionHolder;
 import sonia.scm.repository.RepositoryRoleManager;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;

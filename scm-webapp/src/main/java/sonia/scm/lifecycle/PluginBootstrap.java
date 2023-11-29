@@ -21,34 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
+import jakarta.servlet.ServletContext;
+import jakarta.xml.bind.DataBindingException;
+import jakarta.xml.bind.JAXB;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
 import sonia.scm.migration.UpdateException;
+import sonia.scm.plugin.ConfigurationResolver;
 import sonia.scm.plugin.DefaultPluginLoader;
+import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginException;
 import sonia.scm.plugin.PluginLoadException;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.plugin.InstalledPlugin;
+import sonia.scm.plugin.PluginTransformException;
+import sonia.scm.plugin.PluginTransformer;
 import sonia.scm.plugin.PluginsInternal;
 import sonia.scm.plugin.SmpArchive;
 import sonia.scm.util.IOUtil;
 
-import javax.servlet.ServletContext;
-import javax.xml.bind.DataBindingException;
-import javax.xml.bind.JAXB;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -68,13 +71,15 @@ public final class PluginBootstrap {
   private static final String PLUGIN_COREINDEX = PLUGIN_DIRECTORY.concat("plugin-index.xml");
 
   private final ClassLoaderLifeCycle classLoaderLifeCycle;
+  private final ConfigurationResolver configurationResolver;
   private final ServletContext servletContext;
   private final Set<InstalledPlugin> plugins;
   private final PluginLoader pluginLoader;
 
-  PluginBootstrap(ServletContext servletContext, ClassLoaderLifeCycle classLoaderLifeCycle) {
+  PluginBootstrap(ServletContext servletContext, ClassLoaderLifeCycle classLoaderLifeCycle, ConfigurationResolver configurationResolver) {
     this.servletContext = servletContext;
     this.classLoaderLifeCycle = classLoaderLifeCycle;
+    this.configurationResolver = configurationResolver;
 
     this.plugins = collectPlugins();
     this.pluginLoader = createPluginLoader();
@@ -89,7 +94,7 @@ public final class PluginBootstrap {
   }
 
   private PluginLoader createPluginLoader() {
-    return new DefaultPluginLoader(servletContext, classLoaderLifeCycle.getBootstrapClassLoader(), plugins);
+    return new DefaultPluginLoader(servletContext, classLoaderLifeCycle.getBootstrapClassLoader(), plugins, configurationResolver);
   }
 
   private Set<InstalledPlugin> collectPlugins() {
@@ -103,12 +108,34 @@ public final class PluginBootstrap {
       } else {
         LOG.info("core plugin extraction is disabled");
       }
-
       uninstallMarkedPlugins(pluginDirectory.toPath());
+      transformIncompatiblePlugins(pluginDirectory.toPath());
       return PluginsInternal.collectPlugins(classLoaderLifeCycle, pluginDirectory.toPath());
     } catch (IOException ex) {
       throw new PluginLoadException("could not load plugins", ex);
     }
+  }
+
+  private void transformIncompatiblePlugins(Path pluginsDirectory) {
+    try (Stream<Path> list = java.nio.file.Files.list(pluginsDirectory)) {
+      list
+        .filter(java.nio.file.Files::isDirectory)
+        .filter(this::isIncompatiblePlugin)
+        .forEach(plugin -> {
+          PluginTransformer.transform(plugin);
+          try {
+            Files.touch(plugin.resolve(InstalledPlugin.COMPATIBILITY_MARKER_FILENAME).toFile());
+          } catch (IOException e) {
+            throw new PluginTransformException("Failed to create marker file for jakarta compatibility", e);
+          }
+        });
+    } catch (IOException e) {
+      LOG.warn("error occurred while checking for plugins that should be transformed", e);
+    }
+  }
+
+  private boolean isIncompatiblePlugin(Path path) {
+      return !new File(path.toFile(), InstalledPlugin.COMPATIBILITY_MARKER_FILENAME).exists();
   }
 
   private void uninstallMarkedPlugins(Path pluginDirectory) {

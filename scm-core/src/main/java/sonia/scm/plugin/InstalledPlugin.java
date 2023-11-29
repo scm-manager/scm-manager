@@ -39,6 +39,7 @@ public final class InstalledPlugin implements Plugin
 {
 
   public static final String UNINSTALL_MARKER_FILENAME = "uninstall";
+  public static final String COMPATIBILITY_MARKER_FILENAME = ".jakarta-compatible";
 
   /**
    * Constructs a new plugin wrapper.

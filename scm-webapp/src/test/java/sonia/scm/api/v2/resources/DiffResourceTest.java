@@ -25,8 +25,8 @@
 package sonia.scm.api.v2.resources;
 
 
-import com.google.inject.util.Providers;
 import de.otto.edison.hal.Links;
+import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -54,7 +54,6 @@ import sonia.scm.util.CRLFInjectionException;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
-import javax.ws.rs.core.Response;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 

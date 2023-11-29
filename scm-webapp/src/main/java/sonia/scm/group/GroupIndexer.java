@@ -26,6 +26,8 @@ package sonia.scm.group;
 
 import com.github.legman.Subscribe;
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import sonia.scm.plugin.Extension;
 import sonia.scm.search.HandlerEventIndexSyncer;
 import sonia.scm.search.Id;
@@ -34,9 +36,6 @@ import sonia.scm.search.IndexLogStore;
 import sonia.scm.search.Indexer;
 import sonia.scm.search.SearchEngine;
 import sonia.scm.search.SerializableIndexTask;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Extension
 @Singleton

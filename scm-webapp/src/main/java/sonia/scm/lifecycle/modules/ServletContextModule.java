@@ -25,9 +25,8 @@
 package sonia.scm.lifecycle.modules;
 
 import com.google.inject.servlet.ServletModule;
+import jakarta.servlet.ServletContext;
 import sonia.scm.Default;
-
-import javax.servlet.ServletContext;
 
 public class ServletContextModule extends ServletModule {
 

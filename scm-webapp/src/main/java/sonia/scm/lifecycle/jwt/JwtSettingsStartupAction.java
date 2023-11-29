@@ -24,13 +24,13 @@
 
 package sonia.scm.lifecycle.jwt;
 
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.lifecycle.PrivilegedStartupAction;
 import sonia.scm.plugin.Extension;
-import sonia.scm.security.JwtSystemProperties;
+import sonia.scm.security.JwtConfig;
 
-import javax.inject.Inject;
 import java.time.Clock;
 import java.time.Instant;
 
@@ -39,15 +39,17 @@ public class JwtSettingsStartupAction implements PrivilegedStartupAction {
 
   private static final Logger LOG = LoggerFactory.getLogger(JwtSettingsStartupAction.class);
   private final JwtSettingsStore store;
+  private final JwtConfig jwtConfig;
   private final Clock clock;
 
   @Inject
-  public JwtSettingsStartupAction(JwtSettingsStore store) {
-    this(store, Clock.systemDefaultZone());
+  public JwtSettingsStartupAction(JwtSettingsStore store, JwtConfig jwtConfig) {
+    this(store, jwtConfig, Clock.systemDefaultZone());
   }
 
-  public JwtSettingsStartupAction(JwtSettingsStore store, Clock clock) {
+  public JwtSettingsStartupAction(JwtSettingsStore store, JwtConfig jwtConfig, Clock clock) {
     this.store = store;
+    this.jwtConfig = jwtConfig;
     this.clock = clock;
   }
 
@@ -56,7 +58,7 @@ public class JwtSettingsStartupAction implements PrivilegedStartupAction {
     LOG.debug("Checking JWT Settings");
 
     JwtSettings settings = store.get();
-    boolean isEndlessJwtEnabledNow = JwtSystemProperties.isEndlessJwtEnabled();
+    boolean isEndlessJwtEnabledNow = jwtConfig.isEndlessJwtEnabled();
 
     if(!areSettingsChanged(settings, isEndlessJwtEnabledNow)) {
       LOG.debug("JWT Settings unchanged");

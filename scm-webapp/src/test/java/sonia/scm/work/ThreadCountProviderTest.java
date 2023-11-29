@@ -24,7 +24,6 @@
 
 package sonia.scm.work;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +38,7 @@ class ThreadCountProviderTest {
 
   @Test
   void shouldUseTwoWorkersForOneCPU() {
-    ThreadCountProvider provider = new ThreadCountProvider(() -> 1);
+    ThreadCountProvider provider = new ThreadCountProvider(() -> 1, 2);
 
     assertThat(provider.getAsInt()).isEqualTo(2);
   }
@@ -47,31 +46,24 @@ class ThreadCountProviderTest {
   @ParameterizedTest(name = "shouldUseFourWorkersFor{argumentsWithNames}CPU")
   @ValueSource(ints = {2, 4, 8, 16})
   void shouldUseFourWorkersForMoreThanOneCPU(int cpus) {
-    ThreadCountProvider provider = new ThreadCountProvider(() -> cpus);
+    ThreadCountProvider provider = new ThreadCountProvider(() -> cpus, 4);
 
     assertThat(provider.getAsInt()).isEqualTo(4);
   }
 
   @Nested
-  class SystemPropertyTests {
-
-    @BeforeEach
-    void setUp() {
-      System.clearProperty(ThreadCountProvider.PROPERTY);
-    }
+  class ConfigValueTests {
 
     @Test
     void shouldUseCountFromSystemProperty() {
-      ThreadCountProvider provider = new ThreadCountProvider();
-      System.setProperty(ThreadCountProvider.PROPERTY, "6");
+      ThreadCountProvider provider = new ThreadCountProvider(6);
       assertThat(provider.getAsInt()).isEqualTo(6);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"-1", "0", "100", "a", ""})
     void shouldUseDefaultForInvalidValue(String value) {
-      ThreadCountProvider provider = new ThreadCountProvider(() -> 1);
-      System.setProperty(ThreadCountProvider.PROPERTY, value);
+      ThreadCountProvider provider = new ThreadCountProvider(() -> 1, Integer.parseInt(value));
       assertThat(provider.getAsInt()).isEqualTo(2);
     }
 

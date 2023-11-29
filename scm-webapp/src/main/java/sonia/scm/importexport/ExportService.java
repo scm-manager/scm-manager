@@ -24,6 +24,7 @@
 
 package sonia.scm.importexport;
 
+import jakarta.inject.Inject;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
@@ -36,7 +37,6 @@ import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.user.User;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

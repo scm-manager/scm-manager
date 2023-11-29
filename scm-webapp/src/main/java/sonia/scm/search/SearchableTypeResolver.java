@@ -25,11 +25,11 @@
 package sonia.scm.search;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import sonia.scm.plugin.PluginLoader;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;

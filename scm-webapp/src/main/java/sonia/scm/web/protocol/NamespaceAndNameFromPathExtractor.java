@@ -24,12 +24,12 @@
     
 package sonia.scm.web.protocol;
 
+import jakarta.inject.Inject;
 import sonia.scm.Type;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.HttpUtil;
 
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -54,7 +54,8 @@ public class JAXBDataStoreTest extends DataStoreTestBase {
       repositoryLocationResolver,
       new UUIDKeyGenerator(),
       readOnlyChecker,
-      new DataFileCache(null, false)
+      new DataFileCache(null, false),
+      new StoreCacheConfigProvider(false)
     );
   }
 

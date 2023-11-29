@@ -50,10 +50,16 @@ public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory impleme
    * @param repositoryLocationResolver Resolver to get the repository Directory
    */
   @Inject
-  public JAXBConfigurationStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, RepositoryReadOnlyChecker readOnlyChecker, Set<ConfigurationStoreDecoratorFactory> decoratorFactories) {
+  public JAXBConfigurationStoreFactory(
+    SCMContextProvider contextProvider,
+    RepositoryLocationResolver repositoryLocationResolver,
+    RepositoryReadOnlyChecker readOnlyChecker,
+    Set<ConfigurationStoreDecoratorFactory> decoratorFactories,
+    StoreCacheConfigProvider storeCacheConfigProvider
+  ) {
     super(contextProvider, repositoryLocationResolver, Store.CONFIG, readOnlyChecker);
     this.decoratorFactories = decoratorFactories;
-    this.storeCache = new StoreCache<>(this::createStore);
+    this.storeCache = new StoreCache<>(this::createStore, storeCacheConfigProvider.isStoreCacheEnabled());
   }
 
   @Override
@@ -62,7 +68,7 @@ public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory impleme
     return (ConfigurationStore<T>) storeCache.getStore(storeParameters);
   }
 
-  private  <T> ConfigurationStore<T> createStore(TypedStoreParameters<T> storeParameters) {
+  private <T> ConfigurationStore<T> createStore(TypedStoreParameters<T> storeParameters) {
     TypedStoreContext<T> context = TypedStoreContext.of(storeParameters);
 
     ConfigurationStore<T> store = new JAXBConfigurationStore<>(

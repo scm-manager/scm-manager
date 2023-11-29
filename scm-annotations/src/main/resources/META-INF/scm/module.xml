@@ -25,10 +25,10 @@
 
 <module>
   <extension-point>
-    <class>javax.servlet.ServletContextListener</class>
+    <class>jakarta.servlet.ServletContextListener</class>
   </extension-point>
   <extension-point>
-    <class>javax.servlet.http.HttpSessionListener</class>
+    <class>jakarta.servlet.http.HttpSessionListener</class>
   </extension-point>
   <extension-point>
     <class>com.google.inject.Module</class>

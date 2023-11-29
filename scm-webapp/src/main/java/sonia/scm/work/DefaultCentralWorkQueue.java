@@ -29,15 +29,16 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.ConfigValue;
 import sonia.scm.metrics.Metrics;
 import sonia.scm.web.security.DefaultAdministrationContext;
 
-import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -66,8 +67,13 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
   private final MeterRegistry meterRegistry;
 
   @Inject
-  public DefaultCentralWorkQueue(Injector injector, Persistence persistence, MeterRegistry meterRegistry) {
-    this(injector, persistence, meterRegistry, new ThreadCountProvider());
+  public DefaultCentralWorkQueue(
+    @ConfigValue(key = "centralWorkQueue.workers", defaultValue = "8", description = "") Integer workers,
+    Injector injector,
+    Persistence persistence,
+    MeterRegistry meterRegistry
+  ) {
+    this(injector, persistence, meterRegistry, new ThreadCountProvider(workers));
   }
 
   @VisibleForTesting

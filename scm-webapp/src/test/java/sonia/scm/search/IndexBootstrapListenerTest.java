@@ -24,6 +24,8 @@
 
 package sonia.scm.search;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
@@ -33,13 +35,10 @@ import sonia.scm.group.Group;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

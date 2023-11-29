@@ -25,11 +25,12 @@
 package sonia.scm.plugin;
 
 import com.google.common.collect.ImmutableSet;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import sonia.scm.config.ConfigElement;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Set;
 
 /**
@@ -66,6 +67,9 @@ public class ScmModule {
 
   @XmlElement(name = "subscriber")
   private Set<SubscriberElement> subscribers;
+
+  @XmlElement(name = "config-value")
+  private Set<ConfigElement> configElements;
 
   @XmlElement(name = "web-element")
   private Set<WebElementDescriptor> webElements;
@@ -108,6 +112,14 @@ public class ScmModule {
 
   public Iterable<ClassElement> getIndexedTypes() {
     return nonNull(indexedTypes);
+  }
+
+  /**
+   * @since 3.0.0
+
+   */
+  public Iterable<ConfigElement> getConfigElements() {
+    return nonNull(configElements);
   }
 
   private <T> Iterable<T> nonNull(Iterable<T> iterable) {

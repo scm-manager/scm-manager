@@ -25,6 +25,8 @@
 package sonia.scm.security;
 
 import com.google.common.io.BaseEncoding;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -37,9 +39,6 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

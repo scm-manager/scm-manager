@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # MIT License
 #
@@ -22,6 +22,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+current_version=$(yum info scm-server | grep Version | awk '{ print $3 }' | awk -F "" '{print $1}')
+
+if [ $((current_version)) -lt  $(("3")) ]; then
+	echo "
+
+#########################################################
+
+You are upgrading to a new major version which could break your current server
+configuration. Find more information about the migration here:
+
+<link>
+
+Press Enter to continue
+
+#########################################################
+
+" >/dev/tty
+  if exec </dev/tty; then
+    read input;
+  fi;
+fi
 
 getent group scm >/dev/null || groupadd -r scm
 getent passwd scm >/dev/null || \

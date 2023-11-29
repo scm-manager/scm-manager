@@ -28,10 +28,9 @@ package sonia.scm.lifecycle.modules;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
 import sonia.scm.Validateable;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 
 //~--- JDK imports ------------------------------------------------------------
 

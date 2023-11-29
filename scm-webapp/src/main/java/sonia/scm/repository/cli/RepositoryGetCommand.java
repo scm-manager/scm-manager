@@ -25,13 +25,12 @@
 package sonia.scm.repository.cli;
 
 import com.cronutils.utils.VisibleForTesting;
+import jakarta.inject.Inject;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-
-import javax.inject.Inject;
 
 @ParentCommand(value = RepositoryCommand.class)
 @CommandLine.Command(name = "get")

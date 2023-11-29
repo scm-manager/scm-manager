@@ -15,7 +15,7 @@ Using this has the following implications:
 - The generated code is not explicit (the lombok plugin generates bytecode)
 - Especially for `hashCode` and `equals` a lot of code with a high complexity is generated.
   This has implications for test coverage. Even though lombok supports the generation of `Generated`
-  annotations (own or javax), this has no effect in Sonar.
+  annotations (own or jakarta), this has no effect in Sonar.
 
 First, this will be used for data transfer objects (DTO) in the REST endpoints. To avoid the mentioned
 complexity of `hashCode` and `equals`, these should not be generated.
@@ -30,7 +30,11 @@ The following lombok annotations will be used for DTOs:
 
 ### /repo/ & /repos/ as URI prefixes
 
-The URI-format for accessing a repository, be it with a browser, or cloning/pulling via git/hg/svn, is defined to be `/repo/:namespace/:name`. The decision was made to allow users to choose namespaces as they please. If there would not be a prefix, some namespaces (e.g. `user`, `users`) would have to be reserved, since the names are already in use by SCM Manager itself. The `/repos` URI linked to a list of repositories, as well as operations such as creating a repositoriy (`/repos/create`).
+The URI-format for accessing a repository, be it with a browser, or cloning/pulling via git/hg/svn, is defined to
+be `/repo/:namespace/:name`. The decision was made to allow users to choose namespaces as they please. If there would
+not be a prefix, some namespaces (e.g. `user`, `users`) would have to be reserved, since the names are already in use by
+SCM Manager itself. The `/repos` URI linked to a list of repositories, as well as operations such as creating a
+repositoriy (`/repos/create`).
 
 ### Error handling
 
@@ -57,9 +61,15 @@ For simple objects like users and groups we don't think that we will need more e
 
 ### Logging
 
-Logging can be cucial when it comes to identify bugs in test or production environments. At implementation time one cannot foresee all possible error cases and therefore cannot determine with full certanty what informations will be needed and what can be neglected. Logging only crucial errors leaves the developer with no idea what events might have lead to the error. On the other hand logging too much will overburden the log, making it harder to handle and maybe hiding interesting steps.
+Logging can be cucial when it comes to identify bugs in test or production environments. At implementation time one
+cannot foresee all possible error cases and therefore cannot determine with full certanty what informations will be
+needed and what can be neglected. Logging only crucial errors leaves the developer with no idea what events might have
+lead to the error. On the other hand logging too much will overburden the log, making it harder to handle and maybe
+hiding interesting steps.
 
-Therefore it is best practice to be able to select the detail level of informations to log (called the "log level"). To support this feature SCM-Manager uses [slf4j](https://www.slf4j.org/). Using this library one can log informations with the following log levels:
+Therefore it is best practice to be able to select the detail level of informations to log (called the "log level"). To
+support this feature SCM-Manager uses [slf4j](https://www.slf4j.org/). Using this library one can log informations with
+the following log levels:
 
 * ERROR
 * WARN
@@ -67,13 +77,15 @@ Therefore it is best practice to be able to select the detail level of informati
 * DEBUG
 * TRACE
 
-As a default the log level for SCM-Manager is INFO, so that by default all logs with the levels ERROR, WARN and INFO are stored. Finer levels can be enabled manually.
+As a default the log level for SCM-Manager is INFO, so that by default all logs with the levels ERROR, WARN and INFO are
+stored. Finer levels can be enabled manually.
 
 ### Log levels to use
 
 We have agreed to apply to the following guidelines regarding log levels:
 
-- ERROR should be used for fatal errors that could not be handled by the program and therefore leads to failures for the user, for example
+- ERROR should be used for fatal errors that could not be handled by the program and therefore leads to failures for the
+  user, for example
   - IO errors reading a database file
   - IO errors accessing repositories
 - WARN should be used for errors that could be handled somewhat graceful, but that should be inspected, for example

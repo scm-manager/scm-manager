@@ -27,6 +27,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 
+import jakarta.annotation.Nonnull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +38,6 @@ import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.spi.HgVersionCommand;
 import sonia.scm.store.ConfigurationStoreFactory;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;

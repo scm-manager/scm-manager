@@ -8,7 +8,7 @@ pipeline {
 
   agent {
     docker {
-      image 'scmmanager/java-build:11.0.15_10-2'
+      image 'scmmanager/java-build:17.0.9_9'
       args '-v /var/run/docker.sock:/var/run/docker.sock --group-add 998'
       label 'scmm-core'
     }
@@ -72,8 +72,8 @@ pipeline {
     // in parallel with check?
     stage('Integration Tests') {
       steps {
-        // TODO remove obligatory rerun flag when flappy tests have been fixed
-        gradle '-PrerunIntegrationTests integrationTest'
+        // To rerun integration tests with each build, add '-PrerunIntegrationTests' to the gradle command
+        gradle 'integrationTest'
         junit allowEmptyResults: true, testResults: 'scm-it/build/test-results/javaIntegrationTests/*.xml,scm-ui/build/reports/e2e/*.xml'
         archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/videos/*.mp4'
         archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/screenshots/**/*.png'

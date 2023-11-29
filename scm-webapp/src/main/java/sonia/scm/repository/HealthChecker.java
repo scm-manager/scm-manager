@@ -25,6 +25,7 @@
 package sonia.scm.repository;
 
 import com.google.inject.Inject;
+import jakarta.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,6 @@ import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;

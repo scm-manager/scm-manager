@@ -28,9 +28,8 @@ package sonia.scm.security;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import jakarta.annotation.Nullable;
 import org.apache.shiro.authc.AuthenticationToken;
-
-import javax.annotation.Nullable;
 
 /**
  * Token used for authentication with bearer tokens.

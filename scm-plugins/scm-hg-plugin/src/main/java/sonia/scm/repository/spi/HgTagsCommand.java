@@ -30,10 +30,10 @@ import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import sonia.scm.repository.Tag;
 import sonia.scm.util.Util;
 
-import javax.inject.Inject;
 import java.util.List;
 
 /**

@@ -25,8 +25,8 @@
 package sonia.scm.sse;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Singleton;
 
-import javax.inject.Singleton;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;

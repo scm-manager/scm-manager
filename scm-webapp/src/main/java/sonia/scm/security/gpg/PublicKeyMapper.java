@@ -27,15 +27,14 @@ package sonia.scm.security.gpg;
 import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.api.v2.resources.LinkBuilder;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.user.UserPermissions;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
 
 import static de.otto.edison.hal.Links.linkingTo;
 

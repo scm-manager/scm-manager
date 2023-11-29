@@ -24,11 +24,11 @@
 
 package sonia.scm.update.store;
 
+import jakarta.inject.Inject;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.nio.file.Path;
 

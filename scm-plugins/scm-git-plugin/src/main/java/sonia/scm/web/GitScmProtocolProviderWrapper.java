@@ -24,13 +24,12 @@
 
 package sonia.scm.web;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import sonia.scm.RootURL;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.spi.InitializingHttpScmProtocolWrapper;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 @Extension

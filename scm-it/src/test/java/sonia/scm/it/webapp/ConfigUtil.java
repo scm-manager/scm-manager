@@ -24,36 +24,26 @@
 
 package sonia.scm.it.webapp;
 
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.core.Response;
 import org.junit.Assert;
-import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.api.v2.resources.ConfigDto;
 import sonia.scm.web.VndMediaType;
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 import static sonia.scm.it.webapp.IntegrationTestUtil.createResource;
 
 public class ConfigUtil {
 
   public static ConfigDto readConfig(ScmClient client) {
-    WebResource.Builder wr = createResource(client, "config");
-    ClientResponse response = wr.get(ClientResponse.class);
+    Invocation.Builder wr = createResource(client, "config");
+    Response response = wr.buildGet().invoke();
 
     assertNotNull(response);
     Assert.assertEquals(200, response.getStatus());
 
-    String json = response.getEntity(String.class);
-
-    ConfigDto config = null;
-    try {
-      config = new ObjectMapperProvider().get().readerFor(ConfigDto.class).readValue(json);
-    } catch (IOException e) {
-      fail("could not read json:\n" + json);
-    }
+    ConfigDto config = response.readEntity(ConfigDto.class);
 
     response.close();
     assertNotNull(config);
@@ -61,11 +51,9 @@ public class ConfigUtil {
   }
 
   public static void writeConfig(ScmClient client, ConfigDto config) {
-    ClientResponse response =
-      createResource(client, "config")
-        .accept("*/*")
-        .type(VndMediaType.CONFIG)
-        .put(ClientResponse.class, config);
+    Response response =
+      createResource(client, "config", VndMediaType.CONFIG)
+        .put(Entity.entity(config, VndMediaType.CONFIG));
 
     Assert.assertEquals(204, response.getStatus());
     response.close();

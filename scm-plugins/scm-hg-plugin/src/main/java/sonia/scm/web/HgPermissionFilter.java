@@ -25,15 +25,15 @@
 package sonia.scm.web;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.web.filter.PermissionFilter;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**

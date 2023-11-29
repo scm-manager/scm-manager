@@ -1,0 +1,58 @@
+# base server config
+##  Address to listen 0.0.0.0 means on every interface
+addressBinding: 0.0.0.0
+port: 8080
+contextPath: /scm
+
+## Evaluates headers set by a reverse proxy like X-Forwarded-For, X-Forwarded-Proto and X-Forwarded-Host
+forwardHeadersEnabled: false
+
+## increase http header size for mercurial
+httpHeaderSize: 16384
+
+# ssl config - ssl is only evaluated if key store path is set
+https:
+  ## path to your cert file
+  keyStorePath: ""
+  keyStorePassword: secret
+  keyStoreType: PKCS12
+  sslPort: 8443
+  redirectHttpToHttps: false
+
+# Temp directory used for jetty webserver. The temporary directory for internal operations can be configured as "workDir" in webapp.
+tempDir: /var/cache/scm/work
+
+# logging
+log:
+  ## Destination of logging files
+  logDir: /var/log/scm
+  rootLevel: WARN
+  enableFileAppender: true
+  enableConsoleAppender: true
+  logger:
+    sonia.scm: INFO
+    com.cloudogu.scm: INFO
+
+webapp:
+  ## Sets explicit working directory for internal processes, empty means default java temp dir
+  workDir:
+  ## Home directory "scm-home" which is also set for classpath
+  homeDir: /var/lib/scm
+  cache:
+    dataFile:
+      enabled: true
+    store:
+      enabled: true
+  ## Warning: Enabling this option can lead to security issue.
+  endlessJwt: false
+  #### Number of async threads
+  asyncThreads: 4
+  #### Max seconds to abort async execution
+  maxAsyncAbortSeconds: 60
+  #### Amount of central work queue workers
+  central-work-queue:
+    workers: 4
+  #### Strategy for the working copy pool implementation [sonia.scm.repository.work.NoneCachingWorkingCopyPool, sonia.scm.repository.work.SimpleCachingWorkingCopyPool]
+  workingCopyPoolStrategy: sonia.scm.repository.work.SimpleCachingWorkingCopyPool
+  #### Amount of "cached" working copies
+  workingCopyPoolSize: 5

@@ -24,6 +24,7 @@
 
 package sonia.scm.update.plugin;
 
+import jakarta.inject.Inject;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.plugin.PluginSetConfigStore;
@@ -31,7 +32,6 @@ import sonia.scm.plugin.PluginSetsConfig;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.version.Version;
 
-import javax.inject.Inject;
 import java.util.Collections;
 
 @Extension

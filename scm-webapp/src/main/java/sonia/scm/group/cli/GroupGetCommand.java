@@ -25,12 +25,11 @@
 package sonia.scm.group.cli;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
-
-import javax.inject.Inject;
 
 @ParentCommand(GroupCommand.class)
 @CommandLine.Command(name = "get")

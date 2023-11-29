@@ -24,6 +24,8 @@
 
 package sonia.scm.repository.xml;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
@@ -35,8 +37,6 @@ import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.StoreConstants;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

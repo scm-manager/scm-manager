@@ -26,12 +26,11 @@ package sonia.scm.repository;
 
 import com.github.legman.Subscribe;
 import com.google.common.base.Strings;
+import jakarta.inject.Inject;
 import sonia.scm.EagerSingleton;
 import sonia.scm.api.v2.resources.GitRepositoryConfigChangedEvent;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.plugin.Extension;
-
-import javax.inject.Inject;
 
 @Extension
 @EagerSingleton

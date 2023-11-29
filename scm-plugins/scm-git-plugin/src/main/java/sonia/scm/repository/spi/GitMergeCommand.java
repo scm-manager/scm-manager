@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.Status;
@@ -45,7 +46,6 @@ import sonia.scm.repository.api.MergeDryRunCommandResult;
 import sonia.scm.repository.api.MergeStrategy;
 import sonia.scm.repository.api.MergeStrategyNotSupportedException;
 
-import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Set;

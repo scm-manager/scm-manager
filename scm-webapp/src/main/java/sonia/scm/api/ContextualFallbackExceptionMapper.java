@@ -24,14 +24,13 @@
     
 package sonia.scm.api;
 
+import jakarta.inject.Inject;
+import jakarta.ws.rs.ext.Provider;
 import sonia.scm.ExceptionWithContext;
 import sonia.scm.api.rest.ContextualExceptionMapper;
 import sonia.scm.api.v2.resources.ExceptionWithContextToErrorDtoMapper;
 
-import javax.inject.Inject;
-import javax.ws.rs.ext.Provider;
-
-import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 
 @Provider
 public class ContextualFallbackExceptionMapper extends ContextualExceptionMapper<ExceptionWithContext> {

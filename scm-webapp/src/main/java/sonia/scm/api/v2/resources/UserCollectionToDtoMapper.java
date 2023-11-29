@@ -24,11 +24,11 @@
     
 package sonia.scm.api.v2.resources;
 
+import jakarta.inject.Inject;
 import sonia.scm.PageResult;
 import sonia.scm.user.User;
 import sonia.scm.user.UserPermissions;
 
-import javax.inject.Inject;
 import java.util.Optional;
 
 import static java.util.Optional.empty;

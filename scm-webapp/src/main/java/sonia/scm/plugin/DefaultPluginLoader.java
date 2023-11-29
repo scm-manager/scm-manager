@@ -29,10 +29,10 @@ package sonia.scm.plugin;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
+import jakarta.servlet.ServletContext;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 
-import javax.servlet.ServletContext;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
@@ -64,7 +64,7 @@ public class DefaultPluginLoader implements PluginLoader
    * @param installedPlugins
    */
   public DefaultPluginLoader(ServletContext servletContext, ClassLoader parent,
-    Set<InstalledPlugin> installedPlugins)
+    Set<InstalledPlugin> installedPlugins, ConfigurationResolver configurationResolver)
   {
     this.installedPlugins = installedPlugins;
     this.uberClassLoader = new UberClassLoader(parent, installedPlugins);
@@ -79,7 +79,7 @@ public class DefaultPluginLoader implements PluginLoader
       modules = getInstalled(parent, context, PATH_MODULECONFIG);
 
       ExtensionCollector collector = new ExtensionCollector(parent, modules, installedPlugins);
-      extensionProcessor = new DefaultExtensionProcessor(collector);
+      extensionProcessor = new DefaultExtensionProcessor(collector, configurationResolver);
     }
     catch (IOException | JAXBException ex)
     {

@@ -24,8 +24,8 @@
 
 package sonia.scm.repository.spi;
 
-import org.javahg.commands.PullCommand;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import org.javahg.commands.PullCommand;
 import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.repository.Tag;
@@ -45,7 +45,7 @@ public class HgTagCommandTest extends AbstractHgCommandTestBase {
   @Before
   public void initWorkingCopyFactory() {
 
-    workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver)), new SimpleMeterRegistry()) {
+    workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)), new SimpleMeterRegistry()) {
       @Override
       public void configure(PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test

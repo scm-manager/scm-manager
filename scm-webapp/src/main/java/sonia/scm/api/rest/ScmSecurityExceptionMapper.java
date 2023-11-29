@@ -26,12 +26,9 @@ package sonia.scm.api.rest;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.Provider;
 import sonia.scm.security.ScmSecurityException;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
 
 /**
  *

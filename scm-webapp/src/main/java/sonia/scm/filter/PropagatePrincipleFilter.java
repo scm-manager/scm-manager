@@ -28,6 +28,10 @@ package sonia.scm.filter;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import sonia.scm.Priority;
@@ -37,10 +41,6 @@ import sonia.scm.security.AnonymousMode;
 import sonia.scm.web.filter.HttpFilter;
 import sonia.scm.web.filter.PropagatePrincipleServletRequestWrapper;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 //~--- JDK imports ------------------------------------------------------------

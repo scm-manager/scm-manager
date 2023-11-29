@@ -25,16 +25,16 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
-import org.javahg.Repository;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
+import org.javahg.Repository;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.spi.javahg.HgDiffInternalCommand;
 import sonia.scm.web.HgUtil;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

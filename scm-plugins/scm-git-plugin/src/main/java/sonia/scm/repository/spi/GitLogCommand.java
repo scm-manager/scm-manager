@@ -28,6 +28,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -42,7 +43,6 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.util.IOUtil;
 
-import javax.inject.Inject;
 import java.io.IOException;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;

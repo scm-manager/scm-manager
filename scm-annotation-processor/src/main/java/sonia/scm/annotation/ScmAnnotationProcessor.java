@@ -29,6 +29,8 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.ext.Provider;
 import org.kohsuke.MetaInfServices;
 import org.mapstruct.Mapper;
 import org.w3c.dom.DOMException;
@@ -36,6 +38,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import picocli.CommandLine;
 import sonia.scm.annotation.ClassSetElement.ClassWithAttributes;
+import sonia.scm.config.ConfigValue;
 import sonia.scm.plugin.PluginAnnotation;
 import sonia.scm.plugin.Requires;
 
@@ -56,8 +59,6 @@ import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
-import javax.ws.rs.Path;
-import javax.ws.rs.ext.Provider;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -75,10 +76,10 @@ import java.lang.annotation.Annotation;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import static javax.lang.model.util.ElementFilter.methodsIn;
+
 
 /**
  * @author Sebastian Sdorra
@@ -86,7 +87,7 @@ import static javax.lang.model.util.ElementFilter.methodsIn;
 @SupportedAnnotationTypes("*")
 @MetaInfServices(Processor.class)
 @SuppressWarnings({"Since16"})
-@SupportedSourceVersion(SourceVersion.RELEASE_11)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 public final class ScmAnnotationProcessor extends AbstractProcessor {
 
   private static final String DESCRIPTOR_MODULE = "META-INF/scm/module.xml";
@@ -96,6 +97,8 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
   private static final String PROPERTY_VALUE = "yes";
   private static final Set<String> SUBSCRIBE_ANNOTATIONS =
     ImmutableSet.of(Subscribe.class.getName());
+
+  private static final Set<String> CONFIG_ANNOTATIONS = ImmutableSet.of(ConfigValue.class.getName());
   private static final Set<ClassAnnotation> CLASS_ANNOTATIONS =
     ImmutableSet.of(new ClassAnnotation("rest-resource", Path.class),
       new ClassAnnotation("rest-provider", Provider.class),
@@ -108,6 +111,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     if (!roundEnv.processingOver()) {
       Set<DescriptorElement> descriptorElements = Sets.newHashSet();
       Set<TypeElement> subscriberAnnotations = Sets.newHashSet();
+      Set<TypeElement> configAnnotations = Sets.newHashSet();
 
       for (TypeElement e : annotations) {
         PluginAnnotation pa = e.getAnnotation(PluginAnnotation.class);
@@ -118,6 +122,10 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
 
         if (SUBSCRIBE_ANNOTATIONS.contains(e.getQualifiedName().toString())) {
           subscriberAnnotations.add(e);
+        }
+
+        if (CONFIG_ANNOTATIONS.contains(e.getQualifiedName().toString())) {
+          configAnnotations.add(e);
         }
       }
 
@@ -134,11 +142,27 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
       for (TypeElement annotation : subscriberAnnotations) {
         scanForSubscriberAnnotations(descriptorElements, roundEnv, annotation);
       }
+      for (TypeElement annotation : configAnnotations) {
+        scanForConfigAnnotations(descriptorElements, roundEnv, annotation);
+      }
 
       write(descriptorElements);
     }
 
     return false;
+  }
+
+  private void scanForConfigAnnotations(Set<DescriptorElement> descriptorElements, RoundEnvironment roundEnv, TypeElement annotation) {
+
+    Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(annotation);
+
+    for (Element element : elementsAnnotatedWith) {
+      Map<String, String> attributesFromAnnotation = getAttributesFromAnnotation(element, annotation);
+      String type = element.asType().toString();
+
+      descriptorElements.add(new ConfigElement(attributesFromAnnotation, type));
+    }
+
   }
 
   private TypeElement findAnnotation(Set<? extends TypeElement> annotations,
@@ -353,8 +377,8 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
       String qn = annotationMirror.getAnnotationType().asElement().toString();
 
       if (qn.equals(annotation.toString())) {
-        for (Entry<? extends ExecutableElement,
-          ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
+        for (Map.Entry<? extends ExecutableElement,
+                  ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
           attributes.put(entry.getKey().getSimpleName().toString(),
             getValue(entry.getValue()));
         }

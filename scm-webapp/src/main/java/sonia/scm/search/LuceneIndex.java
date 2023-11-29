@@ -26,6 +26,7 @@ package sonia.scm.search;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import jakarta.annotation.Nonnull;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -35,7 +36,6 @@ import org.apache.lucene.search.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;

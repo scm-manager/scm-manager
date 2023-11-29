@@ -28,14 +28,14 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.metrics.Metrics;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.version.Version;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;

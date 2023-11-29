@@ -24,14 +24,14 @@
 
 package sonia.scm.repository.spi;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.javahg.BaseRepository;
 import org.javahg.Repository;
 import org.javahg.commands.BranchCommand;
 import org.javahg.commands.RemoveCommand;
 import org.javahg.commands.StatusCommand;
 import org.javahg.commands.results.StatusResult;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -63,7 +63,7 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
   @Before
   public void bindScmProtocol() throws IOException {
     workdirProvider = new WorkdirProvider(temporaryFolder.newFolder(), repositoryLocationResolver, false);
-    workingCopyFactory = new SimpleHgWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider, meterRegistry), new SimpleMeterRegistry()) {
+    workingCopyFactory = new SimpleHgWorkingCopyFactory(new SimpleCachingWorkingCopyPool(5, workdirProvider, meterRegistry), new SimpleMeterRegistry()) {
       @Override
       public void configure(org.javahg.commands.PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test

@@ -24,7 +24,8 @@
 
 package sonia.scm.store;
 
-import javax.xml.bind.JAXB;
+import jakarta.xml.bind.JAXB;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;

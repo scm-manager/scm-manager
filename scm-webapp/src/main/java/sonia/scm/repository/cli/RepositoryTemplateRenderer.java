@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.cli;
 
+import jakarta.inject.Inject;
 import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ExitCode;
 import sonia.scm.cli.Table;
@@ -31,7 +32,6 @@ import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.Repository;
 import sonia.scm.template.TemplateEngineFactory;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
 

@@ -27,12 +27,12 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.javahg.Changeset;
 import com.google.common.collect.Lists;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Person;
 
-import javax.inject.Inject;
 import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------

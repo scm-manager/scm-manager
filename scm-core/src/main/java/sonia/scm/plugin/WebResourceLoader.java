@@ -26,7 +26,8 @@ package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
+
 import java.net.URL;
 
 /**

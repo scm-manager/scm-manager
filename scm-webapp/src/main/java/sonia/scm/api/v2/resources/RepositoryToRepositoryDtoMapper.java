@@ -27,6 +27,7 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -52,7 +53,6 @@ import sonia.scm.search.SearchableType;
 import sonia.scm.web.EdisonHalAppender;
 import sonia.scm.web.api.RepositoryToHalMapper;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

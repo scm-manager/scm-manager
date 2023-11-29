@@ -25,13 +25,13 @@
 package sonia.scm.update;
 
 import com.github.legman.Subscribe;
+import jakarta.inject.Inject;
 import sonia.scm.EagerSingleton;
 import sonia.scm.HandlerEventType;
 import sonia.scm.migration.RepositoryUpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.RepositoryEvent;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;

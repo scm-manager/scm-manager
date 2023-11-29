@@ -26,6 +26,7 @@ package sonia.scm.security;
 
 import com.github.legman.Subscribe;
 import com.google.common.util.concurrent.Striped;
+import jakarta.inject.Inject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.shiro.authc.credential.PasswordService;
@@ -40,7 +41,6 @@ import sonia.scm.store.DataStoreFactory;
 import sonia.scm.user.UserEvent;
 import sonia.scm.user.UserPermissions;
 
-import javax.inject.Inject;
 import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.Optional;

@@ -26,14 +26,11 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import jakarta.servlet.http.HttpServletRequest;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.BearerToken;
 import sonia.scm.security.SessionId;
 import sonia.scm.util.HttpUtil;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Creates a {@link BearerToken} from an authorization header with

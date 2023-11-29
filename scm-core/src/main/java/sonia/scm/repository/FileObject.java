@@ -25,11 +25,11 @@
 package sonia.scm.repository;
 
 import com.google.common.base.Strings;
+import jakarta.xml.bind.annotation.XmlElement;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import sonia.scm.LastModifiedAware;
 
-import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;

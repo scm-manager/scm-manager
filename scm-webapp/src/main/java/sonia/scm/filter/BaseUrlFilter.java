@@ -26,19 +26,17 @@ package sonia.scm.filter;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
-
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.filter.HttpFilter;
 
 import java.io.IOException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import sonia.scm.Priority;
 
 /**
  *

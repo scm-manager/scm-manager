@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.util.Providers;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -36,7 +37,6 @@ import sonia.scm.security.ApiKeyService;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -44,7 +44,7 @@ import java.net.URISyntaxException;
 import static java.time.Instant.now;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;

@@ -24,6 +24,11 @@
 
 package sonia.scm.repository.spi;
 
+import jakarta.inject.Provider;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.RootURL;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
@@ -31,11 +36,6 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ScmProtocolProvider;
 
-import javax.inject.Provider;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;

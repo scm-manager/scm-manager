@@ -49,11 +49,18 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
   private final DataFileCache dataFileCache;
 
   @Inject
-  public JAXBDataStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryReadOnlyChecker readOnlyChecker, DataFileCache dataFileCache) {
+  public JAXBDataStoreFactory(
+    SCMContextProvider contextProvider,
+    RepositoryLocationResolver repositoryLocationResolver,
+    KeyGenerator keyGenerator,
+    RepositoryReadOnlyChecker readOnlyChecker,
+    DataFileCache dataFileCache,
+    StoreCacheConfigProvider storeCacheConfigProvider
+  ) {
     super(contextProvider, repositoryLocationResolver, Store.DATA, readOnlyChecker);
     this.keyGenerator = keyGenerator;
     this.dataFileCache = dataFileCache;
-    this.storeCache = new StoreCache<>(this::createStore);
+    this.storeCache = new StoreCache<>(this::createStore, storeCacheConfigProvider.isStoreCacheEnabled());
   }
 
   @Override

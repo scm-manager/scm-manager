@@ -54,11 +54,11 @@ task unix(type: Tar) {
   into('scm-server') {
     into('conf') {
       from 'src/main/fs/conf'
-      include 'server-config.xml'
+      include 'config.yml'
       expand([version: version])
     }
     from('src/main/fs') {
-      exclude('**/server-config.xml')
+      exclude('**/config.yml')
     }
     into('bin') {
       from('src/main/bin') {

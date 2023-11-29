@@ -26,6 +26,9 @@ package sonia.scm.repository.hooks;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.util.ThreadContext;
@@ -33,9 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.metrics.Metrics;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;

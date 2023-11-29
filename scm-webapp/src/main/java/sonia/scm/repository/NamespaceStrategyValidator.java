@@ -24,7 +24,8 @@
     
 package sonia.scm.repository;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
 import java.util.Set;
 
 import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;

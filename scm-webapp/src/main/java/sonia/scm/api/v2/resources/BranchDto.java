@@ -28,14 +28,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import sonia.scm.repository.Branch;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 
 import java.time.Instant;
 

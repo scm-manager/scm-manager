@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -33,8 +34,6 @@ import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.HgRepositoryConfig;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
-
-import javax.inject.Inject;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;

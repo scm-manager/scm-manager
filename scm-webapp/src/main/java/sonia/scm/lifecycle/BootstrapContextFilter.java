@@ -28,13 +28,13 @@ package sonia.scm.lifecycle;
 
 import com.github.legman.Subscribe;
 import com.google.inject.servlet.GuiceFilter;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletException;
 import java.util.Optional;
 
 //~--- JDK imports ------------------------------------------------------------

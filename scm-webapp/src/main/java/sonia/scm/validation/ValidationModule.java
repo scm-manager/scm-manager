@@ -25,9 +25,8 @@
 package sonia.scm.validation;
 
 import com.google.inject.AbstractModule;
-
-import javax.validation.ConstraintValidatorFactory;
-import javax.validation.Validator;
+import jakarta.validation.ConstraintValidatorFactory;
+import jakarta.validation.Validator;
 
 public class ValidationModule extends AbstractModule {
 

@@ -28,17 +28,12 @@ package sonia.scm.filter;
 
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
-
+import jakarta.servlet.Filter;
+import jakarta.servlet.http.HttpServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.WebElementDescriptor;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.servlet.Filter;
-import javax.servlet.http.HttpServlet;
 
 /**
  *

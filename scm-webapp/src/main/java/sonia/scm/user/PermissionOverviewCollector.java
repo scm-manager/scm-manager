@@ -24,6 +24,7 @@
 
 package sonia.scm.user;
 
+import jakarta.inject.Inject;
 import sonia.scm.group.GroupCollector;
 import sonia.scm.group.GroupManager;
 import sonia.scm.repository.Namespace;
@@ -37,7 +38,6 @@ import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.PermissionOverview.GroupEntry;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

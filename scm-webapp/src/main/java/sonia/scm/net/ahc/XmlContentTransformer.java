@@ -27,12 +27,12 @@ package sonia.scm.net.ahc;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.ByteSource;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.xml.bind.DataBindingException;
+import jakarta.xml.bind.JAXB;
 import sonia.scm.plugin.Extension;
 import sonia.scm.util.IOUtil;
 
-import javax.ws.rs.core.MediaType;
-import javax.xml.bind.DataBindingException;
-import javax.xml.bind.JAXB;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;

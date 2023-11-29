@@ -25,8 +25,7 @@
 package sonia.scm.search;
 
 import com.google.common.base.Strings;
-
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 final class Names {
 

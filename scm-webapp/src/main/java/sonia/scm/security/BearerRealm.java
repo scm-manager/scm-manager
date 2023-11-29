@@ -25,6 +25,8 @@
 package sonia.scm.security;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
@@ -34,9 +36,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.group.GroupDAO;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.UserDAO;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

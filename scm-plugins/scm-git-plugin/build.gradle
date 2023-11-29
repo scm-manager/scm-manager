@@ -23,10 +23,10 @@
  */
 
 plugins {
-  id 'org.scm-manager.smp' version '0.13.0'
+  id 'org.scm-manager.smp' version '0.16.1'
 }
 
-def jgitVersion = '6.7.0.202309050840-r-scm1'
+def jgitVersion = '6.7.0.202309050840-r-scm1-jakarta'
 
 dependencies {
   // required by scm-it

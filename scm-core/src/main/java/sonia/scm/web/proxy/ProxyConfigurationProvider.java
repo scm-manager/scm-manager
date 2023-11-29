@@ -26,7 +26,7 @@ package sonia.scm.web.proxy;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *

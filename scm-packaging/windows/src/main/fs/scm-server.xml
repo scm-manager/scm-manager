@@ -38,7 +38,7 @@
   -->
   <!-- env name="SCM_HOME" value="D:\SCM-Manager" /-->
   <executable>%JAVA_HOME%\bin\java</executable>
-  <arguments>-cp "%BASE%\conf";"%BASE%\lib\*" -DBASE_DIR="%BASE%" -Djava.awt.headless=true -Dlogback.configurationFile=logging.xml sonia.scm.server.ScmServerDaemon</arguments>
+  <arguments>-cp "%BASE%\conf";"%BASE%\lib\*" -DBASE_DIR="%BASE%" -Djava.awt.headless=true sonia.scm.server.ScmServerDaemon</arguments>
   <logpath>%BASE%\logs</logpath>
   <logmode>rotate</logmode>
 </service>

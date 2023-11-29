@@ -24,10 +24,9 @@
 
 package sonia.scm.lifecycle;
 
+import jakarta.inject.Inject;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.plugin.Extension;
-
-import javax.inject.Inject;
 
 @Extension
 public class RepositoryExportCleanupStartupAction implements PrivilegedStartupAction {

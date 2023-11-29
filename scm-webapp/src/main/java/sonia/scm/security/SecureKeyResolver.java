@@ -28,28 +28,23 @@ package sonia.scm.security;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.SigningKeyResolverAdapter;
-
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.lifecycle.jwt.JwtSettings;
 import sonia.scm.lifecycle.jwt.JwtSettingsStore;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 
-import static com.google.common.base.Preconditions.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.security.SecureRandom;
 import java.util.Random;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Resolve secure keys which can be used for signing token and messages.

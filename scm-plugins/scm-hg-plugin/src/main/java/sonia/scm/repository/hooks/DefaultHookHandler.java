@@ -25,6 +25,8 @@
 package sonia.scm.repository.hooks;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.shiro.SecurityUtils;
@@ -42,8 +44,6 @@ import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.security.BearerToken;
 import sonia.scm.security.CipherUtil;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

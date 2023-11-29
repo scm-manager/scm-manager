@@ -24,9 +24,8 @@
 
 package sonia.scm.api.v2.resources;
 
+import jakarta.inject.Inject;
 import sonia.scm.repository.NamespaceAndName;
-
-import javax.inject.Inject;
 
 public class DefaultRepositoryLinkProvider implements RepositoryLinkProvider {
 

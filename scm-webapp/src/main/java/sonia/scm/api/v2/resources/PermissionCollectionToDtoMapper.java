@@ -25,10 +25,10 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.security.PermissionPermissions;
 
-import javax.inject.Inject;
 import java.util.Collection;
 
 import static de.otto.edison.hal.Link.link;

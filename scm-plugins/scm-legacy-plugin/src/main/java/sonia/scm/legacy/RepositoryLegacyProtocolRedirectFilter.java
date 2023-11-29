@@ -24,6 +24,12 @@
     
 package sonia.scm.legacy;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import sonia.scm.Priority;
 import sonia.scm.filter.Filters;
 import sonia.scm.migration.MigrationDAO;
@@ -31,12 +37,6 @@ import sonia.scm.migration.MigrationInfo;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.web.filter.HttpFilter;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;

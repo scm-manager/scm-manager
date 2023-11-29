@@ -24,22 +24,22 @@
     
 package sonia.scm.filter;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.ext.WriterInterceptorContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.ext.WriterInterceptor;
-import javax.ws.rs.ext.WriterInterceptorContext;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
 import java.util.zip.GZIPOutputStream;
 
-@javax.ws.rs.ext.Provider
+@jakarta.ws.rs.ext.Provider
 public class GZipResponseFilter implements WriterInterceptor {
 
   private static final Logger LOG = LoggerFactory.getLogger(GZipResponseFilter.class);

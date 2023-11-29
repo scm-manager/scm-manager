@@ -24,6 +24,7 @@
 
 package sonia.scm.security.gpg;
 
+import jakarta.annotation.Nullable;
 import org.bouncycastle.openpgp.PGPCompressedData;
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPObjectFactory;
@@ -39,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.security.PublicKey;
 
-import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;

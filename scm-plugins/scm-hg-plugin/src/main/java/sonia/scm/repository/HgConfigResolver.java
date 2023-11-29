@@ -26,8 +26,8 @@ package sonia.scm.repository;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.MoreObjects;
+import jakarta.inject.Inject;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.util.function.Function;
 

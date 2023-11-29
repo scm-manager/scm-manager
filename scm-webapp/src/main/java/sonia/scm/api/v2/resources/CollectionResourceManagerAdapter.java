@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
+import jakarta.ws.rs.core.Response;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.PageResult;
@@ -32,14 +33,13 @@ import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Comparables;
 import sonia.scm.util.Util;
 
-import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Comparator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+import static jakarta.ws.rs.core.Response.Status.BAD_REQUEST;
 
 /**
  * Adapter from resource http endpoints to managers, for Collection resources (e.g. {@code /users}).

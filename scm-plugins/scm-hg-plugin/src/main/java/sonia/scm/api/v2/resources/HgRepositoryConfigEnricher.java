@@ -24,11 +24,10 @@
 
 package sonia.scm.api.v2.resources;
 
+import jakarta.inject.Inject;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
-
-import javax.inject.Inject;
 
 @Extension
 @Enrich(Repository.class)

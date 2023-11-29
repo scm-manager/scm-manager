@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.javahg.Changeset;
 import org.javahg.commands.AnnotateCommand;
 import org.javahg.AnnotateLine;
@@ -39,7 +40,6 @@ import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Person;
 import sonia.scm.web.HgUtil;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 

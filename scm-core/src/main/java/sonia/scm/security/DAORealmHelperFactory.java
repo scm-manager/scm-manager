@@ -24,10 +24,9 @@
     
 package sonia.scm.security;
 
+import jakarta.inject.Inject;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.user.UserDAO;
-
-import javax.inject.Inject;
 
 /**
  * Factory to create {@link DAORealmHelper} instances.

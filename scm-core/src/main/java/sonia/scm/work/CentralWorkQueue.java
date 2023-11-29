@@ -25,9 +25,8 @@
 package sonia.scm.work;
 
 import com.google.common.annotations.Beta;
+import jakarta.annotation.Nullable;
 import sonia.scm.ModelObject;
-
-import javax.annotation.Nullable;
 
 /**
  * The {@link CentralWorkQueue} provides an api to submit and coordinate long-running or resource intensive tasks.

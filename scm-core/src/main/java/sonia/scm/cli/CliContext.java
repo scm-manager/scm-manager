@@ -56,7 +56,6 @@ public interface CliContext {
   /**
    * Sets the exit code for the current command execution and stops the execution.
    * @param exitcode exit code which will be return to the client terminal
-   * @see {@link ExitCode}
    */
   void exit(int exitcode);
 

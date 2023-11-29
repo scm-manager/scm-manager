@@ -25,6 +25,7 @@
 package sonia.scm.plugin.cli;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import picocli.CommandLine;
@@ -37,7 +38,6 @@ import sonia.scm.plugin.PendingPlugins;
 import sonia.scm.plugin.PluginDescriptor;
 import sonia.scm.plugin.PluginManager;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;

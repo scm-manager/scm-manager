@@ -25,6 +25,7 @@
 package sonia.scm.user.cli;
 
 import com.google.common.collect.ImmutableMap;
+import jakarta.inject.Inject;
 import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ExitCode;
 import sonia.scm.cli.Table;
@@ -32,7 +33,6 @@ import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.template.TemplateEngineFactory;
 import sonia.scm.user.User;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
 

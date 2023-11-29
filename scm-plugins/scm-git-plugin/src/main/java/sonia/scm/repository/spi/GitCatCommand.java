@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lib.Constants;
@@ -45,7 +46,6 @@ import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
-import javax.inject.Inject;
 import java.io.Closeable;
 import java.io.FilterInputStream;
 import java.io.IOException;

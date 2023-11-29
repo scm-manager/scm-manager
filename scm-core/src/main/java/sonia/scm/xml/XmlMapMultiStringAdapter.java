@@ -24,9 +24,9 @@
 
 package sonia.scm.xml;
 
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import sonia.scm.util.Util;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

@@ -24,6 +24,7 @@
 
 package sonia.scm.update.group;
 
+import jakarta.xml.bind.JAXBException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,6 @@ import sonia.scm.store.InMemoryByteConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
 import sonia.scm.update.V1Properties;
 
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;

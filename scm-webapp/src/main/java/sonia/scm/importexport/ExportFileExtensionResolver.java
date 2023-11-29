@@ -24,11 +24,10 @@
 
 package sonia.scm.importexport;
 
+import jakarta.inject.Inject;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-
-import javax.inject.Inject;
 
 public class ExportFileExtensionResolver {
 

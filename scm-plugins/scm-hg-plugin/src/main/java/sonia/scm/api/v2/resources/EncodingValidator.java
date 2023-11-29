@@ -25,9 +25,9 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.common.base.Strings;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 

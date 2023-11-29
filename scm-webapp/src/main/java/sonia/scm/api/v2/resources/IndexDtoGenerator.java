@@ -29,8 +29,10 @@ import com.google.common.collect.Lists;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.config.ConfigValue;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupPermissions;
@@ -45,7 +47,6 @@ import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.UserPermissions;
 import sonia.scm.web.EdisonHalAppender;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -61,18 +62,21 @@ public class IndexDtoGenerator extends HalAppenderMapper {
   private final ScmConfiguration configuration;
   private final InitializationFinisher initializationFinisher;
   private final SearchEngine searchEngine;
+  private final boolean disableFeedback;
 
   @Inject
   public IndexDtoGenerator(ResourceLinks resourceLinks,
                            SCMContextProvider scmContextProvider,
                            ScmConfiguration configuration,
                            InitializationFinisher initializationFinisher,
-                           SearchEngine searchEngine) {
+                           SearchEngine searchEngine,
+                           @ConfigValue(key = "disableFeedback", defaultValue = "false", description = "Disable feedback links in frontend page footer") Boolean disableFeedback) {
     this.resourceLinks = resourceLinks;
     this.scmContextProvider = scmContextProvider;
     this.configuration = configuration;
     this.initializationFinisher = initializationFinisher;
     this.searchEngine = searchEngine;
+    this.disableFeedback = disableFeedback;
   }
 
   public IndexDto generate() {
@@ -86,7 +90,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     builder.self(resourceLinks.index().self());
     builder.single(link("uiPlugins", resourceLinks.uiPluginCollection().self()));
 
-    embeddedBuilder.with("feedback", new FeedbackDto(Boolean.getBoolean("sonia.scm.disableFeedback")));
+    embeddedBuilder.with("feedback", new FeedbackDto(disableFeedback));
 
     if (initializationFinisher.isFullyInitialized()) {
       return handleNormalIndex(builder, embeddedBuilder);

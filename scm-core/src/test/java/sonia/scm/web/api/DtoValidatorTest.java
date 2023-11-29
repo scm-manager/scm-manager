@@ -24,11 +24,10 @@
 
 package sonia.scm.web.api;
 
+import jakarta.validation.ValidationException;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.junit.jupiter.api.Test;
-
-import javax.validation.ValidationException;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

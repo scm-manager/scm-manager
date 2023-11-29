@@ -28,10 +28,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
 
-import javax.validation.ConstraintViolationException;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static java.util.Collections.emptyList;

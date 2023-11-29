@@ -43,10 +43,16 @@ public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
   private final StoreCache<ConfigurationEntryStore<?>> storeCache;
 
   @Inject
-  public JAXBConfigurationEntryStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryReadOnlyChecker readOnlyChecker) {
+  public JAXBConfigurationEntryStoreFactory(
+    SCMContextProvider contextProvider,
+    RepositoryLocationResolver repositoryLocationResolver,
+    KeyGenerator keyGenerator,
+    RepositoryReadOnlyChecker readOnlyChecker,
+    StoreCacheConfigProvider storeCacheConfigProvider
+  ) {
     super(contextProvider, repositoryLocationResolver, Store.CONFIG, readOnlyChecker);
     this.keyGenerator = keyGenerator;
-    this.storeCache = new StoreCache<>(this::createStore);
+    this.storeCache = new StoreCache<>(this::createStore, storeCacheConfigProvider.isStoreCacheEnabled());
   }
 
   @Override

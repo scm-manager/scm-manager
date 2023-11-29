@@ -26,18 +26,14 @@ package sonia.scm.it.webapp;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.client.apache.ApacheHttpClient;
-import com.sun.jersey.client.apache.config.ApacheHttpClientConfig;
-import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
 import de.otto.edison.hal.HalRepresentation;
-import sonia.scm.api.rest.JSONContextResolver;
-import sonia.scm.api.rest.ObjectMapperProvider;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import sonia.scm.repository.Person;
 import sonia.scm.util.IOUtil;
 
@@ -90,25 +86,15 @@ public final class IntegrationTestUtil
   /**
    * Method description
    *
-   *
    * @return
    */
   public static Client createClient()
   {
-    DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
-    config.getSingletons().add(new JSONContextResolver(new ObjectMapperProvider().get()));
-    config.getProperties().put(ApacheHttpClientConfig.PROPERTY_HANDLE_COOKIES, true);
-
-    return ApacheHttpClient.create(config);
+    return ClientBuilder.newBuilder().register(new CustomJacksonMapperProvider()).build();
   }
 
-  public static String serialize(Object o) {
-    ObjectMapper mapper = new ObjectMapperProvider().get();
-    try {
-      return mapper.writeValueAsString(o);
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
-    }
+  public static Entity serialize(Object o, String mediaType) {
+    return Entity.entity(o, mediaType);
   }
 
   public static Collection<String[]> createRepositoryTypeParameters() {
@@ -129,17 +115,23 @@ public final class IntegrationTestUtil
     return URI.create(object.getLinks().getLinkBy("delete").get().getHref());
   }
 
-  public static WebResource.Builder createResource(ScmClient client, String url) {
+  public static Invocation.Builder createResource(ScmClient client, String url) {
     return createResource(client, createResourceUrl(url));
   }
-  public static WebResource.Builder createResource(ScmClient client, URI url) {
+  public static Invocation.Builder createResource(ScmClient client, String url, String mediaType) {
+    return createResource(client, createResourceUrl(url), mediaType);
+  }
+  public static Invocation.Builder createResource(ScmClient client, URI url) {
     return client.resource(url.toString());
   }
 
-  public static ClientResponse post(ScmClient client, String path, String mediaType, Object o) {
-    return createResource(client, path)
-      .type(mediaType)
-      .post(ClientResponse.class, serialize(o));
+  public static Invocation.Builder createResource(ScmClient client, URI url, String mediaType) {
+    return client.resource(url.toString(), MediaType.valueOf(mediaType));
+  }
+
+  public static Response post(ScmClient client, String path, String mediaType, Object o) {
+    return createResource(client, path, mediaType)
+      .post(serialize(o, mediaType));
   }
 
   /**

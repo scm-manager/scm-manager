@@ -28,25 +28,19 @@ package sonia.scm.cache;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-
+import jakarta.inject.Inject;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 /**
  * @author Sebastian Sdorra

@@ -60,6 +60,10 @@ class RunTask extends DefaultTask {
   @Option(option = 'debug-port', description = 'Port for debugger')
   String debugPort = "5005"
 
+  @Input
+  @Option(option = 'configFileDirectory', description = 'Path to config file')
+  String configFileDirectory = ''
+
   @TaskAction
   void exec() {
     List<Closure<Void>> actions = new ArrayList<>()
@@ -85,8 +89,9 @@ class RunTask extends DefaultTask {
           return
         }
       } catch (IOException ex) {
-        Thread.sleep(500)
+        ex.printStackTrace()
       }
+      Thread.sleep(500)
     }
     throw new GradleException("scm-server not reachable")
   }
@@ -124,6 +129,9 @@ class RunTask extends DefaultTask {
         args(new File(project.buildDir, 'server/config.json').toString())
         environment 'NODE_ENV', 'development'
         classpath project.buildscript.configurations.classpath
+        if (configFileDirectory != '') {
+          classpath configFileDirectory
+        }
         systemProperties = runProperties
         if (debugJvm) {
           debug = true

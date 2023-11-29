@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import jakarta.servlet.http.HttpServletRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,7 +39,6 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.initialization.InitializationFinisher;
 import sonia.scm.search.SearchEngine;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Locale;
 import java.util.Optional;
@@ -73,7 +73,8 @@ public class IndexResourceTest {
       scmContextProvider,
       configuration,
       initializationFinisher,
-      searchEngine
+      searchEngine,
+      false
     );
     this.indexResource = new IndexResource(generator);
   }

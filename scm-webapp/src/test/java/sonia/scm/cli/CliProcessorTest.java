@@ -29,6 +29,7 @@ import com.google.inject.Binder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,6 @@ import picocli.CommandLine;
 import sonia.scm.i18n.I18nCollector;
 import sonia.scm.plugin.PluginLoader;
 
-import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.util.Locale;

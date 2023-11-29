@@ -24,14 +24,13 @@
     
 package sonia.scm.api.v2;
 
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.api.v2.resources.ScmViolationExceptionToErrorDtoMapper;
 import sonia.scm.web.VndMediaType;
-
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
 
 @Provider
 public class ScmConstraintValidationExceptionMapper implements ExceptionMapper<ScmConstraintViolationException> {

@@ -26,12 +26,9 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import jakarta.xml.bind.annotation.XmlRootElement;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Base class for all objects which supports different types.

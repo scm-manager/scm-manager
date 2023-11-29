@@ -24,10 +24,9 @@
     
 package sonia.scm.web.lfs.servlet;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.Test;
 import sonia.scm.repository.Repository;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

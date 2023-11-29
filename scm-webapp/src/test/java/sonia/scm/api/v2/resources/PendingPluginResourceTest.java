@@ -25,6 +25,8 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.util.Providers;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.core.Response;
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
@@ -48,13 +50,10 @@ import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.web.RestDispatcher;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
 import static java.net.URI.create;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;

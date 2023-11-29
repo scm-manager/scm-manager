@@ -27,28 +27,24 @@ package sonia.scm.template;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Maps;
-
+import jakarta.servlet.ServletContext;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.util.IOUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
-
 import java.net.URL;
-
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-import sonia.scm.util.IOUtil;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  *

@@ -24,13 +24,13 @@
     
 package sonia.scm.update.xml;
 
+import jakarta.inject.Inject;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.update.V1Properties;
 import sonia.scm.update.V1PropertyDAO;
 import sonia.scm.update.V1PropertyReader;
 
-import javax.inject.Inject;
 import java.util.Map;
 
 public class XmlV1PropertyDAO implements V1PropertyDAO {

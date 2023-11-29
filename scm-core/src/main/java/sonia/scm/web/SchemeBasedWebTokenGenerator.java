@@ -27,15 +27,10 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
-
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.shiro.authc.AuthenticationToken;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *

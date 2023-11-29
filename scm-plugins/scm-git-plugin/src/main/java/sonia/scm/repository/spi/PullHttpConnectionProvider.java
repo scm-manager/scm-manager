@@ -25,12 +25,12 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
+import jakarta.inject.Inject;
 import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import sonia.scm.net.HttpConnectionOptions;
 import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.web.ScmHttpConnectionFactory;
 
-import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 

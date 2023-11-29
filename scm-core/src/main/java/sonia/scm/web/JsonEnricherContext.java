@@ -25,8 +25,8 @@
 package sonia.scm.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.ws.rs.core.MediaType;
 
-import javax.ws.rs.core.MediaType;
 import java.net.URI;
 
 /**

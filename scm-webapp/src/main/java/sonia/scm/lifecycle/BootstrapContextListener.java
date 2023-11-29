@@ -21,22 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.SCMContext;
+import sonia.scm.config.LoggingConfiguration;
 import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
 import sonia.scm.lifecycle.modules.ApplicationModuleProvider;
 import sonia.scm.lifecycle.modules.BootstrapModule;
 import sonia.scm.lifecycle.modules.CloseableModule;
+import sonia.scm.lifecycle.modules.ConfigModule;
 import sonia.scm.lifecycle.modules.EagerSingletonModule;
-import sonia.scm.SCMContext;
 import sonia.scm.lifecycle.modules.InjectionLifeCycle;
 import sonia.scm.lifecycle.modules.ModuleProvider;
 import sonia.scm.lifecycle.modules.ScmEventBusModule;
@@ -44,13 +48,11 @@ import sonia.scm.lifecycle.modules.ScmInitializerModule;
 import sonia.scm.lifecycle.modules.ServletContextModule;
 import sonia.scm.lifecycle.modules.UpdateStepModule;
 import sonia.scm.lifecycle.view.SingleView;
+import sonia.scm.plugin.ConfigurationResolver;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.update.MigrationWizardModuleProvider;
 import sonia.scm.update.UpdateEngine;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +63,7 @@ public class BootstrapContextListener extends GuiceServletContextListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(BootstrapContextListener.class);
 
-  private ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
+  private final ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
 
   private ServletContext context;
   private InjectionLifeCycle injectionLifeCycle;
@@ -81,6 +83,8 @@ public class BootstrapContextListener extends GuiceServletContextListener {
 
   @Override
   protected Injector getInjector() {
+    ConfigurationResolver configurationResolver = new ConfigurationResolver();
+    configureLoggers();
     Throwable startupError = SCMContext.getContext().getStartupError();
     if (startupError != null) {
       LOG.error("received unrecoverable error during startup", startupError);
@@ -90,12 +94,16 @@ public class BootstrapContextListener extends GuiceServletContextListener {
       return createStageOneInjector(SingleView.view("/templates/too-old.mustache", HttpServletResponse.SC_CONFLICT));
     } else {
       try {
-        return createStageTwoInjector();
+        return createStageTwoInjector(configurationResolver);
       } catch (Exception ex) {
         LOG.error("failed to create stage two injector", ex);
         return createStageOneInjector(SingleView.error(ex));
       }
     }
+  }
+
+  private void configureLoggers() {
+    new LoggingConfiguration().configureLogging();
   }
 
   @Override
@@ -111,8 +119,8 @@ public class BootstrapContextListener extends GuiceServletContextListener {
     super.contextDestroyed(sce);
   }
 
-  private Injector createStageTwoInjector() {
-    PluginBootstrap pluginBootstrap = new PluginBootstrap(context, classLoaderLifeCycle);
+  private Injector createStageTwoInjector(ConfigurationResolver configurationResolver) {
+    PluginBootstrap pluginBootstrap = new PluginBootstrap(context, classLoaderLifeCycle, configurationResolver);
 
     ModuleProvider provider = createMigrationOrNormalModuleProvider(pluginBootstrap);
     return createStageTwoInjector(provider, pluginBootstrap.getPluginLoader());
@@ -154,12 +162,13 @@ public class BootstrapContextListener extends GuiceServletContextListener {
 
   private List<Module> createBootstrapModules(PluginLoader pluginLoader) {
     List<Module> modules = new ArrayList<>(createBaseModules());
+    modules.add(new ConfigModule(pluginLoader));
     modules.add(new BootstrapModule(pluginLoader));
     return modules;
   }
 
   private List<Module> createBaseModules() {
-    return ImmutableList.of(
+    return List.of(
       new EagerSingletonModule(),
       new ScmInitializerModule(),
       new ScmEventBusModule(),

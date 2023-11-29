@@ -26,8 +26,8 @@ package sonia.scm.cache;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.cache.GuavaCacheMetrics;
+import jakarta.inject.Inject;
 
-import javax.inject.Inject;
 import java.util.Collections;
 
 public class GuavaCacheFactory {

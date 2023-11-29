@@ -24,8 +24,9 @@
 
 package sonia.scm.it.webapp;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.core.MediaType;
 
 import java.util.Base64;
 
@@ -47,11 +48,19 @@ public class ScmClient {
     this.client = createClient();
   }
 
-  public WebResource.Builder resource(String url) {
+  public Invocation.Builder resource(String url) {
     if (user == null) {
-      return client.resource(url).getRequestBuilder();
+      return client.target(url).request();
     } else {
-      return client.resource(url).header("Authorization", createAuthHeaderValue());
+      return client.target(url).request().header("Authorization", createAuthHeaderValue());
+    }
+  }
+
+  public Invocation.Builder resource(String url, MediaType mediaType) {
+    if (user == null) {
+      return client.target(url).request(mediaType);
+    } else {
+      return client.target(url).request(mediaType).header("Authorization", createAuthHeaderValue());
     }
   }
 

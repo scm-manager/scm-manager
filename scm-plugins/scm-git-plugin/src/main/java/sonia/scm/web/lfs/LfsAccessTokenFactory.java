@@ -25,6 +25,7 @@
 package sonia.scm.web.lfs;
 
 import com.github.sdorra.ssp.PermissionCheck;
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitConfig;
@@ -35,7 +36,6 @@ import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.Scope;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;

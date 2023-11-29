@@ -25,8 +25,8 @@
 package sonia.scm.search;
 
 import com.google.inject.Injector;
+import jakarta.inject.Inject;
 
-import javax.inject.Inject;
 import java.io.Serializable;
 
 public abstract class LuceneIndexTask implements Runnable, Serializable {

@@ -24,15 +24,15 @@
     
 package sonia.scm.repository;
 
- import com.google.common.collect.Maps;
- import org.slf4j.Logger;
- import org.slf4j.LoggerFactory;
- import sonia.scm.util.HttpUtil;
- import sonia.scm.util.Util;
+import com.google.common.collect.Maps;
+import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.util.HttpUtil;
+import sonia.scm.util.Util;
 
- import javax.inject.Inject;
- import java.util.Map;
- import java.util.Set;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * RepositoryMatcher is able to check if a repository matches the requested path.

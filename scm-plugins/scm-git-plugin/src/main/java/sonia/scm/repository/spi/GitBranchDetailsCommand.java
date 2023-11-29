@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -38,7 +39,6 @@ import sonia.scm.repository.BranchDetails;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 
-import javax.inject.Inject;
 import java.io.IOException;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;

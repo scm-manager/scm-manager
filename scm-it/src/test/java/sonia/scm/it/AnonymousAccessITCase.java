@@ -25,6 +25,9 @@
 package sonia.scm.it;
 
 import io.restassured.RestAssured;
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -42,9 +45,6 @@ import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientException;
 import sonia.scm.security.AnonymousMode;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

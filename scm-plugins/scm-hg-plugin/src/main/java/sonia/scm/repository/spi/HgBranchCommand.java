@@ -25,10 +25,11 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
+import org.apache.shiro.SecurityUtils;
 import org.javahg.Changeset;
 import org.javahg.commands.CommitCommand;
-import com.google.common.annotations.VisibleForTesting;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
@@ -38,8 +39,6 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.user.User;
-
-import javax.inject.Inject;
 
 /**
  * Mercurial implementation of the {@link BranchCommand}.

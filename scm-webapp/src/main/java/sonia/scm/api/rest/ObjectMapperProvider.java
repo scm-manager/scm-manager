@@ -34,10 +34,9 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
-
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationIntrospector;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class ObjectMapperProvider implements Provider<ObjectMapper> {
@@ -58,7 +57,7 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
 
   private AnnotationIntrospector createAnnotationIntrospector() {
     return new AnnotationIntrospectorPair(
-      new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
+      new JakartaXmlBindAnnotationIntrospector(TypeFactory.defaultInstance()),
       new JacksonAnnotationIntrospector()
     );
   }

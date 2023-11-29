@@ -24,6 +24,8 @@
 
 package sonia.scm.importexport;
 
+import jakarta.inject.Inject;
+import jakarta.xml.bind.JAXB;
 import sonia.scm.ContextEntry;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.InstalledPlugin;
@@ -32,8 +34,6 @@ import sonia.scm.plugin.PluginManager;
 import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.util.SystemUtil;
 
-import javax.inject.Inject;
-import javax.xml.bind.JAXB;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;

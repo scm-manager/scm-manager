@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.base.Strings;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -36,7 +37,6 @@ import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginPermissions;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 

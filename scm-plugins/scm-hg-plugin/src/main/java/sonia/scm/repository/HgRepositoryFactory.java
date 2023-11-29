@@ -24,6 +24,8 @@
 
 package sonia.scm.repository;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.javahg.RepositoryConfiguration;
 import org.javahg.ext.purge.PurgeExtension;
 import org.slf4j.Logger;
@@ -31,8 +33,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.hooks.HookEnvironment;
 import sonia.scm.repository.spi.javahg.HgFileviewExtension;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

@@ -29,6 +29,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.assistedinject.Assisted;
+import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import org.eclipse.jgit.attributes.Attributes;
 import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lib.Constants;
@@ -56,8 +58,6 @@ import sonia.scm.store.BlobStore;
 import sonia.scm.util.Util;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
-import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayDeque;

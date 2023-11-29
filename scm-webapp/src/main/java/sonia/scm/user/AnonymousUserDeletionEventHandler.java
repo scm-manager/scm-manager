@@ -25,6 +25,7 @@
 package sonia.scm.user;
 
 import com.github.legman.Subscribe;
+import jakarta.inject.Inject;
 import sonia.scm.ContextEntry;
 import sonia.scm.EagerSingleton;
 import sonia.scm.HandlerEventType;
@@ -32,8 +33,6 @@ import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.AnonymousMode;
-
-import javax.inject.Inject;
 
 @EagerSingleton
 @Extension

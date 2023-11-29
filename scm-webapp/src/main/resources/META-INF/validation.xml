@@ -25,7 +25,7 @@
 <validation-config
   xmlns="http://jboss.org/xml/ns/javax/validation/configuration"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://jboss.org/xml/ns/javax/validation/configuration"
+  xsi:schemaLocation="http://jboss.org/xml/ns/jakarta/validation/configuration"
   version="1.1">
 
   <parameter-name-provider>org.hibernate.validator.parameternameprovider.ReflectionParameterNameProvider</parameter-name-provider>

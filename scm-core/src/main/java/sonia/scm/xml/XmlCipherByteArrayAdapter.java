@@ -24,9 +24,8 @@
 
 package sonia.scm.xml;
 
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import sonia.scm.security.CipherUtil;
-
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * @since 2.19.0

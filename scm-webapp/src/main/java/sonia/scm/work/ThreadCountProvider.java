@@ -38,31 +38,28 @@ public class ThreadCountProvider implements IntSupplier {
   static final String PROPERTY = "scm.central-work-queue.workers";
 
   private final IntSupplier cpuCountProvider;
+  private final Integer workers;
 
-  public ThreadCountProvider() {
-    this(() -> Runtime.getRuntime().availableProcessors());
+  public ThreadCountProvider(Integer workers) {
+    this(() -> Runtime.getRuntime().availableProcessors(), workers);
   }
 
   @VisibleForTesting
-  ThreadCountProvider(IntSupplier cpuCountProvider) {
+  ThreadCountProvider(IntSupplier cpuCountProvider, Integer workers) {
     this.cpuCountProvider = cpuCountProvider;
+    this.workers = workers;
   }
 
   @Override
   public int getAsInt() {
-    Integer systemProperty = Integer.getInteger(PROPERTY);
-    if (systemProperty == null) {
-      LOG.debug("derive worker count from cpu count");
-      return deriveFromCPUCount();
-    }
-    if (isInvalid(systemProperty)) {
+    if (isInvalid(workers)) {
       LOG.warn(
-        "system property {} contains a invalid value {}, fall back and derive worker count from cpu count",
-        PROPERTY, systemProperty
+        "config value {} contains a invalid value {}, fall back and derive worker count from cpu count",
+        "central-work-queue.workers", workers
       );
       return deriveFromCPUCount();
     }
-    return systemProperty;
+    return workers;
   }
 
   private boolean isInvalid(int value) {

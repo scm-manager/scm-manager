@@ -1,0 +1,14 @@
+webapp:
+  cache:
+    dataFile:
+      enabled: true
+  initialUser: scmadmin
+  initialPassword: scmadmin
+  stage: DEVELOPMENT
+  homeDir: ./build/scm-home
+
+log:
+  rootLevel: WARN
+  logger:
+    sonia.scm: DEBUG
+    com.cloudogu.scm: DEBUG

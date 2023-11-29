@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.javahg.commands.ExecutionException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -34,7 +35,6 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.spi.javahg.HgIncomingChangesetCommand;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;

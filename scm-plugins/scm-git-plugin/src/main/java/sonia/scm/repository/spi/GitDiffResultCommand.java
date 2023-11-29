@@ -25,12 +25,12 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import sonia.scm.NotUniqueRevisionException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffResult;
 
-import javax.inject.Inject;
 import java.io.IOException;
 
 public class GitDiffResultCommand extends AbstractGitCommand implements DiffResultCommand {

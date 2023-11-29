@@ -24,15 +24,14 @@
 
 package sonia.scm.validation;
 
+import jakarta.inject.Inject;
+import jakarta.validation.BootstrapConfiguration;
+import jakarta.validation.Configuration;
+import jakarta.validation.ConstraintValidatorFactory;
+import jakarta.validation.Validation;
+import jakarta.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ext.Provider;
 import org.jboss.resteasy.spi.validation.GeneralValidator;
-
-import javax.inject.Inject;
-import javax.validation.BootstrapConfiguration;
-import javax.validation.Configuration;
-import javax.validation.ConstraintValidatorFactory;
-import javax.validation.Validation;
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.Provider;
 
 @Provider
 public class ResteasyValidatorContextResolver implements ContextResolver<GeneralValidator> {

@@ -24,10 +24,10 @@
 
 package sonia.scm.cli;
 
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
-import javax.annotation.Nullable;
 import java.time.Instant;
 import java.util.Optional;
 

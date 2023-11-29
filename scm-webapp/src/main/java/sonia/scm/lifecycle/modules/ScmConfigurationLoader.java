@@ -24,13 +24,13 @@
 
 package sonia.scm.lifecycle.modules;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import java.io.File;
 public final class ScmConfigurationLoader {
 

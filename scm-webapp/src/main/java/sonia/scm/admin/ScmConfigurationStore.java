@@ -24,12 +24,11 @@
 
 package sonia.scm.admin;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public final class ScmConfigurationStore {

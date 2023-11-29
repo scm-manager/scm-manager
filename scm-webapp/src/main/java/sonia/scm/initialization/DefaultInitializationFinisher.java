@@ -24,10 +24,10 @@
 
 package sonia.scm.initialization;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import sonia.scm.EagerSingleton;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.List;
 import java.util.Set;
 

@@ -24,17 +24,18 @@
 
 package sonia.scm.cache;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.config.WebappConfigProvider;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import java.io.StringReader;
 
+import static java.util.Map.of;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,6 +51,7 @@ class GuavaNamedCacheConfigurationTest {
 
   @Test
   void shouldTakeValueFromConfigurationFile() throws JAXBException {
+    WebappConfigProvider.setConfigBindings(of());
     GuavaCacheManagerConfiguration configuration = readConfiguration();
 
     assertThat(configuration.getCaches().get(0).getName()).isEqualTo("sonia.cache.externalGroups");
@@ -57,20 +59,16 @@ class GuavaNamedCacheConfigurationTest {
   }
 
   @Nested
-  class WithProperty {
-
-    @BeforeEach
-    void setProperty() {
-      System.setProperty("scm.cache.externalGroups.maximumSize", "42");
-    }
+  class WithConfig {
 
     @AfterEach
-    void removeProperty() {
-      System.clearProperty("scm.cache.externalGroups.maximumSize");
+    void tearDown() {
+      WebappConfigProvider.setConfigBindings(of());
     }
 
     @Test
-    void shouldTakeValueFromPropertyIfPresent() throws JAXBException {
+    void shouldTakeValueFromConfigIfPresent() throws JAXBException {
+      WebappConfigProvider.setConfigBindings(of("scm.cache.externalGroups.maximumSize", "42"));
       GuavaCacheManagerConfiguration configuration = readConfiguration();
 
       assertThat(configuration.getCaches().get(0).getMaximumSize()).isEqualTo(42);

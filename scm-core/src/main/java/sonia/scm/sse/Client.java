@@ -24,12 +24,12 @@
 
 package sonia.scm.sse;
 
+import jakarta.ws.rs.sse.OutboundSseEvent;
+import jakarta.ws.rs.sse.SseEventSink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.security.SessionId;
 
-import javax.ws.rs.sse.OutboundSseEvent;
-import javax.ws.rs.sse.SseEventSink;
 import java.io.Closeable;
 import java.time.Instant;
 import java.util.function.Function;

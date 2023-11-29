@@ -24,11 +24,10 @@
 
 package sonia.scm.user;
 
+import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
-
-import javax.inject.Inject;
 
 @Slf4j
 @Extension

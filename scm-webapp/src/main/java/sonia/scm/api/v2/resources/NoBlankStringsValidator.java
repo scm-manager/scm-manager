@@ -24,8 +24,9 @@
     
 package sonia.scm.api.v2.resources;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
 import java.util.Collection;
 
 public class NoBlankStringsValidator implements ConstraintValidator<NoBlankStrings, Collection> {

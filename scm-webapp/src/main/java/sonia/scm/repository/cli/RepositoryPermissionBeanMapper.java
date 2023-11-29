@@ -24,11 +24,11 @@
 
 package sonia.scm.repository.cli;
 
+import jakarta.inject.Inject;
 import sonia.scm.cli.PermissionDescriptionResolver;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryRoleManager;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.stream.Collectors;
 

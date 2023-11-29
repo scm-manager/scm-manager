@@ -29,9 +29,9 @@ package sonia.scm.i18n;
 import com.google.common.base.Objects;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import jakarta.servlet.http.HttpServletRequest;
 import sonia.scm.util.ClassLoaders;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.util.Locale;
 

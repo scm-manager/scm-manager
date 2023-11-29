@@ -24,12 +24,12 @@
 
 package sonia.scm.repository;
 
+import jakarta.inject.Inject;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevWalk;
 import sonia.scm.security.GPG;
 import sonia.scm.security.PublicKey;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

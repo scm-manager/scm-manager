@@ -29,12 +29,13 @@ import com.google.common.base.Stopwatch;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.ConfigValue;
 import sonia.scm.util.IOUtil;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -43,7 +44,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static java.lang.Integer.getInteger;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -85,9 +85,6 @@ import static java.util.Optional.of;
 @Singleton
 public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
 
-  public static final int DEFAULT_WORKING_COPY_POOL_SIZE = 5;
-  public static final String WORKING_COPY_POOL_SIZE_PROPERTY = "scm.workingCopyPoolSize";
-
   private static final Logger LOG = LoggerFactory.getLogger(SimpleCachingWorkingCopyPool.class);
 
   private final WorkdirProvider workdirProvider;
@@ -105,12 +102,16 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
   private final Timer deleteTimer;
 
   @Inject
-  public SimpleCachingWorkingCopyPool(WorkdirProvider workdirProvider, MeterRegistry meterRegistry) {
-    this(getInteger(WORKING_COPY_POOL_SIZE_PROPERTY, DEFAULT_WORKING_COPY_POOL_SIZE), workdirProvider, meterRegistry);
+  public SimpleCachingWorkingCopyPool(
+    @ConfigValue(key="workingCopyPoolSize", defaultValue="5", description = "Amount of cached working copies") Integer workingCopyPoolSize,
+    WorkdirProvider workdirProvider,
+    MeterRegistry meterRegistry
+  ) {
+    this(workdirProvider, meterRegistry, workingCopyPoolSize);
   }
 
   @VisibleForTesting
-  SimpleCachingWorkingCopyPool(int size, WorkdirProvider workdirProvider, MeterRegistry meterRegistry) {
+  SimpleCachingWorkingCopyPool(WorkdirProvider workdirProvider, MeterRegistry meterRegistry, int size) {
     this.workdirProvider = workdirProvider;
     this.workdirs = new LruMap(size);
     this.locks = new ConcurrentHashMap<>();

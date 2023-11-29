@@ -25,12 +25,12 @@
 package sonia.scm.repository.xml;
 
 import com.google.inject.Inject;
+import jakarta.inject.Singleton;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleDAO;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.xml.AbstractXmlDAO;
 
-import javax.inject.Singleton;
 import java.util.List;
 
 @Singleton

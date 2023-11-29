@@ -26,7 +26,8 @@ package sonia.scm.web.cgi;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;

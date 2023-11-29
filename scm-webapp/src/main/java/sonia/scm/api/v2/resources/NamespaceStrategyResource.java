@@ -26,16 +26,16 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.web.VndMediaType;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

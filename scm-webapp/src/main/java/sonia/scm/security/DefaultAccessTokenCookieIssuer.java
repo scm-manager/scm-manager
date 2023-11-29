@@ -26,6 +26,10 @@ package sonia.scm.security;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
@@ -33,10 +37,6 @@ import sonia.scm.initialization.InitializationCookieIssuer;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
-import javax.inject.Inject;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 

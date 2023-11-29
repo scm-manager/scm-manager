@@ -24,9 +24,8 @@
 
 package sonia.scm.plugin;
 
+import jakarta.xml.bind.JAXB;
 import org.junit.jupiter.api.Test;
-
-import javax.xml.bind.JAXB;
 
 import java.io.StringReader;
 

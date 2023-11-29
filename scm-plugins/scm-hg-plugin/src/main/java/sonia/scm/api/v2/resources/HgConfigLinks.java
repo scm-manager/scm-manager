@@ -26,10 +26,9 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.util.Providers;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import sonia.scm.repository.Repository;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
 
 public class HgConfigLinks {
 

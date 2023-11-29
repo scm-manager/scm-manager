@@ -26,8 +26,8 @@ package sonia.scm.web.cgi;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Handles exception thrown by an {@link CGIExecutor}

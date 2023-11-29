@@ -25,11 +25,10 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.common.base.Strings;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 public class EitherRoleOrVerbsValidator implements ConstraintValidator<EitherRoleOrVerbs, RepositoryPermissionDto> {
 

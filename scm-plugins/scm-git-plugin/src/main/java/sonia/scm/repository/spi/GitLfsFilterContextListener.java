@@ -25,6 +25,8 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.io.ByteStreams;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import org.eclipse.jgit.attributes.FilterCommand;
 import org.eclipse.jgit.attributes.FilterCommandRegistry;
 import org.eclipse.jgit.lib.Repository;
@@ -33,8 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.Extension;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

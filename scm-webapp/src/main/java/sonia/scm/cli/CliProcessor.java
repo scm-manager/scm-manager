@@ -25,11 +25,11 @@
 package sonia.scm.cli;
 
 import com.google.inject.Injector;
+import jakarta.inject.Inject;
 import picocli.AutoComplete;
 import picocli.CommandLine;
 import sonia.scm.plugin.PluginLoader;
 
-import javax.inject.Inject;
 import java.util.Locale;
 import java.util.ResourceBundle;
 

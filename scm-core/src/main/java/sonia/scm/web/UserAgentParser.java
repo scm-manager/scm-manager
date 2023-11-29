@@ -30,20 +30,15 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.util.HttpUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Locale;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Parser for User-Agent header. The UserAgentParser parses the User-Agent 

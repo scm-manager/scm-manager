@@ -24,12 +24,12 @@
 
 package sonia.scm.plugin.cli;
 
+import jakarta.inject.Inject;
 import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ExitCode;
 import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.template.TemplateEngineFactory;
 
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 

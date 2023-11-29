@@ -25,16 +25,18 @@
 package sonia.scm.lifecycle;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.config.WebappConfigProvider;
 import sonia.scm.plugin.PluginSetConfigStore;
 import sonia.scm.plugin.PluginSetsConfig;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,20 +48,15 @@ class PluginWizardStartupActionTest {
   @InjectMocks
   private PluginWizardStartupAction startupAction;
 
-  @BeforeEach
-  void setup() {
-    System.clearProperty(AdminAccountStartupAction.INITIAL_PASSWORD_PROPERTY);
-  }
-
   @Test
   void shouldNotBeDoneByDefault() {
+    WebappConfigProvider.setConfigBindings(Collections.emptyMap());
     Assertions.assertThat(startupAction.done()).isFalse();
   }
 
   @Test
   void shouldBeDoneIfInitialPasswordIsSet() {
-    System.setProperty(AdminAccountStartupAction.INITIAL_PASSWORD_PROPERTY, "secret");
-
+    WebappConfigProvider.setConfigBindings(Map.of("initialPassword", "foo/bar"));
     Assertions.assertThat(startupAction.done()).isTrue();
   }
 
@@ -69,5 +66,4 @@ class PluginWizardStartupActionTest {
 
     Assertions.assertThat(startupAction.done()).isTrue();
   }
-
 }

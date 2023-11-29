@@ -27,11 +27,9 @@ package sonia.scm.lifecycle.jwt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.security.JwtSystemProperties;
+import sonia.scm.security.JwtConfig;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -51,37 +49,52 @@ class JwtSettingsStartupActionTest {
   @Mock
   private JwtSettingsStore jwtSettingsStore;
 
+  @Mock
+  private JwtConfig jwtConfig;
+
   private final Clock clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
 
   @BeforeEach
   void setupAction() {
-    jwtSettingsAction = new JwtSettingsStartupAction(jwtSettingsStore, clock);
+    jwtSettingsAction = new JwtSettingsStartupAction(jwtSettingsStore, jwtConfig, clock);
   }
 
-  @BeforeEach
-  void clearSystemProperties() {
-    System.clearProperty(JwtSystemProperties.ENDLESS_JWT);
-  }
+  @Test
+  void shouldNotChangeSettings_Enabled() {
+    when(jwtConfig.isEndlessJwtEnabled()).thenReturn(true);
 
-  @ParameterizedTest
-  @CsvSource({"true,true", "false,false"})
-  void shouldNotChangeSettings(String isEndlessJwtNowEnabled, String isEndlessJwtEnabledLastStartUp) {
-    System.setProperty(JwtSystemProperties.ENDLESS_JWT, isEndlessJwtNowEnabled);
-    JwtSettings settings = new JwtSettings(Boolean.parseBoolean(isEndlessJwtEnabledLastStartUp), 0);
+    JwtSettings settings = new JwtSettings(true, 0);
     when(jwtSettingsStore.get()).thenReturn(settings);
 
     jwtSettingsAction.run();
 
-    assertThat(settings.isEndlessJwtEnabledLastStartUp()).isEqualTo(Boolean.parseBoolean(isEndlessJwtNowEnabled));
-    assertThat(settings.getKeysValidAfterTimestampInMs()).isEqualTo(0);
+    assertThat(settings.isEndlessJwtEnabledLastStartUp()).isTrue();
+    assertThat(settings.getKeysValidAfterTimestampInMs()).isZero();
 
     verify(jwtSettingsStore).get();
     verifyNoMoreInteractions(jwtSettingsStore);
   }
 
   @Test
+  void shouldNotChangeSettings_Disabled() {
+    when(jwtConfig.isEndlessJwtEnabled()).thenReturn(false);
+
+    JwtSettings settings = new JwtSettings(false, 0);
+    when(jwtSettingsStore.get()).thenReturn(settings);
+
+    jwtSettingsAction.run();
+
+    assertThat(settings.isEndlessJwtEnabledLastStartUp()).isFalse();
+    assertThat(settings.getKeysValidAfterTimestampInMs()).isZero();
+
+    verify(jwtSettingsStore).get();
+    verifyNoMoreInteractions(jwtSettingsStore);
+  }
+
+
+  @Test
   void shouldOnlyUpdateEndlessJwtEnabledLastStartup() {
-    System.setProperty(JwtSystemProperties.ENDLESS_JWT, "true");
+    when(jwtConfig.isEndlessJwtEnabled()).thenReturn(true);
     JwtSettings settings = new JwtSettings(false, 0);
     when(jwtSettingsStore.get()).thenReturn(settings);
 
@@ -90,15 +103,14 @@ class JwtSettingsStartupActionTest {
 
     verify(jwtSettingsStore).get();
     verify(jwtSettingsStore).set(argThat(actualSettings -> {
-      assertThat(actualSettings.isEndlessJwtEnabledLastStartUp()).isEqualTo(true);
-      assertThat(actualSettings.getKeysValidAfterTimestampInMs()).isEqualTo(0);
+      assertThat(actualSettings.isEndlessJwtEnabledLastStartUp()).isTrue();
+      assertThat(actualSettings.getKeysValidAfterTimestampInMs()).isZero();
       return true;
     }));
   }
 
   @Test
   void shouldInvalidateKeys() {
-    System.setProperty(JwtSystemProperties.ENDLESS_JWT, "false");
     JwtSettings settings = new JwtSettings(true, 0);
     when(jwtSettingsStore.get()).thenReturn(settings);
 

@@ -24,14 +24,14 @@
 
 package sonia.scm.update.index;
 
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.util.IOUtil;
 import sonia.scm.version.Version;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

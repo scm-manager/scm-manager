@@ -26,14 +26,13 @@ package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.AbstractRepositoryJsonEnricher;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
 
 @Extension
 public class GitRepositoryConfigEnricher extends AbstractRepositoryJsonEnricher {

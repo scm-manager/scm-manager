@@ -27,14 +27,13 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import org.mapstruct.Mapper;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 import sonia.scm.web.EdisonHalAppender;
-
-import javax.inject.Inject;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Links.linkingTo;

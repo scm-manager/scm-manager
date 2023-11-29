@@ -24,10 +24,9 @@
 
 package sonia.scm.initialization;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import sonia.scm.security.AccessToken;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Generates cookies and invalidates initialization token cookies.

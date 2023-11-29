@@ -27,6 +27,10 @@ package sonia.scm.web.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
@@ -35,10 +39,6 @@ import sonia.scm.security.SecurityRequests;
 import sonia.scm.web.WebTokenGenerator;
 import sonia.scm.web.filter.AuthenticationFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 

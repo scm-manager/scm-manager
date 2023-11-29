@@ -26,13 +26,10 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Detects the ServletContainer.

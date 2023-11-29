@@ -26,10 +26,9 @@ package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.ws.rs.Path;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.ws.rs.Path;
 
 /**
  *  RESTful web service resource to manage repository roles.

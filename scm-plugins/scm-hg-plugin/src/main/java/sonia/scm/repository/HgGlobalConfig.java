@@ -25,11 +25,10 @@
 package sonia.scm.repository;
 
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import sonia.scm.auditlog.AuditEntry;
 import sonia.scm.util.Util;
-
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 
 /**

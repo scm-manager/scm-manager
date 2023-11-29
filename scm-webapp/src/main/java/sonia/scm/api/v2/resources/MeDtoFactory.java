@@ -27,6 +27,7 @@ package sonia.scm.api.v2.resources;
 import com.google.common.base.Strings;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupCollector;
@@ -34,8 +35,6 @@ import sonia.scm.user.EMail;
 import sonia.scm.user.User;
 import sonia.scm.user.UserPermissions;
 import sonia.scm.web.EdisonHalAppender;
-
-import javax.inject.Inject;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;

@@ -25,6 +25,7 @@
 package sonia.scm.repository;
 
 import com.google.common.base.Splitter;
+import jakarta.annotation.Nonnull;
 import org.assertj.core.util.Strings;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Nested;
@@ -36,7 +37,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import sonia.scm.util.SystemUtil;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

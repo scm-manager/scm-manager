@@ -24,9 +24,9 @@
 
 package sonia.scm.api.v2.resources;
 
+import jakarta.validation.constraints.Pattern;
 import sonia.scm.util.ValidationUtil;
 
-import javax.validation.constraints.Pattern;
 import java.util.List;
 
 interface CreateGroupDto {

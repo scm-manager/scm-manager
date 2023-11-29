@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.javahg.Changeset;
 import org.javahg.commands.LogCommand;
 import com.google.common.base.MoreObjects;
@@ -35,7 +36,6 @@ import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.spi.javahg.HgFileviewCommand;
 
-import javax.inject.Inject;
 import java.io.IOException;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;

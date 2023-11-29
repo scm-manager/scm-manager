@@ -27,6 +27,7 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import org.eclipse.jgit.http.server.resolver.DefaultReceivePackFactory;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ReceivePack;
@@ -38,8 +39,6 @@ import sonia.scm.protocolcommand.git.BaseReceivePackFactory;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.spi.HookEventFacade;
-
-import javax.servlet.http.HttpServletRequest;
 
 //~--- JDK imports ------------------------------------------------------------
 

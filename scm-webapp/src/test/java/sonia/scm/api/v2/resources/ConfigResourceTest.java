@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
+import jakarta.servlet.http.HttpServletResponse;
 import org.github.sdorra.jse.ShiroExtension;
 import org.github.sdorra.jse.SubjectAware;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -36,15 +37,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.admin.ScmConfigurationStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.JsonMerger;
-import sonia.scm.admin.ScmConfigurationStore;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;

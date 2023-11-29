@@ -32,154 +32,62 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 data:
-  server-config.xml: |
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">
-    <Configure id="ScmServer" class="org.eclipse.jetty.server.Server">
+  config.yml: |
+    # base server config
+    ##  Address to listen 0.0.0.0 means on every interface
 
-      <New id="httpConfig" class="org.eclipse.jetty.server.HttpConfiguration">
-        <!-- increase header size for mercurial -->
-        <Set name="requestHeaderSize">16384</Set>
-        <Set name="responseHeaderSize">16384</Set>
-        <Set name="sendServerVersion">false</Set>
+    {{- if .Values.ingress.enabled -}}
+    ## Evaluates headers set by a reverse proxy like X-Forwarded-For, X-Forwarded-Proto and X-Forwarded-Host
+    forwardHeadersEnabled: true
+    {{- end }}
 
-        {{- if .Values.ingress.enabled -}}
-        <!--
-        We have to enable ForwardedRequestCustomizer in order to understand X-Forwarded-xxx headers.
-        Without the ForwardedRequestCustomizer, scm will possibly generate wrong links
-        -->
-        <Call name="addCustomizer">
-          <Arg><New class="org.eclipse.jetty.server.ForwardedRequestCustomizer"/></Arg>
-        </Call>
-        {{- end }}
-      </New>
+    addressBinding: 0.0.0.0
+    port: 8080
+    contextPath: /scm
 
-      <!--
-      Connectors
-      -->
-      <Call name="addConnector">
-        <Arg>
-          <New class="org.eclipse.jetty.server.ServerConnector">
-            <Arg name="server">
-              <Ref refid="ScmServer" />
-            </Arg>
-            <Arg name="factories">
-              <Array type="org.eclipse.jetty.server.ConnectionFactory">
-                <Item>
-                  <New class="org.eclipse.jetty.server.HttpConnectionFactory">
-                    <Arg name="config">
-                      <Ref refid="httpConfig" />
-                    </Arg>
-                  </New>
-                </Item>
-              </Array>
-            </Arg>
-            <Set name="port">
-              <SystemProperty name="jetty.port" default="8080" />
-            </Set>
-          </New>
-        </Arg>
-      </Call>
+    ## increase http header size for mercurial
+    httpHeaderSize: 16384
 
-      <New id="scm-webapp" class="org.eclipse.jetty.webapp.WebAppContext">
-        <Set name="contextPath">/scm</Set>
-        <Set name="war">
-          <SystemProperty name="basedir" default="."/>/var/webapp/scm-webapp.war</Set>
-        <!-- disable directory listings -->
-        <Call name="setInitParameter">
-          <Arg>org.eclipse.jetty.servlet.Default.dirAllowed</Arg>
-          <Arg>false</Arg>
-        </Call>
-        <Set name="tempDirectory">
-          <SystemProperty name="basedir" default="."/>/work/scm
-        </Set>
-      </New>
+    # ssl config - ssl is only evaluated if key store path is set
+    ## path to your cert file
+    https:
+      keyStorePath: ""
+      keyStorePassword: secret
+      keyStoreType: PKCS12
+      sslPort: 8443
+      redirectHttpToHttps: false
 
-      <New id="docroot" class="org.eclipse.jetty.webapp.WebAppContext">
-        <Set name="contextPath">/</Set>
-        <Set name="baseResource">
-          <New class="org.eclipse.jetty.util.resource.ResourceCollection">
-            <Arg>
-              <Array type="java.lang.String">
-                <Item>
-                  <SystemProperty name="basedir" default="."/>/var/webapp/docroot</Item>
-              </Array>
-            </Arg>
-          </New>
-        </Set>
-        <Set name="tempDirectory">
-          <SystemProperty name="basedir" default="."/>/work/docroot
-        </Set>
-      </New>
+    tempDir: /var/cache/scm/work
 
-      <Set name="handler">
-        <New class="org.eclipse.jetty.server.handler.HandlerCollection">
-          <Set name="handlers">
-            <Array type="org.eclipse.jetty.server.Handler">
-              <Item>
-                <Ref id="scm-webapp" />
-              </Item>
-              <Item>
-                <Ref id="docroot" />
-              </Item>
-            </Array>
-          </Set>
-        </New>
-      </Set>
+    # logging
+    log:
+      rootLevel: WARN
+      enableFileAppender: false
+      enableConsoleAppender: true
+      logger:
+        sonia.scm: INFO
+        com.cloudogu.scm: INFO
 
-    </Configure>
-
-  logging.xml: |
-    <?xml version="1.0" encoding="UTF-8"?>
-    <configuration>
-
-      <!--
-      in a container environment we only need stdout
-      -->
-      <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-
-        <encoder>
-          <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
-        </encoder>
-
-      </appender>
-
-      <logger name="sonia.scm" level="INFO" />
-
-      <!-- suppress massive gzip logging -->
-      <logger name="sonia.scm.filter.GZipFilter" level="WARN" />
-      <logger name="sonia.scm.filter.GZipResponseStream" level="WARN" />
-
-      <logger name="sonia.scm.util.ServiceUtil" level="WARN" />
-
-      <!-- event bus -->
-      <logger name="sonia.scm.event.LegmanScmEventBus" level="INFO" />
-
-      <!-- shiro -->
-      <!--
-      <logger name="org.apache.shiro" level="INFO" />
-      <logger name="org.apache.shiro.authc.pam.ModularRealmAuthenticator" level="DEBUG" />
-      -->
-
-      <!-- svnkit -->
-      <!--
-      <logger name="svnkit" level="WARN" />
-      <logger name="svnkit.network" level="DEBUG" />
-      <logger name="svnkit.fsfs" level="WARN" />
-      -->
-
-      <!-- javahg -->
-      <!--
-      <logger name="org.javahg" level="DEBUG" />
-      -->
-
-      <!-- ehcache -->
-      <!--
-      <logger name="net.sf.ehcache" level="DEBUG" />
-      -->
-
-      <root level="WARN">
-        <appender-ref ref="STDOUT" />
-      </root>
-
-    </configuration>
+    webapp:
+      ## Sets explicit working directory for internal processes, empty means default java temp dir
+      workDir:
+      ## Home directory "scm-home" which is also set for classpath
+      homeDir: /var/lib/scm
+      cache:
+        dataFile:
+          enabled: true
+        store:
+          enabled: true
+      ## Warning: Enabling this option can lead to security issue.
+      endlessJwt: false
+      #### Number of async threads
+      asyncThreads: 4
+      #### Max seconds to abort async execution
+      maxAsyncAbortSeconds: 60
+      #### Amount of central work queue workers
+      central-work-queue:
+        workers: 4
+      #### Strategy for the working copy pool implementation [sonia.scm.repository.work.NoneCachingWorkingCopyPool, sonia.scm.repository.work.SimpleCachingWorkingCopyPool]
+      workingCopyPoolStrategy: sonia.scm.repository.work.SimpleCachingWorkingCopyPool
+      #### Amount of "cached" working copies
+      workingCopyPoolSize: 5

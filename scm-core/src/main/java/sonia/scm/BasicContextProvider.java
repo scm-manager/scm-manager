@@ -29,15 +29,14 @@ package sonia.scm;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.io.Files;
+import sonia.scm.config.WebappConfigProvider;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.Util;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Locale;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -55,23 +54,11 @@ public class BasicContextProvider implements SCMContextProvider
   /** Default version {@link String} */
   public static final String VERSION_DEFAULT = "unknown";
 
-  /**
-   * System property to override scm-manager version.
-   * <b>Note</b>: This should only be used for testing and never in production.
-   **/
-  public static final String VERSION_PROPERTY = "sonia.scm.version.override";
-
   /** Default name of the SCM-Manager base directory */
   public static final String DIRECTORY_DEFAULT = ".scm";
 
-  /** Environment varibale for the SCM-Manager base directory */
-  public static final String DIRECTORY_ENVIRONMENT = "SCM_HOME";
-
   /** Java system property for the SCM-Manager base directory */
   public static final String DIRECTORY_PROPERTY = "scm.home";
-
-  /** Classpath resource for the SCM-Manager base directory */
-  public static final String DIRECTORY_RESOURCE = "/scm.properties";
 
   /** Path to the maven properties file of the scm-core artifact */
   public static final String MAVEN_PROPERTIES =
@@ -80,11 +67,6 @@ public class BasicContextProvider implements SCMContextProvider
   /** Maven property for the version of the artifact */
   public static final String MAVEN_PROPERTY_VERSION = "version";
 
-  /**
-   * Java system property for the SCM-Manager project stage
-   * @since 1.12
-   */
-  public static final String STAGE_PROPERTY = "scm.stage";
 
   public static final String DEVELOPMENT_INSTANCE_ID = "00000000-0000-0000-0000-000000000000";
 
@@ -100,7 +82,7 @@ public class BasicContextProvider implements SCMContextProvider
     {
       baseDirectory = findBaseDirectory();
       version = determineVersion();
-      stage = loadProjectStage();
+      stage = Stage.valueOf(WebappConfigProvider.resolveAsString("stage").orElse(Stage.PRODUCTION.name()));
       instanceId = readOrCreateInstanceId();
     }
     catch (Exception ex)
@@ -209,37 +191,8 @@ public class BasicContextProvider implements SCMContextProvider
     throw new IllegalStateException(msg);
   }
 
-  /**
-   * Find the current stage.
-   *
-   *
-   * @return current stage
-   */
-  private Stage loadProjectStage()
-  {
-    Stage s = Stage.PRODUCTION;
-    String stageProperty = System.getProperty(STAGE_PROPERTY);
-
-    if (Util.isNotEmpty(stageProperty))
-    {
-      try
-      {
-        s = Stage.valueOf(stageProperty.toUpperCase(Locale.ENGLISH));
-      }
-      catch (IllegalArgumentException ex)
-      {
-
-        // do not use logger or IOUtil,
-        // http://www.slf4j.org/codes.html#substituteLogger
-        ex.printStackTrace(System.err);
-      }
-    }
-
-    return s;
-  }
-
   private String determineVersion() {
-    String v = System.getProperty(VERSION_PROPERTY);
+    String v = WebappConfigProvider.resolveAsString("versionOverride").orElse(null);
     if (Strings.isNullOrEmpty(v)) {
       v = loadVersion();
     }
@@ -288,7 +241,7 @@ public class BasicContextProvider implements SCMContextProvider
   }
 
   private String readOrCreateInstanceId() throws IOException {
-    if (stage == Stage.DEVELOPMENT) {
+    if (stage != Stage.PRODUCTION) {
       return DEVELOPMENT_INSTANCE_ID;
     }
     File configDirectory = new File(baseDirectory, "config");

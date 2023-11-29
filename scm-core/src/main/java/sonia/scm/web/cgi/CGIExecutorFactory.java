@@ -26,13 +26,10 @@ package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import sonia.scm.config.ScmConfiguration;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  *

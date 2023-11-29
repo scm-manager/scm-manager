@@ -11,9 +11,11 @@ To migrate an existing SCM-Manager 1.x Plugin, you have to do the following step
 * create a separate branch for the new version
 * It might be helpful to start and review the old version of the plugin via `mvn scmp:run` for later reference.
 * Import .gitignore & .editorconfig from SCMM
-* You might run the build once and review and fix SCMMv1 deprecation warnings. SCMMv2 gets rids of all deprecated classes.
-* update the version of the parent artifact (sonia.scm.plugins:scm-plugins) to the minimum version of SCM-Manager 2 you are planning for your plugin
-* change the packaging type of your plugin to smp 
+* You might run the build once and review and fix SCMMv1 deprecation warnings. SCMMv2 gets rids of all deprecated
+  classes.
+* update the version of the parent artifact (sonia.scm.plugins:scm-plugins) to the minimum version of SCM-Manager 2 you
+  are planning for your plugin
+* change the packaging type of your plugin to smp
 * remove the sonia.scm.maven:scm-maven-plugin from the pom
 * remove servlet-api from the list of dependencies (not always the case)
 
@@ -41,7 +43,7 @@ diff -r a988f4cfb7ab pom.xml
    <dependencies>
  
 -    <dependency>
--      <groupId>javax.servlet</groupId>
+-      <groupId>jakarta.servlet</groupId>
 -      <artifactId>servlet-api</artifactId>
 -      <version>${servlet.version}</version>
 -      <scope>provided</scope>
@@ -52,7 +54,7 @@ diff -r a988f4cfb7ab pom.xml
        <artifactId>simple-java-mail</artifactId>
        <version>2.4</version>
 @@ -52,18 +46,6 @@
-     <javaxmail.version>1.4.7</javaxmail.version>
+     <jakartamail.version>1.4.7</jakartamail.version>
    </properties>
    
 -  <build>
@@ -74,7 +76,8 @@ diff -r a988f4cfb7ab pom.xml
 
 ### Plugin Descriptor (src/main/resources/META-INF/scm/plugin.xml)
 
-* add the following dtd to the top of the plugin.xml: `<!DOCTYPE plugin SYSTEM "https://download.scm-manager.org/dtd/plugin/2.0.0-01.dtd">`
+* add the following dtd to the top of the
+  plugin.xml: `<!DOCTYPE plugin SYSTEM "https://download.scm-manager.org/dtd/plugin/2.0.0-01.dtd">`
 * add an scm-version element with the value 2 to the plugin.xml
 * remove resources and packages from plugin.xml
 
@@ -120,8 +123,9 @@ diff -r a988f4cfb7ab src/main/resources/META-INF/scm/plugin.xml
 
 * try to compile the sources: `mvn compile`
 * fix problems (TODO more help here)
-* Remove  XML accept headers from REST Resource classes -> SCMMv2 supports JSON only
-* Migrate REST Resources (e.g. `v2`, add to Index Resource, Update Links) - See core plugins Git, Hg, Svn, e.g. [`GitConfigResource`](https://github.com/scm-manager/scm-manager/blob/develop/scm-plugins/scm-git-plugin/src/main/java/sonia/scm/api/v2/resources/GitConfigResource.java)
+* Remove XML accept headers from REST Resource classes -> SCMMv2 supports JSON only
+* Migrate REST Resources (e.g. `v2`, add to Index Resource, Update Links) - See core plugins Git, Hg, Svn,
+  e.g. [`GitConfigResource`](https://github.com/scm-manager/scm-manager/blob/develop/scm-plugins/scm-git-plugin/src/main/java/sonia/scm/api/v2/resources/GitConfigResource.java)
 
 ### UI (src/main/js, src/main/webapp)
 
@@ -131,15 +135,15 @@ diff -r a988f4cfb7ab src/main/resources/META-INF/scm/plugin.xml
 ```json
 {
   "name": "@scm-manager/name-of-plugin",
-  "license" : "MIT",
+  "license": "MIT",
   "main": "src/main/js/index.tsx",
   "scripts": {
-    "build" : "ui-scripts plugin",
-    "watch" : "ui-scripts plugin-watch",
-    "postinstall" : "ui-plugins postinstall"
+    "build": "ui-scripts plugin",
+    "watch": "ui-scripts plugin-watch",
+    "postinstall": "ui-plugins postinstall"
   },
   "dependencies": {
-    "@scm-manager/ui-plugins" : "2.0.0"
+    "@scm-manager/ui-plugins": "2.0.0"
   }
 }
 ```
@@ -162,12 +166,18 @@ diff -r a988f4cfb7ab src/main/resources/META-INF/scm/plugin.xml
 
 Some more hints:
 
- * For Configuration UIs use [`ConfigurationBinder`](https://github.com/scm-manager/scm-manager/blob/develop/scm-ui/ui-components/src/config/ConfigurationBinder.tsx) - See core plugins Git, Hg, Svn, e.g. [scm-git-plugin/index.ts](https://github.com/scm-manager/scm-manager/blob/develop/scm-plugins/scm-git-plugin/src/main/js/index.ts).  
+* For Configuration UIs
+  use [`ConfigurationBinder`](https://github.com/scm-manager/scm-manager/blob/develop/scm-ui/ui-components/src/config/ConfigurationBinder.tsx)
+  - See core plugins Git, Hg, Svn,
+  e.g. [scm-git-plugin/index.ts](https://github.com/scm-manager/scm-manager/blob/develop/scm-plugins/scm-git-plugin/src/main/js/index.ts)
+  .  
   Note that `readOnly` property checks if update link is returned by REST resource
- * Don't forget [i18n for Plugins](../i18n-for-plugins)
+* Don't forget [i18n for Plugins](../i18n-for-plugins)
 
 # Further reading
 
 * [UI Extensions](../../ui-extensions) - Extend the SCM-Manager UI
-* [scm-manager/ui-components](https://github.com/scm-manager/scm-manager/tree/develop/scm-ui/ui-components) - Reusable UI components within SCM-Manager
-* [smp-maven-plugin](https://github.com/scm-manager/smp-maven-plugin) - Plugin that facilitates efficient plugin development for SCMM
+* [scm-manager/ui-components](https://github.com/scm-manager/scm-manager/tree/develop/scm-ui/ui-components) - Reusable
+  UI components within SCM-Manager
+* [smp-maven-plugin](https://github.com/scm-manager/smp-maven-plugin) - Plugin that facilitates efficient plugin
+  development for SCMM

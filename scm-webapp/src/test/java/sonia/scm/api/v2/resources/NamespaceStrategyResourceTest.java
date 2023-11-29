@@ -26,6 +26,8 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.Lists;
 import com.google.inject.util.Providers;
+import jakarta.inject.Provider;
+import jakarta.ws.rs.core.UriInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -33,8 +35,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 
-import javax.inject.Provider;
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.LinkedHashSet;
 import java.util.Set;

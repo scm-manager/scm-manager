@@ -28,26 +28,20 @@ package sonia.scm.web;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
-
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.i18n.Bundle;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.cgi.CGIExceptionHandler;
 import sonia.scm.web.cgi.CGIStatusCodeHandler;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-
 import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  *

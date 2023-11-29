@@ -24,9 +24,9 @@
 
 package sonia.scm.user.xml;
 
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import sonia.scm.user.User;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Map;
 import java.util.TreeMap;
 

@@ -24,6 +24,8 @@
 
 package sonia.scm.server;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -38,8 +40,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -144,7 +144,7 @@ class HealthCheckTest {
   }
 
   @Test
-  void shouldFailOnRedirectWithouLocation() throws Exception {
+  void shouldFailOnRedirectWithoutLocation() throws Exception {
     int redirector = startInvalidRedirector("/scm");
 
     HealthCheck check = new HealthCheck(
@@ -260,7 +260,7 @@ class HealthCheckTest {
   private ServerConnector createSslConnector(Server server, Path directory, String password) throws Exception {
     Path keystorePath = createSelfSignedKeyStore(directory, password);
     KeyStore keyStore = createKeyStore(keystorePath, password);
-    SslContextFactory sslContextFactory = createSslContextFactory(keyStore, password);
+    SslContextFactory.Server sslContextFactory = createSslContextFactory(keyStore, password);
 
     ServerConnector sslConnector = new ServerConnector(
       server,
@@ -273,8 +273,8 @@ class HealthCheckTest {
     return sslConnector;
   }
 
-  private SslContextFactory createSslContextFactory(KeyStore keyStore, String password) {
-    SslContextFactory sslContextFactory = new SslContextFactory.Server();
+  private SslContextFactory.Server createSslContextFactory(KeyStore keyStore, String password) {
+    SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
     sslContextFactory.setKeyStore(keyStore);
     sslContextFactory.setKeyStorePassword(password);
     return sslContextFactory;
@@ -298,7 +298,7 @@ class HealthCheckTest {
       "-storepass", password,
       "-validity", "360",
       "-keysize", "1024",
-      "-dname", "CN=localhost"
+      "-dname", "CN=127.0.0.1"
     )
       .directory(directory.toFile())
       .start()

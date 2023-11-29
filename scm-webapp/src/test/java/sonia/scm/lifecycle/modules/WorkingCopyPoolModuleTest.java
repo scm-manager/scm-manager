@@ -25,12 +25,12 @@ package sonia.scm.lifecycle.modules;
 
 import com.google.inject.Binder;
 import com.google.inject.binder.AnnotatedBindingBuilder;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.config.WebappConfigProvider;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
@@ -38,11 +38,11 @@ import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.repository.work.WorkingCopyPool;
 
 import java.io.File;
+import java.util.Map;
 
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static sonia.scm.lifecycle.modules.WorkingCopyPoolModule.WORKING_COPY_POOL_STRATEGY_PROPERTY;
 
 @ExtendWith(MockitoExtension.class)
 class WorkingCopyPoolModuleTest {
@@ -59,14 +59,9 @@ class WorkingCopyPoolModuleTest {
     lenient().when(pluginLoader.getUberClassLoader()).thenReturn(getClass().getClassLoader());
   }
 
-  @AfterEach
-  void cleanProperty() {
-    System.clearProperty(WORKING_COPY_POOL_STRATEGY_PROPERTY);
-  }
 
   @Test
   void shouldBindToDefaultWithoutProperty() {
-    System.clearProperty(WORKING_COPY_POOL_STRATEGY_PROPERTY);
     WorkingCopyPoolModule module = new WorkingCopyPoolModule(pluginLoader);
     when(binder.bind(WorkingCopyPool.class)).thenReturn(bindingBuilder);
 
@@ -77,7 +72,7 @@ class WorkingCopyPoolModuleTest {
 
   @Test
   void shouldBindToCustomPoolFromProperty() {
-    System.setProperty(WORKING_COPY_POOL_STRATEGY_PROPERTY, TestPool.class.getName());
+    WebappConfigProvider.setConfigBindings(Map.of("workingCopyPoolStrategy", TestPool.class.getName()));
     WorkingCopyPoolModule module = new WorkingCopyPoolModule(pluginLoader);
     when(binder.bind(WorkingCopyPool.class)).thenReturn(bindingBuilder);
 

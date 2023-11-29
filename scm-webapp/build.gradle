@@ -27,7 +27,7 @@ plugins {
   id 'org.scm-manager.java'
   id 'org.scm-manager.run'
   id 'org.scm-manager.core-plugins'
-  id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.12'
+  id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.2.19'
 }
 
 configurations {
@@ -35,6 +35,16 @@ configurations {
   webapp {
     canBeConsumed = true
     canBeResolved = false
+    create("swaggerCoreDeps").defaultDependencies(new Action<DependencySet>() {
+      @Override
+      void execute(DependencySet dependencies) {
+        dependencies.add(project.getDependencies().create("org.apache.commons:commons-lang3:3.12.0"))
+        dependencies.add(project.getDependencies().create("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"))
+        dependencies.add(project.getDependencies().create("jakarta.servlet:jakarta.servlet-api:6.0.0"))
+        dependencies.add(project.getDependencies().create("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.19"))
+        dependencies.add(project.getDependencies().create("com.fasterxml.jackson.core:jackson-core:2.15.2"))
+      }
+    })
   }
 }
 
@@ -81,14 +91,15 @@ dependencies {
   implementation libraries.jacksonJaxRsJsonProvider
   implementation libraries.jacksonDatatypeJdk8
   implementation libraries.jacksonDatatypeJsr310
+  implementation libraries.jacksonDataFormatYaml
 
   // rest api
   implementation libraries.resteasyJaxbProvider
   implementation libraries.resteasyJackson2Provider
   implementation libraries.resteasyMultiartProvider
-  implementation libraries.resteasyGuice
   implementation libraries.resteasyServletInitializer
   implementation libraries.resteasyValidatorProvider
+  implementation "org.apache.httpcomponents:httpcore:4.4.16"
 
   // openapi
   compileOnly libraries.swaggerJaxRs
@@ -144,6 +155,10 @@ dependencies {
 
   // shiro unit
   testImplementation libraries.shiroUnit
+
+  // plugin transformer
+  implementation 'org.eclipse.transformer:org.eclipse.transformer:0.5.0'
+  implementation 'org.eclipse.transformer:org.eclipse.transformer.jakarta:0.5.0'
 }
 
 war {
@@ -161,9 +176,12 @@ artifacts {
 }
 
 // war without assets for development and livereload
-task 'dev-war' (type: War) {
+task 'dev-war'(type: War) {
   archiveName 'scm-webapp-dev.war'
   from 'build/war'
+  into('WEB-INF/classes') {
+    from('src/main/conf/config.yml')
+  }
   into('WEB-INF/classes/META-INF/scm') {
     from('build/openapi')
   }
@@ -175,7 +193,6 @@ scmServer {
   liveReload = true
   openBrowser = true
   warFile = file('build/libs/scm-webapp-dev.war')
-  loggingConfiguration = file('src/main/conf/logback.serve.xml')
 }
 
 run {
@@ -190,6 +207,7 @@ resolve {
   resourcePackages = ['sonia.scm.api.v2.resources']
   outputDir = file('build/openapi')
   openApiFile = file('build/openapi_tmp/openapi.yml')
+  setBuildClasspath(project.configurations.swaggerCoreDeps)
 }
 
 task prepareOpenAPI(type: Copy) {
@@ -197,6 +215,10 @@ task prepareOpenAPI(type: Copy) {
   into 'build/openapi_tmp'
   duplicatesStrategy 'WARN'
   expand(version: project.version)
+}
+
+repositories {
+  mavenCentral()
 }
 
 tasks.getByName("resolve").configure {

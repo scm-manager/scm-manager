@@ -25,13 +25,13 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.javahg.commands.LogCommand;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 
-import javax.inject.Inject;
 import java.util.Iterator;
 import java.util.concurrent.Callable;
 

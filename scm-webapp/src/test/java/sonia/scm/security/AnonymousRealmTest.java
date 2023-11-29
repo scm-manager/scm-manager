@@ -24,6 +24,7 @@
     
 package sonia.scm.security;
 
+import jakarta.ws.rs.NotAuthorizedException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,8 +34,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContext;
 import sonia.scm.user.UserDAO;
-
-import javax.ws.rs.NotAuthorizedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

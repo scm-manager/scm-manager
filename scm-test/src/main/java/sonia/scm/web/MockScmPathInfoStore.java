@@ -24,9 +24,9 @@
 
 package sonia.scm.web;
 
+import jakarta.inject.Provider;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 
-import javax.inject.Provider;
 import java.net.URI;
 
 import static com.google.inject.util.Providers.of;

@@ -28,6 +28,7 @@ import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
@@ -38,7 +39,6 @@ import sonia.scm.search.SearchEngine;
 import sonia.scm.search.SearchableType;
 import sonia.scm.web.EdisonHalAppender;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 

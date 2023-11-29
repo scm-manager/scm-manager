@@ -26,10 +26,10 @@ package sonia.scm.cache;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Singleton;
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 

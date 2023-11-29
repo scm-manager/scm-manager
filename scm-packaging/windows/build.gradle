@@ -73,16 +73,16 @@ task windows(type: Zip) {
   into('scm-server') {
     into('conf') {
       from 'src/main/fs/conf'
-      include 'server-config.xml'
+      include 'config.yml'
       expand([version: version])
     }
     from('src/main/fs') {
-      exclude('**/server-config.xml')
+      exclude('**/config.yml')
     }
     into('lib') {
       from project.configurations.server
     }
-    into('webapp') {
+    into('var/webapp') {
       from project.configurations.webapp
       rename {
         'scm-webapp.war'

@@ -26,7 +26,7 @@ package sonia.scm.it.webapp;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import com.sun.jersey.api.client.WebResource;
+import jakarta.ws.rs.client.Invocation;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
@@ -138,8 +138,8 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
     Thread.sleep(WAIT_TIME);
 
     // check debug servlet for pushed commit
-    WebResource.Builder wr = createResource(client, "../debug/" + repository.getNamespace() + "/" + repository.getName() + "/post-receive/last");
-    DebugHookData data = wr.get(DebugHookData.class);
+    Invocation.Builder wr = createResource(client, "../debug/" + repository.getNamespace() + "/" + repository.getName() + "/post-receive/last");
+    DebugHookData data = wr.buildGet().invoke(DebugHookData.class);
     assertNotNull(data);
     assertThat(data.getChangesets(), contains(changeset.getId()));
   }
@@ -173,8 +173,8 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
     Thread.sleep(WAIT_TIME);
 
     // check debug servlet that only one commit is present
-    WebResource.Builder wr = createResource(client, String.format("../debug/%s/%s/post-receive/last", repository.getNamespace(), repository.getName()));
-    DebugHookData data = wr.get(DebugHookData.class);
+    Invocation.Builder wr = createResource(client, String.format("../debug/%s/%s/post-receive/last", repository.getNamespace(), repository.getName()));
+    DebugHookData data = wr.buildGet().invoke(DebugHookData.class);
     assertNotNull(data);
     assertThat(data.getChangesets(), allOf(
       contains(b.getId()),

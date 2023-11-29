@@ -74,7 +74,7 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
     when(rpack.getRevWalk()).thenReturn(revWalk);
     when(rpack.getPackParserListener()).thenReturn(listener);
     when(converterFactory.create(repository, revWalk)).thenReturn(converter);
-    when(converter.createChangeset(any(), (String[]) any()))
+    when(converter.createChangeset(any(), any(String[].class)))
       .thenAnswer(invocation -> new Changeset(invocation.getArgument(0, RevCommit.class).name(), null, null));
   }
 

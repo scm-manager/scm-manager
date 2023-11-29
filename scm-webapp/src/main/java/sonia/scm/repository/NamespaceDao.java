@@ -24,10 +24,10 @@
 
 package sonia.scm.repository;
 
+import jakarta.inject.Inject;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Optional;
 

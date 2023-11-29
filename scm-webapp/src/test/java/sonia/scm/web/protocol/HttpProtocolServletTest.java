@@ -24,6 +24,9 @@
 
 package sonia.scm.web.protocol;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
@@ -50,16 +53,11 @@ import sonia.scm.web.ScmClientDetector;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.Set;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.eclipse.jgit.api.Git;
@@ -57,7 +58,6 @@ import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.repository.api.TagDeleteRequest;
 import sonia.scm.user.User;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;

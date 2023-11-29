@@ -28,6 +28,9 @@ import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,9 +45,6 @@ import sonia.scm.search.IndexedType;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.security.Principal;
 
 @StaticPermissions(

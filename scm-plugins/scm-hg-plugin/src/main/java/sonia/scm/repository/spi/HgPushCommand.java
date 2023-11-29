@@ -28,6 +28,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.javahg.Changeset;
 import org.javahg.commands.ExecutionException;
 import org.slf4j.Logger;
@@ -36,7 +37,6 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.api.PushFailedException;
 import sonia.scm.repository.api.PushResponse;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 

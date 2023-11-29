@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.util.Providers;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import jakarta.inject.Provider;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.jupiter.api.AfterEach;
@@ -40,7 +41,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.metrics.MonitoringSystem;
 import sonia.scm.metrics.ScrapeTarget;
 
-import javax.inject.Provider;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
@@ -50,7 +50,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class MetricsIndexEnricherTest {

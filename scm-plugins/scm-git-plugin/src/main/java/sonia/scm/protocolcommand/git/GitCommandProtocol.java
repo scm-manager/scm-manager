@@ -24,6 +24,7 @@
 
 package sonia.scm.protocolcommand.git;
 
+import jakarta.inject.Inject;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.transport.ReceivePack;
@@ -40,7 +41,6 @@ import sonia.scm.protocolcommand.RepositoryContext;
 import sonia.scm.protocolcommand.ScmCommandProtocol;
 import sonia.scm.repository.RepositoryPermissions;
 
-import javax.inject.Inject;
 import java.io.IOException;
 
 @Extension

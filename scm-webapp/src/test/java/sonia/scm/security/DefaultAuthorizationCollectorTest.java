@@ -58,13 +58,12 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertSame;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -134,7 +133,7 @@ public class DefaultAuthorizationCollectorTest {
   )
   public void testCollectFromCache() {
     AuthorizationInfo info = new SimpleAuthorizationInfo();
-    when(cache.get(anyObject())).thenReturn(info);
+    when(cache.get(any())).thenReturn(info);
     authenticate(UserTestData.createTrillian(), "main");
 
     AuthorizationInfo authInfo = collector.collect();

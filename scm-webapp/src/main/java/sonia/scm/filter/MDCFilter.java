@@ -27,26 +27,20 @@ package sonia.scm.filter;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
-
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-
 import org.slf4j.MDC;
-
+import sonia.scm.Priority;
 import sonia.scm.SCMContext;
 import sonia.scm.TransactionId;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.web.filter.HttpFilter;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import sonia.scm.Priority;
 
 /**
  *

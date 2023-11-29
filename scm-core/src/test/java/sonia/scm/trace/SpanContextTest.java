@@ -25,9 +25,9 @@
 package sonia.scm.trace;
 
 import com.google.common.collect.ImmutableMap;
+import jakarta.xml.bind.JAXB;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.JAXB;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.time.Instant;

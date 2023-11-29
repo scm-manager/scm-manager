@@ -33,14 +33,14 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.inject.Inject;
 import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.annotation.Nullable;
+import jakarta.servlet.ServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.Default;
 import sonia.scm.metrics.Metrics;
 import sonia.scm.plugin.PluginLoader;
 
-import javax.annotation.Nullable;
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.concurrent.ExecutorService;

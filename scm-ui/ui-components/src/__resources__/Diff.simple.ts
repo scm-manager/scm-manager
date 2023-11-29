@@ -133,8 +133,8 @@ index 889cc49..d5a4811 100644
  import org.mockito.junit.jupiter.MockitoExtension;
  import sonia.scm.security.SessionId;
 +
- import javax.ws.rs.sse.OutboundSseEvent;
- import javax.ws.rs.sse.SseEventSink;
+ import jakarta.ws.rs.sse.OutboundSseEvent;
+ import jakarta.ws.rs.sse.SseEventSink;
 -
  import java.time.Clock;
  import java.time.Instant;

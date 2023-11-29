@@ -24,12 +24,11 @@
 
 package sonia.scm.metrics;
 
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
 public final class RequestCategoryDetector {
 

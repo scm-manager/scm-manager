@@ -26,9 +26,8 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import jakarta.inject.Singleton;
 import sonia.scm.plugin.Extension;
-
-import javax.inject.Singleton;
 
 /**
  * The {@link HalEnricherRegistry} is responsible for binding {@link HalEnricher} instances to their source types.

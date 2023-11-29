@@ -25,10 +25,10 @@
 package sonia.scm.api.v2;
 
 
-import javax.ws.rs.Priorities;
+import jakarta.ws.rs.Priorities;
 
 /**
- * A collection of filter priorities used by custom {@link javax.ws.rs.container.ContainerResponseFilter}s.
+ * A collection of filter priorities used by custom {@link jakarta.ws.rs.container.ContainerResponseFilter}s.
  * Higher number means earlier execution in the response filter chain.
  */
 final class ResponseFilterPriorities {

@@ -27,8 +27,7 @@ package sonia.scm.server;
 import com.google.common.io.Resources;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junitpioneer.jupiter.ClearSystemProperty;
-import org.junitpioneer.jupiter.SetSystemProperty;
+import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,13 +35,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ClearSystemProperty(key = "basedir")
 class ServerConfigurationTest {
 
   @Test
-  void shouldReturnDefaultListener(@TempDir Path directory) throws IOException {
-    ServerConfiguration configuration = configure(directory, "default.xml");
+  void shouldThrowServerConfigurationExceptionIfConfigYamlNotFound() {
+    assertThrows(ServerConfigurationException.class, () -> new ServerConfiguration(null, null));
+  }
+
+  @Test
+  void shouldConfigureServerWithYamlFormat(@TempDir Path directory) throws IOException {
+    ServerConfiguration configuration = configure(directory, "default.yml");
 
     assertThat(configuration.getListeners())
       .hasSize(1)
@@ -54,9 +58,9 @@ class ServerConfigurationTest {
   }
 
   @Test
-  @SetSystemProperty(key = "jetty.port", value = "8081")
+  @SetEnvironmentVariable(key = "SCM_PORT", value = "8081")
   void shouldReturnCustomContextPathAndPort(@TempDir Path directory) throws IOException {
-    ServerConfiguration configuration = configure(directory, "ctxPath.xml");
+    ServerConfiguration configuration = configure(directory, "ctxPath.yml");
 
     assertThat(configuration.getListeners())
       .hasSize(1)
@@ -69,7 +73,7 @@ class ServerConfigurationTest {
 
   @Test
   void shouldReturnConfiguredSSListener(@TempDir Path directory) throws IOException {
-    ServerConfiguration configuration = configure(directory, "ssl.xml");
+    ServerConfiguration configuration = configure(directory, "ssl.yml");
 
     assertThat(configuration.getListeners())
       .hasSize(2)
@@ -87,17 +91,17 @@ class ServerConfigurationTest {
   }
 
   @SuppressWarnings("UnstableApiUsage")
-  private ServerConfiguration configure(Path directory, String configurationFilename) throws IOException {
+  private ServerConfiguration configure(Path tempDir, String configurationFilename) throws IOException {
+    System.setProperty("basedir", tempDir.toString());
+
     URL resource = Resources.getResource("sonia/scm/server/" + configurationFilename);
-    Path path = directory.resolve("server-config.xml");
+    Path path = tempDir.resolve("config.yml");
 
     Files.write(path, Resources.toByteArray(resource));
-    Files.createDirectories(directory.resolve("var/webapp/docroot"));
-    Files.createFile(directory.resolve("var/webapp/scm-webapp.war"));
+    Files.createDirectories(tempDir.resolve("var/webapp/docroot"));
+    Files.createFile(tempDir.resolve("var/webapp/scm-webapp.war"));
 
-    System.setProperty("basedir", directory.toString());
-
-    return new ServerConfiguration(path);
+    return new ServerConfiguration(path.toUri().toURL(), tempDir);
   }
 
 }

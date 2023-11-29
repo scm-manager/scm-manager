@@ -25,6 +25,7 @@
 package sonia.scm.repository.cli;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
@@ -33,7 +34,6 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.ScmProtocol;
 
-import javax.inject.Inject;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;

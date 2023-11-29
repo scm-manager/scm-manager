@@ -24,10 +24,10 @@
 
 package sonia.scm.security;
 
+import jakarta.inject.Inject;
 import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;

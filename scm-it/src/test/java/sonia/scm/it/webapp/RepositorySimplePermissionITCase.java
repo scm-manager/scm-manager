@@ -26,26 +26,23 @@ package sonia.scm.it.webapp;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import de.otto.edison.hal.HalRepresentation;
+import jakarta.ws.rs.core.Response;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.api.v2.resources.RepositoryDto;
 import sonia.scm.web.VndMediaType;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static sonia.scm.it.webapp.IntegrationTestUtil.createAdminClient;
 import static sonia.scm.it.webapp.IntegrationTestUtil.createResource;
-import static sonia.scm.it.webapp.IntegrationTestUtil.serialize;
+import static sonia.scm.it.webapp.IntegrationTestUtil.post;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -89,23 +86,24 @@ public class RepositorySimplePermissionITCase
 
     ScmClient client = createAdminClient();
 
-    WebResource.Builder wr = createResource(client, "repositories");
-    ClientResponse response = wr.type(VndMediaType.REPOSITORY).post(ClientResponse.class, serialize(repository));
+    String repositoryUrl;
+    try (Response response = post(client, "repositories", VndMediaType.REPOSITORY, repository)) {
 
-    assertNotNull(response);
-    Assert.assertEquals(201, response.getStatus());
+      assertNotNull(response);
+      Assert.assertEquals(201, response.getStatus());
 
-    String repositoryUrl = response.getHeaders().getFirst("Location");
+      repositoryUrl = response.getHeaders().getFirst("Location").toString();
 
-    assertNotNull(repositoryUrl);
-    response.close();
-    response = client.resource(repositoryUrl).get(ClientResponse.class);
-    assertNotNull(response);
-    Assert.assertEquals(200, response.getStatus());
-    repository = new ObjectMapperProvider().get().readValue(response.getEntity(String.class), RepositoryDto.class);
+      assertNotNull(repositoryUrl);
+    }
+
+    Response clientResponse = client.resource(repositoryUrl).get();
+    assertNotNull(clientResponse);
+    Assert.assertEquals(200, clientResponse.getStatus());
+    repository = clientResponse.readEntity(RepositoryDto.class);
     REPOSITORY_PATH = repository.getNamespace() + "/" + repository.getName();
     assertNotNull(REPOSITORY_PATH);
-    response.close();
+    clientResponse.close();
   }
 
   /**
@@ -125,20 +123,14 @@ public class RepositorySimplePermissionITCase
    * @param response
    */
   @Override
-  protected void checkGetAllResponse(ClientResponse response)
+  protected void checkGetAllResponse(Response response)
   {
     if (!credentials.isAnonymous())
     {
       assertNotNull(response);
       Assert.assertEquals(200, response.getStatus());
 
-      HalRepresentation repositories =
-        null;
-      try {
-        repositories = new ObjectMapperProvider().get().readValue(response.getEntity(String.class), HalRepresentation.class);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      HalRepresentation repositories = response.readEntity(HalRepresentation.class);
 
       assertNotNull(repositories);
       assertTrue(repositories.getEmbedded().getItemsBy("repositories").isEmpty());
@@ -153,7 +145,7 @@ public class RepositorySimplePermissionITCase
    * @param response
    */
   @Override
-  protected void checkGetResponse(ClientResponse response)
+  protected void checkGetResponse(Response response)
   {
     if (!credentials.isAnonymous())
     {

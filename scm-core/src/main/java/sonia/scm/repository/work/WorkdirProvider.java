@@ -24,15 +24,17 @@
 
 package sonia.scm.repository.work;
 
+import com.google.common.base.Strings;
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.ConfigValue;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.util.IOUtil;
 
-import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -49,8 +51,11 @@ public class WorkdirProvider implements ServletContextListener {
   private final boolean useRepositorySpecificDir;
 
   @Inject
-  public WorkdirProvider(RepositoryLocationResolver repositoryLocationResolver) {
-    this(new File(System.getProperty("scm.workdir" , System.getProperty("java.io.tmpdir")), "scm-work"), repositoryLocationResolver, System.getProperty("scm.workdir") == null);
+  public WorkdirProvider(
+    @ConfigValue(key = "workdir", defaultValue = "", description = "Working directory for internal repository operations") String workDir,
+    RepositoryLocationResolver repositoryLocationResolver
+    ) {
+    this(new File(!Strings.isNullOrEmpty(workDir) ? workDir : System.getProperty("java.io.tmpdir") , "scm-work"), repositoryLocationResolver, workDir == null);
   }
 
   public WorkdirProvider(File rootDirectory, RepositoryLocationResolver repositoryLocationResolver, boolean useRepositorySpecificDir) {

@@ -24,8 +24,9 @@
 
 package sonia.scm.store;
 
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.Marshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.security.KeyGenerator;
@@ -33,15 +34,11 @@ import sonia.scm.xml.XmlStreams;
 import sonia.scm.xml.XmlStreams.AutoCloseableXMLReader;
 import sonia.scm.xml.XmlStreams.AutoCloseableXMLWriter;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 import java.io.File;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Predicate;
 
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static sonia.scm.store.CopyOnWrite.execute;

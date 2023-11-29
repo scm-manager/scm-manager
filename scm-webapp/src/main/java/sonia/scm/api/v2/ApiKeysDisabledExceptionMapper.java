@@ -24,13 +24,12 @@
 
 package sonia.scm.api.v2;
 
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.Provider;
 import sonia.scm.api.rest.ContextualExceptionMapper;
 import sonia.scm.api.v2.resources.ExceptionWithContextToErrorDtoMapper;
 import sonia.scm.security.ApiKeysDisabledException;
-
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
 
 /**
  * @since 2.43.0

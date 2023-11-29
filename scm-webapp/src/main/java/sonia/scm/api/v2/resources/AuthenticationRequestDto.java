@@ -26,8 +26,8 @@ package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import jakarta.ws.rs.FormParam;
 
-import javax.ws.rs.FormParam;
 import java.util.List;
 
 public class AuthenticationRequestDto {

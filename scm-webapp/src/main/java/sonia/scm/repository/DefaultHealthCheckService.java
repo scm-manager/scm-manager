@@ -24,7 +24,7 @@
 
 package sonia.scm.repository;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class DefaultHealthCheckService implements HealthCheckService {
 

@@ -25,8 +25,8 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.ImmutableList;
+import jakarta.ws.rs.core.UriBuilder;
 
-import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.Arrays;
 

@@ -24,13 +24,12 @@
 
 package sonia.scm.api.v2.resources;
 
+import jakarta.inject.Inject;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
-
-import javax.inject.Inject;
 
 public class GitRepositoryConfigStoreProvider {
 

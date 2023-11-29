@@ -24,11 +24,11 @@
 
 package sonia.scm.validation;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.validation.ConstraintValidatorFactory;
-import javax.validation.Validation;
-import javax.validation.Validator;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.validation.ConstraintValidatorFactory;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 
 public class DefaultValidatorProvider implements Provider<Validator> {
 

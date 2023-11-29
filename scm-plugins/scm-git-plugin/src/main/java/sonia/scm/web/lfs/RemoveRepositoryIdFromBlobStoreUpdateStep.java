@@ -24,14 +24,13 @@
 
 package sonia.scm.web.lfs;
 
+import jakarta.inject.Inject;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.store.StoreType;
 import sonia.scm.update.RepositoryUpdateIterator;
 import sonia.scm.update.StoreUpdateStepUtilFactory;
 import sonia.scm.version.Version;
-
-import javax.inject.Inject;
 
 import static sonia.scm.version.Version.parse;
 

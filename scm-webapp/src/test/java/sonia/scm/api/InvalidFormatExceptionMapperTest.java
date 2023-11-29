@@ -24,14 +24,14 @@
 
 package sonia.scm.api;
 
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.jboss.resteasy.spi.Dispatcher;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 

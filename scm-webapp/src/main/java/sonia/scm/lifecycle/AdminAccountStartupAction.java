@@ -24,10 +24,14 @@
 
 package sonia.scm.lifecycle;
 
+import com.google.common.base.Strings;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
+import sonia.scm.config.ConfigValue;
 import sonia.scm.initialization.InitializationStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.PermissionAssigner;
@@ -36,8 +40,6 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.security.AdministrationContext;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Collections;
 
 import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
@@ -48,19 +50,31 @@ public class AdminAccountStartupAction implements InitializationStep {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdminAccountStartupAction.class);
 
-  public static final String INITIAL_PASSWORD_PROPERTY = "scm.initialPassword";
-  private static final String INITIAL_USER_PROPERTY = "scm.initialUser";
-
   private final PasswordService passwordService;
   private final UserManager userManager;
   private final PermissionAssigner permissionAssigner;
   private final RandomPasswordGenerator randomPasswordGenerator;
   private final AdministrationContext context;
+  private final String adminUserName;
+  private final String initialPassword;
+  private final Boolean skipAdminCreation;
 
   private String initialToken;
 
   @Inject
-  public AdminAccountStartupAction(PasswordService passwordService, UserManager userManager, PermissionAssigner permissionAssigner, RandomPasswordGenerator randomPasswordGenerator, AdministrationContext context) {
+  public AdminAccountStartupAction(
+    @ConfigValue(key = "initialUser", defaultValue = "scmadmin", description = "Initial user for admin account") String initialUser,
+    @ConfigValue(key = "initialPassword", defaultValue = "", description = "Initial password for admin account") String initialPassword,
+    @ConfigValue(key = "skipAdminCreation", defaultValue = "false", description = "Skip creation of initial admin user") Boolean skipAdminCreation,
+    PasswordService passwordService,
+    UserManager userManager,
+    PermissionAssigner permissionAssigner,
+    RandomPasswordGenerator randomPasswordGenerator,
+    AdministrationContext context
+  ) {
+    this.initialPassword = initialPassword;
+    this.adminUserName = initialUser;
+    this.skipAdminCreation = skipAdminCreation;
     this.passwordService = passwordService;
     this.userManager = userManager;
     this.permissionAssigner = permissionAssigner;
@@ -71,7 +85,7 @@ public class AdminAccountStartupAction implements InitializationStep {
   }
 
   private void initialize() {
-    context.runAsAdmin((PrivilegedStartupAction)() -> {
+    context.runAsAdmin((PrivilegedStartupAction) () -> {
       if (shouldCreateAdminAccount() && !adminUserCreatedWithGivenPassword()) {
         createStartupToken();
       }
@@ -79,13 +93,11 @@ public class AdminAccountStartupAction implements InitializationStep {
   }
 
   @SuppressWarnings({"java:S2639", "java:S2629"}) // Yes, we use '.' as a regex here
-                                                  // No, we do not need conditional execution for 'replaceAll' here
+  // No, we do not need conditional execution for 'replaceAll' here
   private boolean adminUserCreatedWithGivenPassword() {
-    String startupTokenByProperty = System.getProperty(INITIAL_PASSWORD_PROPERTY);
-    if (startupTokenByProperty != null) {
-      String adminUserName = System.getProperty(INITIAL_USER_PROPERTY, "scmadmin");
+    if (!Strings.isNullOrEmpty(initialPassword)) {
       context.runAsAdmin((PrivilegedStartupAction) () ->
-        createAdminUser(adminUserName, "SCM Administrator", "scm@example.com", startupTokenByProperty));
+        createAdminUser(adminUserName, "SCM Administrator", "scm@example.com", initialPassword));
       LOG.info("================={}========================", adminUserName.replaceAll(".", "="));
       LOG.info("==               {}                      ==", adminUserName.replaceAll(".", " "));
       LOG.info("== Created user '{}' with given password ==", adminUserName);
@@ -138,7 +150,7 @@ public class AdminAccountStartupAction implements InitializationStep {
   }
 
   private boolean shouldCreateAdminAccount() {
-    return !Boolean.getBoolean("sonia.scm.skipAdminCreation") && (userManager.getAll().isEmpty() || onlyAnonymousUserExists());
+    return !skipAdminCreation && (userManager.getAll().isEmpty() || onlyAnonymousUserExists());
   }
 
   private boolean onlyAnonymousUserExists() {

@@ -27,8 +27,7 @@ package sonia.scm.repository;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
-
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RequestScoped
 public class DefaultRepositoryProvider implements RepositoryProvider {

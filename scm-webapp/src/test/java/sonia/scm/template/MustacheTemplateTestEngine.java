@@ -25,9 +25,8 @@
 package sonia.scm.template;
 
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import jakarta.servlet.ServletContext;
 import sonia.scm.plugin.PluginLoader;
-
-import javax.servlet.ServletContext;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

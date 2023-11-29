@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
  * @author Sebastian Sdorra
  */
 @ExtendWith({MockitoExtension.class})
-public class DefaultCipherHandlerTest {
+class DefaultCipherHandlerTest {
 
   @Mock
   private SCMContextProvider context;

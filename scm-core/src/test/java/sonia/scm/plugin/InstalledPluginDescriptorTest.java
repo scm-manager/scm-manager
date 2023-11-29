@@ -25,10 +25,10 @@
 package sonia.scm.plugin;
 
 import com.google.common.io.Resources;
+import jakarta.xml.bind.JAXB;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.JAXB;
 import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;

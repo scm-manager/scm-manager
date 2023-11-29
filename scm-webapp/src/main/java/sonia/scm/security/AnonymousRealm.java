@@ -26,6 +26,8 @@ package sonia.scm.security;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.ws.rs.NotAuthorizedException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
@@ -33,9 +35,6 @@ import org.apache.shiro.realm.AuthenticatingRealm;
 import sonia.scm.SCMContext;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.UserDAO;
-
-import javax.inject.Singleton;
-import javax.ws.rs.NotAuthorizedException;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

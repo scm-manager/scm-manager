@@ -24,12 +24,11 @@
 
 package sonia.scm.repository;
 
+import jakarta.inject.Inject;
 import sonia.scm.EagerSingleton;
 import sonia.scm.Initable;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.Extension;
-
-import javax.inject.Inject;
 
 @Extension
 @EagerSingleton

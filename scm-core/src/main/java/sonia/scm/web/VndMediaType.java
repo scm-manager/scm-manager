@@ -24,7 +24,7 @@
 
 package sonia.scm.web;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * Vendor media types used by SCMM.

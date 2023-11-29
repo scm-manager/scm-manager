@@ -25,13 +25,13 @@
 package sonia.scm.security;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Collection;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Scope of a token. A scope is able to reduce the permissions of a token authentication. That means we can issue a 

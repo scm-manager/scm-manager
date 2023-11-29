@@ -25,12 +25,12 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.api.LockCommandResult;
 import sonia.scm.repository.api.UnlockCommandResult;
 import sonia.scm.repository.spi.GitFileLockStoreFactory.GitFileLockStore;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Optional;
 

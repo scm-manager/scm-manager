@@ -118,7 +118,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     GitContext emptyContext = createMirrorContext(clone);
     SimpleGitWorkingCopyFactory workingCopyFactory =
       new SimpleGitWorkingCopyFactory(
-        new KeepingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver)),
+        new KeepingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)),
         new SimpleMeterRegistry()
       );
 

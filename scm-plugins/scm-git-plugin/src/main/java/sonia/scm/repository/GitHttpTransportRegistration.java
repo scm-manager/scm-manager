@@ -24,13 +24,12 @@
 
 package sonia.scm.repository;
 
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import org.eclipse.jgit.transport.HttpTransport;
 import sonia.scm.plugin.Extension;
 import sonia.scm.web.ScmHttpConnectionFactory;
-
-import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 @Extension
 public class GitHttpTransportRegistration implements ServletContextListener {

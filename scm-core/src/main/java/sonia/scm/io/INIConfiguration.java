@@ -27,8 +27,8 @@ package sonia.scm.io;
 //~--- JDK imports ------------------------------------------------------------
 
 import com.google.common.collect.ImmutableList;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;

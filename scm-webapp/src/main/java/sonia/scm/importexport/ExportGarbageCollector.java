@@ -24,11 +24,10 @@
 
 package sonia.scm.importexport;
 
+import jakarta.inject.Inject;
 import sonia.scm.Initable;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.schedule.Scheduler;
-
-import javax.inject.Inject;
 
 public class ExportGarbageCollector implements Initable {
 

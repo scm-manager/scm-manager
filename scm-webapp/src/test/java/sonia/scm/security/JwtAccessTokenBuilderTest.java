@@ -49,7 +49,9 @@ import java.util.concurrent.TimeUnit;
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
 import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 
 /**
@@ -65,6 +67,9 @@ class JwtAccessTokenBuilderTest {
 
   @Mock
   private SecureKeyResolver secureKeyResolver;
+
+  @Mock
+  private JwtConfig jwtConfig;
 
   private Set<AccessTokenEnricher> enrichers;
 
@@ -92,12 +97,7 @@ class JwtAccessTokenBuilderTest {
     lenient().when(keyGenerator.createKey()).thenReturn("42");
     lenient().when(secureKeyResolver.getSecureKey(anyString())).thenReturn(createSecureKey());
     enrichers = Sets.newHashSet();
-    factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers);
-  }
-
-  @BeforeEach
-  void clearSystemProperties() {
-    System.clearProperty(JwtSystemProperties.ENDLESS_JWT);
+    factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers, jwtConfig);
   }
 
   @Nested
@@ -108,7 +108,7 @@ class JwtAccessTokenBuilderTest {
      */
     @BeforeEach
     void setUpObjectUnderTest() {
-      factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers);
+      factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers, jwtConfig);
     }
 
     /**
@@ -158,7 +158,7 @@ class JwtAccessTokenBuilderTest {
 
     @BeforeEach
     void setUpObjectUnderTest() {
-      factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers, clock);
+      factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, jwtConfig, enrichers, clock);
     }
 
     @Test
@@ -275,7 +275,7 @@ class JwtAccessTokenBuilderTest {
 
     @Test
     void testBuildWithEndlessJwtEnabled() {
-      System.setProperty(JwtSystemProperties.ENDLESS_JWT, "true");
+      when(jwtConfig.isEndlessJwtEnabled()).thenReturn(true);
 
       JwtAccessToken token = factory.create().subject("Red").issuer("https://scm-manager.org").build();
 
@@ -284,12 +284,12 @@ class JwtAccessTokenBuilderTest {
       assertThat(token.getExpiration()).isNull();
       assertThat(token.getSubject()).isEqualTo("Red");
       assertThat(token.getIssuer()).isNotEmpty();
-      assertThat(token.getIssuer().get()).isEqualTo("https://scm-manager.org");
+      assertThat(token.getIssuer()).contains("https://scm-manager.org");
     }
 
     @Test
     void testBuildWithEndlessJwtDisabled() {
-      System.setProperty(JwtSystemProperties.ENDLESS_JWT, "false");
+      when(jwtConfig.isEndlessJwtEnabled()).thenReturn(false);
 
       JwtAccessToken token = factory.create().subject("Red").issuer("https://scm-manager.org").build();
 
@@ -299,37 +299,7 @@ class JwtAccessTokenBuilderTest {
       assertThat(token.getExpiration().getTime() > token.getIssuedAt().getTime()).isTrue();
       assertThat(token.getSubject()).isEqualTo("Red");
       assertThat(token.getIssuer()).isNotEmpty();
-      assertThat(token.getIssuer().get()).isEqualTo("https://scm-manager.org");
-    }
-
-    @Test
-    void testBuildWithInvalidConfig() {
-      System.setProperty(JwtSystemProperties.ENDLESS_JWT, "invalidStuff");
-
-      JwtAccessToken token = factory.create().subject("Red").issuer("https://scm-manager.org").build();
-
-      assertThat(token.getId()).isNotEmpty();
-      assertThat(token.getIssuedAt()).isNotNull();
-      assertThat(token.getExpiration()).isNotNull();
-      assertThat(token.getExpiration().getTime() > token.getIssuedAt().getTime()).isTrue();
-      assertThat(token.getSubject()).isEqualTo("Red");
-      assertThat(token.getIssuer()).isNotEmpty();
-      assertThat(token.getIssuer().get()).isEqualTo("https://scm-manager.org");
-    }
-
-    @Test
-    void testBuildWithMissingConfig() {
-      System.clearProperty(JwtSystemProperties.ENDLESS_JWT);
-
-      JwtAccessToken token = factory.create().subject("Red").issuer("https://scm-manager.org").build();
-
-      assertThat(token.getId()).isNotEmpty();
-      assertThat(token.getIssuedAt()).isNotNull();
-      assertThat(token.getExpiration()).isNotNull();
-      assertThat(token.getExpiration().getTime() > token.getIssuedAt().getTime()).isTrue();
-      assertThat(token.getSubject()).isEqualTo("Red");
-      assertThat(token.getIssuer()).isNotEmpty();
-      assertThat(token.getIssuer().get()).isEqualTo("https://scm-manager.org");
+      assertThat(token.getIssuer()).contains("https://scm-manager.org");
     }
   }
 }

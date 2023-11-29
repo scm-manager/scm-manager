@@ -26,6 +26,10 @@ package sonia.scm.lifecycle;
 
 import com.github.legman.Subscribe;
 import com.google.common.base.Charsets;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -34,10 +38,6 @@ import sonia.scm.Stage;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.event.ScmTestEventBus;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;

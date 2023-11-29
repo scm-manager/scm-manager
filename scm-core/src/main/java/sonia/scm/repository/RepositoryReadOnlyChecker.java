@@ -25,8 +25,8 @@
 package sonia.scm.repository;
 
 import com.google.common.collect.ImmutableSet;
+import jakarta.inject.Inject;
 
-import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;

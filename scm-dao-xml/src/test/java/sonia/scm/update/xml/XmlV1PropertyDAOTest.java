@@ -32,6 +32,7 @@ import sonia.scm.Stage;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
+import sonia.scm.store.StoreCacheConfigProvider;
 import sonia.scm.update.RepositoryV1PropertyReader;
 
 import java.io.File;
@@ -112,7 +113,7 @@ class XmlV1PropertyDAOTest {
     Path propFile = configPath.resolve("repository-properties-v1.xml");
     Files.write(propFile, PROPERTIES.getBytes());
     RepositoryReadOnlyChecker readOnlyChecker = mock(RepositoryReadOnlyChecker.class);
-    XmlV1PropertyDAO dao = new XmlV1PropertyDAO(new JAXBConfigurationEntryStoreFactory(new SimpleContextProvider(temp), null, new SimpleKeyGenerator(), readOnlyChecker));
+    XmlV1PropertyDAO dao = new XmlV1PropertyDAO(new JAXBConfigurationEntryStoreFactory(new SimpleContextProvider(temp), null, new SimpleKeyGenerator(), readOnlyChecker, new StoreCacheConfigProvider(false)));
 
     dao.getProperties(new RepositoryV1PropertyReader())
       .forEachEntry((key, prop) -> {

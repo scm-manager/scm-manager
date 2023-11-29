@@ -24,14 +24,13 @@
     
 package sonia.scm.api.rest;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ExceptionWithContext;
 import sonia.scm.api.v2.resources.ExceptionWithContextToErrorDtoMapper;
 import sonia.scm.web.VndMediaType;
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
 
 public class ContextualExceptionMapper<E extends ExceptionWithContext> implements ExceptionMapper<E> {
 

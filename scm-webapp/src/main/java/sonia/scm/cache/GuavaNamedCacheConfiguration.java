@@ -26,13 +26,14 @@ package sonia.scm.cache;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.WebappConfigProvider;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -66,7 +67,7 @@ public class GuavaNamedCacheConfiguration extends GuavaCacheConfiguration {
 
   @Override
   void setCopyStrategy(CopyStrategy copyStrategy) {
-    setValue("copyStrategy", copyStrategy, super::setCopyStrategy, propertyName -> of(System.getProperty(propertyName)).map(CopyStrategy::valueOf).orElse(null));
+    setValue("copyStrategy", copyStrategy, super::setCopyStrategy, propertyName -> of(WebappConfigProvider.resolveAsString(propertyName).orElse("")).map(CopyStrategy::valueOf).orElse(null));
   }
 
   @Override
@@ -115,15 +116,15 @@ public class GuavaNamedCacheConfiguration extends GuavaCacheConfiguration {
   }
 
   private void setIntegerValue(String propertyName, Integer originalValue, Consumer<Integer> setter) {
-    setValue(propertyName, originalValue, setter, Integer::getInteger);
+    setValue(propertyName, originalValue, setter, value -> WebappConfigProvider.resolveAsInteger(value).orElse(null));
   }
 
   private void setLongValue(String propertyName, Long originalValue, Consumer<Long> setter) {
-    setValue(propertyName, originalValue, setter, Long::getLong);
+    setValue(propertyName, originalValue, setter, value -> WebappConfigProvider.resolveAsLong(value).orElse(null));
   }
 
   private void setBooleanValue(String propertyName, Boolean originalValue, Consumer<Boolean> setter) {
-    setValue(propertyName, originalValue, setter, Boolean::getBoolean);
+    setValue(propertyName, originalValue, setter, value -> WebappConfigProvider.resolveAsBoolean(value).orElse(null));
   }
 
   private <T> void setValue(String propertyName, T originalValue, Consumer<T> setter, Function<String, T> systemPropertyReader) {

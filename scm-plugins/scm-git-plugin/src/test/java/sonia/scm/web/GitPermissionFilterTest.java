@@ -24,6 +24,8 @@
 
 package sonia.scm.web;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -32,8 +34,6 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.util.HttpUtil;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.containsString;

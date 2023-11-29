@@ -25,12 +25,11 @@
 package sonia.scm.autoconfig;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import sonia.scm.Platform;
 import sonia.scm.repository.HgVerifier;
 import sonia.scm.util.SystemUtil;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
 
 public class AutoConfiguratorProvider implements Provider<AutoConfigurator> {
 

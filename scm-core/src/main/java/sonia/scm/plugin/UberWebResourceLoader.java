@@ -26,11 +26,10 @@ package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import jakarta.servlet.ServletContext;
+
 import java.net.URL;
-
 import java.util.List;
-
-import javax.servlet.ServletContext;
 
 /**
  * Load resources from {@link ServletContext} and from the installed plugins.

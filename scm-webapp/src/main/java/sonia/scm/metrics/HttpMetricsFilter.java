@@ -28,19 +28,18 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.Timer;
-import io.micrometer.core.instrument.binder.http.DefaultHttpServletRequestTagsProvider;
-import io.micrometer.core.instrument.binder.http.HttpServletRequestTagsProvider;
+import io.micrometer.core.instrument.binder.http.DefaultHttpJakartaServletRequestTagsProvider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import sonia.scm.Priority;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
 import sonia.scm.web.filter.HttpFilter;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebElement(Filters.PATTERN_ALL)
@@ -49,7 +48,7 @@ public class HttpMetricsFilter extends HttpFilter {
 
   static final String METRIC_DURATION = "http.server.requests";
 
-  private final HttpServletRequestTagsProvider tagsProvider = new DefaultHttpServletRequestTagsProvider();
+  private final DefaultHttpJakartaServletRequestTagsProvider tagsProvider = new DefaultHttpJakartaServletRequestTagsProvider();
 
   private final Provider<MeterRegistry> registryProvider;
   private final RequestCategoryDetector detector;

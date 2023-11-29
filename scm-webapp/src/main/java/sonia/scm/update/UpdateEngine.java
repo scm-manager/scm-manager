@@ -24,6 +24,7 @@
 
 package sonia.scm.update;
 
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.migration.NamespaceUpdateContext;
@@ -35,7 +36,6 @@ import sonia.scm.migration.UpdateStep;
 import sonia.scm.migration.UpdateStepTarget;
 import sonia.scm.version.Version;
 
-import javax.inject.Inject;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;

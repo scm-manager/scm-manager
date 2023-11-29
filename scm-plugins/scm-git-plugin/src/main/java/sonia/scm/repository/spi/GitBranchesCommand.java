@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -42,7 +43,6 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;

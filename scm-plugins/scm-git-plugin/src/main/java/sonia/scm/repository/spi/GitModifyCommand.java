@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.util.concurrent.Striped;
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -42,7 +43,6 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;

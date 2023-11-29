@@ -28,14 +28,11 @@ package sonia.scm.lifecycle.modules;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-//~--- JDK imports ------------------------------------------------------------
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 import java.util.Collections;
 import java.util.Set;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 /**
  *

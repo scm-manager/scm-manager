@@ -26,12 +26,11 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.admin.UpdateInfo;
-
-import javax.inject.Inject;
 
 import static de.otto.edison.hal.Links.linkingTo;
 

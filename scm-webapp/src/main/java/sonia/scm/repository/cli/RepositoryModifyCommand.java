@@ -25,15 +25,14 @@
 package sonia.scm.repository.cli;
 
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.inject.Inject;
+import jakarta.validation.constraints.Email;
 import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-
-import javax.inject.Inject;
-import javax.validation.constraints.Email;
 
 @ParentCommand(value = RepositoryCommand.class)
 @CommandLine.Command(name = "modify")

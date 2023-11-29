@@ -25,13 +25,12 @@
 package sonia.scm.lifecycle.modules;
 
 import com.google.inject.AbstractModule;
+import sonia.scm.config.WebappConfigProvider;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkingCopyPool;
 
 public class WorkingCopyPoolModule extends AbstractModule {
-  public static final String DEFAULT_WORKING_COPY_POOL_STRATEGY = NoneCachingWorkingCopyPool.class.getName();
-  public static final String WORKING_COPY_POOL_STRATEGY_PROPERTY = "scm.workingCopyPoolStrategy";
   private final ClassLoader classLoader;
 
   public WorkingCopyPoolModule(PluginLoader pluginLoader) {
@@ -40,7 +39,8 @@ public class WorkingCopyPoolModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    String workingCopyPoolStrategy = System.getProperty(WORKING_COPY_POOL_STRATEGY_PROPERTY, DEFAULT_WORKING_COPY_POOL_STRATEGY);
+    String workingCopyPoolStrategy = WebappConfigProvider.resolveAsString("workingCopyPoolStrategy")
+      .orElse(NoneCachingWorkingCopyPool.class.getName());
     try {
       Class<? extends WorkingCopyPool> strategyClass = (Class<? extends WorkingCopyPool>) classLoader.loadClass(workingCopyPoolStrategy);
       bind(WorkingCopyPool.class).to(strategyClass);

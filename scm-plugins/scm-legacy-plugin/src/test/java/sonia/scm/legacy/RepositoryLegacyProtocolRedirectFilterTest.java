@@ -24,6 +24,10 @@
     
 package sonia.scm.legacy;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,10 +38,6 @@ import sonia.scm.migration.MigrationInfo;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static java.util.Collections.singletonList;

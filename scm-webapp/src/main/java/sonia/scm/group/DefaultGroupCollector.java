@@ -27,6 +27,8 @@ package sonia.scm.group;
 import com.cronutils.utils.VisibleForTesting;
 import com.github.legman.Subscribe;
 import com.google.common.collect.ImmutableSet;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEventType;
@@ -38,8 +40,6 @@ import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.user.UserEvent;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;

@@ -30,6 +30,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Module;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.servlet.ServletModule;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import sonia.scm.Default;
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
@@ -40,8 +42,6 @@ import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 
 public final class SingleView {

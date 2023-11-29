@@ -25,10 +25,9 @@
 package sonia.scm.validation;
 
 import com.google.inject.Injector;
-
-import javax.inject.Inject;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorFactory;
+import jakarta.inject.Inject;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorFactory;
 
 public class GuiceConstraintValidatorFactory implements ConstraintValidatorFactory {
 

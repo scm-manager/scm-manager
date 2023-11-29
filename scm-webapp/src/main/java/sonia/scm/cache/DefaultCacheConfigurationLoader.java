@@ -27,19 +27,15 @@ package sonia.scm.cache;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Iterators;
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.plugin.PluginLoader;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.inject.Inject;
 import java.io.File;
-
 import java.io.IOException;
 import java.net.URL;
-
 import java.util.Enumeration;
 import java.util.Iterator;
 

@@ -24,6 +24,7 @@
     
 package sonia.scm.update.repository;
 
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
@@ -34,7 +35,6 @@ import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.store.StoreConstants;
 import sonia.scm.version.Version;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

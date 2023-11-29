@@ -24,11 +24,11 @@
 
 package sonia.scm.trace;
 
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.Extension;
 
-import javax.inject.Inject;
 import java.util.Map;
 import java.util.function.Consumer;
 

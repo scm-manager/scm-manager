@@ -26,16 +26,16 @@ package sonia.scm.api.v2;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import jakarta.annotation.Priority;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerResponseContext;
+import jakarta.ws.rs.container.ContainerResponseFilter;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.ext.Provider;
 import sonia.scm.TransactionId;
 import sonia.scm.api.v2.resources.ErrorDto;
 
-import javax.annotation.Priority;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
 import java.util.List;
 
 @Provider

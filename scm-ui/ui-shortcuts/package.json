@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-shortcuts",
-  "version": "2.48.2-SNAPSHOT",
+  "version": "3.0.0-SNAPSHOT",
   "license": "MIT",
   "private": true,
   "main": "build/index.js",

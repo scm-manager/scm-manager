@@ -24,17 +24,17 @@
 
 package sonia.scm.web;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import sonia.scm.RootURL;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.spi.InitializingHttpScmProtocolWrapper;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import java.util.Enumeration;
 
 @Singleton

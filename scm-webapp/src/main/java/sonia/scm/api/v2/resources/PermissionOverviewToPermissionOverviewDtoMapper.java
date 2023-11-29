@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
+import jakarta.inject.Inject;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.ObjectFactory;
@@ -32,7 +33,6 @@ import sonia.scm.group.GroupManager;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.PermissionOverview;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 

@@ -26,13 +26,12 @@ package sonia.scm.plugin;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.net.ahc.AdvancedHttpRequest;
-
-import javax.inject.Inject;
 
 import static sonia.scm.plugin.Tracing.SPAN_KIND;
 

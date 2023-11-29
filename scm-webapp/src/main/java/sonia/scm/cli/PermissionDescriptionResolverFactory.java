@@ -24,9 +24,9 @@
 
 package sonia.scm.cli;
 
+import jakarta.inject.Inject;
 import sonia.scm.i18n.I18nCollector;
 
-import javax.inject.Inject;
 import java.util.Locale;
 
 class PermissionDescriptionResolverFactory {

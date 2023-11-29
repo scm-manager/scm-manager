@@ -24,8 +24,8 @@
 
 package sonia.scm.api.v2.resources;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 public class RepositoryBasedResourceProvider {
   private final Provider<TagRootResource> tagRootResource;

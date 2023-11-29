@@ -24,6 +24,8 @@
 
 package sonia.scm.importexport;
 
+import jakarta.inject.Inject;
+import jakarta.xml.bind.JAXB;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +33,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 
-import javax.inject.Inject;
-import javax.xml.bind.JAXB;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;

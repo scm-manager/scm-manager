@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.inject.Inject;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
 import sonia.scm.repository.GitWorkingCopyFactory;
@@ -32,7 +33,6 @@ import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.WorkingCopyPool;
 import sonia.scm.util.SystemUtil;
 
-import javax.inject.Inject;
 import java.io.File;
 
 public class SimpleGitWorkingCopyFactory extends SimpleWorkingCopyFactory<Repository, Repository, GitContext> implements GitWorkingCopyFactory {

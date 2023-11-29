@@ -25,10 +25,10 @@
 package sonia.scm.lifecycle;
 
 import com.google.common.collect.ImmutableSet;
+import jakarta.servlet.ServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletContext;
 import java.util.Enumeration;
 import java.util.Set;
 

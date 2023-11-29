@@ -27,6 +27,7 @@ package sonia.scm.api.v2.resources;
 import com.google.common.collect.ImmutableSet;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
@@ -42,7 +43,6 @@ import sonia.scm.metrics.MonitoringSystem;
 import sonia.scm.metrics.ScrapeTarget;
 import sonia.scm.web.RestDispatcher;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;

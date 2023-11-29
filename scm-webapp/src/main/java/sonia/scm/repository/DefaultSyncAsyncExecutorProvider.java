@@ -26,12 +26,13 @@ package sonia.scm.repository;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import sonia.scm.config.ConfigValue;
 import sonia.scm.metrics.Metrics;
 import sonia.scm.repository.spi.SyncAsyncExecutor;
 import sonia.scm.repository.spi.SyncAsyncExecutorProvider;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.Closeable;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -41,18 +42,16 @@ import java.util.concurrent.Executors;
 @Singleton
 public class DefaultSyncAsyncExecutorProvider implements SyncAsyncExecutorProvider, Closeable {
 
-  public static final int DEFAULT_MAX_ASYNC_ABORT_SECONDS = 60;
-  public static final String MAX_ASYNC_ABORT_SECONDS_PROPERTY = "scm.maxAsyncAbortSeconds";
-
-  public static final int DEFAULT_NUMBER_OF_THREADS = 4;
-  public static final String NUMBER_OF_THREADS_PROPERTY = "scm.asyncThreads";
-
   private final ExecutorService executor;
   private final int defaultMaxAsyncAbortSeconds;
 
   @Inject
-  public DefaultSyncAsyncExecutorProvider(MeterRegistry registry) {
-    this(createExecutorService(registry, getProperty(NUMBER_OF_THREADS_PROPERTY, DEFAULT_NUMBER_OF_THREADS)));
+  public DefaultSyncAsyncExecutorProvider(
+    @ConfigValue(key="asyncThreads", defaultValue = "4", description = "Amount of async threads for execution") Integer asyncThreads,
+    @ConfigValue(key="maxAsyncAbortSeconds", defaultValue = "60", description = "Max seconds for an asynchronous execution before abort") Integer maxAsyncAbortSeconds,
+    MeterRegistry registry
+  ) {
+    this(createExecutorService(registry, asyncThreads), maxAsyncAbortSeconds);
   }
 
   private static ExecutorService createExecutorService(MeterRegistry registry, int fixed) {
@@ -66,9 +65,9 @@ public class DefaultSyncAsyncExecutorProvider implements SyncAsyncExecutorProvid
     return executorService;
   }
 
-  public DefaultSyncAsyncExecutorProvider(ExecutorService executor) {
+  public DefaultSyncAsyncExecutorProvider(ExecutorService executor, Integer maxAsyncAbortSeconds) {
     this.executor = executor;
-    this.defaultMaxAsyncAbortSeconds = getProperty(MAX_ASYNC_ABORT_SECONDS_PROPERTY, DEFAULT_MAX_ASYNC_ABORT_SECONDS);
+    this.defaultMaxAsyncAbortSeconds = maxAsyncAbortSeconds;
   }
 
   public SyncAsyncExecutor createExecutorWithSecondsToTimeout(int switchToAsyncInSeconds) {
@@ -85,9 +84,5 @@ public class DefaultSyncAsyncExecutorProvider implements SyncAsyncExecutorProvid
   @Override
   public void close() {
     executor.shutdownNow();
-  }
-
-  private static int getProperty(String key, int defaultValue) {
-    return Integer.parseInt(System.getProperty(key, Integer.toString(defaultValue)));
   }
 }

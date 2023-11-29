@@ -25,11 +25,11 @@
 package sonia.scm.repository;
 
 import com.github.legman.Subscribe;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;

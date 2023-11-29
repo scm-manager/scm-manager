@@ -25,6 +25,8 @@
 package sonia.scm.update;
 
 import com.google.common.base.Stopwatch;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,8 +38,6 @@ import sonia.scm.update.repository.MigrationStrategy;
 import sonia.scm.update.repository.V1Repository;
 import sonia.scm.update.repository.XmlRepositoryV1UpdateStep;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;

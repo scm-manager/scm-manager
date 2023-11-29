@@ -26,10 +26,10 @@ package sonia.scm.lifecycle.modules;
 
 import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matcher;
+import jakarta.inject.Singleton;
 import org.assertj.core.api.AbstractBooleanAssert;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Singleton;
 import java.io.Serializable;
 
 import static org.assertj.core.api.Assertions.assertThat;

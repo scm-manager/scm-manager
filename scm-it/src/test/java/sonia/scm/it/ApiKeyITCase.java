@@ -25,6 +25,7 @@
 package sonia.scm.it;
 
 import io.restassured.RestAssured;
+import jakarta.ws.rs.core.MediaType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -39,7 +40,6 @@ import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientException;
 import sonia.scm.web.VndMediaType;
 
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Objects;

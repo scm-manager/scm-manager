@@ -24,7 +24,8 @@
 
 package sonia.scm.security;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.regex.Pattern;
 
 import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;

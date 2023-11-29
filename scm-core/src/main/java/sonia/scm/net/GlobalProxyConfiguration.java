@@ -25,9 +25,9 @@
 package sonia.scm.net;
 
 import com.google.common.base.Strings;
+import jakarta.inject.Inject;
 import sonia.scm.config.ScmConfiguration;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;

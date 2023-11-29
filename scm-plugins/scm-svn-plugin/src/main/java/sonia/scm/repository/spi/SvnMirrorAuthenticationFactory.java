@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
+import jakarta.annotation.Nonnull;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
 import org.tmatesoft.svn.core.auth.SVNAuthentication;
@@ -35,7 +36,6 @@ import sonia.scm.net.ProxyConfiguration;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
 
-import javax.annotation.Nonnull;
 import javax.net.ssl.TrustManager;
 import java.util.ArrayList;
 import java.util.Collection;

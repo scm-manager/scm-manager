@@ -24,10 +24,10 @@
     
 package sonia.scm.api.v2.resources;
 
+import jakarta.ws.rs.Path;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.ws.rs.Path;
 import java.net.URI;
 import java.net.URISyntaxException;
 

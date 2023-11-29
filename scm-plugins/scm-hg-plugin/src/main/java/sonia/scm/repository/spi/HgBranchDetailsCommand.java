@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import org.javahg.Changeset;
 import org.javahg.commands.ExecutionException;
 import org.javahg.commands.LogCommand;
@@ -32,7 +33,6 @@ import sonia.scm.repository.Branch;
 import sonia.scm.repository.BranchDetails;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 
-import javax.inject.Inject;
 import java.util.List;
 
 import static org.javahg.commands.flags.LogCommandFlags.on;

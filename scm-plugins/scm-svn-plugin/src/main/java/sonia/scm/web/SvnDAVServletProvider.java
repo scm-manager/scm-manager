@@ -25,11 +25,10 @@
 package sonia.scm.web;
 
 import com.google.inject.Inject;
+import jakarta.inject.Provider;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.repository.spi.ScmProviderHttpServletProvider;
-
-import javax.inject.Provider;
 
 public class SvnDAVServletProvider extends ScmProviderHttpServletProvider {
 

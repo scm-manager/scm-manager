@@ -25,18 +25,17 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
-import org.javahg.Repository;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import jakarta.inject.Inject;
 import org.apache.shiro.SecurityUtils;
+import org.javahg.Repository;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.repository.api.TagDeleteRequest;
 import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.user.User;
-
-import javax.inject.Inject;
 
 import static sonia.scm.repository.spi.UserFormatter.getUserStringFor;
 

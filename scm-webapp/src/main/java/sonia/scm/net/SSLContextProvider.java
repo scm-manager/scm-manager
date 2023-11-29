@@ -26,14 +26,13 @@ package sonia.scm.net;
 
 import com.google.common.base.Throwables;
 import com.google.inject.Inject;
-
-import java.security.NoSuchAlgorithmException;
-import javax.inject.Named;
-import javax.inject.Provider;
-import javax.net.ssl.SSLContext;
-
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.SSLContext;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Provider for {@link SSLContext}. The provider will first try to retrieve the {@link SSLContext} from an "default"

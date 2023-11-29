@@ -24,6 +24,8 @@
 
 package sonia.scm.update.repository;
 
+import jakarta.inject.Inject;
+import jakarta.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
@@ -36,9 +38,6 @@ import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.user.User;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.version.Version;
-
-import javax.inject.Inject;
-import javax.xml.bind.JAXBException;
 
 import static sonia.scm.version.Version.parse;
 

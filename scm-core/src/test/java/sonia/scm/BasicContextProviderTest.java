@@ -29,13 +29,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import sonia.scm.config.WebappConfigProvider;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static sonia.scm.BasicContextProvider.DEVELOPMENT_INSTANCE_ID;
-import static sonia.scm.BasicContextProvider.STAGE_PROPERTY;
 
 class BasicContextProviderTest {
 
@@ -43,14 +44,10 @@ class BasicContextProviderTest {
   class VersionTests {
 
     @Test
-    void shouldReturnVersionFromSystemProperty() {
-      System.setProperty(BasicContextProvider.VERSION_PROPERTY, "3.0.0");
-      try {
-        SCMContextProvider context = new BasicContextProvider();
-        assertThat(context.getVersion()).isEqualTo("3.0.0");
-      } finally {
-        System.clearProperty(BasicContextProvider.VERSION_PROPERTY);
-      }
+    void shouldReturnVersionFromVersionOverride() {
+      WebappConfigProvider.setConfigBindings(Map.of("versionOverride", "3.0.0"));
+      SCMContextProvider context = new BasicContextProvider();
+      assertThat(context.getVersion()).isEqualTo("3.0.0");
     }
 
     @Test
@@ -134,25 +131,14 @@ class BasicContextProviderTest {
     @Nested
     class WithStageDevelopment {
 
-      private String stage;
-
-      @BeforeEach
-      void setStage() {
-        stage = new BasicContextProvider().getStage().name();
-        System.setProperty(STAGE_PROPERTY, Stage.DEVELOPMENT.name());
-      }
-
       @Test
       void shouldReturnHardCodeInstanceIfIfStageDevelopment() {
+        WebappConfigProvider.setConfigBindings(Map.of("stage", Stage.DEVELOPMENT.name()));
+
         BasicContextProvider basicContextProvider = new BasicContextProvider();
         String instanceId = basicContextProvider.getInstanceId();
 
         assertThat(instanceId).isEqualTo(DEVELOPMENT_INSTANCE_ID);
-      }
-
-      @AfterEach
-      void resetStage() {
-        System.setProperty(STAGE_PROPERTY, stage);
       }
     }
   }

@@ -25,11 +25,11 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.api.BundleResponse;
 import sonia.scm.repository.api.ExportFailedException;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;

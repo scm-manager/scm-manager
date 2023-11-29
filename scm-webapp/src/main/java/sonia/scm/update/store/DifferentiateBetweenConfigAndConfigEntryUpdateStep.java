@@ -103,7 +103,7 @@ abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
 
   private void writeXmlDocument(Document configEntryDocument, Path temporaryFile) throws TransformerException {
     TransformerFactory factory = TransformerFactory.newInstance();
-    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+//    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
     factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
     DOMSource domSource = new DOMSource(configEntryDocument);
     try (OutputStream os = Files.newOutputStream(temporaryFile)) {
@@ -115,8 +115,8 @@ abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
 
   private Document readAsXmlDocument(Path configFile) {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+//    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+//    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 
     try (InputStream is = Files.newInputStream(configFile)) {
       return factory.newDocumentBuilder().parse(is);

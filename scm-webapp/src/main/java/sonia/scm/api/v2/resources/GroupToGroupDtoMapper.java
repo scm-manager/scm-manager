@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
+import jakarta.inject.Inject;
 import org.mapstruct.Mapper;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.group.Group;
@@ -34,7 +35,6 @@ import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.EdisonHalAppender;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 

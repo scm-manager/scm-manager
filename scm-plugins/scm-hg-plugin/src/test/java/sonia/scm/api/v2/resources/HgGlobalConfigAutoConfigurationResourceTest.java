@@ -24,6 +24,8 @@
 
 package sonia.scm.api.v2.resources;
 
+import jakarta.inject.Provider;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
@@ -41,8 +43,6 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
 import sonia.scm.web.RestDispatcher;
 
-import javax.inject.Provider;
-import javax.servlet.http.HttpServletResponse;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;

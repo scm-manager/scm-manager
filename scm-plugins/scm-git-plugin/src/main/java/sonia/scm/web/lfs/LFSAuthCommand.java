@@ -26,6 +26,7 @@ package sonia.scm.web.lfs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
@@ -39,7 +40,6 @@ import sonia.scm.protocolcommand.git.GitRepositoryContextResolver;
 import sonia.scm.repository.Repository;
 import sonia.scm.security.AccessToken;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Optional;
 

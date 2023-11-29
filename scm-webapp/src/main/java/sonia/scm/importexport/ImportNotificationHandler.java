@@ -24,13 +24,13 @@
 
 package sonia.scm.importexport;
 
+import jakarta.inject.Inject;
 import sonia.scm.notifications.Notification;
 import sonia.scm.notifications.NotificationSender;
 import sonia.scm.notifications.Type;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.PullResponse;
 
-import javax.inject.Inject;
 import java.util.Map;
 
 class ImportNotificationHandler {

@@ -24,11 +24,10 @@
 
 package sonia.scm.store;
 
+import jakarta.inject.Inject;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.update.StoreUpdateStepUtilFactory;
-
-import javax.inject.Inject;
 
 public class FileStoreUpdateStepUtilFactory implements StoreUpdateStepUtilFactory {
 

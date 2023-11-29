@@ -154,7 +154,7 @@ public class JAXBConfigurationEntryStoreTest
   @Override
   protected ConfigurationEntryStoreFactory  createConfigurationStoreFactory()
   {
-    return new JAXBConfigurationEntryStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator(), null);
+    return new JAXBConfigurationEntryStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator(), null, new StoreCacheConfigProvider(false));
   }
 
   /**

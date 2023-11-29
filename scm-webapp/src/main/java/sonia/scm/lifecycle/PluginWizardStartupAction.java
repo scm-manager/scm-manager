@@ -24,12 +24,12 @@
 
 package sonia.scm.lifecycle;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import sonia.scm.config.WebappConfigProvider;
 import sonia.scm.initialization.InitializationStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.plugin.PluginSetConfigStore;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Extension
 @Singleton
@@ -54,7 +54,7 @@ public class PluginWizardStartupAction implements InitializationStep {
 
   @Override
   public boolean done() {
-    return System.getProperty(AdminAccountStartupAction.INITIAL_PASSWORD_PROPERTY) != null || store.getPluginSets().isPresent();
+    return WebappConfigProvider.resolveAsString("initialPassword").orElse(null) != null || store.getPluginSets().isPresent();
   }
 
 }

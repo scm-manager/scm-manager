@@ -25,6 +25,7 @@
 package sonia.scm.repository;
 
 import com.github.legman.Subscribe;
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.EagerSingleton;
@@ -34,7 +35,6 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.CannotDeleteDefaultBranchException;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 

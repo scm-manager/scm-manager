@@ -28,6 +28,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import jakarta.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ConfigurationException;
@@ -45,7 +46,6 @@ import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-import javax.inject.Provider;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;

@@ -26,6 +26,11 @@ package sonia.scm.repository.spi;
 
 import com.google.inject.ProvisionException;
 import com.google.inject.util.Providers;
+import jakarta.inject.Provider;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -39,17 +44,16 @@ import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 
-import javax.inject.Provider;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class InitializingHttpScmProtocolWrapperTest {

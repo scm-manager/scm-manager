@@ -24,6 +24,8 @@
 
 package sonia.scm.repository.spi;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.inject.Inject;
 import org.javahg.BaseRepository;
 import org.javahg.Repository;
 import org.javahg.commands.CloneCommand;
@@ -33,14 +35,12 @@ import org.javahg.commands.StatusCommand;
 import org.javahg.commands.UpdateCommand;
 import org.javahg.commands.flags.CloneCommandFlags;
 import org.javahg.ext.purge.PurgeCommand;
-import io.micrometer.core.instrument.MeterRegistry;
 import sonia.scm.repository.HgExtensions;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.WorkingCopyPool;
 import sonia.scm.util.IOUtil;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 

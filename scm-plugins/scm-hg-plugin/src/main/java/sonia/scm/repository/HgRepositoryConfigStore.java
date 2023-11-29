@@ -24,10 +24,9 @@
 
 package sonia.scm.repository;
 
+import jakarta.inject.Inject;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
-
-import javax.inject.Inject;
 
 public class HgRepositoryConfigStore {
 

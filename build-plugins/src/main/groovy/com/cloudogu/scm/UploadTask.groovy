@@ -70,8 +70,7 @@ abstract class UploadTask extends DefaultTask {
   }
 
   private void doUpload() {
-    SslContextFactory.Client sslContextFactory = new SslContextFactory.Client()
-    HttpClient client = new HttpClient(sslContextFactory)
+    HttpClient client = new HttpClient()
     try {
       client.start()
       ContentResponse response = createRequest(client).send()

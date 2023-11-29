@@ -24,12 +24,11 @@
     
 package sonia.scm.api.v2.resources;
 
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.Provider;
 import sonia.scm.api.rest.ContextualExceptionMapper;
 import sonia.scm.repository.InternalRepositoryException;
-
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
 
 @Provider
 public class InternalRepositoryExceptionMapper extends ContextualExceptionMapper<InternalRepositoryException> {

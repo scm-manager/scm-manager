@@ -24,7 +24,8 @@
 
 package sonia.scm.repository.hooks;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
+
 import java.util.UUID;
 
 @Singleton

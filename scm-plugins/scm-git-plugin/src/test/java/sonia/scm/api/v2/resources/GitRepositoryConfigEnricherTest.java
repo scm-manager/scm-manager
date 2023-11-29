@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import com.google.inject.Provider;
 import com.google.inject.util.Providers;
+import jakarta.ws.rs.core.MediaType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,6 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.JsonEnricherContext;
 import sonia.scm.web.VndMediaType;
 
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;

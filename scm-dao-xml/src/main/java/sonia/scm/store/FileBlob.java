@@ -51,7 +51,7 @@ public final class FileBlob implements Blob {
   @Override
   public void commit() throws IOException {
 
-    // nothing todo
+    // nothing to do
   }
 
   @Override

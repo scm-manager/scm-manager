@@ -24,10 +24,10 @@
 
 package sonia.scm.store;
 
+import jakarta.xml.bind.JAXB;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.UUIDKeyGenerator;
 
-import javax.xml.bind.JAXB;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;

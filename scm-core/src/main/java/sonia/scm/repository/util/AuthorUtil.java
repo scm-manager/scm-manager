@@ -24,13 +24,12 @@
 
 package sonia.scm.repository.util;
 
+import jakarta.annotation.Nullable;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import sonia.scm.repository.Person;
 import sonia.scm.user.EMail;
 import sonia.scm.user.User;
-
-import javax.annotation.Nullable;
 
 public class AuthorUtil {
 

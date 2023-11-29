@@ -26,6 +26,7 @@ package sonia.scm.lifecycle.modules;
 
 import com.google.common.base.Throwables;
 import com.google.inject.Module;
+import jakarta.servlet.ServletContext;
 import org.apache.shiro.guice.web.ShiroWebModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,6 @@ import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.ExecutorModule;
 import sonia.scm.validation.ValidationModule;
 
-import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +67,7 @@ public class ApplicationModuleProvider implements ModuleProvider {
     moduleList.add(new ResteasyModule());
     moduleList.add(ShiroWebModule.guiceFilterModule());
     moduleList.add(new WebElementModule(pluginLoader));
+    moduleList.add(new ConfigModule(pluginLoader));
     moduleList.add(new ScmServletModule(pluginLoader, overrides));
     moduleList.add(
       new ScmSecurityModule(servletContext, pluginLoader.getExtensionProcessor())

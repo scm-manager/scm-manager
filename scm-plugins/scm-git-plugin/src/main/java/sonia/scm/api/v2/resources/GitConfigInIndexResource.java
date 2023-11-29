@@ -26,14 +26,13 @@ package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.web.JsonEnricherBase;
 import sonia.scm.web.JsonEnricherContext;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
 
 import static java.util.Collections.singletonMap;
 import static sonia.scm.web.VndMediaType.INDEX;

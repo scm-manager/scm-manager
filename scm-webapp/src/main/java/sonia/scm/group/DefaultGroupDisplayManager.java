@@ -24,11 +24,10 @@
     
 package sonia.scm.group;
 
+import jakarta.inject.Inject;
 import sonia.scm.GenericDisplayManager;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
-
-import javax.inject.Inject;
 
 public class DefaultGroupDisplayManager extends GenericDisplayManager<Group, DisplayGroup> implements GroupDisplayManager {
 

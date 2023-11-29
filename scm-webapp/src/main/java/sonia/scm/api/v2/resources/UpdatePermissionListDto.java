@@ -24,7 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 interface UpdatePermissionListDto {
 

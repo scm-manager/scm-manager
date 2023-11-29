@@ -24,6 +24,10 @@
 
 package sonia.scm.initialization;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.authc.AuthenticationException;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilderFactory;
@@ -32,10 +36,6 @@ import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.web.security.AdministrationContext;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 

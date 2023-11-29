@@ -24,6 +24,7 @@
 
 package sonia.scm.security;
 
+import jakarta.inject.Inject;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -32,8 +33,6 @@ import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
 
 /**
  * Impersonator allows the usage of scm-manager api in the context of another user.

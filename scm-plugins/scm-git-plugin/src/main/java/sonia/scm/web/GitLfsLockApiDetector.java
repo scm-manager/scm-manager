@@ -24,11 +24,11 @@
 
 package sonia.scm.web;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.plugin.Extension;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.MediaType;
 import java.util.Arrays;
 
 @Slf4j

@@ -23,11 +23,8 @@
  */
 package sonia.scm.lifecycle;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.function.IntConsumer;
 
 /**
  * {@link RestartStrategy} which tears down the scm-manager context and
@@ -41,37 +38,18 @@ class ExitRestartStrategy extends RestartStrategy {
 
   static final String NAME = "exit";
 
-  static final String PROPERTY_EXIT_CODE = "sonia.scm.restart.exit-code";
-
-  private IntConsumer exiter = System::exit;
-
-  private int exitCode;
 
   ExitRestartStrategy() {
   }
 
-  @VisibleForTesting
-  void setExiter(IntConsumer exiter) {
-    this.exiter = exiter;
-  }
-
   @Override
   public void prepareRestart(InjectionContext context) {
-    exitCode = determineExitCode();
+    // Nothing to do
   }
 
   @Override
   protected void executeRestart(InjectionContext context) {
-    LOG.warn("exit scm-manager with exit code {}", exitCode);
-    exiter.accept(exitCode);
-  }
-
-  private int determineExitCode() {
-    String exitCodeAsString = System.getProperty(PROPERTY_EXIT_CODE, "0");
-    try {
-      return Integer.parseInt(exitCodeAsString);
-    } catch (NumberFormatException ex) {
-      throw new RestartNotSupportedException("invalid exit code " + exitCodeAsString, ex);
-    }
+    LOG.warn("exit scm-manager with exit code {}", 0);
+    System.exit(0);
   }
 }

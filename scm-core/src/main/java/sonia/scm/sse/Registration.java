@@ -25,11 +25,10 @@
 package sonia.scm.sse;
 
 import com.google.common.base.Preconditions;
+import jakarta.ws.rs.sse.Sse;
+import jakarta.ws.rs.sse.SseEventSink;
 import lombok.Value;
 import sonia.scm.security.SessionId;
-
-import javax.ws.rs.sse.Sse;
-import javax.ws.rs.sse.SseEventSink;
 
 @Value
 public class Registration {

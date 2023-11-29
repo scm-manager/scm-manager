@@ -24,11 +24,10 @@
 
 package sonia.scm.repository.spi;
 
+import jakarta.inject.Inject;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
-
-import javax.inject.Inject;
 
 class GitContextFactory {
 

@@ -25,12 +25,12 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import sonia.scm.repository.Modification;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 import sonia.scm.repository.spi.javahg.StateCommand;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Collection;
 
