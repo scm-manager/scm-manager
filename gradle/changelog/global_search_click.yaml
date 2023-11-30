@@ -1,0 +1,2 @@
+- type: fixed
+  description: Race condition sometimes breaking mouse interaction in global search

@@ -39,6 +39,7 @@ import { SearchBoxContext } from "./SearchBoxContext";
 import { SearchBoxInput } from "./SearchBoxInput";
 import { SearchBoxOption } from "./SearchBoxOption";
 import { SearchBoxOptions } from "./SearchBoxOptions";
+import { useLocation } from "react-router-dom";
 
 const SearchBox = React.forwardRef<
   HTMLDivElement,
@@ -53,6 +54,7 @@ const SearchBox = React.forwardRef<
   const [options, setOptions] = useState<RefObject<HTMLAnchorElement>[]>([]);
   const popupId = useGeneratedId();
   const inputRef = useRef<HTMLInputElement>(null);
+  const location = useLocation();
   const registerOption = useCallback(
     (ref: RefObject<HTMLAnchorElement>) =>
       setOptions((prev) => {
@@ -84,23 +86,20 @@ const SearchBox = React.forwardRef<
     (ref: RefObject<HTMLAnchorElement>) => setOptions((prev) => prev.filter((it) => it !== ref)),
     []
   );
+  const close = useCallback(() => {
+    if (open && shouldClear) {
+      onQueryChange?.("");
+    }
+    setOpen(false);
+    setActiveId(undefined);
+  }, [onQueryChange, open, shouldClear]);
   const handleInputBlur: FocusEventHandler<HTMLInputElement> = useCallback(
     (e) => {
-      const close = () => {
-        if (open && shouldClear) {
-          onQueryChange?.("");
-        }
-        setOpen(false);
-        setActiveId(undefined);
-      };
-
-      if (activeId && e.relatedTarget?.id === activeId) {
-        setTimeout(close, 100);
-      } else {
+      if (!activeId || e.relatedTarget?.id !== activeId) {
         close();
       }
     },
-    [activeId, onQueryChange, open, shouldClear]
+    [activeId, close]
   );
   const handleInputKeyDown = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
@@ -178,6 +177,7 @@ const SearchBox = React.forwardRef<
       });
     }
   }, [activeId, options]);
+  useEffect(close, [location]);
 
   return (
     <SearchBoxContext.Provider
