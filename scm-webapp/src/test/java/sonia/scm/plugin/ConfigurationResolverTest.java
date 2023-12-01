@@ -77,4 +77,12 @@ class ConfigurationResolverTest {
     assertThat(WebappConfigProvider.resolveAsBoolean("redirect")).contains(true);
     assertThat(WebappConfigProvider.resolveAsInteger("https.port")).contains(42);
   }
+
+  @Test
+  void shouldReadNullValuesFromConfigYaml() {
+    new ConfigurationResolver(Collections.emptyMap(), "sonia/scm/plugin/configWithNull.yml");
+
+    assertThat(WebappConfigProvider.resolveAsBoolean("redirect")).contains(true);
+    assertThat(WebappConfigProvider.resolveAsInteger("https.keyType")).isEmpty();
+  }
 }

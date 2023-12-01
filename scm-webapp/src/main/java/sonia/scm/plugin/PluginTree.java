@@ -40,7 +40,7 @@ import java.util.List;
  */
 public final class PluginTree {
 
-  private static final int SCM_VERSION = 2;
+  private static final int SCM_VERSION = 3;
 
   /**
    * the logger for PluginTree
@@ -72,16 +72,6 @@ public final class PluginTree {
 
   private void checkIfSupported(ExplodedSmp smp) {
     InstalledPluginDescriptor plugin = smp.getPlugin();
-
-    if (plugin.getScmVersion() != SCM_VERSION) {
-      throw new PluginException(
-        String.format(
-          "scm version %s of plugin %s does not match, required is version %s",
-          plugin.getScmVersion(), plugin.getInformation().getId(), SCM_VERSION
-        )
-      );
-    }
-
     checkIfConditionsMatch(smp, plugin);
   }
 

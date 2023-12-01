@@ -39,8 +39,8 @@ public class ServerConfigYaml {
     private String logDir = "";
     private String rootLevel = "INFO";
     private Map<String, String> logger = new HashMap<>();
-    private boolean enableFileAppender = true;
-    private boolean enableConsoleAppender = true;
+    private boolean fileAppenderEnabled = true;
+    private boolean consoleAppenderEnabled = true;
 
     private LogConfig() {}
 
@@ -67,7 +67,7 @@ public class ServerConfigYaml {
             continue;
           }
           String[] envLoggerEntryParts = envLoggerEntry.trim().split(":");
-          loggerMap.put(envLoggerEntryParts[0], envLoggerEntryParts[1]);
+          loggerMap.put(envLoggerEntryParts[0].trim(), envLoggerEntryParts[1].trim());
         }
         return loggerMap;
       }
@@ -82,20 +82,20 @@ public class ServerConfigYaml {
       this.logger = logger;
     }
 
-    public boolean isEnableFileAppender() {
-      return getEnvWithDefault("LOG_ENABLE_FILE_APPENDER", enableFileAppender);
+    public boolean isFileAppenderEnabled() {
+      return getEnvWithDefault("LOG_FILE_APPENDER_ENABLED", fileAppenderEnabled);
     }
 
-    public void setEnableFileAppender(boolean enableFileAppender) {
-      this.enableFileAppender = enableFileAppender;
+    public void setFileAppenderEnabled(boolean fileAppenderEnabled) {
+      this.fileAppenderEnabled = fileAppenderEnabled;
     }
 
-    public boolean isEnableConsoleAppender() {
-      return  getEnvWithDefault("LOG_ENABLE_CONSOLE_APPENDER", enableConsoleAppender);
+    public boolean isConsoleAppenderEnabled() {
+      return  getEnvWithDefault("LOG_CONSOLE_APPENDER_ENABLED", consoleAppenderEnabled);
     }
 
-    public void setEnableConsoleAppender(boolean enableConsoleAppender) {
-      this.enableConsoleAppender = enableConsoleAppender;
+    public void setConsoleAppenderEnabled(boolean consoleAppenderEnabled) {
+      this.consoleAppenderEnabled = consoleAppenderEnabled;
     }
   }
 

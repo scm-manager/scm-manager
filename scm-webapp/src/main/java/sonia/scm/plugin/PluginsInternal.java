@@ -39,11 +39,9 @@ import java.nio.file.Path;
 import java.util.Set;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public final class PluginsInternal
-{
+public final class PluginsInternal {
 
   /**
    * the logger for PluginsInternal
@@ -51,30 +49,27 @@ public final class PluginsInternal
   private static final Logger logger =
     LoggerFactory.getLogger(PluginsInternal.class);
 
-  private PluginsInternal() {}
+  private PluginsInternal() {
+  }
 
   public static Set<InstalledPlugin> collectPlugins(ClassLoaderLifeCycle classLoaderLifeCycle,
                                                     Path directory)
-    throws IOException
-  {
+    throws IOException {
     PluginProcessor processor = new PluginProcessor(classLoaderLifeCycle, directory);
 
     return processor.collectPlugins(classLoaderLifeCycle.getBootstrapClassLoader());
   }
 
-  public static File createPluginDirectory(File parent, InstalledPluginDescriptor plugin)
-  {
+  public static File createPluginDirectory(File parent, InstalledPluginDescriptor plugin) {
     PluginInformation info = plugin.getInformation();
 
     return new File(parent, info.getName());
   }
 
   public static void extract(SmpArchive archive, String checksum,
-    File directory, File checksumFile, boolean core)
-    throws IOException
-  {
-    if (directory.exists())
-    {
+                             File directory, File checksumFile, boolean core)
+    throws IOException {
+    if (directory.exists()) {
       logger.debug("delete directory {} for plugin extraction",
         archive.getPlugin().getInformation().getName(false));
       IOUtil.delete(directory);
@@ -87,31 +82,25 @@ public final class PluginsInternal
     archive.extract(directory);
     Files.write(checksum, checksumFile, Charsets.UTF_8);
 
-    if (core)
-    {
-      if (!new File(directory, PluginConstants.FILE_CORE).createNewFile())
-      {
+    if (core) {
+      if (!new File(directory, PluginConstants.FILE_CORE).createNewFile()) {
         throw new IOException("could not create core plugin marker");
       }
     }
   }
 
-  public static Iterable<InstalledPluginDescriptor> unwrap(Iterable<InstalledPlugin> wrapped)
-  {
+  public static Iterable<InstalledPluginDescriptor> unwrap(Iterable<InstalledPlugin> wrapped) {
     return Iterables.transform(wrapped, new Unwrap());
   }
 
-  public static File getChecksumFile(File pluginDirectory)
-  {
+  public static File getChecksumFile(File pluginDirectory) {
     return new File(pluginDirectory, PluginConstants.FILE_CHECKSUM);
   }
 
-  private static class Unwrap implements Function<InstalledPlugin, InstalledPluginDescriptor>
-  {
+  private static class Unwrap implements Function<InstalledPlugin, InstalledPluginDescriptor> {
 
-  @Override
-  public InstalledPluginDescriptor apply(InstalledPlugin wrapper)
-    {
+    @Override
+    public InstalledPluginDescriptor apply(InstalledPlugin wrapper) {
       return wrapper.getDescriptor();
     }
   }

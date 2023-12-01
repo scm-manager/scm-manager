@@ -68,7 +68,7 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
 
   @Inject
   public DefaultCentralWorkQueue(
-    @ConfigValue(key = "centralWorkQueue.workers", defaultValue = "8", description = "") Integer workers,
+    @ConfigValue(key = "centralWorkQueue.workers", defaultValue = "0", description = "Sets the number of threads for the central work queue. If set to 0, the default will be used.") Integer workers,
     Injector injector,
     Persistence persistence,
     MeterRegistry meterRegistry

@@ -46,8 +46,6 @@ import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginException;
 import sonia.scm.plugin.PluginLoadException;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.plugin.PluginTransformException;
-import sonia.scm.plugin.PluginTransformer;
 import sonia.scm.plugin.PluginsInternal;
 import sonia.scm.plugin.SmpArchive;
 import sonia.scm.util.IOUtil;
@@ -109,33 +107,10 @@ public final class PluginBootstrap {
         LOG.info("core plugin extraction is disabled");
       }
       uninstallMarkedPlugins(pluginDirectory.toPath());
-      transformIncompatiblePlugins(pluginDirectory.toPath());
       return PluginsInternal.collectPlugins(classLoaderLifeCycle, pluginDirectory.toPath());
     } catch (IOException ex) {
       throw new PluginLoadException("could not load plugins", ex);
     }
-  }
-
-  private void transformIncompatiblePlugins(Path pluginsDirectory) {
-    try (Stream<Path> list = java.nio.file.Files.list(pluginsDirectory)) {
-      list
-        .filter(java.nio.file.Files::isDirectory)
-        .filter(this::isIncompatiblePlugin)
-        .forEach(plugin -> {
-          PluginTransformer.transform(plugin);
-          try {
-            Files.touch(plugin.resolve(InstalledPlugin.COMPATIBILITY_MARKER_FILENAME).toFile());
-          } catch (IOException e) {
-            throw new PluginTransformException("Failed to create marker file for jakarta compatibility", e);
-          }
-        });
-    } catch (IOException e) {
-      LOG.warn("error occurred while checking for plugins that should be transformed", e);
-    }
-  }
-
-  private boolean isIncompatiblePlugin(Path path) {
-      return !new File(path.toFile(), InstalledPlugin.COMPATIBILITY_MARKER_FILENAME).exists();
   }
 
   private void uninstallMarkedPlugins(Path pluginDirectory) {

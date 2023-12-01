@@ -174,13 +174,22 @@ public final class PluginProcessor
     Set<ExplodedSmp> installedPlugins = findInstalledPlugins();
     logger.debug("found {} installed plugins", installedPlugins.size());
 
+    for (ExplodedSmp installedPlugin : installedPlugins) {
+      if (installedPlugin.getPlugin().getScmVersion() < 3) {
+        logger.debug("start jakarta transformation of already installed plugin: {}", installedPlugin.getPlugin().getInformation().getName());
+        PluginTransformer.transform(installedPlugin.getPath());
+      }
+    }
+
     Set<ExplodedSmp> newlyInstalledPlugins = installPending(installedPlugins);
     logger.debug("finished installation of {} plugins", newlyInstalledPlugins.size());
 
     for (ExplodedSmp newInstalledSmp : newlyInstalledPlugins) {
-      PluginTransformer.transform(newInstalledSmp.getPath());
+      if (newInstalledSmp.getPlugin().getScmVersion() < 3) {
+        logger.debug("start jakarta transformation of newly installed smp: {}", newInstalledSmp.getPlugin().getInformation().getName());
+        PluginTransformer.transform(newInstalledSmp.getPath());
+      }
     }
-    logger.debug("finished jakarta transformation of {} plugins", newlyInstalledPlugins.size());
 
     Set<ExplodedSmp> plugins = concat(installedPlugins, newlyInstalledPlugins);
 

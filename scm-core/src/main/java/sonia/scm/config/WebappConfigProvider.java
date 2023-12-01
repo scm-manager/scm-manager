@@ -24,18 +24,32 @@
 
 package sonia.scm.config;
 
-import java.util.HashMap;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Map;
 import java.util.Optional;
 
-public class WebappConfigProvider {
+import static java.util.Optional.empty;
 
-  private WebappConfigProvider() {}
+@Slf4j
+public final class WebappConfigProvider {
 
-  private static Map<String, String> configBindings = new HashMap<>();
+  private static WebappConfigProvider instance;
+
+  private final Map<String, String> configBindings;
+  private final Map<String, String> environment;
+
+  private WebappConfigProvider(Map<String, String> configBindings, Map<String, String> environment) {
+    this.configBindings = configBindings;
+    this.environment = environment;
+  }
 
   public static void setConfigBindings(Map<String, String> newBindings) {
-    configBindings = newBindings;
+    WebappConfigProvider.setConfigBindings(newBindings, System.getenv());
+  }
+
+  static void setConfigBindings(Map<String, String> newBindings, Map<String, String> environment) {
+    instance = new WebappConfigProvider(newBindings, environment);
   }
 
   public static Optional<String> resolveAsString(String key) {
@@ -55,6 +69,25 @@ public class WebappConfigProvider {
   }
 
   private static Optional<String> resolveConfig(String key) {
-    return Optional.ofNullable(configBindings.get(key));
+    if (instance == null) {
+      return empty();
+    }
+    return instance.resolveConfigInternal(key);
+  }
+
+  private Optional<String> resolveConfigInternal(String key) {
+    String envValue = environment.get("SCM_WEBAPP_" + key.replace('.', '_').toUpperCase());
+    if (envValue != null) {
+      log.debug("resolve config for key '{}' to value '{}' from environment", key, envValue);
+      return Optional.of(envValue);
+    }
+    String value = instance.configBindings.get(key);
+    if (value == null) {
+      log.debug("could not resolve config for key '{}'", key);
+      return empty();
+    } else {
+      log.debug("resolve config for key '{}' to value '{}'", key, value);
+      return Optional.of(value);
+    }
   }
 }

@@ -52,7 +52,7 @@ public class WorkdirProvider implements ServletContextListener {
 
   @Inject
   public WorkdirProvider(
-    @ConfigValue(key = "workdir", defaultValue = "", description = "Working directory for internal repository operations") String workDir,
+    @ConfigValue(key = "workDir", defaultValue = "", description = "Working directory for internal repository operations") String workDir,
     RepositoryLocationResolver repositoryLocationResolver
     ) {
     this(new File(!Strings.isNullOrEmpty(workDir) ? workDir : System.getProperty("java.io.tmpdir") , "scm-work"), repositoryLocationResolver, workDir == null);

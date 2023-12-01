@@ -80,14 +80,14 @@ data:
           enabled: true
       ## Warning: Enabling this option can lead to security issue.
       endlessJwt: false
-      #### Number of async threads
+      ## Number of async threads
       asyncThreads: 4
-      #### Max seconds to abort async execution
+      ## Max seconds to abort async execution
       maxAsyncAbortSeconds: 60
-      #### Amount of central work queue workers
+      ## Amount of central work queue workers
       central-work-queue:
         workers: 4
-      #### Strategy for the working copy pool implementation [sonia.scm.repository.work.NoneCachingWorkingCopyPool, sonia.scm.repository.work.SimpleCachingWorkingCopyPool]
+      ## Strategy for the working copy pool implementation [sonia.scm.repository.work.NoneCachingWorkingCopyPool, sonia.scm.repository.work.SimpleCachingWorkingCopyPool]
       workingCopyPoolStrategy: sonia.scm.repository.work.SimpleCachingWorkingCopyPool
-      #### Amount of "cached" working copies
+      ## Amount of "cached" working copies
       workingCopyPoolSize: 5

@@ -38,6 +38,8 @@ import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -49,16 +51,15 @@ public final class ServerConfiguration {
   @SuppressWarnings("java:S1075") // not a real uri
   private static final String DEFAULT_CONTEXT_PATH = "/scm";
   private final ServerConfigYaml configYaml;
-  private Path testTempDir;
+  private final String baseDir = System.getProperty("basedir", ".");
 
   public ServerConfiguration() {
     this.configYaml = new ServerConfigParser().parse();
   }
 
   // Visible for testing
-  public ServerConfiguration(URL configFile, Path tempDir) {
+  public ServerConfiguration(URL configFile) {
     this.configYaml = new ServerConfigParser().parse(configFile);
-    this.testTempDir = tempDir;
   }
 
   public void configureServer(Server server) {
@@ -138,21 +139,43 @@ public final class ServerConfiguration {
     // disable directory listings
     webApp.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
 
-    String baseDir = resolveBaseDir();
-    webApp.setWar(baseDir + "/var/webapp/scm-webapp.war");
+    String baseDir = this.baseDir;
+    String warFile = asCanonicalFile(Paths.get(baseDir, "/var/webapp/scm-webapp.war")).toString();
+    System.out.println("Set webapp war file to " + warFile);
+    webApp.setWar(warFile);
     String tempDir = configYaml.getTempDir();
-    webApp.setTempDirectory(tempDir.startsWith("/") ? Paths.get(tempDir, "webapp").toFile() : Paths.get(baseDir, tempDir).toFile());
+    File webappTempDir =
+      asCanonicalFile(tempDir.startsWith("/") ?
+        Paths.get(tempDir, "webapp") :
+        Paths.get(baseDir, tempDir, "scm")
+      );
+    System.out.printf("Set webapp temp directory to %s%n", webappTempDir);
+    webApp.setTempDirectory(webappTempDir);
     return webApp;
   }
 
   private WebAppContext createDocRoot() {
     WebAppContext docRoot = new WebAppContext();
     docRoot.setContextPath("/");
-    String baseDir = resolveBaseDir();
+    String baseDir = this.baseDir;
     docRoot.setBaseResource(new ResourceCollection(new String[]{baseDir + "/var/webapp/docroot"}));
     String tempDir = configYaml.getTempDir();
-    docRoot.setTempDirectory(tempDir.startsWith("/") ? Paths.get(tempDir, "work/docroot").toFile() : Paths.get(baseDir, tempDir).toFile());
+    File docRootTempDir =
+      asCanonicalFile(tempDir.startsWith("/") ?
+        Paths.get(tempDir, "work/docroot") :
+        Paths.get(baseDir, tempDir, "docroot")
+      );
+    System.out.printf("Set docroot temp directory to %s%n", docRootTempDir);
+    docRoot.setTempDirectory(docRootTempDir);
     return docRoot;
+  }
+
+  private File asCanonicalFile(Path path) {
+    try {
+      return path.toFile().getAbsoluteFile().getCanonicalFile();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private HttpConfiguration createCustomHttpConfig() {
@@ -193,11 +216,6 @@ public final class ServerConfiguration {
     }
 
     return listeners;
-  }
-
-
-  private String resolveBaseDir() {
-    return testTempDir != null ? testTempDir.toString() : System.getProperty("baseDir", ".");
   }
 
   private String findContextPath(Handler[] handlers) {

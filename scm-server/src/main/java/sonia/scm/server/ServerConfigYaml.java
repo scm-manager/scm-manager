@@ -142,7 +142,7 @@ public class ServerConfigYaml {
   }
 
   public boolean isForwardHeadersEnabled() {
-    return getEnvWithDefault("FORWARD_REMOTE_ADDRESS", forwardHeadersEnabled);
+    return getEnvWithDefault("FORWARD_HEADERS_ENABLED", forwardHeadersEnabled);
   }
 
   public void setForwardHeadersEnabled(boolean forwardHeadersEnabled) {

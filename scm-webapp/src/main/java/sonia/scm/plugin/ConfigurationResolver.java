@@ -70,7 +70,11 @@ public class ConfigurationResolver {
     Map<String, String> configurationFile = new HashMap<>();
     rootNode.fields().forEachRemaining(entry -> {
       if (entry.getValue().isValueNode()) {
-        configurationFile.put(prefix + entry.getKey(), entry.getValue().asText());
+        if (entry.getValue().isNull()) {
+          configurationFile.put(prefix + entry.getKey(), null);
+        } else {
+          configurationFile.put(prefix + entry.getKey(), entry.getValue().asText());
+        }
       } else {
         configurationFile.putAll(readConfigurationFile(entry.getValue(), prefix + entry.getKey() + "."));
       }

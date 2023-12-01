@@ -22,51 +22,59 @@
  * SOFTWARE.
  */
 
-package sonia.scm.work;
+package sonia.scm.config;
 
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Map;
+
+import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class ThreadCountProviderTest {
+class WebappConfigProviderTest {
 
   @Test
-  void shouldUseTwoWorkersForOneCPU() {
-    ThreadCountProvider provider = new ThreadCountProvider(() -> 1, 2);
+  void shouldHandleEmptyConfig() {
+    WebappConfigProvider.setConfigBindings(emptyMap());
 
-    assertThat(provider.getAsInt()).isEqualTo(2);
+    assertThat(WebappConfigProvider.resolveAsString("key")).isEmpty();
   }
 
-  @ParameterizedTest(name = "shouldUseFourWorkersFor{argumentsWithNames}CPU")
-  @ValueSource(ints = {2, 4, 8, 16})
-  void shouldUseFourWorkersForMoreThanOneCPU(int cpus) {
-    ThreadCountProvider provider = new ThreadCountProvider(() -> cpus, 4);
+  @Test
+  void shouldResolveStringValueFromConfig() {
+    WebappConfigProvider.setConfigBindings(Map.of("key", "value"));
 
-    assertThat(provider.getAsInt()).isEqualTo(4);
+    assertThat(WebappConfigProvider.resolveAsString("key")).contains("value");
   }
 
-  @Nested
-  class ConfigValueTests {
+  @Test
+  void shouldResolveNumberValueFromConfig() {
+    WebappConfigProvider.setConfigBindings(Map.of("key", "42"));
 
-    @Test
-    void shouldUseCountFromSystemProperty() {
-      ThreadCountProvider provider = new ThreadCountProvider(6);
-      assertThat(provider.getAsInt()).isEqualTo(6);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"-1", "0", "100"})
-    void shouldUseDefaultForInvalidValue(String value) {
-      ThreadCountProvider provider = new ThreadCountProvider(() -> 1, Integer.parseInt(value));
-      assertThat(provider.getAsInt()).isEqualTo(2);
-    }
-
+    assertThat(WebappConfigProvider.resolveAsInteger("key")).contains(42);
   }
 
+  @Test
+  void shouldResolveBooleanValueFromConfig() {
+    WebappConfigProvider.setConfigBindings(Map.of("key", "true"));
+
+    assertThat(WebappConfigProvider.resolveAsBoolean("key")).contains(true);
+  }
+
+  @Test
+  void shouldLetEnvironmentOverrideConfig() {
+    WebappConfigProvider.setConfigBindings(Map.of("key", "value"), Map.of("SCM_WEBAPP_KEY", "env"));
+
+    assertThat(WebappConfigProvider.resolveAsString("key")).contains("env");
+  }
+
+  @Test
+  void shouldCreateCorrectKeyForEnvironment() {
+    WebappConfigProvider.setConfigBindings(Map.of("some.more.complex.key", "value"), Map.of("SCM_WEBAPP_SOME_MORE_COMPLEX_KEY", "env"));
+
+    assertThat(WebappConfigProvider.resolveAsString("some.more.complex.key")).contains("env");
+  }
 }

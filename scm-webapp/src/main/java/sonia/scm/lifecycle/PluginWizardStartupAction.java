@@ -54,7 +54,7 @@ public class PluginWizardStartupAction implements InitializationStep {
 
   @Override
   public boolean done() {
-    return WebappConfigProvider.resolveAsString("initialPassword").orElse(null) != null || store.getPluginSets().isPresent();
+    return WebappConfigProvider.resolveAsString("initialPassword").isPresent() || store.getPluginSets().isPresent();
   }
 
 }

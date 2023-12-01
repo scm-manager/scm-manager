@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -35,23 +35,21 @@ import java.nio.file.Path;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public final class InstalledPlugin implements Plugin
-{
+public final class InstalledPlugin implements Plugin {
 
   public static final String UNINSTALL_MARKER_FILENAME = "uninstall";
-  public static final String COMPATIBILITY_MARKER_FILENAME = ".jakarta-compatible";
 
   /**
    * Constructs a new plugin wrapper.
-   *  @param descriptor wrapped plugin
-   * @param classLoader plugin class loader
+   *
+   * @param descriptor        wrapped plugin
+   * @param classLoader       plugin class loader
    * @param webResourceLoader web resource loader
-   * @param directory plugin directory
-   * @param core marked as core or not
+   * @param directory         plugin directory
+   * @param core              marked as core or not
    */
   public InstalledPlugin(InstalledPluginDescriptor descriptor, ClassLoader classLoader,
-                         WebResourceLoader webResourceLoader, Path directory, boolean core)
-  {
+                         WebResourceLoader webResourceLoader, Path directory, boolean core) {
     this.descriptor = descriptor;
     this.classLoader = classLoader;
     this.webResourceLoader = webResourceLoader;
@@ -64,56 +62,46 @@ public final class InstalledPlugin implements Plugin
   /**
    * Returns plugin class loader.
    *
-   *
    * @return plugin class loader
    */
-  public ClassLoader getClassLoader()
-  {
+  public ClassLoader getClassLoader() {
     return classLoader;
   }
 
   /**
    * Returns plugin directory.
    *
-   *
    * @return plugin directory
    */
-  public Path getDirectory()
-  {
+  public Path getDirectory() {
     return directory;
   }
 
   /**
    * Returns the id of the plugin.
    *
-   *
    * @return id of plugin
    */
-  public String getId()
-  {
+  public String getId() {
     return descriptor.getInformation().getId();
   }
 
   /**
    * Returns the plugin descriptor.
    *
-   *
    * @return plugin descriptor
    */
   @Override
-  public InstalledPluginDescriptor getDescriptor()
-  {
+  public InstalledPluginDescriptor getDescriptor() {
     return descriptor;
   }
 
   /**
    * Returns the {@link WebResourceLoader} for this plugin.
    *
-   *
    * @return web resource loader
    */
-  public WebResourceLoader getWebResourceLoader()
-  {
+  public WebResourceLoader getWebResourceLoader() {
     return webResourceLoader;
   }
 
@@ -139,16 +127,24 @@ public final class InstalledPlugin implements Plugin
 
 //~--- fields ---------------------------------------------------------------
 
-  /** plugin class loader */
+  /**
+   * plugin class loader
+   */
   private final ClassLoader classLoader;
 
-  /** plugin directory */
+  /**
+   * plugin directory
+   */
   private final Path directory;
 
-  /** plugin */
+  /**
+   * plugin
+   */
   private final InstalledPluginDescriptor descriptor;
 
-  /** plugin web resource loader */
+  /**
+   * plugin web resource loader
+   */
   private final WebResourceLoader webResourceLoader;
 
   private final boolean core;

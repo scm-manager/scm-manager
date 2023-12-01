@@ -41,7 +41,7 @@ class ServerConfigurationTest {
 
   @Test
   void shouldThrowServerConfigurationExceptionIfConfigYamlNotFound() {
-    assertThrows(ServerConfigurationException.class, () -> new ServerConfiguration(null, null));
+    assertThrows(ServerConfigurationException.class, () -> new ServerConfiguration(null));
   }
 
   @Test
@@ -101,7 +101,8 @@ class ServerConfigurationTest {
     Files.createDirectories(tempDir.resolve("var/webapp/docroot"));
     Files.createFile(tempDir.resolve("var/webapp/scm-webapp.war"));
 
-    return new ServerConfiguration(path.toUri().toURL(), tempDir);
+    System.setProperty("basedir", tempDir.toString());
+    return new ServerConfiguration(path.toUri().toURL());
   }
 
 }

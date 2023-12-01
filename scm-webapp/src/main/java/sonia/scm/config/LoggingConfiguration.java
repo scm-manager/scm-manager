@@ -60,12 +60,12 @@ public class LoggingConfiguration {
     root.setLevel(Level.valueOf(config.getRootLevel()));
     configureSpecificLoggers();
 
-    if (config.isEnableFileAppender()) {
+    if (config.isFileAppenderEnabled()) {
       RollingFileAppender fileAppender = configureFileLogger();
       root.addAppender(fileAppender);
     }
 
-    if (config.isEnableConsoleAppender()) {
+    if (config.isConsoleAppenderEnabled()) {
       ConsoleAppender consoleAppender = configureConsoleLogger();
       root.addAppender(consoleAppender);
     }

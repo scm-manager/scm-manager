@@ -34,11 +34,8 @@ public class ThreadCountProvider implements IntSupplier {
 
   private static final Logger LOG = LoggerFactory.getLogger(ThreadCountProvider.class);
 
-  @VisibleForTesting
-  static final String PROPERTY = "scm.central-work-queue.workers";
-
   private final IntSupplier cpuCountProvider;
-  private final Integer workers;
+  private final int workers;
 
   public ThreadCountProvider(Integer workers) {
     this(() -> Runtime.getRuntime().availableProcessors(), workers);
@@ -47,18 +44,24 @@ public class ThreadCountProvider implements IntSupplier {
   @VisibleForTesting
   ThreadCountProvider(IntSupplier cpuCountProvider, Integer workers) {
     this.cpuCountProvider = cpuCountProvider;
-    this.workers = workers;
+    this.workers = sanitizeWorkerCount(workers);
   }
 
   @Override
   public int getAsInt() {
-    if (isInvalid(workers)) {
+    return workers;
+  }
+
+  private int sanitizeWorkerCount(Integer workers) {
+    if (workers == null || workers == 0) {
+      return deriveFromCPUCount();
+    } else if (isInvalid(workers)) {
       LOG.warn(
-        "config value {} contains a invalid value {}, fall back and derive worker count from cpu count",
-        "central-work-queue.workers", workers
+        "config value 'centralWorkQueue.workers' contains an invalid value {}, fall back and derive worker count from cpu count", workers
       );
       return deriveFromCPUCount();
     }
+    LOG.debug("using {} workers for central work queue", workers);
     return workers;
   }
 
@@ -69,8 +72,10 @@ public class ThreadCountProvider implements IntSupplier {
   private int deriveFromCPUCount() {
     int cpus = cpuCountProvider.getAsInt();
     if (cpus > 1) {
+      LOG.debug("using 4 workers for central work queue");
       return 4;
     }
+    LOG.debug("using 2 workers for central work queue");
     return 2;
   }
 }

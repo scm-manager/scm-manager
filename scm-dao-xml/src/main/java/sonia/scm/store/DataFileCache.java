@@ -59,6 +59,7 @@ public class DataFileCache {
   DataFileCache(Cache<File, Object> cache, boolean cacheEnabled) {
     this.cache = cache;
     this.cacheEnabled = cacheEnabled;
+    LOG.debug("data file cache enabled: {}", cacheEnabled);
   }
 
   DataFileCacheInstance instanceFor(Class<?> type) {

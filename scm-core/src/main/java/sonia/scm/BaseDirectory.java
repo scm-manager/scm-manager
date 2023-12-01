@@ -25,6 +25,7 @@
 package sonia.scm;
 
 import com.google.common.base.Strings;
+import lombok.extern.slf4j.Slf4j;
 import sonia.scm.config.WebappConfigProvider;
 import sonia.scm.util.SystemUtil;
 
@@ -41,6 +42,7 @@ import java.util.Properties;
  *
  * @since 2.0.0
  */
+@Slf4j
 final class BaseDirectory {
 
   /**
@@ -93,7 +95,7 @@ final class BaseDirectory {
     if (Strings.isNullOrEmpty(directory)) {
       directory = getOsSpecificDefault();
     }
-
+    log.info("using directory {} as scm home directory", directory);
     return Paths.get(directory);
   }
 
@@ -116,14 +118,21 @@ final class BaseDirectory {
     } else if (platform.isWindows()) {
       return getWindowsDefault();
     }
+    return getUnixDefault();
+  }
+
+  private String getUnixDefault() {
+    log.debug("using Unix default for home directory");
     return systemProperties.getProperty("user.home") + "/.scm";
   }
 
   private String getOsxDefault() {
+    log.debug("using OS/X default for home directory");
     return systemProperties.getProperty("user.home") + "/Library/Application Support/SCM-Manager";
   }
 
   private String getWindowsDefault() {
+    log.debug("using Windows default for home directory");
     return environment.get("APPDATA") + "\\SCM-Manager";
   }
 

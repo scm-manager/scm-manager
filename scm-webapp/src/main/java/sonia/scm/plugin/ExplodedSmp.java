@@ -44,20 +44,17 @@ import java.util.Objects;
  *
  * @author Sebastian Sdorra
  */
-public final class ExplodedSmp
-{
+public final class ExplodedSmp {
 
   private static final Logger logger = LoggerFactory.getLogger(ExplodedSmp.class);
 
   /**
    * Constructs ...
    *
-   *
    * @param path
    * @param plugin
    */
-  ExplodedSmp(Path path, InstalledPluginDescriptor plugin)
-  {
+  ExplodedSmp(Path path, InstalledPluginDescriptor plugin) {
     logger.trace("create exploded scm for plugin {} and dependencies {}", plugin.getInformation().getName(), plugin.getDependencies());
     this.path = path;
     this.plugin = plugin;
@@ -68,16 +65,12 @@ public final class ExplodedSmp
   /**
    * Creates a new ExplodedSmp object.
    *
-   *
    * @param directory directory containing an extracted SCM-Manager plugin.
-   *
    * @return ExplodedSmp object
-   *
    * @throws PluginException if the path does not contain an plugin descriptor
-   *  or the plugin descriptor could not be parsed
+   *                         or the plugin descriptor could not be parsed
    */
-  public static ExplodedSmp create(Path directory)
-  {
+  public static ExplodedSmp create(Path directory) {
     Path desc = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
 
     return new ExplodedSmp(directory, Plugins.parsePluginDescriptor(desc));
@@ -87,6 +80,7 @@ public final class ExplodedSmp
 
   /**
    * Returns {@code true} if the exploded smp contains a core plugin
+   *
    * @return {@code true} for a core plugin
    * @since 2.30.0
    */
@@ -98,22 +92,18 @@ public final class ExplodedSmp
   /**
    * Returns the path to the plugin directory.
    *
-   *
    * @return to plugin directory
    */
-  public Path getPath()
-  {
+  public Path getPath() {
     return path;
   }
 
   /**
    * Returns parsed plugin descriptor.
    *
-   *
    * @return plugin descriptor
    */
-  public InstalledPluginDescriptor getPlugin()
-  {
+  public InstalledPluginDescriptor getPlugin() {
     return plugin;
   }
 
@@ -141,24 +131,19 @@ public final class ExplodedSmp
   /**
    * Transforms {@link Path} to {@link ExplodedSmp}.
    */
-  public static class PathTransformer implements Function<Path, ExplodedSmp>
-  {
+  public static class PathTransformer implements Function<Path, ExplodedSmp> {
 
     /**
      * Transforms {@link Path} to {@link ExplodedSmp}. The path must contain an
      * extracted SCM-Manager plugin.
      *
-     *
      * @param directory directory containing exploded plugin
-     *
      * @return exploded smp object
-     *
      * @throws PluginException if the path does not contain an extracted
-     *  SCM-Manager plugin.
+     *                         SCM-Manager plugin.
      */
     @Override
-    public ExplodedSmp apply(Path directory)
-    {
+    public ExplodedSmp apply(Path directory) {
       return ExplodedSmp.create(directory);
     }
   }
@@ -166,9 +151,13 @@ public final class ExplodedSmp
 
   //~--- fields ---------------------------------------------------------------
 
-  /** directory */
+  /**
+   * directory
+   */
   private final Path path;
 
-  /** plugin object */
+  /**
+   * plugin object
+   */
   private final InstalledPluginDescriptor plugin;
 }

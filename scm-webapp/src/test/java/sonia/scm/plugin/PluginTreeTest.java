@@ -45,7 +45,6 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Sebastian Sdorra
@@ -102,15 +101,6 @@ public class PluginTreeTest {
     List<String> nodes = unwrapIds(new PluginTree(Stage.PRODUCTION, smps).getLeafLastNodes());
 
     assertThat(nodes, containsInAnyOrder("a", "b", "c"));
-  }
-
-  @Test(expected = PluginException.class)
-  public void testScmVersion() throws IOException {
-    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(1, createInfo("a", "1"), null, null, false,
-      null, null);
-    ExplodedSmp smp = createSmp(plugin);
-
-    new PluginTree(Stage.PRODUCTION, smp).getLeafLastNodes();
   }
 
   @Test
