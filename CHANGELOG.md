@@ -5,10 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.48.3] - 2023-12-08
+### Fixed
+- Removed function `toSpliced` due to missing browser support
+
 ## [2.48.2] - 2023-12-08
 ### Fixed
 - Race condition sometimes breaking mouse interaction in global search
-- Removed function `toSpliced` due to missing browser support
 
 ## [2.48.1] - 2023-11-22
 ### Fixed
