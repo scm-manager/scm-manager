@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/ui-layout",
   "private": false,
-  "version": "2.48.2",
+  "version": "2.48.3",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "module": "build/index.mjs",
@@ -16,9 +16,9 @@
     "@scm-manager/eslint-config": "^2.16.0",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
-    "@scm-manager/ui-styles": "2.48.2",
-    "@scm-manager/ui-overlays": "2.48.2",
-    "@scm-manager/ui-forms": "2.48.2",
+    "@scm-manager/ui-styles": "2.48.3",
+    "@scm-manager/ui-overlays": "2.48.3",
+    "@scm-manager/ui-forms": "2.48.3",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-docs": "^6.5.14",
     "@storybook/addon-essentials": "^6.5.10",
@@ -39,7 +39,7 @@
     "react-dom": "17",
     "react-router-dom": "5",
     "styled-components": "5",
-    "@scm-manager/ui-components": "2.48.2"
+    "@scm-manager/ui-components": "2.48.3"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
@@ -52,6 +52,6 @@
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.1",
     "@radix-ui/react-tabs": "^1.0.4",
-    "@scm-manager/ui-buttons": "2.48.2"
+    "@scm-manager/ui-buttons": "2.48.3"
   }
 }
