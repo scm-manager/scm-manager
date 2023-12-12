@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 
 const PrimaryContentColumn: FC = ({ children }) => {
-  return <div className="column">{children}</div>;
+  return <div className="column is-10">{children}</div>;
 };
 
 export default PrimaryContentColumn;
