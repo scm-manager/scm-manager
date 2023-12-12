@@ -42,7 +42,7 @@ export const createLocalLink = (
   currentPath: string,
   link: string
 ) => {
-  const apiBasePath = contentLink.replace("{revision}", revision);
+  const apiBasePath = contentLink.replace("{revision}", encodeURIComponent(revision));
   if (isInternalScmRepoLink(link)) {
     return link;
   }
