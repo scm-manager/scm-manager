@@ -21,31 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Repository } from "@scm-manager/ui-types";
-import { NavLink } from "@scm-manager/ui-components";
-import { RouteProps } from "react-router-dom";
+import { useLocalStorage } from "@scm-manager/ui-api";
+import { useCallback, useMemo } from "react";
 
-type Props = {
-  repository: Repository;
-  to: string;
-  label: string;
-  linkName: string;
-  activeWhenMatch?: (route: RouteProps) => boolean;
-  activeOnlyWhenExact: boolean;
-  icon?: string;
-  title?: string;
+export const useSecondaryNavigation = (isNavigationCollapsible = true) => {
+  const [isCollapsed, setCollapsed] = useLocalStorage<boolean>("secondaryNavigation.collapsed", false);
+  const [isRouteCollapsible, setRouteCollapsible] = useLocalStorage<boolean>("secondaryNavigation.collapsible", true);
+
+  const collapsible = useMemo(
+    () => isRouteCollapsible && isNavigationCollapsible,
+    [isNavigationCollapsible, isRouteCollapsible]
+  );
+  const collapsed = useMemo(() => collapsible && isCollapsed, [collapsible, isCollapsed]);
+
+  const toggleCollapse = useCallback(() => {
+    if (collapsible) {
+      setCollapsed((previousIsCollapsed) => !previousIsCollapsed);
+    }
+  }, [collapsible, setCollapsed]);
+
+  return useMemo(
+    () => ({
+      collapsed,
+      collapsible,
+      setCollapsible: setRouteCollapsible,
+      toggleCollapse,
+    }),
+    [collapsed, collapsible, setRouteCollapsible, toggleCollapse]
+  );
 };
-
-/**
- * Component renders only if the repository contains the link with the given name.
- */
-const RepositoryNavLink: FC<Props> = ({ repository, linkName, ...props }) => {
-  if (!repository._links[linkName]) {
-    return null;
-  }
-
-  return <NavLink {...props} />;
-};
-
-export default RepositoryNavLink;

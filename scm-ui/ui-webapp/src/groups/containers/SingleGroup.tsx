@@ -34,9 +34,8 @@ import {
   PrimaryContentColumn,
   SecondaryNavigation,
   SecondaryNavigationColumn,
-  StateMenuContextProvider,
   SubNavigation,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { Details } from "./../components/table";
 import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLinks";
@@ -63,63 +62,61 @@ const SingleGroup: FC = () => {
 
   const extensionProps = {
     group,
-    url
+    url,
   };
 
   return (
-    <StateMenuContextProvider>
-      <Page title={group.name}>
-        <CustomQueryFlexWrappedColumns>
-          <PrimaryContentColumn>
-            <Route path={escapedUrl} exact>
-              <Details group={group} />
-            </Route>
-            <Route path={`${escapedUrl}/settings/general`} exact>
-              <EditGroup group={group} />
-            </Route>
-            <Route path={`${escapedUrl}/settings/permissions`} exact>
-              <SetGroupPermissions group={group} />
-            </Route>
-            <ExtensionPoint<extensionPoints.GroupRoute>
-              name="group.route"
-              props={{
-                group,
-                url: escapedUrl
-              }}
+    <Page title={group.name}>
+      <CustomQueryFlexWrappedColumns>
+        <PrimaryContentColumn>
+          <Route path={escapedUrl} exact>
+            <Details group={group} />
+          </Route>
+          <Route path={`${escapedUrl}/settings/general`} exact>
+            <EditGroup group={group} />
+          </Route>
+          <Route path={`${escapedUrl}/settings/permissions`} exact>
+            <SetGroupPermissions group={group} />
+          </Route>
+          <ExtensionPoint<extensionPoints.GroupRoute>
+            name="group.route"
+            props={{
+              group,
+              url: escapedUrl,
+            }}
+            renderAll={true}
+          />
+        </PrimaryContentColumn>
+        <SecondaryNavigationColumn>
+          <SecondaryNavigation label={t("singleGroup.menu.navigationLabel")}>
+            <NavLink
+              to={`${url}`}
+              icon="fas fa-info-circle"
+              label={t("singleGroup.menu.informationNavLink")}
+              title={t("singleGroup.menu.informationNavLink")}
+            />
+            <ExtensionPoint<extensionPoints.GroupNavigation>
+              name="group.navigation"
+              props={extensionProps}
               renderAll={true}
             />
-          </PrimaryContentColumn>
-          <SecondaryNavigationColumn>
-            <SecondaryNavigation label={t("singleGroup.menu.navigationLabel")}>
-              <NavLink
-                to={`${url}`}
-                icon="fas fa-info-circle"
-                label={t("singleGroup.menu.informationNavLink")}
-                title={t("singleGroup.menu.informationNavLink")}
-              />
-              <ExtensionPoint<extensionPoints.GroupNavigation>
-                name="group.navigation"
+            <SubNavigation
+              to={`${url}/settings/general`}
+              label={t("singleGroup.menu.settingsNavLink")}
+              title={t("singleGroup.menu.settingsNavLink")}
+            >
+              <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
+              <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
+              <ExtensionPoint<extensionPoints.GroupSetting>
+                name="group.setting"
                 props={extensionProps}
                 renderAll={true}
               />
-              <SubNavigation
-                to={`${url}/settings/general`}
-                label={t("singleGroup.menu.settingsNavLink")}
-                title={t("singleGroup.menu.settingsNavLink")}
-              >
-                <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
-                <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
-                <ExtensionPoint<extensionPoints.GroupSetting>
-                  name="group.setting"
-                  props={extensionProps}
-                  renderAll={true}
-                />
-              </SubNavigation>
-            </SecondaryNavigation>
-          </SecondaryNavigationColumn>
-        </CustomQueryFlexWrappedColumns>
-      </Page>
-    </StateMenuContextProvider>
+            </SubNavigation>
+          </SecondaryNavigation>
+        </SecondaryNavigationColumn>
+      </CustomQueryFlexWrappedColumns>
+    </Page>
   );
 };
 

@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
-import useMenuContext from "./MenuContext";
+import { useSecondaryNavigation } from "@scm-manager/ui-components";
 import { RoutingProps } from "./RoutingProps";
 import useActiveMatch from "./useActiveMatch";
 import { createAttributesForTesting } from "../devBuild";
+import { SubNavigationContext } from "./SubNavigationContext";
 
 type Props = RoutingProps & {
   label: string;
@@ -46,9 +47,7 @@ const SubNavigation: FC<Props> = ({
   children,
   testId,
 }) => {
-  const context = useMenuContext();
-  const collapsed = context.isCollapsed();
-
+  const { collapsed, setCollapsible } = useSecondaryNavigation();
   const parents = to.split("/");
   parents.splice(-1, 1);
   const parent = parents.join("/");
@@ -58,6 +57,12 @@ const SubNavigation: FC<Props> = ({
     activeOnlyWhenExact,
     activeWhenMatch,
   });
+
+  useEffect(() => {
+    if (active) {
+      setCollapsible(false);
+    }
+  }, [active, setCollapsible]);
 
   let defaultIcon = "fas fa-cog";
   if (icon) {
@@ -70,16 +75,18 @@ const SubNavigation: FC<Props> = ({
   }
 
   return (
-    <li title={collapsed ? title : undefined}>
-      <Link
-        className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "")}
-        to={to}
-        {...createAttributesForTesting(testId)}
-      >
-        <i className={classNames(defaultIcon, "fa-fw")} /> {collapsed ? "" : label}
-      </Link>
-      {childrenList}
-    </li>
+    <SubNavigationContext.Provider value={true}>
+      <li title={collapsed ? title : undefined}>
+        <Link
+          className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "")}
+          to={to}
+          {...createAttributesForTesting(testId)}
+        >
+          <i className={classNames(defaultIcon, "fa-fw")} /> {collapsed ? "" : label}
+        </Link>
+        {childrenList}
+      </li>
+    </SubNavigationContext.Provider>
   );
 };
 

@@ -21,31 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Repository } from "@scm-manager/ui-types";
-import { NavLink } from "@scm-manager/ui-components";
-import { RouteProps } from "react-router-dom";
+import React from "react";
 
-type Props = {
-  repository: Repository;
-  to: string;
-  label: string;
-  linkName: string;
-  activeWhenMatch?: (route: RouteProps) => boolean;
-  activeOnlyWhenExact: boolean;
-  icon?: string;
-  title?: string;
-};
-
-/**
- * Component renders only if the repository contains the link with the given name.
- */
-const RepositoryNavLink: FC<Props> = ({ repository, linkName, ...props }) => {
-  if (!repository._links[linkName]) {
-    return null;
-  }
-
-  return <NavLink {...props} />;
-};
-
-export default RepositoryNavLink;
+export const SubNavigationContext = React.createContext(false);

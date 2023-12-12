@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import classNames from "classnames";
+import { useSecondaryNavigation } from "@scm-manager/ui-components";
 import ExternalLink from "./ExternalLink";
-import useMenuContext from "./MenuContext";
+import { SecondaryNavigationContext } from "./SecondaryNavigationContext";
 
 type Props = {
   to: string;
@@ -33,8 +34,8 @@ type Props = {
 };
 
 const ExternalNavLink: FC<Props> = ({ to, icon, label }) => {
-  const context = useMenuContext();
-  const collapsed = context.isCollapsed();
+  const { collapsed } = useSecondaryNavigation();
+  const isSecondaryNavigation = useContext(SecondaryNavigationContext);
 
   let showIcon;
   if (icon) {
@@ -49,7 +50,7 @@ const ExternalNavLink: FC<Props> = ({ to, icon, label }) => {
     <li title={collapsed ? label : undefined}>
       <ExternalLink to={to} className={collapsed ? "has-text-centered" : ""}>
         {showIcon}
-        {collapsed ? null : label}
+        {isSecondaryNavigation && collapsed ? null : label}
       </ExternalLink>
     </li>
   );

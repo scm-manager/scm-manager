@@ -23,28 +23,13 @@
  */
 import React, { FC } from "react";
 import styled from "styled-components";
-import useMenuContext from "../navigation/MenuContext";
 
-const SecondaryColumn = styled.div<{ collapsed: boolean }>`
-  /* In Bulma there is unfortunately no intermediate step between .is-1 and .is-2, hence the size. 
-  Navigation size should be as constant as possible. */
-  flex: none;
-  width: ${(props) => (props.collapsed ? "5.5rem" : "20.5rem")};
-  max-width: ${(props: { collapsed: boolean }) => (props.collapsed ? "11.3%" : "25%")};
-  /* Render this column to full size if column construct breaks (page size too small). */
-  @media (max-width: 785px) {
-    width: 100%;
-    max-width: 100%;
-  }
+const SecondaryColumn = styled.div`
+  flex: 0 0 auto;
 `;
 
 const SecondaryNavigationColumn: FC = ({ children }) => {
-  const context = useMenuContext();
-  return (
-    <SecondaryColumn className="column" collapsed={context.isCollapsed()}>
-      {children}
-    </SecondaryColumn>
-  );
+  return <SecondaryColumn className="column">{children}</SecondaryColumn>;
 };
 
 export default SecondaryNavigationColumn;

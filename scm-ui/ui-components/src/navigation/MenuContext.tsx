@@ -29,6 +29,9 @@ export type MenuContext = {
   setCollapsed: (collapsed: boolean) => void;
 };
 
+/**
+ * @deprecated
+ */
 export const MenuContext = React.createContext<MenuContext>({
   isCollapsed() {
     return false;

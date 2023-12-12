@@ -24,13 +24,13 @@
 
 import { storiesOf } from "@storybook/react";
 import React, { ReactElement } from "react";
+import { LocalStorageProvider } from "@scm-manager/ui-api";
 import SecondaryNavigation from "./SecondaryNavigation";
 import SecondaryNavigationItem from "./SecondaryNavigationItem";
 import styled from "styled-components";
 import SubNavigation from "./SubNavigation";
 import { Binder, ExtensionPoint, BinderContext } from "@scm-manager/ui-extensions";
 import { MemoryRouter } from "react-router-dom";
-import { StateMenuContextProvider } from "./MenuContext";
 
 const Columns = styled.div`
   margin: 2rem;
@@ -53,8 +53,8 @@ const withRoute = (route: string) => {
 };
 
 storiesOf("Secondary Navigation", module)
-  .addDecorator(story => <StateMenuContextProvider>{story()}</StateMenuContextProvider>)
-  .addDecorator(story => (
+  .addDecorator((story) => <LocalStorageProvider>{story()}</LocalStorageProvider>)
+  .addDecorator((story) => (
     <Columns className="columns">
       <div className="column is-3">{story()}</div>
     </Columns>
@@ -92,7 +92,7 @@ storiesOf("Secondary Navigation", module)
       <SecondaryNavigation label="Hitchhiker">
         <SecondaryNavigationItem to="/42" icon="fas fa-puzzle-piece" label="Puzzle 42" title="Puzzle 42" />
         <SecondaryNavigationItem
-          activeWhenMatch={route => route.location?.pathname === "/hog"}
+          activeWhenMatch={(route) => route.location?.pathname === "/hog"}
           to="/heart-of-gold"
           icon="fas fa-star"
           label="Heart Of Gold"

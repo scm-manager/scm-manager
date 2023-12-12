@@ -41,7 +41,6 @@ import {
   RepositoryFlags,
   SecondaryNavigation,
   SecondaryNavigationColumn,
-  StateMenuContextProvider,
   SubNavigation,
   urls,
 } from "@scm-manager/ui-components";
@@ -269,153 +268,151 @@ const RepositoryRoot = () => {
   const escapedUrl = urls.escapeUrlForRoute(url);
 
   return (
-    <StateMenuContextProvider>
-      <RepositoryContextProvider repository={repository}>
-        <Page
-          title={titleComponent}
-          documentTitle={`${repository.namespace}/${repository.name}`}
-          afterTitle={
-            <MobileWrapped className="is-flex is-align-items-center">
-              <ExtensionPoint name="repository.afterTitle" props={{ repository }} />
-              <TagGroup className="has-text-weight-bold">
-                <RepositoryFlags repository={repository} tooltipLocation="bottom" />
-              </TagGroup>
-            </MobileWrapped>
-          }
-        >
-          {modal}
-          <CustomQueryFlexWrappedColumns>
-            <PrimaryContentColumn>
-              <Switch>
-                <Redirect exact from={urls.escapeUrlForRoute(match.url)} to={urls.escapeUrlForRoute(redirectedUrl)} />
+    <RepositoryContextProvider repository={repository}>
+      <Page
+        title={titleComponent}
+        documentTitle={`${repository.namespace}/${repository.name}`}
+        afterTitle={
+          <MobileWrapped className="is-flex is-align-items-center">
+            <ExtensionPoint name="repository.afterTitle" props={{ repository }} />
+            <TagGroup className="has-text-weight-bold">
+              <RepositoryFlags repository={repository} tooltipLocation="bottom" />
+            </TagGroup>
+          </MobileWrapped>
+        }
+      >
+        {modal}
+        <CustomQueryFlexWrappedColumns>
+          <PrimaryContentColumn>
+            <Switch>
+              <Redirect exact from={urls.escapeUrlForRoute(match.url)} to={urls.escapeUrlForRoute(redirectedUrl)} />
 
-                {/* redirect pre 2.0.0-rc2 links */}
-                <Redirect from={`${escapedUrl}/changeset/:id`} to={`${url}/code/changeset/:id`} />
-                <Redirect exact from={`${escapedUrl}/sources`} to={`${url}/code/sources`} />
-                <Redirect from={`${escapedUrl}/sources/:revision/:path*`} to={`${url}/code/sources/:revision/:path*`} />
-                <Redirect exact from={`${escapedUrl}/changesets`} to={`${url}/code/changesets`} />
-                <Redirect
-                  from={`${escapedUrl}/branch/:branch/changesets`}
-                  to={`${url}/code/branch/:branch/changesets/`}
-                />
+              {/* redirect pre 2.0.0-rc2 links */}
+              <Redirect from={`${escapedUrl}/changeset/:id`} to={`${url}/code/changeset/:id`} />
+              <Redirect exact from={`${escapedUrl}/sources`} to={`${url}/code/sources`} />
+              <Redirect from={`${escapedUrl}/sources/:revision/:path*`} to={`${url}/code/sources/:revision/:path*`} />
+              <Redirect exact from={`${escapedUrl}/changesets`} to={`${url}/code/changesets`} />
+              <Redirect
+                from={`${escapedUrl}/branch/:branch/changesets`}
+                to={`${url}/code/branch/:branch/changesets/`}
+              />
 
-                <Route path={`${escapedUrl}/info`} exact>
-                  <RepositoryDetails repository={repository} />
-                </Route>
-                <Route path={`${escapedUrl}/settings/general`}>
-                  <EditRepo repository={repository} />
-                </Route>
-                <Route path={`${escapedUrl}/settings/permissions`}>
-                  <Permissions namespaceOrRepository={repository} />
-                </Route>
-                <Route exact path={`${escapedUrl}/code/changeset/:id`}>
-                  <ChangesetView repository={repository} fileControlFactoryFactory={fileControlFactoryFactory} />
-                </Route>
-                <Route path={`${escapedUrl}/code/sourceext/:extension`} exact={true}>
-                  <SourceExtensions repository={repository} />
-                </Route>
-                <Route path={`${escapedUrl}/code/sourceext/:extension/:revision/:path*`}>
-                  <SourceExtensions repository={repository} baseUrl={`${url}/code/sources`} />
-                </Route>
-                <Route path={`${escapedUrl}/code`}>
-                  <CodeOverview baseUrl={`${url}/code`} repository={repository} />
-                </Route>
-                <Route path={`${escapedUrl}/branch/:branch`}>
-                  <BranchRoot repository={repository} />
-                </Route>
-                <Route path={`${escapedUrl}/branches`} exact={true}>
-                  <BranchesOverview repository={repository} baseUrl={`${url}/branch`} />
-                </Route>
-                <Route path={`${escapedUrl}/branches/create`}>
-                  <CreateBranch repository={repository} />
-                </Route>
-                <Route path={`${escapedUrl}/tag/:tag`}>
-                  <TagRoot repository={repository} baseUrl={`${url}/tag`} />
-                </Route>
-                <Route path={`${escapedUrl}/tags`} exact={true}>
-                  <TagsOverview repository={repository} baseUrl={`${url}/tag`} />
-                </Route>
-                <Route path={`${escapedUrl}/compare/:sourceType/:sourceName`}>
-                  <CompareRoot repository={repository} baseUrl={`${url}/compare`} />
-                </Route>
-                <ExtensionPoint<extensionPoints.RepositoryRoute>
-                  name="repository.route"
-                  props={{
-                    repository,
-                    url: urls.escapeUrlForRoute(url),
-                    indexLinks,
-                  }}
-                  renderAll={true}
-                />
-              </Switch>
-            </PrimaryContentColumn>
-            <SecondaryNavigationColumn>
-              <SecondaryNavigation label={t("repositoryRoot.menu.navigationLabel")}>
-                <ExtensionPoint<extensionPoints.RepositoryNavigationTopLevel>
-                  name="repository.navigation.topLevel"
+              <Route path={`${escapedUrl}/info`} exact>
+                <RepositoryDetails repository={repository} />
+              </Route>
+              <Route path={`${escapedUrl}/settings/general`}>
+                <EditRepo repository={repository} />
+              </Route>
+              <Route path={`${escapedUrl}/settings/permissions`}>
+                <Permissions namespaceOrRepository={repository} />
+              </Route>
+              <Route exact path={`${escapedUrl}/code/changeset/:id`}>
+                <ChangesetView repository={repository} fileControlFactoryFactory={fileControlFactoryFactory} />
+              </Route>
+              <Route path={`${escapedUrl}/code/sourceext/:extension`} exact={true}>
+                <SourceExtensions repository={repository} />
+              </Route>
+              <Route path={`${escapedUrl}/code/sourceext/:extension/:revision/:path*`}>
+                <SourceExtensions repository={repository} baseUrl={`${url}/code/sources`} />
+              </Route>
+              <Route path={`${escapedUrl}/code`}>
+                <CodeOverview baseUrl={`${url}/code`} repository={repository} />
+              </Route>
+              <Route path={`${escapedUrl}/branch/:branch`}>
+                <BranchRoot repository={repository} />
+              </Route>
+              <Route path={`${escapedUrl}/branches`} exact={true}>
+                <BranchesOverview repository={repository} baseUrl={`${url}/branch`} />
+              </Route>
+              <Route path={`${escapedUrl}/branches/create`}>
+                <CreateBranch repository={repository} />
+              </Route>
+              <Route path={`${escapedUrl}/tag/:tag`}>
+                <TagRoot repository={repository} baseUrl={`${url}/tag`} />
+              </Route>
+              <Route path={`${escapedUrl}/tags`} exact={true}>
+                <TagsOverview repository={repository} baseUrl={`${url}/tag`} />
+              </Route>
+              <Route path={`${escapedUrl}/compare/:sourceType/:sourceName`}>
+                <CompareRoot repository={repository} baseUrl={`${url}/compare`} />
+              </Route>
+              <ExtensionPoint<extensionPoints.RepositoryRoute>
+                name="repository.route"
+                props={{
+                  repository,
+                  url: urls.escapeUrlForRoute(url),
+                  indexLinks,
+                }}
+                renderAll={true}
+              />
+            </Switch>
+          </PrimaryContentColumn>
+          <SecondaryNavigationColumn>
+            <SecondaryNavigation label={t("repositoryRoot.menu.navigationLabel")}>
+              <ExtensionPoint<extensionPoints.RepositoryNavigationTopLevel>
+                name="repository.navigation.topLevel"
+                props={extensionProps}
+                renderAll={true}
+              />
+              <NavLink
+                to={`${url}/info`}
+                icon="fas fa-info-circle"
+                label={t("repositoryRoot.menu.informationNavLink")}
+                title={t("repositoryRoot.menu.informationNavLink")}
+              />
+              <RepositoryNavLink
+                repository={repository}
+                linkName="branches"
+                to={`${url}/branches/`}
+                icon="fas fa-code-branch"
+                label={t("repositoryRoot.menu.branchesNavLink")}
+                activeWhenMatch={matchesBranches}
+                activeOnlyWhenExact={false}
+                title={t("repositoryRoot.menu.branchesNavLink")}
+              />
+              <RepositoryNavLink
+                repository={repository}
+                linkName="tags"
+                to={`${url}/tags/`}
+                icon="fas fa-tags"
+                label={t("repositoryRoot.menu.tagsNavLink")}
+                activeWhenMatch={matchesTags}
+                activeOnlyWhenExact={false}
+                title={t("repositoryRoot.menu.tagsNavLink")}
+              />
+              <RepositoryNavLink
+                repository={repository}
+                linkName={codeLinkname}
+                to={evaluateDestinationForCodeLink()}
+                icon="fas fa-code"
+                label={t("repositoryRoot.menu.sourcesNavLink")}
+                activeWhenMatch={matchesCode}
+                activeOnlyWhenExact={false}
+                title={t("repositoryRoot.menu.sourcesNavLink")}
+              />
+              <ExtensionPoint<extensionPoints.RepositoryNavigation>
+                name="repository.navigation"
+                props={extensionProps}
+                renderAll={true}
+              />
+              <SubNavigation
+                to={`${url}/settings/general`}
+                label={t("repositoryRoot.menu.settingsNavLink")}
+                title={t("repositoryRoot.menu.settingsNavLink")}
+              >
+                <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
+                <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
+                <ExtensionPoint<extensionPoints.RepositorySetting>
+                  name="repository.setting"
                   props={extensionProps}
                   renderAll={true}
                 />
-                <NavLink
-                  to={`${url}/info`}
-                  icon="fas fa-info-circle"
-                  label={t("repositoryRoot.menu.informationNavLink")}
-                  title={t("repositoryRoot.menu.informationNavLink")}
-                />
-                <RepositoryNavLink
-                  repository={repository}
-                  linkName="branches"
-                  to={`${url}/branches/`}
-                  icon="fas fa-code-branch"
-                  label={t("repositoryRoot.menu.branchesNavLink")}
-                  activeWhenMatch={matchesBranches}
-                  activeOnlyWhenExact={false}
-                  title={t("repositoryRoot.menu.branchesNavLink")}
-                />
-                <RepositoryNavLink
-                  repository={repository}
-                  linkName="tags"
-                  to={`${url}/tags/`}
-                  icon="fas fa-tags"
-                  label={t("repositoryRoot.menu.tagsNavLink")}
-                  activeWhenMatch={matchesTags}
-                  activeOnlyWhenExact={false}
-                  title={t("repositoryRoot.menu.tagsNavLink")}
-                />
-                <RepositoryNavLink
-                  repository={repository}
-                  linkName={codeLinkname}
-                  to={evaluateDestinationForCodeLink()}
-                  icon="fas fa-code"
-                  label={t("repositoryRoot.menu.sourcesNavLink")}
-                  activeWhenMatch={matchesCode}
-                  activeOnlyWhenExact={false}
-                  title={t("repositoryRoot.menu.sourcesNavLink")}
-                />
-                <ExtensionPoint<extensionPoints.RepositoryNavigation>
-                  name="repository.navigation"
-                  props={extensionProps}
-                  renderAll={true}
-                />
-                <SubNavigation
-                  to={`${url}/settings/general`}
-                  label={t("repositoryRoot.menu.settingsNavLink")}
-                  title={t("repositoryRoot.menu.settingsNavLink")}
-                >
-                  <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
-                  <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
-                  <ExtensionPoint<extensionPoints.RepositorySetting>
-                    name="repository.setting"
-                    props={extensionProps}
-                    renderAll={true}
-                  />
-                </SubNavigation>
-              </SecondaryNavigation>
-            </SecondaryNavigationColumn>
-          </CustomQueryFlexWrappedColumns>
-        </Page>
-      </RepositoryContextProvider>
-    </StateMenuContextProvider>
+              </SubNavigation>
+            </SecondaryNavigation>
+          </SecondaryNavigationColumn>
+        </CustomQueryFlexWrappedColumns>
+      </Page>
+    </RepositoryContextProvider>
   );
 };
 

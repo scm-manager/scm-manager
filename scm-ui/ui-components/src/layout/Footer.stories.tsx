@@ -26,6 +26,7 @@ import { storiesOf } from "@storybook/react";
 import Footer from "./Footer";
 import { Binder, BinderContext, extensionPoints } from "@scm-manager/ui-extensions";
 import { Me } from "@scm-manager/ui-types";
+import { LocalStorageProvider } from "@scm-manager/ui-api";
 import { EXTENSION_POINT } from "../avatar/Avatar";
 // @ts-ignore ignore unknown png
 import hitchhiker from "../__resources__/hitchhiker.png";
@@ -62,6 +63,7 @@ const withBinder = (binder: Binder) => {
 };
 
 storiesOf("Footer", module)
+  .addDecorator((story) => <LocalStorageProvider>{story()}</LocalStorageProvider>)
   .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => {
     return <Footer me={trillian} version="2.0.0" links={{}} />;

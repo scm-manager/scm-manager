@@ -24,6 +24,7 @@
 import React from "react";
 import { mount, shallow } from "@scm-manager/ui-tests";
 import "@scm-manager/ui-tests";
+import { LocalStorageProvider } from "@scm-manager/ui-api";
 import RepositoryNavLink from "./RepositoryNavLink";
 
 describe("RepositoryNavLink", () => {
@@ -32,7 +33,7 @@ describe("RepositoryNavLink", () => {
       namespace: "Namespace",
       name: "Repo",
       type: "GIT",
-      _links: {}
+      _links: {},
     };
 
     const navLink = shallow(
@@ -54,19 +55,21 @@ describe("RepositoryNavLink", () => {
       type: "GIT",
       _links: {
         sources: {
-          href: "/sources"
-        }
-      }
+          href: "/sources",
+        },
+      },
     };
 
     const navLink = mount(
-      <RepositoryNavLink
-        repository={repository}
-        linkName="sources"
-        to="/sources"
-        label="Sources"
-        activeOnlyWhenExact={true}
-      />
+      <LocalStorageProvider>
+        <RepositoryNavLink
+          repository={repository}
+          linkName="sources"
+          to="/sources"
+          label="Sources"
+          activeOnlyWhenExact={true}
+        />
+      </LocalStorageProvider>
     );
     expect(navLink.text()).toBe("Sources");
   });

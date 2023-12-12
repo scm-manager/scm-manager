@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-import React, { createContext, FC, useCallback, useContext, useMemo, useState } from "react";
+import React, { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 type LocalStorage = {
-  getItem: <T>(key: string, initialValue: T) => T;
+  getItem: <T>(key: string, fallback: T) => T;
   setItem: <T>(key: string, value: T) => void;
+  preload: <T>(key: string, initialValue: T) => void;
 };
 
 const LocalStorageContext = createContext<LocalStorage>(null as unknown as LocalStorage);
@@ -50,9 +51,14 @@ export const LocalStorageProvider: FC = ({ children }) => {
   }, []);
 
   const getItem = useCallback(
-    <T,>(key: string, initialValue: T): T => {
-      let initialLoadResult: T | undefined;
+    <T,>(key: string, fallback: T): T => (key in localStorageCache ? (localStorageCache[key] as T) : fallback),
+    [localStorageCache]
+  );
+
+  const preload = useCallback(
+    <T,>(key: string, initialValue: T) => {
       if (!(key in localStorageCache)) {
+        let initialLoadResult: T | undefined;
         try {
           const item = localStorage.getItem(key);
           initialLoadResult = item ? JSON.parse(item) : initialValue;
@@ -63,13 +69,12 @@ export const LocalStorageProvider: FC = ({ children }) => {
         }
         setItem(key, initialLoadResult);
       }
-      return initialLoadResult ?? (localStorageCache[key] as T);
     },
     [localStorageCache, setItem]
   );
 
   return (
-    <LocalStorageContext.Provider value={useMemo(() => ({ getItem, setItem }), [getItem, setItem])}>
+    <LocalStorageContext.Provider value={useMemo(() => ({ getItem, setItem, preload }), [getItem, preload, setItem])}>
       {children}
     </LocalStorageContext.Provider>
   );
@@ -85,7 +90,7 @@ export function useLocalStorage<T>(
   key: string,
   initialValue: T
 ): [value: T, setValue: (value: T | ((previousConfig: T) => T)) => void] {
-  const { getItem, setItem } = useContext(LocalStorageContext);
+  const { getItem, setItem, preload } = useContext(LocalStorageContext);
   const value = useMemo(() => getItem(key, initialValue), [getItem, initialValue, key]);
   const setValue = useCallback(
     (newValue: T | ((previousConfig: T) => T)) =>
@@ -95,5 +100,6 @@ export function useLocalStorage<T>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [key, setItem, value]
   );
+  useEffect(() => preload(key, initialValue), [initialValue, key, preload]);
   return useMemo(() => [value, setValue], [setValue, value]);
 }

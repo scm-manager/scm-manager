@@ -22,26 +22,9 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import styled from "styled-components";
-import useMenuContext from "../navigation/MenuContext";
-
-const PrimaryColumn = styled.div<{ collapsed: boolean }>`
-  /* This is the counterpart to the specific column in SecondaryNavigationColumn. */
-  flex: none;
-  width: ${(props: { collapsed: boolean }) => (props.collapsed ? "89.7%" : "75%")};
-  /* Render this column to full size if column construct breaks (page size too small). */
-  @media (max-width: 785px) {
-    width: 100%;
-  }
-`;
 
 const PrimaryContentColumn: FC = ({ children }) => {
-  const context = useMenuContext();
-  return (
-    <PrimaryColumn className="column" collapsed={context.isCollapsed()}>
-      {children}
-    </PrimaryColumn>
-  );
+  return <div className="column">{children}</div>;
 };
 
 export default PrimaryContentColumn;

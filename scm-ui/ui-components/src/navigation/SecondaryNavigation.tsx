@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import React, { FC } from "react";
 import styled from "styled-components";
-import useMenuContext from "./MenuContext";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
+import { useSecondaryNavigation } from "@scm-manager/ui-components";
+import { SecondaryNavigationContext } from "./SecondaryNavigationContext";
 
 type Props = {
   label: string;
@@ -37,11 +37,12 @@ type CollapsedProps = {
   collapsed: boolean;
 };
 
-const SectionContainer = styled.aside`
+const SectionContainer = styled.aside<{ collapsed: boolean }>`
+  flex: 0 0 auto;
   position: sticky;
   position: -webkit-sticky; /* Safari */
   top: 5rem;
-  width: 100%;
+  min-width: ${(props: { collapsed: boolean }) => (props.collapsed ? "0" : "200px")};
 
   @media (max-height: 900px) {
     position: relative;
@@ -63,42 +64,29 @@ const MenuLabel = styled.p<CollapsedProps>`
 
 const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true }) => {
   const [t] = useTranslation("commons");
-  const menuContext = useMenuContext();
-  const isCollapsed = collapsible && menuContext.isCollapsed();
+  const { collapsible: isCollapsible, collapsed, toggleCollapse } = useSecondaryNavigation(collapsible);
 
-  const toggleCollapseState = () => {
-    if (collapsible) {
-      menuContext.setCollapsed(!isCollapsed);
-    }
-  };
-
-  const uncollapseMenu = () => {
-    if (collapsible && isCollapsed) {
-      menuContext.setCollapsed(false);
-    }
-  };
-
-  const arrowIcon = isCollapsed ? <i className="fas fa-caret-left" /> : <i className="fas fa-caret-down" />;
-  const menuAriaLabel = isCollapsed ? t("secondaryNavigation.showContent") : t("secondaryNavigation.hideContent");
+  const arrowIcon = collapsed ? <i className="fas fa-caret-left" /> : <i className="fas fa-caret-down" />;
+  const menuAriaLabel = collapsed ? t("secondaryNavigation.showContent") : t("secondaryNavigation.hideContent");
 
   return (
-    <SectionContainer className="menu">
+    <SectionContainer className="menu" collapsed={collapsed ?? false}>
       <div>
         <MenuLabel
-          className={classNames("menu-label", { "is-clickable": collapsible })}
-          collapsed={isCollapsed}
-          onClick={toggleCollapseState}
+          className={classNames("menu-label", { "is-clickable": isCollapsible })}
+          collapsed={collapsed}
+          onClick={toggleCollapse}
           aria-label={menuAriaLabel}
         >
-          {collapsible ? (
-            <Icon className="is-medium" collapsed={isCollapsed}>
+          {isCollapsible ? (
+            <Icon className="is-medium" collapsed={collapsed}>
               {arrowIcon}
             </Icon>
           ) : null}
-          {isCollapsed ? "" : label}
+          {collapsed ? "" : label}
         </MenuLabel>
-        <ul className="menu-list" onClick={uncollapseMenu}>
-          {children}
+        <ul className="menu-list">
+          <SecondaryNavigationContext.Provider value={true}>{children}</SecondaryNavigationContext.Provider>
         </ul>
       </div>
     </SectionContainer>

@@ -21,13 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, useContext, useEffect } from "react";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
+import { useSecondaryNavigation } from "@scm-manager/ui-components";
 import { RoutingProps } from "./RoutingProps";
-import useMenuContext from "./MenuContext";
 import useActiveMatch from "./useActiveMatch";
 import { createAttributesForTesting } from "../devBuild";
+import { SecondaryNavigationContext } from "./SecondaryNavigationContext";
+import { SubNavigationContext } from "./SubNavigationContext";
 
 type Props = RoutingProps & {
   label: string;
@@ -55,9 +57,15 @@ const NavLinkContent: FC<NavLinkContentProp> = ({ label, icon, collapsed }) => (
 
 const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, title, testId, children, ...contentProps }) => {
   const active = useActiveMatch({ to, activeWhenMatch, activeOnlyWhenExact });
+  const { collapsed, setCollapsible } = useSecondaryNavigation();
+  const isSecondaryNavigation = useContext(SecondaryNavigationContext);
+  const isSubNavigation = useContext(SubNavigationContext);
 
-  const context = useMenuContext();
-  const collapsed = context.isCollapsed();
+  useEffect(() => {
+    if (isSecondaryNavigation && active) {
+      setCollapsible(!isSubNavigation);
+    }
+  }, [active, isSecondaryNavigation, isSubNavigation, setCollapsible]);
 
   return (
     <li title={collapsed ? title : undefined}>
@@ -66,7 +74,11 @@ const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, title, t
         to={to}
         {...createAttributesForTesting(testId)}
       >
-        {children ? children : <NavLinkContent {...contentProps} collapsed={collapsed} />}
+        {children ? (
+          children
+        ) : (
+          <NavLinkContent {...contentProps} collapsed={(isSecondaryNavigation && collapsed) ?? false} />
+        )}
       </Link>
     </li>
   );

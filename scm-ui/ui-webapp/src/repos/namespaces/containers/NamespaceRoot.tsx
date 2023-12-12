@@ -33,7 +33,6 @@ import {
   PrimaryContentColumn,
   SecondaryNavigation,
   SecondaryNavigationColumn,
-  StateMenuContextProvider,
   SubNavigation,
   urls,
 } from "@scm-manager/ui-components";
@@ -78,46 +77,44 @@ const NamespaceRoot: FC = () => {
   };
 
   return (
-    <StateMenuContextProvider>
-      <Page title={namespace.namespace}>
-        <CustomQueryFlexWrappedColumns>
-          <PrimaryContentColumn>
-            <Switch>
-              <Redirect exact from={`${url}/settings`} to={`${url}/settings/permissions`} />
-              <Route path={`${url}/settings/permissions`}>
-                <Permissions namespaceOrRepository={namespace} />
-              </Route>
-              <ExtensionPoint<extensionPoints.NamespaceRoute>
-                name="namespace.route"
+    <Page title={namespace.namespace}>
+      <CustomQueryFlexWrappedColumns>
+        <PrimaryContentColumn>
+          <Switch>
+            <Redirect exact from={`${url}/settings`} to={`${url}/settings/permissions`} />
+            <Route path={`${url}/settings/permissions`}>
+              <Permissions namespaceOrRepository={namespace} />
+            </Route>
+            <ExtensionPoint<extensionPoints.NamespaceRoute>
+              name="namespace.route"
+              props={extensionProps}
+              renderAll={true}
+            />
+          </Switch>
+        </PrimaryContentColumn>
+        <SecondaryNavigationColumn>
+          <SecondaryNavigation label={t("namespaceRoot.menu.navigationLabel")}>
+            <ExtensionPoint<extensionPoints.NamespaceTopLevelNavigation>
+              name="namespace.navigation.topLevel"
+              props={extensionProps}
+              renderAll={true}
+            />
+            <SubNavigation
+              to={`${url}/settings`}
+              label={t("namespaceRoot.menu.settingsNavLink")}
+              title={t("namespaceRoot.menu.settingsNavLink")}
+            >
+              <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} namespace={namespace} />
+              <ExtensionPoint<extensionPoints.NamespaceSetting>
+                name="namespace.setting"
                 props={extensionProps}
                 renderAll={true}
               />
-            </Switch>
-          </PrimaryContentColumn>
-          <SecondaryNavigationColumn>
-            <SecondaryNavigation label={t("namespaceRoot.menu.navigationLabel")}>
-              <ExtensionPoint<extensionPoints.NamespaceTopLevelNavigation>
-                name="namespace.navigation.topLevel"
-                props={extensionProps}
-                renderAll={true}
-              />
-              <SubNavigation
-                to={`${url}/settings`}
-                label={t("namespaceRoot.menu.settingsNavLink")}
-                title={t("namespaceRoot.menu.settingsNavLink")}
-              >
-                <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} namespace={namespace} />
-                <ExtensionPoint<extensionPoints.NamespaceSetting>
-                  name="namespace.setting"
-                  props={extensionProps}
-                  renderAll={true}
-                />
-              </SubNavigation>
-            </SecondaryNavigation>
-          </SecondaryNavigationColumn>
-        </CustomQueryFlexWrappedColumns>
-      </Page>
-    </StateMenuContextProvider>
+            </SubNavigation>
+          </SecondaryNavigation>
+        </SecondaryNavigationColumn>
+      </CustomQueryFlexWrappedColumns>
+    </Page>
   );
 };
 

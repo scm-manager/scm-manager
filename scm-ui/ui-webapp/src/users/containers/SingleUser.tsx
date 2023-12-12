@@ -33,9 +33,8 @@ import {
   PrimaryContentColumn,
   SecondaryNavigation,
   SecondaryNavigationColumn,
-  StateMenuContextProvider,
   SubNavigation,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { Details } from "./../components/table";
 import EditUser from "./EditUser";
@@ -44,7 +43,7 @@ import {
   SetApiKeysNavLink,
   SetPasswordNavLink,
   SetPermissionsNavLink,
-  SetPublicKeysNavLink
+  SetPublicKeysNavLink,
 } from "./../components/navLinks";
 import { useTranslation } from "react-i18next";
 import SetUserPassword from "../components/SetUserPassword";
@@ -71,70 +70,72 @@ const SingleUser: FC = () => {
 
   const extensionProps = {
     user,
-    url
+    url,
   };
 
   const escapedUrl = urls.escapeUrlForRoute(url);
 
   return (
-    <StateMenuContextProvider>
-      <Page title={user.displayName}>
-        <CustomQueryFlexWrappedColumns>
-          <PrimaryContentColumn>
-            <Route path={escapedUrl} exact>
-              <Details user={user} />
-            </Route>
-            <Route path={`${escapedUrl}/settings/general`}>
-              <EditUser user={user} />
-            </Route>
-            <Route path={`${escapedUrl}/settings/password`}>
-              <SetUserPassword user={user} />
-            </Route>
-            <Route path={`${escapedUrl}/settings/permissions`}>
-              <SetUserPermissions user={user} />
-            </Route>
-            <Route path={`${escapedUrl}/settings/publickeys`}>
-              <SetPublicKeys user={user} />
-            </Route>
-            <Route path={`${escapedUrl}/settings/apiKeys`}>
-              <SetApiKeys user={user} />
-            </Route>
-            <ExtensionPoint<extensionPoints.UserRoute> name="user.route" props={{
+    <Page title={user.displayName}>
+      <CustomQueryFlexWrappedColumns>
+        <PrimaryContentColumn>
+          <Route path={escapedUrl} exact>
+            <Details user={user} />
+          </Route>
+          <Route path={`${escapedUrl}/settings/general`}>
+            <EditUser user={user} />
+          </Route>
+          <Route path={`${escapedUrl}/settings/password`}>
+            <SetUserPassword user={user} />
+          </Route>
+          <Route path={`${escapedUrl}/settings/permissions`}>
+            <SetUserPermissions user={user} />
+          </Route>
+          <Route path={`${escapedUrl}/settings/publickeys`}>
+            <SetPublicKeys user={user} />
+          </Route>
+          <Route path={`${escapedUrl}/settings/apiKeys`}>
+            <SetApiKeys user={user} />
+          </Route>
+          <ExtensionPoint<extensionPoints.UserRoute>
+            name="user.route"
+            props={{
               user,
-              url: escapedUrl
-            }} renderAll={true} />
-          </PrimaryContentColumn>
-          <SecondaryNavigationColumn>
-            <SecondaryNavigation label={t("singleUser.menu.navigationLabel")}>
-              <NavLink
-                to={url}
-                icon="fas fa-info-circle"
-                label={t("singleUser.menu.informationNavLink")}
-                title={t("singleUser.menu.informationNavLink")}
-                testId="user-information-link"
+              url: escapedUrl,
+            }}
+            renderAll={true}
+          />
+        </PrimaryContentColumn>
+        <SecondaryNavigationColumn>
+          <SecondaryNavigation label={t("singleUser.menu.navigationLabel")}>
+            <NavLink
+              to={url}
+              icon="fas fa-info-circle"
+              label={t("singleUser.menu.informationNavLink")}
+              title={t("singleUser.menu.informationNavLink")}
+              testId="user-information-link"
+            />
+            <SubNavigation
+              to={`${url}/settings/general`}
+              label={t("singleUser.menu.settingsNavLink")}
+              title={t("singleUser.menu.settingsNavLink")}
+              testId="user-settings-link"
+            >
+              <EditUserNavLink user={user} editUrl={`${url}/settings/general`} />
+              <SetPasswordNavLink user={user} passwordUrl={`${url}/settings/password`} />
+              <SetPermissionsNavLink user={user} permissionsUrl={`${url}/settings/permissions`} />
+              <SetPublicKeysNavLink user={user} publicKeyUrl={`${url}/settings/publickeys`} />
+              <SetApiKeysNavLink user={user} apiKeyUrl={`${url}/settings/apiKeys`} />
+              <ExtensionPoint<extensionPoints.UserSetting>
+                name="user.setting"
+                props={extensionProps}
+                renderAll={true}
               />
-              <SubNavigation
-                to={`${url}/settings/general`}
-                label={t("singleUser.menu.settingsNavLink")}
-                title={t("singleUser.menu.settingsNavLink")}
-                testId="user-settings-link"
-              >
-                <EditUserNavLink user={user} editUrl={`${url}/settings/general`} />
-                <SetPasswordNavLink user={user} passwordUrl={`${url}/settings/password`} />
-                <SetPermissionsNavLink user={user} permissionsUrl={`${url}/settings/permissions`} />
-                <SetPublicKeysNavLink user={user} publicKeyUrl={`${url}/settings/publickeys`} />
-                <SetApiKeysNavLink user={user} apiKeyUrl={`${url}/settings/apiKeys`} />
-                <ExtensionPoint<extensionPoints.UserSetting>
-                  name="user.setting"
-                  props={extensionProps}
-                  renderAll={true}
-                />
-              </SubNavigation>
-            </SecondaryNavigation>
-          </SecondaryNavigationColumn>
-        </CustomQueryFlexWrappedColumns>
-      </Page>
-    </StateMenuContextProvider>
+            </SubNavigation>
+          </SecondaryNavigation>
+        </SecondaryNavigationColumn>
+      </CustomQueryFlexWrappedColumns>
+    </Page>
   );
 };
 

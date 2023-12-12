@@ -72218,7 +72218,7 @@ exports[`Storyshots Secondary Navigation Active when match 1`] = `
     className="column is-3"
   >
     <aside
-      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 cZyrQa menu"
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 ioXCUt menu"
     >
       <div>
         <p
@@ -72237,7 +72237,6 @@ exports[`Storyshots Secondary Navigation Active when match 1`] = `
         </p>
         <ul
           className="menu-list"
-          onClick={[Function]}
         >
           <li>
             <a
@@ -72280,7 +72279,7 @@ exports[`Storyshots Secondary Navigation Default 1`] = `
     className="column is-3"
   >
     <aside
-      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 cZyrQa menu"
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 ioXCUt menu"
     >
       <div>
         <p
@@ -72299,7 +72298,6 @@ exports[`Storyshots Secondary Navigation Default 1`] = `
         </p>
         <ul
           className="menu-list"
-          onClick={[Function]}
         >
           <li>
             <a
@@ -72342,7 +72340,7 @@ exports[`Storyshots Secondary Navigation Extension Point 1`] = `
     className="column is-3"
   >
     <aside
-      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 cZyrQa menu"
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 ioXCUt menu"
     >
       <div>
         <p
@@ -72361,7 +72359,6 @@ exports[`Storyshots Secondary Navigation Extension Point 1`] = `
         </p>
         <ul
           className="menu-list"
-          onClick={[Function]}
         >
           <li>
             <a
@@ -72430,7 +72427,7 @@ exports[`Storyshots Secondary Navigation Sub Navigation 1`] = `
     className="column is-3"
   >
     <aside
-      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 cZyrQa menu"
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 ioXCUt menu"
     >
       <div>
         <p
@@ -72449,7 +72446,6 @@ exports[`Storyshots Secondary Navigation Sub Navigation 1`] = `
         </p>
         <ul
           className="menu-list"
-          onClick={[Function]}
         >
           <li>
             <a
