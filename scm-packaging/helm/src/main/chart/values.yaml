@@ -106,6 +106,8 @@ persistence:
   accessMode: ReadWriteOnce
   # persistence.size -- The size of the PVC
   size: 40Gi
+  # persistence.annotations -- PVC annotations
+  annotations: {}
 
 livenessProbe:
   initialDelaySeconds: 60
