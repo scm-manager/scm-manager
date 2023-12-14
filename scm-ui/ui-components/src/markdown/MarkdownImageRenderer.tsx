@@ -31,7 +31,7 @@ import {
   isLinkWithProtocol,
   isSubDirectoryOf,
   join,
-  normalizePath
+  normalizePath,
 } from "./paths";
 import { useRepositoryContext, useRepositoryRevisionContext } from "@scm-manager/ui-api";
 
@@ -49,12 +49,13 @@ export const createLocalLink = (
   if (isAbsolute(link)) {
     return apiBasePath.replace("{path}", link.substring(1));
   }
-  if (!isSubDirectoryOf(basePath, currentPath)) {
+  const decodedCurrentPath = currentPath.replace(encodeURIComponent(revision), revision);
+  if (!isSubDirectoryOf(basePath, decodedCurrentPath)) {
     return apiBasePath.replace("{path}", link);
   }
-  const relativePath = currentPath.substring(basePath.length);
+  const relativePath = decodedCurrentPath.substring(basePath.length);
   let path = relativePath;
-  if (currentPath.endsWith("/")) {
+  if (decodedCurrentPath.endsWith("/")) {
     path = relativePath.substring(0, relativePath.length - 1);
   }
   const lastSlash = path.lastIndexOf("/");
@@ -109,7 +110,7 @@ const MarkdownImageRenderer: FC<Props> = ({ src = "", alt = "", base, contentLin
 // base as prop down to our link component.
 export const create = (base: string | undefined): FC<LinkProps> => {
   return (props) => {
-    return <MarkdownImageRenderer base={base}{...props} />;
+    return <MarkdownImageRenderer base={base} {...props} />;
   };
 };
 
