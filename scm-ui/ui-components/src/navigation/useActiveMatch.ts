@@ -35,15 +35,16 @@ const useActiveMatch = ({ to, activeOnlyWhenExact, activeWhenMatch }: RoutingPro
 
   const match = useRouteMatch({
     path: urls.escapeUrlForRoute(path),
-    exact: activeOnlyWhenExact
+    exact: activeOnlyWhenExact,
   });
 
   const location = useLocation();
 
   const isActiveWhenMatch = () => {
     if (activeWhenMatch) {
-      return activeWhenMatch({
-        location
+      // noinspection PointlessBooleanExpressionJS could be a truthy value if a function is passed in
+      return !!activeWhenMatch({
+        location,
       });
     }
     return false;

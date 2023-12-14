@@ -22,9 +22,25 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
+import styled from "styled-components";
+import { useSecondaryNavigation } from "../useSecondaryNavigation";
+
+const PrimaryColumn = styled.div<{ collapsed: boolean }>`
+  width: ${(props: { collapsed: boolean }) => (props.collapsed ? "89.7%" : "75%")};
+  /* Render this column to full size if column construct breaks (page size too small). */
+  @media (max-width: 785px) {
+    width: 100%;
+  }
+`;
 
 const PrimaryContentColumn: FC = ({ children }) => {
-  return <div className="column is-10">{children}</div>;
+  const { collapsed } = useSecondaryNavigation();
+
+  return (
+    <PrimaryColumn className="column" collapsed={collapsed}>
+      {children}
+    </PrimaryColumn>
+  );
 };
 
 export default PrimaryContentColumn;
