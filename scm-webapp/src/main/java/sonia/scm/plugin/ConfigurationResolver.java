@@ -58,7 +58,7 @@ public class ConfigurationResolver {
       rootNode = new ObjectMapper(new YAMLFactory()).readTree(resource).get("webapp");
       WebappConfigProvider.setConfigBindings(readConfigurationFile(rootNode));
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new IllegalArgumentException("failed to read configuration from file " + configPath, e);
     }
   }
 
@@ -100,7 +100,9 @@ public class ConfigurationResolver {
         return Optional.empty();
       }
     }
-
+    if (node.isNull()) {
+      return Optional.empty();
+    }
     return Optional.of(node.asText());
   }
 
@@ -112,6 +114,6 @@ public class ConfigurationResolver {
   }
 
   private String createEnvKey(String key) {
-    return PREFIX + key.toUpperCase(Locale.ENGLISH).replaceAll("\\.-/", "_");
+    return PREFIX + key.toUpperCase(Locale.ENGLISH).replaceAll("[.\\-/]", "_");
   }
 }

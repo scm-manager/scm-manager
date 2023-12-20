@@ -55,15 +55,16 @@ public class WorkdirProvider implements ServletContextListener {
     @ConfigValue(key = "workDir", defaultValue = "", description = "Working directory for internal repository operations") String workDir,
     RepositoryLocationResolver repositoryLocationResolver
     ) {
-    this(new File(!Strings.isNullOrEmpty(workDir) ? workDir : System.getProperty("java.io.tmpdir") , "scm-work"), repositoryLocationResolver, workDir == null);
+    this(new File(Strings.isNullOrEmpty(workDir) ? System.getProperty("java.io.tmpdir") : workDir, "scm-work"), repositoryLocationResolver, workDir == null);
   }
 
   public WorkdirProvider(File rootDirectory, RepositoryLocationResolver repositoryLocationResolver, boolean useRepositorySpecificDir) {
-    this.rootDirectory = rootDirectory;
+    this.rootDirectory = rootDirectory.isAbsolute() ? rootDirectory : new File(System.getProperty("basedir", "."), rootDirectory.getPath());
+    LOG.info("using {} as work directory", this.rootDirectory);
     this.repositoryLocationResolver = repositoryLocationResolver;
     this.useRepositorySpecificDir = useRepositorySpecificDir;
     if (!rootDirectory.exists() && !rootDirectory.mkdirs()) {
-      throw new IllegalStateException("could not create pool directory " + rootDirectory);
+      throw new IllegalStateException("could not create pool directory " + this.rootDirectory);
     }
   }
 

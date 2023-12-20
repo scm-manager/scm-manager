@@ -24,11 +24,11 @@
 
 package sonia.scm.plugin;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 import sonia.scm.config.WebappConfigProvider;
 
 import java.util.Collections;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,11 +54,13 @@ class ConfigurationResolverTest {
 
   @Test
   void shouldResolveConfiguration_WithEnv() {
-    ConfigurationResolver configurationResolver = new ConfigurationResolver(ImmutableMap.of("SCM_WEBAPP_CONTEXTPATH", "/scm"), "sonia/scm/plugin/config.yml");
+    ConfigurationResolver configurationResolver = new ConfigurationResolver(Map.of("SCM_WEBAPP_CONTEXTPATH", "/scm", "SCM_WEBAPP_HTTPS_SSL", "true"), "sonia/scm/plugin/config.yml");
 
     String port = configurationResolver.resolve("contextPath", "/");
+    String ssl = configurationResolver.resolve("https.ssl", "false");
 
     assertThat(port).isEqualTo("/scm");
+    assertThat(ssl).isEqualTo("true");
   }
 
   @Test
@@ -80,9 +82,12 @@ class ConfigurationResolverTest {
 
   @Test
   void shouldReadNullValuesFromConfigYaml() {
-    new ConfigurationResolver(Collections.emptyMap(), "sonia/scm/plugin/configWithNull.yml");
+    ConfigurationResolver configurationResolver = new ConfigurationResolver(Collections.emptyMap(), "sonia/scm/plugin/configWithNull.yml");
 
-    assertThat(WebappConfigProvider.resolveAsBoolean("redirect")).contains(true);
     assertThat(WebappConfigProvider.resolveAsInteger("https.keyType")).isEmpty();
+    assertThat(WebappConfigProvider.resolveAsString("https.keyType")).isEmpty();
+    assertThat(WebappConfigProvider.resolveAsBoolean("https.keyType")).isEmpty();
+
+    assertThat(configurationResolver.resolve("https.keyType", "other")).isEqualTo("other");
   }
 }
