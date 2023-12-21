@@ -45,14 +45,13 @@ public class ServerConfigParser {
 
   ServerConfigYaml parse(URL configFile) {
     if (configFile == null) {
-      //TODO add link
       throw new ServerConfigurationException("""
         Could not find config.yml.
                     
         If you have upgraded from an older SCM-Manager version, you have to migrate your server-config.xml 
         to the new format using the official instructions: 
                   
-        <link>
+        https://scm-manager.org/docs/latest/en/migrate-scm-manager-from-v2/
         """);
     }
     try (InputStream is = configFile.openStream()) {

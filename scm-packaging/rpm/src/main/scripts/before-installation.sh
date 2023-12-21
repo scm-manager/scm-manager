@@ -32,7 +32,7 @@ if [ $((current_version)) -lt  $(("3")) ]; then
 You are upgrading to a new major version which could break your current server
 configuration. Find more information about the migration here:
 
-<link>
+https://scm-manager.org/docs/latest/en/migrate-scm-manager-from-v2/
 
 Press Enter to continue
 

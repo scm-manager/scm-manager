@@ -1,21 +1,21 @@
 ---
-title: Migrate from v1 to v2
+title: Migrate from v1 to v3
 subtitle: How to use the Migration-Wizard
 ---
 
 # Preparation
 
-To upgrade an SCM-Manager from version 1 to version 2, some changes have to be made according the home directory of the SCM-Manager. So before you start, **make sure that you have an up to date backup of your SCM home folder!**
+It is possible to upgrade SCM-Manager from version directly to version 3. To do so, some changes have to be made according the home directory of the SCM-Manager. So before you start, **make sure that you have an up to date backup of your SCM home folder!**
 
-Before the migration process can be started, the last running version of SCM-Manager had to be (at least) 1.60. Data of older versions cannot be migrated automatically. If this is the case, you can stop version 1 and start a version 2 SCM-Manager (make sure that you have configured the same SCM home folder).
+Before the migration process can be started, the last running version of SCM-Manager had to be (at least) 1.60. Data of older versions cannot be migrated automatically. If this is the case, you can stop version 1 and start a version 3 SCM-Manager (make sure that you have configured the same SCM home folder).
  
 # Repository migration
  
 When SCM-Manager starts for the first time, you have to choose how to migrate your existing repositories. The background of this is the following:
 
-While in version 1 of SCM-Manager the repositories were stored in a directory according to their type (`git`, `hg` or `svn`) and their name, in version 2 the directory is independent of the type and name. Therefore a repository is no longer named with an arbitrary number of name parts devided by slashes (`/`), but it has a namespace and a name (both of which must not contain slashes). The namespace should be used to group your repositories (for example you can use this to distinguish between the types of repositories like *git* and *hg* like version 1 or to assign them to different projects or users).
+While in version 1 of SCM-Manager the repositories were stored in a directory according to their type (`git`, `hg` or `svn`) and their name, from version 2 on the directory is independent of the type and name. Therefore, a repository is no longer named with an arbitrary number of name parts devided by slashes (`/`), but it has a namespace and a name (both of which must not contain slashes). The namespace should be used to group your repositories (for example you can use this to distinguish between the types of repositories like *git* and *hg* like version 1 or to assign them to different projects or users).
 
-To specify the new names (and namespaces), the SCM-Manager version 2 starts a migration wizard when it is first started with a home directory of a version 1 SCM-Manager. You can see an according message in the log:
+To specify the new names (and namespaces), the SCM-Manager version 3 starts a migration wizard when it is first started with a home directory of a version 1 SCM-Manager. You can see an according message in the log:
 
 ```
 2019-12-05 14:01:35.109 [main] [          ] INFO  sonia.scm.update.MigrationWizardModule - ==========================================================

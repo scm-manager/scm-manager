@@ -4,11 +4,11 @@ subtitle: Various configuration options for the SCM-Server
 displayToc: true
 ---
 
-SCM-Manager can be configured in several ways. We recommend using `config.yml` to have most of the settings in
+SCM-Manager v3 can be configured in several ways. We recommend using `config.yml` to have most of the settings in
 one place. However, if required, each option in this configuration can also be set via environment variables.
 See the relevant topics below for more information.
 
-## Change log level
+## Logging
 
 The log level can be configured in the `config.yml`.
 You can change the root log level to change the log level globally for all loggers.
@@ -18,7 +18,7 @@ We provide two types of log appender.
 everything to your (bash/shell) console.
 Depending on which platform your scm-server is running, we already configured the recommended logging settings.
 
-#### Example
+**Example**
 
 ```yaml
 log:
@@ -53,7 +53,7 @@ You have to enable your logback configuration by setting the file path with the 
 property `logback.configurationFile`, like `-Dlogback.configurationFile=logging.xml`.
 If the logback configuration is enabled, the log configuration of the `config.yml` will be ignored.
 
-#### Example
+**Example**
 
 ```xml
 
@@ -105,12 +105,12 @@ If the logback configuration is enabled, the log configuration of the `config.ym
 </configuration>
 ```
 
-## Change host, port and context path
+## Webserver Configuration
 
 The listener host and port of your SCM-Server can directly be edited in the top level of your `config.yml`.
 If you want your server without a context path (use `root path`), you can change this option to be `/`.
 
-#### Example
+**Example**
 
 ```yaml
 # This is the host adresse, `0.0.0.0` means it listens on every interface
@@ -187,7 +187,7 @@ protect your keystore.
 
 Adjust your `config.yml` to apply your prepared keystore with configured certificate.
 
-#### Example
+**Example**
 
 ```yaml
 https:
@@ -215,7 +215,7 @@ on unix-based packages).
 For technical reasons the tempDir is located at the top level of your config.yml. All other path-based config options
 are located under `webapp`.
 
-#### Example
+**Example**
 
 ```yaml
 tempDir: /tmp
@@ -239,7 +239,7 @@ These HTTP headers are being appended to the requests which are redirected by yo
 this option set, your SCM-Server may run into connection issues. This option is disabled by default, because without a
 reverse proxy it could cause security issues.
 
-#### Example
+**Example**
 
 ```yaml
 forwardHeadersEnabled: true
