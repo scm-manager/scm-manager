@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
@@ -52,6 +53,9 @@ import java.util.zip.ZipOutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  *
@@ -88,6 +92,10 @@ class PluginProcessorTest {
   private static final PluginResource PLUGIN_F_1_0_1 =
     new PluginResource("sonia/scm/plugin/scm-f-plugin-1.0.1.smp",
       "scm-f-plugin.smp", "scm-f-plugin:1.0.1");
+
+  private static final PluginResource PLUGIN_THIRD_MAJOR =
+    new PluginResource("sonia/scm/plugin/scm-thirdmajor-plugin.smp",
+      "scm-thirdmajor-plugin.smp", "scm-thirdmajor-plugin:1.0.0");
 
   private static final String PLUGIN_G = "scm-g-plugin";
   private static final String PLUGIN_H = "scm-h-plugin";
@@ -185,7 +193,7 @@ class PluginProcessorTest {
     copySmp(PLUGIN_A);
 
     collectAndGetFirst();
-    Mockito.verify(pluginArchiveCleaner).cleanup(pluginDirectory.toPath().resolve(".installed"));
+    verify(pluginArchiveCleaner).cleanup(pluginDirectory.toPath().resolve(".installed"));
   }
 
   @Test
@@ -256,6 +264,37 @@ class PluginProcessorTest {
     Object result = clazz.getMethod("sayHelloAgain").invoke(instance);
 
     assertThat(result).isEqualTo("hello again");
+  }
+
+  @Test
+  void shouldTransformSecondMajorPlugin() throws Exception {
+    copySmps(PLUGIN_A);
+
+    Set<InstalledPlugin> plugins = collectPlugins();
+
+    assertThat(plugins.iterator().next().getDirectory().resolve(".jakarta-compatible")).exists();
+  }
+
+  @Test
+  void shouldNotTransformThirdMajorPlugin() throws Exception {
+    copySmps(PLUGIN_THIRD_MAJOR);
+
+    Set<InstalledPlugin> plugins = collectPlugins();
+
+    assertThat(plugins.iterator().next().getDirectory().resolve(".jakarta-compatible")).doesNotExist();
+  }
+
+  @Test
+  void shouldNotTransformAlreadyTransformedPlugins() throws Exception {
+    try (MockedStatic<PluginTransformer> staticMock = Mockito.mockStatic(PluginTransformer.class)) {
+      copySmps(PLUGIN_A);
+
+      collectPlugins();
+      collectPlugins();
+      collectPlugins();
+
+      staticMock.verify(() -> PluginTransformer.transform(any()), times(1));
+    }
   }
 
   @Test

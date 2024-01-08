@@ -84,6 +84,8 @@ public final class PluginProcessor
   /** Field description */
   private static final String DIRECTORY_INSTALLED = ".installed";
 
+  public static final String JAKARTA_COMPATIBLE = ".jakarta-compatible";
+
   /** Field description */
   private static final String DIRECTORY_METAINF = "META-INF";
 
@@ -175,9 +177,10 @@ public final class PluginProcessor
     logger.debug("found {} installed plugins", installedPlugins.size());
 
     for (ExplodedSmp installedPlugin : installedPlugins) {
-      if (installedPlugin.getPlugin().getScmVersion() < 3) {
+      if (shouldTransform(installedPlugin)) {
         logger.debug("start jakarta transformation of already installed plugin: {}", installedPlugin.getPlugin().getInformation().getName());
         PluginTransformer.transform(installedPlugin.getPath());
+        Files.createFile(installedPlugin.getPath().resolve(JAKARTA_COMPATIBLE));
       }
     }
 
@@ -185,9 +188,10 @@ public final class PluginProcessor
     logger.debug("finished installation of {} plugins", newlyInstalledPlugins.size());
 
     for (ExplodedSmp newInstalledSmp : newlyInstalledPlugins) {
-      if (newInstalledSmp.getPlugin().getScmVersion() < 3) {
+      if (shouldTransform(newInstalledSmp)) {
         logger.debug("start jakarta transformation of newly installed smp: {}", newInstalledSmp.getPlugin().getInformation().getName());
         PluginTransformer.transform(newInstalledSmp.getPath());
+        Files.createFile(newInstalledSmp.getPath().resolve(JAKARTA_COMPATIBLE));
       }
     }
 
@@ -207,6 +211,11 @@ public final class PluginProcessor
     logger.debug("collected {} plugins", wrappers.size());
 
     return ImmutableSet.copyOf(wrappers);
+  }
+
+  private boolean shouldTransform(ExplodedSmp newInstalledSmp) {
+    return newInstalledSmp.getPlugin().getScmVersion() < 3
+      && !newInstalledSmp.getPath().resolve(JAKARTA_COMPATIBLE).toFile().exists();
   }
 
   private Set<ExplodedSmp> concat(Set<ExplodedSmp> installedPlugins, Set<ExplodedSmp> newlyInstalledPlugins) {
