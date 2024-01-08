@@ -23,13 +23,26 @@
  */
 import React, { FC } from "react";
 import styled from "styled-components";
+import { useSecondaryNavigation } from "../useSecondaryNavigation";
 
-const SecondaryColumn = styled.div`
+const SecondaryColumn = styled.div<{ collapsed: boolean }>`
   flex: 0 0 auto;
+  /* Navigation width should be as constant as possible. */
+  width: ${(props: { collapsed: boolean }) => (props.collapsed ? "5.5rem" : "16rem")};
+  /* Render this column to full size if column construct breaks (page size too small). */
+  @media (max-width: 785px) {
+    width: 100%;
+  }
 `;
 
 const SecondaryNavigationColumn: FC = ({ children }) => {
-  return <SecondaryColumn className="column">{children}</SecondaryColumn>;
+  const { collapsed } = useSecondaryNavigation();
+
+  return (
+    <SecondaryColumn className="column" collapsed={collapsed}>
+      {children}
+    </SecondaryColumn>
+  );
 };
 
 export default SecondaryNavigationColumn;
