@@ -21,71 +21,61 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Button, ButtonAddons } from "@scm-manager/ui-components";
 import { SourceViewSelection } from "../../containers/Content";
+import { File, Link } from "@scm-manager/ui-types";
+import { useContentType } from "@scm-manager/ui-api";
 
-type Props = WithTranslation & {
+type Props = {
   className?: string;
   selected: SourceViewSelection;
   showSources: () => void;
   showHistory: () => void;
   showAnnotations: () => void;
+  file: File;
 };
 
-class FileButtonAddons extends React.Component<Props> {
-  showHistory = () => {
-    this.props.showHistory();
-  };
+const color = (selected: boolean) => {
+  return selected ? "link is-selected" : "";
+};
 
-  showSources = () => {
-    this.props.showSources();
-  };
+const FileButtonAddons: FC<Props> = ({ className, selected, showSources, showHistory, showAnnotations, file }) => {
+  const [t] = useTranslation("repos");
+  const { data: contentTypeData } = useContentType((file._links.self as Link).href);
+  const showAnnotationButton = useMemo(
+    () =>
+      contentTypeData?.language ||
+      ["text/", "markdown/"].some((nonBinaryContentType) => contentTypeData?.type.startsWith(nonBinaryContentType)),
+    [contentTypeData]
+  );
 
-  showAnnotations = () => {
-    this.props.showAnnotations();
-  };
-
-  color = (selected: boolean) => {
-    return selected ? "link is-selected" : "";
-  };
-
-  render() {
-    const { className, t, selected, showSources, showHistory, showAnnotations } = this.props;
-
-    return (
-      <ButtonAddons className={className}>
-        <Button
-          action={showSources}
-          color={this.color(selected === "source")}
-          title={t("sources.content.sourcesButton")}
-        >
-          <span className="icon">
-            <i className="fas fa-code" />
-          </span>
-        </Button>
+  return (
+    <ButtonAddons className={className}>
+      <Button action={showSources} color={color(selected === "source")} title={t("sources.content.sourcesButton")}>
+        <span className="icon">
+          <i className="fas fa-code" />
+        </span>
+      </Button>
+      {showAnnotationButton ? (
         <Button
           action={showAnnotations}
-          color={this.color(selected === "annotations")}
+          color={color(selected === "annotations")}
           title={t("sources.content.annotateButton")}
         >
           <span className="icon">
             <i className="fas fa-user-clock" />
           </span>
         </Button>
-        <Button
-          action={showHistory}
-          color={this.color(selected === "history")}
-          title={t("sources.content.historyButton")}
-        >
-          <span className="icon">
-            <i className="fas fa-history" />
-          </span>
-        </Button>
-      </ButtonAddons>
-    );
-  }
-}
+      ) : null}
+      <Button action={showHistory} color={color(selected === "history")} title={t("sources.content.historyButton")}>
+        <span className="icon">
+          <i className="fas fa-history" />
+        </span>
+      </Button>
+    </ButtonAddons>
+  );
+};
 
-export default withTranslation("repos")(FileButtonAddons);
+export default FileButtonAddons;

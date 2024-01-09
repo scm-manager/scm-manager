@@ -114,6 +114,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
 
     const selector = file._links.history ? (
       <FileButtonAddons
+        file={file}
         className="mr-2"
         selected={selected}
         showSources={() => setSelected("source")}
