@@ -25,6 +25,7 @@ package sonia.scm.lifecycle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.WebappConfigProvider;
 
 /**
  * {@link RestartStrategy} which tears down the scm-manager context and
@@ -49,7 +50,8 @@ class ExitRestartStrategy extends RestartStrategy {
 
   @Override
   protected void executeRestart(InjectionContext context) {
-    LOG.warn("exit scm-manager with exit code {}", 0);
-    System.exit(0);
+    Integer exitCode = WebappConfigProvider.resolveAsInteger("restart.exitCode").orElse(0);
+    LOG.warn("exit scm-manager with exit code {}", exitCode);
+    System.exit(exitCode);
   }
 }

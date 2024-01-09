@@ -48,12 +48,12 @@ class DefaultRestarterTest {
 
   @Test
   void shouldLoadStrategyOnCreation() {
-    System.setProperty(RestartStrategyFactory.PROPERTY_STRATEGY, ExitRestartStrategy.NAME);
+    System.setProperty(RestartStrategyFactory.RESTART_STRATEGY, ExitRestartStrategy.NAME);
     try {
       DefaultRestarter restarter = new DefaultRestarter();
       assertThat(restarter.isSupported()).isTrue();
     } finally {
-      System.clearProperty(RestartStrategyFactory.PROPERTY_STRATEGY);
+      System.clearProperty(RestartStrategyFactory.RESTART_STRATEGY);
     }
   }
 

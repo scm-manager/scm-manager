@@ -29,13 +29,14 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import sonia.scm.Platform;
+import sonia.scm.config.WebappConfigProvider;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -123,12 +124,12 @@ class RestartStrategyFactoryTest {
   }
 
   private static Builder builder() {
+    WebappConfigProvider.setConfigBindings(Collections.emptyMap());
     return new Builder();
   }
 
   private static class Builder {
 
-    private final Properties properties = new Properties();
     private final Map<String, String> environment = new HashMap<>();
     private Platform platform = new Platform("Linux", "64Bit", "x64");
 
@@ -137,11 +138,11 @@ class RestartStrategyFactoryTest {
     }
 
     public Builder withStrategy(String strategy) {
-      return withProperty(RestartStrategyFactory.PROPERTY_STRATEGY, strategy);
+      return withConfig(strategy);
     }
 
-    public Builder withProperty(String key, String value) {
-      properties.setProperty(key, value);
+    private Builder withConfig(String strategy) {
+      WebappConfigProvider.setConfigBindings(Map.of(RestartStrategyFactory.RESTART_STRATEGY, strategy));
       return this;
     }
 
@@ -156,9 +157,7 @@ class RestartStrategyFactoryTest {
     }
 
     public RestartStrategyFactory create() {
-      return new RestartStrategyFactory(platform, environment, properties);
+      return new RestartStrategyFactory(platform, environment);
     }
-
   }
-
 }

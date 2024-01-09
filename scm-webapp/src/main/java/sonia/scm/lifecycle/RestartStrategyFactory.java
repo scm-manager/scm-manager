@@ -26,18 +26,18 @@ package sonia.scm.lifecycle;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import sonia.scm.Platform;
+import sonia.scm.config.WebappConfigProvider;
 import sonia.scm.util.SystemUtil;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
-import java.util.Properties;
 
 final class RestartStrategyFactory {
 
   /**
    * System property to load a specific restart strategy.
    */
-  static final String PROPERTY_STRATEGY = "sonia.scm.lifecycle.restart-strategy";
+  static final String RESTART_STRATEGY = "restart.strategy";
 
   /**
    * No restart supported.
@@ -46,13 +46,11 @@ final class RestartStrategyFactory {
 
   private final Platform platform;
   private final Map<String, String> environment;
-  private final Properties systemProperties;
 
   @VisibleForTesting
-  RestartStrategyFactory(Platform platform, Map<String, String> environment, Properties systemProperties) {
+  RestartStrategyFactory(Platform platform, Map<String, String> environment) {
     this.platform = platform;
     this.environment = environment;
-    this.systemProperties = systemProperties;
   }
 
   /**
@@ -64,28 +62,27 @@ final class RestartStrategyFactory {
   static RestartStrategy create(ClassLoader webAppClassLoader) {
     RestartStrategyFactory factory = new RestartStrategyFactory(
       SystemUtil.getPlatform(),
-      System.getenv(),
-      System.getProperties()
+      System.getenv()
     );
     return factory.fromClassLoader(webAppClassLoader);
   }
 
   @VisibleForTesting
   RestartStrategy fromClassLoader(ClassLoader webAppClassLoader) {
-    String property = systemProperties.getProperty(PROPERTY_STRATEGY);
-    if (Strings.isNullOrEmpty(property)) {
+    String strategy = WebappConfigProvider.resolveAsString(RESTART_STRATEGY).orElse(null);
+    if (Strings.isNullOrEmpty(strategy)) {
       return forPlatform();
     }
-    return fromProperty(webAppClassLoader, property);
+    return forStrategy(webAppClassLoader, strategy);
   }
 
-  private RestartStrategy fromProperty(ClassLoader webAppClassLoader, String property) {
-    if (STRATEGY_NONE.equalsIgnoreCase(property)) {
+  private RestartStrategy forStrategy(ClassLoader webAppClassLoader, String strategy) {
+    if (STRATEGY_NONE.equalsIgnoreCase(strategy)) {
       return null;
-    } else if (ExitRestartStrategy.NAME.equalsIgnoreCase(property)) {
+    } else if (ExitRestartStrategy.NAME.equalsIgnoreCase(strategy)) {
       return new ExitRestartStrategy();
     } else {
-      return fromClassName(property, webAppClassLoader);
+      return fromClassName(strategy, webAppClassLoader);
     }
   }
 
