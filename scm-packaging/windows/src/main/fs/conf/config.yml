@@ -20,12 +20,12 @@ https:
   redirectHttpToHttps: false
 
 # Temp directory used for jetty webserver. The temporary directory for internal operations can be configured as "workDir" in webapp.
-tempDir: /var/cache/scm/work
+tempDir: work
 
 # logging
 log:
   ## Destination of logging files
-  logDir: /var/log/scm
+  logDir: logs
   rootLevel: WARN
   enableFileAppender: true
   enableConsoleAppender: true
@@ -38,7 +38,7 @@ webapp:
   ## Sets explicit working directory for internal processes, empty means default java temp dir
   workDir:
   ## Home directory "scm-home" which is also set for classpath
-  homeDir: /var/lib/scm
+  homeDir:
   cache:
     dataFile:
       enabled: true

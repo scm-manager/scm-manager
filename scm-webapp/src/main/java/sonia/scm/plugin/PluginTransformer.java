@@ -28,6 +28,7 @@ import org.eclipse.transformer.AppOption;
 import org.eclipse.transformer.TransformOptions;
 import org.eclipse.transformer.Transformer;
 import org.eclipse.transformer.jakarta.JakartaTransform;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,18 +40,20 @@ import java.util.Comparator;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static org.eclipse.transformer.Transformer.ResultCode.SUCCESS_RC;
+
 public class PluginTransformer {
 
   private PluginTransformer() {
   }
 
   public static void transform(Path pluginPath) {
-    Transformer transformer = new Transformer(createOptions(pluginPath.toString()));
+    Transformer transformer = new Transformer(LoggerFactory.getLogger(Transformer.class), createOptions(pluginPath.toString()));
     transformer.inputPath = pluginPath.resolve("classes").toString();
     transformer.outputName = pluginPath + "-transformed";
     Transformer.ResultCode resultCode = transformer.run();
 
-    if (resultCode.ordinal() == 0) {
+    if (resultCode == SUCCESS_RC) {
       try {
         try (Stream<Path> paths = Files.walk(Path.of(transformer.inputPath))) {
           paths
@@ -64,8 +67,7 @@ public class PluginTransformer {
       }
     } else {
       throw new PluginTransformException(
-        String.format("Failed to transform downloaded plugin: %s",
-         pluginPath)
+        String.format("Failed to transform downloaded plugin %s: %s", pluginPath, resultCode)
       );
     }
   }
