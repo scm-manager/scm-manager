@@ -36,7 +36,7 @@ export const isBranchValid = (name: string) => {
   return branchRegex.test(name);
 };
 
-const mailRegex = /^[ -~]+@[A-Za-z0-9][\w\-.]*\.[A-Za-z0-9][A-Za-z0-9-]+$/;
+const mailRegex = /^[a-z0-9!#$%&'*+\/=?^_`{|}~" -]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
 
 export const isMailValid = (mail: string) => {
   return mailRegex.test(mail);

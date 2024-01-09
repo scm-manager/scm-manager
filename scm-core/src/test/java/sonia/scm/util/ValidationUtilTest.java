@@ -87,7 +87,15 @@ class ValidationUtilTest {
     "s.sdorra@t.co",
     "s.sdorra@ucla.college",
     "s.sdorra@example.xn--p1ai",
-    "s.sdorra@scm.solutions" // issue 909
+    "s.sdorra@scm.solutions", // issue 909
+    "s'sdorra@scm.solutions",
+    "\"S Sdorra\"@scm.solutions",
+    "A@BC.DE",
+    "x@example.com",
+    "example@s.example",
+    "user.name+tag+sorting@example.com",
+    "name/surname@example.com",
+    "user%example.com@example.org"
   })
   void shouldAcceptMailAddress(String value) {
     assertTrue(ValidationUtil.isMailAddressValid(value));
@@ -101,7 +109,10 @@ class ValidationUtilTest {
     "s.sdorra@ostfalia",
     "s.sdorra@@ostfalia.de",
     "s.sdorra@ ostfalia.de",
-    "s.sdorra @ostfalia.de"
+    "s.sdorra @ostfalia.de",
+    "s.sdorra@[ostfalia.de",
+    "abc.example.com",
+    "a@b@c@example.com"
   })
   void shouldRejectMailAddress(String value) {
     assertFalse(ValidationUtil.isMailAddressValid(value));
@@ -180,19 +191,19 @@ class ValidationUtilTest {
 
   @ParameterizedTest
   @ValueSource(strings = {
-      "scm",
-      "scm-",
-      "scm_",
-      "s_cm",
-      "s-cm",
-      "s",
-      "sc",
-      ".hiddenrepo",
-      "b.",
-      "...",
-      "..c",
-      "d..",
-      "a..c"
+    "scm",
+    "scm-",
+    "scm_",
+    "s_cm",
+    "s-cm",
+    "s",
+    "sc",
+    ".hiddenrepo",
+    "b.",
+    "...",
+    "..c",
+    "d..",
+    "a..c"
   })
   void shouldAcceptRepositoryName(String path) {
     assertTrue(ValidationUtil.isRepositoryNameValid(path));

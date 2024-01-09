@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 
 public final class ValidationUtil {
 
-  private static final String REGEX_MAIL = "^[A-Za-z0-9][\\w.-]*@[A-Za-z0-9][\\w\\-\\.]*\\.[A-Za-z0-9][A-Za-z0-9-]+$";
+  private static final String REGEX_MAIL = "^[a-z0-9!#$%&'*+\\/=?^_`{|}~\" -]+(?:\\.[a-z0-9!#$%&'*+\\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$";
 
   public static final String REGEX_NAME = "^(?:(?:[^:/?#;&=\\s@%\\\\][^:/?#;&=%\\\\]*[^:/?#;&=\\s%\\\\])|(?:[^:/?#;&=\\s@%\\\\]))$";
 
@@ -75,7 +75,7 @@ public final class ValidationUtil {
    * @return {@code true} if mail is valid
    */
   public static boolean isMailAddressValid(String mail) {
-    return Util.isNotEmpty(mail) && mail.matches(REGEX_MAIL);
+    return Util.isNotEmpty(mail) && mail.toLowerCase().matches(REGEX_MAIL);
   }
 
   /**

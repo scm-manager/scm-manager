@@ -91,8 +91,12 @@ describe("test mail validation", () => {
     "@ostfalia.de",
     "s.sdorra@",
     "s.sdorra@ostfalia",
+    "s.sdorra@@ostfalia.de",
     "s.sdorra@ ostfalia.de",
+    "s.sdorra @ostfalia.de",
     "s.sdorra@[ostfalia.de",
+    "abc.example.com",
+    "a@b@c@example.com"
   ];
   for (const mail of invalid) {
     it(`should return false for '${mail}'`, () => {
@@ -112,6 +116,12 @@ describe("test mail validation", () => {
     "s.sdorra@scm.solutions",
     "s'sdorra@scm.solutions",
     '"S Sdorra"@scm.solutions',
+    "A@BC.DE",
+    "x@example.com",
+    "example@s.example",
+    "user.name+tag+sorting@example.com",
+    "name/surname@example.com",
+    "user%example.com@example.org"
   ];
   for (const mail of valid) {
     it(`should return true for '${mail}'`, () => {
