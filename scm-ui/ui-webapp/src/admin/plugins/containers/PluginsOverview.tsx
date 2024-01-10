@@ -25,7 +25,7 @@ import * as React from "react";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Plugin } from "@scm-manager/ui-types";
-import { ButtonGroup, ErrorNotification, Loading, Notification, Subtitle, Title } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, Notification, Subtitle, Title } from "@scm-manager/ui-components";
 import PluginsList from "../components/PluginList";
 import PluginTopActions from "../components/PluginTopActions";
 import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
@@ -69,6 +69,10 @@ const StickyHeader = styled.div`
   border-bottom: solid 2px var(--scm-border-color);
   padding-bottom: 1rem;
   padding-top: 1rem;
+
+  @media screen and (max-width: 1215px) {
+    flex-direction: column !important;
+  }
 `;
 
 const PluginsOverview: FC<Props> = ({ installed }) => {
@@ -96,16 +100,14 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
 
   const renderHeader = (actions: React.ReactElement) => {
     return (
-      <StickyHeader className="has-background-secondary-least ">
-        <div className="is-flex is-justify-content-space-between is-align-items-baseline">
-          <div>
-            <Title className="is-flex">
-              {t("plugins.title")} <PluginCenterAuthInfo {...pluginCenterAuthInfo} />
-            </Title>
-            <Subtitle subtitle={installed ? t("plugins.installedSubtitle") : t("plugins.availableSubtitle")} />
-          </div>
-          <PluginTopActions>{actions}</PluginTopActions>
+      <StickyHeader className="has-background-secondary-least is-flex is-justify-content-space-between is-align-items-baseline has-gap-2">
+        <div className="is-flex-shrink-0">
+          <Title className="is-flex">
+            {t("plugins.title")} <PluginCenterAuthInfo {...pluginCenterAuthInfo} />
+          </Title>
+          <Subtitle subtitle={installed ? t("plugins.installedSubtitle") : t("plugins.availableSubtitle")} />
         </div>
+        <PluginTopActions>{actions}</PluginTopActions>
       </StickyHeader>
     );
   };
@@ -147,7 +149,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
       );
     }
 
-    return <>{buttons.length > 0 ? <ButtonGroup>{buttons}</ButtonGroup> : null}</>;
+    return <>{buttons.length > 0 ? buttons : null}</>;
   };
 
   const computeUpdateAllSize = () => {

@@ -23,6 +23,26 @@
  */
 import * as React from "react";
 import classNames from "classnames";
+import styled from "styled-components";
+
+const ActionContainer = styled.div`
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    > button {
+      flex: 1 1 100%;
+    }
+  }
+  @media screen and (min-width: 769px) and (max-width: 1215px) {
+    > button {
+      flex-grow: 1;
+    }
+  }
+  @media screen and (min-width: 1216px) {
+    > button {
+      min-width: 25ch;
+    }
+  }
+`;
 
 type Props = {
   children?: React.ReactElement;
@@ -32,15 +52,9 @@ export default class PluginTopActions extends React.Component<Props> {
   render() {
     const { children } = this.props;
     return (
-      <div
-        className={classNames(
-          "is-flex",
-          "is-justify-content-flex-end",
-          "is-align-items-center"
-        )}
-      >
+      <ActionContainer className={classNames("is-flex", "is-align-self-stretch", "has-gap-1")}>
         {children}
-      </div>
+      </ActionContainer>
     );
   }
 }
