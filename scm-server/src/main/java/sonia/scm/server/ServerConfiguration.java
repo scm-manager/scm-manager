@@ -24,6 +24,7 @@
 
 package sonia.scm.server;
 
+import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.ForwardedRequestCustomizer;
 import org.eclipse.jetty.server.Handler;
@@ -34,6 +35,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.SecuredRedirectHandler;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -110,7 +112,7 @@ public final class ServerConfiguration {
 
   private void configureHttp(Server server) {
     HttpConfiguration httpConfig = createCustomHttpConfig();
-    redirectHttpToHttps(httpConfig);
+    configureHttps(httpConfig);
     ServerConnector connector = new ServerConnector(server, new HttpConnectionFactory(httpConfig));
     System.out.println("Set http address binding to " + configYaml.getAddressBinding());
     connector.setHost(configYaml.getAddressBinding());
@@ -119,17 +121,20 @@ public final class ServerConfiguration {
     server.addConnector(connector);
   }
 
-  private void redirectHttpToHttps(HttpConfiguration httpConfig) {
+  private void configureHttps(HttpConfiguration httpConfig) {
     ServerConfigYaml.SSLConfig https = configYaml.getHttps();
-    if (configYaml.getHttps().isRedirectHttpToHttps()) {
-      httpConfig.setSecurePort(https.getSslPort());
-      httpConfig.setSecureScheme("https");
-    }
+    httpConfig.setSecurePort(https.getSslPort());
+    httpConfig.setSecureScheme("https");
   }
 
   private void configureHandler(Server server) {
     HandlerCollection handlerCollection = new HandlerCollection();
-    handlerCollection.setHandlers(new Handler[]{createWebAppContext(), createDocRoot()});
+    if (configYaml.getHttps().isRedirectHttpToHttps()) {
+      System.out.println("Set http to https redirect");
+      handlerCollection.addHandler(new SecuredRedirectHandler(HttpStatus.MOVED_PERMANENTLY_301));
+    }
+    handlerCollection.addHandler(createWebAppContext());
+    handlerCollection.addHandler(createDocRoot());
     server.setHandler(handlerCollection);
   }
 
