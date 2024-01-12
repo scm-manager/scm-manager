@@ -81,3 +81,14 @@ if (settings.hasProperty("enablePackaging")) {
   include 'scm-packaging:release-yaml'
 }
 
+buildCache {
+  local {
+    enabled = false
+  }
+  remote(HttpBuildCache) {
+    enabled = true
+    useExpectContinue = true
+    url = 'https://build-cache.scm-manager.org/cache/'
+    push = true
+  }
+}
