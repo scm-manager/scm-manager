@@ -6,6 +6,7 @@ webapp:
   initialPassword: scmadmin
   stage: DEVELOPMENT
   homeDir: ./build/scm-home
+  workDir: ./build/scm-work
 
 log:
   rootLevel: WARN
