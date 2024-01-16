@@ -55,8 +55,12 @@ pipeline {
 
     stage('Build') {
       steps {
-        // build without tests
-        gradle "-xtest build"
+        withCredentials([
+          usernamePassword(credentialsId: 'scmm-gradle-build-cache', usernameVariable: 'GRADLE_BUILD_CACHE_USER', passwordVariable: 'GRADLE_BUILD_CACHE_PASSWORD')
+        ]) {
+          // build without tests
+          gradle "-xtest build"
+        }
       }
     }
 

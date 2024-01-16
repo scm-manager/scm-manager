@@ -90,5 +90,9 @@ buildCache {
     useExpectContinue = true
     url = 'https://build-cache.scm-manager.org/cache/'
     push = true
+    credentials {
+      username = System.getenv('GRADLE_BUILD_CACHE_USER')
+      password = System.getenv('GRADLE_BUILD_CACHE_PASSWORD')
+    }
   }
 }
