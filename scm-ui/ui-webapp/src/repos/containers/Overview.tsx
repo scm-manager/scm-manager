@@ -242,15 +242,21 @@ const Overview: FC = () => {
         <div className="column is-clipped">
           <KeyboardIterator>
             <KeyboardSubIterator>
-              <ExtensionPoint<extensionPoints.RepositoryOverviewTop>
-                name="repository.overview.top"
-                renderAll={true}
-                props={{
-                  page,
-                  search,
-                  namespace,
-                }}
-              />
+              {binder.hasExtension<extensionPoints.RepositoryOverviewTop>("repository.overview.top", {
+                page,
+                search,
+                namespace,
+              }) ? (
+                <ExtensionPoint<extensionPoints.RepositoryOverviewTop>
+                  name="repository.overview.top"
+                  renderAll={true}
+                  props={{
+                    page,
+                    search,
+                    namespace,
+                  }}
+                />
+              ) : null}
             </KeyboardSubIterator>
             <Repositories
               namespaces={namespaces}

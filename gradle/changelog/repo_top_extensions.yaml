@@ -1,0 +1,2 @@
+- type: fixed
+  description: Do not mount extensions which are already disabled via configuration
