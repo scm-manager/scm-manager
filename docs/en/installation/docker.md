@@ -18,13 +18,44 @@ for example:
 docker run --name scm -p 8080:8080 -v scm-home:/var/lib/scm scmmanager/scm-manager:2.0.0
 ```
 
+## Configuration
+
+You can configure your server by using environment variables or adjusting the `config.yml`.
+
+### config.yml
+
+The `config.yml` can be copied from your container, e.g.
+
+```shell
+docker cp scm:/etc/scm/config.yml ${PWD}/config.yml  
+```
+
+After you have customized the configuration to your needs, you can restart the container and mount this `config.yml` to
+override the default configuration, e.g.
+
+```shell
+docker run -v ${PWD}/config.yml:/etc/scm/config.yml scmmanager/scm-manager
+```
+
+### Environment variables
+
+Each field of the server configuration can be overridden by the related environment variable.
+The variables follow the same structure as the fields in the server config, e.g.
+
+```shell
+docker run -e "SCM_CONTEXT_PATH=/scm42" scmmanager/scm-manager
+```
+
+To find more examples, please check the [server configuration docs](../administration/scm-server.md).
+
 ## Persistence
 
 It is recommended to create a persistent volume for the scm-manager home directory.
 This allows scm-manager updates and recreation of the container without lose of data.
 The home directory is located at `/var/lib/scm`.
-It is recommended to use a volume managed by docker. 
-If it is required to use a host directory, keep in mind that the scm-manager process is executed with a user which has the id 1000.
+It is recommended to use a volume managed by docker.
+If it is required to use a host directory, keep in mind that the scm-manager process is executed with a user which has
+the id 1000.
 So ensure that the user with the uid 1000 can write to the directory e.g.:
 
 ```text
@@ -56,12 +87,11 @@ docker run scmmanager/scm-manager:<version> -Dsome.property=value
 
 ```bash
 docker run -e JAVA_OPTS="-Dsome.property=value" scmmanager/scm-manager:<version>
-
 ```
 
 ## Docker Compose
 
-If you want to use the image with docker-compose have a look at the example below. 
+If you want to use the image with docker-compose have a look at the example below.
 
 ```yaml
 version: '2.0'
@@ -69,18 +99,19 @@ services:
   scm:
     image: scmmanager/scm-manager:<version>
     ports:
-    - "8080:8080"
-    # if the ssh plugin is used
-    - "2222:2222"
+      - "8080:8080"
+      # if the ssh plugin is used
+      - "2222:2222"
     volumes:
-    - scmhome:/var/lib/scm
+      - scmhome:/var/lib/scm
 volumes:
-  scmhome: {}
+  scmhome: { }
 ```
 
 ## Variants
 
-We are offer two variants of the SCM-Manager docker image one with OpenJDK on Alpine and the other with Eclipse Temurin on Debian.
+We are offer two variants of the SCM-Manager docker image one with OpenJDK on Alpine and the other with Eclipse Temurin
+on Debian.
 
 ### scmmanager/scm-manager:<version>-alpine
 
@@ -101,7 +132,7 @@ The image is available for the following os/architectures:
 
 ### scmmanager/scm-manager:<version>
 
-The default image is mainly an alias for the alpine variant, but there is no alpine variant for arm/v7. 
+The default image is mainly an alias for the alpine variant, but there is no alpine variant for arm/v7.
 For arm/v7 the debian variant is used.
 
 * linux/amd64 uses the alpine variant

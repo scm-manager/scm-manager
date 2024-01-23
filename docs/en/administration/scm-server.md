@@ -30,10 +30,8 @@ log:
   # Custom specific loggers
   # The "name" has to be the path of the classes to be logged with this logger
   logger:
-    - name: sonia.scm
-      level: DEBUG
-    - name: com.cloudogu.scm
-      level: DEBUG
+    sonia.scm: DEBUG
+    com.cloudogu.scm: DEBUG
 ```
 
 To override this config with environment variables you could set it like:
