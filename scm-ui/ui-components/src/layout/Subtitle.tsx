@@ -29,6 +29,10 @@ type Props = {
   className?: string;
 };
 
+/**
+ * @deprecated Please import the identical module from "@scm-manager/ui-core"
+ */
+
 const Subtitle: FC<Props> = ({ subtitle, className, children }) => {
   if (subtitle) {
     return <h2 className={classNames("subtitle", className)}>{subtitle}</h2>;

@@ -34,6 +34,10 @@ type Props = {
   role?: string;
 };
 
+/**
+ * @deprecated Please import the identical module from "@scm-manager/ui-core"
+ */
+
 const Notification: FC<Props> = ({ type = "info", onClose, className, children, role }) => {
   const renderCloseButton = () => {
     if (onClose) {

@@ -2,49 +2,15 @@
   "name": "@scm-manager/ui-overlays",
   "private": false,
   "version": "3.0.0-SNAPSHOT",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
-  "module": "build/index.mjs",
+  "main": "index.ts",
   "license": "MIT",
-  "scripts": {
-    "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
-  },
   "devDependencies": {
-    "@babel/core": "^7.19.0",
     "@scm-manager/eslint-config": "^2.16.0",
     "@scm-manager/prettier-config": "^2.10.1",
-    "@scm-manager/tsconfig": "^2.13.0",
-    "@scm-manager/ui-styles": "3.0.0-SNAPSHOT",
-    "@storybook/addon-actions": "^6.5.10",
-    "@storybook/addon-docs": "^6.5.14",
-    "@storybook/addon-essentials": "^6.5.10",
-    "@storybook/addon-interactions": "^6.5.10",
-    "@storybook/addon-links": "^6.5.10",
-    "@storybook/builder-webpack5": "^6.5.10",
-    "@storybook/manager-webpack5": "^6.5.10",
-    "@storybook/react": "^6.5.10",
-    "@storybook/testing-library": "^0.0.13",
-    "babel-loader": "^8.2.5",
-    "storybook-addon-mock": "^3.2.0",
-    "storybook-addon-themes": "^6.1.0",
-    "tsup": "^6.2.3"
+    "@scm-manager/tsconfig": "^2.13.0"
   },
   "peerDependencies": {
-    "classnames": "2",
-    "react": "17",
-    "react-dom": "17",
-    "react-i18next": "11",
-    "react-router-dom": "5",
-    "styled-components": "5"
-  },
-  "dependencies": {
-    "@radix-ui/react-dialog": "1.0.4",
-    "@radix-ui/react-dropdown-menu": "2.0.5",
-    "@radix-ui/react-popover": "1.0.6",
-    "@radix-ui/react-tooltip": "1.0.2",
-    "@scm-manager/ui-buttons": "3.0.0-SNAPSHOT"
+    "@scm-manager/ui-core": "3.0.0-SNAPSHOT"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {

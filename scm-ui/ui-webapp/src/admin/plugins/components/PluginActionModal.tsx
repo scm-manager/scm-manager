@@ -27,7 +27,7 @@ import { useTranslation } from "react-i18next";
 import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import { ButtonGroup, ErrorNotification, Modal } from "@scm-manager/ui-components";
 import SuccessNotification from "./SuccessNotification";
-import {Button} from "@scm-manager/ui-buttons";
+import {Button} from "@scm-manager/ui-core";
 
 type Props = {
   onClose: () => void;

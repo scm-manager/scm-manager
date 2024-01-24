@@ -61,13 +61,16 @@ type Props<E extends RenderableExtensionPointDefinition> = BaseProps<E> &
 
 function createInstance<P>(Component: Renderable<P>, props: P, key?: number) {
   if (React.isValidElement(Component)) {
+
     return React.cloneElement(Component, {
       ...props,
+      // @ts-ignore
       ...Component.props,
       key,
     });
   }
-  return <Component {...props} key={key} />;
+  // @ts-ignore
+    return <Component {...props} key={key} />;
 }
 
 const renderAllExtensions = <E extends RenderableExtensionPointDefinition<string, unknown>>(

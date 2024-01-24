@@ -31,6 +31,10 @@ type Props = {
   right?: ReactNode;
 };
 
+/**
+ * @deprecated Please import the identical module from "@scm-manager/ui-core"
+ */
+
 export default class Level extends React.Component<Props> {
   render() {
     const { className, left, children, right } = this.props;

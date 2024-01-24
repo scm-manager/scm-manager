@@ -71110,7 +71110,7 @@ exports[`Storyshots Repositories/RepositoryEntry Archived 1`] = `
       </div>
     </div>
     <div
-      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+      className="Card__RowsContainer-sc-16vnzfd-0 rKDzD is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71238,7 +71238,7 @@ exports[`Storyshots Repositories/RepositoryEntry Avatar EP 1`] = `
       </div>
     </div>
     <div
-      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+      className="Card__RowsContainer-sc-16vnzfd-0 rKDzD is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71354,7 +71354,7 @@ exports[`Storyshots Repositories/RepositoryEntry Before Title EP 1`] = `
       </div>
     </div>
     <div
-      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+      className="Card__RowsContainer-sc-16vnzfd-0 rKDzD is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71473,7 +71473,7 @@ exports[`Storyshots Repositories/RepositoryEntry Default 1`] = `
       </div>
     </div>
     <div
-      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+      className="Card__RowsContainer-sc-16vnzfd-0 rKDzD is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71589,7 +71589,7 @@ exports[`Storyshots Repositories/RepositoryEntry Exporting 1`] = `
       </div>
     </div>
     <div
-      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+      className="Card__RowsContainer-sc-16vnzfd-0 rKDzD is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71717,7 +71717,7 @@ exports[`Storyshots Repositories/RepositoryEntry HealthCheck Failure 1`] = `
       </div>
     </div>
     <div
-      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+      className="Card__RowsContainer-sc-16vnzfd-0 rKDzD is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71846,7 +71846,7 @@ exports[`Storyshots Repositories/RepositoryEntry MultiRepositoryTags 1`] = `
       </div>
     </div>
     <div
-      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+      className="Card__RowsContainer-sc-16vnzfd-0 rKDzD is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -71986,7 +71986,7 @@ exports[`Storyshots Repositories/RepositoryEntry RepositoryFlag EP 1`] = `
       </div>
     </div>
     <div
-      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+      className="Card__RowsContainer-sc-16vnzfd-0 rKDzD is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",
@@ -72115,7 +72115,7 @@ exports[`Storyshots Repositories/RepositoryEntry With long texts 1`] = `
       </div>
     </div>
     <div
-      className="sc-iBkjds idsAPT is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+      className="Card__RowsContainer-sc-16vnzfd-0 rKDzD is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
       style={
         Object {
           "gap": "0.25rem",

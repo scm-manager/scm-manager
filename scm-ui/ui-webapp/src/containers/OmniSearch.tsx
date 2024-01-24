@@ -33,7 +33,7 @@ import queryString from "query-string";
 import { orderTypes } from "../search/Search";
 import { useShortcut } from "@scm-manager/ui-shortcuts";
 import SearchBox from "../search/search-box/SearchBox";
-import { Icon } from "@scm-manager/ui-buttons";
+import { Icon } from "@scm-manager/ui-core";
 
 type Props = {
   shouldClear: boolean;

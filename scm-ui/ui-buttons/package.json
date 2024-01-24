@@ -2,77 +2,14 @@
   "name": "@scm-manager/ui-buttons",
   "version": "3.0.0-SNAPSHOT",
   "private": false,
-  "main": "build/index.js",
-  "module": "build/index.mjs",
-  "types": "build/index.d.ts",
-  "files": [
-    "build"
-  ],
-  "scripts": {
-    "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
-    "dev": "tsup ./src/index.ts -d build --format esm,cjs --dts --watch",
-    "lint": "eslint src",
-    "typecheck": "tsc",
-    "storybook": "start-storybook -p 6006 -s ../ui-webapp/public",
-    "build-storybook": "build-storybook",
-    "image-snapshots": "jest \"image-snapshot.test.ts\"",
-    "a11y-check": "jest \"a11y.test.ts\"",
-    "depcheck": "depcheck"
-  },
+  "main": "index.ts",
   "peerDependencies": {
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-router-dom": "^5.3.1",
-    "classnames": "^2.2.6",
-    "@scm-manager/ui-components": "3.0.0-SNAPSHOT"
+    "@scm-manager/ui-core": "3.0.0-SNAPSHOT"
   },
   "devDependencies": {
     "@scm-manager/prettier-config": "^2.11.1",
-    "@scm-manager/ui-api": "3.0.0-SNAPSHOT",
     "@scm-manager/eslint-config": "^2.17.0",
-    "@babel/core": "^7.17.8",
-    "@scm-manager/tsconfig": "^2.12.0",
-    "@storybook/addon-essentials": "^6.4.20",
-    "@storybook/addon-interactions": "^6.4.20",
-    "@storybook/addon-a11y": "^6.4.20",
-    "@storybook/addon-links": "^6.4.20",
-    "@storybook/builder-webpack5": "^6.4.20",
-    "@storybook/manager-webpack5": "^6.4.20",
-    "@storybook/react": "^6.4.20",
-    "@storybook/addon-storyshots-puppeteer": "^6.4.20",
-    "@storybook/addon-storyshots": "^6.4.20",
-    "@storybook/testing-library": "^0.0.9",
-    "jest-transform-css": "^4.0.1",
-    "puppeteer": "^15.5.0",
-    "storybook-addon-pseudo-states": "^1.15.1",
-    "storybook-react-router": "^1.0.8",
-    "@types/storybook-react-router": "^1.0.2",
-    "sass-loader": "^12.3.0",
-    "storybook-addon-themes": "^6.1.0",
-    "babel-loader": "^8.2.4",
-    "postcss": "^8.4.12",
-    "postcss-loader": "^6.2.1",
-    "webpack": "5",
-    "tsup": "^6.1.2",
-    "mini-css-extract-plugin": "^1.6.2",
-    "html-webpack-plugin": "^5.5.0",
-    "react-query": "^3.25.1",
-    "i18next": "^19.9.2",
-    "react-i18next": "11",
-    "i18next-fetch-backend": "^2.3.1",
-    "depcheck": "^1.4.3"
-  },
-  "babel": {
-    "presets": [
-      "@scm-manager/babel-preset"
-    ]
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.[tj]sx?$": "babel-jest",
-      "^.+\\.(css|less|scss)$": "jest-transform-css",
-      "^.+\\.mdx?$": "@storybook/addon-docs/jest-transform-mdx"
-    }
+    "@scm-manager/tsconfig": "^2.13.0"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {

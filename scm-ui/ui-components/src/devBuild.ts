@@ -26,6 +26,10 @@
 // @ts-ignore scmStage is set on the index page
 export const isDevBuild = () => (window.scmStage || "").toUpperCase() !== "PRODUCTION";
 
+/**
+ * @deprecated Please import the identical module from "@scm-manager/ui-core"
+ */
+
 export const createAttributesForTesting = (testId?: string) => {
   if (!testId) {
     return undefined;

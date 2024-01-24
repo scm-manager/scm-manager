@@ -40,6 +40,7 @@ import * as UIForms from "@scm-manager/ui-forms";
 import * as UIOverlays from "@scm-manager/ui-overlays";
 import * as UILayout from "@scm-manager/ui-layout";
 import * as UIApi from "@scm-manager/ui-api";
+import * as UICore from "@scm-manager/ui-core";
 
 // This module has side effects and is required to be imported unconditionally into the application at all times.
 
@@ -59,6 +60,7 @@ defineStatic("@scm-manager/ui-forms", UIForms);
 defineStatic("@scm-manager/ui-overlays", UIOverlays);
 defineStatic("@scm-manager/ui-layout", UILayout);
 defineStatic("@scm-manager/ui-api", UIApi);
+defineStatic("@scm-manager/ui-core", UICore);
 
 // redux is deprecated in favor of ui-api
 defineLazy("redux", () => import("@scm-manager/ui-legacy").then((legacy) => legacy.Redux));

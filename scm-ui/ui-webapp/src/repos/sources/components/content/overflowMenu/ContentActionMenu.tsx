@@ -28,7 +28,7 @@ import styled from "styled-components";
 import { Menu } from "@scm-manager/ui-overlays";
 import FallbackMenuButton from "./FallbackMenuButton";
 import MenuItem from "./MenuItem";
-import { Button, Icon } from "@scm-manager/ui-buttons";
+import { Button, Icon } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import { SmallLoadingSpinner } from "@scm-manager/ui-components";
 

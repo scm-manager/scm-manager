@@ -30,6 +30,10 @@ type Props = Omit<ComponentProps<typeof Notification>, "type" | "role"> & {
   error: BackendError;
 };
 
+/**
+ * @deprecated Please import the identical module from "@scm-manager/ui-core"
+ */
+
 const BackendErrorNotification: FC<Props> = ({ error, ...props }) => {
   const [t] = useTranslation("plugins");
 

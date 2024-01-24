@@ -26,7 +26,7 @@ import { Modal, Notification } from "@scm-manager/ui-components";
 import { PendingPlugins } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import PendingPluginsQueue from "./PendingPluginsQueue";
-import { Button } from "@scm-manager/ui-buttons";
+import { Button } from "@scm-manager/ui-core";
 
 type ModalBodyProps = {
   pendingPlugins: PendingPlugins;

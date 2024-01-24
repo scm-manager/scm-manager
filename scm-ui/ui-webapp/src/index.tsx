@@ -36,7 +36,7 @@ import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink
 
 import "./tokenExpired";
 import { ApiProvider, LocalStorageProvider } from "@scm-manager/ui-api";
-import { ShortcutDocsContextProvider } from "@scm-manager/ui-shortcuts"; // Makes sure that the global `define` function is registered and all provided modules are included in the final bundle at all times
+import { ShortcutDocsContextProvider } from "@scm-manager/ui-core"; // Makes sure that the global `define` function is registered and all provided modules are included in the final bundle at all times
 import "./_modules/provided-modules";
 
 binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);

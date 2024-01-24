@@ -26,7 +26,7 @@ import { CompareFunction, CompareProps } from "./CompareSelectBar";
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { Button } from "@scm-manager/ui-buttons";
+import { Button } from "@scm-manager/ui-core";
 import { Input } from "@scm-manager/ui-forms";
 import { SubmitHandler, useForm } from "react-hook-form";
 

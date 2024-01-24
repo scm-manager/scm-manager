@@ -28,6 +28,10 @@ type Props = {
   className?: string;
 };
 
+/**
+ * @deprecated Please import the identical module from "@scm-manager/ui-core"
+ */
+
 class SubSubtitle extends React.Component<Props> {
   render() {
     const { className, children } = this.props;

@@ -23,7 +23,7 @@
  */
 type Predicate<P extends Record<any, any> = Record<any, any>> = (props: P) => unknown;
 
-type ExtensionRegistration<P, T> = {
+type ExtensionRegistration<P extends Record<any, any>, T> = {
   predicate: Predicate<P>;
   extension: T;
   extensionName: string;
@@ -39,7 +39,7 @@ export type ExtensionPointDefinition<N extends string, T, P = undefined> = {
 export type SimpleDynamicExtensionPointDefinition<P extends string, T, Props, S extends string | undefined> =
   ExtensionPointDefinition<S extends string ? `${P}${S}` : `${P}${string}`, T, Props>;
 
-export type BindOptions<Props> = {
+export type BindOptions<Props extends Record<any, any>> = {
   predicate?: Predicate<Props>;
 
   /**
@@ -53,7 +53,7 @@ export type BindOptions<Props> = {
   priority?: number;
 };
 
-function isBindOptions<Props>(input?: string | Predicate<Props> | BindOptions<Props>): input is BindOptions<Props> {
+function isBindOptions<Props extends Record<any, any>>(input?: string | Predicate<Props> | BindOptions<Props>): input is BindOptions<Props> {
   return typeof input !== "string" && typeof input !== "function" && typeof input === "object";
 }
 
@@ -64,7 +64,7 @@ function isBindOptions<Props>(input?: string | Predicate<Props> | BindOptions<Pr
 export class Binder {
   name: string;
   extensionPoints: {
-    [key: string]: Array<ExtensionRegistration<unknown, unknown>>;
+    [key: string]: Array<ExtensionRegistration<Record<any, any>, unknown>>;
   };
 
   constructor(name: string) {
@@ -210,7 +210,7 @@ export class Binder {
     props?: E["props"]
   ): Array<E["type"]> {
     let registrations = this.extensionPoints[extensionPoint] || [];
-    registrations = registrations.filter((reg) => reg.predicate(props));
+    registrations = registrations.filter((reg) => reg.predicate(props??{}));
     registrations.sort(this.sortExtensions);
     return registrations.map((reg) => reg.extension);
   }
@@ -236,7 +236,7 @@ export class Binder {
   /**
    * Sort extensions in ascending order, starting with entries with specified extensionName.
    */
-  sortExtensions = (a: ExtensionRegistration<unknown, unknown>, b: ExtensionRegistration<unknown, unknown>) => {
+  sortExtensions = (a: ExtensionRegistration<Record<any, any>, unknown>, b: ExtensionRegistration<Record<any, any>, unknown>) => {
     const regA = a.extensionName ? a.extensionName.toUpperCase() : "";
     const regB = b.extensionName ? b.extensionName.toUpperCase() : "";
 

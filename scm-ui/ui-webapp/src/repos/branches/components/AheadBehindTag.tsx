@@ -27,7 +27,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Tooltip } from "@scm-manager/ui-overlays";
-import { Icon } from "@scm-manager/ui-buttons";
+import { Icon } from "@scm-manager/ui-core";
 import { SmallLoadingSpinner } from "@scm-manager/ui-components";
 
 type Props = {

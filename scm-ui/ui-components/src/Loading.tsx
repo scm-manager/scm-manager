@@ -40,6 +40,10 @@ const FixedSizedImage = styled(Image)`
   height: 128px;
 `;
 
+/**
+ * @deprecated Please import the identical module from "@scm-manager/ui-core"
+ */
+
 class Loading extends React.Component<Props> {
   render() {
     const { message, t } = this.props;

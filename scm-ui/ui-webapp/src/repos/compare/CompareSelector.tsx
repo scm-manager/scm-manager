@@ -29,7 +29,7 @@ import styled from "styled-components";
 import { Repository } from "@scm-manager/ui-types";
 import { devices } from "@scm-manager/ui-components";
 import { Tabs } from "@scm-manager/ui-layout";
-import { Icon } from "@scm-manager/ui-buttons";
+import { Icon } from "@scm-manager/ui-core";
 import { CompareFunction, CompareProps, CompareTypes } from "./CompareSelectBar";
 import BranchTab from "./BranchTab";
 import TagTab from "./TagTab";

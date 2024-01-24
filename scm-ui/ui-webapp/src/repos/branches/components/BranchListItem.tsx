@@ -33,7 +33,7 @@ import React, { FC } from "react";
 import { Branch, BranchDetails, Repository } from "@scm-manager/ui-types";
 import AheadBehindTag from "./AheadBehindTag";
 import { Dialog, Menu } from "@scm-manager/ui-overlays";
-import { Icon } from "@scm-manager/ui-buttons";
+import { Icon } from "@scm-manager/ui-core";
 
 type Props = {
   branch: Branch;

@@ -2,52 +2,17 @@
   "name": "@scm-manager/ui-text",
   "version": "3.0.0-SNAPSHOT",
   "private": true,
-  "main": "build/index.js",
-  "module": "build/index.mjs",
-  "types": "build/index.d.ts",
-  "files": [
-    "build"
-  ],
-  "scripts": {
-    "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
-    "test": "jest",
-    "lint": "eslint src",
-    "typecheck": "tsc",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "depcheck": "depcheck"
-  },
+  "main": "index.ts",
   "peerDependencies": {
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "@scm-manager/ui-core": "3.0.0-SNAPSHOT"
   },
   "devDependencies": {
-    "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/eslint-config": "^2.17.0",
-    "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/prettier-config": "^2.10.1",
-    "@scm-manager/tsconfig": "^2.13.0",
-    "@storybook/builder-webpack5": "^6.4.20",
-    "@storybook/manager-webpack5": "^6.4.20",
-    "@storybook/react": "^6.4.20",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "tsup": "^5.12.6",
-    "depcheck": "^1.4.3"
-  },
-  "babel": {
-    "presets": [
-      "@scm-manager/babel-preset"
-    ]
-  },
-  "jest": {
-    "preset": "@scm-manager/jest-preset"
+    "@scm-manager/tsconfig": "^2.13.0"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
     "extends": "@scm-manager/eslint-config"
-  },
-  "publishConfig": {
-    "access": "restricted"
   }
 }

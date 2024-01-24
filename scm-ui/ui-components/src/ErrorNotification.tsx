@@ -50,6 +50,9 @@ const BasicErrorMessage: FC<Omit<ComponentProps<typeof Notification>, "type" | "
   );
 };
 
+/**
+ * @deprecated Please import the identical module from "@scm-manager/ui-core"
+ */
 const ErrorNotification: FC<Props> = ({ error, ...props }) => {
   const [t] = useTranslation("commons");
   if (error) {

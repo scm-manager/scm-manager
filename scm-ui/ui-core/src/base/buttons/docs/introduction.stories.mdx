@@ -1,0 +1,64 @@
+import { Meta } from "@storybook/addon-docs";
+import { Button } from "../";
+
+<Meta title="Introduction"/>
+
+# Buttons
+
+The `@scm-manager/ui-core` library provides [atoms](https://atomicdesign.bradfrost.com/chapter-2/#atoms) implemented
+as minimal wrappers around native html elements styled to match the general SCM-Manager aesthetic.
+
+## Components
+
+There are three actionable components available. Styling is consistent amongst them and all have the required `variant` property.
+
+1. [Button](?path=/story/components--button)
+2. [Link Button](?path=/story/components--link-button)
+3. [External Link Button](?path=/story/components--external-link-button)
+
+## Usage
+
+Actionable components serve a dedicated purpose. It is therefore important to know when and how to use them.
+
+### Variants
+
+There are four variants available to each of the three button types, varying in importance.
+
+<table>
+  <thead>
+  <tr>
+    <th>Emphasis</th>
+    <th>Button Variant</th>
+    <th>Usage Examples</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>Very High</td>
+    <td><Button variant="signal">Signal</Button></td>
+    <td>Destructive actions</td>
+  </tr>
+  <tr>
+    <td>High</td>
+    <td><Button variant="primary">Primary</Button></td>
+    <td>Form submit</td>
+  </tr>
+  <tr>
+    <td>Normal</td>
+    <td><Button variant="secondary">Secondary</Button></td>
+    <td>Cancel action in dialog</td>
+  </tr>
+  <tr>
+    <td>Low</td>
+    <td><Button variant="tertiary">Tertiary</Button></td>
+    <td>Circumstantially relevant action on page with many actionable elements</td>
+  </tr>
+  </tbody>
+</table>
+
+## Content
+
+Buttons exclusively contain text and no icons. Icons tend to be ambiguous and not always applicable which leads to inconsistent
+and cluttered layouts.
+
+Button text should be short, concise and describe the action performed.

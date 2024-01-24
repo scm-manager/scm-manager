@@ -31,6 +31,9 @@ type Props = {
   className?: string;
 };
 
+/**
+ * @deprecated Please import the identical module from "@scm-manager/ui-core"
+ */
 class Image extends React.Component<Props> {
   createImageSrc = () => {
     const { src } = this.props;

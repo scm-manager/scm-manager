@@ -31,7 +31,7 @@ import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 import { encodePart } from "../../sources/components/content/FileLink";
 import { Menu } from "@scm-manager/ui-overlays";
 import { CardList } from "@scm-manager/ui-layout";
-import { Icon } from "@scm-manager/ui-buttons";
+import { Icon } from "@scm-manager/ui-core";
 
 type Props = {
   tag: Tag;

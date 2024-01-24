@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 
-import { useMemo } from "react";
+import { useAriaId } from "@scm-manager/ui-core";
 
-let counter = 0;
-
+/**
+ * @deprecated Please import the identical module from "@scm-manager/ui-core"
+ */
 export default function useGeneratedId(fallback?: string) {
-  return useMemo(() => fallback ?? `scm-id-${++counter}`, [fallback]);
+  return useAriaId(fallback);
 }

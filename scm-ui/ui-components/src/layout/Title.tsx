@@ -31,6 +31,10 @@ type Props = {
   className?: string;
 };
 
+/**
+ * @deprecated Please import the identical module from "@scm-manager/ui-core"
+ */
+
 const Title: FC<Props> = ({ title, preventRefreshingPageTitle, customPageTitle, className, children }) => {
   useEffect(() => {
     if (!preventRefreshingPageTitle) {
