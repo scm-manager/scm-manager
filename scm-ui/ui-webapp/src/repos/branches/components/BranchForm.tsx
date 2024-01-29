@@ -84,6 +84,7 @@ const BranchForm: FC<Props> = ({ submitForm, branches, disabled, transmittedName
               validationError={!nameValid}
               errorMessage={t("validation.branch.nameInvalid")}
               disabled={!!transmittedName || disabled}
+              testId="input-branch-name"
             />
           </div>
         </div>
