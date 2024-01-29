@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/ui-forms",
   "private": false,
-  "version": "3.0.0-SNAPSHOT",
+  "version": "3.0.0",
   "main": "index.ts",
   "license": "MIT",
   "devDependencies": {
@@ -10,7 +10,7 @@
     "@scm-manager/tsconfig": "^2.13.0"
   },
   "peerDependencies": {
-    "@scm-manager/ui-core": "3.0.0-SNAPSHOT"
+    "@scm-manager/ui-core": "3.0.0"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
