@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2024-01-29
+### Added
+- Added e2e tests for branch creation
+
+### Fixed
+- Race condition sometimes breaking mouse interaction in global search
+- URI encode branch of images in markdown files
+- Plugin overview header layout not responsive
+- Non-functional annotate view for binary files
+- Mail validation in front- and backend unified
+- Do not mount extensions which are already disabled via configuration
+
+### Changed
+- Save collapse status of secondary navigation
+- Jetty and many more Libs upgraded (BREAKING)
+- Javax to Jakarta Migration (BREAKING)
+- SCM Configuration redesigned (BREAKING)
+
 ## [2.48.3] - 2023-12-08
 ### Fixed
 - Removed function `toSpliced` due to missing browser support
@@ -1442,3 +1460,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.48.0]: https://scm-manager.org/download/2.48.0
 [2.48.1]: https://scm-manager.org/download/2.48.1
 [2.48.2]: https://scm-manager.org/download/2.48.2
+[3.0.0]: https://scm-manager.org/download/3.0.0
