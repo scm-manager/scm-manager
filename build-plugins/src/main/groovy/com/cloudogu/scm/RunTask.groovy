@@ -128,6 +128,7 @@ class RunTask extends DefaultTask {
         jvmArgs("-Xverify:none")
         args(new File(project.buildDir, 'server/config.json').toString())
         environment 'NODE_ENV', 'development'
+        environment 'SCM_WEBAPP_HOMEDIR', extension.getHome()
         classpath project.buildscript.configurations.classpath
         if (configFileDirectory != '') {
           classpath configFileDirectory

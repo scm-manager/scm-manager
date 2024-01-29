@@ -52,7 +52,6 @@ class ScmServer {
 
     System.setProperty("jakarta.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
 
-    System.setProperty('scm.home', configuration.home)
     if (configuration.disableCorePlugins) {
       info('disable core plugin extraction')
       System.setProperty('sonia.scm.boot.disable-core-plugin-extraction', 'true')

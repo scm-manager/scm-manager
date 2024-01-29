@@ -77,7 +77,6 @@ class WriteServerConfigTask extends DefaultTask {
     serverConfig.getParentFile().mkdirs()
 
     def config = [
-      home: extension.getHome(),
       port: extension.getPort(),
       contextPath: '/scm',
       stage: 'DEVELOPMENT',
