@@ -123,7 +123,7 @@ public class ServerConfigYaml {
 
   static boolean getEnvWithDefault(String envKey, boolean configValue) {
     String value = getEnv(envKey);
-    return value != null ? Boolean.getBoolean(value) : configValue;
+    return value != null ? Boolean.parseBoolean(value) : configValue;
   }
 
   private static String getEnv(String envKey) {

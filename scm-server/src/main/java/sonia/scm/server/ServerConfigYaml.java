@@ -25,9 +25,9 @@
 package sonia.scm.server;
 
 public class ServerConfigYaml {
-  
+
   private static final String SCM_SERVER_PREFIX = "SCM_";
-  
+
   // ### Server
   private String addressBinding = "0.0.0.0";
   private int port = 8080;
@@ -161,7 +161,7 @@ public class ServerConfigYaml {
 
   static boolean getEnvWithDefault(String envKey, boolean configValue) {
     String value = getEnv(envKey);
-    return value != null ? Boolean.getBoolean(value) : configValue;
+    return value != null ? Boolean.parseBoolean(value) : configValue;
   }
 
   private static String getEnv(String envKey) {
