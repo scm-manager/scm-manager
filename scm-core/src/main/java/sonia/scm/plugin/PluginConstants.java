@@ -26,7 +26,6 @@ package sonia.scm.plugin;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public interface PluginConstants
@@ -38,12 +37,9 @@ public interface PluginConstants
   /** core file */
   public static final String FILE_CORE = "core";
 
-  /** Field description */
   public static final String ID_DELIMITER = ":";
 
-  /** Field description */
   public static final String PATH_DESCRIPTOR = "/META-INF/scm/plugin.xml";
 
-  /** Field description */
   public static final String FILE_DESCRIPTOR = PATH_DESCRIPTOR.substring(1);
 }

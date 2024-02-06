@@ -24,7 +24,6 @@
 
 package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -44,8 +43,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-//~--- JDK imports ------------------------------------------------------------
 
 public abstract class UserManagerTestBase extends ManagerTestBase<User> {
 
@@ -252,13 +249,16 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
 
   private static class MultiThreadTester implements Runnable
   {
+    private boolean finished = false;
+
+    private Manager<User> manager;
 
     public MultiThreadTester(Manager<User> userManager)
     {
       this.manager = userManager;
     }
 
-    //~--- methods ------------------------------------------------------------
+    
 
     @Override
     public void run()
@@ -305,12 +305,5 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
       assertNull(otherUser);
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private boolean finished = false;
-
-    /** Field description */
-    private Manager<User> manager;
   }
 }

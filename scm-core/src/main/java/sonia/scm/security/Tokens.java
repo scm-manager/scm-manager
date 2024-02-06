@@ -24,7 +24,6 @@
     
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -34,19 +33,13 @@ import org.apache.shiro.subject.Subject;
 /**
  * Create tokens for security reasons.
  *
- * @author Sebastian Sdorra
  * @since 1.21
  */
 public final class Tokens
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   private Tokens() {}
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Build an {@link AuthenticationToken} for use with

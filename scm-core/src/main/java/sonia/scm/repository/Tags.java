@@ -35,7 +35,6 @@ import java.util.List;
 /**
  * Represents all tags of a repository.
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 @EqualsAndHashCode
@@ -59,9 +58,6 @@ public final class Tags implements Iterable<Tag> {
 
   /**
    * Returns the {@link Tag} with the given name or null.
-   *
-   * @param name name of the tag
-   * @return {@link Tag} with the given name or null
    */
   public Tag getTagByName(String name) {
     Tag tag = null;
@@ -79,9 +75,6 @@ public final class Tags implements Iterable<Tag> {
 
   /**
    * Returns the {@link Tag} with the given revision or null.
-   *
-   * @param revision revision of the tag
-   * @return {@link Tag} with the given revision or null
    */
   public Tag getTagByRevision(String revision) {
     Tag tag = null;
@@ -99,8 +92,6 @@ public final class Tags implements Iterable<Tag> {
 
   /**
    * Returns all tags of a repository.
-   *
-   * @return all tags
    */
   public List<Tag> getTags() {
     if (tags == null) {

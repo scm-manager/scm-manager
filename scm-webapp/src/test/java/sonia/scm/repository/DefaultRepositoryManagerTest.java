@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
 import com.github.sdorra.shiro.ShiroRule;
@@ -89,12 +88,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Unit tests for {@link DefaultRepositoryManager}.
  *
- * @author Sebastian Sdorra
  */
 @SubjectAware(
   username = "trillian",
@@ -540,7 +536,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     verify(repositoryDAO, never()).modify(any());
   }
 
-  //~--- methods --------------------------------------------------------------
 
   @Override
   protected DefaultRepositoryManager createManager() {

@@ -21,18 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,7 +39,6 @@ import java.io.InputStream;
  * Http response. The response of a {@link AdvancedHttpRequest} or
  * {@link AdvancedHttpRequestWithBody}.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public abstract class AdvancedHttpResponse
@@ -50,40 +46,25 @@ public abstract class AdvancedHttpResponse
 
   /**
    * Returns the response content as byte source.
-   *
-   *
-   * @return response content as byte source
-   * @throws IOException
    */
   public abstract ByteSource contentAsByteSource() throws IOException;
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the response headers.
-   *
-   *
-   * @return response headers
    */
   public abstract Multimap<String, String> getHeaders();
 
   /**
    * Returns the status code of the response.
-   *
-   *
-   * @return status code
    */
   public abstract int getStatus();
 
   /**
    * Returns the status text of the response.
-   *
-   *
-   * @return status text
    */
   public abstract String getStatusText();
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Creates a {@link ContentTransformer} for the given Content-Type.
@@ -100,11 +81,6 @@ public abstract class AdvancedHttpResponse
 
   /**
    * Returns the content of the response as byte array.
-   *
-   *
-   * @return content as byte array
-   *
-   * @throws IOException
    */
   public byte[] content() throws IOException
   {
@@ -121,11 +97,6 @@ public abstract class AdvancedHttpResponse
 
   /**
    * Returns a reader for the content of the response.
-   *
-   *
-   * @return read of response content
-   *
-   * @throws IOException
    */
   public BufferedReader contentAsReader() throws IOException
   {
@@ -142,11 +113,6 @@ public abstract class AdvancedHttpResponse
 
   /**
    * Returns response content as stream.
-   *
-   *
-   * @return response content as stram
-   *
-   * @throws IOException
    */
   public InputStream contentAsStream() throws IOException
   {
@@ -163,11 +129,6 @@ public abstract class AdvancedHttpResponse
 
   /**
    * Returns the response content as string.
-   *
-   *
-   * @return response content
-   *
-   * @throws IOException
    */
   public String contentAsString() throws IOException
   {
@@ -247,7 +208,7 @@ public abstract class AdvancedHttpResponse
 
   /**
    * Transforms the response content to the given type. The method will use
-   * the {@link ContentTransformer} which is responsible for the the given
+   * the {@link ContentTransformer} which is responsible for the given
    * content type.
    *
    * @param <T> object type
@@ -277,15 +238,8 @@ public abstract class AdvancedHttpResponse
     return object;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Returns the first header value for the given header name or {@code null}.
-   *
-   *
-   * @param name header name
-   *
-   * @return header value or {@code null}
    */
   public String getFirstHeader(String name)
   {
@@ -295,8 +249,6 @@ public abstract class AdvancedHttpResponse
   /**
    * Returns {@code true} if the response was successful. A response is
    * successful, if the status code is greater than 199 and lower than 400.
-   *
-   * @return {@code true} if the response was successful
    */
   public boolean isSuccessful()
   {

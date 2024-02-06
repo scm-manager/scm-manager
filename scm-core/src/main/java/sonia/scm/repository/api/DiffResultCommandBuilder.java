@@ -46,7 +46,7 @@ public class DiffResultCommandBuilder extends AbstractDiffCommandBuilder<DiffRes
   }
 
   /**
-   * Sets an offset for the first file diff entry that will be created in the result. If there are less entries than the
+   * Sets an offset for the first file diff entry that will be created in the result. If there are fewer entries than the
    * given offset, an empty result will be created.
    *
    * @param offset The number of the first diff file entry that will be added to the result.
@@ -72,8 +72,6 @@ public class DiffResultCommandBuilder extends AbstractDiffCommandBuilder<DiffRes
 
   /**
    * Returns the content of the difference as parsed objects.
-   *
-   * @return content of the difference
    */
   public DiffResult getDiffResult() throws IOException {
     Preconditions.checkArgument(request.isValid(),

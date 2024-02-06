@@ -24,7 +24,6 @@
 
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import jakarta.inject.Inject;
@@ -49,7 +48,6 @@ import java.util.Set;
 /**
  * Default authorizing realm.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Extension

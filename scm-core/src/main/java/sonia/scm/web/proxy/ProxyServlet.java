@@ -24,7 +24,6 @@
     
 package sonia.scm.web.proxy;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 import com.google.common.io.ByteStreams;
@@ -48,49 +47,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.25
  */
 @Singleton
 public class ProxyServlet extends HttpServlet
 {
 
-  /**
-   * the logger for ProxyServlet
-   */
+  private final ProxyConfigurationProvider configurationProvider;
+
   private static final Logger logger =
     LoggerFactory.getLogger(ProxyServlet.class);
 
-  /** Field description */
   private static final long serialVersionUID = 5589963595604482849L;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configurationProvider
-   */
   @Inject
   public ProxyServlet(ProxyConfigurationProvider configurationProvider)
   {
     this.configurationProvider = configurationProvider;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   */
   @Override
   public void service(HttpServletRequest request, HttpServletResponse response)
   {
@@ -150,15 +127,6 @@ public class ProxyServlet extends HttpServlet
 
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param con
-   * @param response
-   *
-   * @throws IOException
-   */
   private void copyContent(HttpURLConnection con, HttpServletResponse response)
     throws IOException
   {
@@ -175,15 +143,6 @@ public class ProxyServlet extends HttpServlet
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param configuration
-   * @param request
-   * @param con
-   */
   @SuppressWarnings("unchecked")
   private void copyRequestHeaders(ProxyConfiguration configuration,
     HttpServletRequest request, HttpURLConnection con)
@@ -218,15 +177,6 @@ public class ProxyServlet extends HttpServlet
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param configuration
-   * @param con
-   * @param response
-   */
   private void copyResponseHeaders(ProxyConfiguration configuration,
     HttpURLConnection con, HttpServletResponse response)
   {
@@ -263,17 +213,6 @@ public class ProxyServlet extends HttpServlet
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param configuration
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   private HttpURLConnection createConnection(ProxyConfiguration configuration,
     HttpServletRequest request)
     throws IOException
@@ -289,8 +228,4 @@ public class ProxyServlet extends HttpServlet
     return con;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final ProxyConfigurationProvider configurationProvider;
 }

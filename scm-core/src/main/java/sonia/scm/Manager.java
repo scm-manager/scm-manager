@@ -31,7 +31,6 @@ import java.util.function.Predicate;
 /**
  * Base interface for all manager classes.
  *
- * @author Sebastian Sdorra
  *
  * @param <T> type of the model object
  */
@@ -41,7 +40,7 @@ public interface Manager<T extends ModelObject>
 
 
   /**
-   * Reloads a object from store and overwrites all changes.
+   * Reloads an object from store and overwrites all changes.
    *
    *
    * @param object to refresh
@@ -50,7 +49,6 @@ public interface Manager<T extends ModelObject>
    */
   void refresh(T object);
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the object with the given id.
@@ -64,9 +62,6 @@ public interface Manager<T extends ModelObject>
 
   /**
    * Returns a {@link java.util.Collection} of all objects in the store.
-   *
-   *
-   * @return all object in the store
    */
   Collection<T> getAll();
 

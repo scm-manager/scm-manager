@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Iterables;
 import org.junit.Test;
@@ -36,12 +35,7 @@ import java.util.stream.StreamSupport;
 
 import static org.junit.Assert.*;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class SvnLogCommandTest extends AbstractSvnCommandTestBase
 {
 
@@ -193,12 +187,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals("1", c2.getId());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   private SvnLogCommand createCommand()
   {
     return new SvnLogCommand(createContext());

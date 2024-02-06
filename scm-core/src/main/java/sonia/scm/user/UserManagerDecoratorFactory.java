@@ -24,7 +24,6 @@
     
 package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.DecoratorFactory;
 import sonia.scm.plugin.ExtensionPoint;
@@ -32,7 +31,6 @@ import sonia.scm.plugin.ExtensionPoint;
 /**
  * Factory for user manager decorators.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 @ExtensionPoint

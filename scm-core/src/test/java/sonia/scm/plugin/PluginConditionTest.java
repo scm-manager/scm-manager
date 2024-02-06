@@ -24,20 +24,14 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Arrays;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class PluginConditionTest
 {
 
@@ -46,11 +40,7 @@ public class PluginConditionTest
     assertTrue(new PluginCondition().isSupported());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testArchIsSupported()
   {
     assertTrue(new PluginCondition(null, null, "32").isSupported(null, null,
@@ -59,11 +49,7 @@ public class PluginConditionTest
                                     "64"));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testIsOsSupported()
   {
     assertTrue(new PluginCondition(null, Arrays.asList("linux"),
@@ -81,22 +67,14 @@ public class PluginConditionTest
                                     null).isSupported(null, "Mac OS X", null));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testIsSupported()
   {
     assertTrue(new PluginCondition("1.2", Arrays.asList("Mac"),
                                    "64").isSupported("1.4", "Mac OS X", "64"));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testVersionIsSupported()
   {
     assertTrue(new PluginCondition("1.1", null, null).isSupported("1.2", null,

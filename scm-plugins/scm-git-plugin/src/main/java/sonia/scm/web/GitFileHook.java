@@ -24,7 +24,6 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Stopwatch;
 import com.google.common.io.Closer;
@@ -39,49 +38,32 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GitFileHook
 {
 
-  /** Field description */
   public static final String FILE_HOOKDIRECTORY = "hooks";
 
-  /** Field description */
   public static final String FILE_HOOK_POST_RECEIVE = "post-receive";
 
-  /** Field description */
   public static final String FILE_HOOK_PRE_RECEIVE = "pre-receive";
 
-  /**
-   * the logger for GitFileHook
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(GitFileHook.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final Iterable<ReceiveCommand> commands;
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   *
-   * @param executor
-   * @param type
-   * @param rpack
-   * @param commands
-   */
+  private final ReceivePack rpack;
+
+  private final RepositoryHookType type;
+
   private GitFileHook(RepositoryHookType type, ReceivePack rpack,
     Iterable<ReceiveCommand> commands)
   {
@@ -90,33 +72,13 @@ public class GitFileHook
     this.commands = commands;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param type
-   * @param rpack
-   * @param commands
-   */
   public static void execute(RepositoryHookType type, ReceivePack rpack,
     Iterable<ReceiveCommand> commands)
   {
     new GitFileHook(type, rpack, commands).execute();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param hook
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   private Process createProcess(File hook) throws IOException
   {
     ProcessBuilder pb = new ProcessBuilder(hook.getAbsolutePath());
@@ -132,14 +94,7 @@ public class GitFileHook
     return pb.redirectErrorStream(true).start();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param rc
-   *
-   * @return
-   */
+
   private String createReceiveCommandOutput(ReceiveCommand rc)
   {
     StringBuilder sb = new StringBuilder();
@@ -153,12 +108,7 @@ public class GitFileHook
     return sb.toString();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   */
+
   private void execute()
   {
     File hook = getHookFile();
@@ -189,12 +139,7 @@ public class GitFileHook
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param hook
-   */
+
   private void execute(File hook)
   {
     Process p;
@@ -254,16 +199,8 @@ public class GitFileHook
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
-   */
+
   private File getHookFile()
   {
     File hook = null;
@@ -287,15 +224,7 @@ public class GitFileHook
     return hook;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   * @param name
-   *
-   * @return
-   */
+
   private File getHookFile(File directory, String name)
   {
     //J-
@@ -308,14 +237,4 @@ public class GitFileHook
     //J+
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final Iterable<ReceiveCommand> commands;
-
-  /** Field description */
-  private final ReceivePack rpack;
-
-  /** Field description */
-  private final RepositoryHookType type;
 }

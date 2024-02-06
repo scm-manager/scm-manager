@@ -42,7 +42,6 @@ import static org.junit.Assert.assertThat;
 /**
  * Unit tests for {@link Scopes}.
  *
- * @author Sebastian Sdorra
  */
 public class ScopesTest {
 

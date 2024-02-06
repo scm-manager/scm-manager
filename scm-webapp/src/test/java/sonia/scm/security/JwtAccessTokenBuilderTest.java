@@ -57,7 +57,6 @@ import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 /**
  * Unit test for {@link JwtAccessTokenBuilder}.
  *
- * @author Sebastian Sdorra
  */
 @ExtendWith(MockitoExtension.class)
 class JwtAccessTokenBuilderTest {

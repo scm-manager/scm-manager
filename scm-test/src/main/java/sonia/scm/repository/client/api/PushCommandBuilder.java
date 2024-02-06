@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.client.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,43 +31,26 @@ import sonia.scm.repository.client.spi.PushCommand;
 
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public final class PushCommandBuilder
 {
 
-  /**
-   * the logger for PushCommandBuilder
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(PushCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param command
-   */
+  private PushCommand command;
+ 
   PushCommandBuilder(PushCommand command)
   {
     this.command = command;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   public void push() throws IOException
   {
     if (logger.isDebugEnabled())
@@ -87,8 +69,4 @@ public final class PushCommandBuilder
     command.pushTags();
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private PushCommand command;
 }

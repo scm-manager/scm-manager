@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 import sonia.scm.repository.BlameLine;
@@ -36,12 +35,9 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Unit tests for {@link GitBlameCommand}.
  *
- * @author Sebastian Sdorra
  */
 public class GitBlameCommandTest extends AbstractGitCommandTestBase
 {
@@ -72,12 +68,7 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
     assertEquals("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", result.getLine(0).getRevision());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testGetBlameResult() throws IOException
   {
@@ -105,12 +96,7 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
                  line.getAuthor().getMail());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testGetBlameResultWithRevision()
           throws IOException
@@ -130,12 +116,7 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
     checkFirstLine(line);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param line
-   */
+
   private void checkFirstLine(BlameLine line)
   {
     assertEquals(1, line.getLineNumber());
@@ -148,12 +129,7 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
     assertEquals("douglas.adams@hitchhiker.com", line.getAuthor().getMail());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   private GitBlameCommand createCommand()
   {
     return new GitBlameCommand(createContext());

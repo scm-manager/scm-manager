@@ -21,18 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm;
 
-//~--- JDK imports ------------------------------------------------------------
+package sonia.scm;
 
 import java.util.Collection;
 
 /**
  * Generic data access object. A DAO does not check the permission of the
- * current user. A DAO should only used by a {@link Manager} class.
+ * current user. A DAO should only be used by a {@link Manager} class.
  *
- * @author Sebastian Sdorra
  * @since 1.14
  *
  * @param <T> type of object
@@ -44,7 +41,6 @@ public interface GenericDAO<T>
   /**
    * Persists a new item.
    *
-   *
    * @param item item to persist
    */
   public void add(T item);
@@ -52,10 +48,7 @@ public interface GenericDAO<T>
   /**
    * Returns true if the item already exists in the backend.
    *
-   *
    * @param item item to check
-   *
-   * @return true if the item already exists
    */
   public boolean contains(T item);
 
@@ -63,16 +56,12 @@ public interface GenericDAO<T>
    * Returns true if the item with the specified id
    * already exists in the backend.
    *
-   *
    * @param id id of the item to check
-   *
-   * @return true if the item already exists
    */
   public boolean contains(String id);
 
   /**
    * Updates an existing item.
-   *
    *
    * @param item item to update
    */
@@ -81,29 +70,20 @@ public interface GenericDAO<T>
   /**
    * Removes the specified item from the backend.
    *
-   *
    * @param item item to remove
    */
   public void delete(T item);
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the item by its id or returns null if no item with
    * the specified id exists in the backend.
    *
-   *
-   * @param id id of the item
-   *
-   * @return item with the specified id or null
    */
   public T get(String id);
 
   /**
    * Returns all items stored in the backend.
-   *
-   *
-   * @return all items
    */
   public Collection<T> getAll();
 

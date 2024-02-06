@@ -28,14 +28,12 @@ package sonia.scm.store;
  * This exception is thrown on a create method if an entry with the given id
  * already exists.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 public class EntryAlreadyExistsStoreException extends StoreException {
 
   private static final long serialVersionUID = 7016781091599951287L;
 
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs new EntryAllreadyExistsStoreException.

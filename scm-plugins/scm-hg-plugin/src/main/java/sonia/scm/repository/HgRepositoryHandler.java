@@ -150,10 +150,6 @@ public class HgRepositoryHandler
 
   /**
    * Writes repository to .hg/hgrc.
-   *
-   * @param repository
-   * @param directory
-   * @throws IOException
    */
   @Override
   protected void postCreate(Repository repository, File directory)

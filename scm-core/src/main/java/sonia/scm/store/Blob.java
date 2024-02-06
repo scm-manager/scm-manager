@@ -24,8 +24,6 @@
     
 package sonia.scm.store;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,7 +31,6 @@ import java.io.OutputStream;
 /**
  * A blob is binary object. A blob can be used to store any unstructured data.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 public interface Blob
@@ -48,7 +45,6 @@ public interface Blob
    */
   public void commit() throws IOException;
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the id of blob object.

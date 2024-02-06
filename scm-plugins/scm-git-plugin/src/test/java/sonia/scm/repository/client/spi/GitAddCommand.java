@@ -24,45 +24,26 @@
     
 package sonia.scm.repository.client.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import sonia.scm.repository.client.api.RepositoryClientException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GitAddCommand implements AddCommand
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param git
-   */
+ 
   GitAddCommand(Git git)
   {
     this.git = git;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @throws IOException
-   */
+  
   @Override
   public void add(String path) throws IOException
   {
@@ -78,6 +59,5 @@ public class GitAddCommand implements AddCommand
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private Git git;
 }

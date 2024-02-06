@@ -43,7 +43,6 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link DefaultCipherHandler}.
  *
- * @author Sebastian Sdorra
  */
 @ExtendWith({MockitoExtension.class})
 class DefaultCipherHandlerTest {

@@ -33,9 +33,7 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   public static final Set<Command> COMMANDS = EnumSet.of(

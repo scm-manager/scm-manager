@@ -24,7 +24,6 @@
     
 package sonia.scm.lifecycle.modules;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -32,24 +31,14 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import sonia.scm.Validateable;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ClassOverride implements Validateable
 {
+  private Class<?> bind;
 
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
+  private Class<?> to;
+
   @Override
   public boolean equals(Object obj)
   {
@@ -68,24 +57,14 @@ public class ClassOverride implements Validateable
     return Objects.equal(bind, other.bind) && Objects.equal(to, other.to);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public int hashCode()
   {
     return Objects.hashCode(bind, to);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String toString()
   {
@@ -97,71 +76,37 @@ public class ClassOverride implements Validateable
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Class<?> getBind()
   {
     return bind;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Class<?> getTo()
   {
     return to;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isValid()
   {
     return (bind != null) && (to != null);
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param bind
-   */
+
   public void setBind(Class<?> bind)
   {
     this.bind = bind;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param to
-   */
+
   public void setTo(Class<?> to)
   {
     this.to = to;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Class<?> bind;
-
-  /** Field description */
-  private Class<?> to;
 }

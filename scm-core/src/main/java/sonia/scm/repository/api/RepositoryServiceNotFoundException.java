@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.Repository;
 
@@ -32,18 +31,12 @@ import sonia.scm.repository.Repository;
  * This exception is throw if no {@link RepositoryService}
  * is available for the given {@link Repository}.
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public final class RepositoryServiceNotFoundException extends RuntimeException
 {
+  private Repository repository;
 
-  /**
-   * Constructs a new {@link RepositoryServiceNotFoundException}.
-   *
-   *
-   * @param repository unsupported repository
-   */
   public RepositoryServiceNotFoundException(Repository repository)
   {
     super("could not find a repository service provider implementation for repository "
@@ -51,21 +44,13 @@ public final class RepositoryServiceNotFoundException extends RuntimeException
     this.repository = repository;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the unsupported repository.
-   *
-   *
-   * @return unsupported repository
    */
   public Repository getRepository()
   {
     return repository;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** unsupported repository */
-  private Repository repository;
 }

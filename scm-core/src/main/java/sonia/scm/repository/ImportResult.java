@@ -37,7 +37,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Import result of the {@link AdvancedImportHandler}.
  *
- * @author Sebastian Sdorra
  * @since 1.43
  * @deprecated
  */

@@ -24,8 +24,6 @@
 
 package sonia.scm.web.filter;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.WriteListener;
 import jakarta.servlet.http.Cookie;
@@ -43,22 +41,23 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class BufferedHttpServletResponse extends HttpServletResponseWrapper
 {
+  private int contentLength = -1;
+
+  private ByteArrayPrintWriter pw = null;
+
+  private Set<Cookie> cookies = new HashSet<>();
+
+  private int statusCode = HttpServletResponse.SC_OK;
+
+  private Map<String, String> headers = new LinkedHashMap<>();
+
+  private String statusMessage;
 
   private static final Logger LOG = LoggerFactory.getLogger(BufferedHttpServletResponse.class);
 
-  /**
-   *     Constructs ...
-   *
-   *
-   *     @param response
-   * @param logBody
-   */
   public BufferedHttpServletResponse(HttpServletResponse response,
                                      boolean logBody)
   {
@@ -70,14 +69,8 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     }
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param cookie
-   */
+
   @Override
   public void addCookie(Cookie cookie)
   {
@@ -85,13 +78,7 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     super.addCookie(cookie);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param date
-   */
+
   @Override
   public void addDateHeader(String name, long date)
   {
@@ -99,13 +86,7 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     super.addDateHeader(name, date);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param value
-   */
+
   @Override
   public void addHeader(String name, String value)
   {
@@ -113,13 +94,7 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     super.addHeader(name, value);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param value
-   */
+
   @Override
   public void addIntHeader(String name, int value)
   {
@@ -127,14 +102,7 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     super.addIntHeader(name, value);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param sc
-   *
-   * @throws IOException
-   */
+  
   @Override
   public void sendError(int sc) throws IOException
   {
@@ -142,15 +110,7 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     super.sendError(sc);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param sc
-   * @param msg
-   *
-   * @throws IOException
-   */
+
   @Override
   public void sendError(int sc, String msg) throws IOException
   {
@@ -159,14 +119,8 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     super.sendError(sc, msg);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public byte[] getContentBuffer()
   {
     byte[] content = null;
@@ -179,47 +133,25 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     return content;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public int getContentLength()
   {
     return contentLength;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Set<Cookie> getCookies()
   {
     return cookies;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Map<String, String> getHeaders()
   {
     return headers;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   @Override
   public ServletOutputStream getOutputStream() throws IOException
   {
@@ -228,36 +160,19 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
            : super.getOutputStream();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public int getStatusCode()
   {
     return statusCode;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getStatusMessage()
   {
     return statusMessage;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   @Override
   public PrintWriter getWriter() throws IOException
   {
@@ -266,14 +181,8 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
            : super.getWriter();
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param len
-   */
+
   @Override
   public void setContentLength(int len)
   {
@@ -281,13 +190,7 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     super.setContentLength(len);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param date
-   */
+
   @Override
   public void setDateHeader(String name, long date)
   {
@@ -295,13 +198,7 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     super.setDateHeader(name, date);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param value
-   */
+
   @Override
   public void setHeader(String name, String value)
   {
@@ -309,13 +206,7 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     super.setHeader(name, value);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param value
-   */
+
   @Override
   public void setIntHeader(String name, int value)
   {
@@ -323,12 +214,7 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     super.setIntHeader(name, value);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param sc
-   */
+
   @Override
   public void setStatus(int sc)
   {
@@ -336,13 +222,7 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     super.setStatus(sc);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param sc
-   * @param sm
-   */
+
 ////  @Override
 //  @SuppressWarnings("deprecation")
   //TODO What to do?
@@ -353,97 +233,47 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
 //    super.setStatus(sc);
 //  }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 2011-04-12
-   * @author         Sebastian Sdorra
-   */
+
+
   private static class ByteArrayPrintWriter
   {
+    private ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+    private PrintWriter pw = new PrintWriter(baos);
+
+    private ServletOutputStream sos = new ByteArrayServletStream(baos);
+
+  
     public byte[] toByteArray()
     {
       return baos.toByteArray();
     }
 
-    //~--- get methods --------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
     public ServletOutputStream getStream()
     {
       return sos;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     public PrintWriter getWriter()
     {
       return pw;
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-    /** Field description */
-    private PrintWriter pw = new PrintWriter(baos);
-
-    /** Field description */
-    private ServletOutputStream sos = new ByteArrayServletStream(baos);
   }
 
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 2011-04-12
-   * @author         Sebastian Sdorra
-   */
+
   private static class ByteArrayServletStream extends ServletOutputStream
   {
+    private ByteArrayOutputStream baos;
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param baos
-     */
     ByteArrayServletStream(ByteArrayOutputStream baos)
     {
       this.baos = baos;
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param param
-     *
-     * @throws IOException
-     */
     @Override
     public void write(int param) throws IOException
     {
@@ -464,30 +294,6 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
       }
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private ByteArrayOutputStream baos;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private int contentLength = -1;
-
-  /** Field description */
-  private ByteArrayPrintWriter pw = null;
-
-  /** Field description */
-  private Set<Cookie> cookies = new HashSet<>();
-
-  /** Field description */
-  private int statusCode = HttpServletResponse.SC_OK;
-
-  /** Field description */
-  private Map<String, String> headers = new LinkedHashMap<>();
-
-  /** Field description */
-  private String statusMessage;
 }

@@ -24,39 +24,29 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Predicate;
 
 /**
  * Used to filter collections of repositories by its type.
  *
- * @author Sebastian Sdorra
  * @since 1.16
  */
 public class RepositoryTypePredicate implements Predicate<Repository>
 {
+  /** type to filter */
+  private String type;
 
-  /**
-   * Constructs new {@link RepositoryTypePredicate} object.
-   *
-   *
-   * @param type type to filter
-   */
   public RepositoryTypePredicate(String type)
   {
     this.type = type;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Return true if the repository is from the given type.
    *
-   *
    * @param repository repository to check
-   *
-   * @return true if the repository is from the given type
    */
   @Override
   public boolean apply(Repository repository)
@@ -64,8 +54,4 @@ public class RepositoryTypePredicate implements Predicate<Repository>
     return type.equalsIgnoreCase(repository.getType());
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** type to filter */
-  private String type;
 }

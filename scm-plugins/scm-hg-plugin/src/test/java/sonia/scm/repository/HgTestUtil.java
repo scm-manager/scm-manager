@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Assume;
 import sonia.scm.SCMContext;
@@ -38,26 +37,14 @@ import java.io.File;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 public final class HgTestUtil {
 
-  /**
-   * Constructs ...
-   */
   private HgTestUtil() {
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   * @param handler
-   */
+
   public static void checkForSkip(HgRepositoryHandler handler) {
 
     // skip tests if hg not in path

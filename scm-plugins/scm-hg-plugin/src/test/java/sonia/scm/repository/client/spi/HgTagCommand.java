@@ -31,7 +31,6 @@ import sonia.scm.repository.Tag;
 /**
  * Mercurial implementation of the {@link TagCommand}.
  *
- * @author Sebastian Sdorra
  */
 public class HgTagCommand implements TagCommand
 {

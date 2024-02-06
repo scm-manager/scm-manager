@@ -24,7 +24,6 @@
     
 package sonia.scm.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -34,7 +33,6 @@ import jakarta.xml.bind.annotation.adapters.XmlAdapter;
  * Converts a string to a string array and vice versa. The string is divided by
  * a comma.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public class XmlArrayStringAdapter extends XmlAdapter<String, String[]>
@@ -43,7 +41,6 @@ public class XmlArrayStringAdapter extends XmlAdapter<String, String[]>
   /** separator char */
   private static final char SEPARATOR = ',';
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Converts the array to a single string divided by commas.

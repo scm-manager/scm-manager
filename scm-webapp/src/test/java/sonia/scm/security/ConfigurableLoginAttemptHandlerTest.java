@@ -34,7 +34,6 @@ import sonia.scm.config.ScmConfiguration;
 /**
  * Unit tests for {@link ConfigurableLoginAttemptHandler}.
  * 
- * @author Sebastian Sdorra
  */
 public class ConfigurableLoginAttemptHandlerTest {
 

@@ -24,11 +24,8 @@
     
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.BindingAnnotation;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -40,7 +37,6 @@ import java.lang.annotation.Target;
  * The default annotation can be used to inject the default implementation of
  * service. The annotation is mainly used to inject the ServletContext.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Documented

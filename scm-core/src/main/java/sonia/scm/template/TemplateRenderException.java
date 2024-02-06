@@ -24,60 +24,32 @@
     
 package sonia.scm.template;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
 /**
  * This exception is thrown, if an error during the template rendering 
  * phase occurs.
  *
- * @author Sebastian Sdorra
  * @since 1.19
  */
 public class TemplateRenderException extends IOException
 {
 
-  /** Field description */
   private static final long serialVersionUID = 2176596549717814756L;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   public TemplateRenderException() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
   public TemplateRenderException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
   public TemplateRenderException(Throwable cause)
   {
     super(cause);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
   public TemplateRenderException(String message, Throwable cause)
   {
     super(message, cause);

@@ -24,7 +24,6 @@
     
 package sonia.scm.template;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -35,8 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.Default;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -46,7 +43,6 @@ import java.util.Set;
  * The factory return available template engines. The
  * {@link TemplateEngineFactory} is available via injection.
  *
- * @author Sebastian Sdorra
  * @since 1.19
  *
  * @apiviz.landmark
@@ -56,13 +52,14 @@ import java.util.Set;
 public final class TemplateEngineFactory
 {
 
-  /**
-   * the logger for TemplateEngineFactory
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(TemplateEngineFactory.class);
 
-  //~--- constructors ---------------------------------------------------------
+  /** default template engine */
+  private final TemplateEngine defaultEngine;
+
+  /** map of registered template engines */
+  private final Map<String, TemplateEngine> engineMap;
 
   /**
    * Constructs new template engine factory. This constructor should only be
@@ -102,10 +99,9 @@ public final class TemplateEngineFactory
     this.defaultEngine = defaultEngine;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns the default template engine. In the normal case the should be a
+   * Returns the default template engine. In the normal case this should be an
    * implementation of the
    * <a href="http://mustache.github.com/" target="_blank">mustache template
    * system</a>.
@@ -167,20 +163,10 @@ public final class TemplateEngineFactory
 
   /**
    * Returns all registered template engines.
-   *
-   *
-   * @return all registered template engines
    */
   public Collection<TemplateEngine> getEngines()
   {
     return engineMap.values();
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** default template engine */
-  private final TemplateEngine defaultEngine;
-
-  /** map of registered template engines */
-  private final Map<String, TemplateEngine> engineMap;
 }

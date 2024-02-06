@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,38 +37,33 @@ import sonia.scm.repository.spi.HookMergeDetectionProvider;
 /**
  * The context for all repository hooks. With the {@link HookContext} class it
  * is able to send messages back to the client, retrieve {@link Changeset}s
- * which are added during this push/commit and gives informations about changed
+ * which are added during this push/commit and gives information about changed
  * branches and tags.
  *
- * @author Sebastian Sdorra
  * @since 1.33
  */
 public final class HookContext {
 
-  /**
-   * the logger for HookContext
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(HookContext.class);
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param provider
-   * @param repository
-   * @param preProcessorUtil
-   */
+  private final PreProcessorUtil preProcessorUtil;
+
+  private final HookContextProvider provider;
+
+  private final Repository repository;
+
+
   HookContext(HookContextProvider provider, Repository repository, PreProcessorUtil preProcessorUtil) {
     this.provider = provider;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns a {@link HookBranchProvider} which is able to return informations
+   * Returns a {@link HookBranchProvider} which is able to return information
    * about changed branches during the current hook.
    *
    * @return {@link HookBranchProvider}
@@ -185,14 +179,4 @@ public final class HookContext {
     return provider.getSupportedFeatures().contains(feature);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** pre processor util */
-  private final PreProcessorUtil preProcessorUtil;
-
-  /** hook context provider */
-  private final HookContextProvider provider;
-
-  /** repository */
-  private final Repository repository;
 }

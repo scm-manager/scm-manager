@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.client.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import org.eclipse.jgit.api.Git;
@@ -39,38 +38,18 @@ import sonia.scm.repository.client.api.RepositoryClientException;
 
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class GitTagCommand implements TagCommand
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param git
-   */
+ 
   GitTagCommand(Git git)
   {
     this.git = git;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   @Override
   public Tag tag(TagRequest request) throws IOException
   {
@@ -128,6 +107,5 @@ public class GitTagCommand implements TagCommand
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private Git git;
 }

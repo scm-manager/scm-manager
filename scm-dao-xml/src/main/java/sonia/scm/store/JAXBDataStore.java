@@ -43,13 +43,10 @@ import static sonia.scm.store.CopyOnWrite.compute;
  * Jaxb implementation of {@link DataStore}.
  *
  * @param <T> type of stored data.
- * @author Sebastian Sdorra
  */
 public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> {
 
-  /**
-   * the logger for JAXBDataStore
-   */
+ 
   private static final Logger LOG = LoggerFactory.getLogger(JAXBDataStore.class);
 
   private final KeyGenerator keyGenerator;

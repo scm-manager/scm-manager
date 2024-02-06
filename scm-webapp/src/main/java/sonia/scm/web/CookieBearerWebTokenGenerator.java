@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +36,6 @@ import sonia.scm.util.HttpUtil;
  * Creates an {@link BearerToken} from the {@link HttpUtil#COOKIE_BEARER_AUTHENTICATION}
  * cookie.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Extension

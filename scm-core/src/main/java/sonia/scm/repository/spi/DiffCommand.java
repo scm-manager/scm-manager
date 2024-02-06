@@ -30,7 +30,6 @@ import java.io.IOException;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public interface DiffCommand

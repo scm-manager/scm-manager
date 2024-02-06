@@ -24,7 +24,7 @@
     
 package sonia.scm.store;
 
-//~--- JDK imports ------------------------------------------------------------
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,7 +36,6 @@ import java.io.OutputStream;
 /**
  * File base implementation of {@link Blob}.
  *
- * @author Sebastian Sdorra
  */
 public final class FileBlob implements Blob {
 

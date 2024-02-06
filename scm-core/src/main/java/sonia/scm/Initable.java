@@ -27,7 +27,6 @@ package sonia.scm;
 /**
  * Base interface for all initable objects.
  *
- * @author Sebastian Sdorra
  */
 public interface Initable
 {

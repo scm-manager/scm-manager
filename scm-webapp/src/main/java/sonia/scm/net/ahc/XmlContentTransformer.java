@@ -24,7 +24,6 @@
     
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.ByteSource;
 import jakarta.ws.rs.core.MediaType;
@@ -37,22 +36,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * {@link ContentTransformer} for xml. The {@link XmlContentTransformer} uses 
  * jaxb to marshalling/unmarshalling.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 @Extension
 public class XmlContentTransformer implements ContentTransformer
 {
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public ByteSource marshall(Object object)
   {
@@ -72,9 +66,7 @@ public class XmlContentTransformer implements ContentTransformer
     return source;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public <T> T unmarshall(Class<T> type, ByteSource content)
   {
@@ -97,7 +89,6 @@ public class XmlContentTransformer implements ContentTransformer
     return object;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns {@code true}, if the content type is compatible with 

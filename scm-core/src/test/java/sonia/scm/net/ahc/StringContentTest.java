@@ -28,10 +28,7 @@ import com.google.common.base.Charsets;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class StringContentTest {
 
 

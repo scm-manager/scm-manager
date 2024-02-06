@@ -24,8 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -33,7 +31,6 @@ import java.net.URLClassLoader;
  * Default {@link ClassLoader} for SCM-Manager plugins. This {@link ClassLoader}
  * uses the default parent first strategy.
  *
- * @author Sebastian Sdorra
  */
 public class DefaultPluginClassLoader extends URLClassLoader
   implements PluginClassLoader
@@ -41,13 +38,7 @@ public class DefaultPluginClassLoader extends URLClassLoader
 
   private final String plugin;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param urls
-   * @param parent
-   */
+ 
   public DefaultPluginClassLoader(URL[] urls, ClassLoader parent, String plugin)
   {
     super(urls, parent);

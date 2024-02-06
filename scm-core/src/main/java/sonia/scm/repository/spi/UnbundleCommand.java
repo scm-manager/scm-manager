@@ -24,13 +24,10 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.api.UnbundleResponse;
 
 import java.io.IOException;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Service provider implementation for the unbundle command.

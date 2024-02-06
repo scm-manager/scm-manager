@@ -33,7 +33,6 @@ import sonia.scm.plugin.ExtensionPoint;
  *
  * <b>Warning:</b> enrichers are always registered as singletons.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @ExtensionPoint

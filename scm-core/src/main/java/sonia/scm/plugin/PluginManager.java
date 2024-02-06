@@ -35,29 +35,22 @@ import java.util.Set;
 /**
  * The plugin manager is responsible for plugin related tasks, such as install, uninstall or updating.
  *
- * @author Sebastian Sdorra
  */
 public interface PluginManager {
 
   /**
    * Returns the available plugin with the given name.
-   * @param name of plugin
-   * @return optional available plugin.
    */
   Optional<AvailablePlugin> getAvailable(String name);
 
   /**
    * Returns the installed plugin with the given name.
-   * @param name of plugin
-   * @return optional installed plugin.
    */
   Optional<InstalledPlugin> getInstalled(String name);
 
 
   /**
    * Returns all installed plugins.
-   *
-   * @return a list of installed plugins.
    */
   List<InstalledPlugin> getInstalled();
 
@@ -71,15 +64,11 @@ public interface PluginManager {
   /**
    * Returns all available plugins. The list contains the plugins which are loaded from the plugin center, but without
    * the installed plugins.
-   *
-   * @return a list of available plugins.
    */
   List<AvailablePlugin> getAvailable();
 
   /**
    * Returns all available plugin sets from the plugin center.
-   *
-   * @return a list of available plugin sets
    * @since 2.35.0
    */
   Set<PluginSet> getPluginSets();
@@ -95,16 +84,13 @@ public interface PluginManager {
 
   /**
    * Returns all updatable plugins.
-   *
-   * @return a list of updatable plugins.
    */
   List<InstalledPlugin> getUpdatable();
 
   /**
    * Returns all pending plugins.
    *
-   * @return a list of pending plugins.
-   * @since 2.38.0
+   *  @since 2.38.0
    */
   PendingPlugins getPending();
 

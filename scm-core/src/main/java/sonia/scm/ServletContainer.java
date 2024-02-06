@@ -25,9 +25,8 @@
 package sonia.scm;
 
 /**
- * Type of a servlet container.
+ * Type of servlet container.
  *
- * @author Sebastian Sdorra
  */
 public enum ServletContainer
 {

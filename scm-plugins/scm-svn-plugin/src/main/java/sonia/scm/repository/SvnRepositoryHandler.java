@@ -48,9 +48,7 @@ import java.io.IOException;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @Singleton
 @Extension
 public class SvnRepositoryHandler extends AbstractSimpleRepositoryHandler<SvnConfig> {

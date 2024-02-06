@@ -52,9 +52,7 @@ import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toSet;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @Singleton
 public class DefaultGroupManager extends AbstractGroupManager {
 

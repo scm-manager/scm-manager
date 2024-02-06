@@ -47,7 +47,6 @@ import java.io.IOException;
 /**
  * Abstract http filter to check repository permissions.
  *
- * @author Sebastian Sdorra
  */
 public abstract class PermissionFilter extends ScmProviderHttpServletDecorator {
 
@@ -55,9 +54,6 @@ public abstract class PermissionFilter extends ScmProviderHttpServletDecorator {
   private final ScmConfiguration configuration;
 
   /**
-   * Constructs a new permission filter
-   *
-   * @param configuration global scm-manager configuration
    * @since 1.21
    */
   protected PermissionFilter(ScmConfiguration configuration, ScmProviderHttpServlet delegate) {
@@ -149,12 +145,6 @@ public abstract class PermissionFilter extends ScmProviderHttpServletDecorator {
     }
   }
 
-  /**
-   * Returns action as string.
-   *
-   * @param writeRequest true if the action is a write action
-   * @return action as string
-   */
   private String getActionAsString(boolean writeRequest) {
     return writeRequest
       ? "write"
@@ -165,7 +155,6 @@ public abstract class PermissionFilter extends ScmProviderHttpServletDecorator {
    * Returns the username from the given subject or anonymous.
    *
    * @param subject user subject
-   * @return username username from subject or anonymous
    */
   private Object getUserName(Subject subject) {
     Object principal = subject.getPrincipal();

@@ -51,7 +51,6 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Unit tests for {@link JSONContextResolver}.
  * 
- * @author Sebastian Sdorra
  */
 public class JSONContextResolverTest {
 

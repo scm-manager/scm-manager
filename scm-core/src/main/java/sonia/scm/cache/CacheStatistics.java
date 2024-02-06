@@ -31,10 +31,18 @@ import com.google.common.base.Objects;
  * Statistics about the performance of a {@link Cache}.
  * Instances of this class are immutable.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class CacheStatistics {
+
+  private final long hitCount;
+
+  private final long missCount;
+
+  /**
+   * name of cache
+   */
+  private final String name;
 
   /**
    * Constructs a new performance statistic for a {@link Cache}.
@@ -49,11 +57,8 @@ public final class CacheStatistics {
     this.missCount = missCount;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -71,17 +76,13 @@ public final class CacheStatistics {
       && Objects.equal(missCount, other.missCount);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public int hashCode() {
     return Objects.hashCode(name, hitCount, missCount);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public String toString() {
     //J-
@@ -93,7 +94,6 @@ public final class CacheStatistics {
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns number of times requested elements were found in the cache.
@@ -106,8 +106,6 @@ public final class CacheStatistics {
 
   /**
    * Returns the ratio of cache requests which were hits.
-   *
-   * @return ratio of cache hits
    */
   public double getHitRate() {
     return ratio(hitCount);
@@ -115,8 +113,6 @@ public final class CacheStatistics {
 
   /**
    * Returns number of times a requested element was not found in the cache.
-   *
-   * @return number of cache misses
    */
   public long getMissCount() {
     return missCount;
@@ -124,8 +120,6 @@ public final class CacheStatistics {
 
   /**
    * Returns the ratio of cache requests which were misses.
-   *
-   * @return ratio of cache misses
    */
   public double getMissRate() {
     return ratio(missCount);
@@ -133,8 +127,6 @@ public final class CacheStatistics {
 
   /**
    * Returns name of the cache.
-   *
-   * @return name of the cache
    */
   public String getName() {
     return name;
@@ -142,8 +134,6 @@ public final class CacheStatistics {
 
   /**
    * Returns the total number of requests, this includes hits and misses.
-   *
-   * @return numer of requests
    */
   public long getRequestCount() {
     return hitCount + missCount;
@@ -163,18 +153,5 @@ public final class CacheStatistics {
       : (double) counter / requestCount;
   }
 
-  /**
-   * hit count
-   */
-  private final long hitCount;
 
-  /**
-   * miss count
-   */
-  private final long missCount;
-
-  /**
-   * name of cache
-   */
-  private final String name;
 }

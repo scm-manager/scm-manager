@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
@@ -44,8 +43,6 @@ import java.util.zip.GZIPInputStream;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * The unbundle command can restore an empty repository from a bundle. The
  * bundle can be created with the {@link BundleCommandBuilder}.
@@ -56,19 +53,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public final class UnbundleCommandBuilder
 {
 
-  /** logger for UnbundleCommandBuilder */
   private static final Logger logger =
     LoggerFactory.getLogger(UnbundleCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final Repository repository;
 
-  /**
-   * Constructs a new UnbundleCommandBuilder.
-   *
-   *
-   * @param unbundleCommand unbundle command implementation
-   * @param repository repository
-   */
+  private final UnbundleCommand unbundleCommand;
+
+  private boolean compressed = false;
+
+  private Consumer<RepositoryHookEvent> postEventSink;
+
+
   public UnbundleCommandBuilder(UnbundleCommand unbundleCommand,
     Repository repository)
   {
@@ -76,7 +72,6 @@ public final class UnbundleCommandBuilder
     this.repository = repository;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Restores the repository from the given bundle.
@@ -140,7 +135,6 @@ public final class UnbundleCommandBuilder
     return unbundleCommand.unbundle(createRequest(byteSource));
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Set to {@code true} if bundle is gzip compressed. Default is {@code false}.
@@ -171,7 +165,6 @@ public final class UnbundleCommandBuilder
     return this;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Converts an {@link InputStream} into a {@link ByteSource}.
@@ -194,14 +187,6 @@ public final class UnbundleCommandBuilder
     };
   }
 
-  /**
-   * Creates the {@link UnbundleCommandRequest}.
-   *
-   *
-   * @param source byte source
-   *
-   * @return the create request
-   */
   private UnbundleCommandRequest createRequest(ByteSource source)
   {
     ByteSource bs;
@@ -223,26 +208,20 @@ public final class UnbundleCommandBuilder
     return request;
   }
 
-  //~--- inner classes --------------------------------------------------------
+
 
   /**
    * ByteSource which is able to handle gzip compressed resources.
    */
   private static class CompressedByteSource extends ByteSource
   {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param wrapped
-     */
+    private final ByteSource wrapped;
+  
     public CompressedByteSource(ByteSource wrapped)
     {
       this.wrapped = wrapped;
     }
 
-    //~--- methods ------------------------------------------------------------
 
     /**
      * Opens the stream for reading the compressed source.
@@ -257,24 +236,6 @@ public final class UnbundleCommandBuilder
     {
       return new GZIPInputStream(wrapped.openStream());
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final ByteSource wrapped;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** repository */
-  private final Repository repository;
-
-  /** unbundle command implementation */
-  private final UnbundleCommand unbundleCommand;
-
-  /** Field description */
-  private boolean compressed = false;
-
-  private Consumer<RepositoryHookEvent> postEventSink;
 }

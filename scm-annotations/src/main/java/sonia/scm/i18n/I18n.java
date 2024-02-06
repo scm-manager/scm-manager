@@ -24,8 +24,6 @@
     
 package sonia.scm.i18n;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -36,7 +34,6 @@ import java.lang.annotation.Target;
  * The I18n annotation is used by the I18nMessages class to define the
  * resource bundle key.
  *
- * @author Sebastian Sdorra
  * @since 1.37
  */
 @Documented
@@ -46,8 +43,6 @@ public @interface I18n
 {
   /**
    * Returns the key for the resource bundle.
-   *
-   * @return resource bundle key
    */
   String value();
 }

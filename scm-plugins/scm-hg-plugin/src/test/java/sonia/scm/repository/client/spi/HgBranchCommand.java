@@ -31,7 +31,6 @@ import sonia.scm.repository.Branch;
 /**
  * Mercurial implementation of the {@link BranchCommand}.
  * 
- * @author Sebastian Sdorra
  */
 public class HgBranchCommand implements BranchCommand
 {

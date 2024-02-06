@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
@@ -41,20 +40,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 
-//~--- JDK imports ------------------------------------------------------------
-
-/**
- * @param <C>
- * @author Sebastian Sdorra
- */
 public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig>
   extends AbstractRepositoryHandler<C> implements RepositoryDirectoryHandler {
 
   public static final String DEFAULT_VERSION_INFORMATION = "unknown";
 
-  /**
-   * the logger for AbstractSimpleRepositoryHandler
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractSimpleRepositoryHandler.class);
 

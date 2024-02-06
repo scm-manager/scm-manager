@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -32,35 +31,24 @@ import com.google.common.collect.ImmutableSet;
 
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Result of {@link HealthCheck}.
  *
- * @author Sebastian Sdorra
  * @since 1.36
  */
 public final class HealthCheckResult
 {
 
-  /** healthy result */
   private static final HealthCheckResult HEALTHY =
     new HealthCheckResult(ImmutableSet.<HealthCheckFailure>of());
 
-  //~--- constructors ---------------------------------------------------------
+  private final Set<HealthCheckFailure> failures;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param failures
-   */
   private HealthCheckResult(Set<HealthCheckFailure> failures)
   {
     this.failures = failures;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Returns a {@link HealthCheckResult} for a healthy repository.
@@ -99,18 +87,16 @@ public final class HealthCheckResult
     HealthCheckFailure... otherFailures)
   {
     //J-
-    return new HealthCheckResult( 
+    return new HealthCheckResult(
       ImmutableSet.<HealthCheckFailure>builder()
         .add(failure)
         .add(otherFailures)
-        .build() 
+        .build()
     );
     //J+
   }
 
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
   public boolean equals(Object obj)
   {
@@ -129,9 +115,7 @@ public final class HealthCheckResult
     return Objects.equal(failures, other.failures);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
   public int hashCode()
   {
@@ -139,7 +123,7 @@ public final class HealthCheckResult
   }
 
   /**
-   * Merge this {@link HealthCheckResult} with another 
+   * Merge this {@link HealthCheckResult} with another
    * {@link HealthCheckResult}.
    *
    *
@@ -170,19 +154,16 @@ public final class HealthCheckResult
     return merged;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
   public String toString()
   {
     return MoreObjects.toStringHelper(this).add("failures", failures).toString();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns a {@link Set} of {@link HealthCheckFailure}s. The set is empty if 
+   * Returns a {@link Set} of {@link HealthCheckFailure}s. The set is empty if
    * the repository is healthy.
    *
    * @return {@link Set} of {@link HealthCheckFailure}s
@@ -194,8 +175,6 @@ public final class HealthCheckResult
 
   /**
    * Returns {@code true} if the result is healthy.
-   *
-   * @return {@code true} if the result is healthy
    */
   public boolean isHealthy()
   {
@@ -204,16 +183,10 @@ public final class HealthCheckResult
 
   /**
    * Returns {@code true} if the result is unhealthy
-   *
-   * @return {@code true} if the result is unhealthy.
    */
   public boolean isUnhealthy()
   {
     return !failures.isEmpty();
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** set of failures */
-  private final Set<HealthCheckFailure> failures;
 }

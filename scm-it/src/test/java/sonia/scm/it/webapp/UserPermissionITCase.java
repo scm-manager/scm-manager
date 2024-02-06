@@ -24,7 +24,6 @@
 
 package sonia.scm.it.webapp;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import de.otto.edison.hal.HalRepresentation;
 import jakarta.ws.rs.core.Response;
@@ -39,81 +38,47 @@ import sonia.scm.web.VndMediaType;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @RunWith(Parameterized.class)
 public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param credentials
-   */
+ 
   public UserPermissionITCase(Credentials credentials, String ignore_testCaseName)
   {
     super(credentials);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String getBasePath()
   {
     return "users";
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected User getCreateItem()
   {
     return UserTestData.createZaphod();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String getDeletePath()
   {
     return "users/scmadmin";
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String getGetPath()
   {
     return "users/scmadmin";
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected User getModifyItem()
   {
@@ -126,12 +91,7 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
     return user;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String getModifyPath()
   {

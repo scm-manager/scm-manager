@@ -24,7 +24,6 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
@@ -39,8 +38,6 @@ import org.eclipse.jgit.transport.PackParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Set;
 
 /**
@@ -48,23 +45,20 @@ import java.util.Set;
  * pushed with the reveive pack. The listener is used to find out which object
  * is new and which was already pushed.
  *
- * @author Sebastian Sdorra
  */
 public class CollectingPackParserListener implements PackParserListener
 {
 
-  /**
-   * the logger for CollectingPackParserListener
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(CollectingPackParserListener.class);
   private final GitReceiveHook hook;
+
+  private Set<ObjectId> newObjectIds;
 
   public CollectingPackParserListener(GitReceiveHook hook) {
     this.hook = hook;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the listener from the receive pack.
@@ -91,7 +85,6 @@ public class CollectingPackParserListener implements PackParserListener
     return (CollectingPackParserListener) listener;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Applies the listener to the receive pack.
@@ -105,7 +98,6 @@ public class CollectingPackParserListener implements PackParserListener
     pack.setPackParserListener(new CollectingPackParserListener(hook));
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Collects all new object ids.
@@ -134,9 +126,6 @@ public class CollectingPackParserListener implements PackParserListener
 
   /**
    * Prepares the pack parser to retrieve the new object ids.
-   *
-   *
-   * @param parser pack parser
    */
   @Override
   public void before(PackParser parser)
@@ -150,14 +139,9 @@ public class CollectingPackParserListener implements PackParserListener
     hook.afterReceive();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns {@code true} if the object is a new object.
-   *
-   * @param object rev object
-   *
-   * @return {@code true} if the object is new
    */
   public boolean isNew(RevObject object)
   {
@@ -166,7 +150,6 @@ public class CollectingPackParserListener implements PackParserListener
     return newObjectIds.contains(object.getId());
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Throws an {@link IllegalStateException} if the after method was not called.
@@ -180,8 +163,4 @@ public class CollectingPackParserListener implements PackParserListener
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** set of new object ids */
-  private Set<ObjectId> newObjectIds;
 }

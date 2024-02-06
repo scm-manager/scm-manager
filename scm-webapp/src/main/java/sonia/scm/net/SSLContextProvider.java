@@ -38,14 +38,11 @@ import java.security.NoSuchAlgorithmException;
  * Provider for {@link SSLContext}. The provider will first try to retrieve the {@link SSLContext} from an "default"
  * named optional provider, if this fails the provider will return the jvm default context.
  *
- * @author Sebastian Sdorra
  * @version 1.47
  */
 public final class SSLContextProvider implements Provider<SSLContext> {
 
-  /**
-   * the logger for SSLContextProvider
-   */
+ 
   private static final Logger logger = LoggerFactory.getLogger(SSLContextProvider.class);
 
   @Named("default")

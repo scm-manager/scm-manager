@@ -24,30 +24,20 @@
     
 package sonia.scm.i18n;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Locale;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class TestMessages
 {
 
-  /** Field description */
   public Bundle bundle;
 
-  /** Field description */
   @I18n("key_with_annotation")
   public String keyWithAnnotation;
 
-  /** Field description */
   public Locale locale;
 
-  /** Field description */
   public String normalKey;
 
-  /** Field description */
   public Integer someObject;
 }

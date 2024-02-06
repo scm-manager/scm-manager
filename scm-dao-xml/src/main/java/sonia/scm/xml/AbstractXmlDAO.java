@@ -24,7 +24,6 @@
 
 package sonia.scm.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
@@ -35,37 +34,20 @@ import sonia.scm.store.ConfigurationStore;
 
 import java.util.Collection;
 
-//~--- JDK imports ------------------------------------------------------------
-
-/**
- *
- * @author Sebastian Sdorra
- *
- * @param <I>
- * @param <T>
- */
 public abstract class AbstractXmlDAO<I extends ModelObject,
       T extends XmlDatabase<I>> implements GenericDAO<I>
 {
 
-  /** Field description */
   public static final String TYPE = "xml";
 
-  /**
-   * the logger for XmlGroupDAO
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractXmlDAO.class);
 
-  //~--- constructors ---------------------------------------------------------
+  protected final ConfigurationStore<T> store;
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param store
-   */
+  protected T db;
+
   public AbstractXmlDAO(ConfigurationStore<T> store)
   {
     this.store = store;
@@ -77,33 +59,14 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
     }
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   *
-   * @return
-   */
+
   protected abstract I clone(I item);
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected abstract T createNewDatabase();
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param item
-   */
+
   @Override
   public void add(I item)
   {
@@ -119,43 +82,21 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param item
-   *
-   * @return
-   */
+
   @Override
   public boolean contains(I item)
   {
     return contains(item.getId());
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
+
   @Override
   public boolean contains(String id)
   {
     return db.contains(id);
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param item
-   */
+
   @Override
   public void delete(I item)
   {
@@ -171,13 +112,7 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param item
-   */
+
   @Override
   @SuppressWarnings("unchecked")
   public void modify(I item)
@@ -195,17 +130,8 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
+
   @Override
   @SuppressWarnings("unchecked")
   public I get(String id)
@@ -213,12 +139,7 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
     return (I) db.get(id);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Collection<I> getAll()
   {
@@ -226,49 +147,29 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
     return ImmutableList.copyOf(db.values());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Long getCreationTime()
   {
     return db.getCreationTime();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Long getLastModified()
   {
     return db.getLastModified();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String getType()
   {
     return TYPE;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  protected void storeDB()
+   protected void storeDB()
   {
     if (logger.isTraceEnabled())
     {
@@ -279,11 +180,4 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
     store.set(db);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected final ConfigurationStore<T> store;
-
-  /** Field description */
-  protected T db;
 }

@@ -24,8 +24,6 @@
     
 package sonia.scm.template;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.Writer;
 
@@ -33,7 +31,6 @@ import java.io.Writer;
  * The template represents a single template file and is able to render this
  * template.
  *
- * @author Sebastian Sdorra
  * @since 1.19
  */
 public interface Template

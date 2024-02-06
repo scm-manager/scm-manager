@@ -38,7 +38,6 @@ import java.util.regex.Pattern;
 /**
  * Represents a branch in a repository.
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 @XmlRootElement(name = "branch")

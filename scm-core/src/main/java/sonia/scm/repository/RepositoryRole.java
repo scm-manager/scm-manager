@@ -83,14 +83,6 @@ public class RepositoryRole implements ModelObject, PermissionObject, AuditLogEn
     this.type = type;
   }
 
-  /**
-   * Returns true if the {@link RepositoryRole} is the same as the obj argument.
-   *
-   *
-   * @param obj the reference object with which to compare
-   *
-   * @return true if the {@link RepositoryRole} is the same as the obj argument
-   */
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -110,9 +102,6 @@ public class RepositoryRole implements ModelObject, PermissionObject, AuditLogEn
 
   /**
    * Returns the hash code value for the {@link RepositoryRole}.
-   *
-   *
-   * @return the hash code value for the {@link RepositoryRole}
    */
   @Override
   public int hashCode()

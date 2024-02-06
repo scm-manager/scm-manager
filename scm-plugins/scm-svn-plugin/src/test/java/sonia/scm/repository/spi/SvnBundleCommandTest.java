@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.ByteSink;
 import com.google.common.io.Files;
@@ -42,12 +41,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class SvnBundleCommandTest extends AbstractSvnCommandTestBase
 {
 
@@ -67,7 +61,6 @@ public class SvnBundleCommandTest extends AbstractSvnCommandTestBase
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   @Rule
   public TemporaryFolder temp = new TemporaryFolder();
 }

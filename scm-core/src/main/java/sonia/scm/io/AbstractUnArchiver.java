@@ -24,7 +24,6 @@
     
 package sonia.scm.io;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +32,6 @@ import sonia.scm.util.ChecksumUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -42,65 +39,28 @@ import java.io.IOException;
 
 import java.util.Properties;
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public abstract class AbstractUnArchiver implements UnArchiver
 {
 
-  /** Field description */
   public static final String FILE_SOURCE_PROPERTIES = "scm-source.properties";
 
-  /** Field description */
   public static final String PROPERTY_CHECKSUM = "scm.unarchiver.checksum";
 
-  /** Field description */
   public static final String PROPERTY_SOURCEFILE = "scm.unarchiver.source";
 
-  /** the logger for AbstractUnArchiver */
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractUnArchiver.class);
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param archive
-   * @param outputDirectory
-   *
-   * @throws IOException
-   */
   protected abstract void extractArchive(File archive, File outputDirectory)
           throws IOException;
 
-  /**
-   * Method description
-   *
-   *
-   * @param archive
-   * @param outputDirectory
-   *
-   * @throws IOException
-   */
   @Override
   public void extract(File archive, File outputDirectory) throws IOException
   {
     extract(archive, outputDirectory, false);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param archive
-   * @param outputDirectory
-   * @param force
-   *
-   * @throws IOException
-   */
   @Override
   public void extract(File archive, File outputDirectory, boolean force)
           throws IOException
@@ -118,15 +78,6 @@ public abstract class AbstractUnArchiver implements UnArchiver
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param archive
-   * @param outputDirectory
-   *
-   * @throws IOException
-   */
   private void extractAndCreateProperties(File archive, File outputDirectory)
           throws IOException
   {
@@ -137,15 +88,6 @@ public abstract class AbstractUnArchiver implements UnArchiver
     writeProperties(outputDirectory, checksum);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param outputDirectory
-   * @param checksum
-   *
-   * @throws IOException
-   */
   private void writeProperties(File outputDirectory, String checksum)
           throws IOException
   {
@@ -170,16 +112,6 @@ public abstract class AbstractUnArchiver implements UnArchiver
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param sourcePropsFile
-   *
-   * @return
-   */
   private String getChecksumProperty(File sourcePropsFile)
   {
     Properties properties = new Properties();
@@ -202,15 +134,6 @@ public abstract class AbstractUnArchiver implements UnArchiver
     return properties.getProperty(PROPERTY_CHECKSUM);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param archive
-   * @param outputDirectory
-   *
-   * @return
-   */
   private boolean isModified(File archive, File outputDirectory)
   {
     boolean modified = true;

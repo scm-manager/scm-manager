@@ -31,10 +31,7 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @RunWith(MockitoJUnitRunner.class)
 public class AdvancedHttpClientTest {
 

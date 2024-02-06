@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -38,25 +37,17 @@ import java.util.Set;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.10
  */
 @Singleton
 public class RepositoryRequestListenerUtil
 {
 
-  /** the logger for RepositoryRequestListenerUtil */
   private static final Logger logger =
     LoggerFactory.getLogger(RepositoryRequestListenerUtil.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param listenerSet
-   */
+  private Set<RepositoryRequestListener> listenerSet;
+ 
   @Inject
   public RepositoryRequestListenerUtil(
           Set<RepositoryRequestListener> listenerSet)
@@ -64,18 +55,7 @@ public class RepositoryRequestListenerUtil
     this.listenerSet = listenerSet;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param repository
-   *
-   * @return
-   */
   public boolean callListeners(HttpServletRequest request,
                                HttpServletResponse response,
                                Repository repository)
@@ -120,8 +100,4 @@ public class RepositoryRequestListenerUtil
     return process;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Set<RepositoryRequestListener> listenerSet;
 }

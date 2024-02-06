@@ -24,7 +24,6 @@
     
 package sonia.scm.user.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -33,26 +32,16 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 import sonia.scm.xml.AbstractXmlDAO;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Singleton
 public class XmlUserDAO extends AbstractXmlDAO<User, XmlUserDatabase>
         implements UserDAO
 {
 
-  /** Field description */
   public static final String STORE_NAME = "users";
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param storeFactory
-   */
+ 
   @Inject
   public XmlUserDAO(ConfigurationStoreFactory storeFactory)
   {
@@ -62,28 +51,15 @@ public class XmlUserDAO extends AbstractXmlDAO<User, XmlUserDatabase>
       .build());
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @return
-   */
+
   @Override
   protected User clone(User user)
   {
     return user.clone();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected XmlUserDatabase createNewDatabase()
   {

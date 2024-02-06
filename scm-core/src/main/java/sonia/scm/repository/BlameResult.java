@@ -35,7 +35,6 @@ import java.util.List;
 /**
  * Changeset information by line for a given file.
  *
- * @author Sebastian Sdorra
  * @since 1.8
  */
 @EqualsAndHashCode

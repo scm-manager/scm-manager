@@ -38,9 +38,7 @@ import java.io.OutputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
 
   @Inject

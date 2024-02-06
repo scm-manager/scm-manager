@@ -38,7 +38,6 @@ import static sonia.scm.repository.spi.SyncAsyncExecutors.synchronousExecutor;
 /**
  * Unit tests for {@link GitBrowseCommand}.
  *
- * @author Sebastian Sdorra
  */
 public class GitBrowseCommand_RecursiveDirectoryNameTest extends AbstractGitCommandTestBase {
 

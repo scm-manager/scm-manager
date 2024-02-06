@@ -41,12 +41,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Mock

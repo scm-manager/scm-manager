@@ -39,7 +39,6 @@ import java.net.URL;
 /**
  * The pull command pull changes from a other repository.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public final class PullCommandBuilder {
@@ -50,12 +49,6 @@ public final class PullCommandBuilder {
   private final Repository localRepository;
   private final PullCommandRequest request = new PullCommandRequest();
 
-  /**
-   * Constructs a new PullCommandBuilder.
-   *
-   * @param command         pull command implementation
-   * @param localRepository local repository
-   */
   PullCommandBuilder(PullCommand command, Repository localRepository) {
     this.command = command;
     this.localRepository = localRepository;
@@ -103,7 +96,7 @@ public final class PullCommandBuilder {
    * Pull all changes from the given remote url.
    *
    * @param url remote url
-   * @return informations over the executed pull command
+   * @return information over the executed pull command
    * @throws IOException
    * @since 1.43
    */
@@ -125,7 +118,7 @@ public final class PullCommandBuilder {
    * Pull all changes from the given remote repository.
    *
    * @param remoteRepository remote repository
-   * @return informations over the executed pull command
+   * @return information over the executed pull command
    * @throws IOException
    */
   public PullResponse pull(Repository remoteRepository) throws IOException {

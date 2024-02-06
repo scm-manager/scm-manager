@@ -27,7 +27,6 @@ package sonia.scm;
 /**
  * Util class to transform multiple objects.
  *
- * @author Sebastian Sdorra
  *
  * @param <T> type of objects to transform
  * @param <R> result type of the transformation
@@ -43,7 +42,7 @@ public interface TransformFilter<T, R>
    *
    * @param item
    *
-   * @return tranformed object
+   * @return transformed object
    */
   R accept(T item);
 }

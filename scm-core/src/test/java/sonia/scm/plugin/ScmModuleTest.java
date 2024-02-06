@@ -24,7 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Iterables;
 import com.google.common.io.Resources;
@@ -37,18 +36,11 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class ScmModuleTest
 {
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   @SuppressWarnings("unchecked")
   public void testUnmarshall()
   {

@@ -24,50 +24,28 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Predicate;
 
 /**
- *
- * @author Sebastian Sdorra
  * @since 1.17
- *
- * @param <T>
  */
 public class RepositoryCacheKeyPredicate<T extends RepositoryCacheKey>
   implements Predicate<T>
 {
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repositoryId
-   */
+  private final String repositoryId;
+ 
   public RepositoryCacheKeyPredicate(String repositoryId)
   {
     this.repositoryId = repositoryId;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   *
-   * @return
-   */
+
   @Override
   public boolean apply(T item)
   {
     return repositoryId.equals(item.getRepositoryId());
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final String repositoryId;
 }

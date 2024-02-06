@@ -53,21 +53,15 @@ import java.util.Collection;
  * Receives all kinds of events, which affects authorization relevant data and fires an
  * {@link AuthorizationChangedEvent} if authorization data has changed.
  *
- * @author Sebastian Sdorra
  * @since 1.52
  */
 @Singleton
 @EagerSingleton
 public class AuthorizationChangedEventProducer {
 
-  /**
-   * the logger for AuthorizationChangedEventProducer
-   */
+ 
   private static final Logger logger = LoggerFactory.getLogger(AuthorizationChangedEventProducer.class);
 
-  /**
-   * Constructs a new instance.
-   */
   public AuthorizationChangedEventProducer() {
   }
 

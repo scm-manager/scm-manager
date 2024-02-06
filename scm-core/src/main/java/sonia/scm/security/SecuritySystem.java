@@ -30,38 +30,28 @@ import java.util.function.Predicate;
 /**
  * The SecuritySystem manages global permissions.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public interface SecuritySystem {
 
   /**
    * Store a new permission.
-   *
-   * @param permission permission to be stored
    */
   void addPermission(AssignedPermission permission);
 
   /**
    * Delete stored permission.
-   *
-   * @param permission permission to be deleted
    */
   void deletePermission(AssignedPermission permission);
 
   /**
    * Return all available permissions.
-   *
-   * @return available permissions
    */
   Collection<PermissionDescriptor> getAvailablePermissions();
 
   /**
    * Returns all stored permissions which are matched by the given
    * {@link Predicate}.
-   *
-   * @param predicate predicate to filter
-   * @return filtered permissions
    */
   Collection<AssignedPermission> getPermissions(Predicate<AssignedPermission> predicate);
 }

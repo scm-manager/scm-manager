@@ -24,15 +24,11 @@
 
 package sonia.scm.repository.spi.javahg;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.javahg.MercurialExtension;
 import sonia.scm.repository.HgExtensions;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class HgFileviewExtension extends MercurialExtension {
 
   static final String NAME = "fileview";

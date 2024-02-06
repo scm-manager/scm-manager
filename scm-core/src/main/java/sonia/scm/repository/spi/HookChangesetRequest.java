@@ -31,7 +31,6 @@ import sonia.scm.repository.Changeset;
  * this object has no functionality, but it is used to be prepared for further 
  * functions.
  *
- * @author Sebastian Sdorra
  * @since 1.33
  */
 public final class HookChangesetRequest {}

@@ -38,7 +38,6 @@ import static java.util.Optional.ofNullable;
 /**
  * Jwt implementation of {@link AccessToken}.
  * 
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class JwtAccessToken implements AccessToken {

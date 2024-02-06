@@ -26,23 +26,13 @@ package sonia.scm.plugin;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public class PluginCircularDependencyException extends PluginException
 {
 
-  /** Field description */
   private static final long serialVersionUID = -4163410666933840934L;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
   public PluginCircularDependencyException(String message)
   {
     super(message);

@@ -33,25 +33,16 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public abstract class RepositoryServiceProvider implements Closeable
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public abstract Set<Command> getSupportedCommands();
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * The default implementation of this method does nothing. If you need to
@@ -68,58 +59,32 @@ public abstract class RepositoryServiceProvider implements Closeable
     // should be implmentented from a service provider
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public BlameCommand getBlameCommand()
   {
     throw new CommandNotSupportedException(Command.BLAME);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public BranchesCommand getBranchesCommand()
   {
     throw new CommandNotSupportedException(Command.BRANCHES);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public BranchCommand getBranchCommand()
   {
     throw new CommandNotSupportedException(Command.BRANCH);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public BrowseCommand getBrowseCommand()
   {
     throw new CommandNotSupportedException(Command.BROWSE);
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
-   *
    * @since 1.43
    */
   public BundleCommand getBundleCommand()
@@ -127,23 +92,12 @@ public abstract class RepositoryServiceProvider implements Closeable
     throw new CommandNotSupportedException(Command.BUNDLE);
   }
 
-  /**
-   *  Method description
-   *
-   *
-   *  @return
-   */
   public CatCommand getCatCommand()
   {
     throw new CommandNotSupportedException(Command.CAT);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public DiffCommand getDiffCommand()
   {
     throw new CommandNotSupportedException(Command.DIFF);
@@ -155,10 +109,6 @@ public abstract class RepositoryServiceProvider implements Closeable
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
    * @since 1.31
    */
   public IncomingCommand getIncomingCommand()
@@ -166,12 +116,7 @@ public abstract class RepositoryServiceProvider implements Closeable
     throw new CommandNotSupportedException(Command.INCOMING);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public LogCommand getLogCommand()
   {
     throw new CommandNotSupportedException(Command.LOG);
@@ -188,10 +133,6 @@ public abstract class RepositoryServiceProvider implements Closeable
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
    * @since 1.31
    */
   public OutgoingCommand getOutgoingCommand()
@@ -200,10 +141,6 @@ public abstract class RepositoryServiceProvider implements Closeable
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
    * @since 1.31
    */
   public PullCommand getPullCommand()
@@ -212,10 +149,6 @@ public abstract class RepositoryServiceProvider implements Closeable
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
    * @since 1.31
    */
   public PushCommand getPushCommand()
@@ -223,23 +156,13 @@ public abstract class RepositoryServiceProvider implements Closeable
     throw new CommandNotSupportedException(Command.PUSH);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Set<Feature> getSupportedFeatures()
   {
     return Collections.emptySet();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public TagsCommand getTagsCommand()
   {
     throw new CommandNotSupportedException(Command.TAGS);
@@ -255,11 +178,6 @@ public abstract class RepositoryServiceProvider implements Closeable
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
-   *
    * @since 1.43
    */
   public UnbundleCommand getUnbundleCommand()

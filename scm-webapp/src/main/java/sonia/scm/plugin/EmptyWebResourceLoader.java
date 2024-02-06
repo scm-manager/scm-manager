@@ -24,15 +24,12 @@
     
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.net.URL;
 
 /**
  * This {@link WebResourceLoader} is used, if the plugin does not contain a
  * webapp directory.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public class EmptyWebResourceLoader implements WebResourceLoader
@@ -44,7 +41,6 @@ public class EmptyWebResourceLoader implements WebResourceLoader
    *
    * @param path resource path
    *
-   * @return {@code null}
    */
   @Override
   public URL getResource(String path)

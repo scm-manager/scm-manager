@@ -24,7 +24,6 @@
     
 package sonia.scm.template;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Maps;
 import jakarta.servlet.ServletContext;
@@ -46,61 +45,27 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public abstract class TemplateEngineTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   *
-   * @return
-   */
+
   public abstract TemplateEngine createEngine(ServletContext context);
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public abstract String getDefectTemplateResource();
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public abstract String getTemplateResource();
 
   public abstract String getTemplateResourceWithGermanTranslation();
 
-  /**
-   * Method description
-   *
-   *
-   * @param resource
-   *
-   * @return
-   */
+
   protected abstract InputStream getResource(String resource);
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test(expected = IOException.class)
   public void testGetDefectTemplate() throws IOException
   {
@@ -110,12 +75,7 @@ public abstract class TemplateEngineTestBase
     engine.getTemplate(getDefectTemplateResource());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testGetTemplateNotFound() throws IOException
   {
@@ -126,12 +86,7 @@ public abstract class TemplateEngineTestBase
     assertNull(template);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testGetTemplateFromClasspath() throws IOException
   {
@@ -168,12 +123,7 @@ public abstract class TemplateEngineTestBase
     Assertions.assertThat(writer.toString()).contains("English");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testGetTemplateFromReader() throws IOException
   {
@@ -207,12 +157,7 @@ public abstract class TemplateEngineTestBase
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testGetTemplateFromServletContext() throws IOException
   {

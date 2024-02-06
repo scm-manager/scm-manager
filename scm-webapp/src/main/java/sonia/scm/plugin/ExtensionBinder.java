@@ -35,9 +35,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.EagerSingleton;
 import sonia.scm.util.Util;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @SuppressWarnings({"unchecked", "rawtypes"})
 public final class ExtensionBinder {
 

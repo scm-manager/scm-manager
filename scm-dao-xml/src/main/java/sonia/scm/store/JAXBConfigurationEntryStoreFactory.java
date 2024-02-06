@@ -31,9 +31,7 @@ import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.KeyGenerator;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @Singleton
 public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
   implements ConfigurationEntryStoreFactory {

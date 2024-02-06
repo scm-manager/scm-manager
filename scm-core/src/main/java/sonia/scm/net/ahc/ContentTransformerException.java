@@ -28,36 +28,20 @@ package sonia.scm.net.ahc;
  * A {@link ContentTransformerException} is thrown if an error occurs during
  * content transformation by an {@link ContentTransformer}.
  *
- * @author Sebastian Sdorra
  *
  * @since 1.46
  */
 public class ContentTransformerException extends RuntimeException
 {
 
-  /** Field description */
   private static final long serialVersionUID = 367333504151208563L;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs a new {@link ContentTransformerException}.
-   *
-   *
-   * @param message exception message
-   */
   public ContentTransformerException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs a new {@link ContentTransformerException}.
-   *
-   *
-   * @param message exception message
-   * @param cause exception cause
-   */
   public ContentTransformerException(String message, Throwable cause)
   {
     super(message, cause);

@@ -27,7 +27,6 @@ package sonia.scm.security;
 /**
  * Interface for permission objects.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public interface PermissionObject
@@ -35,17 +34,11 @@ public interface PermissionObject
 
   /**
    * Returns the name of the user or group which the permission is assigned.
-   *
-   *
-   * @return name of user or group
    */
   public String getName();
 
   /**
    * Returns the id of the stored permission object.
-   *
-   *
-   * @return id of permission
    */
   public boolean isGroupPermission();
 }

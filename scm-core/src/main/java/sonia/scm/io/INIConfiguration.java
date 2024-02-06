@@ -24,8 +24,6 @@
 
 package sonia.scm.io;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import com.google.common.collect.ImmutableList;
 import jakarta.annotation.Nullable;
 
@@ -37,7 +35,6 @@ import java.util.Map;
  * Configuration in the ini format.
  * The format consists of sections, keys and values.
  *
- * @author Sebastian Sdorra
  * @see <a href="https://en.wikipedia.org/wiki/INI_file">Wikipedia article</a>
  */
 public class INIConfiguration {
@@ -46,7 +43,6 @@ public class INIConfiguration {
 
   /**
    * Add a new section to the configuration.
-   * @param section section
    */
   public void addSection(INISection section) {
     sectionMap.put(section.getName(), section);
@@ -54,7 +50,6 @@ public class INIConfiguration {
 
   /**
    * Remove an existing section from the configuration.
-   * @param name name of the section
    */
   public void removeSection(String name) {
     sectionMap.remove(name);
@@ -72,7 +67,6 @@ public class INIConfiguration {
 
   /**
    * Returns all sections of the configuration.
-   * @return all sections
    */
   public Collection<INISection> getSections() {
     return ImmutableList.copyOf(sectionMap.values());

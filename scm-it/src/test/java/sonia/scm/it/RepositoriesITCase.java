@@ -24,7 +24,6 @@
 
 package sonia.scm.it;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;

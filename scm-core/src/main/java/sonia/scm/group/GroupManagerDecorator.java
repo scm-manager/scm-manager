@@ -24,7 +24,6 @@
 
 package sonia.scm.group;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.ManagerDecorator;
 import sonia.scm.search.SearchRequest;
@@ -32,54 +31,31 @@ import sonia.scm.search.SearchRequest;
 import java.util.Collection;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Decorator for {@link GroupManager}.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 public class GroupManagerDecorator
   extends ManagerDecorator<Group> implements GroupManager
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param decorated
-   */
   public GroupManagerDecorator(GroupManager decorated)
   {
     super(decorated);
     this.decorated = decorated;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param searchRequest
-   *
-   * @return
-   */
   @Override
   public Collection<Group> search(SearchRequest searchRequest)
   {
     return decorated.search(searchRequest);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the decorated {@link GroupManager}.
-   *
-   *
-   * @return decorated {@link GroupManager}
-   *
    * @since 1.34
    */
   public GroupManager getDecorated()
@@ -87,14 +63,6 @@ public class GroupManagerDecorator
     return decorated;
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param member
-   *
-   * @return
-   */
   @Override
   public Collection<Group> getGroupsForMember(String member)
   {
@@ -106,6 +74,5 @@ public class GroupManagerDecorator
     return decorated.getAllNames();
   }
 
-  /** Field description */
   private final GroupManager decorated;
 }

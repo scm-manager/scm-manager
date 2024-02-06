@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
 import org.slf4j.Logger;
@@ -40,8 +39,6 @@ import sonia.scm.repository.spi.TagsCommand;
 import java.io.IOException;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * The tags command list all repository tags.<br />
  * <br />
@@ -53,22 +50,25 @@ import java.util.List;
  * TagsCommandBuilder tagsCommand = repositoryService.getTagsCommand();
  * Tags tags = tagsCommand.getTags();
  * </code></pre>
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public final class TagsCommandBuilder
 {
 
-  /** name of the cache */
   static final String CACHE_NAME = "sonia.cache.cmd.tags";
 
-  /**
-   * the logger for TagsCommandBuilder
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(TagsCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  /** cache for changesets */
+  private final Cache<CacheKey, Tags> cache;
+
+  private final TagsCommand command;
+
+  private final Repository repository;
+
+  private boolean disableCache = false;
 
   /**
    * Constructs a new {@link TagsCommandBuilder}, this constructor should
@@ -86,15 +86,9 @@ public final class TagsCommandBuilder
     this.repository = repository;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns all tags from the repository.
-   *
-   *
-   * @return tags from the repository
-   *
-   * @throws IOException
    */
   public Tags getTags() throws IOException {
     Tags tags;
@@ -139,12 +133,11 @@ public final class TagsCommandBuilder
     return tags;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Disables the cache for tags. This means that every {@link Tag}
    * is directly retrieved from the {@link Repository}. <b>Note: </b> Disabling
-   * the cache cost a lot of performance and could be much more slower.
+   * the cache cost a lot of performance and could be much slower.
    *
    *
    * @param disableCache true to disable the cache
@@ -158,16 +151,8 @@ public final class TagsCommandBuilder
     return this;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   private Tags getTagsFromCommand() throws IOException
   {
     List<Tag> tagList = command.getTags();
@@ -175,39 +160,18 @@ public final class TagsCommandBuilder
     return new Tags(tagList);
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 12/07/05
-   * @author         Enter your name here...
-   */
+
+
   static class CacheKey implements RepositoryCacheKey
   {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param repository
-     */
+    private final String repositoryId;
+  
     public CacheKey(Repository repository)
     {
       this.repositoryId = repository.getId();
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param obj
-     *
-     * @return
-     */
     @Override
     public boolean equals(Object obj)
     {
@@ -226,50 +190,20 @@ public final class TagsCommandBuilder
       return Objects.equal(repositoryId, other.repositoryId);
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     @Override
     public int hashCode()
     {
       return Objects.hashCode(repositoryId);
     }
 
-    //~--- get methods --------------------------------------------------------
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
     @Override
     public String getRepositoryId()
     {
       return repositoryId;
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** repository id */
-    private final String repositoryId;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** cache for changesets */
-  private final Cache<CacheKey, Tags> cache;
-
-  /** command implementation */
-  private final TagsCommand command;
-
-  /** repository */
-  private final Repository repository;
-
-  /** disable cache */
-  private boolean disableCache = false;
 }

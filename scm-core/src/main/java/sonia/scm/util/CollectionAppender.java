@@ -24,26 +24,12 @@
     
 package sonia.scm.util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Collection;
 
 /**
- *
- * @author Sebastian Sdorra
- *
- * @param <T>
  * @since 1.4
  */
 public interface CollectionAppender<T>
 {
-
-  /**
-   * Method description
-   *
-   *
-   * @param collection
-   * @param item
-   */
   public void append(Collection<T> collection, T item);
 }

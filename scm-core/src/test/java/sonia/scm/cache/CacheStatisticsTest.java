@@ -24,24 +24,16 @@
     
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class CacheStatisticsTest
 {
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testCounters()
   {
     CacheStatistics stats = new CacheStatistics("", 12, 3);
@@ -51,11 +43,7 @@ public class CacheStatisticsTest
     assertEquals(15, stats.getRequestCount());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testRates()
   {
     CacheStatistics stats = new CacheStatistics("", 12, 3);

@@ -63,7 +63,6 @@ import java.util.stream.Stream;
  * after work is finished. For closing the connection to the repository use the
  * {@link #close()} method.
  *
- * @author Sebastian Sdorra
  * @apiviz.uses sonia.scm.repository.Feature
  * @apiviz.uses sonia.scm.repository.api.Command
  * @apiviz.uses sonia.scm.repository.api.BlameCommandBuilder

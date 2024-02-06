@@ -24,102 +24,38 @@
     
 package sonia.scm.xml;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Collection;
 
-/**
- *
- * @author Sebastian Sdorra
- *
- * @param <T>
- */
+
 public interface XmlDatabase<T>
 {
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param item
-   */
+
   public void add(T item);
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
+
   public boolean contains(String id);
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
+
   public T remove(String id);
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public Collection<T> values();
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
+
   public T get(String id);
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public long getCreationTime();
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public long getLastModified();
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param creationTime
-   */
+
   public void setCreationTime(long creationTime);
 
-  /**
-   * Method description
-   *
-   *
-   * @param lastModified
-   */
+
   public void setLastModified(long lastModified);
 }

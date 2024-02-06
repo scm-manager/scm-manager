@@ -24,11 +24,8 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.Serializable;
 
@@ -37,30 +34,18 @@ import java.util.Comparator;
 /**
  * Compare {@link FileObject}'s by its name.
  *
- * @author Sebastian Sdorra
  */
 public class FileObjectNameComparator
   implements Comparator<FileObject>, Serializable
 {
 
-  /** Field description */
   public static final FileObjectNameComparator instance =
     new FileObjectNameComparator();
 
-  /** Field description */
   private static final long serialVersionUID = -2133224334287527874L;
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param o1
-   * @param o2
-   *
-   * @return
-   */
+
   @Override
   public int compare(FileObject o1, FileObject o2)
   {

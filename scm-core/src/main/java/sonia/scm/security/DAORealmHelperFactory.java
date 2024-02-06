@@ -31,7 +31,6 @@ import sonia.scm.user.UserDAO;
 /**
  * Factory to create {@link DAORealmHelper} instances.
  * 
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class DAORealmHelperFactory {
@@ -40,12 +39,6 @@ public final class DAORealmHelperFactory {
   private final UserDAO userDAO; 
   private final CacheManager cacheManager;
 
-  /**
-   * Constructs a new instance.
-   * @param loginAttemptHandler login attempt handler
-   * @param userDAO user dao
-   * @param cacheManager
-   */
   @Inject
   public DAORealmHelperFactory(LoginAttemptHandler loginAttemptHandler, UserDAO userDAO, CacheManager cacheManager) {
     this.loginAttemptHandler = loginAttemptHandler;

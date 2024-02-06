@@ -30,7 +30,6 @@ import sonia.scm.ModificationHandlerEvent;
 /**
  * Event which is fired whenever a group is modified.
  * 
- * @author Sebastian Sdorra
  * @since 1.48
  */
 public class GroupModificationEvent extends GroupEvent implements ModificationHandlerEvent<Group>

@@ -24,45 +24,22 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.tmatesoft.svn.core.SVNErrorCode;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class ScmSvnErrorCode extends SVNErrorCode
 {
 
-  /** Field description */
   private static final long serialVersionUID = -6864996390796610410L;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param category
-   * @param index
-   * @param description
-   */
   protected ScmSvnErrorCode(int category, int index, String description)
   {
     super(category, index, description);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param description
-   *
-   * @return
-   */
+
   public static ScmSvnErrorCode authzNotEnoughPrivileges(String description)
   {
     return new ScmSvnErrorCode(AUTHZ_CATEGORY, 4, description);

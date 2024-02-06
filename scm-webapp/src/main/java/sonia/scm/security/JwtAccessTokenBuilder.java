@@ -48,14 +48,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Jwt implementation of {@link AccessTokenBuilder}.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
-  /**
-   * the logger for JwtAccessTokenBuilder
-   */
+ 
   private static final Logger LOG = LoggerFactory.getLogger(JwtAccessTokenBuilder.class);
 
   @VisibleForTesting

@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
 
 /**
  * Read configuration in ini format from files and streams.
- * @author Sebastian Sdorra
  */
 public class INIConfigurationReader extends AbstractReader<INIConfiguration> {
 

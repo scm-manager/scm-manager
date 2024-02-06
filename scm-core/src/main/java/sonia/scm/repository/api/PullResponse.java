@@ -32,7 +32,6 @@ import lombok.Value;
  * {@link PullCommandBuilder#pull(String)} and
  * contains information for the executed pull command.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public final class PullResponse extends AbstractPushOrPullResponse
@@ -40,30 +39,15 @@ public final class PullResponse extends AbstractPushOrPullResponse
 
   private final LfsCount lfsCount;
 
-  /**
-   * Constructs a new PullResponse.
-   *
-   */
   public PullResponse() {
     this.lfsCount = new LfsCount(0, 0);
   }
 
-  /**
-   * Constructs a new PullResponse.
-   *
-   * @param changesetCount count of pulled changesets
-   */
   public PullResponse(long changesetCount)
   {
     this(changesetCount, new LfsCount(0, 0));
   }
 
-  /**
-   * Constructs a new PullResponse.
-   *
-   * @param changesetCount count of pulled changesets
-   * @param lfsCount Object for the count of potentially loaded lfs files
-   */
   public PullResponse(long changesetCount, LfsCount lfsCount) {
     super(changesetCount);
     this.lfsCount = lfsCount;

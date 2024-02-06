@@ -45,14 +45,8 @@ public class Person implements Validateable, Serializable {
 
   private static final long serialVersionUID = -4675080650527063196L;
 
-  /**
-   * mail address of the person
-   */
   private String mail;
 
-  /**
-   * name of the person
-   */
   private String name;
 
   public Person() {
@@ -98,8 +92,6 @@ public class Person implements Validateable, Serializable {
   /**
    * Returns a string representation of the {@link Person} object,
    * in the format "name &gt;mail&lt;".
-   *
-   * @return string representation of {@link Person} object
    */
   @Override
   public String toString() {
@@ -112,12 +104,8 @@ public class Person implements Validateable, Serializable {
     return out;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Returns the mail address of the changeset author.
-   *
-   * @return
    */
   public String getMail() {
     return mail;
@@ -125,8 +113,6 @@ public class Person implements Validateable, Serializable {
 
   /**
    * Returns the name of the changeset author.
-   *
-   * @return name of the changeset person
    */
   public String getName() {
     return name;
@@ -135,8 +121,6 @@ public class Person implements Validateable, Serializable {
 
   /**
    * Returns true if the person is valid.
-   *
-   * @return true if the person is valid
    */
   @Override
   public boolean isValid() {

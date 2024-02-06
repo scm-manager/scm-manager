@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  * Defines a custom resource bundle for the CLI command
  *
  * We need to use this workaround instead the picocli way because we cannot ensure that the resource bundles can be found by the classloader.
- * Currently there is no solution for picocli to chose which classloader should be used to load command-related resource bundle.
+ * Currently, there is no solution for picocli to chose which classloader should be used to load command-related resource bundle.
  *
  * @since 2.35.0
  */

@@ -24,7 +24,6 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Sets;
@@ -53,19 +52,12 @@ import static org.mockito.Mockito.when;
 public class UserAgentParserTest
 {
 
-  /** Field description */
   private static final String UA_1 = "mozilla/5.0";
 
-  /** Field description */
   private static final String UA_2 = "wget/1.5.3";
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Before
+   @Before
   public void prepare()
   {
     Set<UserAgentProvider> providers = Sets.newHashSet(provider1, provider2);
@@ -73,11 +65,7 @@ public class UserAgentParserTest
     parser = new UserAgentParser(providers, cacheManager);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testDefaultValues()
   {
     UserAgent ua = parser.parse(UA_1);
@@ -86,11 +74,7 @@ public class UserAgentParserTest
     assertFalse(ua.isBrowser());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testParse()
   {
     UserAgent ua = UserAgent.other("UA1").build();
@@ -105,11 +89,7 @@ public class UserAgentParserTest
     assertEquals(ua2, parser.parse(UA_2));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testParseHttpServletRequest()
   {
     when(request.getHeader(HttpUtil.HEADER_USERAGENT)).thenReturn(UA_2);
@@ -120,22 +100,14 @@ public class UserAgentParserTest
     assertEquals(ua, parser.parse(request));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testParseNotFound()
   {
     assertEquals(UserAgentParser.UNKNOWN, parser.parse(UA_1));
     assertEquals(UserAgentParser.UNKNOWN, parser.parse(UA_2));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testParseWithCache()
   {
     UserAgent ua = UserAgent.other("UA").build();
@@ -147,26 +119,20 @@ public class UserAgentParserTest
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   @Mock
   private Cache cache;
 
-  /** Field description */
   @Mock
   private CacheManager cacheManager;
 
-  /** Field description */
   private UserAgentParser parser;
 
-  /** Field description */
   @Mock
   private UserAgentProvider provider1;
 
-  /** Field description */
   @Mock
   private UserAgentProvider provider2;
 
-  /** Field description */
   @Mock
   private HttpServletRequest request;
 }

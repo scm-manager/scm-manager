@@ -24,7 +24,6 @@
 
 package sonia.scm.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import jakarta.servlet.FilterChain;
@@ -42,10 +41,7 @@ import sonia.scm.web.filter.HttpFilter;
 
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Priority(Filters.PRIORITY_POST_AUTHENTICATION)
 @WebElement(Filters.PATTERN_ALL)
 public class MDCFilter extends HttpFilter
@@ -67,19 +63,8 @@ public class MDCFilter extends HttpFilter
   @VisibleForTesting
   static final String MDC_USERNAME = "username";
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param chain
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
+
   @Override
   protected void doFilter(HttpServletRequest request,
     HttpServletResponse response, FilterChain chain)
@@ -107,14 +92,8 @@ public class MDCFilter extends HttpFilter
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   private String getUsername()
   {
     Subject subject = SecurityUtils.getSubject();

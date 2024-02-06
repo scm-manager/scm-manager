@@ -24,7 +24,6 @@
     
 package sonia.scm.template;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.google.common.base.Charsets;
@@ -37,46 +36,26 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class ServletMustacheFactory extends DefaultMustacheFactory
 {
 
-  /**
-   * the logger for ServletMustacheFactory
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(ServletMustacheFactory.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private ServletContext servletContext;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param servletContext
-   * @param classLoader
-   */
+  private ClassLoader classLoader;
+ 
   public ServletMustacheFactory(ServletContext servletContext, ClassLoader classLoader)
   {
     this.servletContext = servletContext;
     this.classLoader = classLoader;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param resourceName
-   *
-   * @return
-   */
+
   @Override
   public Reader getReader(String resourceName)
   {
@@ -127,10 +106,4 @@ public class ServletMustacheFactory extends DefaultMustacheFactory
     return reader;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private ServletContext servletContext;
-
-  private ClassLoader classLoader;
 }

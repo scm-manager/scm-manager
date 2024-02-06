@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
@@ -44,29 +43,20 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import java.io.File;
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @Singleton
 @Extension
 public class GitRepositoryHandler
   extends AbstractSimpleRepositoryHandler<GitConfig>
 {
 
-  /** Field description */
   public static final String DIRECTORY_REFS = "refs";
 
-  /** Field description */
   public static final String RESOURCE_VERSION =
     "sonia/scm/version/scm-git-plugin";
 
-  /** Field description */
   public static final String TYPE_DISPLAYNAME = "Git";
 
-  /** Field description */
   public static final String TYPE_NAME = "git";
 
 
@@ -74,7 +64,6 @@ public class GitRepositoryHandler
 
   private static final Logger logger = LoggerFactory.getLogger(GitRepositoryHandler.class);
 
-  /** Field description */
   public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME,
                                     TYPE_DISPLAYNAME,
                                     GitRepositoryServiceProvider.COMMANDS);
@@ -87,7 +76,6 @@ public class GitRepositoryHandler
 
   private Task task;
 
-  //~--- constructors ---------------------------------------------------------
 
   @Inject
   public GitRepositoryHandler(ConfigurationStoreFactory storeFactory,
@@ -101,7 +89,6 @@ public class GitRepositoryHandler
     this.workingCopyFactory = workingCopyFactory;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   public void init(SCMContextProvider context)
@@ -133,36 +120,21 @@ public class GitRepositoryHandler
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public ImportHandler getImportHandler()
   {
     return new GitImportHandler(this);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public RepositoryType getType()
   {
     return TYPE;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String getVersionInformation()
   {
@@ -177,7 +149,6 @@ public class GitRepositoryHandler
     return new GitConfigHelper().getRepositoryId(gitConfig);
   }
 
-  //~--- methods --------------------------------------------------------------
 
   @Override
   protected void create(Repository repository, File directory) throws IOException {
@@ -196,26 +167,15 @@ public class GitRepositoryHandler
       .build();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected GitConfig createInitialConfig()
   {
     return new GitConfig();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected Class<GitConfig> getConfigClass()
   {

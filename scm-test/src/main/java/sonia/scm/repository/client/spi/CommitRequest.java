@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.client.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -32,20 +31,14 @@ import sonia.scm.repository.Person;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public final class CommitRequest
 {
+  private Person author;
 
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
+  private String message;
+
   @Override
   public boolean equals(Object obj)
   {
@@ -65,34 +58,20 @@ public final class CommitRequest
       && Objects.equal(message, other.message);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public int hashCode()
   {
     return Objects.hashCode(author, message);
   }
 
-  /**
-   * Method description
-   *
-   */
-  public void reset()
+   public void reset()
   {
     this.author = null;
     this.message = null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String toString()
   {
@@ -104,59 +83,30 @@ public final class CommitRequest
     //J+
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param author
-   */
+
   public void setAuthor(Person author)
   {
     this.author = author;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param message
-   */
+
   public void setMessage(String message)
   {
     this.message = message;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   Person getAuthor()
   {
     return author;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   String getMessage()
   {
     return message;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Person author;
-
-  /** Field description */
-  private String message;
 }

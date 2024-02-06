@@ -27,48 +27,24 @@ package sonia.scm.version;
 /**
  * The VersionParseException is thrown if a version could not be parsed.
  *
- * @author Sebastian Sdorra
- * 
+ *
  * @since 2.0.0
  */
 public class VersionParseException extends RuntimeException
 {
 
-  /**
-   * Constructs a new VersionParseException.
-   *
-   */
   public VersionParseException() {}
 
-  /**
-   * Constructs a new VersionParseException.
-   *
-   *
-   * @param message message of the exception
-   */
   public VersionParseException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs a new VersionParseException.
-   *
-   *
-   * @param cause cause of the exception
-   */
   public VersionParseException(Throwable cause)
   {
     super(cause);
   }
 
-  /**
-   * Constructs a new VersionParseException.
-   *
-   *
-   * @param message message of the exception
-   * @param cause cause of the exception
-   */
   public VersionParseException(String message, Throwable cause)
   {
     super(message, cause);

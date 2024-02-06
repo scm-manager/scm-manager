@@ -173,7 +173,7 @@ public final class HttpConnectionOptions {
 
   /**
    * Add a request property that will be converted to headers in the request.
-   * @param key The property (aka header) name (eg. "User-Agent").
+   * @param key The property (aka header) name (e.g. "User-Agent").
    * @param value The value of the property.
    * @return {@code this}
    */

@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
@@ -40,27 +39,18 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
 
   private final GitTagConverter gitTagConverter;
 
-  /**
-   * Constructs ...
-   *
-   * @param context
-   */
+
   @Inject
   public GitTagsCommand(@Assisted GitContext context, GitTagConverter gitTagConverter) {
     super(context);
     this.gitTagConverter = gitTagConverter;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   public List<Tag> getTags() throws IOException {

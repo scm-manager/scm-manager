@@ -27,7 +27,6 @@ package sonia.scm.store;
 /**
  * In memory store implementation of {@link ConfigurationStore}.
  *
- * @author Sebastian Sdorra
  *
  * @param <T> type of stored object
  *

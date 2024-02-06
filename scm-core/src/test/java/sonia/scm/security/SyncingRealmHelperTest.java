@@ -24,7 +24,6 @@
     
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
@@ -57,12 +56,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Unit tests for {@link SyncingRealmHelper}.
  *
- * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SyncingRealmHelperTest {

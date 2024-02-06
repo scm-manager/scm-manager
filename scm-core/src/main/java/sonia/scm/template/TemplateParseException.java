@@ -24,60 +24,32 @@
     
 package sonia.scm.template;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
 /**
  * This exception is thrown, if an error during the template parse
  * phase occurs.
  *
- * @author Sebastian Sdorra
  * @since 1.19
  */
 public class TemplateParseException extends IOException
 {
 
-  /** Field description */
   private static final long serialVersionUID = 3583405534141707032L;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   public TemplateParseException() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
   public TemplateParseException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
   public TemplateParseException(Throwable cause)
   {
     super(cause);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
   public TemplateParseException(String message, Throwable cause)
   {
     super(message, cause);

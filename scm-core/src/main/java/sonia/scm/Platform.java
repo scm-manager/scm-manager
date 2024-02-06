@@ -21,32 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Locale;
 
 /**
  * Represents the platform on which the SCM manager running.
  *
- * @author Sebastian Sdorra
  */
 public class Platform
 {
 
+  private String arch;
+
+  private String name;
+
+  private PlatformType type;
+
+  private boolean x64;
   /**
    * Constructs a {@link Platform} object
    *
    *
-   * @param osName - name of the operation system
+   * @param osName - name of the operating system
    * @param archModel - name of the host architecture model
-   * @param osArch - name of the operation system architecture
+   * @param osArch - name of the operating system architecture
    */
   public Platform(String osName, String archModel, String osArch)
   {
@@ -67,13 +70,9 @@ public class Platform
     type = PlatformType.createPlatformType(osName);
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
-   * Returns true if the operating system is a 32 bit operating system.
-   *
-   *
-   * @return true if the operating system is a 32 bit operating system
+   * Returns true if the operating system is a 32-bit operating system.
    */
   public boolean is32Bit()
   {
@@ -82,22 +81,15 @@ public class Platform
 
   /**
    * Returns true if the operating system is a 64 a bit operating system.
-   *
-   *
-   * @return true if the operating system is a 64 a bit operating system
    */
   public boolean is64Bit()
   {
     return x64;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the architecture of the platform.
-   *
-   *
-   * @return the architecture of the platform
    */
   public String getArch()
   {
@@ -106,9 +98,6 @@ public class Platform
 
   /**
    * Returns the name of the platform.
-   *
-   *
-   * @return name of the platform
    */
   public String getName()
   {
@@ -117,9 +106,6 @@ public class Platform
 
   /**
    * Returns the type of the platform.
-   *
-   *
-   * @return type of the platform
    */
   public PlatformType getType()
   {
@@ -128,9 +114,6 @@ public class Platform
 
   /**
    * Returns true if the operating system is a FreeBSD.
-   *
-   *
-   * @return true if the operating system is a FreeBSD
    */
   public boolean isFreeBSD()
   {
@@ -139,9 +122,6 @@ public class Platform
 
   /**
    * Returns true if the operating system is a Linux.
-   *
-   *
-   * @return true if the operating system is a Linux
    */
   public boolean isLinux()
   {
@@ -150,9 +130,6 @@ public class Platform
 
   /**
    * Returns true if the operating system is a Mac OS.
-   *
-   *
-   * @return true if the operating system is a Mac OS
    */
   public boolean isMac()
   {
@@ -161,9 +138,6 @@ public class Platform
 
   /**
    * Returns true if the operating system is a OpenBSD.
-   *
-   *
-   * @return true if the operating system is a OpenBSD
    */
   public boolean isOpenBSD()
   {
@@ -172,9 +146,6 @@ public class Platform
 
   /**
    * Returns true if the operating system has posix support.
-   *
-   *
-   * @return true if the operating system has posix support
    */
   public boolean isPosix()
   {
@@ -183,9 +154,6 @@ public class Platform
 
   /**
    * Returns true if the operating system is a Solaris.
-   *
-   *
-   * @return true if the operating system is a Solaris
    */
   public boolean isSolaris()
   {
@@ -194,9 +162,6 @@ public class Platform
 
   /**
    * Returns true if the operating system is a Unix system.
-   *
-   *
-   * @return true if the operating system is a Unix system
    */
   public boolean isUnix()
   {
@@ -205,26 +170,10 @@ public class Platform
 
   /**
    * Returns true if the operating system is a Windows.
-   *
-   *
-   * @return true if the operating system is a Windows
    */
   public boolean isWindows()
   {
     return PlatformType.WINDOWS == type;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String arch;
-
-  /** Field description */
-  private String name;
-
-  /** Field description */
-  private PlatformType type;
-
-  /** Field description */
-  private boolean x64;
 }

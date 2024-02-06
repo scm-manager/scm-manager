@@ -28,9 +28,6 @@ import lombok.Value;
 import sonia.scm.plugin.WebElementDescriptor;
 
 /**
- *
- * @author Sebastian Sdorra
- * @param <T>
  * @since 2.0.0
  */
 @Value

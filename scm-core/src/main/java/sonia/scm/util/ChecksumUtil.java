@@ -24,8 +24,6 @@
     
 package sonia.scm.util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,36 +33,16 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class ChecksumUtil
 {
 
-  /** Field description */
   private static final String DIGEST_TYPE = "SHA-1";
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private ChecksumUtil() {}
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param in
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   public static String createChecksum(InputStream in) throws IOException
   {
     MessageDigest digest = null;
@@ -99,16 +77,6 @@ public final class ChecksumUtil
     return Util.toString(digest.digest());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param input
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   public static String createChecksum(String input) throws IOException
   {
     MessageDigest digest = getDigest();
@@ -118,31 +86,12 @@ public final class ChecksumUtil
     return Util.toString(digest.digest());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   public static String createChecksum(File file) throws IOException
   {
     return createChecksum(new FileInputStream(file));
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param content
-   *
-   * @return
-   *
-   * @throws IOException
-   *
    * @since 1.12
    */
   public static String createChecksum(byte[] content) throws IOException
@@ -150,14 +99,8 @@ public final class ChecksumUtil
     return createChecksum(new ByteArrayInputStream(content));
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   private static MessageDigest getDigest()
   {
     MessageDigest digest = null;

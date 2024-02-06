@@ -24,7 +24,6 @@
 
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Predicate;
 
@@ -32,7 +31,6 @@ import com.google.common.base.Predicate;
  * The main interface for the cache.
  * Provides methods to add, access, and remove entries from a cache.
  *
- * @author Sebastian Sdorra
  *
  * @param <K> type of the keys for the cache
  * @param <V> type of cached elements
@@ -42,17 +40,13 @@ public interface Cache<K, V> extends org.apache.shiro.cache.Cache<K, V> {
 
   /**
    * Remove all elements from this cache.
-   *
    */
   void clear();
 
   /**
    * Returns true if this cache contains an element with the specified key.
    *
-   *
    * @param key key of the cached element
-   *
-   * @return true if this cache contains an element with the specified key
    */
   boolean contains(K key);
 
@@ -84,8 +78,6 @@ public interface Cache<K, V> extends org.apache.shiro.cache.Cache<K, V> {
    * @since 1.9
    *
    * @param predicate predicate to match cache keys
-   *
-   * @return all previous cached values
    */
   @SuppressWarnings("java:S4738") // we have to use guava predicate for compatibility
   Iterable<V> removeAll(Predicate<K> predicate);
@@ -93,13 +85,10 @@ public interface Cache<K, V> extends org.apache.shiro.cache.Cache<K, V> {
   /**
    * Returns the number of entries in the cache.
    *
-   * @return number of entries in the cache
-   *
    * @since 2.0.0
    */
   int size();
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the element with the specified key.
@@ -115,8 +104,6 @@ public interface Cache<K, V> extends org.apache.shiro.cache.Cache<K, V> {
    * Returns performance statistics of the cache or null if the cache does not
    * support statistics. The returned statistic is a snapshot of the current
    * performance.
-   *
-   * @return performance statistics or null
    *
    * @since 2.0.0
    */

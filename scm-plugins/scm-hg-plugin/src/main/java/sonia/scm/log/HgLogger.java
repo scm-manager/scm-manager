@@ -24,234 +24,131 @@
     
 package sonia.scm.log;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class HgLogger implements org.javahg.log.Logger
 {
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param logger
-   */
+  private Logger logger;
+ 
   public HgLogger(Logger logger)
   {
     this.logger = logger;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param msg
-   */
+
   @Override
   public void debug(String msg)
   {
     logger.debug(msg);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param msg
-   * @param args
-   */
+
   @Override
   public void debug(String msg, Object... args)
   {
     logger.debug(msg, args);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param msg
-   * @param thrown
-   */
+
   @Override
   public void debug(String msg, Throwable thrown)
   {
     logger.debug(msg, thrown);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param msg
-   */
+
   @Override
   public void error(String msg)
   {
     logger.error(msg);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param msg
-   * @param args
-   */
+
   @Override
   public void error(String msg, Object... args)
   {
     logger.error(msg, args);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param msg
-   * @param thrown
-   */
+
   @Override
   public void error(String msg, Throwable thrown)
   {
     logger.error(msg, thrown);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param msg
-   */
+
   @Override
   public void info(String msg)
   {
     logger.info(msg);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param msg
-   * @param args
-   */
+
   @Override
   public void info(String msg, Object... args)
   {
     logger.info(msg, args);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param msg
-   * @param thrown
-   */
+
   @Override
   public void info(String msg, Throwable thrown)
   {
     logger.info(msg, thrown);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param msg
-   */
+
   @Override
   public void warn(String msg)
   {
     logger.warn(msg);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param msg
-   * @param args
-   */
+
   @Override
   public void warn(String msg, Object... args)
   {
     logger.warn(msg, args);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param msg
-   * @param thrown
-   */
+
   @Override
   public void warn(String msg, Throwable thrown)
   {
     logger.warn(msg, thrown);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isDebugEnabled()
   {
     return logger.isDebugEnabled();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isErrorEnabled()
   {
     return logger.isErrorEnabled();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isInfoEnabled()
   {
     return logger.isInfoEnabled();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isWarnEnabled()
   {
     return logger.isWarnEnabled();
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Logger logger;
 }

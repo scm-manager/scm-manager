@@ -36,7 +36,6 @@ import java.util.regex.Pattern;
 /**
  * Represents a tag in a repository.
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 @EqualsAndHashCode
@@ -53,12 +52,6 @@ public final class Tag {
   private final List<Signature> signatures = new ArrayList<>();
   private final Boolean deletable;
 
-  /**
-   * Constructs a new tag.
-   *
-   * @param name     name of the tag
-   * @param revision tagged revision
-   */
   public Tag(String name, String revision) {
     this(name, revision, null);
   }

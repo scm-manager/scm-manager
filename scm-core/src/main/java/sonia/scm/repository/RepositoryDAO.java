@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.GenericDAO;
 
@@ -33,7 +32,6 @@ import sonia.scm.GenericDAO;
  * {@link RepositoryManager}. Plugins and other classes should use the
  * {@link RepositoryManager} instead.
  *
- * @author Sebastian Sdorra
  * @since 1.14
  */
 public interface RepositoryDAO extends GenericDAO<Repository>
@@ -50,7 +48,6 @@ public interface RepositoryDAO extends GenericDAO<Repository>
    */
   boolean contains(NamespaceAndName namespaceAndName);
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the repository with the specified namespace and name or null

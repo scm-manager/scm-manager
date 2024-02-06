@@ -33,7 +33,6 @@ import static java.util.Optional.ofNullable;
  * implementation use JAXB to marshall the configuration objects.
  *
  * @param <T> type of the configuration objects
- * @author Sebastian Sdorra
  */
 public interface ConfigurationStore<T> {
 

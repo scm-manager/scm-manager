@@ -30,52 +30,34 @@ import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;
  * Useful constants for filter implementations.
  *
  * @since 2.0.0
- * @author Sebastian Sdorra
  */
 public final class Filters
 {
 
-  /** Field description */
   public static final String PATTERN_ALL = "/*";
 
-  /** Field description */
   public static final String PATTERN_DEBUG = "/debug.html";
 
-  /** Field description */
   public static final String PATTERN_RESTAPI = REST_API_PATH + "/*";
 
-  /** authentication priority */
   public static final int PRIORITY_AUTHENTICATION = 5000;
 
-  /** authorization priority */
   public static final int PRIORITY_AUTHORIZATION = 6000;
 
-  /** base url priority */
   public static final int PRIORITY_BASEURL = 1000;
 
-  /** post authentication priority */
   public static final int PRIORITY_POST_AUTHENTICATION = 5500;
 
-  /** pre authorization priority */
   public static final int PRIORITY_POST_AUTHORIZATION = 6500;
 
-  /** post base url priority */
   public static final int PRIORITY_POST_BASEURL = 1500;
 
-  /** pre authentication priority */
   public static final int PRIORITY_PRE_AUTHENTICATION = 4500;
 
-  /** pre authorization priority */
   public static final int PRIORITY_PRE_AUTHORIZATION = 5500;
 
-  /** pre base url priority */
   public static final int PRIORITY_PRE_BASEURL = 500;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private Filters() {}
 }

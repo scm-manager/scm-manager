@@ -31,15 +31,20 @@ import sonia.scm.auditlog.AuditEntry;
 import sonia.scm.util.Util;
 
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @XmlRootElement(name = "config")
 @AuditEntry(labels = {"hg", "config"})
 public class HgGlobalConfig extends RepositoryConfig {
 
   public static final String PERMISSION = "hg";
+
+  private String encoding = "UTF-8";
+
+  private String hgBinary;
+
+  private boolean showRevisionInId = false;
+
+  private boolean enableHttpPostArgs = false;
 
   @Override
   @XmlTransient // Only for permission checks, don't serialize to XML
@@ -48,34 +53,19 @@ public class HgGlobalConfig extends RepositoryConfig {
     return PERMISSION;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getEncoding()
   {
     return encoding;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getHgBinary()
   {
     return hgBinary;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isShowRevisionInId()
   {
     return showRevisionInId;
@@ -85,48 +75,27 @@ public class HgGlobalConfig extends RepositoryConfig {
     return enableHttpPostArgs;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isValid()
   {
     return super.isValid() && Util.isNotEmpty(hgBinary);
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param encoding
-   */
+
   public void setEncoding(String encoding)
   {
     this.encoding = encoding;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param hgBinary
-   */
+
   public void setHgBinary(String hgBinary)
   {
     this.hgBinary = hgBinary;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param showRevisionInId
-   */
+
   public void setShowRevisionInId(boolean showRevisionInId)
   {
     this.showRevisionInId = showRevisionInId;
@@ -135,18 +104,5 @@ public class HgGlobalConfig extends RepositoryConfig {
   public void setEnableHttpPostArgs(boolean enableHttpPostArgs) {
     this.enableHttpPostArgs = enableHttpPostArgs;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String encoding = "UTF-8";
-
-  /** Field description */
-  private String hgBinary;
-
-  /** Field description */
-  private boolean showRevisionInId = false;
-
-  private boolean enableHttpPostArgs = false;
 
 }

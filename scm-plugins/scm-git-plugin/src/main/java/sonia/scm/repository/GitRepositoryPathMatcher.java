@@ -31,7 +31,6 @@ import sonia.scm.util.Util;
 /**
  * Matches git repositories with ".git" and without ".git".
  *
- * @author Sebastian Sdorra
  * @since 1.54
  */
 @Extension

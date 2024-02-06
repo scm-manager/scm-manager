@@ -38,23 +38,18 @@ public interface SearchableType {
 
   /**
    * Return name of the type.
-   *
-   * @return name of type
    */
   String getName();
 
   /**
    * Return type in form of class.
-   *
-   * @return class of type
    */
   Class<?> getType();
 
   /**
    * Returns collection of searchable fields.
    *
-   * @return collection of searchable fields
-   * @since 2.23.0
+   *  @since 2.23.0
    */
   Collection<? extends SearchableField> getFields();
 

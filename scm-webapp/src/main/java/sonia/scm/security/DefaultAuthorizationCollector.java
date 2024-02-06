@@ -291,7 +291,6 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector {
     return UserPermissions.read(user.getName()).asShiroString();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   private boolean isUserPermitted(User user, Set<String> groups,
     PermissionObject perm)

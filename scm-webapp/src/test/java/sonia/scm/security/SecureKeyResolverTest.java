@@ -24,7 +24,6 @@
     
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import io.jsonwebtoken.Jwts;
 import org.junit.Before;
@@ -51,19 +50,12 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @RunWith(MockitoJUnitRunner.class)
 public class SecureKeyResolverTest
 {
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testGetSecureKey()
   {
     SecureKey key = resolver.getSecureKey("test");
@@ -94,11 +86,7 @@ public class SecureKeyResolverTest
     assertThat(sameRegeneratedKey.getCreationDate()).isEqualTo(regeneratedKey.getCreationDate());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testResolveSigningKeyBytes()
   {
     SecureKey key = resolver.getSecureKey("test");
@@ -112,34 +100,21 @@ public class SecureKeyResolverTest
     assertArrayEquals(key.getBytes(), bytes);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testResolveSigningKeyBytesWithoutKey()
   {
     byte[] bytes = resolver.resolveSigningKeyBytes(null, Jwts.claims().setSubject("test"));
     assertThat(bytes[0]).isEqualTo((byte) 42);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test(expected = IllegalArgumentException.class)
+   @Test(expected = IllegalArgumentException.class)
   public void testResolveSigningKeyBytesWithoutSubject()
   {
     resolver.resolveSigningKeyBytes(null, Jwts.claims());
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Before
+   @Before
   public void setUp()
   {
     ConfigurationEntryStoreFactory factory = mock(ConfigurationEntryStoreFactory.class);
@@ -157,10 +132,8 @@ public class SecureKeyResolverTest
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private SecureKeyResolver resolver;
 
-  /** Field description */
   @Mock
   private ConfigurationEntryStore<SecureKey> store;
 

@@ -31,7 +31,6 @@ import sonia.scm.repository.BrowserResult;
 import java.util.function.Consumer;
 
 /**
- * @author Sebastian Sdorra
  * @since 1.17
  */
 @EqualsAndHashCode(callSuper = true)

@@ -24,7 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -34,29 +33,18 @@ import jakarta.xml.bind.annotation.XmlElement;
 
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @XmlAccessorType(XmlAccessType.NONE)
 public class PluginResources
 {
+  @XmlElement(name = "script")
+  private Set<String> scriptResources;
 
-  /**
-   * Constructs ...
-   *
-   */
+  @XmlElement(name = "stylesheet")
+  private Set<String> stylesheetResources;
+
   PluginResources() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param scriptResources
-   * @param stylesheetResources
-   */
   public PluginResources(Set<String> scriptResources,
     Set<String> stylesheetResources)
   {
@@ -64,16 +52,6 @@ public class PluginResources
     this.stylesheetResources = stylesheetResources;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
   @Override
   public boolean equals(Object obj)
   {
@@ -93,24 +71,14 @@ public class PluginResources
       && Objects.equal(stylesheetResources, other.stylesheetResources);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public int hashCode()
   {
     return Objects.hashCode(scriptResources, stylesheetResources);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String toString()
   {
@@ -122,37 +90,17 @@ public class PluginResources
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Set<String> getScriptResources()
   {
     return scriptResources;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Set<String> getStylesheetResources()
   {
     return stylesheetResources;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "script")
-  private Set<String> scriptResources;
-
-  /** Field description */
-  @XmlElement(name = "stylesheet")
-  private Set<String> stylesheetResources;
 }

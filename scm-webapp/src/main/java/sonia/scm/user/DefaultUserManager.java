@@ -52,9 +52,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @Singleton
 @EagerSingleton
 public class DefaultUserManager extends AbstractUserManager {
@@ -223,7 +221,6 @@ public class DefaultUserManager extends AbstractUserManager {
     return userDAO.getLastModified();
   }
 
-  //~--- methods --------------------------------------------------------------
 
   @Override
   public void changePasswordForLoggedInUser(String oldPassword, String newPassword) {

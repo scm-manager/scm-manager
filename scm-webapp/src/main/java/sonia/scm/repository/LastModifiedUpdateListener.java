@@ -35,7 +35,6 @@ import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.PrivilegedAction;
 
 /**
- * @author Sebastian Sdorra
  * @since 1.37
  */
 @Extension

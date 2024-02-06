@@ -24,18 +24,14 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.io.Serializable;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 @EqualsAndHashCode
@@ -43,14 +39,9 @@ import java.io.Serializable;
 public abstract class FileBaseCommandRequest
   implements Resetable, Serializable, Cloneable {
 
-  /** Field description */
   private static final long serialVersionUID = -3442101119408346165L;
 
-  /**
-   * Method description
-   *
-   */
-  @Override
+   @Override
   public void reset()
   {
     path = null;

@@ -24,7 +24,6 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
@@ -44,14 +43,12 @@ import java.util.Set;
  * Parser for User-Agent header. The UserAgentParser parses the User-Agent 
  * header and returns a {@link UserAgent} object.
  *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.45
  */
 @Singleton
 public final class UserAgentParser
 {
 
-  /** name of the cache */
   @VisibleForTesting
   static final String CACHE_NAME = "sonia.scm.user-agent";
 
@@ -59,19 +56,15 @@ public final class UserAgentParser
   @VisibleForTesting
   static final UserAgent UNKNOWN = UserAgent.other("UNKNOWN").build();
 
-  /** logger */
   private static final Logger logger =
     LoggerFactory.getLogger(UserAgentParser.class);
 
-  //~--- constructors ---------------------------------------------------------
+  /** cache for parsed UserAgents */
+  private final Cache<String, UserAgent> cache;
 
-  /**
-   * Constructs a new UserAgentParser.
-   *
-   *
-   * @param providers set of providers
-   * @param cacheManager cache manager
-   */
+  /** set of providers */
+  private final Set<UserAgentProvider> providers;
+
   @Inject
   public UserAgentParser(Set<UserAgentProvider> providers,
     CacheManager cacheManager)
@@ -80,7 +73,6 @@ public final class UserAgentParser
     this.cache = cacheManager.getCache(CACHE_NAME);
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Extracts the User-Agent header and returns an {@link UserAgent} object.
@@ -100,8 +92,6 @@ public final class UserAgentParser
    *
    *
    * @param userAgent User-Agent header
-   *
-   * @return {@link UserAgent} object
    */
   public UserAgent parse(String userAgent)
   {
@@ -133,11 +123,4 @@ public final class UserAgentParser
     return ua;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** cache for parsed UserAgents */
-  private final Cache<String, UserAgent> cache;
-
-  /** set of providers */
-  private final Set<UserAgentProvider> providers;
 }

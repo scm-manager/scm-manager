@@ -24,14 +24,11 @@
     
 package sonia.scm.io;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,36 +37,26 @@ import java.io.InputStreamReader;
 
 import java.util.Map;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class SimpleCommand implements Command
 {
+  private String[] command;
 
-  /** Field description */
+  private Map<String, String> environment;
+
+  private boolean useSystemEnvironment = false;
+
+  private File workDirectory;
+
   private static final Logger logger =
     LoggerFactory.getLogger(SimpleCommand.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param command
-   */
   public SimpleCommand(String... command)
   {
     this(null, command);
   }
 
   /**
-   * Constructs ...
-   *
-   *
-   * @param environment
-   * @param command
    * @since 1.8
    */
   public SimpleCommand(Map<String, String> environment, String... command)
@@ -78,16 +65,6 @@ public class SimpleCommand implements Command
     this.command = command;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   @Override
   public SimpleCommandResult execute() throws IOException
   {
@@ -96,14 +73,8 @@ public class SimpleCommand implements Command
     return getResult(process);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @return
-   * 
    * @since 1.23
    */
   public boolean isUseSystemEnvironment()
@@ -111,13 +82,8 @@ public class SimpleCommand implements Command
     return useSystemEnvironment;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @param environment
    * @since 1.8
    */
   public void setEnvironment(Map<String, String> environment)
@@ -126,11 +92,6 @@ public class SimpleCommand implements Command
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param useSystemEnvironment
-   * 
    * @since 1.23
    */
   public void setUseSystemEnvironment(boolean useSystemEnvironment)
@@ -138,28 +99,12 @@ public class SimpleCommand implements Command
     this.useSystemEnvironment = useSystemEnvironment;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param workDirectory
-   */
   @Override
   public void setWorkDirectory(File workDirectory)
   {
     this.workDirectory = workDirectory;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   protected Process createProcess() throws IOException
   {
     if (logger.isDebugEnabled())
@@ -195,18 +140,6 @@ public class SimpleCommand implements Command
     return processBuilder.redirectErrorStream(true).start();
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param process
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   protected SimpleCommandResult getResult(Process process) throws IOException
   {
     SimpleCommandResult result = null;
@@ -261,17 +194,4 @@ public class SimpleCommand implements Command
     return result;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String[] command;
-
-  /** Field description */
-  private Map<String, String> environment;
-
-  /** Field description */
-  private boolean useSystemEnvironment = false;
-
-  /** Field description */
-  private File workDirectory;
 }

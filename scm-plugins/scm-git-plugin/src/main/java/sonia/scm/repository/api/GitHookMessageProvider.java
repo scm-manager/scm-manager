@@ -24,50 +24,30 @@
 
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.transport.ReceivePack;
 
 import sonia.scm.web.GitHooks;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class GitHookMessageProvider implements HookMessageProvider
 {
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param receivePack
-   */
+  private ReceivePack receivePack;
+ 
   public GitHookMessageProvider(ReceivePack receivePack)
   {
     this.receivePack = receivePack;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param message
-   */
+
   @Override
   public void sendError(String message)
   {
     GitHooks.sendPrefixedError(receivePack, message);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param message
-   */
+
   @Override
   public void sendMessage(String message)
   {
@@ -76,8 +56,4 @@ public final class GitHookMessageProvider implements HookMessageProvider
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private ReceivePack receivePack;
 }

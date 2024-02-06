@@ -24,7 +24,6 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
@@ -44,12 +43,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class GitReceiveHook implements PreReceiveHook, PostReceiveHook {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitReceiveHook.class);

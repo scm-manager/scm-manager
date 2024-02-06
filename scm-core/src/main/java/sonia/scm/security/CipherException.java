@@ -26,55 +26,29 @@ package sonia.scm.security;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.7
  */
 public class CipherException extends RuntimeException
 {
 
-  /** Field description */
   private static final long serialVersionUID = -310359939906084281L;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   public CipherException()
   {
     super();
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
   public CipherException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
   public CipherException(Throwable cause)
   {
     super(cause);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
   public CipherException(String message, Throwable cause)
   {
     super(message, cause);

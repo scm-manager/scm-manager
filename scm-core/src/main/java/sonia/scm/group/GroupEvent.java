@@ -24,7 +24,6 @@
     
 package sonia.scm.group;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 
 import sonia.scm.HandlerEventType;
@@ -34,33 +33,17 @@ import sonia.scm.event.Event;
 /**
  * The GroupEvent is fired if a group object changes.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 @Event
 public class GroupEvent extends AbstractHandlerEvent<Group>
 {
 
-  /**
-   * Constructs a new group event.
-   *
-   *
-   * @param eventType type of the event
-   * @param group changed group
-   */
   public GroupEvent(HandlerEventType eventType, Group group)
   {
     super(eventType, group);
   }
 
-  /**
-   * Constructs a new group event.
-   *
-   *
-   * @param eventType type of the event
-   * @param group changed group
-   * @param oldGroup old group
-   */
   public GroupEvent(HandlerEventType eventType, Group group, Group oldGroup)
   {
     super(eventType, group, oldGroup);

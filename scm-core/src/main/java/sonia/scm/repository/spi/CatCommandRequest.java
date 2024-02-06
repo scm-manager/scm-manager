@@ -28,24 +28,16 @@ import lombok.EqualsAndHashCode;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 @EqualsAndHashCode(callSuper = true)
 public final class CatCommandRequest extends FileBaseCommandRequest
 {
 
-  /** Field description */
   private static final long serialVersionUID = -6404958421249874551L;
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public CatCommandRequest clone()
   {

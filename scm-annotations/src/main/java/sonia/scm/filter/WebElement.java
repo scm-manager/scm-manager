@@ -24,11 +24,8 @@
     
 package sonia.scm.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.plugin.PluginAnnotation;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -40,7 +37,6 @@ import java.lang.annotation.Target;
  * Annotation to register servlets and filters. The annotation is automatically 
  * picked up by the plugin registration processor of SCM-Manager.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Documented
@@ -69,14 +65,11 @@ public @interface WebElement
    * Returns {@code true} if the path patterns are specified as regex patterns.
    * Default is {@code false}.
    * 
-   * @return {@code true} if the path patterns are specified as regex patterns
    */
   public boolean regex() default false;
 
   /**
    * Returns an array of init params.
-   * 
-   * @return array of init params
    */
   public WebInitParam[] initParams() default {};
 }

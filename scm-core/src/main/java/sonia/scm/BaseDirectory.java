@@ -70,8 +70,6 @@ final class BaseDirectory {
 
   /**
    * Returns the determined base directory.
-   *
-   * @return base directory
    */
   @SuppressWarnings("java:S5304") // it is safe to use environment in this case
   static Path get() {

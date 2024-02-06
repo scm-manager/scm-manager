@@ -41,7 +41,6 @@ import java.util.stream.Collectors;
 /**
  * Util methods for {@link Scope}.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class Scopes {

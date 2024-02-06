@@ -40,9 +40,8 @@ import java.net.URL;
 import java.util.Set;
 
 /**
- * The push command push changes to a other repository.
+ * The push command push changes to another repository.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public final class PushCommandBuilder {
@@ -85,7 +84,7 @@ public final class PushCommandBuilder {
    * Push all changes to the given remote repository.
    *
    * @param remoteRepository remote repository
-   * @return informations of the executed push command
+   * @return information of the executed push command
    * @throws IOException
    * @throws PushFailedException when the push (maybe just partially) failed (since 2.47.0)
    */
@@ -108,7 +107,7 @@ public final class PushCommandBuilder {
    * Push all changes to the given remote url.
    *
    * @param url url of a remote repository
-   * @return informations of the executed push command
+   * @return information of the executed push command
    * @throws IOException
    * @throws PushFailedException when the push (maybe just partially) failed (since 2.47.0)
    * @since 1.43

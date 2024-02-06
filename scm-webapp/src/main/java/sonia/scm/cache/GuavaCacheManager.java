@@ -36,7 +36,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Guava based implementation of {@link CacheManager} and {@link org.apache.shiro.cache.CacheManager}.
  *
- * @author Sebastian Sdorra
  */
 @Singleton
 public class GuavaCacheManager implements CacheManager, org.apache.shiro.cache.CacheManager {

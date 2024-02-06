@@ -24,7 +24,6 @@
     
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -33,7 +32,6 @@ import sonia.scm.plugin.ExtensionPoint;
 /**
  * Collect {@link AuthorizationInfo} for the authenticated user.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @ExtensionPoint
@@ -44,8 +42,6 @@ public interface AuthorizationCollector
    * Returns {@link AuthorizationInfo} for the authenticated user.
    *
    * @param principalCollection collected principals
-   *
-   * @return {@link AuthorizationInfo} for authenticated user
    */
   AuthorizationInfo collect(PrincipalCollection principalCollection);
 }

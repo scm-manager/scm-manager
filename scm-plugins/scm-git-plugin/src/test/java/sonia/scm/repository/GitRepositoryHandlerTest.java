@@ -40,9 +40,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 

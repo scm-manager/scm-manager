@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -48,11 +47,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 public class GitChangesetConverter implements Closeable {
 
   private final GPGSignatureResolver gpg;

@@ -24,53 +24,28 @@
     
 package sonia.scm.server;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class ScmServerException extends RuntimeException
 {
 
-  /** Field description */
   private static final long serialVersionUID = -6496747280225411051L;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   public ScmServerException() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
+
   public ScmServerException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param throwable
-   */
+ 
   public ScmServerException(Throwable throwable)
   {
     super(throwable);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param throwable
-   */
+
   public ScmServerException(String message, Throwable throwable)
   {
     super(message, throwable);

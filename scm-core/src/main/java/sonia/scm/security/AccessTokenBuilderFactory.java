@@ -30,7 +30,6 @@ import sonia.scm.plugin.ExtensionPoint;
  * Creates new {@link AccessTokenBuilder}. The AccessTokenBuilderFactory resolves all required dependencies for the 
  * access token builder. The builder factory is the main entry point for creating {@link AccessToken}.
  * 
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @ExtensionPoint(multi = false)

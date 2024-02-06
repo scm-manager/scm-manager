@@ -24,93 +24,52 @@
     
 package sonia.scm.xml;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @XmlRootElement(name = "element")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlMapStringElement
 {
+  private String key;
 
-  /**
-   * Constructs ...
-   *
-   */
+  private String value;
+
   public XmlMapStringElement() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param key
-   * @param value
-   */
+
   public XmlMapStringElement(String key, String value)
   {
     this.key = key;
     this.value = value;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getKey()
   {
     return key;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getValue()
   {
     return value;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   */
+
   public void setKey(String key)
   {
     this.key = key;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   */
+
   public void setValue(String value)
   {
     this.value = value;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String key;
-
-  /** Field description */
-  private String value;
 }

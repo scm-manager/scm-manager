@@ -24,14 +24,11 @@
     
 package sonia.scm;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Collection;
 
 /**
  * Base interface for all type manager classes.
  *
- * @author Sebastian Sdorra
  *
  * @param <T> type of the model object
  * @param <H> type of the handler
@@ -44,16 +41,12 @@ public interface TypeManager<T extends ModelObject, H extends Handler<T>> extend
    * null if no handler of that type is available.
    *
    * @param type name of the handler
-   *
-   * @return the handler for given type
    */
   H getHandler(String type);
 
   /**
    * Returns a {@link java.util.Collection} of all
    * available and configured types.
-   *
-   * @return all available types
    */
   Collection<Type> getTypes();
 }

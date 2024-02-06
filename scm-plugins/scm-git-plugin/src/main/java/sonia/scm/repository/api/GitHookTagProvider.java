@@ -46,7 +46,6 @@ import static sonia.scm.repository.GitUtil.getId;
 /**
  * Git provider implementation of {@link HookTagProvider}.
  *
- * @author Sebastian Sdorra
  * @since 1.50
  */
 public class GitHookTagProvider implements HookTagProvider {
@@ -56,11 +55,6 @@ public class GitHookTagProvider implements HookTagProvider {
   private final List<Tag> createdTags;
   private final List<Tag> deletedTags;
 
-  /**
-   * Constructs new instance.
-   *
-   * @param commands received commands
-   */
   public GitHookTagProvider(List<ReceiveCommand> commands, Repository repository) {
     ImmutableList.Builder<Tag> createdTagBuilder = ImmutableList.builder();
     ImmutableList.Builder<Tag> deletedTagBuilder = ImmutableList.builder();

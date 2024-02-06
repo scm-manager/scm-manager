@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
@@ -45,8 +44,6 @@ import sonia.scm.repository.spi.LogCommandRequest;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Set;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * LogCommandBuilder is able to show the history of a file in a
@@ -78,22 +75,31 @@ import java.util.Set;
  *          log.setPath("pom.xml").disablePagingLimit().getChangesets();
  * </code></pre>
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public final class LogCommandBuilder
 {
 
-  /** name of the cache */
   static final String CACHE_NAME = "sonia.cache.cmd.log";
 
-  /**
-   * the logger for LogCommandBuilder
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(LogCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  /** cache for changesets */
+  private final Cache<CacheKey, ChangesetPagingResult> cache;
+
+  private final LogCommand logCommand;
+
+  private final PreProcessorUtil preProcessorUtil;
+  private Set<Feature> supportedFeatures;
+
+  private final Repository repository;
+
+  private boolean disableCache = false;
+
+  private boolean disablePreProcessors = false;
+
+  private final LogCommandRequest request = new LogCommandRequest();
 
   /**
    * Constructs a new {@link LogCommandBuilder}, this constructor should
@@ -114,7 +120,6 @@ public final class LogCommandBuilder
     this.supportedFeatures = supportedFeatures;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Disable paging limit all available changesets will be retrieved.
@@ -146,7 +151,6 @@ public final class LogCommandBuilder
     return this;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the {@link Changeset} with the given id or null if the
@@ -264,7 +268,6 @@ public final class LogCommandBuilder
     return cpr;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Retrieves only changesets of the given branch.<br />
@@ -301,12 +304,7 @@ public final class LogCommandBuilder
   }
 
   /**
-   * Disable the execution of pre processors.
-   *
-   *
-   * @param disablePreProcessors true to disable the pre processors execution
-   *
-   * @return {@code this}
+   * Disable the execution of pre processors if set to <code>true</code>.
    */
   public LogCommandBuilder setDisablePreProcessors(boolean disablePreProcessors)
   {
@@ -407,30 +405,21 @@ public final class LogCommandBuilder
     return this;
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 12/06/05
-   * @author         Enter your name here...
-   */
+
+
   static class CacheKey implements RepositoryCacheKey, Serializable
   {
 
-    /** Field description */
-    private static final long serialVersionUID = 5701675009949268863L;
+      private static final long serialVersionUID = 5701675009949268863L;
 
-    //~--- constructors -------------------------------------------------------
+    private final String changesetId;
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param repository
-     * @param request
-     */
+    private final String repositoryId;
+
+    private final LogCommandRequest request;
+
+
     public CacheKey(Repository repository, LogCommandRequest request)
     {
       this.repositoryId = repository.getId();
@@ -438,14 +427,6 @@ public final class LogCommandBuilder
       this.changesetId = null;
     }
 
-    /**
-     * Constructs ...
-     *
-     *
-     *
-     * @param repository
-     * @param changesetId
-     */
     public CacheKey(Repository repository, String changesetId)
     {
       this.repositoryId = repository.getId();
@@ -453,16 +434,9 @@ public final class LogCommandBuilder
       this.request = null;
     }
 
-    //~--- methods ------------------------------------------------------------
 
-    /**
-     * Method description
-     *
-     *
-     * @param obj
-     *
-     * @return
-     */
+
+
     @Override
     public boolean equals(Object obj)
     {
@@ -483,66 +457,19 @@ public final class LogCommandBuilder
         && Objects.equal(request, other.request);
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+
     @Override
     public int hashCode()
     {
       return Objects.hashCode(repositoryId, changesetId, request);
     }
 
-    //~--- get methods --------------------------------------------------------
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
     @Override
     public String getRepositoryId()
     {
       return repositoryId;
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final String changesetId;
-
-    /** Field description */
-    private final String repositoryId;
-
-    /** Field description */
-    private final LogCommandRequest request;
   }
-
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** cache for changesets */
-  private final Cache<CacheKey, ChangesetPagingResult> cache;
-
-  /** Implementation of the log command */
-  private final LogCommand logCommand;
-
-  /** Field description */
-  private final PreProcessorUtil preProcessorUtil;
-  private Set<Feature> supportedFeatures;
-
-  /** repository to query */
-  private final Repository repository;
-
-  /** disable cache */
-  private boolean disableCache = false;
-
-  /** disable the execution of pre processors */
-  private boolean disablePreProcessors = false;
-
-  /** request for the log command */
-  private final LogCommandRequest request = new LogCommandRequest();
 }

@@ -32,7 +32,6 @@ import lombok.ToString;
 /**
  * Request object for {@link PullCommand}.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 @Getter

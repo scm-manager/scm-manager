@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -39,7 +38,6 @@ import org.apache.shiro.subject.SubjectContext;
  * DisabledRememberMeManager is used to disable the cookie creation of the
  * default {@link RememberMeManager}.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public class DisabledRememberMeManager implements RememberMeManager
@@ -47,9 +45,6 @@ public class DisabledRememberMeManager implements RememberMeManager
 
   /**
    * The implementation does nothing.
-   *
-   *
-   * @param subjectContext subject context
    */
   @Override
   public void forgetIdentity(SubjectContext subjectContext)
@@ -60,11 +55,6 @@ public class DisabledRememberMeManager implements RememberMeManager
 
   /**
    * The implementation does nothing.
-   *
-   *
-   * @param subject subject
-   * @param token authentication token
-   * @param ae authentication exception
    */
   @Override
   public void onFailedLogin(Subject subject, AuthenticationToken token,
@@ -76,9 +66,6 @@ public class DisabledRememberMeManager implements RememberMeManager
 
   /**
    * The implementation does nothing.
-   *
-   *
-   * @param subject subject
    */
   @Override
   public void onLogout(Subject subject)
@@ -89,11 +76,6 @@ public class DisabledRememberMeManager implements RememberMeManager
 
   /**
    * The implementation does nothing.
-   *
-   *
-   * @param subject subject
-   * @param token authentication token
-   * @param info authentication info
    */
   @Override
   public void onSuccessfulLogin(Subject subject, AuthenticationToken token,
@@ -103,15 +85,9 @@ public class DisabledRememberMeManager implements RememberMeManager
     // do nothing
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * The implementation returns always {@code null}.
-   *
-   *
-   * @param subjectContext subject context
-   *
-   * @return always {@code null}
    */
   @Override
   public PrincipalCollection getRememberedPrincipals(

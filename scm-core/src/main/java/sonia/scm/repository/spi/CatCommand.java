@@ -30,7 +30,6 @@ import java.io.OutputStream;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public interface CatCommand {

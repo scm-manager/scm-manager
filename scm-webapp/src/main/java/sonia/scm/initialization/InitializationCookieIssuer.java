@@ -31,7 +31,6 @@ import sonia.scm.security.AccessToken;
 /**
  * Generates cookies and invalidates initialization token cookies.
  *
- * @author Sebastian Sdorra
  * @since 2.35.0
  */
 public interface InitializationCookieIssuer {

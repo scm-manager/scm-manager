@@ -24,7 +24,6 @@
     
 package sonia.scm.net;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,33 +31,21 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.GlobUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.net.URL;
 
 /**
  * Util class for proxy settings.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 public final class Proxies
 {
 
-  /**
-   * the logger for Proxies
-   */
   private static final Logger logger = LoggerFactory.getLogger(Proxies.class);
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private Proxies() {}
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns true if proxy settings should be used to access the given url.

@@ -37,8 +37,6 @@ public interface ScrapeTarget {
 
   /**
    * Returns content type of output format.
-   *
-   * @return content type
    */
   String getContentType();
 

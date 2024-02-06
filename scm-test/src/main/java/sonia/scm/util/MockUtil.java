@@ -24,7 +24,6 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,33 +52,18 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class MockUtil
 {
 
-  /** Field description */
   private static final User ADMIN = new User("scmadmin", "SCM Admin",
                                       "scmadmin@scm.org");
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private MockUtil() {}
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @SuppressWarnings("unchecked")
   public static Subject createAdminSubject()
   {
@@ -120,25 +104,12 @@ public final class MockUtil
     return subject;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static Subject createUserSubject()
   {
     return createUserSubject(null);
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param securityManager
-   * @return
-   */
   public static Subject createUserSubject(
     org.apache.shiro.mgt.SecurityManager securityManager)
   {
@@ -162,14 +133,8 @@ public final class MockUtil
     return builder.principals(collection).authenticated(true).buildSubject();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static HttpServletRequest getHttpServletRequest()
   {
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -179,25 +144,13 @@ public final class MockUtil
     return request;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static HttpServletResponse getHttpServletResponse()
   {
     return mock(HttpServletResponse.class);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   */
+
   public static SCMContextProvider getSCMContextProvider(File directory)
   {
     SCMContextProvider provider = mock(SCMContextProvider.class);

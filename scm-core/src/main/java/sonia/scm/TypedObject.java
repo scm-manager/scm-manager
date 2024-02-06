@@ -21,22 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 /**
  * Base interface for all objects of specific type.
  *
- * @author Sebastian Sdorra
  */
 public interface TypedObject
 {
 
   /**
    * Returns the type of the object.
-   *
-   *
-   * @return type of the object
    */
-  public String getType();
+  String getType();
 }

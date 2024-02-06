@@ -31,20 +31,12 @@ import sonia.scm.event.Event;
  * This class is wrapper of {@link RepositoryHookEvent} for the event system of 
  * SCM-Manager.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 @Event
 public final class PostReceiveRepositoryHookEvent
   extends WrappedRepositoryHookEvent
 {
-
-  /**
-   * Constructs a new PostReceiveRepositoryHookEvent.
-   *
-   *
-   * @param wrappedEvent event to wrap
-   */
   public PostReceiveRepositoryHookEvent(RepositoryHookEvent wrappedEvent)
   {
     super(wrappedEvent);

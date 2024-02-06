@@ -24,7 +24,6 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.servlet.ServletModule;
@@ -35,10 +34,7 @@ import sonia.scm.api.v2.resources.HgRepositoryConfigMapper;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.*;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Extension
 public class HgServletModule extends ServletModule {
 

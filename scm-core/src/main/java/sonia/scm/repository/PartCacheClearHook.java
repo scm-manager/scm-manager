@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Predicate;
 
@@ -32,20 +31,12 @@ import com.google.common.base.Predicate;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.9
  */
 public class PartCacheClearHook extends CacheClearHook
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param event
-   *
-   * @return
-   */
+
   @Override
   protected Predicate<?> createPredicate(RepositoryHookEvent event)
   {

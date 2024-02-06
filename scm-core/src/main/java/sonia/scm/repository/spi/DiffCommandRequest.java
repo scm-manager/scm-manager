@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import lombok.EqualsAndHashCode;
@@ -33,7 +32,6 @@ import sonia.scm.repository.api.DiffFormat;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 @EqualsAndHashCode(callSuper = true)
@@ -41,6 +39,10 @@ public class DiffCommandRequest extends FileBaseCommandRequest
   implements Validateable {
 
   private static final long serialVersionUID = 4026911212676859626L;
+
+  private DiffFormat format = DiffFormat.NATIVE;
+
+  private String ancestorChangeset;
 
   @Override
   public DiffCommandRequest clone()
@@ -87,10 +89,6 @@ public class DiffCommandRequest extends FileBaseCommandRequest
 
   /**
    * Return the output format of the diff command.
-   *
-   *
-   * @return output format
-   *
    * @since 1.34
    */
   public DiffFormat getFormat()
@@ -102,8 +100,4 @@ public class DiffCommandRequest extends FileBaseCommandRequest
     return ancestorChangeset;
   }
 
-  /** diff format */
-  private DiffFormat format = DiffFormat.NATIVE;
-
-  private String ancestorChangeset;
 }

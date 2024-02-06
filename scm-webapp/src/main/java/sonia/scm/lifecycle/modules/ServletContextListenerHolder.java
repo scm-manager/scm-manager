@@ -24,7 +24,6 @@
     
 package sonia.scm.lifecycle.modules;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -34,10 +33,7 @@ import jakarta.servlet.ServletContextListener;
 import java.util.Collections;
 import java.util.Set;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Singleton
 public class ServletContextListenerHolder implements ServletContextListener {
 

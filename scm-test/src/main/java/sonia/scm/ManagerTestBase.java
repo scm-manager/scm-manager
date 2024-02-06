@@ -39,12 +39,7 @@ import java.io.IOException;
 import static java.util.Collections.emptySet;
 import static org.mockito.Mockito.mock;
 
-/**
- *
- * @author Sebastian Sdorra
- *
- * @param <T>
- */
+
 public abstract class ManagerTestBase<T extends ModelObject>
 {
 
@@ -76,12 +71,7 @@ public abstract class ManagerTestBase<T extends ModelObject>
     manager.close();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   protected abstract Manager<T> createManager();
 
 }

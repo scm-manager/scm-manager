@@ -33,7 +33,6 @@ import java.io.IOException;
 /**
  * Mercurial implementation of the {@link PushCommand}.
  *
- * @author Sebastian Sdorra
  */
 public class HgPushCommand implements PushCommand
 {

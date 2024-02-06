@@ -35,7 +35,6 @@ import java.util.Set;
 /**
  * Mercurial implementation of the {@link RepositoryClientProvider}.
  * 
- * @author Sebastian Sdorra
  */
 public class HgRepositoryClientProvider extends RepositoryClientProvider
 {

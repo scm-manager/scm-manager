@@ -31,7 +31,6 @@ import sonia.scm.event.Event;
 /**
  * Event which is fired whenever a repository is modified.
  *
- * @author Sebastian Sdorra
  * @since 1.48
  */
 @Event

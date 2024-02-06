@@ -186,7 +186,6 @@ public interface SearchEngine {
 
     /**
      * Returns a query builder object which can be used to search the index.
-     * @return query builder
      */
     QueryBuilder<T> search();
   }

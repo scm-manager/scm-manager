@@ -24,7 +24,6 @@
     
 package sonia.scm.io;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
 import org.junit.Test;
@@ -35,12 +34,9 @@ import java.io.Serializable;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Unit tests for {@link DeepCopy}.
  * 
- * @author Sebastian Sdorra
  */
 public class DeepCopyTest {
 
@@ -68,7 +64,7 @@ public class DeepCopyTest {
     DeepCopy.copy(new NonSerializable());
   }
 
-  //~--- inner classes --------------------------------------------------------
+
 
   private static class Address implements Serializable {
 
@@ -102,7 +98,7 @@ public class DeepCopyTest {
       return Objects.hashCode(city, street);
     }
 
-    //~--- get methods --------------------------------------------------------
+    
 
     public String getCity() {
       return city;
@@ -125,7 +121,7 @@ public class DeepCopyTest {
 
     private static final long serialVersionUID = -2098386757802626539L;
 
-    //~--- constructors -------------------------------------------------------
+    
 
     public Person() {}
 
@@ -135,7 +131,7 @@ public class DeepCopyTest {
       this.address = address;
     }
 
-    //~--- methods ------------------------------------------------------------
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -159,7 +155,7 @@ public class DeepCopyTest {
       return Objects.hashCode(firstname, lastname, address);
     }
 
-    //~--- get methods --------------------------------------------------------
+    
 
     public Address getAddress() {
       return address;

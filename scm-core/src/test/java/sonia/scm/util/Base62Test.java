@@ -24,35 +24,18 @@
     
 package sonia.scm.util;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class Base62Test extends BaseXTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
+
   @Override
   protected long decode(String value)
   {
     return Base62.decode(value);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
+
   @Override
   protected String encode(long value)
   {

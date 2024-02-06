@@ -24,7 +24,6 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.servlet.ServletModule;
@@ -85,9 +84,7 @@ import sonia.scm.repository.spi.TagsCommand;
 import sonia.scm.repository.spi.UnbundleCommand;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @Extension
 public class GitServletModule extends ServletModule {
 

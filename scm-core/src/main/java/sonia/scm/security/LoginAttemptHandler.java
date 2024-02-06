@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import org.apache.shiro.authc.AuthenticationException;
@@ -29,9 +29,6 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 
 /**
- * Login attempt handler.
- *
- * @author Sebastian Sdorra
  * @since 1.34
  */
 public interface LoginAttemptHandler
@@ -41,31 +38,24 @@ public interface LoginAttemptHandler
    * This method is called before the authentication procedure is invoked.
    *
    * @param token authentication token
-   *
-   * @throws AuthenticationException
    */
-  public void beforeAuthentication(AuthenticationToken token) throws AuthenticationException;
+  void beforeAuthentication(AuthenticationToken token) throws AuthenticationException;
 
   /**
    * Handle successful authentication.
    *
    * @param token authentication token
    * @param info successful authentication result
-   *
-   * @throws AuthenticationException
    */
-  public void onSuccessfulAuthentication(AuthenticationToken token, AuthenticationInfo info) 
+  void onSuccessfulAuthentication(AuthenticationToken token, AuthenticationInfo info)
     throws AuthenticationException;
 
   /**
    * Handle unsuccessful authentication.
    *
-   *
    * @param token authentication token
    * @param info unsuccessful authentication result
-   *
-   * @throws AuthenticationException
    */
-  public void onUnsuccessfulAuthentication(AuthenticationToken token, AuthenticationInfo info)
+  void onUnsuccessfulAuthentication(AuthenticationToken token, AuthenticationInfo info)
     throws AuthenticationException;
 }

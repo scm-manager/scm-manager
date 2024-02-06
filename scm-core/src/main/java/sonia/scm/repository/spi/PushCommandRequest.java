@@ -30,7 +30,6 @@ import lombok.Setter;
 /**
  * Request object for {@link PushCommand}.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 @Getter

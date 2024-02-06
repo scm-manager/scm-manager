@@ -27,7 +27,6 @@ package sonia.scm.web.security;
 /**
  * Execute actions with administration privileges.
  *
- * @author Sebastian Sdorra
  * @since 1.6
  */
 public interface AdministrationContext

@@ -31,23 +31,14 @@ import sonia.scm.repository.RepositoryTestData;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public abstract class DataStoreTestBase extends KeyValueStoreTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   protected abstract DataStoreFactory createDataStoreFactory();
 
 
-  //~--- get methods ----------------------------------------------------------
 
 
 

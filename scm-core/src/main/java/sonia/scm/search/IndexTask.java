@@ -37,7 +37,6 @@ public interface IndexTask<T> {
 
   /**
    * Execute operations on the index.
-   * @param index index to update
    */
   void update(Index<T> index);
 

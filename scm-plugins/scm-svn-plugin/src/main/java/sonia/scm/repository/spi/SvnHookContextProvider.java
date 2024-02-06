@@ -24,68 +24,40 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.api.HookFeature;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.EnumSet;
 import java.util.Set;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class SvnHookContextProvider extends HookContextProvider
 {
 
-  /** Field description */
   private static final Set<HookFeature> SUPPORTED_FEATURES =
     EnumSet.of(HookFeature.CHANGESET_PROVIDER);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param changesetProvider
-   */
+  private AbstractSvnHookChangesetProvider changesetProvider;
+ 
   public SvnHookContextProvider(
     AbstractSvnHookChangesetProvider changesetProvider)
   {
     this.changesetProvider = changesetProvider;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public AbstractSvnHookChangesetProvider getChangesetProvider()
   {
     return changesetProvider;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Set<HookFeature> getSupportedFeatures()
   {
     return SUPPORTED_FEATURES;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private AbstractSvnHookChangesetProvider changesetProvider;
 }

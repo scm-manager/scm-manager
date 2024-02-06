@@ -21,18 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.collect;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
 import java.util.Random;
@@ -41,17 +38,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class IterableQueueTest
 {
 
-  /**
-   * Method description
-   *
-   */
   @Test(expected = IllegalStateException.class)
   public void testDuplicatedEndReached()
   {
@@ -61,10 +51,6 @@ public class IterableQueueTest
     queue.endReached();
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
   public void testIterator()
   {
@@ -75,40 +61,18 @@ public class IterableQueueTest
     assertNotEquals(QueueIterator.class, queue.iterator().getClass());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws ExecutionException
-   * @throws InterruptedException
-   *
-   * @throws Exception
-   */
   @Test
   public void testMultiThreaded() throws Exception
   {
     testMultiThreaded(5, 10, false, 1000);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws ExecutionException
-   * @throws InterruptedException
-   *
-   * @throws Exception
-   */
   @Test
   public void testMultiThreadedWithRandomSleep() throws Exception
   {
     testMultiThreaded(5, 10, true, 50);
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test(expected = IllegalStateException.class)
   public void testPushEndReached()
   {
@@ -119,10 +83,6 @@ public class IterableQueueTest
     queue.push("b");
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
   public void testSingleConsumer()
   {
@@ -132,13 +92,7 @@ public class IterableQueueTest
     assertResult(Lists.newArrayList(queue), 100);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param result
-   * @param itemCount
-   */
+
   private void assertResult(List<Integer> result, int itemCount)
   {
     assertNotNull(result);
@@ -150,17 +104,6 @@ public class IterableQueueTest
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param threads
-   * @param consumer
-   * @param randomSleep
-   * @param itemCount
-   *
-   * @throws Exception
-   */
   private void testMultiThreaded(int threads, int consumer,
     boolean randomSleep, int itemCount)
     throws Exception
@@ -186,26 +129,9 @@ public class IterableQueueTest
     }
   }
 
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 13/03/01
-   * @author         Enter your name here...
-   */
   private static class IntegerProducer implements Runnable
   {
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param queue
-     * @param randomSleep
-     * @param itemCount
-     */
     public IntegerProducer(IterableQueue<Integer> queue, boolean randomSleep,
       int itemCount)
     {
@@ -214,12 +140,6 @@ public class IterableQueueTest
       this.itemCount = itemCount;
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     */
     @Override
     public void run()
     {
@@ -245,15 +165,10 @@ public class IterableQueueTest
       queue.endReached();
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
     IterableQueue<Integer> queue;
 
-    /** Field description */
     private int itemCount;
 
-    /** Field description */
     private boolean randomSleep;
   }
 }

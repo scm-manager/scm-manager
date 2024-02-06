@@ -122,7 +122,7 @@ public final class FileLockCommandBuilder {
     }
 
     /**
-     * Set the command to force unlock. Shortcur for <code>force(true)</code>.
+     * Set the command to force unlock. Shortcut for <code>force(true)</code>.
      *
      * @return This builder instance.
      * @see #force(boolean)

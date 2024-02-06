@@ -24,7 +24,6 @@
 
 package sonia.scm.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
@@ -40,27 +39,18 @@ import sonia.scm.plugin.WebElementExtension;
 
 import java.util.List;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class WebElementCollector
 {
 
-  /**
-   * the logger for WebElementCollector
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(WebElementCollector.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final Iterable<TypedWebElementDescriptor<Filter>> filters;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param elements
-   */
+  private final Iterable<TypedWebElementDescriptor<HttpServlet>> servlets;
+ 
   @SuppressWarnings("unchecked")
   private WebElementCollector(Iterable<WebElementExtension> elements)
   {
@@ -95,68 +85,34 @@ public final class WebElementCollector
     servlets = ordering.immutableSortedCopy(sl);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param loader
-   *
-   * @return
-   */
+
   public static WebElementCollector collect(PluginLoader loader)
   {
     return new WebElementCollector(
       loader.getExtensionProcessor().getWebElements());
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Iterable<TypedWebElementDescriptor<Filter>> getFilters()
   {
     return filters;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Iterable<TypedWebElementDescriptor<HttpServlet>> getServlets()
   {
     return servlets;
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 15/02/01
-   * @author         Enter your name here...
-   */
+
+
   private static class TypedWebElementDescriptorOrdering
     extends Ordering<TypedWebElementDescriptor<?>>
   {
 
-    /**
-     * Method description
-     *
-     *
-     * @param left
-     * @param right
-     *
-     * @return
-     */
     @Override
     public int compare(TypedWebElementDescriptor<?> left,
       TypedWebElementDescriptor<?> right)
@@ -166,12 +122,4 @@ public final class WebElementCollector
     }
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final Iterable<TypedWebElementDescriptor<Filter>> filters;
-
-  /** Field description */
-  private final Iterable<TypedWebElementDescriptor<HttpServlet>> servlets;
 }

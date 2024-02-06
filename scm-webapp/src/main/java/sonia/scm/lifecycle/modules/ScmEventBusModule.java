@@ -24,7 +24,6 @@
     
 package sonia.scm.lifecycle.modules;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.AbstractModule;
@@ -38,7 +37,6 @@ import sonia.scm.event.ScmEventBus;
 /**
  * Registers every instance to the scm-manager event bus.
  *
- * @author Sebastian Sdorra
  */
 public class ScmEventBusModule extends AbstractModule {
 

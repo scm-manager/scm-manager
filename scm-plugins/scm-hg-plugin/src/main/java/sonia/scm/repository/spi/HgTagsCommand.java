@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
@@ -36,31 +35,20 @@ import sonia.scm.util.Util;
 
 import java.util.List;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class HgTagsCommand extends AbstractCommand implements TagsCommand {
 
   public static final String DEFAULT_TAG_NAME = "tip";
 
-  /**
-   * Constructs ...
-   *
-   * @param context
-   */
+
 
   @Inject
   public HgTagsCommand(@Assisted HgCommandContext context) {
     super(context);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   * @return
-   */
+
   @Override
   public List<Tag> getTags() {
     org.javahg.commands.TagsCommand cmd =
@@ -82,23 +70,9 @@ public class HgTagsCommand extends AbstractCommand implements TagsCommand {
     return tags;
   }
 
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   * @author Enter your name here...
-   * @version Enter version here..., 12/08/03
-   */
   private static class TagTransformer
     implements Function<org.javahg.Tag, Tag> {
 
-    /**
-     * Method description
-     *
-     * @param f
-     * @return
-     */
     @Override
     public Tag apply(org.javahg.Tag f) {
       Tag t = null;

@@ -24,7 +24,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
@@ -60,11 +59,8 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  *
  * TODO don't mix nio and io
  */
@@ -72,54 +68,44 @@ import static java.util.stream.Collectors.toSet;
 public final class PluginProcessor
 {
 
-  /** Field description */
   private static final String INSTALLEDNAME_FORMAT = "%s.%03d";
 
-  /** Field description */
   private static final String DIRECTORY_CLASSES = "classes";
 
-  /** Field description */
   private static final String DIRECTORY_DEPENDENCIES = "lib";
 
-  /** Field description */
   private static final String DIRECTORY_INSTALLED = ".installed";
 
   public static final String JAKARTA_COMPATIBLE = ".jakarta-compatible";
 
-  /** Field description */
   private static final String DIRECTORY_METAINF = "META-INF";
 
-  /** Field description */
   private static final String DIRECTORY_WEBAPP = "webapp";
 
-  /** Field description */
   private static final String EXTENSION_PLUGIN = ".smp";
 
-  /** Field description */
   private static final String FORMAT_DATE = "yyyy-MM-dd";
 
-  /** Field description */
   private static final String GLOB_JAR = "*.jar";
 
-  /**
-   * the logger for PluginProcessor
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(PluginProcessor.class);
 
-  //~--- constructors ---------------------------------------------------------
 
   private final SmpDescriptorExtractor extractor = new SmpDescriptorExtractor();
 
   private ClassLoaderLifeCycle classLoaderLifeCycle;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param classLoaderLifeCycle
-   * @param pluginDirectory
-   */
+  private final JAXBContext context;
+
+  private final Path installedRootDirectory;
+
+  private final Path installedDirectory;
+
+  private final Path pluginDirectory;
+  private final PluginArchiveCleaner pluginArchiveCleaner;
+
   public PluginProcessor(ClassLoaderLifeCycle classLoaderLifeCycle, Path pluginDirectory){
     this(classLoaderLifeCycle, pluginDirectory, new PluginArchiveCleaner());
   }
@@ -139,19 +125,7 @@ public final class PluginProcessor
     }
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   * @param filter
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   private static DirectoryStream<Path> stream(Path directory,
     Filter<Path> filter)
     throws IOException
@@ -159,15 +133,6 @@ public final class PluginProcessor
     return Files.newDirectoryStream(directory, filter);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param classLoader
-   * @return
-   *
-   * @throws IOException
-   */
   public Set<InstalledPlugin> collectPlugins(ClassLoader classLoader)
     throws IOException
   {
@@ -268,16 +233,6 @@ public final class PluginProcessor
     return dir -> Files.exists(dir.resolve(DIRECTORY_METAINF).resolve("scm").resolve("plugin.xml"));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param plugins
-   * @param classLoader
-   * @param node
-   *
-   * @throws IOException
-   */
   private void appendPluginWrapper(Set<InstalledPlugin> plugins,
     ClassLoader classLoader, PluginNode node)
     throws IOException
@@ -321,17 +276,6 @@ public final class PluginProcessor
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   * @param filter
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   private Set<Path> collect(Path directory, Filter<Path> filter)
     throws IOException
   {
@@ -345,16 +289,7 @@ public final class PluginProcessor
     return paths;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   private List<Path> collectPluginDirectories(Path directory) throws IOException
   {
     Builder<Path> paths = ImmutableList.builder();
@@ -372,17 +307,6 @@ public final class PluginProcessor
     return paths.build();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param parentClassLoader
-   * @param smp
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   private ClassLoader createClassLoader(ClassLoader parentClassLoader,
     ExplodedSmp smp)
     throws IOException
@@ -436,26 +360,13 @@ public final class PluginProcessor
     return classLoader;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   private String createDate()
   {
     return new SimpleDateFormat(FORMAT_DATE).format(new Date());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param root
-   * @param parents
-   *
-   * @return
-   */
+
   private ClassLoader createParentPluginClassLoader(ClassLoader root,
     List<ClassLoader> parents)
   {
@@ -510,18 +421,6 @@ public final class PluginProcessor
     return plugin;
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param classLoader
-   * @param nodes
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   private Set<InstalledPlugin> createPluginWrappers(ClassLoader classLoader,
                                                     List<PluginNode> nodes)
     throws IOException
@@ -536,14 +435,7 @@ public final class PluginProcessor
     return plugins;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   */
+
   private WebResourceLoader createWebResourceLoader(Path directory)
   {
     WebResourceLoader resourceLoader;
@@ -563,14 +455,7 @@ public final class PluginProcessor
     return resourceLoader;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param archives
-   *
-   * @throws IOException
-   */
+  
   private Set<ExplodedSmp> extract(Iterable<Path> archives) throws IOException
   {
     logger.debug("extract archives");
@@ -603,12 +488,7 @@ public final class PluginProcessor
     return extracted.build();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   private Path findInstalledDirectory()
   {
     Path directory = null;
@@ -635,14 +515,7 @@ public final class PluginProcessor
     return directory;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param archive
-   *
-   * @throws IOException
-   */
+  
   private void moveArchive(Path archive) throws IOException
   {
     if (!Files.exists(installedDirectory))
@@ -670,28 +543,12 @@ public final class PluginProcessor
     Files.move(archive, installed);
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/06/04
-   * @author         Enter your name here...
-   */
+
+
   private static class DirectoryFilter implements DirectoryStream.Filter<Path>
   {
 
-    /**
-     * Method description
-     *
-     *
-     * @param entry
-     *
-     * @return
-     *
-     * @throws IOException
-     */
     @Override
     public boolean accept(Path entry) throws IOException
     {
@@ -701,27 +558,11 @@ public final class PluginProcessor
   }
 
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/06/04
-   * @author         Enter your name here...
-   */
+
   private static class PluginArchiveFilter
     implements DirectoryStream.Filter<Path>
   {
 
-    /**
-     * Method description
-     *
-     *
-     * @param entry
-     *
-     * @return
-     *
-     * @throws IOException
-     */
     @Override
     public boolean accept(Path entry) throws IOException
     {
@@ -730,18 +571,4 @@ public final class PluginProcessor
     }
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final JAXBContext context;
-
-  private final Path installedRootDirectory;
-
-  /** Field description */
-  private final Path installedDirectory;
-
-  /** Field description */
-  private final Path pluginDirectory;
-  private final PluginArchiveCleaner pluginArchiveCleaner;
 }

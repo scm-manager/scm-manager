@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
  * Executes git gc on every git repository. Statistics of the gc process are logged to the info level. The task is
  * disabled by default and must be enabled through the global git configuration.
  *
- * @author Sebastian Sdorra
  * @since 1.47
  */
 public class GitGcTask implements Runnable {

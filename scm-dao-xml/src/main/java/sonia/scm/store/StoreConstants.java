@@ -27,7 +27,6 @@ package sonia.scm.store;
 /**
  * Store constants for xml implementations.
  *
- * @author Sebastian Sdorra
  */
 public class StoreConstants
 {

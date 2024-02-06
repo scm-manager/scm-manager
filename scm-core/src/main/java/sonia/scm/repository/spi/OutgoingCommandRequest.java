@@ -26,7 +26,6 @@ package sonia.scm.repository.spi;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public final class OutgoingCommandRequest extends PagedRemoteCommandRequest {}

@@ -75,7 +75,6 @@ import static org.mockito.Mockito.when;
  * Performance test for {@link RepositoryManager#getAll()}.
  *
  * @see <a href="https://goo.gl/PD1AeM">Issue 781</a>
- * @author Sebastian Sdorra
  * @since 1.52
  */
 @RunWith(MockitoJUnitRunner.class)

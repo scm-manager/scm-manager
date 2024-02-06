@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
@@ -43,29 +42,15 @@ import sonia.scm.web.HgUtil;
 import java.io.IOException;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class HgBlameCommand extends AbstractCommand implements BlameCommand
 {
 
-  /**
-   * the logger for HgBlameCommand
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(HgBlameCommand.class);
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *  @param context
-   *
-   */
 
   @Inject
   HgBlameCommand(@Assisted HgCommandContext context)
@@ -73,7 +58,6 @@ public class HgBlameCommand extends AbstractCommand implements BlameCommand
     super(context);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   public BlameResult getBlameResult(BlameCommandRequest request)
@@ -100,17 +84,8 @@ public class HgBlameCommand extends AbstractCommand implements BlameCommand
     return new BlameResult(blameLines);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param line
-   * @param counter
-   *
-   * @return
-   */
+
   private BlameLine convert(AnnotateLine line, int counter)
   {
     BlameLine blameLine = new BlameLine();

@@ -24,56 +24,34 @@
     
 package sonia.scm.repository.client.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.client.spi.BranchCommand;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public final class BranchCommandBuilder
 {
 
-  /**
-   * the logger for BranchCommandBuilder
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(BranchCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param command
-   */
+  private BranchCommand command;
+ 
   public BranchCommandBuilder(BranchCommand command)
   {
     this.command = command;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   public BranchCommandBuilder branch(String name) throws IOException
   {
     if (logger.isDebugEnabled())
@@ -86,8 +64,4 @@ public final class BranchCommandBuilder
     return this;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private BranchCommand command;
 }

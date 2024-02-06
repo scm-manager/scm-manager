@@ -40,7 +40,6 @@ public interface RepositoryContentInitializer {
 
   /**
    * @param context add content to this context in order to commit files in the initial repository commit
-   * @throws IOException
    */
   void initialize(InitializerContext context) throws IOException;
 
@@ -57,14 +56,11 @@ public interface RepositoryContentInitializer {
 
     /**
      * create new file which will be included in initial repository commit
-     *
-     * @param path path of new file
-     * @return
      */
     CreateFile create(String path);
 
     /**
-     * Returns the the context entry with the given key and unmarshalls it to the given type.
+     * Returns the context entry with the given key and unmarshalls it to the given type.
      * It no entry with the given key is available an empty optional is returned.
      *
      * @param key  key of the context object

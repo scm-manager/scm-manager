@@ -59,8 +59,6 @@ public @interface Indexed {
 
   /**
    * {@code true} if this field should be part of default query for this type of object.
-   *
-   * @return {@code true} if field is part of default query
    */
   boolean defaultQuery() default false;
 
@@ -76,7 +74,6 @@ public @interface Indexed {
   /**
    * {@code true} to search the field value for matches and returns fragments with those matches instead of the whole value.
    *
-   * @return {@code true} to return matched fragments
    */
   boolean highlighted() default false;
 
@@ -150,9 +147,6 @@ public @interface Indexed {
     }
 
     /**
-     * Returns {@code true} if the field is tokenized.
-     *
-     * @return {@code true} if tokenized
      * @see #TOKENIZED
      */
     public boolean isTokenized() {
@@ -160,19 +154,12 @@ public @interface Indexed {
     }
 
     /**
-     * Returns {@code true} if the field is searchable.
-     *
-     * @return {@code true} if searchable
      * @see #SEARCHABLE
      */
     public boolean isSearchable() {
       return searchable;
     }
 
-    /**
-     * Returns {@code true} if the field is stored.
-     * @return {@code true} if stored
-     */
     public boolean isStored() {
       return stored;
     }

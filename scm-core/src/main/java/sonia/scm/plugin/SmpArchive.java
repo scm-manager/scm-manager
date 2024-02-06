@@ -24,7 +24,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
@@ -45,12 +44,9 @@ import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Smp plugin archive.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class SmpArchive {
@@ -59,11 +55,6 @@ public final class SmpArchive {
   private final ZipInputStreamFactory zipInputStreamFactory;
   private InstalledPluginDescriptor plugin;
 
-  /**
-   * Constructs ...
-   *
-   * @param archive
-   */
   public SmpArchive(ByteSource archive) {
     this(archive, source -> new ZipInputStream(archive.openStream(), StandardCharsets.UTF_8));
   }
@@ -74,56 +65,22 @@ public final class SmpArchive {
     this.zipInputStreamFactory = zipInputStreamFactory;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @param archive
-   * @return
-   */
   public static SmpArchive create(ByteSource archive) {
     return new SmpArchive(archive);
   }
 
-  /**
-   * Method description
-   *
-   * @param archive
-   * @return
-   */
   public static SmpArchive create(URL archive) {
     return create(Resources.asByteSource(archive));
   }
 
-  /**
-   * Method description
-   *
-   * @param archive
-   * @return
-   */
   public static SmpArchive create(Path archive) {
     return create(archive.toFile());
   }
 
-  /**
-   * Method description
-   *
-   * @param archive
-   * @return
-   */
   public static SmpArchive create(File archive) {
     return create(Files.asByteSource(archive));
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @param entry
-   * @return
-   */
   private static String getPath(ZipEntry entry) {
     String path = entry.getName().replace("\\", "/");
 
@@ -134,14 +91,6 @@ public final class SmpArchive {
     return path;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @param target
-   * @throws IOException
-   */
   public void extract(File target) throws IOException {
     try (ZipInputStream zis = open()) {
       ZipEntry ze = zis.getNextEntry();
@@ -171,14 +120,6 @@ public final class SmpArchive {
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @return
-   * @throws IOException
-   */
   public InstalledPluginDescriptor getPlugin() throws IOException {
     if (plugin == null) {
       plugin = createPlugin();
@@ -203,14 +144,6 @@ public final class SmpArchive {
     return plugin;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @return
-   * @throws IOException
-   */
   private InstalledPluginDescriptor createPlugin() throws IOException {
     InstalledPluginDescriptor p = null;
     NonClosingZipInputStream zis = null;
@@ -242,103 +175,40 @@ public final class SmpArchive {
     return p;
   }
 
-  /**
-   * Method description
-   *
-   * @return
-   * @throws IOException
-   */
   private ZipInputStream open() throws IOException {
     return zipInputStreamFactory.open(archive);
   }
 
-  /**
-   * Method description
-   *
-   * @return
-   * @throws IOException
-   */
   private NonClosingZipInputStream openNonClosing() throws IOException {
     return new NonClosingZipInputStream(archive.openStream(), StandardCharsets.UTF_8);
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   * @author Enter your name here...
-   * @version Enter version here..., 14/07/13
-   */
   private static class InputStreamByteSource extends ByteSource {
+    private final InputStream input;
 
-    /**
-     * Constructs ...
-     *
-     * @param input
-     */
     public InputStreamByteSource(InputStream input) {
       this.input = input;
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     * @return
-     * @throws IOException
-     */
     @Override
     public InputStream openStream() throws IOException {
       return input;
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /**
-     * Field description
-     */
-    private final InputStream input;
   }
 
-
-  /**
-   * Class description
-   *
-   * @author Enter your name here...
-   * @version Enter version here..., 14/07/12
-   */
   private static class NonClosingZipInputStream extends ZipInputStream {
 
-    /**
-     * Constructs ...
-     *
-     * @param in
-     * @param charset
-     */
     public NonClosingZipInputStream(InputStream in, Charset charset) {
       super(in, charset);
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     * @throws IOException
-     */
     @Override
     public void close() throws IOException {
 
       // do nothing
     }
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     */
     public void reallyClose() throws IOException {
       super.close();
     }

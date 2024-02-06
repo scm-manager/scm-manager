@@ -24,53 +24,28 @@
     
 package sonia.scm.cache;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class CacheException extends RuntimeException
 {
 
-  /** Field description */
   private static final long serialVersionUID = -1108209749696572319L;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   public CacheException() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
+
   public CacheException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
+ 
   public CacheException(Throwable cause)
   {
     super(cause);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
+ 
   public CacheException(String message, Throwable cause)
   {
     super(message, cause);

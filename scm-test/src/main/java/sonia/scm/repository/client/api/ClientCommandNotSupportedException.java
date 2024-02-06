@@ -26,18 +26,12 @@ package sonia.scm.repository.client.api;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public class ClientCommandNotSupportedException extends RuntimeException
 {
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param clientCommand
-   */
+  private ClientCommand clientCommand;
+ 
   public ClientCommandNotSupportedException(ClientCommand clientCommand)
   {
     super(
@@ -46,13 +40,7 @@ public class ClientCommandNotSupportedException extends RuntimeException
     this.clientCommand = clientCommand;
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param clientCommand
-   * @param message
-   */
+ 
   public ClientCommandNotSupportedException(ClientCommand clientCommand,
     String message)
   {
@@ -60,21 +48,11 @@ public class ClientCommandNotSupportedException extends RuntimeException
     this.clientCommand = clientCommand;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public ClientCommand getClientCommand()
   {
     return clientCommand;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private ClientCommand clientCommand;
 }

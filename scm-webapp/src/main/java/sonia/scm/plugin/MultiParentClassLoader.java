@@ -24,8 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
 import java.net.URL;
@@ -42,44 +40,25 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * TODO add caching
  *
- * @author Sebastian Sdorra
  */
 public class MultiParentClassLoader extends ClassLoader
 {
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param parents
-   */
+  private final List<ClassLoader> parents;
+ 
   public MultiParentClassLoader(ClassLoader... parents)
   {
     this(Arrays.asList(parents));
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param parents
-   */
+ 
   public MultiParentClassLoader(Collection<? extends ClassLoader> parents)
   {
     super(null);
     this.parents = new CopyOnWriteArrayList<>(parents);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   */
+
   @Override
   public URL getResource(String name)
   {
@@ -96,16 +75,7 @@ public class MultiParentClassLoader extends ClassLoader
     return null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   @Override
   public Enumeration<URL> getResources(String name) throws IOException
   {
@@ -124,19 +94,6 @@ public class MultiParentClassLoader extends ClassLoader
     return Collections.enumeration(resources);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param resolve
-   *
-   * @return
-   *
-   * @throws ClassNotFoundException
-   */
   @Override
   protected Class<?> loadClass(String name, boolean resolve)
     throws ClassNotFoundException
@@ -157,8 +114,4 @@ public class MultiParentClassLoader extends ClassLoader
     throw new ClassNotFoundException(String.format("%s not found.", name));
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final List<ClassLoader> parents;
 }

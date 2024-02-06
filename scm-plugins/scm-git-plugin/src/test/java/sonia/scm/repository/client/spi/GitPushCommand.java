@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.client.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -34,36 +33,19 @@ import sonia.scm.repository.client.api.RepositoryClientException;
 import java.io.IOException;
 import java.util.function.Supplier;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class GitPushCommand implements PushCommand
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param git
-   * @param credentialsProvider
-   */
+ 
   public GitPushCommand(Git git, CredentialsProvider credentialsProvider)
   {
     this.git = git;
     this.credentialsProvider = credentialsProvider;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Override
   public void push() throws IOException {
     push(() -> git.push().setPushAll());
@@ -96,9 +78,7 @@ public class GitPushCommand implements PushCommand
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private CredentialsProvider credentialsProvider;
 
-  /** Field description */
   private Git git;
 }

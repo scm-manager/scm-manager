@@ -24,7 +24,6 @@
 
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Iterators;
 
@@ -34,22 +33,13 @@ import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Iterator;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GuavaConfigurationReaderTest
 {
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testDefaultConfiguration()
   {
     GuavaCacheConfiguration cfg =
@@ -58,11 +48,7 @@ public class GuavaConfigurationReaderTest
     assertCacheValues(cfg, 200L, 1200L, 2400L);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testMergeAndOverride()
   {
     //J-
@@ -80,11 +66,7 @@ public class GuavaConfigurationReaderTest
                       2400L);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testMergeWithManualConfiguration()
   {
     GuavaCacheManagerConfiguration gcm = readConfiguration("gcache.001.xml",
@@ -96,11 +78,7 @@ public class GuavaConfigurationReaderTest
     assertCacheValues(getCache(gcm, "sonia.test.cache.002"), 1000L, 120L, 60L);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testMergeWithModuleConfigurations()
   {
     GuavaCacheManagerConfiguration gcm = readConfiguration("gcache.001.xml",
@@ -113,11 +91,7 @@ public class GuavaConfigurationReaderTest
                       2400L);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testSimpleConfiguration()
   {
     GuavaCacheConfiguration cfg =
@@ -126,11 +100,7 @@ public class GuavaConfigurationReaderTest
     assertCacheValues(cfg, 1000L, 60L, 30L);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testWithoutDefaultConfiguration()
   {
     GuavaCacheConfiguration cfg =
@@ -156,29 +126,14 @@ public class GuavaConfigurationReaderTest
     assertEquals(Long.valueOf(expireAfterWrite), cfg.getExpireAfterWrite());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param defaultConfiguration
-   *
-   * @return
-   */
+
   private GuavaCacheManagerConfiguration readConfiguration(
     String defaultConfiguration)
   {
     return readConfiguration(defaultConfiguration, null, null);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param defaultConfiguration
-   * @param moduleConfiguration
-   *
-   * @return
-   */
+
   private GuavaCacheManagerConfiguration readConfiguration(
     String defaultConfiguration, Iterator<String> moduleConfiguration)
   {
@@ -205,17 +160,8 @@ public class GuavaConfigurationReaderTest
           manualConfiguration)).read();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param gcmc
-   * @param name
-   *
-   * @return
-   */
+
   private GuavaNamedCacheConfiguration getCache(
     GuavaCacheManagerConfiguration gcmc, String name)
   {
@@ -234,7 +180,6 @@ public class GuavaConfigurationReaderTest
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   @Rule
   public TemporaryFolder tempFolder = new TemporaryFolder();
 }

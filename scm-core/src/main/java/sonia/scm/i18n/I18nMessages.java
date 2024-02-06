@@ -24,7 +24,6 @@
     
 package sonia.scm.i18n;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
 import com.google.common.cache.Cache;
@@ -35,8 +34,6 @@ import sonia.scm.util.ClassLoaders;
 import java.lang.reflect.Field;
 import java.util.Locale;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * The I18nMessages class instantiates a class and initializes all {@link String}
  * fields with values from a resource bundle. The resource bundle must have the
@@ -45,25 +42,17 @@ import java.util.Locale;
  * {@link I18n} annotation which holds the key. I18nMessages injects also the
  * locale and the bundle if it founds a field with the corresponding type.
  *
- * @author Sebastian Sdorra
  * @since 1.37
  */
 public final class I18nMessages
 {
 
-  /** Field description */
   private static final Cache<CacheKey, Object> cache =
     CacheBuilder.newBuilder().build();
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private I18nMessages() {}
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Same as {@link #get(java.lang.Class, java.util.Locale)}, with locale
@@ -87,8 +76,6 @@ public final class I18nMessages
    * @param msgClass message class
    * @param request servlet request
    * @param <T> type of message class
-   *
-   * @return
    */
   public static <T> T get(Class<T> msgClass, HttpServletRequest request)
   {
@@ -96,15 +83,13 @@ public final class I18nMessages
   }
 
   /**
-   * Returns a instance of the given message class with all message fields
+   * Returns an instance of the given message class with all message fields
    * initialized.
    *
    *
    * @param msgClass message class
    * @param locale locale
    * @param <T> type of the message class
-   *
-   * @return instance of message class
    */
   @SuppressWarnings("unchecked")
   public synchronized static <T> T get(Class<T> msgClass, Locale locale)
@@ -121,18 +106,6 @@ public final class I18nMessages
     return instance;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param msgClass
-   * @param locale
-   * @param <T>
-   *
-   * @return
-   */
   private static <T> T createInstance(Class<T> msgClass, Locale locale)
   {
     Bundle bundle = Bundle.getBundle(msgClass.getName(), locale,
@@ -152,18 +125,6 @@ public final class I18nMessages
     return instance;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param bundle
-   * @param locale
-   * @param msgClass
-   * @param instance
-   *
-   * @throws IllegalAccessException
-   * @throws IllegalArgumentException
-   */
   private static void initializeInstance(Bundle bundle, Locale locale,
     Class msgClass, Object instance)
     throws IllegalArgumentException, IllegalAccessException
@@ -202,41 +163,19 @@ public final class I18nMessages
     }
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/03/15
-   * @author         Enter your name here...
-   */
   private static class CacheKey
   {
+    private final Locale locale;
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param locale
-     * @param msgClass
-     */
+    private final Class msgClass;
+
     public CacheKey(Locale locale, Class msgClass)
     {
       this.locale = locale;
       this.msgClass = msgClass;
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param obj
-     *
-     * @return
-     */
     @Override
     public boolean equals(Object obj)
     {
@@ -256,24 +195,11 @@ public final class I18nMessages
         && Objects.equal(msgClass, other.msgClass);
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
     @Override
     public int hashCode()
     {
       return Objects.hashCode(locale, msgClass);
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final Locale locale;
-
-    /** Field description */
-    private final Class msgClass;
   }
 }

@@ -24,7 +24,6 @@
     
 package sonia.scm.group.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -35,26 +34,16 @@ import sonia.scm.xml.AbstractXmlDAO;
 
 import sonia.scm.store.ConfigurationStoreFactory;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Singleton
 public class XmlGroupDAO extends AbstractXmlDAO<Group, XmlGroupDatabase>
         implements GroupDAO
 {
 
-  /** Field description */
   public static final String STORE_NAME = "groups";
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param storeFactory
-   */
+ 
   @Inject
   public XmlGroupDAO(ConfigurationStoreFactory storeFactory) {
     super(storeFactory
@@ -63,28 +52,15 @@ public class XmlGroupDAO extends AbstractXmlDAO<Group, XmlGroupDatabase>
       .build());
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param group
-   *
-   * @return
-   */
+
   @Override
   protected Group clone(Group group)
   {
     return group.clone();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected XmlGroupDatabase createNewDatabase()
   {

@@ -34,7 +34,6 @@ import java.util.Map;
 /**
  * In memory store implementation of {@link DataStore}.
  *
- * @author Sebastian Sdorra
  *
  * @param <T> type of stored object
  * @deprecated use {@link InMemoryByteDataStore} instead.

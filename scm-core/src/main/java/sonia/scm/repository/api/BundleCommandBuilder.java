@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.ByteSink;
 import com.google.common.io.Files;
@@ -43,39 +42,30 @@ import java.io.OutputStream;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * The bundle command dumps a repository to a byte source such as a file. The
  * created bundle can be restored to an empty repository with the
  * {@link UnbundleCommandBuilder}.
  *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
  */
 public final class BundleCommandBuilder {
 
-  /**
-   * logger for BundleCommandBuilder
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(BundleCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final BundleCommand bundleCommand;
 
-  /**
-   * Constructs a new {@link BundleCommandBuilder}.
-   *  @param bundleCommand bundle command implementation
-   * @param repositoryExportingCheck
-   * @param repository    repository
-   */
+  private final Repository repository;
+
+  private final RepositoryExportingCheck repositoryExportingCheck;
+
   BundleCommandBuilder(BundleCommand bundleCommand, RepositoryExportingCheck repositoryExportingCheck, Repository repository) {
     this.bundleCommand = bundleCommand;
     this.repositoryExportingCheck = repositoryExportingCheck;
     this.repository = repository;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Dumps the repository to the given {@link File}.
@@ -137,8 +127,6 @@ public final class BundleCommandBuilder {
 
   /**
    * Checks for the file extension of the bundled repository
-   *
-   * @return the file extension of the bundle
    */
   public String getFileExtension() {
     return bundleCommand.getFileExtension();
@@ -160,17 +148,4 @@ public final class BundleCommandBuilder {
     };
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * bundle command implementation
-   */
-  private final BundleCommand bundleCommand;
-
-  /**
-   * repository
-   */
-  private final Repository repository;
-
-  private final RepositoryExportingCheck repositoryExportingCheck;
 }

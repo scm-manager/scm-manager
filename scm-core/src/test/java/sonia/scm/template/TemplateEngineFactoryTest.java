@@ -24,15 +24,12 @@
     
 package sonia.scm.template;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Sets;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.Reader;
@@ -41,18 +38,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class TemplateEngineFactoryTest
 {
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testGetDefaultEngine()
   {
 
@@ -65,11 +55,7 @@ public class TemplateEngineFactoryTest
     assertSame(engine2, factory.getDefaultEngine());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testGetEngine()
   {
     FakeTemplateEngine1 engine1 = new FakeTemplateEngine1();
@@ -82,11 +68,7 @@ public class TemplateEngineFactoryTest
     assertSame(engine2, factory.getEngine("fake2"));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testGetEngineByExtension()
   {
     FakeTemplateEngine1 engine1 = new FakeTemplateEngine1();
@@ -100,11 +82,7 @@ public class TemplateEngineFactoryTest
     assertSame(engine1, factory.getEngineByExtension("fake"));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testGetEngines()
   {
     FakeTemplateEngine1 engine1 = new FakeTemplateEngine1();
@@ -131,15 +109,9 @@ public class TemplateEngineFactoryTest
     assertTrue(engines.contains(engine2));
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 12/08/18
-   * @author         Enter your name here...
-   */
+
+
   private static class FakeTemplateEngine1 implements TemplateEngine
   {
 
@@ -177,12 +149,7 @@ public class TemplateEngineFactoryTest
       throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     @Override
     public TemplateType getType()
     {
@@ -191,13 +158,7 @@ public class TemplateEngineFactoryTest
   }
 
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 12/08/18
-   * @author         Enter your name here...
-   */
+
   private static class FakeTemplateEngine2 implements TemplateEngine
   {
 
@@ -235,12 +196,7 @@ public class TemplateEngineFactoryTest
       throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     @Override
     public TemplateType getType()
     {

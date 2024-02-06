@@ -46,7 +46,6 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link HgHookTagProvider}.
  *
- * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
 public class HgHookTagProviderTest {

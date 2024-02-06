@@ -54,7 +54,6 @@ import static org.mockito.Mockito.verify;
 /**
  * Unit tests for {@link PropagatePrincipleFilter}.
  * 
- * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
 @SubjectAware(configuration = "classpath:sonia/scm/shiro-001.ini")

@@ -24,13 +24,10 @@
     
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,90 +35,48 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
- * @author Sebastian Sdorra
  * @since 1.17
- *
- * @param <K>
- * @param <V>
  */
 public class MapCache<K, V>
   implements Cache<K, V>, org.apache.shiro.cache.Cache<K, V>
 {
+  private final Map<K, V> map = Maps.newHashMap();
 
-  /**
-   * Method description
-   *
-   */
-  @Override
+   @Override
   public void clear()
   {
     map.clear();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
+
   @Override
   public boolean contains(K key)
   {
     return map.containsKey(key);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Set<K> keys()
   {
     return Collections.unmodifiableSet(map.keySet());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   * @param value
-   *
-   * @return
-   */
+
   @Override
   public V put(K key, V value)
   {
     return map.put(key, value);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
+
   @Override
   public V remove(K key)
   {
     return map.remove(key);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param filter
-   *
-   * @return
-   */
+
   @Override
   public Iterable<V> removeAll(Predicate<K> filter)
   {
@@ -138,60 +93,33 @@ public class MapCache<K, V>
     return values;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public int size()
   {
     return map.size();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Collection<V> values()
   {
     return Collections.unmodifiableCollection(map.values());
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
+
   @Override
   public V get(K key)
   {
     return map.get(key);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public CacheStatistics getStatistics()
   {
     return null;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final Map<K, V> map = Maps.newHashMap();
 }

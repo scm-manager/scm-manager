@@ -54,7 +54,6 @@ import static org.junit.Assert.assertTrue;
 /**
  * Unit tests for {@link AuthorizationChangedEventProducer}.
  *
- * @author Sebastian Sdorra
  */
 public class AuthorizationChangedEventProducerTest {
 

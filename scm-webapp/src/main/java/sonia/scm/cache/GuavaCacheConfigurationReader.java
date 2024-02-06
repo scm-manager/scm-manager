@@ -24,7 +24,6 @@
 
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
@@ -42,24 +41,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class GuavaCacheConfigurationReader {
 
-  /**
-   * the logger for CacheConfigurationReader
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(GuavaCacheConfigurationReader.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private JAXBContext context;
 
-  /**
-   * Constructs ...
-   *
-   * @param loader
-   */
+  private CacheConfigurationLoader loader;
+
   @Inject
   public GuavaCacheConfigurationReader(CacheConfigurationLoader loader) {
     this.loader = loader;
@@ -71,7 +63,6 @@ public class GuavaCacheConfigurationReader {
     }
   }
 
-  //~--- methods --------------------------------------------------------------
 
   public GuavaCacheManagerConfiguration read() {
     URL defaultConfigUrl = loader.getDefaultResource();
@@ -127,13 +118,7 @@ public class GuavaCacheConfigurationReader {
     return map;
   }
 
-  /**
-   * Method description
-   *
-   * @param config
-   * @param other
-   * @return
-   */
+
   private GuavaCacheManagerConfiguration merge(
     GuavaCacheManagerConfiguration config, GuavaCacheManagerConfiguration other) {
     GuavaCacheConfiguration defaultCache = config.getDefaultCache();
@@ -154,13 +139,7 @@ public class GuavaCacheConfigurationReader {
       ImmutableList.copyOf(namedCaches.values()));
   }
 
-  /**
-   * Method description
-   *
-   * @param url
-   * @param fail
-   * @return
-   */
+
   private GuavaCacheManagerConfiguration readConfiguration(URL url, boolean fail) {
     logger.debug("read cache configuration from {}", url);
 
@@ -180,15 +159,4 @@ public class GuavaCacheConfigurationReader {
     return config;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * Field description
-   */
-  private JAXBContext context;
-
-  /**
-   * Field description
-   */
-  private CacheConfigurationLoader loader;
 }

@@ -24,8 +24,6 @@
 
 package sonia.scm.repository.api;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,10 +31,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

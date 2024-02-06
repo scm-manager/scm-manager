@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi.javahg;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.javahg.Repository;
 import org.javahg.internals.HgInputStream;
@@ -33,39 +32,20 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public abstract class HgIncomingOutgoingChangesetCommand
   extends AbstractChangesetCommand
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repository
-   * @param config
-   */
+ 
   public HgIncomingOutgoingChangesetCommand(Repository repository, HgConfig config) {
     super(repository, config);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param remoteRepository
-   *
-   * @return
-   */
+
   public List<Changeset> execute(String remoteRepository)
   {
     cmdAppend("--style", CHANGESET_EAGER_STYLE_PATH);

@@ -36,19 +36,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * The software agent that is acting on behalf of a user. The user agent
  * represents a browser or one of the repository client (svn, git or hg).
  *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.45
  */
 public final class UserAgent
 {
+  private final Charset basicAuthenticationCharset;
 
-  /**
-   * Constructs a new user agent
-   *
-   *  @param name
-   * @param basicAuthenticationCharset
-   * @param browser
-   */
+  /** indicator for browsers */
+  private final boolean browser;
+
+  /** indicator for scm clients (e.g. git, hg, svn) */
+  private final boolean scmClient;
+
+  /** name of UserAgent */
+  private final String name;
+
   private UserAgent(String name, Charset basicAuthenticationCharset, boolean browser, boolean scmClient)
   {
     this.name = checkNotNull(name);
@@ -57,7 +59,6 @@ public final class UserAgent
     this.scmClient = scmClient;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Returns the {@link Builder} for the UserAgent.
@@ -94,9 +95,7 @@ public final class UserAgent
     return new Builder(name);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public boolean equals(Object obj)
   {
@@ -117,18 +116,14 @@ public final class UserAgent
       && Objects.equal(basicAuthenticationCharset, other.basicAuthenticationCharset);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public int hashCode()
   {
     return Objects.hashCode(name, browser, basicAuthenticationCharset);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public String toString()
   {
@@ -141,7 +136,6 @@ public final class UserAgent
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the {@link Charset}, which is used to decode the basic
@@ -167,9 +161,6 @@ public final class UserAgent
 
   /**
    * Returns {@code true} if UserAgent is a browser.
-   *
-   *
-   * @return {@code true} if UserAgent is a browser
    */
   public boolean isBrowser()
   {
@@ -186,13 +177,23 @@ public final class UserAgent
     return scmClient;
   }
 
-  //~--- inner classes --------------------------------------------------------
+
 
   /**
    * Builder class for {@link UserAgent}.
    */
   public static class Builder
   {
+    /** name of UserAgent */
+    private final String name;
+
+    /** indicator for browsers */
+    private boolean browser = false;
+
+    /** indicator for browsers */
+    private boolean scmClient = false;
+
+    private Charset basicAuthenticationCharset = StandardCharsets.UTF_8;
 
     /**
      * Constructs a new UserAgent builder.
@@ -205,7 +206,7 @@ public final class UserAgent
       this.name = name;
     }
 
-    //~--- methods ------------------------------------------------------------
+    
 
     /**
      * Sets {@link Charset} which is used to decode the basic authentication.
@@ -252,33 +253,6 @@ public final class UserAgent
       return new UserAgent(name, basicAuthenticationCharset, browser, scmClient);
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** name of UserAgent */
-    private final String name;
-
-    /** indicator for browsers */
-    private boolean browser = false;
-
-    /** indicator for browsers */
-    private boolean scmClient = false;
-
-    /** basic authentication charset */
-    private Charset basicAuthenticationCharset = StandardCharsets.UTF_8;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** basic authentication charset */
-  private final Charset basicAuthenticationCharset;
-
-  /** indicator for browsers */
-  private final boolean browser;
-
-  /** indicator for scm clients (e.g. git, hg, svn) */
-  private final boolean scmClient;
-
-  /** name of UserAgent */
-  private final String name;
 }

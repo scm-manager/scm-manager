@@ -24,7 +24,6 @@
     
 package sonia.scm.web.cgi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,28 +33,16 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class DefaultCGIStatusCodeHandler implements CGIStatusCodeHandler
 {
 
-  /**
-   * the logger for DefaultCGIStatusCodeHandler
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultCGIStatusCodeHandler.class);
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param statusCode
-   */
+
   @Override
   public void handleStatusCode(HttpServletRequest request, int statusCode)
   {
@@ -65,17 +52,7 @@ public class DefaultCGIStatusCodeHandler implements CGIStatusCodeHandler
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param ouputStream
-   * @param statusCode
-   *
-   * @throws IOException
-   */
+
   @Override
   public void handleStatusCode(HttpServletRequest request,
                                HttpServletResponse response,

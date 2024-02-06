@@ -24,39 +24,20 @@
     
 package sonia.scm.net.ahc;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
- * An http request without {@link Content} for example a GET or HEAD request.
+ * A http request without {@link Content} for example a GET or HEAD request.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public class AdvancedHttpRequest extends BaseHttpRequest<AdvancedHttpRequest>
 {
 
-  /**
-   * Constructs a new {@link AdvancedHttpRequest}
-   *
-   *
-   * @param client
-   * @param method
-   * @param url
-   */
   AdvancedHttpRequest(AdvancedHttpClient client, String method,
     String url)
   {
     super(client, method, url);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Returns {@code this}.
-   *
-   *
-   * @return {@code this}
-   */
   @Override
   protected AdvancedHttpRequest self()
   {

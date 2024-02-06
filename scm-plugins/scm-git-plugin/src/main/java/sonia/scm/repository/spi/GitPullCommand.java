@@ -52,9 +52,7 @@ import sonia.scm.repository.api.PullResponse;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class GitPullCommand extends AbstractGitPushOrPullCommand
   implements PullCommand {
 

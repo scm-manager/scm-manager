@@ -24,7 +24,6 @@
     
 package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,29 +37,18 @@ import sonia.scm.HandlerEventType;
 
 import static org.mockito.Mockito.*;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @RunWith(MockitoJUnitRunner.class)
 public class UserEventHackTest
 {
 
-  /**
-   * Method description
-   *
-   */
-  @Before
+   @Before
   public void before()
   {
     verifier = inOrder(userManager);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testFireEvent()
   {
     fireEvent(userManager);
@@ -68,11 +56,7 @@ public class UserEventHackTest
     verify(1);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testFireEventDecorated()
   {
 
@@ -83,11 +67,7 @@ public class UserEventHackTest
     verify(1);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testFireEventMultiDecorated()
   {
 
@@ -103,23 +83,13 @@ public class UserEventHackTest
     verify(1);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param u
-   */
+
   private void fireEvent(UserManager u)
   {
     UserEventHack.fireEvent(u, HandlerEventType.CREATE, new User());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param count
-   */
+
   private void verify(int count)
   {
     verifier.verify(userManager,
@@ -128,10 +98,8 @@ public class UserEventHackTest
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   @Mock
   private AbstractUserManager userManager;
 
-  /** Field description */
   private InOrder verifier;
 }

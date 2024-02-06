@@ -52,11 +52,6 @@ public final class Tracer {
 
   private final Set<Exporter> exporters;
 
-  /**
-   * Constructs a new tracer with the given set of exporters.
-   *
-   * @param exporters set of exporters
-   */
   @Inject
   public Tracer(Set<Exporter> exporters) {
     this.exporters = exporters;
@@ -65,7 +60,6 @@ public final class Tracer {
   /**
    * Creates a new span.
    * @param kind kind of span
-   * @return new span
    */
   public Span span(String kind) {
     return new Span(this, kind);
@@ -73,8 +67,6 @@ public final class Tracer {
 
   /**
    * Pass the finished span to the exporters.
-   *
-   * @param span finished span
    */
   void export(SpanContext span) {
     for (Exporter exporter : exporters) {

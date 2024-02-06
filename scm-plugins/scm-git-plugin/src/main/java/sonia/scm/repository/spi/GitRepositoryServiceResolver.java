@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -32,10 +31,7 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Extension
 public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
 

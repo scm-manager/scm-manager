@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -42,8 +41,6 @@ import sonia.scm.repository.spi.BlameCommandRequest;
 
 import java.io.IOException;
 import java.io.Serializable;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Shows changeset information by line for a given file.
@@ -64,22 +61,30 @@ import java.io.Serializable;
  * }
  * </code></pre>
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public final class BlameCommandBuilder
 {
 
-  /** name of the cache */
   static final String CACHE_NAME = "sonia.cache.cmd.blame";
 
-  /**
-   * the logger for BlameCommandBuilder
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(BlameCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final BlameCommand blameCommand;
+
+  private final Cache<CacheKey, BlameResult> cache;
+
+  private boolean disableCache = false;
+
+  private boolean disablePreProcessors = false;
+
+  private final PreProcessorUtil preProcessorUtil;
+
+  private final Repository repository;
+
+  private final BlameCommandRequest request = new BlameCommandRequest();
 
   /**
    * Constructs a new {@link BlameCommandBuilder}, this constructor should
@@ -99,7 +104,6 @@ public final class BlameCommandBuilder
     this.preProcessorUtil = preProcessorUtil;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Reset each parameter to its default value.
@@ -115,13 +119,12 @@ public final class BlameCommandBuilder
     return this;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns changeset informations by line for the given file.
+   * Returns changeset information by line for the given file.
    *
    * @param path path of the file
-   * @return changeset informations by line for the given file
+   * @return changeset information by line for the given file
    *
    * @throws IllegalArgumentException if the path is null or empty
    *
@@ -182,7 +185,6 @@ public final class BlameCommandBuilder
     return result;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Disables the cache. This means that every {@link BlameResult}
@@ -202,7 +204,7 @@ public final class BlameCommandBuilder
   }
   
   /**
-   * Disable the execution of pre processors.
+   * Disable the execution of pre-processors.
    *
    *
    * @param disablePreProcessors true to disable the pre processors execution
@@ -232,46 +234,24 @@ public final class BlameCommandBuilder
     return this;
   }
 
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Key for cache.
-   *
-   *
-   * @version        Enter version here..., 12/06/05
-   * @author         Enter your name here...
-   */
   static class CacheKey implements RepositoryCacheKey, Serializable
   {
 
-    /** Field description */
-    private static final long serialVersionUID = 8373766042131887789L;
+      private static final long serialVersionUID = 8373766042131887789L;
 
-    //~--- constructors -------------------------------------------------------
+    private final String repositoryId;
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param repository
-     * @param request
-     */
+    private final BlameCommandRequest request;
+
     public CacheKey(Repository repository, BlameCommandRequest request)
     {
       this.repositoryId = repository.getId();
       this.request = request;
     }
 
-    //~--- methods ------------------------------------------------------------
+    
 
-    /**
-     * Method description
-     *
-     *
-     * @param obj
-     *
-     * @return
-     */
+    
     @Override
     public boolean equals(Object obj)
     {
@@ -291,62 +271,19 @@ public final class BlameCommandBuilder
              && Objects.equal(request, other.request);
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     @Override
     public int hashCode()
     {
       return Objects.hashCode(repositoryId, request);
     }
 
-    //~--- get methods --------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
     @Override
     public String getRepositoryId()
     {
       return repositoryId;
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** repository id */
-    private final String repositoryId;
-
-    /** request object */
-    private final BlameCommandRequest request;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** implementation of the blame command */
-  private final BlameCommand blameCommand;
-
-  /** the cache */
-  private final Cache<CacheKey, BlameResult> cache;
-
-  /** disable change */
-  private boolean disableCache = false;
-
-  /** disable the execution of pre processors */
-  private boolean disablePreProcessors = false;
-
-  /** Field description */
-  private final PreProcessorUtil preProcessorUtil;
-
-  /** the repository */
-  private final Repository repository;
-
-  /** request for the blame command implementation */
-  private final BlameCommandRequest request = new BlameCommandRequest();
 }

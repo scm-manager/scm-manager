@@ -24,7 +24,6 @@
 
 package sonia.scm.lifecycle;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
 import com.google.inject.servlet.GuiceFilter;
@@ -37,24 +36,16 @@ import sonia.scm.event.ScmEventBus;
 
 import java.util.Optional;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class BootstrapContextFilter extends GuiceFilter {
 
-  /**
-   * the logger for BootstrapContextFilter
-   */
+ 
   private static final Logger LOG = LoggerFactory.getLogger(BootstrapContextFilter.class);
 
   private final BootstrapContextListener listener = new BootstrapContextListener();
 
   private ClassLoader webAppClassLoader;
 
-  /** Field description */
   private FilterConfig filterConfig;
 
   @Override

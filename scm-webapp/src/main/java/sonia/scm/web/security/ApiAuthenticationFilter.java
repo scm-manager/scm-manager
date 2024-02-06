@@ -24,7 +24,6 @@
     
 package sonia.scm.web.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import jakarta.servlet.FilterChain;
@@ -42,12 +41,9 @@ import sonia.scm.web.filter.AuthenticationFilter;
 import java.io.IOException;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Filter to handle authentication for the rest api of SCM-Manager.
  *
- * @author Sebastian Sdorra
  */
 @Priority(Filters.PRIORITY_AUTHENTICATION)
 @WebElement(value = Filters.PATTERN_RESTAPI,
@@ -55,7 +51,6 @@ import java.util.Set;
 public class ApiAuthenticationFilter extends AuthenticationFilter
 {
 
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new ApiAuthenticationFilter
@@ -70,7 +65,6 @@ public class ApiAuthenticationFilter extends AuthenticationFilter
     super(configuration, tokenGenerators);
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * The filter skips the authentication chain on the login resource, for all

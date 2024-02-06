@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -40,12 +39,9 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Unit tests for {@link OutgoingCommand}.
  *
- * @author Sebastian Sdorra
  */
 public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
 {
@@ -123,12 +119,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
     assertCommitsEquals(c2, cpr.getChangesets().get(0));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testGetOutgoingChangesetsWithEmptyRepository()
     throws IOException
@@ -145,12 +136,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
     assertEquals(0, cpr.getTotal());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   private GitOutgoingCommand createCommand()
   {
     return new GitOutgoingCommand(

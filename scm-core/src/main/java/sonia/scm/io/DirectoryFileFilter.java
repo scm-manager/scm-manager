@@ -24,32 +24,18 @@
     
 package sonia.scm.io;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.FileFilter;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.6
  */
 public class DirectoryFileFilter implements FileFilter
 {
 
-  /** Field description */
   public static final DirectoryFileFilter instance = new DirectoryFileFilter();
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   *
-   * @return
-   */
   @Override
   public boolean accept(File file)
   {

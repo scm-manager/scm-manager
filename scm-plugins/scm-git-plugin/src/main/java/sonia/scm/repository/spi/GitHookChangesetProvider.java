@@ -31,10 +31,7 @@ import sonia.scm.repository.api.HookChangesetProvider;
 
 import java.util.List;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GitHookChangesetProvider implements HookChangesetProvider {
 
   private final GitChangesetConverterFactory converterFactory;

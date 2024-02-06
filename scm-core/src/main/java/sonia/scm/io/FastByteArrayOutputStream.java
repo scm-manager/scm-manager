@@ -24,8 +24,6 @@
     
 package sonia.scm.io;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -33,12 +31,14 @@ import java.io.OutputStream;
  * ByteArrayOutputStream implementation that doesn't synchronize methods
  * and doesn't copy the data on toByteArray().
  *
- * @author Sebastian Sdorra
  * @since 1.29
  * @see <a href="http://javatechniques.com/blog/faster-deep-copies-of-java-objects" target="_blank">http://javatechniques.com/blog/faster-deep-copies-of-java-objects</a>
  */
 public final class FastByteArrayOutputStream extends OutputStream
 {
+  private byte[] buf = null;
+
+  private int size = 0;
 
   /**
    * Constructs a stream with buffer capacity size 5K
@@ -59,14 +59,6 @@ public final class FastByteArrayOutputStream extends OutputStream
     this.buf = new byte[initSize];
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param b
-   */
   @Override
   public final void write(byte b[])
   {
@@ -75,14 +67,6 @@ public final class FastByteArrayOutputStream extends OutputStream
     size += b.length;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param b
-   * @param off
-   * @param len
-   */
   @Override
   public final void write(byte b[], int off, int len)
   {
@@ -91,12 +75,6 @@ public final class FastByteArrayOutputStream extends OutputStream
     size += len;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param b
-   */
   @Override
   public final void write(int b)
   {
@@ -104,16 +82,11 @@ public final class FastByteArrayOutputStream extends OutputStream
     buf[size++] = (byte) b;
   }
 
-  /**
-   * Method description
-   *
-   */
-  public void reset()
+   public void reset()
   {
     size = 0;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the byte array containing the written data. Note that this
@@ -137,18 +110,12 @@ public final class FastByteArrayOutputStream extends OutputStream
     return new FastByteArrayInputStream(buf, size);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public int getSize()
   {
     return size;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Ensures that we have a large enough buffer for the given size.
@@ -167,13 +134,4 @@ public final class FastByteArrayOutputStream extends OutputStream
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * Buffer and size
-   */
-  private byte[] buf = null;
-
-  /** Field description */
-  private int size = 0;
 }

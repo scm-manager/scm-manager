@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
 import com.google.common.io.ByteSink;
@@ -37,23 +36,13 @@ import com.google.common.io.ByteSink;
  */
 public final class BundleCommandRequest
 {
+  private final ByteSink archive;
 
-  /**
-   * Constructs a new bundle command request.
-   *
-   *
-   * @param archive byte sink archive
-   */
   public BundleCommandRequest(ByteSink archive)
   {
     this.archive = archive;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean equals(Object obj)
   {
@@ -72,9 +61,7 @@ public final class BundleCommandRequest
     return Objects.equal(archive, other.archive);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
   public int hashCode()
   {
@@ -85,17 +72,11 @@ public final class BundleCommandRequest
 
   /**
    * Returns the archive as {@link ByteSink}.
-   *
-   *
-   * @return {@link ByteSink} archive.
    */
   public ByteSink getArchive()
   {
     return archive;
   }
 
-  //~--- fields ---------------------------------------------------------------
 
-  /** byte sink archive */
-  private final ByteSink archive;
 }

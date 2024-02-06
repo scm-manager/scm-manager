@@ -37,20 +37,20 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @AuditEntry(ignore = true)
 @XmlRootElement(name = "group-db")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlGroupDatabase implements XmlDatabase<Group>
 {
+  private Long creationTime;
 
-  /**
-   * Constructs ...
-   *
-   */
+  @XmlJavaTypeAdapter(XmlGroupMapAdapter.class)
+  @XmlElement(name = "groups")
+  private Map<String, Group> groupMap = new TreeMap<>();
+
+  private Long lastModified;
+
   public XmlGroupDatabase()
   {
     long c = System.currentTimeMillis();
@@ -59,136 +59,70 @@ public class XmlGroupDatabase implements XmlDatabase<Group>
     lastModified = c;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param group
-   */
+
   @Override
   public void add(Group group)
   {
     groupMap.put(group.getName(), group);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param groupname
-   *
-   * @return
-   */
+
   @Override
   public boolean contains(String groupname)
   {
     return groupMap.containsKey(groupname);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param groupname
-   *
-   * @return
-   */
+
   @Override
   public Group remove(String groupname)
   {
     return groupMap.remove(groupname);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Collection<Group> values()
   {
     return groupMap.values();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param groupname
-   *
-   * @return
-   */
+
   @Override
   public Group get(String groupname)
   {
     return groupMap.get(groupname);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public long getCreationTime()
   {
     return creationTime;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public long getLastModified()
   {
     return lastModified;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param creationTime
-   */
+
   @Override
   public void setCreationTime(long creationTime)
   {
     this.creationTime = creationTime;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param lastModified
-   */
+
   @Override
   public void setLastModified(long lastModified)
   {
     this.lastModified = lastModified;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Long creationTime;
-
-  /** Field description */
-  @XmlJavaTypeAdapter(XmlGroupMapAdapter.class)
-  @XmlElement(name = "groups")
-  private Map<String, Group> groupMap = new TreeMap<>();
-
-  /** Field description */
-  private Long lastModified;
 }

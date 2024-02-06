@@ -24,7 +24,6 @@
 
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import com.google.common.collect.LinkedHashMultimap;
@@ -35,27 +34,39 @@ import sonia.scm.util.HttpUtil;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Base class for http requests.
  *
- * @author Sebastian Sdorra
  * @param <T> request implementation
  *
  * @since 1.46
  */
 public abstract class BaseHttpRequest<T extends BaseHttpRequest>
 {
+  protected final AdvancedHttpClient client;
 
-  /**
-   * Constructs a new {@link BaseHttpRequest}.
-   *
-   *
-   * @param client http client
-   * @param method http method
-   * @param url url
-   */
+  private final Multimap<String, String> headers = LinkedHashMultimap.create();
+
+  private final String method;
+
+  private boolean ignoreProxySettings = false;
+
+  /** disable ssl hostname validation */
+  private boolean disableHostnameValidation = false;
+
+  /** disable ssl certificate validation */
+  private boolean disableCertificateValidation = false;
+
+  private boolean decodeGZip = false;
+
+  private String url;
+
+  /** kind of span for trace api */
+  private String spanKind = "HTTP Request";
+
+  /** codes which will be marked as successful by tracer */
+  private int[] acceptedStatusCodes = new int[]{};
+
   public BaseHttpRequest(AdvancedHttpClient client, String method, String url)
   {
     this.client = client;
@@ -63,7 +74,6 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
     this.url = url;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Executes the request and returns the http response.
@@ -296,13 +306,9 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
     return self();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Return a map with http headers used for the request.
-   *
-   *
-   * @return map with http headers
    */
   public Multimap<String, String> getHeaders()
   {
@@ -311,9 +317,6 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
 
   /**
    * Returns the http method for the request.
-   *
-   *
-   * @return http method of request
    */
   public String getMethod()
   {
@@ -322,9 +325,6 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
 
   /**
    * Returns the url for the request.
-   *
-   *
-   * @return url of the request
    */
   public String getUrl()
   {
@@ -333,8 +333,6 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
 
   /**
    * Returns the kind of span which is used for the trace api.
-   *
-   * @return kind of span
    *
    * @since 2.9.0
    */
@@ -356,9 +354,6 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
 
   /**
    * Returns true if the request decodes gzip compression.
-   *
-   *
-   * @return true if the request decodes gzip compression
    */
   public boolean isDecodeGZip()
   {
@@ -367,9 +362,6 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
 
   /**
    * Returns true if the verification of ssl certificates is disabled.
-   *
-   *
-   * @return true if certificate verification is disabled
    */
   public boolean isDisableCertificateValidation()
   {
@@ -378,9 +370,6 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
 
   /**
    * Returns true if the ssl hostname validation is disabled.
-   *
-   *
-   * @return true if the ssl hostname validation is disabled
    */
   public boolean isDisableHostnameValidation()
   {
@@ -389,16 +378,12 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
 
   /**
    * Returns true if the proxy settings are ignored.
-   *
-   *
-   * @return true if the proxy settings are ignored
    */
   public boolean isIgnoreProxySettings()
   {
     return ignoreProxySettings;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Returns the value url encoded.
@@ -416,11 +401,6 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
   /**
    * Returns string representation of the given object or {@code null}, if the
    * object is {@code null}.
-   *
-   *
-   * @param object object
-   *
-   * @return string representation or {@code null}
    */
   protected String toString(Object object)
   {
@@ -446,35 +426,4 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
     url = url.concat(buffer.toString());
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** http client */
-  protected final AdvancedHttpClient client;
-
-  /** http header */
-  private final Multimap<String, String> headers = LinkedHashMultimap.create();
-
-  /** http method */
-  private final String method;
-
-  /** ignore proxy settings */
-  private boolean ignoreProxySettings = false;
-
-  /** disable ssl hostname validation */
-  private boolean disableHostnameValidation = false;
-
-  /** disable ssl certificate validation */
-  private boolean disableCertificateValidation = false;
-
-  /** decode gzip */
-  private boolean decodeGZip = false;
-
-  /** url of request */
-  private String url;
-
-  /** kind of span for trace api */
-  private String spanKind = "HTTP Request";
-
-  /** codes which will be marked as successful by tracer */
-  private int[] acceptedStatusCodes = new int[]{};
 }

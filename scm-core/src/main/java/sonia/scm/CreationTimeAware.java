@@ -27,16 +27,12 @@ package sonia.scm;
 /**
  * Base interface of all objects which have a creation time.
  *
- * @author Sebastian Sdorra
  * @since 1.14
  */
 public interface CreationTimeAware
 {
   /**
    * Returns a timestamp of object creation.
-   *
-   *
-   * @return timestamp of object creation
    */
   public Long getCreationTime();
 }

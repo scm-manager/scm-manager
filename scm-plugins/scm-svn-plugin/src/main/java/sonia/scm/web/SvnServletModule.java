@@ -32,10 +32,7 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.repository.SvnWorkingCopyFactory;
 import sonia.scm.repository.spi.SimpleSvnWorkingCopyFactory;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Extension
 public class SvnServletModule extends ServletModule {
 

@@ -29,7 +29,6 @@ import sonia.scm.plugin.ExtensionPoint;
 /**
  * ExtensionPoint to modify the path matching behaviour for a certain type of repositories.
  * 
- * @author Sebastian Sdorra
  * @since 1.54
  */
 @ExtensionPoint
@@ -47,8 +46,6 @@ public interface RepositoryPathMatcher {
   
   /**
    * Returns the type of repository for which the matcher is responsible.
-   * 
-   * @return type of repository
    */
   String getType();
 }

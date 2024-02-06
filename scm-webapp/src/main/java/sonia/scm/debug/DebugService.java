@@ -38,7 +38,6 @@ import java.util.Collection;
 /**
  * The DebugService stores and returns received data from repository hook events.
  *
- * @author Sebastian Sdorra
  */
 @Singleton
 public final class DebugService

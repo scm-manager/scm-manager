@@ -24,29 +24,16 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.Tag;
 
 import java.io.IOException;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public interface TagsCommand
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   public List<Tag> getTags() throws IOException;
 }

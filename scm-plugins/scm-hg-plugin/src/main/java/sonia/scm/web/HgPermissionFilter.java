@@ -39,7 +39,6 @@ import java.io.IOException;
 /**
  * Permission filter for mercurial repositories.
  *
- * @author Sebastian Sdorra
  */
 public class HgPermissionFilter extends PermissionFilter {
 

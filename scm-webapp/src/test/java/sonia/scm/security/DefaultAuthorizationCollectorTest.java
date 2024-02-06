@@ -70,7 +70,6 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link AuthorizationCollector}.
  *
- * @author Sebastian Sdorra
  */
 @SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)

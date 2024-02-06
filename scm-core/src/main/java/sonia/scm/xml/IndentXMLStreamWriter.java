@@ -24,8 +24,6 @@
     
 package sonia.scm.xml;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import com.google.common.annotations.VisibleForTesting;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamException;
@@ -34,18 +32,15 @@ import javax.xml.stream.XMLStreamWriter;
 /**
  * This class is a pretty print wrapper for XMLStreamWriter.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseable
 {
 
-  /** line separator */
   @VisibleForTesting
   static final String LINE_SEPARATOR =
     System.getProperty("line.separator");
 
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new IndentXMLStreamWriter.
@@ -69,29 +64,22 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     this.indent = indent;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void close() throws XMLStreamException
   {
     writer.close();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void flush() throws XMLStreamException
   {
     writer.flush();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeAttribute(String localName, String value)
     throws XMLStreamException
@@ -99,9 +87,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.writeAttribute(localName, value);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeAttribute(String prefix, String namespaceURI,
     String localName, String value)
@@ -110,9 +96,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.writeAttribute(prefix, namespaceURI, localName, value);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeAttribute(String namespaceURI, String localName,
     String value)
@@ -121,27 +105,21 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.writeAttribute(namespaceURI, localName, value);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeCData(String data) throws XMLStreamException
   {
     writer.writeCData(data);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeCharacters(String text) throws XMLStreamException
   {
     writer.writeCharacters(text);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeCharacters(char[] text, int start, int len)
     throws XMLStreamException
@@ -149,9 +127,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.writeCharacters(text, start, len);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeComment(String data) throws XMLStreamException
   {
@@ -160,18 +136,14 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     unindent();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeDTD(String dtd) throws XMLStreamException
   {
     writer.writeDTD(dtd);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeDefaultNamespace(String namespaceURI)
     throws XMLStreamException
@@ -179,9 +151,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.writeDefaultNamespace(namespaceURI);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeEmptyElement(String namespaceURI, String localName)
     throws XMLStreamException
@@ -191,9 +161,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     unindent();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeEmptyElement(String prefix, String localName,
     String namespaceURI)
@@ -204,9 +172,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     unindent();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeEmptyElement(String localName) throws XMLStreamException
   {
@@ -215,9 +181,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     unindent();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeEndDocument() throws XMLStreamException
   {
@@ -225,9 +189,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writeLineSeparator();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeEndElement() throws XMLStreamException
   {
@@ -235,18 +197,14 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.writeEndElement();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeEntityRef(String name) throws XMLStreamException
   {
     writer.writeEntityRef(name);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeNamespace(String prefix, String namespaceURI)
     throws XMLStreamException
@@ -254,9 +212,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.writeNamespace(prefix, namespaceURI);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeProcessingInstruction(String target)
     throws XMLStreamException
@@ -264,9 +220,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.writeProcessingInstruction(target);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeProcessingInstruction(String target, String data)
     throws XMLStreamException
@@ -274,9 +228,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.writeProcessingInstruction(target, data);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeStartDocument() throws XMLStreamException
   {
@@ -284,9 +236,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writeLineSeparator();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeStartDocument(String version) throws XMLStreamException
   {
@@ -294,9 +244,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writeLineSeparator();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeStartDocument(String encoding, String version)
     throws XMLStreamException
@@ -305,9 +253,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writeLineSeparator();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeStartElement(String localName) throws XMLStreamException
   {
@@ -315,9 +261,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.writeStartElement(localName);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeStartElement(String namespaceURI, String localName)
     throws XMLStreamException
@@ -326,9 +270,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.writeStartElement(namespaceURI, localName);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void writeStartElement(String prefix, String localName,
     String namespaceURI)
@@ -338,49 +280,37 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.writeStartElement(prefix, localName, namespaceURI);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public NamespaceContext getNamespaceContext()
   {
     return writer.getNamespaceContext();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public String getPrefix(String uri) throws XMLStreamException
   {
     return writer.getPrefix(uri);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public Object getProperty(String name) throws IllegalArgumentException
   {
     return writer.getProperty(name);
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void setDefaultNamespace(String uri) throws XMLStreamException
   {
     writer.setDefaultNamespace(uri);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void setNamespaceContext(NamespaceContext context)
     throws XMLStreamException
@@ -388,9 +318,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.setNamespaceContext(context);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void setPrefix(String prefix, String uri) throws XMLStreamException
   {
@@ -401,7 +329,6 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter, AutoCloseab
     writer.writeCharacters(LINE_SEPARATOR);
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Write indent spaces for start elements.

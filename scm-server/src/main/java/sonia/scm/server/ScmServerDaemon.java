@@ -24,82 +24,44 @@
     
 package sonia.scm.server;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
 import org.apache.commons.daemon.DaemonInitException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class ScmServerDaemon implements Daemon
 {
 
-  /** Field description */
   private static volatile ScmServer webserver = new ScmServer();
 
-  //~--- methods --------------------------------------------------------------
+  private String[] daemonArgs;
 
-  /**
-   * Method description
-   *
-   *
-   * @param args
-   */
   public static void main(String[] args)
   {
     webserver.run();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param args
-   *
-   * @throws Exception
-   */
+  
   public static void start(String[] args) throws Exception
   {
     webserver.start();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param args
-   *
-   * @throws Exception
-   */
+  
   public static void stop(String[] args) throws Exception
   {
     webserver.stopServer();
     webserver.join((long) ScmServer.GRACEFUL_TIMEOUT);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Override
+   @Override
   public void destroy()
   {
 
     // do nothing
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   *
-   * @throws DaemonInitException
-   * @throws Exception
-   */
   @Override
   public void init(DaemonContext context) throws DaemonInitException, Exception
   {
@@ -110,32 +72,16 @@ public class ScmServerDaemon implements Daemon
     webserver.init();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
   @Override
   public void start() throws Exception
   {
     start(daemonArgs);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
   @Override
   public void stop() throws Exception
   {
     stop(daemonArgs);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String[] daemonArgs;
 }

@@ -27,7 +27,6 @@ package sonia.scm;
 /**
  * Factory for decorated objects.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  *
  * @param <T>
@@ -35,13 +34,5 @@ package sonia.scm;
 public interface DecoratorFactory<T>
 {
 
-  /**
-   * Create a decorator for the given object.
-   *
-   *
-   * @param object object to decorate
-   *
-   * @return decorated object
-   */
   public T createDecorator(T object);
 }

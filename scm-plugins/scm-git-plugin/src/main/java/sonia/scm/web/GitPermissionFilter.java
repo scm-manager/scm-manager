@@ -39,7 +39,6 @@ import java.io.IOException;
 /**
  * GitPermissionFilter decides if a git request requires write or read privileges.
  * 
- * @author Sebastian Sdorra
  */
 public class GitPermissionFilter extends PermissionFilter
 {
@@ -54,7 +53,6 @@ public class GitPermissionFilter extends PermissionFilter
   
   private static final String METHOD_LFS_UPLOAD = "PUT";
 
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new instance of the GitPermissionFilter.

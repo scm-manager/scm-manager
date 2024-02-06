@@ -24,20 +24,14 @@
     
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.io.DeepCopy;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
 import java.util.Locale;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public enum CopyStrategy
 {
 
@@ -61,30 +55,14 @@ public enum CopyStrategy
     this.copyOnWrite = copyOnWrite;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
+
   public static CopyStrategy fromString(String value)
   {
     return valueOf(value.toUpperCase(Locale.ENGLISH).replace("-", ""));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   * @param <T>
-   *
-   * @return
-   */
+
   public <T> T copyOnRead(T object)
   {
     return copyOnRead
@@ -92,15 +70,7 @@ public enum CopyStrategy
       : object;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   * @param <T>
-   *
-   * @return
-   */
+
   public <T> T copyOnWrite(T object)
   {
     return copyOnWrite
@@ -108,30 +78,15 @@ public enum CopyStrategy
       : object;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getConfigName()
   {
     return configName;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   * @param <T>
-   *
-   * @return
-   */
+
   private <T> T deepCopy(T object)
   {
     T copy = null;
@@ -151,12 +106,9 @@ public enum CopyStrategy
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private String configName;
 
-  /** Field description */
   private boolean copyOnRead;
 
-  /** Field description */
   private boolean copyOnWrite;
 }

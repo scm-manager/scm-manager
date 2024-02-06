@@ -24,32 +24,18 @@
     
 package sonia.scm.upgrade;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.version.Version;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 
 /**
- * Handle upgrades from one SCM-Manager version to an other.
+ * Handle upgrades from one SCM-Manager version to another.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 public interface UpgradeHandler
 {
-
-  /**
-   * Handle upgrade of SCM-Manager
-   *
-   *
-   * @param homeDirectory home directory
-   * @param configDirectory config directory
-   * @param oldVersion old version
-   * @param newVersion new version
-   */
   public void doUpgrade(File homeDirectory, File configDirectory,
     Version oldVersion, Version newVersion);
 }

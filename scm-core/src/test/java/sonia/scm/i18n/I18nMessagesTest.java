@@ -24,7 +24,6 @@
     
 package sonia.scm.i18n;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
@@ -32,23 +31,14 @@ import sonia.scm.repository.Changeset;
 
 import static org.junit.Assert.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Locale;
 import java.util.MissingResourceException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class I18nMessagesTest
 {
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testI18n()
   {
     /*
@@ -71,11 +61,7 @@ public class I18nMessagesTest
     assertEquals(Locale.ENGLISH, msg.locale);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testI18nOtherLanguage()
   {
     TestMessages msg = I18nMessages.get(TestMessages.class, Locale.GERMANY);
@@ -87,11 +73,7 @@ public class I18nMessagesTest
     assertEquals(Locale.GERMANY, msg.locale);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test(expected = MissingResourceException.class)
+   @Test(expected = MissingResourceException.class)
   public void testMissingBundle()
   {
     Changeset msg = I18nMessages.get(Changeset.class);

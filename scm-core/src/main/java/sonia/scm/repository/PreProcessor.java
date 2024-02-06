@@ -28,19 +28,11 @@ package sonia.scm.repository;
  * A pre processor is able to modify a object before it is delivered 
  * to the user interface.
  *
- * @author Sebastian Sdorra
  * @since 1.17
  *
  * @param <T> object type
  */
 public interface PreProcessor<T>
 {
-
-  /**
-   * Process the given object.
-   *
-   *
-   * @param item object to process
-   */
   public void process(T item);
 }

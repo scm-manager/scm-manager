@@ -24,7 +24,6 @@
     
 package sonia.scm.web.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import com.google.inject.Singleton;
@@ -45,31 +44,15 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map.Entry;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Singleton
 public class LoggingFilter extends HttpFilter
 {
 
-  /** Field description */
   private static final Logger logger =
     LoggerFactory.getLogger(LoggingFilter.class);
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param chain
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   @Override
   protected void doFilter(HttpServletRequest request,
     HttpServletResponse response, FilterChain chain)
@@ -93,12 +76,7 @@ public class LoggingFilter extends HttpFilter
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   */
+
   private void logRequest(BufferedHttpServletRequest request)
   {
     logger.debug("**************** request ****************");
@@ -189,16 +167,6 @@ public class LoggingFilter extends HttpFilter
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param orgResponse
-   * @param response
-   *
-   * @throws IOException
-   */
   private void logResponse(HttpServletResponse orgResponse,
     BufferedHttpServletResponse response)
     throws IOException
@@ -246,42 +214,20 @@ public class LoggingFilter extends HttpFilter
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
+
   private boolean isTextRequest(HttpServletRequest request)
   {
     return isTextRequest(request.getContentType());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   *
-   * @return
-   */
+
   private boolean isTextRequest(HttpServletResponse response)
   {
     return isTextRequest(response.getContentType());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param contentType
-   *
-   * @return
-   */
+
   private boolean isTextRequest(String contentType)
   {
     return !Strings.isNullOrEmpty(contentType)

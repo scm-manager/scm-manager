@@ -24,13 +24,11 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.throwingproviders.CheckedProvider;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.10
  */
 public interface RepositoryProvider extends CheckedProvider<Repository> {

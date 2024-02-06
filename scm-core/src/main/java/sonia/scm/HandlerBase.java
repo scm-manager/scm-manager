@@ -21,17 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm;
 
-//~--- JDK imports ------------------------------------------------------------
+package sonia.scm;
 
 import java.io.Closeable;
 
 /**
  * The base class of all handlers.
  *
- * @author Sebastian Sdorra
  *
  * @param <T> type object of the handler
  */
@@ -41,24 +38,16 @@ public interface HandlerBase<T extends TypedObject>
 
   /**
    * Persists a new object.
-   *
-   * @return  The persisted object.
    */
   T create(T object);
 
   /**
    * Removes a persistent object.
-   *
-   *
-   * @param object to delete
    */
   void delete(T object);
 
   /**
    * Modifies a persistent object.
-   *
-   *
-   * @param object to modify
    */
   void modify(T object);
 }

@@ -37,7 +37,6 @@ import sonia.scm.repository.spi.HookChangesetResponse;
 /**
  * Mercurial tag provider implementation.
  *
- * @author Sebastian Sdorra
  * @since 1.50
  */
 public class HgHookTagProvider implements HookTagProvider {
@@ -51,11 +50,6 @@ public class HgHookTagProvider implements HookTagProvider {
   private List<Tag> createdTags;
   private final List<Tag> deletedTags = Collections.emptyList();
 
-  /**
-   * Constructs a new instance.
-   *
-   * @param changesetProvider changeset provider
-   */
   public HgHookTagProvider(HookChangesetProvider changesetProvider) {
     this.changesetProvider = changesetProvider;
   }

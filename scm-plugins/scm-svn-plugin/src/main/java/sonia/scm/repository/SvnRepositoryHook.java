@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,20 +45,16 @@ import sonia.scm.util.Util;
 import java.io.File;
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class SvnRepositoryHook implements FSHook
 {
 
-  /** the logger for SvnRepositoryHook */
   private static final Logger logger =
     LoggerFactory.getLogger(SvnRepositoryHook.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private HookEventFacade hookEventFacade;
+
+  private final SvnRepositoryHandler handler;
 
   public SvnRepositoryHook(HookEventFacade hookEventFacade, SvnRepositoryHandler handler)
   {
@@ -67,16 +62,8 @@ public class SvnRepositoryHook implements FSHook
     this.handler = handler;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param event
-   *
-   * @throws SVNException
-   */
+  
   @Override
   public void onHook(FSHookEvent event) throws SVNException
   {
@@ -130,15 +117,7 @@ public class SvnRepositoryHook implements FSHook
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   * @param changesetProvider
-   *
-   * @throws SVNCancelException
-   */
+
   private void fireHook(File directory,
     AbstractSvnHookChangesetProvider changesetProvider)
     throws SVNCancelException
@@ -167,28 +146,12 @@ public class SvnRepositoryHook implements FSHook
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   private String getRepositoryId(File directory)
   {
     AssertUtil.assertIsNotNull(directory);
     return handler.getRepositoryId(directory);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private HookEventFacade hookEventFacade;
-
-  private final SvnRepositoryHandler handler;
 }

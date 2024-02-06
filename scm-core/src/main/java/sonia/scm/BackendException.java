@@ -28,55 +28,27 @@ package sonia.scm;
  * This type of exception is only thrown by scm-manager backend implementation, 
  * such as the xml or jdbc backend.
  *
- * @author Sebastian Sdorra
  * @since 1.14
  */
 public class BackendException extends RuntimeException
 {
-
-  /** Field description */
   private static final long serialVersionUID = -6885276113482167556L;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
   public BackendException()
   {
     super();
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
   public BackendException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
   public BackendException(Throwable cause)
   {
     super(cause);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
   public BackendException(String message, Throwable cause)
   {
     super(message, cause);

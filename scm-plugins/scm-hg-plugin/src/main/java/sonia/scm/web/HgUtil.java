@@ -26,10 +26,7 @@ package sonia.scm.web;
 
 import sonia.scm.util.Util;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class HgUtil {
 
   public static final String REVISION_TIP = "tip";

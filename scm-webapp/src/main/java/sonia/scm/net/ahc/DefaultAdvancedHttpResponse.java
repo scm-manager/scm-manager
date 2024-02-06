@@ -24,7 +24,6 @@
 
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -32,8 +31,6 @@ import com.google.common.io.ByteSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,11 +43,22 @@ import java.util.Map.Entry;
 /**
  * Http server response object of {@link DefaultAdvancedHttpClient}.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public class DefaultAdvancedHttpResponse extends AdvancedHttpResponse
 {
+  private final DefaultAdvancedHttpClient client;
+
+  private final HttpURLConnection connection;
+
+  /** server response status */
+  private final int status;
+
+  /** server response text */
+  private final String statusText;
+
+  /** http headers */
+  private Multimap<String, String> headers;
 
   /**
    * Constructs a new {@link DefaultAdvancedHttpResponse}.
@@ -69,22 +77,16 @@ HttpURLConnection connection, int status, String statusText)
     this.statusText = statusText;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public ByteSource contentAsByteSource() throws IOException
   {
     return new URLConnectionByteSource(connection);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public Multimap<String, String> getHeaders()
   {
@@ -102,29 +104,22 @@ HttpURLConnection connection, int status, String statusText)
     return headers;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public int getStatus()
   {
     return status;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public String getStatusText()
   {
     return statusText;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   protected ContentTransformer createTransformer(Class<?> type,
     String contentType)
@@ -132,7 +127,7 @@ HttpURLConnection connection, int status, String statusText)
     return client.createTransformer(type, contentType);
   }
 
-  //~--- inner classes --------------------------------------------------------
+
 
   /**
    * {@link ByteSource} implementation of a http connection.
@@ -140,26 +135,17 @@ HttpURLConnection connection, int status, String statusText)
   private static class URLConnectionByteSource extends ByteSource
   {
 
-    /**
-     * the logger for URLConnectionByteSource
-     */
     private static final Logger logger =
       LoggerFactory.getLogger(URLConnectionByteSource.class);
 
-    //~--- constructors -------------------------------------------------------
+    private final HttpURLConnection connection;
 
-    /**
-     * Constructs a new {@link URLConnectionByteSource}.
-     *
-     *
-     * @param connection http connection
-     */
     private URLConnectionByteSource(HttpURLConnection connection)
     {
       this.connection = connection;
     }
 
-    //~--- methods ------------------------------------------------------------
+    
 
     /**
      * Opens the input stream of http connection, if an error occurs during
@@ -193,27 +179,6 @@ HttpURLConnection connection, int status, String statusText)
       return stream;
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** http connection */
-    private final HttpURLConnection connection;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final DefaultAdvancedHttpClient client;
-
-  /** http connection */
-  private final HttpURLConnection connection;
-
-  /** server response status */
-  private final int status;
-
-  /** server response text */
-  private final String statusText;
-
-  /** http headers */
-  private Multimap<String, String> headers;
 }

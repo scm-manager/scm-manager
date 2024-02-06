@@ -24,7 +24,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -39,36 +38,39 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @XmlRootElement(name = "plugin")
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class InstalledPluginDescriptor extends ScmModule implements PluginDescriptor
 {
 
+  @XmlElement(name = "child-first-classloader")
+  private boolean childFirstClassLoader;
+
+  @XmlElement(name = "conditions")
+  private PluginCondition condition;
+
+  @XmlElement(name = "dependency")
+  @XmlElementWrapper(name = "dependencies")
+  private Set<NameAndVersion> dependencies;
+
+  @XmlElement(name = "dependency")
+  @XmlElementWrapper(name = "optional-dependencies")
+  private Set<NameAndVersion> optionalDependencies;
+
+  @XmlElement(name = "information")
+  private PluginInformation information;
+
+  private PluginResources resources;
+
+  @XmlElement(name = "scm-version")
+  private int scmVersion = 1;
+
   private static final PluginCondition EMPTY_CONDITION = new PluginCondition();
 
-  /**
-   * Constructs ...
-   *
-   */
   InstalledPluginDescriptor() {}
 
   /**
-   * Constructs ...
-   *
-   *
-   * @param scmVersion
-   * @param information
-   * @param resources
-   * @param condition
-   * @param childFirstClassLoader
-   * @param dependencies
-   *
    * @deprecated this constructor uses dependencies with plain strings,
    *             which is deprecated because the version information is missing.
    *             This class should not instantiated manually, it is designed to be loaded by jaxb.
@@ -96,16 +98,6 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
       .collect(Collectors.toSet());
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
   @Override
   public boolean equals(Object obj)
   {
@@ -130,12 +122,7 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
       && Objects.equal(optionalDependencies, other.optionalDependencies);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public int hashCode()
   {
@@ -143,12 +130,7 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
       childFirstClassLoader, dependencies, optionalDependencies);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String toString()
   {
@@ -165,14 +147,8 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public PluginCondition getCondition()
   {
@@ -180,11 +156,6 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
-   *
    * @since 2.0.0
    */
   @Override
@@ -194,7 +165,6 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
 
   /**
    * Returns name and versions of the plugins which are this plugin depends on.
-   * @return dependencies with their versions
    * @since 2.4.0
    */
   public Set<NameAndVersion> getDependenciesWithVersion() {
@@ -205,11 +175,6 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
-   *
    * @since 2.0.0
    */
   @Override
@@ -219,7 +184,6 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
 
   /**
    * Returns name and versions of the plugins which are this plugin optional depends on.
-   * @return optional dependencies with their versions
    * @since 2.4.0
    */
   public Set<NameAndVersion> getOptionalDependenciesWithVersion() {
@@ -239,79 +203,29 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
       .collect(Collectors.toSet());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public PluginInformation getInformation()
   {
     return information;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public PluginResources getResources()
   {
     return resources;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public int getScmVersion()
   {
     return scmVersion;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isChildFirstClassLoader()
   {
     return childFirstClassLoader;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "child-first-classloader")
-  private boolean childFirstClassLoader;
-
-  /** Field description */
-  @XmlElement(name = "conditions")
-  private PluginCondition condition;
-
-  /** Field description */
-  @XmlElement(name = "dependency")
-  @XmlElementWrapper(name = "dependencies")
-  private Set<NameAndVersion> dependencies;
-
-  /** Field description */
-  @XmlElement(name = "dependency")
-  @XmlElementWrapper(name = "optional-dependencies")
-  private Set<NameAndVersion> optionalDependencies;
-
-  /** Field description */
-  @XmlElement(name = "information")
-  private PluginInformation information;
-
-  /** Field description */
-  private PluginResources resources;
-
-  /** Field description */
-  @XmlElement(name = "scm-version")
-  private int scmVersion = 1;
 }

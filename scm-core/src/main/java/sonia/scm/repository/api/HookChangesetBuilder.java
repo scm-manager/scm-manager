@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -44,19 +43,23 @@ import java.util.List;
  * The {@link HookChangesetBuilder} is able to return all {@link Changeset}s
  * which are added during the current push/commit.
  *
- * @author Sebastian Sdorra
  * @since 1.33
  */
 public final class HookChangesetBuilder
 {
+  private boolean disablePreProcessors = false;
 
-  /** request */
+  private PreProcessorUtil preProcessorUtil;
+
+  private HookChangesetProvider provider;
+
+  /** changed repository */
+  private Repository repository;
+
   private static final HookChangesetRequest request =
     new HookChangesetRequest();
 
-  /**
-   * the logger for HookChangesetBuilder
-   */
+
   private static final Logger logger =
     LoggerFactory.getLogger(HookChangesetBuilder.class);
 
@@ -78,14 +81,13 @@ public final class HookChangesetBuilder
     this.preProcessorUtil = preProcessorUtil;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns a immutable {@link List} of added {@link Changeset}'s.
+   * Returns an immutable {@link List} of added {@link Changeset}'s.
    * <strong>Note:</strong> Use this method only if you need a {@link List}, if
    * you just want to iterate over the {@link Changeset}'s use
    * {@link #getChangesets()} instead. The {@link #getChangesets()} needs less
-   * memory and should be much more faster then this method.
+   * memory and should be much faster than this method.
    *
    * @return immutable {@link List} of added {@link Changeset}'s
    */
@@ -136,13 +138,9 @@ public final class HookChangesetBuilder
     });
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
-   * Disable the execution of pre processors.
-   *
-   *
-   * @param disablePreProcessors true to disable the pre processors execution
+   * Disable the execution of pre processors if set to <code>true</code>.
    *
    * @return {@code this}
    */
@@ -154,17 +152,4 @@ public final class HookChangesetBuilder
     return this;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** disable pre processors marker */
-  private boolean disablePreProcessors = false;
-
-  /** PreProcessorUtil */
-  private PreProcessorUtil preProcessorUtil;
-
-  /** provider implementation */
-  private HookChangesetProvider provider;
-
-  /** changed repository */
-  private Repository repository;
 }

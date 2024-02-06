@@ -24,71 +24,41 @@
 
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.Platform;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class SystemUtil
 {
 
-  /** Field description */
   public static final String PROPERTY_ARCH = "sun.arch.data.model";
 
-  /** Field description */
   public static final String PROPERTY_OSARCH = "os.arch";
 
-  /** Field description */
   public static final String PROPERTY_OSNAME = "os.name";
 
-  /** Field description */
   private static Platform platform =
     new Platform(System.getProperty(PROPERTY_OSNAME),
       System.getProperty(PROPERTY_ARCH), System.getProperty(PROPERTY_OSARCH));
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private SystemUtil() {}
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static boolean is32bit()
   {
     return platform.is32Bit();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static String getArch()
   {
     return platform.getArch();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static String getOS()
   {
     return platform.getName();
@@ -98,45 +68,25 @@ public final class SystemUtil
     return System.getProperty("java.version");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static Platform getPlatform()
   {
     return platform;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static boolean isMac()
   {
     return platform.isMac();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static boolean isUnix()
   {
     return platform.isUnix();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static boolean isWindows()
   {
     return platform.isWindows();

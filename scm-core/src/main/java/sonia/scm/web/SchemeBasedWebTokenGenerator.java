@@ -24,7 +24,6 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public abstract class SchemeBasedWebTokenGenerator implements WebTokenGenerator {
@@ -42,9 +40,6 @@ public abstract class SchemeBasedWebTokenGenerator implements WebTokenGenerator 
   /** authorization header */
   private static final String HEADER_AUTHORIZATION = "Authorization";
 
-  /**
-   * the logger for SchemeBasedWebTokenGenerator
-   */
   private static final Logger LOG = LoggerFactory.getLogger(SchemeBasedWebTokenGenerator.class);
 
   protected abstract AuthenticationToken createToken(HttpServletRequest request, String scheme, String authorization);

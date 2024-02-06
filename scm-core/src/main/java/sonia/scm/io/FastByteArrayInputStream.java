@@ -24,53 +24,44 @@
     
 package sonia.scm.io;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.InputStream;
 
 /**
  * ByteArrayInputStream implementation that does not synchronize methods.
  *
- * @author Sebastian Sdorra
  * @since 1.29
  * @see <a href="http://javatechniques.com/blog/faster-deep-copies-of-java-objects" target="_blank">http://javatechniques.com/blog/faster-deep-copies-of-java-objects</a>
  */
 public final class FastByteArrayInputStream extends InputStream
 {
+    /**
+   * Our byte buffer
+   */
+  private byte[] buf = null;
 
   /**
-   * Constructs ...
-   *
-   *
-   * @param buf
-   * @param count
+   * Number of bytes that we can read from the buffer
    */
+  private int count = 0;
+
+  /**
+   * Number of bytes that have been read from the buffer
+   */
+  private int pos = 0;
+
   public FastByteArrayInputStream(byte[] buf, int count)
   {
     this.buf = buf;
     this.count = count;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public final int available()
   {
     return count - pos;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public final int read()
   {
@@ -79,16 +70,6 @@ public final class FastByteArrayInputStream extends InputStream
       : -1;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param b
-   * @param off
-   * @param len
-   *
-   * @return
-   */
   @Override
   public final int read(byte[] b, int off, int len)
   {
@@ -108,14 +89,6 @@ public final class FastByteArrayInputStream extends InputStream
     return len;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param n
-   *
-   * @return
-   */
   @Override
   public final long skip(long n)
   {
@@ -134,20 +107,4 @@ public final class FastByteArrayInputStream extends InputStream
     return n;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * Our byte buffer
-   */
-  private byte[] buf = null;
-
-  /**
-   * Number of bytes that we can read from the buffer
-   */
-  private int count = 0;
-
-  /**
-   * Number of bytes that have been read from the buffer
-   */
-  private int pos = 0;
 }

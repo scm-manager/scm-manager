@@ -26,57 +26,34 @@ package sonia.scm.repository;
 
 /**
  *
- * @author Sebastian Sdorra
  * @deprecated
  */
 @Deprecated
 public class SvnImportHandler extends AbstactImportHandler
 {
 
-  /** Field description */
   public static final String SVN_DIR_LOCKS = "locks";
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   */
+  private SvnRepositoryHandler handler;
+ 
   public SvnImportHandler(SvnRepositoryHandler handler)
   {
     this.handler = handler;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String[] getDirectoryNames()
   {
     return new String[] { SVN_DIR_LOCKS };
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected AbstractRepositoryHandler<?> getRepositoryHandler()
   {
     return handler;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private SvnRepositoryHandler handler;
 }

@@ -27,7 +27,6 @@ package sonia.scm.repository.api;
 /**
  * Enumeration of available hook features.
  *
- * @author Sebastian Sdorra
  * @since 1.33
  */
 public enum HookFeature

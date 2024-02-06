@@ -34,7 +34,6 @@ import java.util.Set;
 /**
  * Subversion repository client provider.
  * 
- * @author Sebastian Sdorra
  * @since 1.51
  */
 public class SvnRepositoryClientProvider extends RepositoryClientProvider {

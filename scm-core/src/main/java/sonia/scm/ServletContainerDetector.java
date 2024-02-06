@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,16 +35,16 @@ import org.slf4j.LoggerFactory;
  * This class is inspired by
  * com.liferay.portal.kernel.util.ServerDetector of liferay.
  *
- * @author Sebastian Sdorra
  */
 public class ServletContainerDetector
 {
+  /** Servlet request for alternate detection method. */
+  private HttpServletRequest request = null;
 
   /** Make usage of the logging framework. */
   private static final Logger LOGGER =
     LoggerFactory.getLogger(ServletContainerDetector.class);
 
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new ServletContainerDetector depending on the ServletRequest.
@@ -56,13 +55,11 @@ public class ServletContainerDetector
     request = req;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Detects the ServletContainer.
    *
    * @param req The used Servlet instance.
-   * @return the detected ServletContainer.
    * @since 1.32
    */
   public static ServletContainer detect(final HttpServletRequest req)
@@ -72,9 +69,6 @@ public class ServletContainerDetector
 
   /**
    * Detects the ServletContainer.
-   *
-   *
-   * @return the detected ServletContainer
    */
   public ServletContainer detectContainer()
   {
@@ -139,13 +133,11 @@ public class ServletContainerDetector
     return container;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns true if the ServletContainer is a Eclipse Jetty.
    *
    * @since 1.32
-   * @return true if the ServletContainer is a Eclipse Jetty
    */
   public boolean isEclipseJetty()
   {
@@ -161,9 +153,6 @@ public class ServletContainerDetector
 
   /**
    * Returns true if the ServletContainer is a Geronimo.
-   *
-   *
-   * @return true if the ServletContainer is a Geronimo
    */
   public boolean isGeronimo()
   {
@@ -172,9 +161,6 @@ public class ServletContainerDetector
 
   /**
    * Returns true if the ServletContainer is a Glassfish.
-   *
-   *
-   * @return true if the ServletContainer is a Glassfish
    */
   public boolean isGlassfish()
   {
@@ -185,9 +171,6 @@ public class ServletContainerDetector
 
   /**
    * Returns true if the ServletContainer is a JBoss.
-   *
-   *
-   * @return true if the ServletContainer is a JBos
    */
   public boolean isJBoss()
   {
@@ -196,9 +179,6 @@ public class ServletContainerDetector
 
   /**
    * Returns true if the ServletContainer is a JOnAS.
-   *
-   *
-   * @return true if the ServletContainer is a JOnAS
    */
   public boolean isJOnAS()
   {
@@ -214,9 +194,6 @@ public class ServletContainerDetector
 
   /**
    * Returns true if the ServletContainer is a Jetty.
-   *
-   *
-   * @return true if the ServletContainer is a Jetty
    */
   public boolean isJetty()
   {
@@ -225,9 +202,6 @@ public class ServletContainerDetector
 
   /**
    * Returns true if the ServletContainer is a OC4J.
-   *
-   *
-   * @return true if the ServletContainer is a OC4J
    */
   public boolean isOC4J()
   {
@@ -236,9 +210,6 @@ public class ServletContainerDetector
 
   /**
    * Returns true if the ServletContainer is a Resin.
-   *
-   *
-   * @return true if the ServletContainer is a Resin
    */
   public boolean isResin()
   {
@@ -247,9 +218,6 @@ public class ServletContainerDetector
 
   /**
    * Returns true if the ServletContainer is a SCM-Server.
-   *
-   *
-   * @return true if the ServletContainer is a SCM-Server
    */
   public boolean isScmServer()
   {
@@ -260,9 +228,6 @@ public class ServletContainerDetector
 
   /**
    * Returns true if the ServletContainer is a Tomcat.
-   *
-   *
-   * @return true if the ServletContainer is a Tomcat
    */
   public boolean isTomcat()
   {
@@ -278,9 +243,6 @@ public class ServletContainerDetector
 
   /**
    * Returns true if the ServletContainer is a WebLogic.
-   *
-   *
-   * @return true if the ServletContainer is a WebLogic
    */
   public boolean isWebLogic()
   {
@@ -289,24 +251,18 @@ public class ServletContainerDetector
 
   /**
    * Returns true if the ServletContainer is a WebSphere.
-   *
-   *
-   * @return true if the ServletContainer is a WebSpere
    */
   public boolean isWebSphere()
   {
     return detect("/com/ibm/websphere/product/VersionInfo.class");
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Returns true if the given class exists in the system classpath.
    *
    *
    * @param clazz class name to search in classpath
-   *
-   * @return true if class exists in system classpath
    */
   private boolean detect(final String clazz)
   {
@@ -332,18 +288,16 @@ public class ServletContainerDetector
   }
 
   /**
-   * An alternate detection. The default servlet that must be implemented by each application, so we can get it's
+   * An alternate detection. The default servlet that must be implemented by each application, so we can get its
    * class name and compare against our suggestion.
    *
    * @since 1.32
    * @param keyword Part of the class path that is needed at the implementation class.
-   *
-   * @return
    */
   private boolean detectDefaultServlet(final String keyword)
   {
 
-    // Request the default servlet (its pretty safe to say it will always be there)
+    // Request the default servlet (It's pretty safe to say it will always be there)
     final RequestDispatcher dispatcher =
       request.getServletContext().getNamedDispatcher("default");
 
@@ -356,8 +310,4 @@ public class ServletContainerDetector
     return dispatcher.getClass().getName().contains(keyword);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Servlet request for alternate detection method. */
-  private HttpServletRequest request = null;
 }

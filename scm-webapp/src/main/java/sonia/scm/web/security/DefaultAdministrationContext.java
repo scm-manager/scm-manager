@@ -36,11 +36,7 @@ import sonia.scm.security.Impersonator;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 @Singleton
 public class DefaultAdministrationContext implements AdministrationContext {
 

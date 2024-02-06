@@ -64,8 +64,6 @@ public class AvailablePluginResource {
 
   /**
    * Returns a collection of available plugins.
-   *
-   * @return collection of available plugins.
    */
   @GET
   @Path("")
@@ -107,8 +105,6 @@ public class AvailablePluginResource {
 
   /**
    * Returns available plugin.
-   *
-   * @return available plugin.
    */
   @GET
   @Path("/{name}")

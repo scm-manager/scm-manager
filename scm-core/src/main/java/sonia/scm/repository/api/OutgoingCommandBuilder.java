@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import org.apache.shiro.SecurityUtils;
@@ -39,13 +39,18 @@ import java.io.IOException;
 /**
  * Show changesets not found in a remote repository.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public final class OutgoingCommandBuilder
 {
-  
-  
+  private OutgoingCommand command;
+
+  private boolean disablePreProcessors = false;
+
+  private PreProcessorUtil preProcessorUtil;
+
+  private OutgoingCommandRequest request = new OutgoingCommandRequest();
+
   /**
    * Constructs a new {@link OutgoingCommandBuilder}, this constructor should
    * only be called from the {@link RepositoryService}.
@@ -62,7 +67,6 @@ public final class OutgoingCommandBuilder
     this.preProcessorUtil = preProcessorUtil;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the outgoing changesets for the remote repository.
@@ -92,15 +96,9 @@ public final class OutgoingCommandBuilder
     return cpr;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
-   * Disable the execution of pre processors.
-   *
-   *
-   * @param disablePreProcessors true to disable the pre processors execution
-   *
-   * @return {@code this}
+   * Disable the execution of pre processors if set to <code>true</code>.
    */
   public OutgoingCommandBuilder setDisablePreProcessors(
     boolean disablePreProcessors)
@@ -141,19 +139,4 @@ public final class OutgoingCommandBuilder
 
     return this;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** outgoing command implementation */
-  private OutgoingCommand command;
-
-  /** disable the execution of pre processors */
-  private boolean disablePreProcessors = false;
-
-  /** disable the execution of pre processors */
-  private PreProcessorUtil preProcessorUtil;
-
-  /** request object */
-  private OutgoingCommandRequest request = new OutgoingCommandRequest();
-  
 }

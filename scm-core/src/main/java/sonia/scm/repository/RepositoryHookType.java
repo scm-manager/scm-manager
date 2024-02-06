@@ -27,7 +27,6 @@ package sonia.scm.repository;
 /**
  * Type of repository hook.
  *
- * @author Sebastian Sdorra
  * @since 1.6
  */
 public enum RepositoryHookType

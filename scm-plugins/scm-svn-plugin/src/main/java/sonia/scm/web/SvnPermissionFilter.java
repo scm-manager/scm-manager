@@ -37,41 +37,23 @@ import sonia.scm.web.filter.PermissionFilter;
 import java.io.IOException;
 import java.util.Set;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class SvnPermissionFilter extends PermissionFilter
 {
 
-  /** Field description */
   private static final Set<String> WRITEMETHOD_SET =
     ImmutableSet.of("MKACTIVITY", "PROPPATCH", "PUT", "CHECKOUT", "MKCOL",
       "MOVE", "COPY", "DELETE", "LOCK", "UNLOCK", "MERGE");
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   * @param configuration
-   */
+
   public SvnPermissionFilter(ScmConfiguration configuration, ScmProviderHttpServlet delegate)
   {
     super(configuration, delegate);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   */
+
   @Override
   protected void sendNotEnoughPrivilegesError(HttpServletRequest request,
     HttpServletResponse response)
@@ -96,16 +78,8 @@ public class SvnPermissionFilter extends PermissionFilter
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
+
   @Override
   public boolean isWriteRequest(HttpServletRequest request)
   {

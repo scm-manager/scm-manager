@@ -28,7 +28,6 @@ import sonia.scm.repository.spi.HookChangesetRequest;
 import sonia.scm.repository.spi.HookChangesetResponse;
 
 /**
- * @author Sebastian Sdorra
  * @since 1.33
  */
 public interface HookChangesetProvider {

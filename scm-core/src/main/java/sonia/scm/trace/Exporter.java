@@ -36,8 +36,6 @@ public interface Exporter {
 
   /**
    * Process the collected span.
-   *
-   * @param span collected span
    */
   void export(SpanContext span);
 }

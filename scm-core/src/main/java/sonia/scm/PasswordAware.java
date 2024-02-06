@@ -27,7 +27,6 @@ package sonia.scm;
 /**
  * Interface for objects using a password.
  *
- * @author Sebastian Sdorra
  * @since 1.13
  */
 public interface PasswordAware
@@ -35,19 +34,12 @@ public interface PasswordAware
 
   /**
    * Returns the encrypted password.
-   *
-   *
-   * @return encrypted password
    */
   public String getPassword();
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Sets the encrypted password
-   *
-   *
-   * @param password encrypted password
    */
   public void setPassword(String password);
 }

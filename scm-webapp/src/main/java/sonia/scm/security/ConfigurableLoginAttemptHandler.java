@@ -42,25 +42,20 @@ import java.util.concurrent.TimeUnit;
 /**
  * Configurable implementation of {@link LoginAttemptHandler}.
  * 
- * @author Sebastian Sdorra
  * @since 1.34
  */
 @Singleton
 public class ConfigurableLoginAttemptHandler implements LoginAttemptHandler {
   
-  /**
-   * the logger for ConfigurableLoginAttemptHandler
-   */
+ 
   private static final Logger LOG =
     LoggerFactory.getLogger(ConfigurableLoginAttemptHandler.class);
 
-  //~--- fields ---------------------------------------------------------------
-  
+
   private final ConcurrentMap<Object, LoginAttempt> attempts = new ConcurrentHashMap<>();
   
   private final ScmConfiguration configuration;
   
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new instance.
@@ -72,7 +67,6 @@ public class ConfigurableLoginAttemptHandler implements LoginAttemptHandler {
     this.configuration = configuration;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   @Override
   public void beforeAuthentication(AuthenticationToken token) throws AuthenticationException {
@@ -130,7 +124,6 @@ public class ConfigurableLoginAttemptHandler implements LoginAttemptHandler {
     attempt.increase();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   private LoginAttempt getAttempt(AuthenticationToken token){
     LoginAttempt freshAttempt = new LoginAttempt();
@@ -151,7 +144,7 @@ public class ConfigurableLoginAttemptHandler implements LoginAttemptHandler {
     return (configuration.getLoginAttemptLimit() > 0) && (configuration.getLoginAttemptLimitTimeout() > 0l);
   }
 
-  //~--- inner classes --------------------------------------------------------
+
 
   private static class LoginAttempt {
 

@@ -24,63 +24,35 @@
     
 package sonia.scm.repository.spi.javahg;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.javahg.Repository;
 import org.javahg.internals.AbstractCommand;
 import org.javahg.internals.HgInputStream;
 import org.javahg.internals.Utils;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class HgDiffInternalCommand extends AbstractCommand
 {
 
-  /** Field description */
   private static final String NAME = "diff";
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repository
-   */
+ 
   private HgDiffInternalCommand(Repository repository)
   {
     super(repository, NAME);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
+
   public static HgDiffInternalCommand on(Repository repository)
   {
     return new HgDiffInternalCommand(repository);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param rev
-   *
-   * @return
-   */
+
   public HgDiffInternalCommand change(String rev)
   {
     cmdAppend("--change", rev);
@@ -88,25 +60,13 @@ public final class HgDiffInternalCommand extends AbstractCommand
     return this;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param files
-   *
-   * @return
-   */
+
   public String execute(String... files)
   {
     return launchString(files);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public HgDiffInternalCommand git()
   {
     cmdAppend("--git");
@@ -114,27 +74,14 @@ public final class HgDiffInternalCommand extends AbstractCommand
     return this;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param files
-   *
-   * @return
-   */
+
   public HgInputStream stream(File... files)
   {
     return launchStream(Utils.fileArray2StringArray(files));
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String getCommandName()
   {

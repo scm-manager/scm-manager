@@ -24,8 +24,6 @@
     
 package sonia.scm.util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.text.MessageFormat;
 
 import java.util.ArrayList;
@@ -33,40 +31,20 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class LinkTextParser
 {
 
-  /** Field description */
   private static final Pattern REGEX_URL =
     Pattern.compile(
       "\\(?\\b((?:https?://|ftps?://|mailto:|www[.])[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|])");
 
-  /** Field description */
   private static final String REPLACE_URL =
     "<a target=\"_blank\" href=\"{1}\">{0}</a>";
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private LinkTextParser() {}
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param content
-   *
-   * @return
-   */
   public static String parseText(String content)
   {
     Matcher m = REGEX_URL.matcher(content);
@@ -114,72 +92,34 @@ public final class LinkTextParser
     return buffer.toString();
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 11/11/06
-   * @author         Enter your name here...
-   */
+
   private static class Token
   {
+    private String replacement;
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param value
-     */
+    private String value;
+
     public Token(String value)
     {
       this.value = value;
     }
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param value
-     * @param replacement
-     */
     public Token(String value, String replacement)
     {
       this.value = value;
       this.replacement = replacement;
     }
 
-    //~--- get methods --------------------------------------------------------
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
     public String getReplacement()
     {
       return replacement;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
     public String getValue()
     {
       return value;
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private String replacement;
-
-    /** Field description */
-    private String value;
   }
 }

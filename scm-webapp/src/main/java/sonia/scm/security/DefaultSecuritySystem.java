@@ -67,7 +67,6 @@ import static java.util.Objects.isNull;
 
 
 /**
- * @author Sebastian Sdorra
  * @since 1.31
  */
 @Singleton

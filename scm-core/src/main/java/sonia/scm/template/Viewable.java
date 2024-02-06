@@ -31,7 +31,6 @@ import com.google.common.base.Objects;
  * A viewable holds the path to a template and the context object which is used to render the template. Viewables can
  * be used as return type of jax-rs resources.
  * 
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class Viewable {

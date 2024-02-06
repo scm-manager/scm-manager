@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
@@ -77,11 +76,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 public final class GitUtil {
 
   private static final GitUserAgentProvider GIT_USER_AGENT_PROVIDER = new GitUserAgentProvider();
@@ -97,18 +92,14 @@ public final class GitUtil {
   private static final String REMOTE_REF = "refs/remote/scm/%s/%s";
   private static final int TIMEOUT = 5;
 
-  /**
-   * the logger for GitUtil
-   */
+ 
   private static final Logger logger = LoggerFactory.getLogger(GitUtil.class);
   private static final String REF_SPEC = "refs/heads/*:refs/heads/*";
 
-  //~--- constructors ---------------------------------------------------------
 
   private GitUtil() {
   }
 
-  //~--- methods --------------------------------------------------------------
 
   public static void close(org.eclipse.jgit.lib.Repository repo) {
     if (repo != null) {
@@ -118,10 +109,6 @@ public final class GitUtil {
 
   /**
    * TODO cache
-   *
-   * @param repository
-   * @param revWalk
-   * @return
    */
   public static Multimap<ObjectId,
     String> createTagMap(org.eclipse.jgit.lib.Repository repository,
@@ -202,7 +189,6 @@ public final class GitUtil {
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   public static String getBranch(Ref ref) {
     String branch = null;
@@ -256,14 +242,7 @@ public final class GitUtil {
     }
   }
 
-  /**
-   * Method description
-   *
-   * @param repo
-   * @param branchName
-   * @return
-   * @throws IOException
-   */
+
   public static Ref getBranchId(org.eclipse.jgit.lib.Repository repo,
                                 String branchName)
     throws IOException {
@@ -354,12 +333,7 @@ public final class GitUtil {
     return tag;
   }
 
-  /**
-   * Method description
-   *
-   * @param commit
-   * @return
-   */
+
   public static long getCommitTime(RevCommit commit) {
     long date = commit.getCommitTime();
 
@@ -368,12 +342,7 @@ public final class GitUtil {
     return date;
   }
 
-  /**
-   * Method description
-   *
-   * @param objectId
-   * @return
-   */
+
   public static String getId(AnyObjectId objectId) {
     String id = Util.EMPTY_STRING;
 
@@ -384,14 +353,7 @@ public final class GitUtil {
     return id;
   }
 
-  /**
-   * Method description
-   *
-   * @param repository
-   * @param id
-   * @return
-   * @throws IOException
-   */
+
   public static Ref getRefForCommit(org.eclipse.jgit.lib.Repository repository,
                                     ObjectId id)
     throws IOException {
@@ -456,14 +418,7 @@ public final class GitUtil {
       .findFirst();
   }
 
-  /**
-   * Method description
-   *
-   * @param repo
-   * @param revision
-   * @return
-   * @throws IOException
-   */
+
   public static ObjectId getRevisionId(org.eclipse.jgit.lib.Repository repo,
                                        String revision)
     throws IOException {
@@ -478,25 +433,12 @@ public final class GitUtil {
     return revId;
   }
 
-  /**
-   * Method description
-   *
-   * @param repository
-   * @param localBranch
-   * @return
-   */
+
   public static String getScmRemoteRefName(Repository repository,
                                            Ref localBranch) {
     return getScmRemoteRefName(repository, localBranch.getName());
   }
 
-  /**
-   * Method description
-   *
-   * @param repository
-   * @param localBranch
-   * @return
-   */
   public static String getScmRemoteRefName(Repository repository,
                                            String localBranch) {
     String branch = localBranch;
@@ -524,12 +466,7 @@ public final class GitUtil {
     return tagName;
   }
 
-  /**
-   * Method description
-   *
-   * @param ref
-   * @return
-   */
+
   public static String getTagName(Ref ref) {
     String name = ref.getName();
 
@@ -580,33 +517,15 @@ public final class GitUtil {
     return Optional.empty();
   }
 
-  /**
-   * Returns true if the request comes from a git client.
-   *
-   * @param request servlet request
-   * @return true if the client is git
-   */
   public static boolean isGitClient(HttpServletRequest request) {
     return GIT_USER_AGENT_PROVIDER.parseUserAgent(request.getHeader(HttpUtil.HEADER_USERAGENT)) != null;
   }
 
-  /**
-   * Method description
-   *
-   * @param dir
-   * @return
-   */
+
   public static boolean isGitDirectory(File dir) {
     return isGitDirectory(FS.DETECTED, dir);
   }
 
-  /**
-   * Method description
-   *
-   * @param fs
-   * @param dir
-   * @return
-   */
   public static boolean isGitDirectory(FS fs, File dir) {
     //J-
     return fs.resolve(dir, DIRECTORY_OBJETCS).exists()
@@ -615,22 +534,12 @@ public final class GitUtil {
     //J+
   }
 
-  /**
-   * Method description
-   *
-   * @param ref
-   * @return
-   */
+
   public static boolean isHead(String ref) {
     return ref.startsWith(REF_HEAD_PREFIX);
   }
 
-  /**
-   * Method description
-   *
-   * @param id
-   * @return
-   */
+
   public static boolean isValidObjectId(ObjectId id) {
     return (id != null) && !id.equals(ObjectId.zeroId());
   }
@@ -669,15 +578,7 @@ public final class GitUtil {
     }
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   * @param repo
-   * @param branchName
-   * @throws IOException
-   */
   @VisibleForTesting
   static void checkBranchName(org.eclipse.jgit.lib.Repository repo,
                               String branchName)
@@ -698,12 +599,7 @@ public final class GitUtil {
     }
   }
 
-  /**
-   * Method description
-   *
-   * @param repository
-   * @return
-   */
+
   private static RefSpec createRefSpec(Repository repository) {
     return new RefSpec(String.format(REFSPEC, repository.getId()));
   }

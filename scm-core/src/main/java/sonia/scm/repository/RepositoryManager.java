@@ -34,7 +34,6 @@ import java.util.function.Consumer;
  * The central class for managing {@link Repository} objects.
  * This class is a singleton and is available via injection.
  *
- * @author Sebastian Sdorra
  * @apiviz.uses sonia.scm.repository.RepositoryHandler
  */
 public interface RepositoryManager
@@ -69,8 +68,6 @@ public interface RepositoryManager
 
   /**
    * Returns all configured repository types.
-   *
-   * @return all configured repository types
    */
   Collection<RepositoryType> getConfiguredTypes();
 
@@ -93,8 +90,6 @@ public interface RepositoryManager
 
   /**
    * Returns all namespaces.
-   *
-   * @return all namespaces
    */
   Collection<String> getAllNamespaces();
 
@@ -115,14 +110,14 @@ public interface RepositoryManager
   }
 
   /**
-   * @param repository the {@link Repository} to be archived.
+   * Archives the given repository.
    *
    * @since 2.12.0
    */
   void archive(Repository repository);
 
   /**
-   * @param repository the {@link Repository} to be "unarchived".
+   * Un-archives the given repository.
    *
    * @since 2.12.0
    */

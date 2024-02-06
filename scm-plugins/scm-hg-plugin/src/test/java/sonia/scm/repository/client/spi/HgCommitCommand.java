@@ -34,7 +34,6 @@ import java.io.IOException;
 /**
  * Mercurial implementation of the {@link CommitCommand}.
  * 
- * @author Sebastian Sdorra
  */
 public class HgCommitCommand implements CommitCommand
 {

@@ -24,44 +24,20 @@
     
 package sonia.scm.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import sonia.scm.util.Util;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class XmlIntervalAdapter extends XmlAdapter<String, Long>
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param longValue
-   *
-   * @return
-   *
-   * @throws Exception
-   */
   @Override
   public String marshal(Long longValue) throws Exception
   {
     return Util.convertTime(longValue);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param stringValue
-   *
-   * @return
-   *
-   * @throws Exception
-   */
   @Override
   public Long unmarshal(String stringValue) throws Exception
   {

@@ -24,15 +24,12 @@
     
 package sonia.scm.net.ahc;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
  * Content of a {@link AdvancedHttpRequestWithBody}.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public interface Content

@@ -24,7 +24,6 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Singleton;
 import jakarta.servlet.ServletContext;
@@ -38,29 +37,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Singleton
 public class DebugServlet extends HttpServlet
 {
 
-  /** Field description */
   private static final long serialVersionUID = -1918351712617918728L;
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -68,16 +51,6 @@ public class DebugServlet extends HttpServlet
     processRequest(request, response);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   @Override
   protected void doPost(HttpServletRequest request,
     HttpServletResponse response)
@@ -86,13 +59,7 @@ public class DebugServlet extends HttpServlet
     processRequest(request, response);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param writer
-   * @param context
-   */
+
   private void appendAttributes(PrintWriter writer, AttributeContext context)
   {
     writer.append("<ul>");
@@ -114,12 +81,7 @@ public class DebugServlet extends HttpServlet
     writer.append("</ul>");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param writer
-   */
+
   @SuppressWarnings("unchecked")
   private void appendContextAttributes(PrintWriter writer)
   {
@@ -142,13 +104,7 @@ public class DebugServlet extends HttpServlet
     });
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param writer
-   * @param session
-   */
+
   @SuppressWarnings("unchecked")
   private void appendSessionAttributes(PrintWriter writer,
     final HttpSession session)
@@ -169,23 +125,13 @@ public class DebugServlet extends HttpServlet
     });
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param writer
-   */
+
   private void printFooter(PrintWriter writer)
   {
     writer.append("</body></html>");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param writer
-   */
+
   private void printHeader(PrintWriter writer)
   {
     writer.append("<html>");
@@ -193,16 +139,6 @@ public class DebugServlet extends HttpServlet
     writer.append("<body><h1>SCM Manager :: Debugging</h1>");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   private void processRequest(HttpServletRequest request,
     HttpServletResponse response)
     throws ServletException, IOException
@@ -231,34 +167,14 @@ public class DebugServlet extends HttpServlet
     }
   }
 
-  //~--- inner interfaces -----------------------------------------------------
 
-  /**
-   * Interface description
-   *
-   *
-   * @version        Enter version here..., 10/10/15
-   * @author         Enter your name here...
-   */
   private interface AttributeContext
   {
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     public Enumeration<String> getNames();
 
-    /**
-     * Method description
-     *
-     *
-     * @param name
-     *
-     * @return
-     */
+    
     public Object getValue(String name);
   }
 }

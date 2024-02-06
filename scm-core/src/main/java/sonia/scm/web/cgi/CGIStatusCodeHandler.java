@@ -24,8 +24,6 @@
     
 package sonia.scm.web.cgi;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -36,7 +34,6 @@ import java.io.OutputStream;
  * Interface for handling return codes of processes
  * executed by the {@link CGIExecutor}.
  *
- * @author Sebastian Sdorra
  * @since 1.15
  */
 public interface CGIStatusCodeHandler

@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.ReferenceType;
 import com.github.legman.Subscribe;
@@ -67,8 +66,6 @@ import java.util.Set;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * The {@link RepositoryServiceFactory} is the entrypoint of the repository api.
  * You could create {@link RepositoryService} from a {@link Repository} and
@@ -104,7 +101,6 @@ import static sonia.scm.NotFoundException.notFound;
  * }
  * </code></pre>
  *
- * @author Sebastian Sdorra
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.repository.api.RepositoryService
  * @since 1.17
@@ -112,9 +108,7 @@ import static sonia.scm.NotFoundException.notFound;
 @Singleton
 public final class RepositoryServiceFactory {
 
-  /**
-   * the logger for RepositoryServiceFactory
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(RepositoryServiceFactory.class);
 

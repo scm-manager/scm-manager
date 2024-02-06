@@ -24,7 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -33,32 +32,24 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @XmlRootElement(name = "subscriber")
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class SubscriberElement
 {
+  private String description;
 
-  /**
-   * Constructs ...
-   *
-   */
+  @XmlElement(name = "event")
+  private Class<?> eventClass;
+
+  @XmlElement(name = "class")
+  private Class<?> subscriberClass;
+
   SubscriberElement() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param subscriberClass
-   * @param eventClass
-   * @param description
-   */
   public SubscriberElement(Class<?> subscriberClass, Class<?> eventClass,
     String description)
   {
@@ -67,16 +58,6 @@ public final class SubscriberElement
     this.description = description;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
   @Override
   public boolean equals(Object obj)
   {
@@ -97,24 +78,14 @@ public final class SubscriberElement
       && Objects.equal(description, other.description);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public int hashCode()
   {
     return Objects.hashCode(eventClass, subscriberClass, description);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String toString()
   {
@@ -127,51 +98,23 @@ public final class SubscriberElement
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getDescription()
   {
     return description;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Class<?> getEventClass()
   {
     return eventClass;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Class<?> getSubscriberClass()
   {
     return subscriberClass;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String description;
-
-  /** Field description */
-  @XmlElement(name = "event")
-  private Class<?> eventClass;
-
-  /** Field description */
-  @XmlElement(name = "class")
-  private Class<?> subscriberClass;
 }

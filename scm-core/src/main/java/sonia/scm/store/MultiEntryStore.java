@@ -31,7 +31,6 @@ import static java.util.Optional.ofNullable;
 /**
  * Base class for {@link BlobStore} and {@link DataStore}.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  *
  * @param <T> Type of the stored objects
@@ -52,7 +51,6 @@ public interface MultiEntryStore<T> {
    */
   public void remove(String id);
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the item with the given id from the store.

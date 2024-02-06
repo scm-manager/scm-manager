@@ -27,7 +27,6 @@ package sonia.scm.repository.api;
 /**
  * Send messages back to scm client during hook execution.
  *
- * @author Sebastian Sdorra
  * @since 1.33
  */
 public interface HookMessageProvider

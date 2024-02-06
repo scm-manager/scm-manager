@@ -50,7 +50,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * The main configuration object for SCM-Manager.
  *
- * @author Sebastian Sdorra
  */
 
 @Singleton

@@ -26,35 +26,20 @@ package sonia.scm.plugin;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.21
  */
 public final class PluginConditionFailedException extends PluginException
 {
+  private final PluginCondition condition;
 
-  /** Field description */
   private static final long serialVersionUID = 3257937172323964102L;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param condition
-   */
   public PluginConditionFailedException(PluginCondition condition)
   {
     this.condition = condition;
   }
 
-  /**
-   *  Constructs ...
-   * 
-   * 
-   *  @param condition
-   * @param message
-   */
   public PluginConditionFailedException(PluginCondition condition,
     String message)
   {
@@ -62,21 +47,8 @@ public final class PluginConditionFailedException extends PluginException
     this.condition = condition;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public PluginCondition getCondition()
   {
     return condition;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final PluginCondition condition;
 }

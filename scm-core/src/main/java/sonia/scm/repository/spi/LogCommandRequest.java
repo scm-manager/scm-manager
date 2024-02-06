@@ -24,36 +24,35 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public final class LogCommandRequest implements Serializable, Resetable
 {
 
-  /** Field description */
   private static final long serialVersionUID = 8759598040394428649L;
 
-  //~--- methods --------------------------------------------------------------
+  private String branch;
 
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
+  private String endChangeset;
+
+  private int pagingLimit = 20;
+
+  private int pagingStart = 0;
+
+  private String path;
+
+  private String startChangeset;
+
+  private String ancestorChangeset;
+
   @Override
   public boolean equals(Object obj)
   {
@@ -80,12 +79,7 @@ public final class LogCommandRequest implements Serializable, Resetable
     //J+
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public int hashCode()
   {
@@ -93,11 +87,7 @@ public final class LogCommandRequest implements Serializable, Resetable
       pagingLimit, path, branch, ancestorChangeset);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Override
+   @Override
   public void reset()
   {
     startChangeset = null;
@@ -109,12 +99,7 @@ public final class LogCommandRequest implements Serializable, Resetable
     ancestorChangeset = null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String toString()
   {
@@ -131,69 +116,38 @@ public final class LogCommandRequest implements Serializable, Resetable
     //J+
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param branch
-   */
+
   public void setBranch(String branch)
   {
     this.branch = branch;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param endChangeset
-   */
+
   public void setEndChangeset(String endChangeset)
   {
     this.endChangeset = endChangeset;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param pagingLimit
-   */
+
   public void setPagingLimit(int pagingLimit)
   {
     this.pagingLimit = pagingLimit;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param pagingStart
-   */
+
   public void setPagingStart(int pagingStart)
   {
     this.pagingStart = pagingStart;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   */
+
   public void setPath(String path)
   {
     this.path = path;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param startChangeset
-   */
+
   public void setStartChangeset(String startChangeset)
   {
     this.startChangeset = startChangeset;
@@ -203,80 +157,44 @@ public final class LogCommandRequest implements Serializable, Resetable
     this.ancestorChangeset = ancestorChangeset;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getBranch()
   {
     return branch;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getEndChangeset()
   {
     return endChangeset;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public int getPagingLimit()
   {
     return pagingLimit;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public int getPagingStart()
   {
     return pagingStart;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getPath()
   {
     return path;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getStartChangeset()
   {
     return startChangeset;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isPagingUnlimited()
   {
     return pagingLimit < 0;
@@ -286,25 +204,4 @@ public final class LogCommandRequest implements Serializable, Resetable
     return ancestorChangeset;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String branch;
-
-  /** Field description */
-  private String endChangeset;
-
-  /** Field description */
-  private int pagingLimit = 20;
-
-  /** Field description */
-  private int pagingStart = 0;
-
-  /** Field description */
-  private String path;
-
-  /** Field description */
-  private String startChangeset;
-
-  private String ancestorChangeset;
 }

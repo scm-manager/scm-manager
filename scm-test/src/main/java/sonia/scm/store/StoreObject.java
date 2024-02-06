@@ -24,48 +24,26 @@
     
 package sonia.scm.store;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class StoreObject
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   public StoreObject() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param value
-   */
+ 
   public StoreObject(String value)
   {
     this.value = value;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
+
   @Override
   public boolean equals(Object obj)
   {
@@ -91,12 +69,7 @@ public class StoreObject
     return true;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public int hashCode()
   {
@@ -109,14 +82,8 @@ public class StoreObject
     return hash;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getValue()
   {
     return value;
@@ -124,6 +91,5 @@ public class StoreObject
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private String value;
 }

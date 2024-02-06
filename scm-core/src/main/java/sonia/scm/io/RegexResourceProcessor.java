@@ -24,11 +24,8 @@
     
 package sonia.scm.io;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -38,28 +35,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class RegexResourceProcessor extends AbstractResourceProcessor
 {
 
-  /** Field description */
   public static final Pattern PATTERN = Pattern.compile("\\$\\{([^\\$]+)\\}");
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param variableMap
-   * @param reader
-   * @param writer
-   *
-   * @throws IOException
-   */
   @Override
   protected void process(Map<String, String> variableMap,
                          BufferedReader reader, BufferedWriter writer)
@@ -88,15 +70,6 @@ public class RegexResourceProcessor extends AbstractResourceProcessor
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param variableMap
-   * @param line
-   *
-   * @return
-   */
   private String parseLine(Map<String, String> variableMap, String line)
   {
     StringBuffer result = null;

@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.plugin.ExtensionPoint;
 
@@ -32,7 +31,6 @@ import sonia.scm.plugin.ExtensionPoint;
  * The FileObjectPreProcessorFactory create {@link FileObjectPreProcessor}
  * objects for a specific repository.
  *
- * @author Sebastian Sdorra
  * @since 1.10
  */
 @ExtensionPoint
@@ -40,14 +38,6 @@ public interface FileObjectPreProcessorFactory
   extends PreProcessorFactory<FileObject>
 {
 
-  /**
-   * Create a new {@link FileObjectPreProcessor} for the given repository.
-   *
-   *
-   * @param repository repository
-   *
-   * @return {@link FileObjectPreProcessor} for the given repository
-   */
   @Override
   public FileObjectPreProcessor createPreProcessor(Repository repository);
 }

@@ -58,7 +58,6 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link GitHookTagProvider}.
  *
- * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GitHookTagProviderTest {

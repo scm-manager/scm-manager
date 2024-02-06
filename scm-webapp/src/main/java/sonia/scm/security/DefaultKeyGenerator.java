@@ -24,7 +24,6 @@
     
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Singleton;
 
@@ -33,50 +32,32 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.Base62;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Singleton
 public class DefaultKeyGenerator implements KeyGenerator
 {
 
-  /** Field description */
   private static final int RANDOM_MAX = 999;
 
-  /** Field description */
   private static final int RANDOM_MIN = 100;
 
-  /**
-   * the logger for DefaultKeyGenerator
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultKeyGenerator.class);
 
-  //~--- methods --------------------------------------------------------------
+  private final AtomicLong sessionKey = new AtomicLong();
 
-  /**
-   * Method description
-   *
-   *
-   * @param args
-   */
+  private final Random random = new Random();
+
   public static void main(String[] args)
   {
     System.out.println(new DefaultKeyGenerator().createKey());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String createKey()
   {
@@ -107,11 +88,4 @@ public class DefaultKeyGenerator implements KeyGenerator
     return random.nextInt(RANDOM_MAX - RANDOM_MIN + 1) + RANDOM_MIN;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final AtomicLong sessionKey = new AtomicLong();
-
-  /** Field description */
-  private final Random random = new Random();
 }

@@ -46,9 +46,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 
-/**
- * @author Sebastian Sdorra
- */
+
 @ExtendWith(MockitoExtension.class)
 class BaseUrlFilterTest {
 

@@ -24,7 +24,6 @@
     
 package sonia.scm.template;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Maps;
 
@@ -32,48 +31,23 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.StringWriter;
 
 import java.util.Map;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public abstract class TemplateTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   public abstract Template getFailureTemplate() throws IOException;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   public abstract Template getHelloTemplate() throws IOException;
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testRender() throws IOException
   {
@@ -82,12 +56,7 @@ public abstract class TemplateTestBase
     assertEquals("Hello marvin!", execute(template));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test(expected = IOException.class)
   public void testRenderFailure() throws IOException
   {
@@ -96,24 +65,10 @@ public abstract class TemplateTestBase
     execute(template);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param env
-   */
+
   protected void prepareEnv(Map<String, Object> env) {}
 
-  /**
-   * Method description
-   *
-   *
-   * @param template
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   private String execute(Template template) throws IOException
   {
     Map<String, Object> env = Maps.newHashMap();

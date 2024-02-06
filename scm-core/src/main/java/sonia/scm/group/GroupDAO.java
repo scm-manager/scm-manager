@@ -24,16 +24,14 @@
     
 package sonia.scm.group;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.GenericDAO;
 
 /**
- * Data access object for groups. This class should only used by the
+ * Data access object for groups. This class should only be used by the
  * {@link GroupManager}. Plugins and other classes should use the
  * {@link GroupManager} instead.
  *
- * @author Sebastian Sdorra
  * @since 1.14
  */
 public interface GroupDAO extends GenericDAO<Group> {}

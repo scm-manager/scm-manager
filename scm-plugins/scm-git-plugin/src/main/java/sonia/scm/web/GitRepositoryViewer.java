@@ -24,7 +24,6 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
@@ -55,40 +54,25 @@ import java.io.Writer;
 import java.util.Date;
 import java.util.Iterator;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class GitRepositoryViewer
 {
 
-  /** Field description */
   public static final String MIMETYPE_HTML = "text/html";
 
-  /** Field description */
   public static final String RESOURCE_GITINDEX =
     "/sonia/scm/git.index.mustache";
 
-  /** Field description */
   private static final int CHANGESET_PER_BRANCH = 10;
 
-  /**
-   * the logger for GitRepositoryViewer
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(GitRepositoryViewer.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final RepositoryServiceFactory repositoryServiceFactory;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param templateEngineFactory
-   * @param repositoryServiceFactory
-   */
+  private final TemplateEngineFactory templateEngineFactory;
+ 
   @Inject
   public GitRepositoryViewer(TemplateEngineFactory templateEngineFactory,
     RepositoryServiceFactory repositoryServiceFactory)
@@ -97,7 +81,6 @@ public class GitRepositoryViewer
     this.repositoryServiceFactory = repositoryServiceFactory;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   public void handleRequest(HttpServletRequest request,
     HttpServletResponse response, Repository repository)
@@ -133,16 +116,7 @@ public class GitRepositoryViewer
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   private BranchesModel createBranchesModel(Repository repository)
     throws IOException
   {
@@ -167,97 +141,53 @@ public class GitRepositoryViewer
     return model;
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 13/02/27
-   * @author         Enter your name here...
-   */
+
+
   private static class BranchModel
   {
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param name
-     * @param changesets
-     */
+    private final Iterable<ChangesetModel> changesets;
+
+    private final String name;
+
     public BranchModel(String name, Iterable<ChangesetModel> changesets)
     {
       this.name = name;
       this.changesets = changesets;
     }
 
-    //~--- get methods --------------------------------------------------------
+    
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     public Iterable<ChangesetModel> getChangesets()
     {
       return changesets;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     public String getName()
     {
       return name;
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final Iterable<ChangesetModel> changesets;
-
-    /** Field description */
-    private final String name;
   }
 
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 13/02/27
-   * @author         Enter your name here...
-   */
+
   private static class BranchModelTransformer
     implements Function<Branch, BranchModel>
   {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param service
-     */
+    private final RepositoryService service;
+  
     public BranchModelTransformer(RepositoryService service)
     {
       this.service = service;
     }
 
-    //~--- methods ------------------------------------------------------------
+    
 
-    /**
-     * Method description
-     *
-     *
-     * @param branch
-     *
-     * @return
-     */
+    
     @Override
     public BranchModel apply(Branch branch)
     {
@@ -294,95 +224,49 @@ public class GitRepositoryViewer
       return model;
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final RepositoryService service;
   }
 
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 13/02/27
-   * @author         Enter your name here...
-   */
+
   private static class BranchesModel implements Iterable<BranchModel>
   {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param branches
-     */
+    private final Iterable<BranchModel> branches;
+  
     public BranchesModel(Iterable<BranchModel> branches)
     {
       this.branches = branches;
     }
 
-    //~--- methods ------------------------------------------------------------
+    
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     @Override
     public Iterator<BranchModel> iterator()
     {
       return branches.iterator();
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final Iterable<BranchModel> branches;
   }
 
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 13/02/27
-   * @author         Enter your name here...
-   */
+
   private static class ChangesetModel
   {
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param changeset
-     */
+    private final Changeset changeset;
+
     public ChangesetModel(Changeset changeset)
     {
       this.changeset = changeset;
     }
 
-    //~--- get methods --------------------------------------------------------
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
     public Person getAuthor()
     {
       return changeset.getAuthor();
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     public String getDate()
     {
       String date = Util.EMPTY_STRING;
@@ -396,29 +280,12 @@ public class GitRepositoryViewer
       return date;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     public String getDescription()
     {
       return changeset.getDescription();
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final Changeset changeset;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final RepositoryServiceFactory repositoryServiceFactory;
-
-  /** Field description */
-  private final TemplateEngineFactory templateEngineFactory;
 }

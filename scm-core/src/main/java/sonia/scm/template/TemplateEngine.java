@@ -24,8 +24,6 @@
     
 package sonia.scm.template;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Locale;
@@ -34,7 +32,6 @@ import java.util.Locale;
  * The {@link TemplateEngine} searches for {@link Template}s and prepares the
  * template for the rendering process.
  *
- * @author Sebastian Sdorra
  * @since 1.19
  *
  * @apiviz.uses sonia.scm.template.Template
@@ -105,11 +102,6 @@ public interface TemplateEngine
   Template getTemplate(String templateIdentifier, Reader reader)
     throws IOException;
 
-  /**
-   * Returns the type of this template engine.
-   *
-   * @return type of template engine
-   */
   TemplateType getType();
 
   static String extendWithLanguage(String templatePath, Locale locale) {

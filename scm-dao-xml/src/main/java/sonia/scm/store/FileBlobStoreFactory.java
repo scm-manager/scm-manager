@@ -24,7 +24,6 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -39,19 +38,12 @@ import java.io.File;
 /**
  * File based store factory.
  *
- * @author Sebastian Sdorra
  */
 @Singleton
 public class FileBlobStoreFactory extends FileBasedStoreFactory implements BlobStoreFactory {
 
   private final KeyGenerator keyGenerator;
 
-  /**
-   * Constructs a new instance.
-   *
-   * @param repositoryLocationResolver location resolver
-   * @param keyGenerator key generator
-   */
   @Inject
   public FileBlobStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryReadOnlyChecker readOnlyChecker) {
     super(contextProvider, repositoryLocationResolver, Store.BLOB, readOnlyChecker);

@@ -24,17 +24,11 @@
 
 package sonia.scm.event;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.EventBus;
-import com.github.legman.Subscribe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.util.ServiceUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.ServiceLoader;
 
@@ -43,30 +37,20 @@ import java.util.ServiceLoader;
  * themselves. The ScmEventBus searches its implementation with the
  * {@link ServiceLoader}.
  *
- * @author Sebastian Sdorra
  * @apiviz.landmark
  * @see EventBus
  * @since 1.23
  */
 public abstract class ScmEventBus {
 
-  /**
-   * Field description
-   */
   private static ScmEventBus instance;
 
-  /**
-   * the logger for ScmEventBus
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(ScmEventBus.class);
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the singleton instance of the ScmEventBus
-   *
-   * @return singleton instance
    */
   public static ScmEventBus getInstance() {
     synchronized (ScmEventBus.class) {
@@ -86,10 +70,9 @@ public abstract class ScmEventBus {
     return instance;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
-   * Post a event through the event bus. All registered subscribers will be
+   * Post an event through the event bus. All registered subscribers will be
    * notified by the event bus.
    *
    * @param event event to send through the event bus
@@ -97,17 +80,13 @@ public abstract class ScmEventBus {
   public abstract void post(Object event);
 
   /**
-   * Register all handler methods with the {@link Subscribe} annotation as
+   * Register all handler methods with the {@link com.github.legman.Subscribe} annotation as
    * subscriber for the event bus.
-   *
-   * @param subscriber subscriber object
    */
   public abstract void register(Object subscriber);
 
   /**
    * Unregister the given subscriber object from the event bus.
-   *
-   * @param subscriber subscriber object to unregister
    */
   public abstract void unregister(Object subscriber);
 }

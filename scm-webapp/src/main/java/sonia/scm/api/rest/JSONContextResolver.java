@@ -33,7 +33,6 @@ import jakarta.ws.rs.ext.Provider;
 /**
  * Configures the way objects are marshaled to json.
  * 
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Provider

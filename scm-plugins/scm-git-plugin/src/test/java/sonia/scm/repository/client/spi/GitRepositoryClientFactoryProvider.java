@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.client.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -34,15 +33,10 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.client.api.RepositoryClientException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GitRepositoryClientFactoryProvider
   implements RepositoryClientFactoryProvider
 {
@@ -118,14 +112,8 @@ public class GitRepositoryClientFactoryProvider
     return new GitRepositoryClientProvider(git, credentialsProvider);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String getType()
   {

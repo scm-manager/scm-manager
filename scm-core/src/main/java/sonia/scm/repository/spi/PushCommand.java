@@ -24,31 +24,15 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.api.PushResponse;
 
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
- *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public interface PushCommand
 {
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   PushResponse push(PushCommandRequest request) throws IOException;
 }

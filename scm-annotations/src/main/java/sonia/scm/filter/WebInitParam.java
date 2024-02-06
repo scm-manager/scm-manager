@@ -34,24 +34,13 @@ import java.lang.annotation.Target;
  * Init param for servlet of filter registration. This annotation can only be 
  * used with {@link WebElement}.
  *
- * @author Sebastian Sdorra
  */
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WebInitParam
 {
-  /**
-   * Name of the init parameter.
-   * 
-   * @return name of init parameter
-   */
   public String name();
   
-  /**
-   * Value of the init parameter.
-   * 
-   * @return value of init parameter
-   */
   public String value();
 }

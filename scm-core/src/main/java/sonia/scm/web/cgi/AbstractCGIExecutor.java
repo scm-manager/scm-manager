@@ -24,37 +24,38 @@
 
 package sonia.scm.web.cgi;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public abstract class AbstractCGIExecutor implements CGIExecutor
 {
+  protected List<String> args = Collections.emptyList();
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  protected int bufferSize;
+
+  protected EnvList environment;
+
+  protected CGIExceptionHandler exceptionHandler;
+
+  protected boolean ignoreExitCode = false;
+
+  protected String interpreter;
+
+  protected boolean passShellEnvironment = false;
+
+  protected CGIStatusCodeHandler statusCodeHandler;
+
+  protected File workDirectory;
+
   @Override
   public int getBufferSize()
   {
     return bufferSize;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public EnvList getEnvironment()
   {
@@ -62,10 +63,6 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
   }
 
   /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
    * @since 1.15
    */
   @Override
@@ -74,12 +71,7 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
     return exceptionHandler;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public String getInterpreter()
   {
@@ -87,10 +79,6 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
   }
 
   /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
    * @since 1.15
    */
   @Override
@@ -99,62 +87,33 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
     return statusCodeHandler;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public File getWorkDirectory()
   {
     return workDirectory;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public boolean isIgnoreExitCode()
   {
     return ignoreExitCode;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public boolean isPassShellEnvironment()
   {
     return passShellEnvironment;
   }
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param bufferSize
-   */
   @Override
   public void setBufferSize(int bufferSize)
   {
     this.bufferSize = bufferSize;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param environment
-   */
   @Override
   public void setEnvironment(EnvList environment)
   {
@@ -162,10 +121,6 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
   }
 
   /**
-   * {@inheritDoc}
-   *
-   *
-   * @param exceptionHandler
    * @since 1.15
    */
   @Override
@@ -174,36 +129,18 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
     this.exceptionHandler = exceptionHandler;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param ignoreExitCode
-   */
   @Override
   public void setIgnoreExitCode(boolean ignoreExitCode)
   {
     this.ignoreExitCode = ignoreExitCode;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param interpreter
-   */
   @Override
   public void setInterpreter(String interpreter)
   {
     this.interpreter = interpreter;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param passShellEnvironment
-   */
   @Override
   public void setPassShellEnvironment(boolean passShellEnvironment)
   {
@@ -211,10 +148,6 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
   }
 
   /**
-   * {@inheritDoc}
-   *
-   *
-   * @param statusCodeHandler
    * @since 1.15
    */
   @Override
@@ -223,12 +156,6 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
     this.statusCodeHandler = statusCodeHandler;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param workDirectory
-   */
   @Override
   public void setWorkDirectory(File workDirectory)
   {
@@ -245,31 +172,4 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
     return args;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  protected List<String> args = Collections.emptyList();
-
-  /** Field description */
-  protected int bufferSize;
-
-  /** Field description */
-  protected EnvList environment;
-
-  /** Field description */
-  protected CGIExceptionHandler exceptionHandler;
-
-  /** Field description */
-  protected boolean ignoreExitCode = false;
-
-  /** Field description */
-  protected String interpreter;
-
-  /** Field description */
-  protected boolean passShellEnvironment = false;
-
-  /** Field description */
-  protected CGIStatusCodeHandler statusCodeHandler;
-
-  /** Field description */
-  protected File workDirectory;
 }

@@ -38,7 +38,6 @@ import java.util.Objects;
 /**
  * The GitHeadModifier is able to modify the head of a git repository.
  *
- * @author Sebastian Sdorra
  * @since 1.61
  */
 public class GitHeadModifier {

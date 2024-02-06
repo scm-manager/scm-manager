@@ -24,14 +24,11 @@
     
 package sonia.scm.store;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
 
 /**
  * The blob store can be used store unstructured data in form of a {@link Blob}.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  *
  * @apiviz.uses sonia.scm.store.Blob
@@ -68,7 +65,6 @@ public interface BlobStore extends MultiEntryStore<Blob>
    */
   public void remove(Blob blob);
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Return all blob object which are stored in this BlobStore.

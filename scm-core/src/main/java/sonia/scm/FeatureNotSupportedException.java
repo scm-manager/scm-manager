@@ -28,7 +28,6 @@ import java.util.Collections;
 
 /**
  *
- * @author Sebastian Sdorra
  * @version 1.6
  */
 @SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here

@@ -65,9 +65,8 @@ public abstract class ExceptionWithContext extends RuntimeException {
 
   /**
    * Returns an url which gives more information about the exception or an empty optional.
-   * The methods returns an empty optional by default and can be overwritten.
+   * The method returns an empty optional by default and can be overwritten.
    *
-   * @return information url or empty
    * @since 2.5.0
    */
   public Optional<String> getUrl() {

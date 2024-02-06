@@ -34,7 +34,6 @@ import java.util.function.Predicate;
  * configuration data. <b>Note:</b> the default implementation use JAXB to
  * marshall the items.
  *
- * @author Sebastian Sdorra
  *
  * @param <V> store value type
  * @since 1.31

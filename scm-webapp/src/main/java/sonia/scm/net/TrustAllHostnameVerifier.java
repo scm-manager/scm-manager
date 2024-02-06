@@ -24,27 +24,14 @@
     
 package sonia.scm.net;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class TrustAllHostnameVerifier implements HostnameVerifier
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param hostname
-   * @param session
-   *
-   * @return
-   */
+
   @Override
   public boolean verify(String hostname, SSLSession session)
   {

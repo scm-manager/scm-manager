@@ -24,11 +24,8 @@
     
 package sonia.scm.io;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.Closer;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -43,7 +40,6 @@ import java.io.ObjectOutputStream;
  * null is returned. Depending on your specific application, it might
  * make more sense to have copy(...) re-throw the exception.
  *
- * @author Sebastian Sdorra
  * @since 1.29
  * @see <a href="http://javatechniques.com/blog/faster-deep-copies-of-java-objects" target="_blank">http://javatechniques.com/blog/faster-deep-copies-of-java-objects</a>
  */

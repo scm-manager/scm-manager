@@ -24,53 +24,30 @@
     
 package sonia.scm.repository.client.api;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public final class RepositoryClientException extends IOException
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   public RepositoryClientException() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
+
   public RepositoryClientException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
+ 
   public RepositoryClientException(Throwable cause)
   {
     super(cause);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
+ 
   public RepositoryClientException(String message, Throwable cause)
   {
     super(message, cause);

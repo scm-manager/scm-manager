@@ -46,7 +46,6 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link XsrfAccessTokenEnricher}.
  *
- * @author Sebastian Sdorra
  */
 @ExtendWith(MockitoExtension.class)
 class XsrfAccessTokenEnricherTest {

@@ -24,14 +24,11 @@
     
 package sonia.scm.collect;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -40,7 +37,6 @@ import java.util.concurrent.Callable;
  * A {@link Callable} which consumes all items from a {@link QueueIterator} and 
  * returns a list with all items from the queue.
  *
- * @author Sebastian Sdorra
  * 
  * @since 1.29
  *
@@ -49,13 +45,9 @@ import java.util.concurrent.Callable;
 public class CallableQueueCollector<T> implements Callable<List<T>>
 {
 
-  /**
-   * the logger for CallableListComsumer
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(CallableQueueCollector.class);
 
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new {@link CallableQueueCollector} from the given 
@@ -68,7 +60,6 @@ public class CallableQueueCollector<T> implements Callable<List<T>>
     this.queue = queue;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Creates a {@link List} from all items of the queue.

@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -59,19 +58,12 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 import static sonia.scm.repository.ConsolidatingModificationCollector.consolidate;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public final class SvnUtil
 {
 
-  /** Field description */
   public static final String XML_CONTENT_TYPE = "text/xml; charset=\"utf-8\"";
 
-  /** Field description */
   private static final String ID_TRANSACTION_PREFIX = "-1:";
 
   /**
@@ -80,27 +72,17 @@ public final class SvnUtil
    */
   private static final char TYPE_UPDATED = 'U';
 
-  /** Field description */
   private static final String USERAGENT_SVN = "svn/";
 
-  /**
-   * the logger for SvnUtil
-   */
+ 
   private static final Logger logger = LoggerFactory.getLogger(SvnUtil.class);
 
-  /** Field description */
   private static final String ID_TRANSACTION_PATTERN =
     ID_TRANSACTION_PREFIX.concat("%s");
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private SvnUtil() {}
 
-  //~--- methods --------------------------------------------------------------
 
   public static long parseRevision(String v, Repository repository) {
     long result = -1l;
@@ -169,12 +151,7 @@ public final class SvnUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   */
+
   public static void closeSession(SVNRepository repository)
   {
     if (repository != null)
@@ -190,14 +167,7 @@ public final class SvnUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param entry
-   *
-   * @return
-   */
+
   @SuppressWarnings("unchecked")
   public static Changeset createChangeset(SVNLogEntry entry)
   {
@@ -214,14 +184,7 @@ public final class SvnUtil
     return changeset;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param entries
-   *
-   * @return
-   */
+
   public static List<Changeset> createChangesets(List<SVNLogEntry> entries)
   {
     List<Changeset> changesets = Lists.newArrayList();
@@ -234,13 +197,6 @@ public final class SvnUtil
     return changesets;
   }
 
-  /**
-   * Method description
-   *
-   * @param errorCode
-   *
-   * @return
-   */
   @SuppressWarnings("java:S1149") // we can not use StringBuild SVNXMLUtil requires StringBuffer
   public static String createErrorBody(SVNErrorCode errorCode)
   {
@@ -268,25 +224,13 @@ public final class SvnUtil
     return xmlBuffer.toString();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param transaction
-   *
-   * @return
-   */
+
   public static String createTransactionEntryId(String transaction)
   {
     return String.format(ID_TRANSACTION_PATTERN, transaction);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param clientManager
-   */
+
   public static void dispose(SVNClientManager clientManager)
   {
     if (clientManager != null)
@@ -302,17 +246,6 @@ public final class SvnUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param statusCode
-   * @param errorCode
-   *
-   * @throws IOException
-   */
   public static void sendError(HttpServletRequest request,
     HttpServletResponse response, int statusCode, SVNErrorCode errorCode)
     throws IOException
@@ -354,40 +287,19 @@ public final class SvnUtil
     return revisionNumber;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
+
   public static String getTransactionId(String id)
   {
     return id.substring(ID_TRANSACTION_PREFIX.length());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
+
   public static boolean isSvnClient(HttpServletRequest request)
   {
     return HttpUtil.userAgentStartsWith(request, USERAGENT_SVN);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
+
   public static boolean isTransactionEntryId(String id)
   {
     return Strings.nullToEmpty(id).startsWith(ID_TRANSACTION_PREFIX);

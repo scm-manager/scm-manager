@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,36 +32,25 @@ import sonia.scm.FeatureNotSupportedException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.event.ScmEventBus;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
-
-/**
- *
- * @author Sebastian Sdorra
- *
- * @param <C>
- */
 public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
   implements RepositoryHandler
 {
 
-  /** the logger for AbstractRepositoryHandler */
+  
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractRepositoryHandler.class);
 
-  //~--- constructors ---------------------------------------------------------
+  protected File baseDirectory;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param storeFactory
-   */
+  protected C config;
+
+  protected ConfigurationStore<C> store;
+ 
   protected AbstractRepositoryHandler(ConfigurationStoreFactory storeFactory) {
     this.store = storeFactory
       .withType(getConfigClass())
@@ -70,24 +58,11 @@ public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
       .build();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected abstract Class<C> getConfigClass();
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
   public void close() throws IOException
   {
@@ -95,12 +70,7 @@ public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
     // do nothing
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   */
+
   @Override
   public void init(SCMContextProvider context)
   {
@@ -108,11 +78,7 @@ public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
     loadConfig();
   }
 
-  /**
-   * Method description
-   *
-   */
-  public void loadConfig()
+   public void loadConfig()
   {
     if (logger.isDebugEnabled())
     {
@@ -122,11 +88,7 @@ public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
     config = store.get();
   }
 
-  /**
-   * Method description
-   *
-   */
-  public void storeConfig()
+   public void storeConfig()
   {
     if (config != null)
     {
@@ -139,27 +101,14 @@ public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public C getConfig()
   {
     return config;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws FeatureNotSupportedException
-   */
+
   @Override
   public ImportHandler getImportHandler()
   {
@@ -168,9 +117,6 @@ public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
 
   /**
    * Returns true if the plugin is configured and enabled.
-   *
-   *
-   * @return true if the plugin is configured and enabled
    */
   @Override
   public boolean isConfigured()
@@ -178,40 +124,19 @@ public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
     return (config != null) && config.isValid() &&!config.isDisabled();
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param config
-   */
+
   public void setConfig(C config)
   {
     this.config = config;
     fireConfigChanged();
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  private void fireConfigChanged()
+   private void fireConfigChanged()
   {
     ScmEventBus.getInstance().post(
       new RepositoryHandlerConfigChangedEvent<C>(config));
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected File baseDirectory;
-
-  /** Field description */
-  protected C config;
-
-  /** Field description */
-  protected ConfigurationStore<C> store;
 }

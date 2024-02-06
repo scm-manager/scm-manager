@@ -24,10 +24,7 @@
     
 package sonia.scm.repository;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public enum Compatibility
 {
   NONE(false, false, false, false, false),
@@ -36,15 +33,16 @@ public enum Compatibility
   PRE17(false, false, false, true, false),
   WITH17(false, false, false, false, true);
 
-  /**
-   * Field description
-   *
-   * @param pre14Compatible
-   * @param pre15Compatible
-   * @param pre16Compatible
-   * @param pre17Compatible
-   * @param with17Compatible
-   */
+  private boolean pre14Compatible;
+
+  private boolean pre15Compatible;
+
+  private boolean pre16Compatible;
+
+  private boolean pre17Compatible;
+
+  private boolean with17Compatible;
+
   private Compatibility(boolean pre14Compatible, boolean pre15Compatible,
                         boolean pre16Compatible, boolean pre17Compatible,
                         boolean with17Compatible)
@@ -56,77 +54,35 @@ public enum Compatibility
     this.with17Compatible = with17Compatible;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isPre14Compatible()
   {
     return pre14Compatible;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isPre15Compatible()
   {
     return pre15Compatible;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isPre16Compatible()
   {
     return pre16Compatible;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isPre17Compatible()
   {
     return pre17Compatible;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isWith17Compatible()
   {
     return with17Compatible;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private boolean pre14Compatible;
-
-  /** Field description */
-  private boolean pre15Compatible;
-
-  /** Field description */
-  private boolean pre16Compatible;
-
-  /** Field description */
-  private boolean pre17Compatible;
-
-  /** Field description */
-  private boolean with17Compatible;
 }

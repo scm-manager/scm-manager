@@ -38,7 +38,6 @@ import sonia.scm.repository.api.HookFeatureIsNotSupportedException;
 /**
  * Unit tests for {@link HookContextProvider}.
  * 
- * @author Sebastian Sdorra
  */
 public class HookContextProviderTest {
 

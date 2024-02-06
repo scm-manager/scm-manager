@@ -37,44 +37,32 @@ public interface ContentType {
 
   /**
    * Returns the primary part of the content type (e.g.: text of text/plain).
-   *
-   * @return primary content type part
    */
   String getPrimary();
 
   /**
    * Returns the secondary part of the content type (e.g.: plain of text/plain).
-   *
-   * @return secondary content type part
    */
   String getSecondary();
 
   /**
    * Returns the raw presentation of the content type (e.g.: text/plain).
-   *
-   * @return raw presentation
    */
   String getRaw();
 
   /**
    * Returns {@code true} if the content type is text based.
-   *
-   * @return {@code true} for text content
    */
   boolean isText();
 
   /**
    * Returns an optional with the programming language
    * or empty if the content is not programming language.
-   *
-   * @return programming language or empty
    */
   Optional<String> getLanguage();
 
   /**
    * Returns a map of syntax modes such as codemirror, ace or prism.
-   *
-   * @return map of syntax modes
    * @since 2.28.0
    */
   default Map<String, String> getSyntaxModes() {

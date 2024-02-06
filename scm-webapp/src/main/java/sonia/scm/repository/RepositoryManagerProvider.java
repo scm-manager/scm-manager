@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,23 +31,18 @@ import com.google.inject.Provider;
 import sonia.scm.Undecorated;
 import sonia.scm.util.Decorators;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Set;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class RepositoryManagerProvider implements Provider<RepositoryManager>
 {
+  @Inject(optional = true)
+  private Set<RepositoryManagerDecoratorFactory> decoratorFactories;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  @Inject
+  @Undecorated
+  private Provider<RepositoryManager> repositoryManagerProvider;
+  
   @Override
   public RepositoryManager get()
   {
@@ -56,40 +50,19 @@ public class RepositoryManagerProvider implements Provider<RepositoryManager>
       decoratorFactories);
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param decoratorFactories
-   */
+
   public void setDecoratorFactories(
     Set<RepositoryManagerDecoratorFactory> decoratorFactories)
   {
     this.decoratorFactories = decoratorFactories;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryManagerProvider
-   */
+
   public void setRepositoryManagerProvider(
     Provider<RepositoryManager> repositoryManagerProvider)
   {
     this.repositoryManagerProvider = repositoryManagerProvider;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @Inject(optional = true)
-  private Set<RepositoryManagerDecoratorFactory> decoratorFactories;
-
-  /** Field description */
-  @Inject
-  @Undecorated
-  private Provider<RepositoryManager> repositoryManagerProvider;
 }

@@ -36,7 +36,6 @@ import static org.junit.Assert.assertTrue;
 /**
  * Unit tests for {@link RepositoryMatcher}.
  * 
- * @author Sebastian Sdorra
  * @since 1.54
  */
 public class RepositoryMatcherTest {

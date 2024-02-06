@@ -24,19 +24,15 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.math.BigInteger;
 
 /**
  * Abstract base class for encoding and decoding BaseX.
  *
- * @author Sebastian Sdorra
  * @since 1.21
  */
 public abstract class AbstractBase

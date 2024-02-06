@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
@@ -38,8 +37,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Shows differences between revisions for a specified file or
@@ -56,22 +53,17 @@ import java.util.Set;
  * System.out.println(content);
  * </code></pre>
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCommandBuilder, DiffCommandRequest>
 {
 
-  /**
-   * the logger for DiffCommandBuilder
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(DiffCommandBuilder.class);
 
-  /** implementation of the diff command */
   private final DiffCommand diffCommand;
 
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new {@link DiffCommandBuilder}, this constructor should
@@ -86,7 +78,6 @@ public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCom
     this.diffCommand = diffCommand;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Passes the difference of the given parameter to the outputstream.
@@ -100,7 +91,6 @@ public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCom
     return getDiffResult();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the content of the difference as string.
@@ -120,12 +110,11 @@ public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCom
     }
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Sets the diff format which should be used for the output.
    * <strong>Note: </strong> If the repository provider does not support the
-   * diff format, it will fallback to its default format.
+   * diff format, it will fall back to its default format.
    *
    *
    * @param format format of the diff output
@@ -141,15 +130,7 @@ public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCom
 
     return this;
   }
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @return
-   */
   private OutputStreamConsumer getDiffResult() throws IOException {
     checkArguments();
 

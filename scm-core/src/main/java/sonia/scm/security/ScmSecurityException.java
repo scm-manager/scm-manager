@@ -24,53 +24,28 @@
     
 package sonia.scm.security;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class ScmSecurityException extends RuntimeException
 {
 
-  /** Field description */
   private static final long serialVersionUID = 3166977667869197399L;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   public ScmSecurityException() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
+
   public ScmSecurityException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param throwable
-   */
+ 
   public ScmSecurityException(Throwable throwable)
   {
     super(throwable);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param throwable
-   */
+
   public ScmSecurityException(String message, Throwable throwable)
   {
     super(message, throwable);

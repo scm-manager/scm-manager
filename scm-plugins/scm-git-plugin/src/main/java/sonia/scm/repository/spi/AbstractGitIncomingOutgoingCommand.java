@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Closeables;
@@ -46,18 +45,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map.Entry;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public abstract class AbstractGitIncomingOutgoingCommand
   extends AbstractGitCommand
 {
 
-  /** Field description */
   private static final String REMOTE_REF_PREFIX = "refs/remote/scm/%s/";
+
+  private GitRepositoryHandler handler;
+  private final GitChangesetConverterFactory converterFactory;
 
   AbstractGitIncomingOutgoingCommand(GitContext context, GitRepositoryHandler handler, GitChangesetConverterFactory converterFactory) {
     super(context);
@@ -65,36 +61,15 @@ public abstract class AbstractGitIncomingOutgoingCommand
     this.converterFactory = converterFactory;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param logCommand
-   * @param localId
-   * @param remoteId
-   *
-   * @throws IOException
-   */
   protected abstract void prepareLogCommand(
     org.eclipse.jgit.api.LogCommand logCommand, ObjectId localId,
     ObjectId remoteId)
     throws IOException;
 
-  /**
-   * Method description
-   *
-   *
-   * @param localId
-   * @param remoteId
-   *
-   * @return
-   */
+
   protected abstract boolean retrieveChangesets(ObjectId localId,
     ObjectId remoteId);
 
-  //~--- get methods ----------------------------------------------------------
 
   protected ChangesetPagingResult getIncomingOrOutgoingChangesets(PagedRemoteCommandRequest request) throws IOException {
     Repository remoteRepository = request.getRemoteRepository();
@@ -192,9 +167,4 @@ public abstract class AbstractGitIncomingOutgoingCommand
     return ref;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private GitRepositoryHandler handler;
-  private final GitChangesetConverterFactory converterFactory;
 }

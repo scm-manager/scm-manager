@@ -24,45 +24,21 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.DecoratorFactory;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class Decorators
 {
 
-  /**
-   * the logger for Decorators
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(Decorators.class);
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private Decorators() {}
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   * @param decoratorFactories
-   * @param <T>
-   *
-   * @return
-   */
   public static <T> T decorate(T object,
     Iterable<? extends DecoratorFactory<T>> decoratorFactories)
   {

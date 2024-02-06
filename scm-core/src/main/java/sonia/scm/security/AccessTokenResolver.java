@@ -30,7 +30,6 @@ import sonia.scm.plugin.ExtensionPoint;
  * AccessTokenResolver are used to parse, validate and verify an {@link AccessToken} from a {@link BearerToken}. The 
  * resolver should be used to get an {@link AccessToken} from a {@link BearerToken}.
  * 
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @ExtensionPoint(multi = false)

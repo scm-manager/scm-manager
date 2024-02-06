@@ -24,35 +24,19 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.Validateable;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Collection;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class AssertUtil
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   private AssertUtil() {}
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   */
+
   public static void assertIsNotEmpty(String value)
   {
     if (Util.isEmpty(value))
@@ -61,12 +45,6 @@ public final class AssertUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param array
-   */
   public static void assertIsNotEmpty(Object[] array)
   {
     if (Util.isEmpty(array))
@@ -75,12 +53,6 @@ public final class AssertUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param collection
-   */
   public static void assertIsNotEmpty(Collection<?> collection)
   {
     if (Util.isEmpty(collection))
@@ -89,12 +61,6 @@ public final class AssertUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   */
   public static void assertIsNotNull(Object object)
   {
     if (object == null)
@@ -103,12 +69,6 @@ public final class AssertUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param validateable
-   */
   public static void assertIsValid(Validateable validateable)
   {
     assertIsNotNull(validateable);
@@ -120,10 +80,6 @@ public final class AssertUtil
   }
 
   /**
-   * throws an IllegalArgumentException if the value is smaller then 0
-   *
-   *
-   * @param value
    * @since 1.4
    */
   public static void assertPositive(int value)

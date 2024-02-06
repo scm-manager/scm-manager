@@ -43,9 +43,7 @@ import java.nio.charset.StandardCharsets;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @ExtendWith(MockitoExtension.class)
 class FormContentBuilderTest {
 

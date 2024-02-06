@@ -29,7 +29,6 @@ package sonia.scm.repository;
  * gives more control over the result of the import as the
  * {@link ImportHandler}.
  *
- * @author Sebastian Sdorra
  * @since 1.43
  * @deprecated
  */

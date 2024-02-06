@@ -24,11 +24,8 @@
     
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.ByteSource;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,24 +33,17 @@ import java.io.OutputStream;
 /**
  * {@link ByteSource} content for {@link AdvancedHttpRequestWithBody}.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public class ByteSourceContent implements Content
 {
+  private final ByteSource byteSource;
 
-  /**
-   * Constructs a new {@link ByteSourceContent}.
-   *
-   *
-   * @param byteSource byte source
-   */
   public ByteSourceContent(ByteSource byteSource)
   {
     this.byteSource = byteSource;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Sets the content length for the request.
@@ -83,8 +73,4 @@ public class ByteSourceContent implements Content
     byteSource.copyTo(output);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** byte source */
-  private final ByteSource byteSource;
 }

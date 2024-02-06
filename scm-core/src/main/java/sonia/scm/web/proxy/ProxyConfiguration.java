@@ -24,7 +24,6 @@
     
 package sonia.scm.web.proxy;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -38,35 +37,35 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.25
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "proxy-configuration")
 public class ProxyConfiguration
 {
+  @XmlElement(name = "cache-enabled")
+  private boolean cacheEnabled = true;
 
-  /**
-   * Constructs ...
-   *
-   */
+  @XmlElement(name = "copy-request-headers")
+  private boolean copyRequestHeaders = true;
+
+  @XmlElement(name = "copy-response-headers")
+  private boolean copyResponseHeaders = true;
+
+  @XmlElement(name = "exclude")
+  @XmlElementWrapper(name = "request-header-excludes")
+  private Set<String> requestHeaderExcludes;
+
+  @XmlElement(name = "exclude")
+  @XmlElementWrapper(name = "response-header-excludes")
+  private Set<String> responseHeaderExcludes;
+
+  private URL url;
+
   public ProxyConfiguration() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param url
-   * @param copyRequestHeaders
-   * @param requestHeaderExcludes
-   * @param copyResponseHeaders
-   * @param responseHeaderExcludes
-   * @param cacheEnabled
-   */
   public ProxyConfiguration(URL url, boolean copyRequestHeaders,
     Set<String> requestHeaderExcludes, boolean copyResponseHeaders,
     Set<String> responseHeaderExcludes, boolean cacheEnabled)
@@ -79,16 +78,7 @@ public class ProxyConfiguration
     this.cacheEnabled = cacheEnabled;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
   @Override
   public boolean equals(Object obj)
   {
@@ -112,12 +102,7 @@ public class ProxyConfiguration
       && Objects.equal(cacheEnabled, other.cacheEnabled);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public int hashCode()
   {
@@ -125,12 +110,7 @@ public class ProxyConfiguration
       copyResponseHeaders, responseHeaderExcludes, cacheEnabled);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String toString()
   {
@@ -146,14 +126,8 @@ public class ProxyConfiguration
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @SuppressWarnings("unchecked")
   public Set<String> getRequestHeaderExcludes()
   {
@@ -165,12 +139,7 @@ public class ProxyConfiguration
     return requestHeaderExcludes;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @SuppressWarnings("unchecked")
   public Set<String> getResponseHeaderExcludes()
   {
@@ -182,74 +151,28 @@ public class ProxyConfiguration
     return responseHeaderExcludes;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public URL getUrl()
   {
     return url;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isCacheEnabled()
   {
     return cacheEnabled;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isCopyRequestHeaders()
   {
     return copyRequestHeaders;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isCopyResponseHeaders()
   {
     return copyResponseHeaders;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "cache-enabled")
-  private boolean cacheEnabled = true;
-
-  /** Field description */
-  @XmlElement(name = "copy-request-headers")
-  private boolean copyRequestHeaders = true;
-
-  /** Field description */
-  @XmlElement(name = "copy-response-headers")
-  private boolean copyResponseHeaders = true;
-
-  /** Field description */
-  @XmlElement(name = "exclude")
-  @XmlElementWrapper(name = "request-header-excludes")
-  private Set<String> requestHeaderExcludes;
-
-  /** Field description */
-  @XmlElement(name = "exclude")
-  @XmlElementWrapper(name = "response-header-excludes")
-  private Set<String> responseHeaderExcludes;
-
-  /** Field description */
-  private URL url;
 }

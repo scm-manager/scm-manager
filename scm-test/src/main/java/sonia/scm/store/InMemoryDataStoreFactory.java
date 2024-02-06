@@ -27,7 +27,6 @@ package sonia.scm.store;
 /**
  * In memory configuration store factory for testing purposes.
  *
- * @author Sebastian Sdorra
  * @deprecated use {@link InMemoryByteDataStoreFactory} instead.
  */
 @Deprecated

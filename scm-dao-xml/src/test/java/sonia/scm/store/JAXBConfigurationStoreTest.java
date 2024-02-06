@@ -39,7 +39,6 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link JAXBConfigurationStore}.
  *
- * @author Sebastian Sdorra
  */
 public class JAXBConfigurationStoreTest extends StoreTestBase {
 

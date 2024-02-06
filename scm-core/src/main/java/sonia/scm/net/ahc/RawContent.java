@@ -24,11 +24,8 @@
     
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,24 +33,17 @@ import java.io.OutputStream;
 /**
  * Byte array content for {@link AdvancedHttpRequestWithBody}.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public class RawContent implements Content
 {
+  private final byte[] data;
 
-  /**
-   * Constructs a new {@link RawContent}.
-   *
-   *
-   * @param data data
-   */
   public RawContent(byte[] data)
   {
     this.data = data;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Sets the length of the byte array as http header.
@@ -81,22 +71,9 @@ public class RawContent implements Content
     output.write(data);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns content data.
-   *
-   *
-   * @return content data
-   */
   @VisibleForTesting
   byte[] getData()
   {
     return data;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** byte array */
-  private final byte[] data;
 }

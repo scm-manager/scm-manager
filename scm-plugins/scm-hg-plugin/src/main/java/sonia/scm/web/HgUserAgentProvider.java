@@ -24,13 +24,10 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 
 import sonia.scm.plugin.Extension;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.nio.charset.Charset;
 
@@ -48,19 +45,10 @@ public class HgUserAgentProvider implements UserAgentProvider
   static UserAgent HG = UserAgent.scmClient("Mercurial").basicAuthenticationCharset(
                           Charset.defaultCharset()).build();
 
-  /** Field description */
   private static final String PREFIX = "mercurial";
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param userAgentString
-   *
-   * @return
-   */
+
   @Override
   public UserAgent parseUserAgent(String userAgentString)
   {

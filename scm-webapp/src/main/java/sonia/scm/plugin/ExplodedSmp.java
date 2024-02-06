@@ -24,7 +24,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
 import org.slf4j.Logger;
@@ -34,33 +33,33 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * The ExplodedSmp object represents an extracted SCM-Manager plugin. The object
  * contains the path to the plugin directory and loads the plugin descriptor.
  * The ExplodedSmp can be created with the {@link #create(java.nio.file.Path)}
  * method.
  *
- * @author Sebastian Sdorra
  */
 public final class ExplodedSmp {
 
   private static final Logger logger = LoggerFactory.getLogger(ExplodedSmp.class);
 
   /**
-   * Constructs ...
-   *
-   * @param path
-   * @param plugin
+   * directory
    */
+  private final Path path;
+
+  /**
+   * plugin object
+   */
+  private final InstalledPluginDescriptor plugin;
+
   ExplodedSmp(Path path, InstalledPluginDescriptor plugin) {
     logger.trace("create exploded scm for plugin {} and dependencies {}", plugin.getInformation().getName(), plugin.getDependencies());
     this.path = path;
     this.plugin = plugin;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Creates a new ExplodedSmp object.
@@ -76,12 +75,10 @@ public final class ExplodedSmp {
     return new ExplodedSmp(directory, Plugins.parsePluginDescriptor(desc));
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns {@code true} if the exploded smp contains a core plugin
    *
-   * @return {@code true} for a core plugin
    * @since 2.30.0
    */
   public boolean isCore() {
@@ -92,7 +89,6 @@ public final class ExplodedSmp {
   /**
    * Returns the path to the plugin directory.
    *
-   * @return to plugin directory
    */
   public Path getPath() {
     return path;
@@ -101,7 +97,6 @@ public final class ExplodedSmp {
   /**
    * Returns parsed plugin descriptor.
    *
-   * @return plugin descriptor
    */
   public InstalledPluginDescriptor getPlugin() {
     return plugin;
@@ -126,7 +121,7 @@ public final class ExplodedSmp {
     return information.getName() + "@" + information.getVersion() + " (" + path + ")";
   }
 
-  //~--- inner classes --------------------------------------------------------
+
 
   /**
    * Transforms {@link Path} to {@link ExplodedSmp}.
@@ -148,16 +143,4 @@ public final class ExplodedSmp {
     }
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * directory
-   */
-  private final Path path;
-
-  /**
-   * plugin object
-   */
-  private final InstalledPluginDescriptor plugin;
 }

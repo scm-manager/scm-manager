@@ -24,18 +24,14 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.net.ChildFirstURLClassLoader;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.net.URL;
 
 /**
  * Child first {@link ClassLoader} for SCM-Manager plugins.
  *
- * @author Sebastian Sdorra
  */
 public class ChildFirstPluginClassLoader extends ChildFirstURLClassLoader
   implements PluginClassLoader
@@ -43,13 +39,7 @@ public class ChildFirstPluginClassLoader extends ChildFirstURLClassLoader
 
   private final String plugin;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param urls
-   * @param parent
-   */
+ 
   public ChildFirstPluginClassLoader(URL[] urls, ClassLoader parent, String plugin)
   {
     super(urls, parent);

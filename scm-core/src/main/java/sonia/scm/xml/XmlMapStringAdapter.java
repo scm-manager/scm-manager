@@ -24,7 +24,6 @@
     
 package sonia.scm.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import sonia.scm.util.Util;
@@ -32,24 +31,11 @@ import sonia.scm.util.Util;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class XmlMapStringAdapter
         extends XmlAdapter<XmlMapStringElement[], Map<String, String>>
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param map
-   *
-   * @return
-   *
-   * @throws Exception
-   */
   @Override
   public XmlMapStringElement[] marshal(Map<String, String> map) throws Exception
   {
@@ -76,16 +62,6 @@ public class XmlMapStringAdapter
     return elements;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param elements
-   *
-   * @return
-   *
-   * @throws Exception
-   */
   @Override
   public Map<String, String> unmarshal(XmlMapStringElement[] elements)
           throws Exception

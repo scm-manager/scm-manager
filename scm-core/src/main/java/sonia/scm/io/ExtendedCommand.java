@@ -24,40 +24,20 @@
     
 package sonia.scm.io;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
 import java.util.Timer;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class ExtendedCommand extends SimpleCommand
 {
+  private long timeout = 30000;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param command
-   */
   public ExtendedCommand(String... command)
   {
     super(command);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   @Override
   public SimpleCommandResult execute() throws IOException
   {
@@ -80,34 +60,14 @@ public class ExtendedCommand extends SimpleCommand
     return result;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public long getTimeout()
   {
     return timeout;
   }
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param timeout
-   */
   public void setTimeout(long timeout)
   {
     this.timeout = timeout;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private long timeout = 30000;
 }

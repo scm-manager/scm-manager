@@ -24,26 +24,19 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 
 /**
  * Util methods for {@link ClassLoader}s.
  *
- * @author Sebastian Sdorra
  * @since 1.37
  */
 public final class ClassLoaders
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   private ClassLoaders() {}
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Executes a {@link Runnable} with the given {@link ClassLoader} as context 
@@ -75,7 +68,6 @@ public final class ClassLoaders
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the context {@link ClassLoader} from the current {@link Thread}, if

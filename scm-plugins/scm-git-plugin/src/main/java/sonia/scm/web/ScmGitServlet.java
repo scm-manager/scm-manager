@@ -47,10 +47,7 @@ import java.util.regex.Pattern;
 import static org.eclipse.jgit.lfs.lib.Constants.CONTENT_TYPE_GIT_LFS_JSON;
 import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Singleton
 public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
 {
@@ -61,14 +58,18 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
     "(?x)^/repo/(.*/(HEAD|info/refs|objects/(info/[^/]+|[0-9a-f]{2}/[0-9a-f]{38}|pack/pack-[0-9a-f]{40}\\.(pack|idx))|git-(upload|receive)-pack))$"
   );
 
-  /** Field description */
   private static final long serialVersionUID = -7712897339207470674L;
 
-  /** the logger for ScmGitServlet */
+  
   private static final Logger logger = getLogger(ScmGitServlet.class);
   public static final MediaType LFS_LOCKING_MEDIA_TYPE = MediaType.valueOf("application/vnd.git-lfs+json");
 
-  //~--- constructors ---------------------------------------------------------
+  private final RepositoryRequestListenerUtil repositoryRequestListenerUtil;
+
+
+  private final GitRepositoryViewer repositoryViewer;
+
+  private final LfsServletFactory lfsServletFactory;
 
   @Inject
   public ScmGitServlet(GitRepositoryResolver repositoryResolver,
@@ -85,18 +86,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
     setReceivePackFactory(receivePackFactory);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   @Override
   public void service(HttpServletRequest request, HttpServletResponse response, Repository repository)
     throws ServletException, IOException
@@ -253,15 +243,4 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
     return false;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final RepositoryRequestListenerUtil repositoryRequestListenerUtil;
-
-  /**
-   * Field description
-   */
-  private final GitRepositoryViewer repositoryViewer;
-
-  private final LfsServletFactory lfsServletFactory;
 }

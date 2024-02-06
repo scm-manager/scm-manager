@@ -24,7 +24,6 @@
 
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,62 +31,28 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.io.SimpleCommand;
 import sonia.scm.io.SimpleCommandResult;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
 import java.util.Scanner;
 
-/**
- * @author Sebastian Sdorra
- */
 public final class RegistryUtil {
 
-  /**
-   * the logger for RegistryUtil
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(RegistryUtil.class);
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   */
   private RegistryUtil() {
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   * @param key
-   * @return
-   */
   public static String getRegistryValue(String key) {
     return getRegistryValue(key, null, null);
   }
 
-  /**
-   * Method description
-   *
-   * @param key
-   * @param defaultValue
-   * @return
-   */
   public static String getRegistryValue(String key, String defaultValue) {
     return getRegistryValue(key, null, defaultValue);
   }
 
-  /**
-   * Method description
-   *
-   * @param key
-   * @param subKey
-   * @param defaultValue
-   * @return
-   */
   public static String getRegistryValue(String key, String subKey,
                                         String defaultValue) {
     String value = defaultValue;

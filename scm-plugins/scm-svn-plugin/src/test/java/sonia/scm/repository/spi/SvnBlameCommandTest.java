@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 import sonia.scm.repository.BlameLine;
@@ -34,12 +33,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class SvnBlameCommandTest extends AbstractSvnCommandTestBase
 {
 
@@ -85,12 +79,7 @@ public class SvnBlameCommandTest extends AbstractSvnCommandTestBase
     checkFirstLine(line);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param line
-   */
+
   private void checkFirstLine(BlameLine line)
   {
     assertEquals(1, line.getLineNumber());
@@ -102,12 +91,7 @@ public class SvnBlameCommandTest extends AbstractSvnCommandTestBase
     assertNull(line.getAuthor().getMail());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   private SvnBlameCommand createCommand()
   {
     return new SvnBlameCommand(createContext());

@@ -27,7 +27,6 @@ package sonia.scm;
 /**
  * Handler event type.
  *
- * @author Sebastian Sdorra
  */
 public enum HandlerEventType
 {
@@ -38,12 +37,12 @@ public enum HandlerEventType
   CREATE(true),
 
   /**
-   * After a object is modified by a handler.
+   * After an object is modified by a handler.
    */
   MODIFY(true),
 
   /**
-   * After a object is removed by a handler.
+   * After an object is removed by a handler.
    */
   DELETE(true),
 
@@ -54,35 +53,25 @@ public enum HandlerEventType
   BEFORE_CREATE(false),
 
   /**
-   * Before a object is modified by a handler.
+   * Before an object is modified by a handler.
    * @since 1.16
    */
   BEFORE_MODIFY(false),
 
   /**
-   * Before a object is removed by a handler.
+   * Before an object is removed by a handler.
    * @since 1.16
    */
   BEFORE_DELETE(false);
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param post
-   */
   private HandlerEventType(boolean post)
   {
     this.post = post;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Returns true if the event is fired after the action is occurred.
    *
-   *
-   * @return true if the event is fired after the action is occurred
    * @since 1.21
    */
   public boolean isPost()
@@ -93,8 +82,6 @@ public enum HandlerEventType
   /**
    * Returns true if the event is fired before the action is occurred.
    *
-   *
-   * @return true if the event is fired before the action is occurred
    * @since 1.21
    */
   public boolean isPre()
@@ -102,8 +89,5 @@ public enum HandlerEventType
     return !post;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
   private final boolean post;
 }

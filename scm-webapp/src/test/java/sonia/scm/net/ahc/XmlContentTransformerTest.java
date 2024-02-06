@@ -38,10 +38,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class XmlContentTransformerTest {
 
   private final XmlContentTransformer transformer = new XmlContentTransformer();

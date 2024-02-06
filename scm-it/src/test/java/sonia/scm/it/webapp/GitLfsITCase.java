@@ -67,7 +67,6 @@ import static sonia.scm.it.webapp.RepositoryITUtil.deleteRepository;
 /**
  * Integration tests for git lfs.
  *
- * @author Sebastian Sdorra
  */
 public class GitLfsITCase {
 

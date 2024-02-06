@@ -24,8 +24,6 @@
 
 package sonia.scm;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import sonia.scm.version.Version;
 
 import java.io.File;
@@ -39,14 +37,10 @@ import static java.lang.String.format;
  * This class is a singleton which can be retrieved via injection
  * or with the static {@link SCMContext#getContext()} method.
  *
- * @author Sebastian Sdorra
  */
 public interface SCMContextProvider {
   /**
    * Returns the base directory of the SCM-Manager.
-   *
-   *
-   * @return base directory of the SCM-Manager
    */
   File getBaseDirectory();
 
@@ -64,14 +58,12 @@ public interface SCMContextProvider {
   /**
    * Returns the current stage of SCM-Manager.
    *
-   *
-   * @return stage of SCM-Manager
    * @since 1.12
    */
   Stage getStage();
 
   /**
-   * Returns a exception which is occurred on context startup.
+   * Returns an exception which is occurred on context startup.
    * The method returns null if the start was successful.
    *
    *
@@ -82,18 +74,14 @@ public interface SCMContextProvider {
 
   /**
    * Returns the version of the SCM-Manager.
-   *
-   *
-   * @return version of the SCM-Manager
    */
   String getVersion();
 
   /**
-   * Returns the version of the SCM-Manager used in documentation urls (eg. version 2.17.0 and 2.17.1 will all result
+   * Returns the version of the SCM-Manager used in documentation urls (e.g. version 2.17.0 and 2.17.1 will all result
    * in 2.17.x). The default implementation works for versions with three parts (major version, minor version,
-   * and patch version, where the patch version will be replaces with an 'x').
+   * and patch version, where the patch version will be replaced with an 'x').
    *
-   * @return version of the SCM-Manager used in documentation urls
    * @since 2.17.0
    */
   default String getDocumentationVersion() {
@@ -104,7 +92,6 @@ public interface SCMContextProvider {
   /**
    * Returns the instance id of the SCM-Manager used.
    *
-   * @return instance id of the SCM-Manager
    * @since 2.30.0
    */
   default String getInstanceId() {

@@ -24,11 +24,8 @@
     
 package sonia.scm.event;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.plugin.PluginAnnotation;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -40,7 +37,6 @@ import java.lang.annotation.Target;
  * This annotation marks classes which are receivable over the event bus of
  * scm-manager.
  *
- * @author Sebastian Sdorra
  * @since 1.33
  */
 @Documented

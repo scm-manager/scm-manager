@@ -24,7 +24,6 @@
     
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableList;
 
@@ -34,14 +33,9 @@ import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class PrioritiesTest
 {
 
@@ -55,19 +49,10 @@ public class PrioritiesTest
   public static final int PRE_AUTHENTICATION = 4500;
 
   
-  /**
-   * Constructs ...
-   *
-   */
   public PrioritiesTest() {}
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testGetPriority()
   {
     assertEquals(POST_AUTHENTICATION,
@@ -75,11 +60,7 @@ public class PrioritiesTest
     assertEquals(Priorities.DEFAULT, Priorities.getPriority(D.class));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   @SuppressWarnings("unchecked")
   public void testSort()
   {
@@ -104,47 +85,23 @@ public class PrioritiesTest
     assertThat(instances, contains(b, c, a, d));
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/12/20
-   * @author         Enter your name here...
-   */
+
+
   @Priority(POST_AUTHENTICATION)
   public static class A {}
 
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/12/20
-   * @author         Enter your name here...
-   */
+
   @Priority(PRE_AUTHENTICATION)
   public static class B {}
 
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/12/20
-   * @author         Enter your name here...
-   */
+
   @Priority(AUTHENTICATION)
   public static class C {}
 
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/12/20
-   * @author         Enter your name here...
-   */
+
   public static class D {}
 }

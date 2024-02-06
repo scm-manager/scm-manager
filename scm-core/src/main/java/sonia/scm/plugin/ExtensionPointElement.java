@@ -24,7 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -33,33 +32,26 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "extension-point")
 public final class ExtensionPointElement
 {
+  @XmlElement(name = "class")
+  private Class<?> clazz;
 
-  /**
-   * Constructs ...
-   *
-   */
+  private String description;
+
+  @XmlElement(name = "multi")
+  private boolean multiple = true;
+
+  private boolean autoBind = true;
+
   ExtensionPointElement() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param clazz
-   * @param description
-   * @param multiple
-   * @param autoBind
-   */
   public ExtensionPointElement(Class<?> clazz, String description,
     boolean multiple, boolean autoBind)
   {
@@ -69,16 +61,6 @@ public final class ExtensionPointElement
     this.autoBind = autoBind;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
   @Override
   public boolean equals(Object obj)
   {
@@ -100,24 +82,14 @@ public final class ExtensionPointElement
       && Objects.equal(autoBind, other.autoBind);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public int hashCode()
   {
     return Objects.hashCode(clazz, description, multiple, autoBind);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String toString()
   {
@@ -131,65 +103,29 @@ public final class ExtensionPointElement
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Class<?> getClazz()
   {
     return clazz;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getDescription()
   {
     return description;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isAutoBind()
   {
     return autoBind;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isMultiple()
   {
     return multiple;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "class")
-  private Class<?> clazz;
-
-  /** Field description */
-  private String description;
-
-  /** Field description */
-  @XmlElement(name = "multi")
-  private boolean multiple = true;
-
-  /** Field description */
-  private boolean autoBind = true;
 }

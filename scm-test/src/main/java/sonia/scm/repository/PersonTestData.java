@@ -26,45 +26,32 @@ package sonia.scm.repository;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public final class PersonTestData
 {
 
-  /** Field description */
   public static final Person ADAMS =
     Person.toPerson("Douglas Adams <douglas.adams@hitchhiker.com>");
 
-  /** Field description */
   public static final Person DENT =
     Person.toPerson("Arthur Dent <arthur.dent@hitchhiker.com>");
 
-  /** Field description */
   public static final Person MARVIN =
     Person.toPerson("Marvin <paranoid.android@hitchhiker.com>");
 
-  /** Field description */
   public static final Person PERFECT =
     Person.toPerson("Ford Prefect <ford.perfect@hitchhiker.com>");
 
-  /** Field description */
   public static final Person SLARTI =
     Person.toPerson("Slartibartfaß <slartibartfass@hitchhiker.com>");
 
-  /** Field description */
   public static final Person TILLIAN =
     Person.toPerson("Tricia McMillan <tricia.mcmillan@hitchhiker.com>");
 
-  /** Field description */
   public static final Person ZAPHOD =
     Person.toPerson("Zaphod Beeblebrox <zaphod.beeblebrox@hitchhiker.com>");
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private PersonTestData() {}
 }

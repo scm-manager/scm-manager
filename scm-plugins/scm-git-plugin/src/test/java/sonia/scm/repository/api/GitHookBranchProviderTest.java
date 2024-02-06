@@ -41,7 +41,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 /**
  * Unit tests for {@link GitHookBranchProvider}.
  *
- * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GitHookBranchProviderTest {

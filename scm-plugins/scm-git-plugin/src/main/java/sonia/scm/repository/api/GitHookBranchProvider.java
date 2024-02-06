@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -35,8 +34,6 @@ import org.eclipse.jgit.transport.ReceiveCommand.Type;
 
 import sonia.scm.repository.GitUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -45,19 +42,16 @@ import org.slf4j.LoggerFactory;
 /**
  * Collects created, modified and deleted git branches during a hook.
  * 
- * @author Sebastian Sdorra
  */
 public class GitHookBranchProvider implements HookBranchProvider
 {
     
   private static final Logger logger = LoggerFactory.getLogger(GitHookBranchProvider.class);
 
-  /**
-   * Constructs a new instance.
-   *
-   *
-   * @param commands received git commands
-   */
+  private final List<String> createdOrModified;
+
+  private final List<String> deletedOrClosed;
+
   public GitHookBranchProvider(List<ReceiveCommand> commands)
   {
     Builder<String> createdOrModifiedBuilder = ImmutableList.builder();
@@ -91,7 +85,6 @@ public class GitHookBranchProvider implements HookBranchProvider
     return type == Type.CREATE || type == Type.UPDATE || type == Type.UPDATE_NONFASTFORWARD;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   public List<String> getCreatedOrModified()
@@ -105,9 +98,4 @@ public class GitHookBranchProvider implements HookBranchProvider
     return deletedOrClosed;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  private final List<String> createdOrModified;
-
-  private final List<String> deletedOrClosed;
 }

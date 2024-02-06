@@ -30,9 +30,7 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @Extension
 public class HgRepositoryServiceResolver implements RepositoryServiceResolver {
 

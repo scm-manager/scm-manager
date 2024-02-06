@@ -24,7 +24,6 @@
 
 package sonia.scm.annotation;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import org.w3c.dom.Document;
@@ -33,11 +32,7 @@ import org.w3c.dom.Element;
 import java.util.Map;
 import java.util.Map.Entry;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 public class ClassSetElement implements DescriptorElement {
 
   private static final String EL_CLASS = "class";

@@ -24,7 +24,6 @@
     
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -46,17 +45,13 @@ import java.io.InputStream;
  * {@link ContentTransformer} for json. The {@link JsonContentTransformer} uses
  * jacksons {@link ObjectMapper} to marshalling/unmarshalling.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 @Extension
 public class JsonContentTransformer implements ContentTransformer
 {
+  private final ObjectMapper mapper;
 
-  /**
-   * Constructs a new {@link JsonContentTransformer}.
-   *
-   */
   public JsonContentTransformer()
   {
     this.mapper = new ObjectMapper();
@@ -71,11 +66,8 @@ public class JsonContentTransformer implements ContentTransformer
     this.mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public ByteSource marshall(Object object)
   {
@@ -95,9 +87,7 @@ public class JsonContentTransformer implements ContentTransformer
     return source;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public <T> T unmarshall(Class<T> type, ByteSource content)
   {
@@ -121,7 +111,6 @@ public class JsonContentTransformer implements ContentTransformer
     return object;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns {@code true}, if the content type is compatible with
@@ -140,8 +129,4 @@ public class JsonContentTransformer implements ContentTransformer
     return MediaType.valueOf(contentType).isCompatible(MediaType.APPLICATION_JSON_TYPE);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** object mapper */
-  private final ObjectMapper mapper;
 }

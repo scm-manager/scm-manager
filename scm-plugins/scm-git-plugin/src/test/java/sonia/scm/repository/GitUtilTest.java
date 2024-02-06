@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.assertj.core.api.Assertions;
@@ -54,7 +53,6 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link GitUtil}.
  *
- * @author Sebastian Sdorra
  */
 public class GitUtilTest
 {

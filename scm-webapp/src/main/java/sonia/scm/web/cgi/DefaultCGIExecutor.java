@@ -24,7 +24,6 @@
 
 package sonia.scm.web.cgi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
@@ -56,41 +55,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class DefaultCGIExecutor extends AbstractCGIExecutor
 {
 
-  /** Field description */
   public static final String CGI_VERSION = "CGI/1.1";
 
-  /** Field description */
   public static final int DEFAULT_BUFFER_SIZE = 16264;
 
-  /** Field description */
   public static final String SYSTEM_ROOT_WINDOWS = "C:\\WINDOWS";
 
-  /** Field description */
   private static final String SERVER_SOFTWARE_PREFIX = "scm-manager/";
 
-  /** the logger for DefaultCGIExecutor */
+  
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultCGIExecutor.class);
 
-  //~--- constructors ---------------------------------------------------------
+  /** executor to handle error stream processing */
+  private final ExecutorService executor;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param executor to handle error stream processing
-   * @param configuration
-   * @param context
-   * @param request
-   * @param response
-   */
+  private ScmConfiguration configuration;
+
+  private boolean contentLengthWorkaround = false;
+
+  private ServletContext context;
+
+  private HttpServletRequest request;
+
+  private HttpServletResponse response;
+
   public DefaultCGIExecutor(ExecutorService executor,
     ScmConfiguration configuration, ServletContext context,
     HttpServletRequest request, HttpServletResponse response)
@@ -106,7 +99,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     this.environment = createEnvironment();
   }
 
-  //~--- methods --------------------------------------------------------------
 
   @Override
   public void execute(String cmd)
@@ -176,14 +168,8 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public CGIExceptionHandler getExceptionHandler()
   {
@@ -195,12 +181,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     return exceptionHandler;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public CGIStatusCodeHandler getStatusCodeHandler()
   {
@@ -212,41 +193,23 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     return statusCodeHandler;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isContentLengthWorkaround()
   {
     return contentLengthWorkaround;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param contentLengthWorkaround
-   */
+
   @Override
   public void setContentLengthWorkaround(boolean contentLengthWorkaround)
   {
     this.contentLengthWorkaround = contentLengthWorkaround;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param env
-   */
+
   private void apendOsEnvironment(EnvList env)
   {
     Map<String, String> osEnv = System.getenv();
@@ -260,12 +223,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   private EnvList createEnvironment()
   {
 
@@ -369,14 +327,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     return cgiContentLength;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param process
-   *
-   * @throws IOException
-   */
+  
   @SuppressWarnings("UnstableApiUsage")
   private void execute(Process process) throws IOException
   {
@@ -447,14 +398,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param in
-   *
-   * @throws IOException
-   */
+  
   private void processErrorStream(InputStream in) throws IOException
   {
     if (logger.isWarnEnabled())
@@ -470,13 +414,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param process
-   */
+
   private void processErrorStreamAsync(final Process process)
   {
     executor.execute(() -> {
@@ -498,12 +436,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     });
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param process
-   */
+
   private void processServletInput(Process process)
   {
     logger.trace("process servlet input");
@@ -530,17 +463,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param process
-   * @param output
-   * @param content
-   *
-   *
-   * @throws IOException
-   */
   private void waitForFinish(Process process, ServletOutputStream output,
     long content)
     throws IOException
@@ -580,18 +502,8 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param is
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   private String getTextLineFromStream(InputStream is) throws IOException
   {
     StringBuilder buffer = new StringBuilder();
@@ -605,23 +517,4 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     return buffer.toString().trim();
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** executor to handle error stream processing */
-  private final ExecutorService executor;
-
-  /** Field description */
-  private ScmConfiguration configuration;
-
-  /** Field description */
-  private boolean contentLengthWorkaround = false;
-
-  /** Field description */
-  private ServletContext context;
-
-  /** Field description */
-  private HttpServletRequest request;
-
-  /** Field description */
-  private HttpServletResponse response;
 }

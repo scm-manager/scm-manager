@@ -27,18 +27,12 @@ package sonia.scm.repository.api;
 /**
  * The {@link PushResponse} is the result of the
  * {@link PushCommandBuilder#push(sonia.scm.repository.Repository)} method and
- * contains informations over the executed push command.
+ * contains information over the executed push command.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public final class PushResponse extends AbstractPushOrPullResponse {
 
-  /**
-   * Constructs a new PushResponse.
-   *
-   * @param changesetCount count of pushed changesets
-   */
   public PushResponse(long changesetCount) {
     super(changesetCount);
   }

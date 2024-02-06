@@ -24,32 +24,22 @@
     
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Maps;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
 import java.util.Map;
 
 /**
- *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 @SuppressWarnings("unchecked")
 public class MapCacheManager
   implements CacheManager, org.apache.shiro.cache.CacheManager
 {
+  private final Map<String, MapCache> cacheMap = Maps.newHashMap();
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
   public void close() throws IOException
   {
@@ -57,18 +47,7 @@ public class MapCacheManager
     // do nothing
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param <K>
-   * @param <V>
-   *
-   * @return
-   */
   @Override
   public synchronized <K, V> MapCache<K, V> getCache(String name)
   {
@@ -82,8 +61,4 @@ public class MapCacheManager
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final Map<String, MapCache> cacheMap = Maps.newHashMap();
 }

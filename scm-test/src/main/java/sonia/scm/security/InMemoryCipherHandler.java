@@ -24,26 +24,17 @@
     
 package sonia.scm.security;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.UUID;
 
 /**
- * @author Sebastian Sdorra
  * @since 1.38
  */
 public class InMemoryCipherHandler extends DefaultCipherHandler
 {
 
-  /** Field description */
   private static final String KEY = UUID.randomUUID().toString();
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   public InMemoryCipherHandler()
   {
     super(KEY);

@@ -24,7 +24,6 @@
     
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -41,26 +40,16 @@ import static org.junit.Assert.*;
 
 import static org.mockito.Mockito.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @RunWith(MockitoJUnitRunner.class)
 public class FileContentTest
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testPrepareRequest() throws IOException
   {
@@ -70,12 +59,7 @@ public class FileContentTest
     verify(request).contentLength(3l);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testProcess() throws IOException
   {
@@ -97,11 +81,9 @@ public class FileContentTest
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   @Rule
   public TemporaryFolder temp = new TemporaryFolder();
 
-  /** Field description */
   @Mock
   private AdvancedHttpRequestWithBody request;
 }

@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
@@ -35,7 +34,6 @@ import sonia.scm.util.AssertUtil;
  * implements the listener and hook methods of the {@link RepositoryManager}
  * interface.
  *
- * @author Sebastian Sdorra
  */
 public abstract class AbstractRepositoryManager implements RepositoryManager {
 
@@ -84,7 +82,6 @@ public abstract class AbstractRepositoryManager implements RepositoryManager {
    * Prepare a hook event before it is fired to the event system of SCM-Manager.
    *
    * @param event hook event
-   * @return
    * @since 1.26
    */
   protected RepositoryHookEvent prepareHookEvent(RepositoryHookEvent event) {

@@ -46,9 +46,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class PluginTreeTest {
 
   @Rule

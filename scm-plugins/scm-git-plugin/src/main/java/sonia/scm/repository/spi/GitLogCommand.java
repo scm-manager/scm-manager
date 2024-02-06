@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import com.google.inject.assistedinject.Assisted;
@@ -48,32 +47,17 @@ import java.io.IOException;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class GitLogCommand extends AbstractGitCommand implements LogCommand
 {
 
-  /**
-   * the logger for GitLogCommand
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(GitLogCommand.class);
   public static final String REVISION = "Revision";
   private final GitChangesetConverterFactory converterFactory;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *  @param context
-   *
-   */
   @Inject
   GitLogCommand(@Assisted GitContext context, GitChangesetConverterFactory converterFactory)
   {
@@ -81,16 +65,8 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     this.converterFactory = converterFactory;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param revision
-   *
-   * @return
-   */
+
   @Override
   @SuppressWarnings("java:S2093")
   public Changeset getChangeset(String revision, LogCommandRequest request)
@@ -166,16 +142,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     return revWalk.parseCommit(GitUtil.getCommit(repository, revWalk, repository.findRef(branchName)));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   @Override
   @SuppressWarnings("java:S2093")
   public ChangesetPagingResult getChangesets(LogCommandRequest request) {

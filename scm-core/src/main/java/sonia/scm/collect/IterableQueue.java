@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.collect;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
@@ -32,37 +31,34 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * A iterable queue. The queue can have multiple parallel consumer 
- * {@link Iterator}s, which can iterate over all items of the queue until the 
- * end of the queue is reached. The end of the queue if reached, if a producer 
+ * An iterable queue. The queue can have multiple parallel consumer
+ * {@link Iterator}s, which can iterate over all items of the queue until the
+ * end of the queue is reached. The end of the queue if reached, if a producer
  * call the method {@link #endReached()} and the iterator has consumed all items
- * of the backend list. <strong>Warning: </strong> The queue iterator blocks 
+ * of the backend list. <strong>Warning: </strong> The queue iterator blocks
  * forever if the producer never call {@link #endReached()}.
  *
- * @author Sebastian Sdorra
  *
  * @since 1.29
  * @param <T> type of the queued items
  */
 public final class IterableQueue<T> implements Iterable<T>
 {
+  private boolean endReached = false;
 
-  /**
-   * the logger for IterableQueue
-   */
+  /** backend list of the queue */
+  private List<T> list;
+
   private static final Logger logger =
     LoggerFactory.getLogger(IterableQueue.class);
 
-  //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs a new {@link IterableQueue} with the default implementation 
+   * Constructs a new {@link IterableQueue} with the default implementation
    * of the backing list.
    *
    */
@@ -82,10 +78,9 @@ public final class IterableQueue<T> implements Iterable<T>
     this.list = list;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
-   * Mark that the end of the queue is reached and notify all consuming 
+   * Mark that the end of the queue is reached and notify all consuming
    * iterators.
    *
    * @throws IllegalStateException if the end of the queue if already reached
@@ -102,11 +97,11 @@ public final class IterableQueue<T> implements Iterable<T>
   }
 
   /**
-   * Returns a new consuming iterator for the queue. The methods 
-   * {@link Iterator#hasNext()} and {@link Iterator#next()} of the 
-   * {@link Iterator} will block until the next item is pushed to the queue, if 
-   * the queue is empty and the end is not reached. The 
-   * {@link Iterator#remove()} method of the {@link Iterator} is not implemented 
+   * Returns a new consuming iterator for the queue. The methods
+   * {@link Iterator#hasNext()} and {@link Iterator#next()} of the
+   * {@link Iterator} will block until the next item is pushed to the queue, if
+   * the queue is empty and the end is not reached. The
+   * {@link Iterator#remove()} method of the {@link Iterator} is not implemented
    * and will throw a {@link UnsupportedOperationException}.
    *
    *
@@ -151,24 +146,15 @@ public final class IterableQueue<T> implements Iterable<T>
 
   /**
    * Returns the current size of the queue.
-   *
-   *
-   * @return current size
    */
   int size()
   {
     return list.size();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the item at the specified index in this queue.
-   *
-   *
-   * @param index index of the item in the queue
-   *
-   * @return item at the current index
    */
   T get(int index)
   {
@@ -177,20 +163,10 @@ public final class IterableQueue<T> implements Iterable<T>
 
   /**
    * Returns true if the end of the queue is reached.
-   *
-   *
-   * @return true if the end is reached
    */
   boolean isEndReached()
   {
     return endReached;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** marker for the end of the queue */
-  private boolean endReached = false;
-
-  /** backend list of the queue */
-  private List<T> list;
 }

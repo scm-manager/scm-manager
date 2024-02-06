@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.javahg.BaseRepository;
 import org.javahg.Changeset;
@@ -52,12 +51,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public abstract class IncomingOutgoingTestBase extends AbstractTestBase
 {
 
@@ -89,27 +83,15 @@ public abstract class IncomingOutgoingTestBase extends AbstractTestBase
     when(handler.getConfig()).thenReturn(temp.getConfig());
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Before
+   @Before
   public void setUp()
   {
     setSubject(MockUtil.createAdminSubject());
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param expected
-   * @param actual
-   */
+
   protected void assertChangesetsEqual(Changeset expected,
     sonia.scm.repository.Changeset actual)
   {
@@ -118,15 +100,7 @@ public abstract class IncomingOutgoingTestBase extends AbstractTestBase
     assertEquals(expected.getUser(), actual.getAuthor().toString());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param message
-   *
-   * @return
-   */
+
   protected Changeset commit(BaseRepository repository, String message)
   {
     CommitCommand c = CommitCommand.on(repository);
@@ -137,14 +111,7 @@ public abstract class IncomingOutgoingTestBase extends AbstractTestBase
     return c.execute();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @return
-   */
+
   protected String createUser(User user)
   {
     return user.getDisplayName().concat(" <").concat(user.getMail()).concat(
@@ -192,28 +159,20 @@ public abstract class IncomingOutgoingTestBase extends AbstractTestBase
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   @Rule
   public TemporaryFolder tempFolder = new TemporaryFolder();
 
-  /** Field description */
   protected HgRepositoryHandler handler;
 
-  /** Field description */
   protected BaseRepository incoming;
 
-  /** Field description */
   protected File incomingDirectory;
 
-  /** Field description */
   protected sonia.scm.repository.Repository incomingRepository;
 
-  /** Field description */
   protected BaseRepository outgoing;
 
-  /** Field description */
   protected File outgoingDirectory;
 
-  /** Field description */
   protected sonia.scm.repository.Repository outgoingRepository;
 }

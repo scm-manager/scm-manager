@@ -24,7 +24,6 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
@@ -32,38 +31,17 @@ import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public abstract class BaseXTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
+
   protected abstract long decode(String value);
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
+
   protected abstract String encode(long value);
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testEncodeAndDecode()
   {
     long value = 1234;

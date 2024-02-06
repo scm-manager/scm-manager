@@ -37,10 +37,7 @@ import sonia.scm.repository.SvnUtil;
 import java.io.Closeable;
 import java.io.File;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class SvnContext implements Closeable, RepositoryProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(SvnContext.class);

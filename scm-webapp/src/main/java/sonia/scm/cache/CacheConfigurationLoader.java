@@ -24,8 +24,6 @@
 
 package sonia.scm.cache;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import com.google.inject.ImplementedBy;
 
 import java.io.File;
@@ -34,9 +32,7 @@ import java.net.URL;
 
 import java.util.Iterator;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @ImplementedBy(DefaultCacheConfigurationLoader.class)
 public interface CacheConfigurationLoader {
 

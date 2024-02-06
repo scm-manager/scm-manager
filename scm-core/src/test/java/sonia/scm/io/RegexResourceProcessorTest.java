@@ -24,19 +24,11 @@
     
 package sonia.scm.io;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class RegexResourceProcessorTest extends ResourceProcessorTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected ResourceProcessor createNewResourceProcessor()
   {

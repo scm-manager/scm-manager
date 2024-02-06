@@ -24,7 +24,6 @@
     
 package sonia.scm.lifecycle.modules;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
@@ -39,7 +38,6 @@ import sonia.scm.SCMContext;
 /**
  * Initializes all instances which are implementing the {@link Initable} interface.
  *
- * @author Sebastian Sdorra
  */
 public class ScmInitializerModule extends AbstractModule {
 

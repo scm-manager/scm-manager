@@ -24,7 +24,6 @@
     
 package sonia.scm.user.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -36,76 +35,42 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlUserList implements Iterable<User>
 {
+  @XmlElement(name = "user")
+  private LinkedList<User> users;
 
-  /**
-   * Constructs ...
-   *
-   */
   public XmlUserList() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param userMap
-   */
+
   public XmlUserList(Map<String, User> userMap)
   {
     this.users = new LinkedList<>(userMap.values());
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public Iterator<User> iterator()
   {
     return users.iterator();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public LinkedList<User> getUsers()
   {
     return users;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param users
-   */
+
   public void setUsers(LinkedList<User> users)
   {
     this.users = users;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "user")
-  private LinkedList<User> users;
 }

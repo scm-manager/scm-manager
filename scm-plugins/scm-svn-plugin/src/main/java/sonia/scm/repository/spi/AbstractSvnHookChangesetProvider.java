@@ -31,40 +31,19 @@ import sonia.scm.repository.api.HookChangesetProvider;
 
 import java.util.Collections;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public abstract class AbstractSvnHookChangesetProvider
   implements HookChangesetProvider
 {
+  private HookChangesetResponse response;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public abstract RepositoryHookType getType();
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   protected abstract Changeset fetchChangeset();
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
+
   @Override
   @SuppressWarnings("unchecked")
   public synchronized HookChangesetResponse handleRequest(
@@ -90,8 +69,4 @@ public abstract class AbstractSvnHookChangesetProvider
     return response;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private HookChangesetResponse response;
 }

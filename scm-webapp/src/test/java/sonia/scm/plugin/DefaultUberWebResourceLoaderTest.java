@@ -24,7 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
 import jakarta.servlet.ServletContext;
@@ -53,33 +52,19 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
 {
 
-  /** Field description */
   private static URL BITBUCKET;
 
-  /** Field description */
   private static URL GITHUB;
 
-  /** Field description */
   private static URL SCM_MANAGER;
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws MalformedURLException
-   */
+
   @BeforeClass
   public static void prepare() throws MalformedURLException
   {
@@ -88,12 +73,7 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
     GITHUB = new URL("https://github.com");
   }
 
-  /**
-   * Method description
-   *
-   *
-   */
-  @Test
+   @Test
   public void testGetResourceFromCache() {
     DefaultUberWebResourceLoader resourceLoader =
       new DefaultUberWebResourceLoader(servletContext,
@@ -115,12 +95,7 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
     assertNotSame(url, secondUrl);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testGetResourceFromDirectory() throws IOException
   {
@@ -152,12 +127,7 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
     assertSame(SCM_MANAGER, resource);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testGetResources() throws IOException
   {
@@ -219,27 +189,13 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
     Assertions.assertThat(resources).isEmpty();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   */
+
   private InstalledPlugin createPluginWrapper(File directory)
   {
     return createPluginWrapper(directory.toPath());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   */
+
   private InstalledPlugin createPluginWrapper(Path directory)
   {
     return new InstalledPlugin(null, null, new PathWebResourceLoader(directory),
@@ -248,7 +204,6 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   @Mock
   private ServletContext servletContext;
 }

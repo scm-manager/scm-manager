@@ -24,26 +24,21 @@
     
 package sonia.scm.repository.client.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public final class TagRequest
 {
+  private String name;
 
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
+  private String revision;
+
+  private String username;
+
   @Override
   public boolean equals(Object obj)
   {
@@ -63,35 +58,21 @@ public final class TagRequest
       && Objects.equal(name, other.name);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public int hashCode()
   {
     return Objects.hashCode(revision, name);
   }
 
-  /**
-   * Method description
-   *
-   */
-  public void reset()
+   public void reset()
   {
     this.name = null;
     this.revision = null;
     this.username = null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String toString()
   {
@@ -104,25 +85,14 @@ public final class TagRequest
     //J+
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   */
+
   public void setName(String name)
   {
     this.name = name;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param revision
-   */
+
   public void setRevision(String revision)
   {
     this.revision = revision;
@@ -132,25 +102,14 @@ public final class TagRequest
     this.username = username;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   String getName()
   {
     return name;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   String getRevision()
   {
     return revision;
@@ -160,13 +119,4 @@ public final class TagRequest
     return username;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String name;
-
-  /** Field description */
-  private String revision;
-
-  private String username;
 }

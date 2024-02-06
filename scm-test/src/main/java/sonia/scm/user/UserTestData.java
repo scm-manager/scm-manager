@@ -24,82 +24,44 @@
 
 package sonia.scm.user;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class UserTestData
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   private UserTestData() {}
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static User createAdams()
   {
     return new User("adams", "Douglas Adams", "douglas.adams@hitchhiker.com");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static User createDent()
   {
     return new User("dent", "Arthur Dent", "arthur.dent@hitchhiker.com");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static User createMarvin()
   {
     return new User("marvin", "Marvin", "paranoid.android@hitchhiker.com");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static User createPerfect()
   {
     return new User("perfect", "Ford Prefect", "ford.perfect@hitchhiker.com");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static User createSlarti()
   {
     return new User("slarti", "Slartibartfaß", "slartibartfass@hitchhiker.com");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static User createTrillian()
   {
     User user = new User("trillian", "Tricia McMillan", "tricia.mcmillan@hitchhiker.com");
@@ -108,12 +70,7 @@ public final class UserTestData
     return user;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public static User createZaphod()
   {
     User user = new User("zaphod", "Zaphod Beeblebrox", "zaphod.beeblebrox@hitchhiker.com");

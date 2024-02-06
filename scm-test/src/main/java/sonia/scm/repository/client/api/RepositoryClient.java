@@ -36,6 +36,8 @@ public final class RepositoryClient implements Closeable {
 
   private static final Logger logger = LoggerFactory.getLogger(RepositoryClient.class);
 
+  private final RepositoryClientProvider clientProvider;
+
   RepositoryClient(RepositoryClientProvider clientProvider)
   {
     this.clientProvider = clientProvider;
@@ -110,5 +112,4 @@ public final class RepositoryClient implements Closeable {
     return clientProvider.getSupportedClientCommands().contains(command);
   }
 
-  private final RepositoryClientProvider clientProvider;
 }

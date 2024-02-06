@@ -30,7 +30,6 @@ import java.util.concurrent.TimeUnit;
  * The access token builder is able to create {@link AccessToken}. For more informations about access tokens have look
  * at {@link AccessToken}.
  * 
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public interface AccessTokenBuilder {

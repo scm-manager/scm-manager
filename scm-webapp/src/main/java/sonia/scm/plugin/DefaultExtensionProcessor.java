@@ -24,7 +24,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Stopwatch;
 import com.google.inject.Binder;
@@ -35,25 +34,17 @@ import sonia.scm.config.ConfigBinding;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @SuppressWarnings("unchecked")
 public class DefaultExtensionProcessor implements ExtensionProcessor {
 
-  /**
-   * the logger for DefaultExtensionProcessor
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultExtensionProcessor.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final ExtensionCollector collector;
+  private final Set<ConfigBinding> configBindings;
 
-  /**
-   * Constructs ...
-   *
-   * @param collector
-   */
   public DefaultExtensionProcessor(ExtensionCollector collector, ConfigurationResolver configurationResolver) {
     this.collector = collector;
     this.configBindings = collector.getConfigElements().stream().map(configElement -> {
@@ -63,35 +54,20 @@ public class DefaultExtensionProcessor implements ExtensionProcessor {
     }).collect(Collectors.toSet());
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   * @param extensionPoint
-   * @return
-   */
+
   @Override
   public Iterable<Class> byExtensionPoint(Class extensionPoint) {
     return collector.byExtensionPoint(extensionPoint);
   }
 
-  /**
-   * Method description
-   *
-   * @param extensionPoint
-   * @return
-   */
+
   @Override
   public Class oneByExtensionPoint(Class extensionPoint) {
     return collector.oneByExtensionPoint(extensionPoint);
   }
 
-  /**
-   * Method description
-   *
-   * @param binder
-   */
+
   @Override
   public void processAutoBindExtensions(Binder binder) {
     logger.info("start processing extensions");
@@ -102,13 +78,8 @@ public class DefaultExtensionProcessor implements ExtensionProcessor {
     logger.info("bound extensions in {}", sw.stop());
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   * @return
-   */
+
   @Override
   public Iterable<WebElementExtension> getWebElements() {
     return collector.getWebElements();
@@ -124,11 +95,4 @@ public class DefaultExtensionProcessor implements ExtensionProcessor {
     return configBindings;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * Field description
-   */
-  private final ExtensionCollector collector;
-  private final Set<ConfigBinding> configBindings;
 }

@@ -27,19 +27,12 @@ package sonia.scm.repository.api;
 /**
  * Response of bundle command.
  *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
  */
 public final class BundleResponse
   extends AbstractBundleOrUnbundleCommandResponse
 {
 
-  /**
-   * Constructs a new bundle response.
-   *
-   *
-   * @param changesetCount count of bundled changesets
-   */
   public BundleResponse(long changesetCount)
   {
     super(changesetCount);

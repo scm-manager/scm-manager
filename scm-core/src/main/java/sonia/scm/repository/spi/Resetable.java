@@ -25,16 +25,10 @@
 package sonia.scm.repository.spi;
 
 /**
- *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public interface Resetable
 {
 
-  /**
-   * Method description
-   *
-   */
-  public void reset();
+   public void reset();
 }

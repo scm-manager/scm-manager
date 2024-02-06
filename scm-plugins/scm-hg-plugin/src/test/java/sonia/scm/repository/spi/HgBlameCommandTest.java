@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 import sonia.scm.repository.BlameLine;
@@ -35,12 +34,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class HgBlameCommandTest extends AbstractHgCommandTestBase
 {
 
@@ -86,12 +80,7 @@ public class HgBlameCommandTest extends AbstractHgCommandTestBase
     checkFirstLine(line);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param line
-   */
+
   private void checkFirstLine(BlameLine line)
   {
     assertEquals(1, line.getLineNumber());
@@ -103,12 +92,7 @@ public class HgBlameCommandTest extends AbstractHgCommandTestBase
     assertEquals("douglas.adams@hitchhiker.com", line.getAuthor().getMail());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   private BlameCommand createCommand()
   {
     return new HgBlameCommand(cmdContext);

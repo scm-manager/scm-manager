@@ -24,15 +24,12 @@
     
 package sonia.scm.repository.api;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
 
 /**
- * The HookBranchProvider returns informations about branch changes during the
+ * The HookBranchProvider returns information about branch changes during the
  * current hook.
  *
- * @author Sebastian Sdorra
  * @since 1.45
  */
 public interface HookBranchProvider

@@ -31,10 +31,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class EnvList {
 
   private static final ImmutableSet<String> SENSITIVE =
@@ -65,7 +62,6 @@ public class EnvList {
    * Return {@code true} if the list contains an environment variable with the given key.
    *
    * @param key name of environment variable
-   * @return {@code true} if contains environment variable
    */
   public boolean containsKey(String key)
   {

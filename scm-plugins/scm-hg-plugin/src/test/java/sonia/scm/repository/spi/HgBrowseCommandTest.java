@@ -38,10 +38,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
   @Test
@@ -293,17 +290,8 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
       .containsExactly("e.txt");
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param foList
-   * @param name
-   *
-   * @return
-   */
+
   private FileObject getFileObject(Collection<FileObject> foList, String name)
   {
     return foList.stream()

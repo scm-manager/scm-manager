@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import com.google.common.collect.ImmutableList;
@@ -34,12 +34,11 @@ import java.util.Collections;
 import java.util.Iterator;
 
 /**
- * Scope of a token. A scope is able to reduce the permissions of a token authentication. That means we can issue a 
+ * Scope of a token. A scope is able to reduce the permissions of a token authentication. That means we can issue a
  * token which is only suitable for a single or a set of actions e.g.: we could create a token which can only read
  * a single repository. The values of the scope should be explicit string representations of shiro permissions. An empty
  * scope means all permissions of the user.
- * 
- * @author Sebastian Sdorra
+ *
  * @since 2.0.0
  */
 @XmlRootElement(name = "scope")
@@ -47,9 +46,9 @@ import java.util.Iterator;
 public final class Scope implements Iterable<String> {
 
   private static final Scope EMPTY = new Scope(Collections.emptySet());
-  
+
   private final Collection<String> values;
-  
+
   private Scope(Collection<String> values) {
     this.values = values;
   }
@@ -58,41 +57,37 @@ public final class Scope implements Iterable<String> {
   public Iterator<String> iterator() {
     return values.iterator();
   }
-  
+
   /**
    * Returns {@code true} if the scope is empty.
-   * 
-   * @return {@code true} if the scope is empty
    */
   public boolean isEmpty() {
     return values.isEmpty();
   }
-  
+
   /**
    * Creates an empty scope.
-   * 
-   * @return empty scope
    */
   public static Scope empty(){
     return EMPTY;
   }
-  
+
   /**
    * Creates a scope object from the given iterable.
-   * 
+   *
    * @param values values of scope
-   * 
+   *
    * @return new scope
    */
   public static Scope valueOf(Iterable<String> values) {
     return new Scope(ImmutableList.copyOf(values));
   }
-  
+
   /**
    * Create a scope from the given array.
-   * 
+   *
    * @param values values of scope
-   * 
+   *
    * @return new scope.
    */
   public static Scope valueOf(String... values) {
@@ -111,5 +106,5 @@ public final class Scope implements Iterable<String> {
     }
     return buffer.append("]").toString();
   }
-  
+
 }

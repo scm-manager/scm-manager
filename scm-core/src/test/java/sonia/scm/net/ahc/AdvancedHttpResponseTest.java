@@ -39,10 +39,7 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @RunWith(MockitoJUnitRunner.class)
 public class AdvancedHttpResponseTest {
 

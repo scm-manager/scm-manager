@@ -24,23 +24,13 @@
     
 package sonia.scm.security;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.UUID;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class UUIDKeyGenerator implements KeyGenerator
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String createKey()
   {

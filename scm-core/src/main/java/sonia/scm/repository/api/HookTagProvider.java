@@ -28,11 +28,10 @@ import java.util.List;
 import sonia.scm.repository.Tag;
 
 /**
- * The HookTagProvider returns informations about tags during the
+ * The HookTagProvider returns information about tags during the
  * current hook.
  * 
  * @since 1.50
- * @author Sebastian Sdorra
  */
 public interface HookTagProvider {
     

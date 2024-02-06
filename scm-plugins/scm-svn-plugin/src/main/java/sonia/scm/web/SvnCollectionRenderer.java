@@ -49,9 +49,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class SvnCollectionRenderer implements CollectionRenderer {
 
   private final TemplateEngineFactory templateEngineFactory;

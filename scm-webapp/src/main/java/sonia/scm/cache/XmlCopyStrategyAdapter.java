@@ -24,43 +24,20 @@
     
 package sonia.scm.cache;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class XmlCopyStrategyAdapter extends XmlAdapter<String, CopyStrategy>
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param v
-   *
-   * @return
-   *
-   * @throws Exception
-   */
+
   @Override
   public String marshal(CopyStrategy v) throws Exception
   {
     return v.getConfigName();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param v
-   *
-   * @return
-   *
-   * @throws Exception
-   */
+
   @Override
   public CopyStrategy unmarshal(String v) throws Exception
   {

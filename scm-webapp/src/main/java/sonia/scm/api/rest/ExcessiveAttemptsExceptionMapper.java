@@ -24,25 +24,17 @@
     
 package sonia.scm.api.rest;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Provider
 public class ExcessiveAttemptsExceptionMapper
   extends StatusExceptionMapper<ExcessiveAttemptsException>
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   public ExcessiveAttemptsExceptionMapper()
   {
     super(ExcessiveAttemptsException.class, Response.Status.FORBIDDEN);

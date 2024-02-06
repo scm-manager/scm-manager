@@ -24,38 +24,17 @@
     
 package sonia.scm.util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.ServiceLoader;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class ServiceUtil
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   private ServiceUtil() {}
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param def
-   * @param <T>
-   *
-   * @return
-   */
   public static <T> T getService(Class<T> type, T def)
   {
     T result = getService(type);
@@ -68,15 +47,6 @@ public final class ServiceUtil
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param <T>
-   *
-   * @return
-   */
   public static <T> T getService(Class<T> type)
   {
     T result = null;
@@ -99,15 +69,6 @@ public final class ServiceUtil
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param <T>
-   *
-   * @return
-   */
   public static <T> List<T> getServices(Class<T> type)
   {
     List<T> result = new ArrayList<>();

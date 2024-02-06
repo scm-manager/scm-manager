@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
@@ -41,22 +40,12 @@ import java.io.IOException;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Utilizes the mercurial fileview extension in order to support mercurial repository browsing.
  *
- * @author Sebastian Sdorra
  */
 public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
 {
-
-  /**
-   * Constructs ...
-   *
-   *  @param context
-   *
-   */
 
   @Inject
   public HgBrowseCommand(@Assisted HgCommandContext context)
@@ -64,7 +53,6 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
     super(context);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   public BrowserResult getBrowserResult(BrowseCommandRequest request) throws IOException {

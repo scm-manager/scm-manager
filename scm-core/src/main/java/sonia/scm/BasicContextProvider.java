@@ -24,7 +24,6 @@
 
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
@@ -40,12 +39,9 @@ import java.nio.file.Path;
 import java.util.Properties;
 import java.util.UUID;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * The default implementation of {@link SCMContextProvider}.
  *
- * @author Sebastian Sdorra
  */
 @SuppressWarnings("java:S106") // we can not use logger until base directory is not determined
 public class BasicContextProvider implements SCMContextProvider
@@ -67,10 +63,22 @@ public class BasicContextProvider implements SCMContextProvider
   /** Maven property for the version of the artifact */
   public static final String MAVEN_PROPERTY_VERSION = "version";
 
-
   public static final String DEVELOPMENT_INSTANCE_ID = "00000000-0000-0000-0000-000000000000";
 
-  //~--- constructors ---------------------------------------------------------
+  /** The base directory of the SCM-Manager */
+  private File baseDirectory;
+
+  /** stage of the current SCM-Manager instance */
+  private Stage stage;
+
+  /** startup exception */
+  private Throwable startupError;
+
+  /** the version of the SCM-Manager */
+  private String version;
+
+  /** the instance id of the SCM-Manager */
+  private String instanceId;
 
   /**
    * Constructs a new {@link BasicContextProvider} object.
@@ -101,9 +109,6 @@ public class BasicContextProvider implements SCMContextProvider
     this.stage = stage;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-
   @Override
   public Path resolve(Path path) {
     if (path.isAbsolute()) {
@@ -113,29 +118,22 @@ public class BasicContextProvider implements SCMContextProvider
     return baseDirectory.toPath().resolve(path);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public File getBaseDirectory()
   {
     return baseDirectory;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
   public Stage getStage()
   {
     return stage;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
   public Throwable getStartupError()
   {
@@ -145,9 +143,6 @@ public class BasicContextProvider implements SCMContextProvider
   /**
    * Returns the version of the SCM-Manager. If the version is not set, the
    * {@link #VERSION_DEFAULT} is returned.
-   *
-   *
-   * @return the version of the SCM-Manager
    */
   @Override
   public String getVersion()
@@ -160,7 +155,6 @@ public class BasicContextProvider implements SCMContextProvider
     return instanceId;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Find the base directory of SCM-Manager.
@@ -201,9 +195,6 @@ public class BasicContextProvider implements SCMContextProvider
 
   /**
    * Loads the version of the SCM-Manager from maven properties file.
-   *
-   *
-   * @return the version of the SCM-Manager
    */
   private String loadVersion()
   {
@@ -255,20 +246,5 @@ public class BasicContextProvider implements SCMContextProvider
     return uuid;
   }
 
-  //~--- fields ---------------------------------------------------------------
 
-  /** The base directory of the SCM-Manager */
-  private File baseDirectory;
-
-  /** stage of the current SCM-Manager instance */
-  private Stage stage;
-
-  /** startup exception */
-  private Throwable startupError;
-
-  /** the version of the SCM-Manager */
-  private String version;
-
-  /** the instance id of the SCM-Manager */
-  private String instanceId;
 }

@@ -58,10 +58,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @ExtendWith(MockitoExtension.class)
 class DefaultAdvancedHttpClientTest {
 

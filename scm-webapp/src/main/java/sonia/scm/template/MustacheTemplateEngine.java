@@ -24,7 +24,6 @@
 
 package sonia.scm.template;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
@@ -46,12 +45,7 @@ import java.io.Reader;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @Default
 public class MustacheTemplateEngine implements TemplateEngine
 {
@@ -72,15 +66,14 @@ public class MustacheTemplateEngine implements TemplateEngine
     @Inject(optional = true) MeterRegistry registry;
   }
 
-  /** Field description */
   public static final TemplateType TYPE = new TemplateType("mustache",
                                             "Mustache", "mustache");
 
-  /**
-   * the logger for MustacheTemplateEngine
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(MustacheTemplateEngine.class);
+
+  private final ServletMustacheFactory factory;
 
   @Inject
   public MustacheTemplateEngine(@Default ServletContext context, PluginLoaderHolder pluginLoaderHolder, MeterRegistryHolder registryHolder)
@@ -110,18 +103,7 @@ public class MustacheTemplateEngine implements TemplateEngine
     return pluginLoader.getUberClassLoader();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param templateIdentifier
-   * @param reader
-   *
-   * @return
-   *
-   */
   @Override
   public Template getTemplate(String templateIdentifier, Reader reader) {
     if (logger.isTraceEnabled())
@@ -135,16 +117,7 @@ public class MustacheTemplateEngine implements TemplateEngine
     return new MustacheTemplate(templateIdentifier, mustache);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param templatePath
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   @Override
   public Template getTemplate(String templatePath) throws IOException
   {
@@ -194,29 +167,15 @@ public class MustacheTemplateEngine implements TemplateEngine
     return template;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public TemplateType getType()
   {
     return TYPE;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param ex
-   * @param templatePath
-   *
-   * @throws IOException
-   */
+
   private void handleWrappedException(Exception ex, String templatePath)
     throws IOException
   {
@@ -235,8 +194,4 @@ public class MustacheTemplateEngine implements TemplateEngine
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final ServletMustacheFactory factory;
 }

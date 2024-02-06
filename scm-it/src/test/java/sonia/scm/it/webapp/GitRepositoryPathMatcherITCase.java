@@ -55,7 +55,6 @@ import static sonia.scm.it.webapp.RepositoryITUtil.deleteRepository;
 /**
  * Integration test for RepositoryPathMatching with ".git" and without ".git".
  *
- * @author Sebastian Sdorra
  * @since 1.54
  */
 public class GitRepositoryPathMatcherITCase {

@@ -59,8 +59,6 @@ public class UIPluginResource {
 
   /**
    * Returns a collection of installed plugins and their ui bundles.
-   *
-   * @return collection of installed plugins.
    */
   @GET
   @Path("")
@@ -95,7 +93,6 @@ public class UIPluginResource {
    *
    * @param id id of plugin
    *
-   * @return installed plugin with specified id
    */
   @GET
   @Path("{id}")

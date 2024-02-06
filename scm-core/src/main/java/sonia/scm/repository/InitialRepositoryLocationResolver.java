@@ -42,7 +42,6 @@ import static com.google.common.base.Preconditions.checkArgument;
  * Please use the {@link sonia.scm.store.BlobStoreFactory } and the {@link sonia.scm.store.BlobStore} classes to store binary files<br>
  * Please use the {@link sonia.scm.store.ConfigurationStoreFactory} and the {@link sonia.scm.store.ConfigurationStore} classes  to store configurations
  *
- * @author Mohamed Karray
  * @since 2.0.0
  */
 public class InitialRepositoryLocationResolver {
@@ -60,10 +59,6 @@ public class InitialRepositoryLocationResolver {
 
   /**
    * Returns the initial path to repository.
-   *
-   * @param repositoryId id of the repository
-   *
-   * @return initial path of repository
    */
   @SuppressWarnings("squid:S2083") // path traversal is prevented with ID_MATCHER
   public Path getPath(String repositoryId) {

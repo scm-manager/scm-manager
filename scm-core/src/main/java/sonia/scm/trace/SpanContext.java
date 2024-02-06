@@ -71,8 +71,6 @@ public class SpanContext {
 
   /**
    * Calculates the duration of the span.
-   *
-   * @return duration of the span
    */
   public Duration duration() {
     return Duration.between(opened, closed);

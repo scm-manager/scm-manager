@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.event.Event;
 
@@ -33,20 +32,12 @@ import sonia.scm.event.Event;
  * through the repository. This class is wrapper of {@link RepositoryHookEvent}
  * for the event system of SCM-Manager.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 @Event
 public final class PreReceiveRepositoryHookEvent
   extends WrappedRepositoryHookEvent
 {
-
-  /**
-   * Constructs new PreReceiveRepositoryHookEvent.
-   *
-   *
-   * @param wrappedEvent event to wrap
-   */
   public PreReceiveRepositoryHookEvent(RepositoryHookEvent wrappedEvent)
   {
     super(wrappedEvent);

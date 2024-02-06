@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
@@ -31,7 +31,6 @@ import java.util.List;
 /**
  * The {@link HalAppender} can be used within an {@link HalEnricher} to append hateoas links to a json response.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public interface HalAppender {

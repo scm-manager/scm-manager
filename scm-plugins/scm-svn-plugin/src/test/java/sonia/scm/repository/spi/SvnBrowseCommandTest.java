@@ -49,9 +49,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase {
 
   @Rule
@@ -310,24 +308,13 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase {
     return context;
   }
 
-  /**
-   * Method description
-   *
-   * @return
-   */
+
   private SvnBrowseCommand createCommand() {
     return new SvnBrowseCommand(createContext());
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   * @param foList
-   * @param name
-   * @return
-   */
+
   private FileObject getFileObject(Collection<FileObject> foList, String name) {
     return foList.stream()
       .filter(f -> name.equals(f.getName()))

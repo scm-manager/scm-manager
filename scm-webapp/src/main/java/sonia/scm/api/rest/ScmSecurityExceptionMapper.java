@@ -24,25 +24,17 @@
     
 package sonia.scm.api.rest;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 import sonia.scm.security.ScmSecurityException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Provider
 public class ScmSecurityExceptionMapper
   extends StatusExceptionMapper<ScmSecurityException>
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   public ScmSecurityExceptionMapper()
   {
     super(ScmSecurityException.class, Response.Status.FORBIDDEN);

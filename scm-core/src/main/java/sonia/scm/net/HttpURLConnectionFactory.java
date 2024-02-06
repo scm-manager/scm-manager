@@ -96,9 +96,6 @@ public final class HttpURLConnectionFactory {
 
   /**
    * Creates a new {@link HttpURLConnection} from the given url with default options.
-   * @param url url
-   * @return a new connection with default options.
-   * @throws IOException
    */
   public HttpURLConnection create(URL url) throws IOException {
     return create(url, new HttpConnectionOptions());
@@ -106,10 +103,6 @@ public final class HttpURLConnectionFactory {
 
   /**
    * Creates a new {@link HttpURLConnection} from the given url and options.
-   * @param url url
-   * @param options options for the new connection
-   * @return a new connection with the given options
-   * @throws IOException
    */
   public HttpURLConnection create(URL url, HttpConnectionOptions options) throws IOException {
     Preconditions.checkArgument(options != null, "Options are required");

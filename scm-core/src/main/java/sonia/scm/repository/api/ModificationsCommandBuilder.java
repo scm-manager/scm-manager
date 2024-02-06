@@ -47,7 +47,6 @@ import java.io.IOException;
  * <p>
  * Modifications are for example: Add, Update and Delete
  *
- * @author Mohamed Karray
  * @since 2.0
  */
 @Slf4j

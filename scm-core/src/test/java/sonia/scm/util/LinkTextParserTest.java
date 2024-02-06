@@ -24,28 +24,18 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.text.MessageFormat;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class LinkTextParserTest
 {
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void complexUrlParseTextTest()
   {
     assertEquals(createLink("http://www.scm-manager.org/test/"),
@@ -73,11 +63,7 @@ public class LinkTextParserTest
               "http://www.scm-manager.org/test/index.html#hashparam;otherHash"));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void simpleParseTextTest()
   {
     assertEquals(
@@ -104,29 +90,14 @@ public class LinkTextParserTest
               "The page www.scm-manager.org is the home of scm-manager"));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param href
-   *
-   * @return
-   */
+
   private String createLink(String href)
   {
     return MessageFormat.format("<a target=\"_blank\" href=\"{1}\">{0}</a>",
                                 href, href);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param href
-   * @param content
-   *
-   * @return
-   */
+
   private String createLink(String href, String content)
   {
     return MessageFormat.format("<a target=\"_blank\" href=\"{1}\">{0}</a>",

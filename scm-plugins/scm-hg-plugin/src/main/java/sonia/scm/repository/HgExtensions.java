@@ -24,19 +24,13 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public enum HgExtensions {
 
   HOOK("scmhooks.py"),

@@ -24,7 +24,6 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -42,33 +41,14 @@ import java.io.InputStream;
 /**
  * Util methods to handle xml files.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class XmlUtil
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   private XmlUtil() {}
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Create {@link Document} from {@link InputStream}.
-   *
-   *
-   * @param stream input stream
-   *
-   * @return generated document
-   *
-   *
-   * @throws IOException
-   * @throws ParserConfigurationException
-   * @throws SAXException
-   */
   public static Document createDocument(InputStream stream)
     throws ParserConfigurationException, SAXException, IOException
   {
@@ -76,17 +56,6 @@ public final class XmlUtil
       stream);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param input
-   * @param entries
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   public static Multimap<String, String> values(InputStream input,
     String... entries)
     throws IOException
@@ -110,17 +79,6 @@ public final class XmlUtil
     return values;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param doc
-   * @param entries
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   public static Multimap<String, String> values(Document doc, String... entries)
     throws IOException
   {
@@ -134,16 +92,6 @@ public final class XmlUtil
     return values;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param values
-   * @param doc
-   * @param entries
-   *
-   * @throws IOException
-   */
   private static void values(Multimap<String, String> values, Document doc,
     String... entries)
     throws IOException

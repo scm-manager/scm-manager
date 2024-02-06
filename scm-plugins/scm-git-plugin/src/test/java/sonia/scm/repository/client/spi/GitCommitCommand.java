@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.client.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -36,40 +35,20 @@ import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.client.api.RepositoryClientException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GitCommitCommand implements CommitCommand
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param git
-   */
+ 
   GitCommitCommand(Git git)
   {
     this.git = git;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   @Override
   public Changeset commit(CommitRequest request) throws IOException
   {
@@ -89,6 +68,5 @@ public class GitCommitCommand implements CommitCommand
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private final Git git;
 }

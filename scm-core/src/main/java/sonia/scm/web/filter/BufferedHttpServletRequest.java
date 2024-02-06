@@ -24,7 +24,6 @@
 
 package sonia.scm.web.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
@@ -38,28 +37,21 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class BufferedHttpServletRequest extends HttpServletRequestWrapper
 {
-
-  /** the logger for BufferedHttpServletRequest */
   private static final Logger logger =
     LoggerFactory.getLogger(BufferedHttpServletRequest.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private ByteArrayInputStream bais;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param request
-   * @param logBody
-   *
-   * @throws IOException
-   */
+  private ByteArrayOutputStream baos;
+
+  private BufferedServletInputStream bsis;
+
+  private byte[] buffer;
+
+
   public BufferedHttpServletRequest(HttpServletRequest request, boolean logBody)
           throws IOException
   {
@@ -83,27 +75,14 @@ public class BufferedHttpServletRequest extends HttpServletRequestWrapper
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public byte[] getContentBuffer()
   {
     return buffer;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   @Override
   public ServletInputStream getInputStream() throws IOException
   {
@@ -130,65 +109,31 @@ public class BufferedHttpServletRequest extends HttpServletRequestWrapper
     return stream;
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 2011-04-12
-   * @author         Sebastian Sdorra
-   */
+
+
   private static class BufferedServletInputStream extends ServletInputStream
   {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param bais
-     */
+    private ByteArrayInputStream bais;
+  
     public BufferedServletInputStream(ByteArrayInputStream bais)
     {
       this.bais = bais;
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
     @Override
     public int available()
     {
       return bais.available();
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     @Override
     public int read()
     {
       return bais.read();
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @param buf
-     * @param off
-     * @param len
-     *
-     * @return
-     */
     @Override
     public int read(byte[] buf, int off, int len)
     {
@@ -214,24 +159,5 @@ public class BufferedHttpServletRequest extends HttpServletRequestWrapper
       }
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private ByteArrayInputStream bais;
   }
-
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private ByteArrayInputStream bais;
-
-  /** Field description */
-  private ByteArrayOutputStream baos;
-
-  /** Field description */
-  private BufferedServletInputStream bsis;
-
-  /** Field description */
-  private byte[] buffer;
 }

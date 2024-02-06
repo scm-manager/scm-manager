@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 
 import sonia.scm.HandlerEventType;
@@ -34,33 +33,16 @@ import sonia.scm.event.Event;
 /**
  * The RepositoryEvent is fired if a {@link Repository} object changes.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 @Event
 public class RepositoryEvent extends AbstractHandlerEvent<Repository>
 {
-
-  /**
-   * Constructs a new repository event.
-   *
-   *
-   * @param eventType type of the event
-   * @param repository changed repository
-   */
   public RepositoryEvent(HandlerEventType eventType, Repository repository)
   {
     super(eventType, repository);
   }
 
-  /**
-   * Constructs a new repository event.
-   *
-   *
-   * @param eventType type of the event
-   * @param repository changed repository
-   * @param oldRepository old repository
-   */
   public RepositoryEvent(HandlerEventType eventType, Repository repository,
     Repository oldRepository)
   {

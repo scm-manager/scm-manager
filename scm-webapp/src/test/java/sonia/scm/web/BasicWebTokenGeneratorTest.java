@@ -24,7 +24,6 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -40,12 +39,9 @@ import sonia.scm.security.BearerToken;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * TODO add test with {@link UserAgentParser}.
  *
- * @author Sebastian Sdorra
  */
 @ExtendWith(MockitoExtension.class)
 class BasicWebTokenGeneratorTest {

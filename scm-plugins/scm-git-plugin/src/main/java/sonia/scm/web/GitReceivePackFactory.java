@@ -24,7 +24,6 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,13 +39,10 @@ import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.spi.HookEventFacade;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * GitReceivePackFactory creates {@link ReceivePack} objects and assigns the required
  * Hook components.
  *
- * @author Sebastian Sdorra
  */
 public class GitReceivePackFactory extends BaseReceivePackFactory<HttpServletRequest>
 {

@@ -48,7 +48,6 @@ package sonia.scm.store;
  *       .build();
  * </pre></code>
  *
- * @author Sebastian Sdorra
  *
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.store.ConfigurationStore

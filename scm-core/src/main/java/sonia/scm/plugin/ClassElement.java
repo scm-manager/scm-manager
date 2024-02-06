@@ -24,7 +24,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -40,7 +39,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Getter

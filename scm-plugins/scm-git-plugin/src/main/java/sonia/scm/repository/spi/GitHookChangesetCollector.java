@@ -46,9 +46,7 @@ import java.util.Map;
 
 import static java.util.Collections.unmodifiableCollection;
 
-/**
- * @author Sebastian Sdorra
- */
+
 class GitHookChangesetCollector {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitHookChangesetCollector.class);

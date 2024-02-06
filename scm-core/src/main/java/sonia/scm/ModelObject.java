@@ -24,14 +24,11 @@
     
 package sonia.scm;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.Serializable;
 
 /**
  * Base interface for all model objects.
  *
- * @author Sebastian Sdorra
  */
 public interface ModelObject
         extends TypedObject, LastModifiedAware, Cloneable, Validateable,
@@ -40,9 +37,6 @@ public interface ModelObject
 
   /**
    * Returns the unique id of the model object
-   *
-   *
-   * @return unique id
    */
   String getId();
 

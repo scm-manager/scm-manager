@@ -43,7 +43,6 @@ import static java.util.Optional.ofNullable;
 /**
  * The FileObject represents a file or a directory in a repository.
  *
- * @author Sebastian Sdorra
  * @since 1.5
  */
 @EqualsAndHashCode
@@ -54,50 +53,23 @@ public class FileObject implements LastModifiedAware, Serializable {
 
   private String description;
 
-  /**
-   * directory indicator
-   */
   private boolean directory;
 
-  /**
-   * commit date
-   */
   private Long commitDate;
 
-  /**
-   * file length
-   */
   private Long length;
 
-  /**
-   * filename
-   */
   private String name;
 
-  /**
-   * file path
-   */
   private String path;
 
-  /**
-   * Marker for partial result.
-   */
   private boolean partialResult = false;
 
-  /**
-   * Marker for aborted computation.
-   */
   private boolean computationAborted = false;
 
-  /**
-   * sub repository informations
-   */
   @XmlElement(name = "subrepository")
   private SubRepository subRepository;
 
-  /**
-   * Children of this file (aka directory).
-   */
   private Collection<FileObject> children = new ArrayList<>();
 
   private boolean truncated;
@@ -144,8 +116,6 @@ public class FileObject implements LastModifiedAware, Serializable {
 
   /**
    * Returns the name of the file.
-   *
-   * @return name of file
    */
   public String getName() {
     return name;
@@ -153,8 +123,6 @@ public class FileObject implements LastModifiedAware, Serializable {
 
   /**
    * Returns the path of the file.
-   *
-   * @return path of file
    */
   public String getPath() {
     return path;
@@ -179,8 +147,6 @@ public class FileObject implements LastModifiedAware, Serializable {
   /**
    * Return sub repository information or null if the file is not
    * sub repository.
-   *
-   * @return sub repository informations or null
    * @since 1.10
    */
   public SubRepository getSubRepository() {
@@ -189,17 +155,13 @@ public class FileObject implements LastModifiedAware, Serializable {
 
   /**
    * Returns true if the file is a directory.
-   *
-   * @return true if file is a directory
    */
   public boolean isDirectory() {
     return directory;
   }
 
   /**
-   * Returns the children of this file.
-   *
-   * @return The children of this file if it is a directory.
+   * Returns the children of this file if it is a directory.
    */
   public Collection<FileObject> getChildren() {
     return children == null ? null : unmodifiableCollection(children);
@@ -234,12 +196,9 @@ public class FileObject implements LastModifiedAware, Serializable {
     return truncated;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Sets the description of the file.
-   *
-   * @param description description of file
    */
   public void setDescription(String description) {
     this.description = description;
@@ -247,8 +206,6 @@ public class FileObject implements LastModifiedAware, Serializable {
 
   /**
    * Set to true to indicate that the file is a directory.
-   *
-   * @param directory true for directory
    */
   public void setDirectory(boolean directory) {
     this.directory = directory;
@@ -256,8 +213,6 @@ public class FileObject implements LastModifiedAware, Serializable {
 
   /**
    * Sets the commit date of the file.
-   *
-   * @param commitDate commit date
    */
   public void setCommitDate(Long commitDate) {
     this.commitDate = commitDate;
@@ -265,8 +220,6 @@ public class FileObject implements LastModifiedAware, Serializable {
 
   /**
    * Sets the length of the file.
-   *
-   * @param length file length
    */
   public void setLength(Long length) {
     this.length = length;
@@ -274,8 +227,6 @@ public class FileObject implements LastModifiedAware, Serializable {
 
   /**
    * Sets the name of the file.
-   *
-   * @param name filename
    */
   public void setName(String name) {
     this.name = name;
@@ -283,8 +234,6 @@ public class FileObject implements LastModifiedAware, Serializable {
 
   /**
    * Sets the path of the file.
-   *
-   * @param path file path
    */
   public void setPath(String path) {
     this.path = path;
@@ -293,8 +242,7 @@ public class FileObject implements LastModifiedAware, Serializable {
   /**
    * Set sub repository information for the file.
    *
-   * @param subRepository sub repository informations
-   * @since 1.10
+   *  @since 1.10
    */
   public void setSubRepository(SubRepository subRepository) {
     this.subRepository = subRepository;
@@ -323,8 +271,6 @@ public class FileObject implements LastModifiedAware, Serializable {
 
   /**
    * Set the children for this file.
-   *
-   * @param children The new childre.
    */
   public void setChildren(List<FileObject> children) {
     this.children = new ArrayList<>(children);

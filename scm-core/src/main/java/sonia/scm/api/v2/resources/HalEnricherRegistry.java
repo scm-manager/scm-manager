@@ -32,7 +32,6 @@ import sonia.scm.plugin.Extension;
 /**
  * The {@link HalEnricherRegistry} is responsible for binding {@link HalEnricher} instances to their source types.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Extension
@@ -55,7 +54,6 @@ public final class HalEnricherRegistry {
    * Returns all registered {@link HalEnricher} for the given type.
    *
    * @param sourceType type of json mapping source
-   * @return all registered enrichers
    */
   public Iterable<HalEnricher> allByType(Class sourceType) {
     return enrichers.get(sourceType);

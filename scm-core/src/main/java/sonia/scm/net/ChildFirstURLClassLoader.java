@@ -24,8 +24,6 @@
     
 package sonia.scm.net;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
@@ -33,10 +31,9 @@ import java.net.URLStreamHandlerFactory;
 /**
  * The ChildFirstURLClassLoader alters regular ClassLoader delegation and will
  * check the URLs used in its initialization for matching classes before
- * delegating to it's parent. Sometimes also referred to as a
+ * delegating to its parent. Sometimes also referred to as a
  * ParentLastClassLoader.
  *
- * @author Sebastian Sdorra
  * @since 1.29
  */
 public class ChildFirstURLClassLoader extends URLClassLoader
@@ -82,7 +79,6 @@ public class ChildFirstURLClassLoader extends URLClassLoader
     super(urls, parent, factory);
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Loads the class with the specified name. The default implementation of this
@@ -154,11 +150,7 @@ public class ChildFirstURLClassLoader extends URLClassLoader
     return clazz;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * {@inheritDoc }
-   */
   @Override
   public URL getResource(String name)
   {

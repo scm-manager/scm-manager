@@ -27,7 +27,6 @@ package sonia.scm.security;
 /**
  * Shared constants for Xsrf related classes.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class Xsrf {

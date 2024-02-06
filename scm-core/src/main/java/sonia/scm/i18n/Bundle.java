@@ -21,15 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.i18n;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.text.MessageFormat;
 
@@ -41,23 +38,14 @@ import java.util.ResourceBundle;
  * This class is a wrapper for {@link ResourceBundle}, it applies some missing
  * format options missing in {@link ResourceBundle}.
  *
- * @author Sebastian Sdorra
  * @since 1.15
  */
 public class Bundle
 {
+  private final ResourceBundle bundle;
 
-  /** Field description */
   private static final String SEPARATOR = System.getProperty("line.separator");
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param bundle
-   */
   private Bundle(ResourceBundle bundle)
   {
     this.bundle = bundle;
@@ -67,7 +55,6 @@ public class Bundle
 
   /**
    * Creates a new bundle instance
-   *
    *
    * @param path path to the properties file
    *
@@ -81,7 +68,6 @@ public class Bundle
   /**
    * Creates a new bundle instance
    *
-   *
    * @param path path to the properties file
    * @param locale locale for the properties file
    *
@@ -94,7 +80,6 @@ public class Bundle
 
   /**
    * Creates a new bundle instance
-   *
    *
    * @param path path to the properties file
    * @param locale locale for the properties file
@@ -128,7 +113,7 @@ public class Bundle
    * @param key key in the properties file
    * @param args format arguments
    *
-   * @return formated message
+   * @return formatted message
    */
   public String getLine(String key, Object... args)
   {
@@ -142,7 +127,7 @@ public class Bundle
    * @param key key in the properties file
    * @param args format arguments
    *
-   * @return formated message
+   * @return formatted message
    */
   public String getString(String key, Object... args)
   {
@@ -164,7 +149,7 @@ public class Bundle
    * @param key key in the properties file
    * @param args format arguments
    *
-   * @return formated message or null
+   * @return formatted message or null
    *
    * @since 1.37
    */
@@ -180,9 +165,4 @@ public class Bundle
 
     return msg;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** resource bundle */
-  private final ResourceBundle bundle;
 }

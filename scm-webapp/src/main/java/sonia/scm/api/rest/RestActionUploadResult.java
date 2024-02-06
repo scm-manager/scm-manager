@@ -24,33 +24,19 @@
     
 package sonia.scm.api.rest;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @XmlRootElement(name = "result")
 public class RestActionUploadResult extends RestActionResult
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   public RestActionUploadResult()
   {
     this(true);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param success
-   */
+ 
   public RestActionUploadResult(boolean success)
   {
     super(success);

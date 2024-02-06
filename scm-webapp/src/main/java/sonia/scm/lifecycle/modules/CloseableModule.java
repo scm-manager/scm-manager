@@ -42,7 +42,6 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  * Guice module which captures all classes which are implementing the {@link Closeable}. These classes can be later
  * closed, by injecting the {@link CloseableModule} and calling {@link #closeAll()}.
  *
- * @author Sebastian Sdorra
  */
 public final class CloseableModule extends AbstractModule {
 

@@ -21,63 +21,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import sonia.scm.event.Event;
 
 /**
- * This type of event is fired whenever a authorization relevant data changes. This event
+ * This type of event is fired whenever an authorization relevant data changes. This event
  * is especially useful for cache invalidation.
- * 
- * @author Sebastian Sdorra
+ *
  * @since 1.52
  */
 @Event
 public final class AuthorizationChangedEvent {
-  
+
   private final String nameOfAffectedUser;
-  
+
   private AuthorizationChangedEvent(String nameOfAffectedUser) {
     this.nameOfAffectedUser = nameOfAffectedUser;
   }
-  
+
   /**
    * Returns {@code true} if every user is affected by this data change.
-   * 
-   * @return {@code true} if every user is affected
    */
   public boolean isEveryUserAffected(){
     return nameOfAffectedUser == null;
   }
-  
+
   /**
    * Returns the name of the user which is affected by this event.
-   * 
-   * @return name of affected user
    */
   public String getNameOfAffectedUser(){
     return nameOfAffectedUser;
   }
-  
+
   /**
    * Creates a new event which affects every user.
-   * 
-   * @return new event for every user
    */
   public static AuthorizationChangedEvent createForEveryUser() {
     return new AuthorizationChangedEvent(null);
   }
-  
+
   /**
    * Create a new event which affect a single user.
-   * 
-   * @param nameOfAffectedUser name of affected user
-   * 
-   * @return new event for a single user
    */
   public static AuthorizationChangedEvent createForUser(String nameOfAffectedUser) {
     return new AuthorizationChangedEvent(nameOfAffectedUser);
   }
-  
+
 }

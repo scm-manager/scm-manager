@@ -24,43 +24,29 @@
     
 package sonia.scm.version;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public enum VersionType
 {
   EARLY_ACESS("ea", 0, "early", "earlyaccess"), MILESTONE("M", 1, "milestone"),
   ALPHA("alpha", 2), BETA("beta", 3),
   RELEASE_CANDIDAT("RC", 4, "releasecandidate"), RELEASE(10);
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param value
-   */
+  public String[] aliases;
+
+  private String id;
+
+  private int value;
+
   private VersionType(int value)
   {
     this(null, value);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param id
-   * @param value
-   * @param aliases
-   */
   private VersionType(String id, int value, String... aliases)
   {
     this.id = id;
@@ -68,36 +54,20 @@ public enum VersionType
     this.aliases = aliases;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String[] getAliases()
   {
     return aliases;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getId()
   {
     return id;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Collection<String> getNames()
   {
     List<String> names = new ArrayList<String>();
@@ -115,25 +85,9 @@ public enum VersionType
     return names;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public int getValue()
   {
     return value;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  public String[] aliases;
-
-  /** Field description */
-  private String id;
-
-  /** Field description */
-  private int value;
 }

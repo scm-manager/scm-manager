@@ -24,7 +24,6 @@
     
 package sonia.scm.lifecycle.modules;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -48,35 +47,24 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @XmlRootElement(name = "overrides")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ClassOverrides implements Iterable<ClassOverride>
 {
 
-  /** Field description */
   public static final String OVERRIDE_PATH = "META-INF/scm/override.xml";
 
-  /**
-   * the logger for ClassOverrides
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(ClassOverrides.class);
 
-  //~--- methods --------------------------------------------------------------
+  @XmlElement(name = "module")
+  private List<Class<? extends Module>> moduleClasses;
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param classLoader
-   * @return
-   *
-   */
+  @XmlElement(name = "override")
+  private List<ClassOverride> overrides;
+
   public static ClassOverrides findOverrides(ClassLoader classLoader)
   {
     final ClassOverrides overrides = new ClassOverrides();
@@ -133,12 +121,7 @@ public class ClassOverrides implements Iterable<ClassOverride>
     return overrides;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param overrides
-   */
+
   public void append(ClassOverrides overrides)
   {
     AssertUtil.assertIsNotNull(overrides);
@@ -158,26 +141,15 @@ public class ClassOverrides implements Iterable<ClassOverride>
     getModuleClasses().addAll(overrides.getModuleClasses());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public Iterator<ClassOverride> iterator()
   {
     return getOverrides().iterator();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public List<Class<? extends Module>> getModuleClasses()
   {
     if (moduleClasses == null)
@@ -188,12 +160,7 @@ public class ClassOverrides implements Iterable<ClassOverride>
     return moduleClasses;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @SuppressWarnings("unchecked")
   public List<? extends Module> getModules()
   {
@@ -232,15 +199,7 @@ public class ClassOverrides implements Iterable<ClassOverride>
     return modules;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param clazz
-   * @param <T>
-   *
-   * @return
-   */
+
   @SuppressWarnings("unchecked")
   public <T> Class<T> getOverride(Class<T> clazz)
   {
@@ -257,12 +216,7 @@ public class ClassOverrides implements Iterable<ClassOverride>
     return implementation;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public List<ClassOverride> getOverrides()
   {
     if (overrides == null)
@@ -273,38 +227,17 @@ public class ClassOverrides implements Iterable<ClassOverride>
     return overrides;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param moduleClasses
-   */
+
   public void setModuleClasses(List<Class<? extends Module>> moduleClasses)
   {
     this.moduleClasses = moduleClasses;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param overrides
-   */
+
   public void setOverrides(List<ClassOverride> overrides)
   {
     this.overrides = overrides;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "module")
-  private List<Class<? extends Module>> moduleClasses;
-
-  /** Field description */
-  @XmlElement(name = "override")
-  private List<ClassOverride> overrides;
 }

@@ -24,7 +24,6 @@
     
 package sonia.scm.template;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
@@ -45,46 +44,30 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @Singleton
 public class TemplateServlet extends HttpServlet
 {
 
-  /** Field description */
   public static final String CONTENT_TYPE = "text/html";
 
-  /** Field description */
   public static final String ENCODING = "UTF-8";
 
-  /** Field description */
   private static final long serialVersionUID = 3578555653924091546L;
 
-  /**
-   * the logger for TemplateServlet
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(TemplateServlet.class);
 
-  /** Field description */
   private static final Set<Locale> DEFAULT_LOCALE =
     ImmutableSet.of(Locale.ENGLISH, Locale.UK, Locale.US);
 
-  //~--- constructors ---------------------------------------------------------
+  private final ScmConfiguration configuration;
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param context
-   * @param templateEngineFactory
-   * @param configuration
-   */
+  private final TemplateEngineFactory templateEngineFactory;
+
+  private final String version;
+
   @Inject
   public TemplateServlet(SCMContextProvider context,
     TemplateEngineFactory templateEngineFactory, ScmConfiguration configuration)
@@ -94,17 +77,8 @@ public class TemplateServlet extends HttpServlet
     this.version = context.getVersion();
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   */
+
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
   {
@@ -182,17 +156,8 @@ public class TemplateServlet extends HttpServlet
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param contextPath
-   * @param requestURI
-   *
-   * @return
-   */
+
   private String getTemplateName(String contextPath, String requestURI)
   {
     String path = requestURI.substring(contextPath.length());
@@ -214,14 +179,4 @@ public class TemplateServlet extends HttpServlet
     return path;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final ScmConfiguration configuration;
-
-  /** Field description */
-  private final TemplateEngineFactory templateEngineFactory;
-
-  /** Field description */
-  private final String version;
 }

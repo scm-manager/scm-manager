@@ -33,7 +33,6 @@ import java.util.Set;
 /**
  * Jwt implementation of {@link AccessTokenBuilderFactory}.
  * 
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Extension

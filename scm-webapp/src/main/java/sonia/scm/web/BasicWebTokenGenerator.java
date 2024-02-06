@@ -24,7 +24,6 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
@@ -45,13 +44,10 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Creates a {@link UsernamePasswordToken} from an authorization header with
  * basic authentication.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Priority(100)
@@ -67,9 +63,7 @@ public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator {
   /** default encoding to decode basic authentication header */
   private static final Charset DEFAULT_ENCODING = StandardCharsets.ISO_8859_1;
 
-  /**
-   * the logger for BasicWebTokenGenerator
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(BasicWebTokenGenerator.class);
 

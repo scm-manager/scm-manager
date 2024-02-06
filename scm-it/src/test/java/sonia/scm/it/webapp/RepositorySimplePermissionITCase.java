@@ -24,7 +24,6 @@
 
 package sonia.scm.it.webapp;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import de.otto.edison.hal.HalRepresentation;
 import jakarta.ws.rs.core.Response;
@@ -44,40 +43,23 @@ import static sonia.scm.it.webapp.IntegrationTestUtil.createAdminClient;
 import static sonia.scm.it.webapp.IntegrationTestUtil.createResource;
 import static sonia.scm.it.webapp.IntegrationTestUtil.post;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @RunWith(Parameterized.class)
 public class RepositorySimplePermissionITCase
         extends AbstractPermissionITCaseBase<RepositoryDto>
 {
 
-  /** Field description */
   private static String REPOSITORY_PATH;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param credentials
-   */
+ 
   public RepositorySimplePermissionITCase(Credentials credentials, String ignore_testCaseName)
   {
     super(credentials);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @BeforeClass
+   @BeforeClass
   public static void createTestRepository() throws IOException {
     RepositoryDto repository = new RepositoryDto();
 
@@ -106,22 +88,13 @@ public class RepositorySimplePermissionITCase
     clientResponse.close();
   }
 
-  /**
-   * Method description
-   *
-   */
-  @AfterClass
+   @AfterClass
   public static void removeTestRepository()
   {
     createResource(createAdminClient(), "repositories/" + REPOSITORY_PATH).delete();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   */
+
   @Override
   protected void checkGetAllResponse(Response response)
   {
@@ -138,12 +111,7 @@ public class RepositorySimplePermissionITCase
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   */
+
   @Override
   protected void checkGetResponse(Response response)
   {
@@ -155,26 +123,15 @@ public class RepositorySimplePermissionITCase
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String getBasePath()
   {
     return "repositories";
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected RepositoryDto getCreateItem()
   {
@@ -186,36 +143,21 @@ public class RepositorySimplePermissionITCase
     return repository;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String getDeletePath()
   {
     return "repositories/".concat(REPOSITORY_PATH);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String getGetPath()
   {
     return "repositories/".concat(REPOSITORY_PATH);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected RepositoryDto getModifyItem()
   {
@@ -229,12 +171,7 @@ public class RepositorySimplePermissionITCase
     return repository;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String getModifyPath()
   {

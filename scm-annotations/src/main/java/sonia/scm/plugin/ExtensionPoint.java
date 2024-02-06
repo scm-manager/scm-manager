@@ -30,10 +30,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Documented
 @Target({ ElementType.TYPE })
 @PluginAnnotation("extension-point")

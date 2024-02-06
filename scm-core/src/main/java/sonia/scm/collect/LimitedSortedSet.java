@@ -21,15 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.collect;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ForwardingSortedSet;
 import com.google.common.collect.Sets;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -40,13 +37,16 @@ import java.util.TreeSet;
  * A sorted set which is limited to a specified maximum size. If the maximum
  * size is reached the last element is removed from the set.
  *
- * @author Sebastian Sdorra
  *
  * @param <E>
  * @since 1.32
  */
 public class LimitedSortedSet<E> extends ForwardingSortedSet<E>
 {
+  private int maxSize;
+
+  /** delegate set */
+  private SortedSet<E> sortedSet;
 
   /**
    * Constructs a new set with the specified maximum.
@@ -74,11 +74,8 @@ public class LimitedSortedSet<E> extends ForwardingSortedSet<E>
     this.maxSize = maxSize;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
   public boolean add(E o)
   {
@@ -89,9 +86,7 @@ public class LimitedSortedSet<E> extends ForwardingSortedSet<E>
     return added;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
   public boolean addAll(Collection<? extends E> c)
   {
@@ -116,7 +111,6 @@ public class LimitedSortedSet<E> extends ForwardingSortedSet<E>
 
   /**
    * Remove the last entries, if the maximum size is reached.
-   *
    */
   private void cleanUp()
   {
@@ -126,11 +120,4 @@ public class LimitedSortedSet<E> extends ForwardingSortedSet<E>
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** maximum size of the set */
-  private int maxSize;
-
-  /** delegate set */
-  private SortedSet<E> sortedSet;
 }

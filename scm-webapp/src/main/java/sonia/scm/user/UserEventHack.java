@@ -24,44 +24,25 @@
     
 package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.HandlerEventType;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class UserEventHack
 {
 
-  /**
-   * the logger for UserEventHack
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(UserEventHack.class);
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private UserEventHack() {}
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param userManager
-   * @param user
-   * @param event
-   */
+ 
   public static void fireEvent(UserManager userManager, HandlerEventType event,
     User user)
   {
@@ -78,16 +59,8 @@ public final class UserEventHack
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param userManager
-   *
-   * @return
-   */
+
   private static AbstractUserManager getAbstractUserManager(
     UserManager userManager)
   {

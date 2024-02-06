@@ -24,19 +24,28 @@
 
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.nio.file.Path;
 
 /**
  * Wrapper for a {@link InstalledPluginDescriptor}. The wrapper holds the directory,
  * {@link ClassLoader} and {@link WebResourceLoader} of a plugin.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class InstalledPlugin implements Plugin {
 
+  private final ClassLoader classLoader;
+
+  private final Path directory;
+
+  private final InstalledPluginDescriptor descriptor;
+
+  private final WebResourceLoader webResourceLoader;
+
+  private final boolean core;
+
+  private boolean markedForUninstall = false;
+  private boolean uninstallable = false;
   public static final String UNINSTALL_MARKER_FILENAME = "uninstall";
 
   /**
@@ -57,12 +66,8 @@ public final class InstalledPlugin implements Plugin {
     this.core = core;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Returns plugin class loader.
-   *
-   * @return plugin class loader
    */
   public ClassLoader getClassLoader() {
     return classLoader;
@@ -70,8 +75,6 @@ public final class InstalledPlugin implements Plugin {
 
   /**
    * Returns plugin directory.
-   *
-   * @return plugin directory
    */
   public Path getDirectory() {
     return directory;
@@ -79,8 +82,6 @@ public final class InstalledPlugin implements Plugin {
 
   /**
    * Returns the id of the plugin.
-   *
-   * @return id of plugin
    */
   public String getId() {
     return descriptor.getInformation().getId();
@@ -88,8 +89,6 @@ public final class InstalledPlugin implements Plugin {
 
   /**
    * Returns the plugin descriptor.
-   *
-   * @return plugin descriptor
    */
   @Override
   public InstalledPluginDescriptor getDescriptor() {
@@ -98,8 +97,6 @@ public final class InstalledPlugin implements Plugin {
 
   /**
    * Returns the {@link WebResourceLoader} for this plugin.
-   *
-   * @return web resource loader
    */
   public WebResourceLoader getWebResourceLoader() {
     return webResourceLoader;
@@ -125,30 +122,4 @@ public final class InstalledPlugin implements Plugin {
     this.uninstallable = uninstallable;
   }
 
-//~--- fields ---------------------------------------------------------------
-
-  /**
-   * plugin class loader
-   */
-  private final ClassLoader classLoader;
-
-  /**
-   * plugin directory
-   */
-  private final Path directory;
-
-  /**
-   * plugin
-   */
-  private final InstalledPluginDescriptor descriptor;
-
-  /**
-   * plugin web resource loader
-   */
-  private final WebResourceLoader webResourceLoader;
-
-  private final boolean core;
-
-  private boolean markedForUninstall = false;
-  private boolean uninstallable = false;
 }

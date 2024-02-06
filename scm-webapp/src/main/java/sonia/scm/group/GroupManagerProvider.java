@@ -24,7 +24,6 @@
     
 package sonia.scm.group;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,63 +31,37 @@ import com.google.inject.Provider;
 import sonia.scm.Undecorated;
 import sonia.scm.util.Decorators;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Set;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GroupManagerProvider implements Provider<GroupManager>
 {
+  @Inject(optional = true)
+  private Set<GroupManagerDecoratorFactory> decoratorFactories;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  @Inject
+  @Undecorated
+  private Provider<GroupManager> groupManagerProvider;
+  
   @Override
   public GroupManager get()
   {
     return Decorators.decorate(groupManagerProvider.get(), decoratorFactories);
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param decoratorFactories
-   */
+
   public void setDecoratorFactories(
     Set<GroupManagerDecoratorFactory> decoratorFactories)
   {
     this.decoratorFactories = decoratorFactories;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param groupManagerProvider
-   */
+
   public void setGroupManagerProvider(
     Provider<GroupManager> groupManagerProvider)
   {
     this.groupManagerProvider = groupManagerProvider;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @Inject(optional = true)
-  private Set<GroupManagerDecoratorFactory> decoratorFactories;
-
-  /** Field description */
-  @Inject
-  @Undecorated
-  private Provider<GroupManager> groupManagerProvider;
 }

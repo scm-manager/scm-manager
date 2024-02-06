@@ -27,14 +27,11 @@ package sonia.scm.store;
 /**
  * The store exception can be used by a store implementation.
  * 
- * @author Sebastian Sdorra
  */
 public class StoreException extends RuntimeException {
 
-  /** Field description */
   private static final long serialVersionUID = 6974469896007155294L;
 
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new instance.

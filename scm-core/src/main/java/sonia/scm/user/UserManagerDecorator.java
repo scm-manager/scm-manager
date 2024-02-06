@@ -24,75 +24,44 @@
     
 package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.ManagerDecorator;
 import sonia.scm.search.SearchRequest;
 
 import java.util.Collection;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Decorator for {@link UserManager}.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 public class UserManagerDecorator extends ManagerDecorator<User>
   implements UserManager
 {
+   private final UserManager decorated;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param decorated
-   */
   public UserManagerDecorator(UserManager decorated)
   {
     super(decorated);
     this.decorated = decorated;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param username
-   *
-   * @return
-   */
   @Override
   public boolean contains(String username)
   {
     return decorated.contains(username);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param searchRequest
-   *
-   * @return
-   */
   @Override
   public Collection<User> search(SearchRequest searchRequest)
   {
     return decorated.search(searchRequest);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the decorated {@link UserManager}.
    *
-   *
-   * @return decorated {@link UserManager}
-   * 
    * @since 1.34
    */
   public UserManager getDecorated()
@@ -100,12 +69,6 @@ public class UserManagerDecorator extends ManagerDecorator<User>
     return decorated;
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
   @Override
   public String getDefaultType()
   {
@@ -121,8 +84,4 @@ public class UserManagerDecorator extends ManagerDecorator<User>
   public void overwritePassword(String userId, String newPassword) {
     decorated.overwritePassword(userId, newPassword);
   }
-//~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final UserManager decorated;
 }

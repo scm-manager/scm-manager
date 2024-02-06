@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.Resources;
 
@@ -39,8 +38,6 @@ import sonia.scm.util.IOUtil;
 
 import static org.junit.Assert.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -51,47 +48,29 @@ import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public abstract class ZippedRepositoryTestBase extends AbstractTestBase
 {
+  @Rule
+  public TemporaryFolder tempFolder = new TemporaryFolder();
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  protected Repository repository = createRepository();
+
+  protected File repositoryDirectory;
+  
   protected abstract String getType();
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected abstract String getZippedRepositoryResource();
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Before
+   @Before
   public void before()
   {
     repositoryDirectory = createRepositoryDirectory();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param date
-   */
+
   protected void checkDate(long date)
   {
     assertNotNull(date);
@@ -99,23 +78,13 @@ public abstract class ZippedRepositoryTestBase extends AbstractTestBase
       date < System.currentTimeMillis());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected Repository createRepository()
   {
     return RepositoryTestData.createHeartOfGold(getType());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected File createRepositoryDirectory()
   {
     File folder = null;
@@ -134,14 +103,7 @@ public abstract class ZippedRepositoryTestBase extends AbstractTestBase
     return folder;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param folder
-   *
-   * @throws IOException
-   */
+  
   private void extract(File folder) throws IOException
   {
     String zippedRepositoryResource = getZippedRepositoryResource();
@@ -186,15 +148,4 @@ public abstract class ZippedRepositoryTestBase extends AbstractTestBase
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
-
-  /** Field description */
-  protected Repository repository = createRepository();
-
-  /** Field description */
-  protected File repositoryDirectory;
 }

@@ -368,13 +368,6 @@ public class RepositoryPermissionRootResource {
       .orElseThrow(() -> notFound(entity(namespaceAndName)));
   }
 
-  /**
-   * check if the permission already exists in the repository
-   *
-   * @param permission the searched permission
-   * @param repository the repository to be inspected
-   * @throws AlreadyExistsException if the permission already exists in the repository
-   */
   private void checkPermissionAlreadyExists(RepositoryPermissionDto permission, Repository repository) {
     if (isPermissionExist(permission, repository)) {
       throw alreadyExists(entity("Permission", permission.getName()).in(repository));

@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,26 +44,18 @@ import java.io.OutputStream;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 public class SvnCatCommand extends AbstractSvnCommand implements CatCommand {
 
-  /**
-   * the logger for SvnCatCommand
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(SvnCatCommand.class);
 
-  //~--- constructors ---------------------------------------------------------
 
   SvnCatCommand(SvnContext context) {
     super(context);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   public void getCatResult(CatCommandRequest request, OutputStream output) {

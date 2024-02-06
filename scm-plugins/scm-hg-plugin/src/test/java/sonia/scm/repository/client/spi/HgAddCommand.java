@@ -30,7 +30,6 @@ import java.io.IOException;
 /**
  * Mercurial implementation of the {@link AddCommand}.
  * 
- * @author Sebastian Sdorra
  */
 public final class HgAddCommand implements AddCommand
 {

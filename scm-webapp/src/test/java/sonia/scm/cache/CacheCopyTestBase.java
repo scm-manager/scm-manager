@@ -24,20 +24,14 @@
     
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.Serializable;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public abstract class CacheCopyTestBase
 {
 
@@ -52,11 +46,7 @@ public abstract class CacheCopyTestBase
   protected abstract Cache<String,
     MutableObject> createCache(CopyStrategy strategy);
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testNoneCopy()
   {
     Cache<String, MutableObject> cache = createCache(CopyStrategy.NONE);
@@ -73,11 +63,7 @@ public abstract class CacheCopyTestBase
     assertEquals(3, mo.getVersion());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testReadCopy()
   {
     Cache<String, MutableObject> cache = createCache(CopyStrategy.READ);
@@ -93,11 +79,7 @@ public abstract class CacheCopyTestBase
     assertEquals(1, mo.getVersion());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testReadWriteCopy()
   {
     Cache<String, MutableObject> cache = createCache(CopyStrategy.READWRITE);
@@ -114,11 +96,7 @@ public abstract class CacheCopyTestBase
     assertEquals(1, mo.getVersion());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testWriteCopy()
   {
     Cache<String, MutableObject> cache = createCache(CopyStrategy.WRITE);
@@ -130,42 +108,25 @@ public abstract class CacheCopyTestBase
     assertEquals(1, mo.getVersion());
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 13/04/12
-   * @author         Enter your name here...
-   */
+
+
   public static class MutableObject implements Serializable
   {
 
-    /** Field description */
-    private static final long serialVersionUID = -6934061151741193924L;
+      private static final long serialVersionUID = -6934061151741193924L;
 
-    //~--- constructors -------------------------------------------------------
+    
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param version
-     */
+  
     public MutableObject(int version)
     {
       this.version = version;
     }
 
-    //~--- get methods --------------------------------------------------------
+    
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     public int getVersion()
     {
       return version;
@@ -186,7 +147,6 @@ public abstract class CacheCopyTestBase
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
-    private int version;
+      private int version;
   }
 }

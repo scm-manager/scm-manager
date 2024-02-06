@@ -24,7 +24,6 @@
 
 package sonia.scm.event;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.EventBus;
 import com.github.legman.Subscribe;
@@ -39,18 +38,13 @@ import sonia.scm.metrics.MeterRegistryProvider;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class LegmanScmEventBus extends ScmEventBus {
 
   private static final AtomicLong INSTANCE_COUNTER = new AtomicLong();
   private static final String FORMAT_NAME = "ScmEventBus-%s";
 
-  /**
-   * the logger for LegmanScmEventBus
-   */
+ 
   private static final Logger logger = LoggerFactory.getLogger(LegmanScmEventBus.class);
 
   private String name;

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -32,19 +32,15 @@ import sonia.scm.config.Configuration;
 /**
  * Basic {@link Repository} configuration class.
  *
- * @author Sebastian Sdorra
  */
 @XmlRootElement
 public abstract class RepositoryConfig implements Validateable, Configuration {
 
-  /** true if the plugin is disabled */
   private boolean disabled = false;
   /**
    * Returns true if the plugin is disabled.
    *
-   *
-   * @return true if the plugin is disabled
-   * @since 1.13
+   *  @since 1.13
    */
   public boolean isDisabled() {
     return disabled;
@@ -52,23 +48,17 @@ public abstract class RepositoryConfig implements Validateable, Configuration {
 
   /**
    * Returns true if the configuration object is valid.
-   *
-   *
-   * @return true if the configuration object is valid
    */
   @Override
   public boolean isValid() {
     return true;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Enable or disable the plugin.
    *
-   *
-   * @param disabled
-   * @since 1.13
+   *  @since 1.13
    */
   public void setDisabled(boolean disabled) {
     this.disabled = disabled;

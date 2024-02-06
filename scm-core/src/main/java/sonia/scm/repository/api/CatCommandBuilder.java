@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import com.google.common.base.Preconditions;
@@ -51,19 +51,16 @@ import java.io.OutputStream;
  * System.out.println(content);
  * </code></pre>
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public final class CatCommandBuilder
 {
-
-  /**
-   * the logger for CatCommandBuilder
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(CatCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final CatCommand catCommand;
+
+  private final CatCommandRequest request = new CatCommandRequest();
 
   /**
    * Constructs a new {@link CatCommandBuilder}, this constructor should
@@ -76,7 +73,6 @@ public final class CatCommandBuilder
     this.catCommand = catCommand;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Reset each parameter to its default value.
@@ -118,15 +114,8 @@ public final class CatCommandBuilder
     return catCommand.getCatResultStream(requestClone);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Returns the content of the given file.
-   *
-   * @param path file path
-   * @return content of the file
-   *
-   * @throws IOException
    */
   public String getContent(String path) throws IOException {
     String content = null;
@@ -151,9 +140,6 @@ public final class CatCommandBuilder
   /**
    * Sets the revision of the file.
    *
-   *
-   * @param revision revision of the file
-   *
    * @return {@code this}
    */
   public CatCommandBuilder setRevision(String revision)
@@ -163,7 +149,6 @@ public final class CatCommandBuilder
     return this;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Executes the cat command.
@@ -192,11 +177,4 @@ public final class CatCommandBuilder
     catCommand.getCatResult(requestClone, outputStream);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** implementation of the cat command */
-  private final CatCommand catCommand;
-
-  /** request for the cat command */
-  private final CatCommandRequest request = new CatCommandRequest();
 }

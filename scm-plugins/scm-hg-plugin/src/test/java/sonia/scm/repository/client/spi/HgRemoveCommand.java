@@ -30,7 +30,6 @@ import java.io.IOException;
 /**
  * Mercurial implementation of the {@link RemoveCommand}.
  *
- * @author Sebastian Sdorra
  */
 public class HgRemoveCommand implements RemoveCommand
 {

@@ -27,25 +27,20 @@ package sonia.scm.filter;
 /**
  * Configuration for the {@link GZipResponseFilter}.
  *
- * @author Sebastian Sdorra
  * @since 1.16
  */
 public class GZipFilterConfig
 {
-
+  private boolean bufferResponse = true;
 
   /**
    * Returns true if the response should be buffered.
-   *
-   *
-   * @return true if the response should be buffered
    */
   public boolean isBufferResponse()
   {
     return bufferResponse;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Enables or disables response buffering. Default buffering is enabled.
@@ -57,8 +52,4 @@ public class GZipFilterConfig
     this.bufferResponse = bufferResponse;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private boolean bufferResponse = true;
 }

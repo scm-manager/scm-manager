@@ -42,8 +42,6 @@ public interface Indexer<T> {
 
   /**
    * Returns class of type.
-   *
-   * @return class of type
    */
   Class<T> getType();
 
@@ -57,7 +55,6 @@ public interface Indexer<T> {
 
   /**
    * Returns task which re index all items.
-   * @return task to re index all
    * @since 2.23.0
    */
   Class<? extends ReIndexAllTask<T>> getReIndexAllTask();

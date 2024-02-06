@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -45,14 +44,11 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Permissions controls the access to {@link Repository}.
  * This object should be immutable, but could not be due to mapstruct. Do not modify instances of this because this
  * would change the hash code and therefor make it undeletable in a repository.
  *
- * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "permissions")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -93,7 +89,6 @@ public class RepositoryPermission implements PermissionObject, Serializable
     this.groupPermission = groupPermission;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Returns true if the {@link RepositoryPermission} is the same as the obj argument.
@@ -131,9 +126,6 @@ public class RepositoryPermission implements PermissionObject, Serializable
 
   /**
    * Returns the hash code value for the {@link RepositoryPermission}.
-   *
-   *
-   * @return the hash code value for the {@link RepositoryPermission}
    */
   @Override
   public int hashCode()
@@ -157,13 +149,9 @@ public class RepositoryPermission implements PermissionObject, Serializable
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the name of the user or group.
-   *
-   *
-   * @return name of the user or group
    */
   @Override
   public String getName()
@@ -173,9 +161,6 @@ public class RepositoryPermission implements PermissionObject, Serializable
 
   /**
    * Returns the verb of the permission.
-   *
-   *
-   * @return verb of the permission
    */
   public Collection<String> getVerbs()
   {
@@ -184,27 +169,17 @@ public class RepositoryPermission implements PermissionObject, Serializable
 
   /**
    * Returns the role of the permission.
-   *
-   *
-   * @return role of the permission
    */
   public String getRole() {
     return role;
   }
 
-  /**
-   * Returns true if the permission is a permission which affects a group.
-   *
-   *
-   * @return true if the permision is a group permission
-   */
   @Override
   public boolean isGroupPermission()
   {
     return groupPermission;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Use this for creation only. This will throw an {@link IllegalStateException} when modified.

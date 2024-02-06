@@ -24,7 +24,6 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
@@ -35,7 +34,6 @@ import sonia.scm.plugin.Extension;
 
 /**
  * UserAgent provider for git related clients.
- * @author Sebastian Sdorra <sebastian.sdorra@gmail.com>
  * @since 1.45
  */
 @Extension
@@ -71,7 +69,6 @@ public class GitUserAgentProvider implements UserAgentProvider {
 
 
 
-  //~--- methods --------------------------------------------------------------
 
   @Override
   public UserAgent parseUserAgent(String userAgentString) {

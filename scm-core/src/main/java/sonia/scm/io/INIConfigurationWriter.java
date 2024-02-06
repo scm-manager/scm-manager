@@ -30,7 +30,6 @@ import java.io.PrintWriter;
 
 /**
  * Write configurations in ini format to file and streams.
- * @author Sebastian Sdorra
  */
 public class INIConfigurationWriter extends AbstractWriter<INIConfiguration> {
 

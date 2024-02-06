@@ -24,7 +24,6 @@
 
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,10 +42,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class HttpUtilTest
 {
 
@@ -87,11 +83,7 @@ public class HttpUtilTest
     );
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void appendTest()
   {
     //J-
@@ -114,11 +106,7 @@ public class HttpUtilTest
     //J+
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void normalizeUrlTest()
   {
     assertEquals("http://www.scm-manager/scm",
@@ -139,61 +127,37 @@ public class HttpUtilTest
       HttpUtil.normalizeUrl("http://www.scm-manager:8080"));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test(expected = IllegalArgumentException.class)
+   @Test(expected = IllegalArgumentException.class)
   public void testCheckForCRLFInjectionFailure1()
   {
     HttpUtil.checkForCRLFInjection("any%0D%0A");
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test(expected = IllegalArgumentException.class)
+   @Test(expected = IllegalArgumentException.class)
   public void testCheckForCRLFInjectionFailure2()
   {
     HttpUtil.checkForCRLFInjection("123\nabc");
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test(expected = IllegalArgumentException.class)
+   @Test(expected = IllegalArgumentException.class)
   public void testCheckForCRLFInjectionFailure3()
   {
     HttpUtil.checkForCRLFInjection("123\rabc");
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test(expected = IllegalArgumentException.class)
+   @Test(expected = IllegalArgumentException.class)
   public void testCheckForCRLFInjectionFailure4()
   {
     HttpUtil.checkForCRLFInjection("123\r\nabc");
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test(expected = IllegalArgumentException.class)
+   @Test(expected = IllegalArgumentException.class)
   public void testCheckForCRLFInjectionFailure5()
   {
     HttpUtil.checkForCRLFInjection("123%abc");
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testCheckForCRLFInjectionSuccess()
   {
     HttpUtil.checkForCRLFInjection("123");
@@ -201,11 +165,7 @@ public class HttpUtilTest
     HttpUtil.checkForCRLFInjection("abcka");
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testCreateBaseUrl()
   {
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -218,11 +178,7 @@ public class HttpUtilTest
       HttpUtil.createBaseUrl(request));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testCreateForwardedUrl()
   {
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -243,11 +199,7 @@ public class HttpUtilTest
     HttpUtil.createForwardedBaseUrl(request);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testCreateForwardedUrlWithPortAndProtoFromRequest()
   {
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -261,11 +213,7 @@ public class HttpUtilTest
       HttpUtil.createForwardedBaseUrl(request));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testCreateForwardedUrlWithPortInHost()
   {
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -279,11 +227,7 @@ public class HttpUtilTest
       HttpUtil.createForwardedBaseUrl(request));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testCreateForwardedUrlWithPortInHostAndPortHeader()
   {
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -298,11 +242,7 @@ public class HttpUtilTest
       HttpUtil.createForwardedBaseUrl(request));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testGetCompleteUrl()
   {
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -321,11 +261,7 @@ public class HttpUtilTest
       HttpUtil.getCompleteUrl(request));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testIsForwarded()
   {
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -337,11 +273,7 @@ public class HttpUtilTest
     assertTrue(HttpUtil.isForwarded(request));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testRemoveCRLFInjectionChars()
   {
     assertEquals("any0D0A", HttpUtil.removeCRLFInjectionChars("any%0D%0A"));
@@ -353,11 +285,7 @@ public class HttpUtilTest
 
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void userAgentStartsWithTest()
   {
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -370,13 +298,8 @@ public class HttpUtilTest
     assertFalse(HttpUtil.userAgentStartsWith(request, "sobbo/"));
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void getCompleteUrlTest()
   {
     ScmConfiguration config = new ScmConfiguration();
@@ -392,11 +315,7 @@ public class HttpUtilTest
       HttpUtil.getCompleteUrl(config, "/test/path"));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void getPortFromUrlTest()
   {
     assertThat(HttpUtil.getPortFromUrl("http://www.scm-manager.org")).isEqualTo(80);
@@ -405,11 +324,7 @@ public class HttpUtilTest
     assertThat(HttpUtil.getPortFromUrl("http://www.scm-manager.org:8181/test/folder")).isEqualTo(8181);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void getServerPortTest()
   {
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -423,11 +338,7 @@ public class HttpUtilTest
     assertThat(HttpUtil.getServerPort(config, request)).isEqualTo(8080);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void getStrippedURITest()
   {
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -439,11 +350,7 @@ public class HttpUtilTest
     assertEquals("/test/path", HttpUtil.getStrippedURI(request));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void getUriWithoutEndSeperatorTest()
   {
     assertEquals("/test", HttpUtil.getUriWithoutEndSeperator("/test/"));
@@ -452,11 +359,7 @@ public class HttpUtilTest
       HttpUtil.getUriWithoutEndSeperator("/test/two/three"));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void getUriWithoutStartSeperator()
   {
     assertEquals("test/", HttpUtil.getUriWithoutStartSeperator("/test/"));

@@ -39,7 +39,6 @@ public interface Index<T>  {
   /**
    * Returns details such as name and type of index.
    *
-   * @return details of index
    * @since 2.23.0
    */
   IndexDetails getDetails();

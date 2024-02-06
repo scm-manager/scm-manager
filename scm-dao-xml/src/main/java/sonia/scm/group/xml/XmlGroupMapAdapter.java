@@ -30,40 +30,19 @@ import sonia.scm.group.Group;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class XmlGroupMapAdapter
         extends XmlAdapter<XmlGroupList, Map<String, Group>>
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param groupMap
-   *
-   * @return
-   *
-   * @throws Exception
-   */
+
   @Override
   public XmlGroupList marshal(Map<String, Group> groupMap) throws Exception
   {
     return new XmlGroupList(groupMap);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param groups
-   *
-   * @return
-   *
-   * @throws Exception
-   */
+
   @Override
   public Map<String, Group> unmarshal(XmlGroupList groups) throws Exception
   {

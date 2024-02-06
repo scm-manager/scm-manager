@@ -35,13 +35,11 @@ public interface IndexDetails {
 
   /**
    * Returns type of objects which are indexed.
-   * @return type of objects
    */
   Class<?> getType();
 
   /**
    * Returns the name of the index (e.g. `default`)
-   * @return name
    */
   String getName();
 }

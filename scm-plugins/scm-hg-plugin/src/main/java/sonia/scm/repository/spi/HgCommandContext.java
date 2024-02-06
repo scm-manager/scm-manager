@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.javahg.Repository;
 import sonia.scm.repository.HgConfig;
@@ -35,12 +34,7 @@ import sonia.scm.repository.RepositoryProvider;
 import java.io.Closeable;
 import java.io.File;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class HgCommandContext implements Closeable, RepositoryProvider {
 
   private final HgConfigResolver configResolver;

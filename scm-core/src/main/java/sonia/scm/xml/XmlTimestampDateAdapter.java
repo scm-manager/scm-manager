@@ -24,46 +24,24 @@
     
 package sonia.scm.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import sonia.scm.util.Util;
 
 import java.util.Date;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class XmlTimestampDateAdapter extends XmlAdapter<String, Long>
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   *
-   * @throws Exception
-   */
+ 
   @Override
   public String marshal(Long value) throws Exception
   {
     return Util.formatDate(new Date(value));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   *
-   * @throws Exception
-   */
+ 
   @Override
   public Long unmarshal(String value) throws Exception
   {

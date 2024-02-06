@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import jakarta.servlet.ServletContextEvent;
@@ -34,34 +33,20 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.PrivilegedAction;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Extension
 public class HealthCheckContextListener implements ServletContextListener
 {
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param context
-   */
+  private final AdministrationContext context;
+ 
   @Inject
   public HealthCheckContextListener(AdministrationContext context)
   {
     this.context = context;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param sce
-   */
+
   @Override
   public void contextDestroyed(ServletContextEvent sce)
   {
@@ -69,48 +54,29 @@ public class HealthCheckContextListener implements ServletContextListener
     // do nothing
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param sce
-   */
+
   @Override
   public void contextInitialized(ServletContextEvent sce)
   {
     context.runAsAdmin(HealthCheckStartupAction.class);
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/01/23
-   * @author         Enter your name here...
-   */
+
+
   static class HealthCheckStartupAction implements PrivilegedAction
   {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param healthChecker
-     */
+    private final HealthChecker healthChecker;
+  
     @Inject
     public HealthCheckStartupAction(HealthChecker healthChecker)
     {
       this.healthChecker = healthChecker;
     }
 
-    //~--- methods ------------------------------------------------------------
+    
 
-    /**
-     * Method description
-     *
-     */
+
     @Override
     public void run()
     {
@@ -119,15 +85,6 @@ public class HealthCheckContextListener implements ServletContextListener
       SecurityUtils.getSubject().execute(healthChecker::lightCheckAll);
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final HealthChecker healthChecker;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final AdministrationContext context;
 }

@@ -24,7 +24,6 @@
     
 package sonia.scm.api.rest;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
 import jakarta.ws.rs.WebApplicationException;
@@ -43,28 +42,11 @@ import java.lang.reflect.Type;
  * mimetype for uploads.
  *
  * TODO find a better way
- * @author Sebastian Sdorra
  */
 @Provider
 public class RestActionUploadResultMessageWriter
   implements MessageBodyWriter<RestActionResult>
 {
-
-  /**
-   * Method description
-   *
-   *
-   * @param result
-   * @param type
-   * @param genericType
-   * @param annotations
-   * @param mediaType
-   * @param httpHeaders
-   * @param entityStream
-   *
-   * @throws IOException
-   * @throws WebApplicationException
-   */
   @Override
   public void writeTo(RestActionResult result, Class<?> type, Type genericType,
     Annotation[] annotations, MediaType mediaType,
@@ -77,20 +59,6 @@ public class RestActionUploadResultMessageWriter
     entityStream.write(v.getBytes(Charsets.UTF_8));
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param result
-   * @param type
-   * @param genericType
-   * @param annotations
-   * @param mediaType
-   *
-   * @return
-   */
   @Override
   public long getSize(RestActionResult result, Class<?> type, Type genericType,
     Annotation[] annotations, MediaType mediaType)
@@ -98,17 +66,6 @@ public class RestActionUploadResultMessageWriter
     return -1;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param genericType
-   * @param annotations
-   * @param mediaType
-   *
-   * @return
-   */
   @Override
   public boolean isWriteable(Class<?> type, Type genericType,
     Annotation[] annotations, MediaType mediaType)

@@ -26,17 +26,11 @@ package sonia.scm.repository;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.9
  */
 public interface RepositoryCacheKey
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getRepositoryId();
 }

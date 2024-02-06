@@ -50,9 +50,7 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
   private static final String TAG_KEY = "key";
   private static final String TAG_VALUE = "value";
 
-  /**
-   * the logger for JAXBConfigurationEntryStore
-   */
+ 
   private static final Logger LOG = LoggerFactory.getLogger(JAXBConfigurationEntryStore.class);
 
 

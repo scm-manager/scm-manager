@@ -44,7 +44,6 @@ package sonia.scm.store;
  *       .build();
  * </pre></code>
  *
- * @author Sebastian Sdorra
  * @since 1.23
  *
  * @apiviz.landmark

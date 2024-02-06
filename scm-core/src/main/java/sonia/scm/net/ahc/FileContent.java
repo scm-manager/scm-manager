@@ -24,12 +24,9 @@
     
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,24 +37,17 @@ import java.io.OutputStream;
 /**
  * Sets the content of the file to the request.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public class FileContent implements Content
 {
+  private final File file;
 
-  /**
-   * Constructs a new {@link FileContent}.
-   *
-   *
-   * @param file file
-   */
   public FileContent(File file)
   {
     this.file = file;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Sets the content length of the file as request header.
@@ -94,9 +84,4 @@ public class FileContent implements Content
       Closeables.close(stream, true);
     }
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** file */
-  private final File file;
 }

@@ -29,13 +29,18 @@ import java.util.Locale;
 /**
  * Type of the SCM-Manager host platform.
  *
- * @author Sebastian Sdorra
  */
 public enum PlatformType
 {
   UNSPECIFIED(false, false), MAC(true, true), LINUX(false, true),
   WINDOWS(false, false), SOLARIS(true, true), FREEBSD(true, true),
   OPENBSD(true, true);
+
+  /** has the platform support for posix */
+  private boolean posix;
+
+  /** is the platform a unix system */
+  private boolean unix;
 
   /**
    * Constructs {@link PlatformType} object.
@@ -50,15 +55,12 @@ public enum PlatformType
     this.posix = posix;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Returns {@link PlatformType} object for the given operating system name.
    *
    *
    * @param osName - name of the operating system
-   *
-   * @return {@link PlatformType} object for the given operating system name
    */
   public static PlatformType createPlatformType(String osName)
   {
@@ -94,7 +96,6 @@ public enum PlatformType
     return type;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns true if the platform has support for posix.
@@ -118,11 +119,4 @@ public enum PlatformType
     return unix;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** has the platform support for posix */
-  private boolean posix;
-
-  /** is the platform is a unix system */
-  private boolean unix;
 }

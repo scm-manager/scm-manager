@@ -24,18 +24,14 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.api.BundleResponse;
 
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Service provider implementation for the bundle command.
  *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
  */
 public interface BundleCommand

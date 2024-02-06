@@ -24,7 +24,6 @@
     
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,14 +38,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Map;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public abstract class KeyValueStoreTestBase extends AbstractTestBase
 {
 
@@ -56,23 +50,13 @@ public abstract class KeyValueStoreTestBase extends AbstractTestBase
   protected String repoStoreName = "testRepoStore";
   protected String storeName = "testStore";
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected abstract <STORE_OBJECT> DataStore<STORE_OBJECT> getDataStore(Class<STORE_OBJECT> type , Repository repository);
   protected abstract <STORE_OBJECT> DataStore<STORE_OBJECT> getDataStore(Class<STORE_OBJECT> type );
 
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Before
+   @Before
   public void before()
   {
     store = getDataStore(StoreObject.class);
@@ -81,11 +65,7 @@ public abstract class KeyValueStoreTestBase extends AbstractTestBase
     repoStore.clear();
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testClear()
   {
     testPutWithId();
@@ -97,11 +77,7 @@ public abstract class KeyValueStoreTestBase extends AbstractTestBase
     assertTrue(store.getAll().isEmpty());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testGet()
   {
     StoreObject other = store.get("1");
@@ -116,11 +92,7 @@ public abstract class KeyValueStoreTestBase extends AbstractTestBase
     assertEquals(obj, other);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testGetAll()
   {
     StoreObject obj1 = new StoreObject("test-1");
@@ -144,11 +116,7 @@ public abstract class KeyValueStoreTestBase extends AbstractTestBase
     assertNull(map.get("3"));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testGetAllFromEmpty()
   {
     Map<String, StoreObject> map = store.getAll();
@@ -157,11 +125,7 @@ public abstract class KeyValueStoreTestBase extends AbstractTestBase
     assertTrue(map.isEmpty());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testGetFromEmpty()
   {
     StoreObject obj = store.get("test");
@@ -169,11 +133,7 @@ public abstract class KeyValueStoreTestBase extends AbstractTestBase
     assertNull(obj);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testPutWithId()
   {
     StoreObject obj1 = new StoreObject("test-1");
@@ -188,11 +148,7 @@ public abstract class KeyValueStoreTestBase extends AbstractTestBase
     assertEquals(obj2, store.get("2"));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testPutWithoutId()
   {
     StoreObject obj = new StoreObject("test-1");
@@ -203,11 +159,7 @@ public abstract class KeyValueStoreTestBase extends AbstractTestBase
     assertEquals(obj, store.get(id));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testRemove()
   {
     testPutWithId();

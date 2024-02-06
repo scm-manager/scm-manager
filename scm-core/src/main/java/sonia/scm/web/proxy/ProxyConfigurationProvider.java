@@ -24,25 +24,13 @@
     
 package sonia.scm.web.proxy;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.25
  */
 public interface ProxyConfigurationProvider
 {
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
   public ProxyConfiguration getConfiguration(HttpServletRequest request);
 }

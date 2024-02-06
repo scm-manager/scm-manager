@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +35,6 @@ import org.tmatesoft.svn.core.wc.ISVNAnnotateHandler;
 
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 
 import java.util.Collection;
@@ -46,29 +43,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @SuppressWarnings("deprecation")
 public class SvnBlameHandler implements ISVNAnnotateHandler
 {
-
-  /** the logger for SvnBlameHandler */
   private static final Logger logger =
     LoggerFactory.getLogger(SvnBlameHandler.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final List<BlameLine> blameLines;
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param svnRepository
-   * @param path
-   * @param blameLines
-   */
+  private final Map<Long, String> descriptionCache = new HashMap<>();
+
+  private final String path;
+
+  private final SVNRepository svnRepository;
+
   public SvnBlameHandler(SVNRepository svnRepository, String path,
                          List<BlameLine> blameLines)
   {
@@ -77,30 +66,14 @@ public class SvnBlameHandler implements ISVNAnnotateHandler
     this.blameLines = blameLines;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Override
+   @Override
   public void handleEOF()
   {
 
     // do nothing
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param date
-   * @param revision
-   * @param author
-   * @param line
-   *
-   * @throws SVNException
-   */
   @Override
   public void handleLine(Date date, long revision, String author, String line)
           throws SVNException
@@ -108,22 +81,6 @@ public class SvnBlameHandler implements ISVNAnnotateHandler
     handleLine(date, revision, author, line, null, -1, null, null, 0);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param date
-   * @param revision
-   * @param author
-   * @param line
-   * @param mergedDate
-   * @param mergedRevision
-   * @param mergedAuthor
-   * @param mergedPath
-   * @param lineNumber
-   *
-   * @throws SVNException
-   */
   @Override
   public void handleLine(Date date, long revision, String author, String line,
                          Date mergedDate, long mergedRevision,
@@ -150,19 +107,6 @@ public class SvnBlameHandler implements ISVNAnnotateHandler
                                  when, authorPerson, description, line));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param date
-   * @param revision
-   * @param author
-   * @param contents
-   *
-   * @return
-   *
-   * @throws SVNException
-   */
   @Override
   public boolean handleRevision(Date date, long revision, String author,
                                 File contents)
@@ -171,16 +115,8 @@ public class SvnBlameHandler implements ISVNAnnotateHandler
     return false;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param revision
-   *
-   * @return
-   */
+
   @SuppressWarnings("unchecked")
   private String getDescription(long revision)
   {
@@ -216,17 +152,4 @@ public class SvnBlameHandler implements ISVNAnnotateHandler
     return description;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final List<BlameLine> blameLines;
-
-  /** Field description */
-  private final Map<Long, String> descriptionCache = new HashMap<>();
-
-  /** Field description */
-  private final String path;
-
-  /** Field description */
-  private final SVNRepository svnRepository;
 }

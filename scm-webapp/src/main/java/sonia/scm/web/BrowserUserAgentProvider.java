@@ -24,70 +24,47 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 
 import sonia.scm.plugin.Extension;
 
-/**
- *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
- */
 @Extension
 public class BrowserUserAgentProvider implements UserAgentProvider
 {
 
-  /** Field description */
   @VisibleForTesting
   static final UserAgent CHROME = UserAgent.browser(
                                     "Chrome").basicAuthenticationCharset(
                                     Charsets.UTF_8).build();
 
-  /** Field description */
   private static final String CHROME_PATTERN = "chrome";
 
-  /** Field description */
   @VisibleForTesting
   static final UserAgent FIREFOX = UserAgent.browser("Firefox").build();
 
-  /** Field description */
   private static final String FIREFOX_PATTERN = "firefox";
 
-  /** Field description */
   @VisibleForTesting
   static final UserAgent MSIE = UserAgent.browser("Internet Explorer").build();
 
-  /** Field description */
   private static final String MSIE_PATTERN = "msie";
 
-  /** Field description */
   @VisibleForTesting    // todo check charset
   static final UserAgent SAFARI = UserAgent.browser("Safari").build();
 
-  /** Field description */
   private static final String OPERA_PATTERN = "opera";
 
-  /** Field description */
   private static final String SAFARI_PATTERN = "safari";
 
-  /** Field description */
   @VisibleForTesting    // todo check charset
   static final UserAgent OPERA = UserAgent.browser(
                                    "Opera").basicAuthenticationCharset(
                                    Charsets.UTF_8).build();
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param userAgentString
-   *
-   * @return
-   */
+
   @Override
   public UserAgent parseUserAgent(String userAgentString)
   {

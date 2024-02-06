@@ -35,7 +35,6 @@ import java.util.List;
  * The changeset paging result is used to do a paging over the
  * {@link Changeset}s of a {@link Repository}.
  *
- * @author Sebastian Sdorra
  */
 @EqualsAndHashCode
 @ToString
@@ -75,7 +74,6 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable 
   /**
    * Returns an iterator which can iterate over the current list of changesets.
    *
-   * @return iterator for current list of changesets
    * @since 1.8
    */
   @Override
@@ -91,8 +89,6 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable 
 
   /**
    * Returns the current list of changesets.
-   *
-   * @return current list of changesets
    */
   public List<Changeset> getChangesets() {
     return changesets;
@@ -100,8 +96,6 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable 
 
   /**
    * Returns the total number of changesets.
-   *
-   * @return total number of changesets
    */
   public int getTotal() {
     return total;

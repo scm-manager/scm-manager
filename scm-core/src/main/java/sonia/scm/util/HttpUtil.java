@@ -24,7 +24,6 @@
 
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
@@ -46,12 +45,9 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Util method for the http protocol.
  *
- * @author Sebastian Sdorra
  */
 public final class HttpUtil
 {
@@ -80,7 +76,6 @@ public final class HttpUtil
    */
   public static final String COOKIE_BEARER_AUTHENTICATION = "X-Bearer-Token";
 
-  /** Field description */
   public static final String ENCODING = "UTF-8";
 
   /**
@@ -107,7 +102,6 @@ public final class HttpUtil
    */
   public static final String HEADER_SCM_CLIENT = "X-SCM-Client";
 
-  /** Field description */
   public static final String HEADER_USERAGENT = "User-Agent";
 
   /** authentication header */
@@ -212,7 +206,7 @@ public final class HttpUtil
   /** skip size for drain body method */
   private static final int SKIP_SIZE = 4096;
 
-  /** the logger for HttpUtil */
+  
   private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
   /**
@@ -229,15 +223,9 @@ public final class HttpUtil
   private static final CharMatcher CRLF_CHARMATCHER =
     CharMatcher.anyOf("\n\r%");
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private HttpUtil() {}
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Joins all path elements together separated by {@code {@link #SEPARATOR_PATH}}.
@@ -436,13 +424,6 @@ public final class HttpUtil
   }
 
   /**
-   * Returns the normalized url.
-   *
-   *
-   * @param url to normalize
-   *
-   * @return normalized url
-   *
    * @since 1.26
    */
   public static String normalizeUrl(String url)
@@ -618,7 +599,6 @@ public final class HttpUtil
       Strings.nullToEmpty(userAgent).toLowerCase(Locale.ENGLISH));
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns an absolute url with context path. The method creates the url from
@@ -675,16 +655,6 @@ public final class HttpUtil
     return append(configuration.getBaseUrl(), path);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param header
-   * @param defaultValue
-   *
-   * @return
-   */
   public static String getHeader(HttpServletRequest request, String header,
     String defaultValue)
   {
@@ -695,12 +665,6 @@ public final class HttpUtil
     return value;
   }
 
-  /**
-   * Returns the port of the url parameter.
-   *
-   * @param url
-   * @return port of url
-   */
   public static int getPortFromUrl(String url)
   {
     AssertUtil.assertIsNotEmpty(url);
@@ -742,15 +706,6 @@ public final class HttpUtil
     return port;
   }
 
-  /**
-   * Returns the server port
-   *
-   *
-   * @param configuration
-   * @param request
-   *
-   * @return the server port
-   */
   public static int getServerPort(ScmConfiguration configuration,
     HttpServletRequest request)
   {
@@ -770,12 +725,10 @@ public final class HttpUtil
   }
 
   /**
-   * Return the request uri with out the context path.
+   * Return the request uri without the context path.
    *
    *
    * @param request - the http client request
-   *
-   * @return the request uri with out the context path
    */
   public static String getStrippedURI(HttpServletRequest request)
   {
@@ -802,7 +755,7 @@ public final class HttpUtil
    *
    * @param uri - to strip ending separator
    *
-   * @return the given uri without a ending separator
+   * @return the given uri without an ending separator
    * @since 1.7
    */
   public static String getUriWithoutEndSeperator(String uri)
@@ -838,8 +791,6 @@ public final class HttpUtil
    *
    *
    * @param uri - to strip leading separator
-   *
-   * @return the given uri without leading separator
    * @since 1.7
    */
   public static String getUriWithoutStartSeperator(String uri)
@@ -854,11 +805,6 @@ public final class HttpUtil
 
   /**
    * Returns true if the body of the request is chunked.
-   *
-   *
-   * @param request http request
-   *
-   * @return true if the request is chunked
    *
    * @since 1.37
    */
@@ -895,7 +841,6 @@ public final class HttpUtil
     return client.isPresent() && SCM_CLIENT_WUI.equalsIgnoreCase(client.get());
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Creates base url for request url.

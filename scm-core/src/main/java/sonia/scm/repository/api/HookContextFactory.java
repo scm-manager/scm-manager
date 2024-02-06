@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 
@@ -38,33 +37,22 @@ import sonia.scm.repository.spi.HookContextProvider;
 /**
  * Injectable factory for {@link HookContext} objects.
  *
- * @author Sebastian Sdorra
  * @since 1.33
  */
 public final class HookContextFactory
 {
 
-  /**
-   * the logger for HookContextFactory
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(HookContextFactory.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private PreProcessorUtil preProcessorUtil;
 
-  /**
-   * Constructs a new {@link HookContextFactory}.
-   *
-   *
-   * @param preProcessorUtil pre processor util
-   */
   @Inject
   public HookContextFactory(PreProcessorUtil preProcessorUtil)
   {
     this.preProcessorUtil = preProcessorUtil;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Creates a new {@link HookContext}.
@@ -84,8 +72,4 @@ public final class HookContextFactory
     return new HookContext(provider, repository, preProcessorUtil);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** pre processor util */
-  private PreProcessorUtil preProcessorUtil;
 }

@@ -24,7 +24,6 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
@@ -43,63 +42,39 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Locale;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class HgCGIExceptionHandler
   implements CGIExceptionHandler, CGIStatusCodeHandler
 {
 
-  /** Field description */
   public static final String BUNDLE_PATH = "sonia.scm.web.cgimessages";
 
-  /** Field description */
   public static final String CONTENT_TYPE_ERROR = "application/hg-error";
 
-  /** Field description */
   public static final String CONTENT_TYPE_HTML = "text/html";
 
   /** TODO create a bundle for error messages */
   public static final String ERROR_NOT_CONFIGURED = "error.notConfigured";
 
-  /** Field description */
   public static final String ERROR_STATUSCODE = "error.statusCode";
 
-  /** Field description */
   public static final String ERROR_UNEXPECTED = "error.unexpected";
 
-  /** Field description */
   private static final String HEADER_ACCEPT = "Accept";
 
-  /**
-   * the logger for HgCGIExceptionHandler
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(HgCGIExceptionHandler.class);
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   public HgCGIExceptionHandler()
   {
     this.bundle = Bundle.getBundle(BUNDLE_PATH, Locale.ENGLISH,
       HgCGIExceptionHandler.class.getClassLoader());
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param ex
-   */
+ 
   @Override
   public void handleException(HttpServletRequest request,
     HttpServletResponse response, Throwable ex)
@@ -118,17 +93,7 @@ public class HgCGIExceptionHandler
     //J+
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param output
-   * @param statusCode
-   *
-   * @throws IOException
-   */
+
   @Override
   public void handleStatusCode(HttpServletRequest request,
     HttpServletResponse response, OutputStream output, int statusCode)
@@ -153,13 +118,7 @@ public class HgCGIExceptionHandler
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param statusCode
-   */
+
   @Override
   public void handleStatusCode(HttpServletRequest request, int statusCode)
   {
@@ -223,15 +182,8 @@ public class HgCGIExceptionHandler
     sendError(request, response, bundle.getString(key));
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   */
+
   private void setContentType(HttpServletRequest request,
     HttpServletResponse response)
   {
@@ -249,6 +201,5 @@ public class HgCGIExceptionHandler
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private Bundle bundle;
 }

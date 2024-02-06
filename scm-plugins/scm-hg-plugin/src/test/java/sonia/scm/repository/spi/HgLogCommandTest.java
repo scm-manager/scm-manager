@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 import sonia.scm.repository.Changeset;
@@ -39,12 +38,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class HgLogCommandTest extends AbstractHgCommandTestBase
 {
 
@@ -188,12 +182,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     assertEquals("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427", c2.getId());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   private HgLogCommand createCommand()
   {
     return new HgLogCommand(cmdContext);

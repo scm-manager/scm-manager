@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.client.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,51 +33,28 @@ import sonia.scm.repository.Person;
 import sonia.scm.repository.client.spi.CommitCommand;
 import sonia.scm.repository.client.spi.CommitRequest;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public final class CommitCommandBuilder
 {
 
-  /**
-   * the logger for CommitCommandBuilder
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(CommitCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private CommitCommand command;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param directory
-   * @param command
-   */
+  private CommitRequest request = new CommitRequest();
+ 
   CommitCommandBuilder(CommitCommand command)
   {
     this.command = command;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param author
-   * @param message
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   public Changeset commit(Person author, String message) throws IOException
   {
     request.setAuthor(author);
@@ -96,11 +72,4 @@ public final class CommitCommandBuilder
     return changeset;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private CommitCommand command;
-
-  /** Field description */
-  private CommitRequest request = new CommitRequest();
 }

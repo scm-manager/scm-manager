@@ -34,7 +34,6 @@ import java.util.Optional;
  * Context object for the {@link HalEnricher}. The context holds the source object for the json and all related
  * objects, which can be useful for the enrichment.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class HalEnricherContext {
@@ -49,8 +48,6 @@ public final class HalEnricherContext {
    * Creates a context with the given entries
    *
    * @param instances entries of the context
-   *
-   * @return context of given entries
    */
   public static HalEnricherContext of(Object... instances) {
     ImmutableMap.Builder<Class<?>, Object> builder = ImmutableMap.builder();
@@ -62,7 +59,6 @@ public final class HalEnricherContext {
 
   /**
    * Return builder for {@link HalEnricherContext}.
-   * @return builder
    * @since 2.23.0
    */
   public static Builder builder() {
@@ -125,7 +121,6 @@ public final class HalEnricherContext {
 
     /**
      * Returns the {@link HalEnricherContext}.
-     * @return context
      */
     public HalEnricherContext build() {
       return new HalEnricherContext(mapBuilder.build());

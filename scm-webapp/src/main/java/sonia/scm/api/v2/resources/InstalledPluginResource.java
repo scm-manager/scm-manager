@@ -64,8 +64,6 @@ public class InstalledPluginResource {
 
   /**
    * Returns a collection of installed plugins.
-   *
-   * @return collection of installed plugins.
    */
   @GET
   @Path("")
@@ -129,7 +127,6 @@ public class InstalledPluginResource {
    * Returns the installed plugin with the given id.
    *
    * @param name name of plugin
-   * @return installed plugin with specified id
    */
   @GET
   @Path("/{name}")

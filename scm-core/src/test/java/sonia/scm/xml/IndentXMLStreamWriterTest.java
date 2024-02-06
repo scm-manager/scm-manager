@@ -24,7 +24,6 @@
     
 package sonia.scm.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,19 +33,11 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.ByteArrayOutputStream;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class IndentXMLStreamWriterTest
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws XMLStreamException
-   */
+
   @Test
   public void testIndent() throws XMLStreamException
   {

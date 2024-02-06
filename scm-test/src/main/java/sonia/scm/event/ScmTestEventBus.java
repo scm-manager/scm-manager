@@ -24,56 +24,35 @@
 
 package sonia.scm.event;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.EventBus;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public class ScmTestEventBus extends ScmEventBus
 {
+  private final EventBus eventBus = new EventBus("testing");
 
-  /**
-   * Method description
-   *
-   *
-   * @param event
-   */
   @Override
   public void post(Object event)
   {
     eventBus.post(event);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param subscriber
-   */
+
   @Override
   public void register(Object subscriber)
   {
     eventBus.register(subscriber);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param subscriber
-   */
+
   @Override
   public void unregister(Object subscriber)
   {
     eventBus.unregister(subscriber);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final EventBus eventBus = new EventBus("testing");
 }

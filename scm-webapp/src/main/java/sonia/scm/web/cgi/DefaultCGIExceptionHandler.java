@@ -24,7 +24,6 @@
     
 package sonia.scm.web.cgi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,27 +31,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.security.ScmSecurityException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class DefaultCGIExceptionHandler implements CGIExceptionHandler
 {
 
-  /** the logger for DefaultCGIExceptionHandler */
+  
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultCGIExceptionHandler.class);
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param exception
-   */
+ 
   @Override
   public void handleException(HttpServletRequest request,
                               HttpServletResponse response, Throwable exception)

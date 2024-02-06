@@ -24,12 +24,9 @@
     
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Ints;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
 
@@ -37,24 +34,16 @@ import java.util.List;
  * Priority constants and util methods to sort classes by {@link Priority}
  * annotation.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class Priorities
 {
 
-  /** default priority */
   public static final int DEFAULT = 9999;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private Priorities() {}
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Returns a list sorted by priority.
@@ -83,7 +72,6 @@ public final class Priorities
   }
 
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the priority of the given class.
@@ -105,8 +93,6 @@ public final class Priorities
 
     return priority;
   }
-
-  //~--- inner classes --------------------------------------------------------
 
   /**
    * {@link Ordering} which orders classes by priority.

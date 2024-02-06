@@ -27,14 +27,10 @@ package sonia.scm.schedule;
 /**
  * Tasks are executed in the future and can be running more than once. A task execution can be canceled.
  * 
- * @author Sebastian Sdorra
  * @since 1.47
  */
 public interface Task {
 
-  /**
-   * Cancel task execution.
-   */
   public void cancel();
   
 }

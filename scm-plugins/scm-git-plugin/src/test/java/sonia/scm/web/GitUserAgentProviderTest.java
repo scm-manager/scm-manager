@@ -24,13 +24,10 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Unit tests for {@link GitUserAgentProvider}.

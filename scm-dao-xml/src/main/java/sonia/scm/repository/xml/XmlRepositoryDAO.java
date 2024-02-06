@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
@@ -54,9 +53,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @Singleton
 @Slf4j
 public class XmlRepositoryDAO implements RepositoryDAO {

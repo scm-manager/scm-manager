@@ -42,12 +42,6 @@ public final class ValidationUtil {
   private ValidationUtil() {
   }
 
-  /**
-   * Returns {@code true} if the filename is valid.
-   *
-   * @param filename filename to be validated
-   * @return {@code true} if filename is valid
-   */
   public static boolean isFilenameValid(String filename) {
     return Util.isNotEmpty(filename) && isNotContaining(filename, "/", "\\", ":");
   }
@@ -68,32 +62,14 @@ public final class ValidationUtil {
       && !path.equals("..");
   }
 
-  /**
-   * Returns {@code true} if the mail is valid.
-   *
-   * @param mail email-address to be validated
-   * @return {@code true} if mail is valid
-   */
   public static boolean isMailAddressValid(String mail) {
     return Util.isNotEmpty(mail) && mail.toLowerCase().matches(REGEX_MAIL);
   }
 
-  /**
-   * Returns {@code true} if the name is valid.
-   *
-   * @param name name to be validated
-   * @return {@code true} if name is valid
-   */
   public static boolean isNameValid(String name) {
     return Util.isNotEmpty(name) && name.matches(REGEX_NAME) && !name.equals("..");
   }
 
-  /**
-   * Returns {@code true} if the user password is valid.
-   *
-   * @param password password to be validated
-   * @return {@code true} if password is valid
-   */
   public static boolean isPasswordValid(String password) {
     String pw = Strings.nullToEmpty(password);
     return pw.length() >= 6 && pw.length() <= 1024;
@@ -123,10 +99,6 @@ public final class ValidationUtil {
   }
 
   /**
-   * Returns {@code true} if the repository name is valid.
-   *
-   * @param name repository name
-   * @return {@code true} if repository name is valid
    * @since 1.9
    */
   public static boolean isRepositoryNameValid(String name) {

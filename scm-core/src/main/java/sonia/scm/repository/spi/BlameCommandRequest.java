@@ -28,24 +28,16 @@ import lombok.EqualsAndHashCode;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 @EqualsAndHashCode(callSuper = true)
 public final class BlameCommandRequest extends FileBaseCommandRequest
 {
 
-  /** Field description */
   private static final long serialVersionUID = 6421975024231127315L;
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public BlameCommandRequest clone()
   {

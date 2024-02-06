@@ -24,25 +24,21 @@
     
 package sonia.scm.util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import com.google.common.net.UrlEscapers;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
  * @since 1.9
- * @author Sebastian Sdorra
  */
 public class UrlBuilder
 {
+  private boolean parameterAdded = false;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param baseUrl
-   */
+  private String separator;
+
+  private String url;
+
   public UrlBuilder(String baseUrl)
   {
     this.url = baseUrl;
@@ -58,16 +54,6 @@ public class UrlBuilder
     }
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param part
-   *
-   * @return
-   */
   public UrlBuilder append(String part)
   {
     url = url.concat(part);
@@ -75,57 +61,21 @@ public class UrlBuilder
     return this;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param value
-   *
-   * @return
-   */
   public UrlBuilder appendParameter(String name, boolean value)
   {
     return appendParameter(name, String.valueOf(value));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param value
-   *
-   * @return
-   */
   public UrlBuilder appendParameter(String name, int value)
   {
     return appendParameter(name, String.valueOf(value));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param value
-   *
-   * @return
-   */
   public UrlBuilder appendParameter(String name, long value)
   {
     return appendParameter(name, String.valueOf(value));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param value
-   *
-   * @return
-   */
   public UrlBuilder appendParameter(String name, String value)
   {
     if (Util.isNotEmpty(name) && Util.isNotEmpty(value))
@@ -142,14 +92,6 @@ public class UrlBuilder
     return this;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param part
-   *
-   * @return
-   */
   public UrlBuilder appendUrlPart(String part)
   {
     if (parameterAdded)
@@ -162,24 +104,14 @@ public class UrlBuilder
     return this;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String toString()
   {
     return url;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public URL toURL()
   {
     try
@@ -192,14 +124,4 @@ public class UrlBuilder
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private boolean parameterAdded = false;
-
-  /** Field description */
-  private String separator;
-
-  /** Field description */
-  private String url;
 }

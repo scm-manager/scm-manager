@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
 import org.slf4j.Logger;
@@ -42,8 +41,6 @@ import sonia.scm.repository.spi.BrowseCommandRequest;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.function.Supplier;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * BrowseCommandBuilder is able to browse the files of a {@link Repository}.
@@ -63,22 +60,31 @@ import java.util.function.Supplier;
  * }
  * </pre></code>
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public final class BrowseCommandBuilder
 {
 
-  /** Name of the cache */
   static final String CACHE_NAME = "sonia.cache.cmd.browse";
 
-  /**
-   * the logger for BrowseCommandBuilder
-   */
+
   private static final Logger logger =
     LoggerFactory.getLogger(BrowseCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final BrowseCommand browseCommand;
+
+  private final Cache<CacheKey, BrowserResult> cache;
+
+  private boolean disableCache = false;
+
+  private boolean disablePreProcessors = false;
+
+  private final PreProcessorUtil preProcessorUtil;
+  private final Supplier<BrowseCommand> browseCommandFactory;
+
+  private final Repository repository;
+
+  private final BrowseCommandRequest request = new BrowseCommandRequest(this::updateCache);
 
   /**
    * Constructs a new {@link BrowseCommandBuilder}, this constructor should
@@ -100,7 +106,6 @@ public final class BrowseCommandBuilder
     this.browseCommandFactory = browseCommandFactory;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Reset each parameter to its default value.
@@ -117,13 +122,9 @@ public final class BrowseCommandBuilder
     return this;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Return the files for the given parameters.
-   *
-   *
-   * @return files for the given parameters
    *
    * @throws IOException
    */
@@ -182,7 +183,6 @@ public final class BrowseCommandBuilder
     return result;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Disables the cache. This means that every {@link BrowserResult}
@@ -222,10 +222,7 @@ public final class BrowseCommandBuilder
   }
 
   /**
-   * Disable the execution of pre processors.
-   *
-   *
-   * @param disablePreProcessors true to disable the pre processors execution
+   * Disable the execution of pre processors if set to <code>true</code>.
    *
    * @return {@code this}
    */
@@ -302,7 +299,7 @@ public final class BrowseCommandBuilder
   }
 
   /**
-   * Limit the number of result files to <code>limit</code> entries. By default this is set to
+   * Limit the number of result files to <code>limit</code> entries. By default, this is set to
    * {@value BrowseCommandRequest#DEFAULT_REQUEST_LIMIT}. Be aware that this parameter can have
    * severe performance implications. Reading a repository with thousands of files in one folder
    * can generate a huge load for a longer time.
@@ -321,7 +318,7 @@ public final class BrowseCommandBuilder
    *
    * @param offset The number of the file, the result should start with (zero based).
    *               All preceding files will be omitted. Directories are <b>not</b>
-   *               counted. Therefore directories are only listed in results without
+   *               counted. Therefore, directories are only listed in results without
    *               offset.
    * @since 2.0.0
    */
@@ -349,46 +346,27 @@ public final class BrowseCommandBuilder
     }
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Key for cache.
-   *
-   *
-   * @version        Enter version here..., 12/06/05
-   * @author         Enter your name here...
-   */
   static class CacheKey implements RepositoryCacheKey, Serializable
   {
 
-    /** Field description */
-    private static final long serialVersionUID = 8078650026812373524L;
+      private static final long serialVersionUID = 8078650026812373524L;
 
-    //~--- constructors -------------------------------------------------------
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param repository
-     * @param request
-     */
+    private final String repositoryId;
+
+    private final BrowseCommandRequest request;
+
+
     public CacheKey(Repository repository, BrowseCommandRequest request)
     {
       this.repositoryId = repository.getId();
       this.request = request.clone();
     }
 
-    //~--- methods ------------------------------------------------------------
 
-    /**
-     * Method description
-     *
-     *
-     * @param obj
-     *
-     * @return
-     */
+
+
     @Override
     public boolean equals(Object obj)
     {
@@ -408,63 +386,22 @@ public final class BrowseCommandBuilder
         && Objects.equal(request, other.request);
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+
     @Override
     public int hashCode()
     {
       return Objects.hashCode(repositoryId, request);
     }
 
-    //~--- get methods --------------------------------------------------------
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+
+
     @Override
     public String getRepositoryId()
     {
       return repositoryId;
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** repository id */
-    private final String repositoryId;
-
-    /** request object */
-    private final BrowseCommandRequest request;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** implementation of the browse command */
-  private final BrowseCommand browseCommand;
-
-  /** cache */
-  private final Cache<CacheKey, BrowserResult> cache;
-
-  /** disables the cache */
-  private boolean disableCache = false;
-
-  /** disables the execution of pre processors */
-  private boolean disablePreProcessors = false;
-
-  /** Field description */
-  private final PreProcessorUtil preProcessorUtil;
-  private final Supplier<BrowseCommand> browseCommandFactory;
-
-  /** the repsitory */
-  private final Repository repository;
-
-  /** request for the command */
-  private final BrowseCommandRequest request = new BrowseCommandRequest(this::updateCache);
 }

@@ -143,9 +143,7 @@ import sonia.scm.work.DefaultCentralWorkQueue;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
-/**
- * @author Sebastian Sdorra
- */
+
 class ScmServletModule extends ServletModule {
 
   private static final String PATTERN_ALL = "/*";

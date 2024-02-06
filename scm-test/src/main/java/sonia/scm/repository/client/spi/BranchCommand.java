@@ -24,31 +24,18 @@
     
 package sonia.scm.repository.client.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.Branch;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public interface BranchCommand
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   public Branch branch(String name) throws IOException;
 }

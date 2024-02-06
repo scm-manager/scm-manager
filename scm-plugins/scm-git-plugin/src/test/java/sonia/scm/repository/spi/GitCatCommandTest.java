@@ -49,7 +49,6 @@ import static org.mockito.Mockito.when;
  *
  * TODO add not found test
  *
- * @author Sebastian Sdorra
  */
 public class GitCatCommandTest extends AbstractGitCommandTestBase {
 

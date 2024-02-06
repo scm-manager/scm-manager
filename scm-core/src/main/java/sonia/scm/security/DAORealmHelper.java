@@ -24,7 +24,6 @@
     
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
@@ -49,14 +48,10 @@ import static com.google.common.base.Preconditions.checkArgument;
  * The {@link DAORealmHelper} provides a simple way to authenticate against the
  * {@link UserDAO}. The class is used by the default and the legacy realm.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class DAORealmHelper {
 
-  /**
-   * the logger for DAORealmHelper
-   */
   private static final Logger LOG = LoggerFactory.getLogger(DAORealmHelper.class);
 
   private final LoginAttemptHandler loginAttemptHandler;
@@ -65,7 +60,6 @@ public final class DAORealmHelper {
 
   private final String realm;
 
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new instance. Consider to use {@link DAORealmHelperFactory} which
@@ -81,7 +75,6 @@ public final class DAORealmHelper {
     this.userDAO = userDAO;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Wraps credentials matcher and applies login attempt policies.
@@ -111,13 +104,6 @@ public final class DAORealmHelper {
     return getAuthenticationInfo(principal, null, null, null);
   }
 
-  /**
-   * Returns a builder for {@link AuthenticationInfo}.
-   *
-   * @param principal name of principal (username)
-   *
-   * @return authentication info builder
-   */
   public AuthenticationInfoBuilder authenticationInfoBuilder(String principal) {
     return new AuthenticationInfoBuilder(principal);
   }
@@ -157,7 +143,6 @@ public final class DAORealmHelper {
     return new SimpleAuthenticationInfo(collection, creds);
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Builder class for {@link AuthenticationInfo}.
@@ -177,10 +162,6 @@ public final class DAORealmHelper {
     /**
      * With credentials uses the given credentials for the {@link AuthenticationInfo}, this is particularly important
      * for caching purposes.
-     *
-     * @param credentials credentials such as password
-     *
-     * @return {@code this}
      */
     public AuthenticationInfoBuilder withCredentials(String credentials) {
       this.credentials = credentials;
@@ -189,23 +170,12 @@ public final class DAORealmHelper {
 
     /**
      * With the scope object it is possible to limit the access permissions to scm-manager.
-     *
-     * @param scope scope object
-     *
-     * @return {@code this}
      */
     public AuthenticationInfoBuilder withScope(Scope scope) {
       this.scope = scope;
       return this;
     }
 
-    /**
-     * With the session id.
-     *
-     * @param sessionId session id
-     *
-     * @return {@code this}
-     */
     public AuthenticationInfoBuilder withSessionId(SessionId sessionId) {
       this.sessionId = sessionId;
       return this;

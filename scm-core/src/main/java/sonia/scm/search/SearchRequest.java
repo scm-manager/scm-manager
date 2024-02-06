@@ -24,37 +24,24 @@
     
 package sonia.scm.search;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class SearchRequest
 {
+  private boolean ignoreCase = false;
 
-  /**
-   * Constructs ...
-   *
-   */
+  private int maxResults = -1;
+
+  private String query;
+
+  private int startWith = 0;
+
   public SearchRequest() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param query
-   */
   public SearchRequest(String query)
   {
     this.query = query;
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param query
-   * @param ignoreCase
-   */
   public SearchRequest(String query, boolean ignoreCase)
   {
     this.query = query;
@@ -67,109 +54,49 @@ public class SearchRequest
     this.maxResults = maxResults;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public int getMaxResults()
   {
     return maxResults;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getQuery()
   {
     return query;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public int getStartWith()
   {
     return startWith;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isIgnoreCase()
   {
     return ignoreCase;
   }
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param ignoreCase
-   */
   public void setIgnoreCase(boolean ignoreCase)
   {
     this.ignoreCase = ignoreCase;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param maxResults
-   */
   public void setMaxResults(int maxResults)
   {
     this.maxResults = maxResults;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param query
-   */
   public void setQuery(String query)
   {
     this.query = query;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param startWith
-   */
   public void setStartWith(int startWith)
   {
     this.startWith = startWith;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private boolean ignoreCase = false;
-
-  /** Field description */
-  private int maxResults = -1;
-
-  /** Field description */
-  private String query;
-
-  /** Field description */
-  private int startWith = 0;
 }

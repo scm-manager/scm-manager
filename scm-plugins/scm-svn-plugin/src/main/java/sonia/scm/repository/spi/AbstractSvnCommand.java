@@ -24,53 +24,30 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.io.SVNRepository;
 
 import sonia.scm.repository.Repository;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class AbstractSvnCommand
 {
+  protected SvnContext context;
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param context
-   */
+  protected Repository repository;
+
   protected AbstractSvnCommand(SvnContext context)
   {
     this.context = context;
     this.repository = context.getRepository();
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws SVNException
-   */
+
   public SVNRepository open() throws SVNException
   {
     return context.open();
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected SvnContext context;
-
-  /** Field description */
-  protected Repository repository;
 }

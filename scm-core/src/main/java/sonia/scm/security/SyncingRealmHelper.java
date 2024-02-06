@@ -46,7 +46,6 @@ import java.util.Set;
  * Helper class for syncing realms. The class should simplify the creation of realms, which are syncing authenticated
  * users with the local database.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Slf4j

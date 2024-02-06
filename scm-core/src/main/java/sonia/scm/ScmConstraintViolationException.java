@@ -67,7 +67,7 @@ public class ScmConstraintViolationException extends RuntimeException implements
   }
 
   /**
-   * An optional URL for more informations about this constraint violation.
+   * An optional URL for more information about this constraint violation.
    */
   public String getUrl() {
     return furtherInformation;
@@ -102,7 +102,7 @@ public class ScmConstraintViolationException extends RuntimeException implements
      * you can call this method multiple times.
      * @param message The message describing the violation.
      * @param pathElements The affected property denoted by the path to reach this property,
-     *                    eg. "someParameter", "complexProperty", "attribute"
+     *                    e.g. "someParameter", "complexProperty", "attribute"
      * @return this builder instance.
      */
     public Builder violation(String message, String... pathElements) {
@@ -121,7 +121,7 @@ public class ScmConstraintViolationException extends RuntimeException implements
     }
 
     /**
-     * When the given condition is <code>true</code>, a exception will be thrown. Otherwise this simply resets this
+     * When the given condition is <code>true</code>, an exception will be thrown. Otherwise, this simply resets this
      * builder and does nothing else.
      * @param condition The condition that indicates a violation of this constraint.
      * @return this builder instance.

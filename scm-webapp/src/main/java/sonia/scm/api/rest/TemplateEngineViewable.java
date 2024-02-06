@@ -24,7 +24,6 @@
     
 package sonia.scm.api.rest;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
@@ -43,10 +42,7 @@ import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Provider
 public class TemplateEngineViewable implements MessageBodyWriter<Viewable>
 {

@@ -24,7 +24,6 @@
     
 package sonia.scm.api.rest;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -35,11 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.security.Authentications;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Provider

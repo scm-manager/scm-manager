@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,40 +35,27 @@ import sonia.scm.util.ValidationUtil;
 import java.io.File;
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @deprecated
  */
 @Deprecated
 public class HgImportHandler extends AbstactImportHandler
 {
 
-  /** Field description */
   public static final String HG_DIR = ".hg";
 
-  /**
-   * the logger for HgImportHandler
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(HgImportHandler.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   */
+  private HgRepositoryHandler handler;
+ 
   public HgImportHandler(HgRepositoryHandler handler)
   {
     this.handler = handler;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   @Override
   protected Repository createRepository(File repositoryDirectory,
@@ -109,34 +95,19 @@ public class HgImportHandler extends AbstactImportHandler
     return repository;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String[] getDirectoryNames()
   {
     return new String[] { HG_DIR };
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected AbstractRepositoryHandler<?> getRepositoryHandler()
   {
     return handler;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private HgRepositoryHandler handler;
 }

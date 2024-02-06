@@ -35,7 +35,6 @@ import java.util.List;
 /**
  * Represents all branches of a repository.
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 @EqualsAndHashCode

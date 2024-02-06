@@ -24,15 +24,12 @@
 
 package sonia.scm.repository;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.util.List;
 
 /**
  * Searches and import existing repositories.
  *
- * @author Sebastian Sdorra
  * @since 1.12
  * @deprecated
  */

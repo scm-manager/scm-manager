@@ -71,7 +71,6 @@ import static sonia.scm.NotFoundException.notFound;
 /**
  * Default implementation of {@link RepositoryManager}.
  *
- * @author Sebastian Sdorra
  */
 @Singleton
 public class DefaultRepositoryManager extends AbstractRepositoryManager {

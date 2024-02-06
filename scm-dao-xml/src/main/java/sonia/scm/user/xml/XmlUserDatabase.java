@@ -37,20 +37,20 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @AuditEntry(ignore = true)
 @XmlRootElement(name = "user-db")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlUserDatabase implements XmlDatabase<User>
 {
+  private Long creationTime;
 
-  /**
-   * Constructs ...
-   *
-   */
+  private Long lastModified;
+
+  @XmlJavaTypeAdapter(XmlUserMapAdapter.class)
+  @XmlElement(name = "users")
+  private Map<String, User> userMap = new TreeMap<>();
+
   public XmlUserDatabase()
   {
     long c = System.currentTimeMillis();
@@ -59,136 +59,70 @@ public class XmlUserDatabase implements XmlDatabase<User>
     lastModified = c;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   */
+
   @Override
   public void add(User user)
   {
     userMap.put(user.getName(), user);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param username
-   *
-   * @return
-   */
+
   @Override
   public boolean contains(String username)
   {
     return userMap.containsKey(username);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param username
-   *
-   * @return
-   */
+
   @Override
   public User remove(String username)
   {
     return userMap.remove(username);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Collection<User> values()
   {
     return userMap.values();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param username
-   *
-   * @return
-   */
+
   @Override
   public User get(String username)
   {
     return userMap.get(username);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public long getCreationTime()
   {
     return creationTime;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public long getLastModified()
   {
     return lastModified;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param creationTime
-   */
+
   @Override
   public void setCreationTime(long creationTime)
   {
     this.creationTime = creationTime;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param lastModified
-   */
+
   @Override
   public void setLastModified(long lastModified)
   {
     this.lastModified = lastModified;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Long creationTime;
-
-  /** Field description */
-  private Long lastModified;
-
-  /** Field description */
-  @XmlJavaTypeAdapter(XmlUserMapAdapter.class)
-  @XmlElement(name = "users")
-  private Map<String, User> userMap = new TreeMap<>();
 }

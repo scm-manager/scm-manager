@@ -24,8 +24,6 @@
 
 package sonia.scm.cache;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -34,28 +32,20 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Collections;
 import java.util.List;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @XmlRootElement(name = "caches")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GuavaCacheManagerConfiguration
 {
+  @XmlElement(name = "cache")
+  private List<GuavaNamedCacheConfiguration> caches;
 
-  /**
-   * Constructs ...
-   *
-   */
+  @XmlElement(name = "defaultCache")
+  private GuavaCacheConfiguration defaultCache;
+
   public GuavaCacheManagerConfiguration() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param defaultCache
-   * @param caches
-   */
+ 
   public GuavaCacheManagerConfiguration(GuavaCacheConfiguration defaultCache,
     List<GuavaNamedCacheConfiguration> caches)
   {
@@ -63,14 +53,8 @@ public class GuavaCacheManagerConfiguration
     this.caches = caches;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @SuppressWarnings("unchecked")
   public List<GuavaNamedCacheConfiguration> getCaches()
   {
@@ -82,24 +66,10 @@ public class GuavaCacheManagerConfiguration
     return caches;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public GuavaCacheConfiguration getDefaultCache()
   {
     return defaultCache;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "cache")
-  private List<GuavaNamedCacheConfiguration> caches;
-
-  /** Field description */
-  @XmlElement(name = "defaultCache")
-  private GuavaCacheConfiguration defaultCache;
 }

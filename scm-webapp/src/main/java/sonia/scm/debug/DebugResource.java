@@ -37,18 +37,12 @@ import java.util.Collection;
 /**
  * Rest api resource for the {@link DebugService}.
  * 
- * @author Sebastian Sdorra
  */
 @Path("debug/{namespace}/{name}/post-receive")
 public final class DebugResource
 {
   private final DebugService debugService;
 
-  /**
-   * Constructs a new instance.
-   * 
-   * @param debugService debug service
-   */
   @Inject
   public DebugResource(DebugService debugService)
   {

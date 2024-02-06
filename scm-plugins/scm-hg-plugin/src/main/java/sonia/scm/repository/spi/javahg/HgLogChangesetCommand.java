@@ -37,9 +37,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class HgLogChangesetCommand extends AbstractChangesetCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgLogChangesetCommand.class);

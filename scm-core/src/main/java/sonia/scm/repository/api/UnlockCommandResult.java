@@ -27,7 +27,7 @@ package sonia.scm.repository.api;
 import lombok.AllArgsConstructor;
 
 /**
- * Result of a unlock command.
+ * Result of an unlock command.
  *
  * @since 2.26.0
  */

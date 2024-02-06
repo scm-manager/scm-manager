@@ -39,13 +39,10 @@ import static sonia.scm.store.CopyOnWrite.execute;
  * JAXB implementation of {@link ConfigurationStore}.
  *
  * @param <T>
- * @author Sebastian Sdorra
  */
 public class JAXBConfigurationStore<T> extends AbstractStore<T> {
 
-  /**
-   * the logger for JAXBConfigurationStore
-   */
+ 
   private static final Logger LOG = LoggerFactory.getLogger(JAXBConfigurationStore.class);
 
   private final TypedStoreContext<T> context;
@@ -59,11 +56,6 @@ public class JAXBConfigurationStore<T> extends AbstractStore<T> {
     this.configFile = configFile;
   }
 
-  /**
-   * Returns type of stored object.
-   *
-   * @return type
-   */
   public Class<T> getType() {
     return type;
   }

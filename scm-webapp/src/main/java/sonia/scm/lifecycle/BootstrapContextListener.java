@@ -56,9 +56,7 @@ import sonia.scm.update.UpdateEngine;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class BootstrapContextListener extends GuiceServletContextListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(BootstrapContextListener.class);

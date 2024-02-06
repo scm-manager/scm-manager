@@ -24,63 +24,41 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 
 import sonia.scm.plugin.Extension;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 
 /**
  * Simple {@link HealthCheck} for git repositories.
  *
- * @author Sebastian Sdorra
  * @since 1.39
  */
 @Extension
 public final class GitHealthCheck extends DirectoryHealthCheck
 {
 
-  /** Field description */
   private static final HealthCheckFailure COULD_NOT_FIND_GIT_DIRECTORIES =
     new HealthCheckFailure("AKOdhQ0pw1",
       "Could not find .git or refs directory",
       "The git repository does not contain a .git or a refs directory.");
 
-  /** Field description */
   private static final String DIRECTORY_DOT_GIT = ".git";
 
-  /** Field description */
   private static final String DIRECTORY_REFS = "refs";
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repositoryManager
-   */
+ 
   @Inject
   public GitHealthCheck(RepositoryManager repositoryManager)
   {
     super(repositoryManager);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @return
-   */
+
   @Override
   protected HealthCheckResult check(Repository repository, File directory)
   {
@@ -94,7 +72,6 @@ public final class GitHealthCheck extends DirectoryHealthCheck
     return result;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns {@code true} if the repository is from type git.

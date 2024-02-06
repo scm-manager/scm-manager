@@ -24,7 +24,6 @@
     
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;
@@ -41,29 +40,18 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class JsonContentTransformerTest
 {
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testDoNotFailOnUnknownProperties() {
     ByteSource bs = ByteSource.wrap("{\"value\": \"test\", \"other\": \"test2\"}".getBytes(Charsets.UTF_8));
     TestObject obj = transformer.unmarshall(TestObject.class, bs);
     assertEquals("test", obj.value);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testIsResponsible()
   {
     assertTrue(transformer.isResponsible(String.class, "application/json"));
@@ -71,12 +59,7 @@ public class JsonContentTransformerTest
     assertFalse(transformer.isResponsible(String.class, "text/plain"));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testMarshallAndUnmarshall() throws IOException
   {
@@ -86,12 +69,7 @@ public class JsonContentTransformerTest
     assertEquals("test", to.value);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @SuppressWarnings("unchecked")
   @Test(expected = ContentTransformerException.class)
   public void testUnmarshallIOException() throws IOException
@@ -102,15 +80,9 @@ public class JsonContentTransformerTest
     transformer.unmarshall(String.class, bs);
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 15/10/21
-   * @author         Enter your name here...    
-   */
+
+
   @XmlRootElement(name = "test")
   @XmlAccessorType(XmlAccessType.FIELD)
   private static class TestObject
@@ -122,12 +94,7 @@ public class JsonContentTransformerTest
      */
     public TestObject() {}
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param value
-     */
+  
     public TestObject(String value)
     {
       this.value = value;
@@ -135,23 +102,15 @@ public class JsonContentTransformerTest
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
-    private String value;
+      private String value;
   }
 
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 15/10/21
-   * @author         Enter your name here...    
-   */
+
   private static class TestObject2 {}
 
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private final JsonContentTransformer transformer = new JsonContentTransformer();
 }

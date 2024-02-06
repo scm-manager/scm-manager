@@ -24,7 +24,6 @@
 
 package sonia.scm.web.cgi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -38,19 +37,16 @@ import sonia.scm.metrics.Metrics;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class DefaultCGIExecutorFactory implements CGIExecutorFactory, AutoCloseable
 {
+  @Override
+  public void close() {
+    executor.shutdown();
+  }
 
-  /**
-   * Constructs ...
-   *
-   */
+  private final ExecutorService executor;
+
   @Inject
   public DefaultCGIExecutorFactory(MeterRegistry registry) {
     this.executor = createExecutor(registry);
@@ -66,19 +62,6 @@ public class DefaultCGIExecutorFactory implements CGIExecutorFactory, AutoClosea
     return executorService;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param configuration
-   * @param context
-   * @param request
-   * @param response
-   *
-   * @return
-   */
   @Override
   public CGIExecutor createExecutor(ScmConfiguration configuration,
     ServletContext context, HttpServletRequest request,
@@ -88,13 +71,4 @@ public class DefaultCGIExecutorFactory implements CGIExecutorFactory, AutoClosea
       response);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  @Override
-  public void close() {
-    executor.shutdown();
-  }
-
-  /** Field description */
-  private final ExecutorService executor;
 }

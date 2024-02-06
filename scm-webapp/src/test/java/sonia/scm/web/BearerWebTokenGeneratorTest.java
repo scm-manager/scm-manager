@@ -37,10 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @ExtendWith(MockitoExtension.class)
 class BearerWebTokenGeneratorTest {
 

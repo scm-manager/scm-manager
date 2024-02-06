@@ -24,7 +24,6 @@
     
 package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,62 +31,36 @@ import com.google.inject.Provider;
 import sonia.scm.Undecorated;
 import sonia.scm.util.Decorators;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Set;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class UserManagerProvider implements Provider<UserManager>
 {
+  @Inject(optional = true)
+  private Set<UserManagerDecoratorFactory> decoratorFactories;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  @Inject
+  @Undecorated
+  private Provider<UserManager> userManagerProvider;
+  
   @Override
   public UserManager get()
   {
     return Decorators.decorate(userManagerProvider.get(), decoratorFactories);
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param decoratorFactories
-   */
+
   public void setDecoratorFactories(
     Set<UserManagerDecoratorFactory> decoratorFactories)
   {
     this.decoratorFactories = decoratorFactories;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param userManagerProvider
-   */
+
   public void setUserManagerProvider(Provider<UserManager> userManagerProvider)
   {
     this.userManagerProvider = userManagerProvider;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @Inject(optional = true)
-  private Set<UserManagerDecoratorFactory> decoratorFactories;
-
-  /** Field description */
-  @Inject
-  @Undecorated
-  private Provider<UserManager> userManagerProvider;
 }

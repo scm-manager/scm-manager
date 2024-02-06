@@ -27,31 +27,23 @@ package sonia.scm.net.ahc;
 /**
  * Http methods.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public final class HttpMethod
 {
 
-  /** http delete method */
   public static final String DELETE = "DELETE";
 
-  /** http get method */
   public static final String GET = "GET";
 
-  /** http head method */
   public static final String HEAD = "HEAD";
 
-  /** http options method */
   public static final String OPTIONS = "OPTIONS";
 
-  /** http post method */
   public static final String POST = "POST";
 
-  /** http put method */
   public static final String PUT = "PUT";
 
-  //~--- constructors ---------------------------------------------------------
 
   private HttpMethod() {}
 }

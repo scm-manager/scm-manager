@@ -31,7 +31,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /**
  * Encrypts and decrypts string values.
  *
- * @author Sebastian Sdorra
  * @since 1.7
  */
 public interface CipherHandler
@@ -39,10 +38,6 @@ public interface CipherHandler
 
   /**
    * Decrypts the given value.
-   *
-   * @param value encrypted value
-   *
-   * @return decrypted value
    */
   String decode(String value);
 
@@ -64,10 +59,6 @@ public interface CipherHandler
 
   /**
    * Encrypts the given value.
-   *
-   * @param value plain text value to encrypt.
-   *
-   * @return encrypted value
    */
   String encode(String value);
 

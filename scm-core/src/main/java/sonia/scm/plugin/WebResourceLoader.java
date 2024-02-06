@@ -24,8 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.servlet.ServletContext;
 
 import java.net.URL;
@@ -36,7 +34,6 @@ import java.net.URL;
  * to its implementation. The {@link UberWebResourceLoader} is able to load
  * resources from the {@link ServletContext} and all plugin directories.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public interface WebResourceLoader

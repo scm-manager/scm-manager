@@ -30,40 +30,19 @@ import sonia.scm.user.User;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class XmlUserMapAdapter
         extends XmlAdapter<XmlUserList, Map<String, User>>
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param userMap
-   *
-   * @return
-   *
-   * @throws Exception
-   */
+
   @Override
   public XmlUserList marshal(Map<String, User> userMap) throws Exception
   {
     return new XmlUserList(userMap);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param users
-   *
-   * @return
-   *
-   * @throws Exception
-   */
+
   @Override
   public Map<String, User> unmarshal(XmlUserList users) throws Exception
   {

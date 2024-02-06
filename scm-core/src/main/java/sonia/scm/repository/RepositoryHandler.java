@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.Handler;
 import sonia.scm.FeatureNotSupportedException;
@@ -34,14 +33,12 @@ import sonia.scm.plugin.ExtensionPoint;
  * Handler class for a specific {@link Repository} type.
  * These classes are singletons.
  *
- * @author Sebastian Sdorra
  */
 @ExtensionPoint
 public interface RepositoryHandler
         extends Handler<Repository>
 {
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the {@link ImportHandler} for the repository type of this handler.
@@ -57,10 +54,7 @@ public interface RepositoryHandler
   public ImportHandler getImportHandler() throws FeatureNotSupportedException;
 
   /**
-   * Returns informations about the version of the RepositoryHandler.
-   *
-   *
-   * @return version informations
+   * Returns information about the version of the RepositoryHandler.
    * @since 1.15
    */
   public String getVersionInformation();

@@ -24,7 +24,6 @@
 
 package sonia.scm.it.webapp;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.Invocation;
@@ -42,8 +41,6 @@ import static sonia.scm.it.webapp.ConfigUtil.readConfig;
 import static sonia.scm.it.webapp.IntegrationTestUtil.BASE_URL;
 import static sonia.scm.it.webapp.IntegrationTestUtil.createResource;
 import static sonia.scm.it.webapp.IntegrationTestUtil.getLink;
-
-//~--- JDK imports ------------------------------------------------------------
 
 public final class RepositoryITUtil
 {

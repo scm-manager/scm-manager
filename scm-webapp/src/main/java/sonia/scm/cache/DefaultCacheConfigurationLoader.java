@@ -24,7 +24,6 @@
 
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Iterators;
 import jakarta.inject.Inject;

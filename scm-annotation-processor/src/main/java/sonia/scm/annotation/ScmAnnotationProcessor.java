@@ -81,9 +81,7 @@ import java.util.Set;
 import static javax.lang.model.util.ElementFilter.methodsIn;
 
 
-/**
- * @author Sebastian Sdorra
- */
+
 @SupportedAnnotationTypes("*")
 @MetaInfServices(Processor.class)
 @SuppressWarnings({"Since16"})

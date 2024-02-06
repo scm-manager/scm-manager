@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
 import com.google.common.io.ByteSource;
@@ -42,20 +41,16 @@ import java.util.function.Consumer;
  */
 public final class UnbundleCommandRequest {
 
-  /**
-   * Constructs a new unbundle command request.
-   *
-   * @param archive byte source archive
-   */
+  private Consumer<RepositoryHookEvent> postEventSink = event ->
+    ScmEventBus.getInstance().post(new PostReceiveRepositoryHookEvent(event));
+
+  private final ByteSource archive;
+
   public UnbundleCommandRequest(ByteSource archive) {
     this.archive = archive;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -71,21 +66,13 @@ public final class UnbundleCommandRequest {
     return Objects.equal(archive, other.archive);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public int hashCode() {
     return Objects.hashCode(archive);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Returns the archive as {@link ByteSource}.
-   *
-   * @return {@link ByteSource} archive
-   */
   public ByteSource getArchive() {
     return archive;
   }
@@ -99,13 +86,4 @@ public final class UnbundleCommandRequest {
     this.postEventSink = postEventSink;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  private Consumer<RepositoryHookEvent> postEventSink = event ->
-    ScmEventBus.getInstance().post(new PostReceiveRepositoryHookEvent(event));
-
-  /**
-   * byte source archive
-   */
-  private final ByteSource archive;
 }

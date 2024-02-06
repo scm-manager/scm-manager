@@ -41,15 +41,12 @@ public interface PublicKey {
 
   /**
    * Returns id of the public key.
-   *
-   * @return id of key
    */
   String getId();
 
   /**
    * Returns ids from gpg sub keys.
    *
-   * @return sub key ids
    * @since 2.19.0
    */
   default Set<String> getSubkeys() {
@@ -58,15 +55,11 @@ public interface PublicKey {
 
   /**
    * Returns the username of the owner or an empty optional.
-   *
-   * @return owner or empty optional
    */
   Optional<String> getOwner();
 
   /**
    * Returns raw of the public key.
-   *
-   * @return raw of key
    */
   String getRaw();
 

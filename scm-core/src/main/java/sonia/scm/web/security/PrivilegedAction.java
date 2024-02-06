@@ -26,7 +26,6 @@ package sonia.scm.web.security;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.6
  */
 public interface PrivilegedAction extends Runnable {}

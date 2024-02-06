@@ -28,18 +28,13 @@ package sonia.scm.repository.api;
  * This exception is thrown if the {@link RepositoryService} does not support
  * the requested command.
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public final class CommandNotSupportedException extends RuntimeException
 {
+  /** not supported command */
+  private Command command;
 
-  /**
-   * Constructs a new {@link CommandNotSupportedException}.
-   *
-   *
-   * @param command not supported command
-   */
   public CommandNotSupportedException(Command command)
   {
     //J-
@@ -52,34 +47,19 @@ public final class CommandNotSupportedException extends RuntimeException
     //J+
   }
 
-  /**
-   * Constructs a new {@link CommandNotSupportedException}.
-   *
-   *
-   * @param command not supported command
-   * @param message message to be shown
-   */
   public CommandNotSupportedException(Command command, String message)
   {
     super(message);
     this.command = command;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the command which is not supported.
-   *
-   *
-   * @return not supported command
    */
   public Command getCommand()
   {
     return command;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** not supported command */
-  private Command command;
 }

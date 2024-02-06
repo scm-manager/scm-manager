@@ -24,17 +24,15 @@
 
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.security.CipherUtil;
 import sonia.scm.user.User;
 import sonia.scm.util.ServiceUtil;
 
 /**
- * The SCMContext searches a implementation of {@link SCMContextProvider} and
+ * The SCMContext searches an implementation of {@link SCMContextProvider} and
  * holds a singleton instance of this implementation.
  *
- * @author Sebastian Sdorra
  */
 public final class SCMContext {
 
@@ -67,20 +65,13 @@ public final class SCMContext {
    */
   private static SCMContextProvider provider = null;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   */
   private SCMContext() {
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the singleton instance of {@link SCMContextProvider}
-   *
-   * @return singleton instance of {@link SCMContextProvider}
    */
   public static SCMContextProvider getContext() {
     synchronized (SCMContext.class) {

@@ -35,7 +35,6 @@ import java.util.Set;
 /**
  * JAXB implementation of {@link ConfigurationStoreFactory}.
  *
- * @author Sebastian Sdorra
  */
 @Singleton
 public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory implements ConfigurationStoreFactory {
@@ -44,11 +43,6 @@ public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory impleme
 
   private final StoreCache<ConfigurationStore<?>> storeCache;
 
-  /**
-   * Constructs a new instance.
-   *
-   * @param repositoryLocationResolver Resolver to get the repository Directory
-   */
   @Inject
   public JAXBConfigurationStoreFactory(
     SCMContextProvider contextProvider,

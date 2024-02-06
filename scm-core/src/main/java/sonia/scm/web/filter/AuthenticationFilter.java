@@ -24,7 +24,6 @@
 
 package sonia.scm.web.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -57,7 +56,6 @@ import java.util.Set;
  * Handles authentication, if a one of the {@link WebTokenGenerator} returns
  * an {@link AuthenticationToken}.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Singleton
@@ -211,8 +209,6 @@ public class AuthenticationFilter extends HttpFilter {
    * @param chain    filter chain
    * @param subject  subject
    * @param token    authentication token
-   * @throws IOException
-   * @throws ServletException
    */
   private void handleAuthentication(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain chain, Subject subject,
@@ -269,8 +265,6 @@ public class AuthenticationFilter extends HttpFilter {
 
   /**
    * Returns {@code true} if anonymous access is enabled.
-   *
-   * @return {@code true} if anonymous access is enabled
    */
   protected boolean isAnonymousAccessEnabled() {
     return (configuration != null) && configuration.getAnonymousMode() != AnonymousMode.OFF;

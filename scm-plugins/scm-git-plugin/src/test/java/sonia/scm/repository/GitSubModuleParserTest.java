@@ -24,38 +24,25 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.Map;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GitSubModuleParserTest
 {
 
-  /** Field description */
   public static final String GITMODULES_001 =
     "/sonia/scm/repository/gitmodules-001";
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testParse() throws IOException
   {
@@ -74,18 +61,8 @@ public class GitSubModuleParserTest
                  repository.getRepositoryUrl());
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param resource
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   private String getContent(String resource) throws IOException
   {
     InputStream input =
@@ -97,16 +74,7 @@ public class GitSubModuleParserTest
     return new String(buffer);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param resource
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   private Map<String, SubRepository> getSubRepositories(String resource)
           throws IOException
   {

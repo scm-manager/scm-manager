@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.After;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
@@ -32,18 +31,11 @@ import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
 {
 
-  /**
-   * Method description
-   *
-   */
-  @After
+   @After
   public void close()
   {
     if (context != null) {
@@ -52,12 +44,7 @@ public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected GitContext createContext()
   {
     if (context == null)
@@ -68,26 +55,15 @@ public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
     return context;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String getType()
   {
     return "git";
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String getZippedRepositoryResource()
   {
@@ -96,6 +72,5 @@ public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private GitContext context;
 }

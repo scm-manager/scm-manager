@@ -33,21 +33,10 @@ import org.apache.shiro.authc.AuthenticationException;
 @SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
 public class TokenExpiredException extends AuthenticationException {
 
-  /**
-   * Constructs a new SessionExpiredException.
-   *
-   * @param message the reason for the exception
-   */
   public TokenExpiredException(String message) {
     super(message);
   }
 
-  /**
-   * Constructs a new SessionExpiredException.
-   *
-   * @param message the reason for the exception
-   * @param cause   the underlying Throwable that caused this exception to be thrown.
-   */
   public TokenExpiredException(String message, Throwable cause) {
     super(message, cause);
   }

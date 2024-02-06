@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import com.google.inject.assistedinject.Assisted;
@@ -40,11 +39,7 @@ import sonia.scm.repository.api.PushResponse;
 import java.io.IOException;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 public class HgPushCommand extends AbstractHgPushOrPullCommand implements PushCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgPushCommand.class);

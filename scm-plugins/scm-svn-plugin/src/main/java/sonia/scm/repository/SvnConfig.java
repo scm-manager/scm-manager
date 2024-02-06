@@ -31,10 +31,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import sonia.scm.auditlog.AuditEntry;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @XmlRootElement(name = "config")
 @XmlAccessorType(XmlAccessType.FIELD)
 @AuditEntry(labels = {"svn", "config"})
@@ -44,12 +41,11 @@ public class SvnConfig extends RepositoryConfig
   @SuppressWarnings("WeakerAccess") // This might be needed for permission checking
   public static final String PERMISSION = "svn";
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  @XmlElement(name = "enable-gzip")
+  private boolean enabledGZip = false;
+
+  private Compatibility compatibility = Compatibility.NONE;
+
   public Compatibility getCompatibility()
   {
     if (compatibility == null)
@@ -60,49 +56,24 @@ public class SvnConfig extends RepositoryConfig
     return compatibility;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isEnabledGZip()
   {
     return enabledGZip;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param compatibility
-   */
+
   public void setCompatibility(Compatibility compatibility)
   {
     this.compatibility = compatibility;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param enabledGZip
-   */
+
   public void setEnabledGZip(boolean enabledGZip)
   {
     this.enabledGZip = enabledGZip;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "enable-gzip")
-  private boolean enabledGZip = false;
-
-  /** Field description */
-  private Compatibility compatibility = Compatibility.NONE;
 
   @Override
   @XmlTransient // Only for permission checks, don't serialize to XML

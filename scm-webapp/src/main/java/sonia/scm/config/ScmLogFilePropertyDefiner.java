@@ -24,7 +24,6 @@
 
 package sonia.scm.config;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import ch.qos.logback.core.PropertyDefinerBase;
 import com.google.common.annotations.VisibleForTesting;
@@ -34,15 +33,12 @@ import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.util.SystemUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.util.Properties;
 
 /**
  * Resolve directory path for SCM-Manager logs.
  *
- * @author Sebastian Sdorra
  */
 public class ScmLogFilePropertyDefiner extends PropertyDefinerBase {
 

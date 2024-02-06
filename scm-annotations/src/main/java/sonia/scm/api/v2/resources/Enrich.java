@@ -33,7 +33,6 @@ import java.lang.annotation.Target;
 /**
  * Annotation to specify the source of an enricher.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Documented

@@ -24,45 +24,25 @@
     
 package sonia.scm.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import sonia.scm.security.CipherUtil;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.7
  */
 public class XmlCipherStringAdapter extends XmlAdapter<String, String>
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param v
-   *
-   * @return
-   *
-   * @throws Exception
-   */
+
   @Override
   public String marshal(String v) throws Exception
   {
     return CipherUtil.getInstance().encode(v);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param v
-   *
-   * @return
-   *
-   * @throws Exception
-   */
+
   @Override
   public String unmarshal(String v) throws Exception
   {

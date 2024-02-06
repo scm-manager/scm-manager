@@ -38,15 +38,11 @@ import sonia.scm.web.filter.HttpFilter;
 
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Priority(Filters.PRIORITY_BASEURL)
 @WebElement(Filters.PATTERN_ALL)
 public class BaseUrlFilter extends HttpFilter {
 
-  /** scm configuration */
   private final ScmConfiguration configuration;
 
   @Inject

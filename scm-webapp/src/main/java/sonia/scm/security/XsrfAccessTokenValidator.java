@@ -39,7 +39,6 @@ import java.util.Set;
  * equal to the one in the access token. If the token does not contain a xsrf key, the check is passed by. The xsrf keys
  * are added by the {@link XsrfAccessTokenEnricher}.
  * 
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Extension
@@ -52,12 +51,6 @@ public class XsrfAccessTokenValidator implements AccessTokenValidator {
   private final Provider<HttpServletRequest> requestProvider;
   private final XsrfExcludes excludes;
   
-  /**
-   * Constructs a new instance.
-   *
-   * @param requestProvider http request provider
-   * @param excludes
-   */
   @Inject
   public XsrfAccessTokenValidator(Provider<HttpServletRequest> requestProvider, XsrfExcludes excludes) {
     this.requestProvider = requestProvider;

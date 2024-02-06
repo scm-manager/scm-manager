@@ -24,8 +24,6 @@
 
 package sonia.scm.io;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;
@@ -36,7 +34,6 @@ import java.util.Map;
  * A section of {@link INIConfiguration}.
  * The section consists of keys and values.
  *
- * @author Sebastian Sdorra
  */
 public class INISection {
 
@@ -65,7 +62,6 @@ public class INISection {
 
   /**
    * Returns the name of the section.
-   * @return name of section
    */
   public String getName() {
     return name;
@@ -73,8 +69,6 @@ public class INISection {
 
   /**
    * Returns the value of the parameter with the given key or {@code null} if the given parameter does not exist.
-   * @param key key of parameter
-   * @return value of parameter or {@code null}
    */
   public String getParameter(String key) {
     return parameters.get(key);
@@ -82,7 +76,6 @@ public class INISection {
 
   /**
    * Returns all parameter keys of the section.
-   * @return all parameters of section
    */
   public Collection<String> getParameterKeys() {
     return ImmutableList.copyOf(parameters.keySet());
@@ -90,8 +83,6 @@ public class INISection {
 
   /**
    * Sets the parameter with the given key to the given value.
-   * @param key key of parameter
-   * @param value value of parameter
    */
   public void setParameter(String key, String value) {
     parameters.put(key, value);
@@ -99,7 +90,6 @@ public class INISection {
 
   /**
    * Remove parameter with the given name from the section.
-   * @param key name of parameter
    */
   public void removeParameter(String key) {
     parameters.remove(key);

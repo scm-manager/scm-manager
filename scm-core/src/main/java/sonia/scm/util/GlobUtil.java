@@ -21,34 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.util;
 
 /**
  * Util for pattern matching with glob
  * (http://en.wikipedia.org/wiki/Glob_%28programming%29) syntax.
  *
- * @author Sebastian Sdorra
  * @since 1.8
  */
 public final class GlobUtil
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   private GlobUtil() {}
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * Converts the given glob string to a regular expression string.
-   *
-   *
-   * @param globString string to convert
-   *
-   * @return regular expression string
    */
   public static String convertGlobToRegEx(String globString)
   {
@@ -184,8 +174,6 @@ public final class GlobUtil
    *
    * @param glob glob pattern
    * @param value string value
-   *
-   * @return true if the glob string matches the given value
    */
   public static boolean matches(String glob, String value)
   {

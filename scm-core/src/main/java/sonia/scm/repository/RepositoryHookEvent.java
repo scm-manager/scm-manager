@@ -24,26 +24,26 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.api.HookContext;
 
 /**
  * Repository hook event represents an change event of a repository.
  *
- * @author Sebastian Sdorra
  * @since 1.6
  */
 public class RepositoryHookEvent
 {
 
-  /**
-   * Constructs a new {@link RepositoryHookEvent}.
-   *
-   * @param context context of current hook
-   * @param repository
-   * @param type type of current hook
-   */
+  /** context of current hook */
+  private final HookContext context;
+
+  /** modified repository */
+  private final Repository repository;
+
+  /** hook type */
+  private final RepositoryHookType type;
+
   public RepositoryHookEvent(HookContext context, Repository repository,
     RepositoryHookType type)
   {
@@ -52,35 +52,19 @@ public class RepositoryHookEvent
     this.type = type;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Returns the context of the current hook.
-   *
-   * @return context of current hook
-   */
   public HookContext getContext()
   {
     return context;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Repository getRepository()
   {
     return repository;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public RepositoryHookType getType()
   {
     return type;
@@ -93,15 +77,4 @@ public class RepositoryHookEvent
       ", type=" + type +
       '}';
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** context of current hook */
-  private final HookContext context;
-
-  /** modified repository */
-  private final Repository repository;
-
-  /** hook type */
-  private final RepositoryHookType type;
 }

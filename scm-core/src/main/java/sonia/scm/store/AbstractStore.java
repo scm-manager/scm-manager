@@ -30,7 +30,6 @@ import java.util.function.BooleanSupplier;
  * Base class for {@link ConfigurationStore}.
  *
  * @param <T> type of store objects
- * @author Sebastian Sdorra
  * @since 1.16
  */
 public abstract class AbstractStore<T> implements ConfigurationStore<T> {

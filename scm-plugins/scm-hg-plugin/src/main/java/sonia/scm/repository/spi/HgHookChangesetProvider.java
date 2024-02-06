@@ -34,10 +34,7 @@ import sonia.scm.repository.api.HookChangesetProvider;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 import sonia.scm.web.HgUtil;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class HgHookChangesetProvider implements HookChangesetProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgHookChangesetProvider.class);

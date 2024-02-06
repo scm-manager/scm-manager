@@ -38,14 +38,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public final class PluginsInternal {
 
-  /**
-   * the logger for PluginsInternal
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(PluginsInternal.class);
 

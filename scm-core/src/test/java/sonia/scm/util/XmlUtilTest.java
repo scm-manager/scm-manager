@@ -24,7 +24,6 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Multimap;
 import com.google.common.io.Resources;
@@ -35,26 +34,16 @@ import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.InputStream;
 
 import java.net.URL;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class XmlUtilTest
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testValues() throws IOException
   {

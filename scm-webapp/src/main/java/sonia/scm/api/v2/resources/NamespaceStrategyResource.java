@@ -62,7 +62,6 @@ public class NamespaceStrategyResource {
    *
    * @param uriInfo uri info
    *
-   * @return available and current namespace strategies
    */
   @GET
   @Path("")

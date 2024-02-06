@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
@@ -35,31 +34,19 @@ import sonia.scm.repository.Person;
 
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class HgBranchesCommand extends AbstractCommand
   implements BranchesCommand
 {
 
   private static final String DEFAULT_BRANCH_NAME = "default";
 
-  /**
-   * Constructs ...
-   *
-   *  @param context
-   *
-   */
   @Inject
   public HgBranchesCommand(@Assisted HgCommandContext context)
   {
     super(context);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   public List<Branch> getBranches() {

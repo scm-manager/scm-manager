@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public interface BranchesCommand {

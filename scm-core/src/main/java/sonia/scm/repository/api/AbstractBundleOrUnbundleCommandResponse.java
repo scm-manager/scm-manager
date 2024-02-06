@@ -24,35 +24,24 @@
     
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 /**
  * Abstract class for bundle or unbundle command.
  *
- * @author Sebastian Sdorra
  * @since 1.43
  */
 public abstract class AbstractBundleOrUnbundleCommandResponse
 {
+  /** count of bundled/unbundled changesets */
+  private final long changesetCount;
 
-  /**
-   * Constructs a new bundle/unbundle response.
-   *
-   *
-   * @param changesetCount count of bundled/unbundled changesets
-   */
   protected AbstractBundleOrUnbundleCommandResponse(long changesetCount)
   {
     this.changesetCount = changesetCount;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean equals(Object obj)
   {
@@ -72,18 +61,14 @@ public abstract class AbstractBundleOrUnbundleCommandResponse
     return Objects.equal(changesetCount, other.changesetCount);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public int hashCode()
   {
     return Objects.hashCode(changesetCount);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public String toString()
   {
@@ -94,21 +79,13 @@ public abstract class AbstractBundleOrUnbundleCommandResponse
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the count of bundled/unbundled changesets.
-   *
-   *
-   * @return count of bundled/unbundled changesets
    */
   public long getChangesetCount()
   {
     return changesetCount;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** count of bundled/unbundled changesets */
-  private final long changesetCount;
 }

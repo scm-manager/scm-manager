@@ -24,14 +24,11 @@
 
 package sonia.scm.repository.client.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
 
 import sonia.scm.repository.client.spi.RepositoryClientFactoryProvider;
 import sonia.scm.util.ServiceUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +36,6 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public final class RepositoryClientFactory {

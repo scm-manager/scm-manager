@@ -24,7 +24,6 @@
     
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -34,7 +33,6 @@ import org.apache.shiro.authc.AuthenticationToken;
 /**
  * Token used for authentication with bearer tokens.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class BearerToken implements AuthenticationToken {
@@ -55,8 +53,6 @@ public final class BearerToken implements AuthenticationToken {
 
   /**
    * Returns the wrapped raw format of the token.
-   *
-   * @return raw format
    */
   @Override
   public String getCredentials() {
@@ -65,8 +61,6 @@ public final class BearerToken implements AuthenticationToken {
 
   /**
    * Returns the session id or {@code null}.
-   *
-   * @return session id or {@code null}
    */
   @Override
   public SessionId getPrincipal() {
@@ -77,8 +71,6 @@ public final class BearerToken implements AuthenticationToken {
    * Creates a new {@link BearerToken} from raw string representation.
    *
    * @param raw string representation
-   *
-   * @return new bearer token
    */
   public static BearerToken valueOf(String raw){
     Preconditions.checkArgument(!Strings.isNullOrEmpty(raw), "raw token is required");
@@ -90,8 +82,6 @@ public final class BearerToken implements AuthenticationToken {
    *
    * @param session session id of the client
    * @param rawToken bearer token string representation
-   *
-   * @return new bearer token
    */
   public static BearerToken create(@Nullable SessionId session, String rawToken) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(rawToken), "raw token is required");

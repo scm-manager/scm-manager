@@ -24,56 +24,27 @@
     
 package sonia.scm.plugin;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class PluginException extends RuntimeException
 {
 
-  /** Field description */
   private static final long serialVersionUID = -5370284100147219134L;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   public PluginException()
   {
     super();
   }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
   public PluginException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
   public PluginException(Throwable cause)
   {
     super(cause);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
   public PluginException(String message, Throwable cause)
   {
     super(message, cause);

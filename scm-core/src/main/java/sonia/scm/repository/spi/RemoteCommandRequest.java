@@ -33,7 +33,6 @@ import sonia.scm.repository.Repository;
 import java.net.URL;
 
 /**
- * @author Sebastian Sdorra
  * @since 1.31
  */
 @Getter

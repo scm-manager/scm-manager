@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ReceiveCommand;
@@ -46,16 +45,11 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GitHookContextProvider extends HookContextProvider
 {
 
-  /**
-   * Field description
-   */
+  
   private static final Set<HookFeature> SUPPORTED_FEATURES = EnumSet.of(
     HookFeature.MESSAGE_PROVIDER,
     HookFeature.CHANGESET_PROVIDER,
@@ -65,15 +59,9 @@ public class GitHookContextProvider extends HookContextProvider
     HookFeature.MERGE_DETECTION_PROVIDER
   );
 
-  //~--- constructors ---------------------------------------------------------
 
   private final GitChangesetConverterFactory converterFactory;
 
-  /**
-   * Constructs a new instance
-   * @param receivePack git receive pack
-   * @param receiveCommands received commands
-   */
   public GitHookContextProvider(
     GitChangesetConverterFactory converterFactory, ReceivePack receivePack,
                                 List<ReceiveCommand> receiveCommands,
@@ -89,7 +77,6 @@ public class GitHookContextProvider extends HookContextProvider
     this.converterFactory = converterFactory;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   @Override
   public HookMessageProvider createMessageProvider()
@@ -97,7 +84,6 @@ public class GitHookContextProvider extends HookContextProvider
     return new GitHookMessageProvider(receivePack);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   public HookBranchProvider getBranchProvider()

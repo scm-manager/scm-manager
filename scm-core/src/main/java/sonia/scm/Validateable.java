@@ -27,16 +27,12 @@ package sonia.scm;
 /**
  * Base interface for all validateable objects.
  *
- * @author Sebastian Sdorra
  */
 public interface Validateable
 {
 
   /**
    * Returns true if the object is valid.
-   *
-   *
-   * @return true if the object is valid
    */
   public boolean isValid();
 }

@@ -24,8 +24,6 @@
     
 package sonia.scm;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
@@ -34,19 +32,12 @@ import java.util.function.Predicate;
 /**
  * Basic decorator for manager classes.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  *
  * @param <T> model type
  */
 public class ManagerDecorator<T extends ModelObject> implements Manager<T> {
 
-  /**
-   * Constructs a new ManagerDecorator.
-   *
-   *
-   * @param decorated manager implementation
-   */
   public ManagerDecorator(Manager<T> decorated)
   {
     this.decorated = decorated;

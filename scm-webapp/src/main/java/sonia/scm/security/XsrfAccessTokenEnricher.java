@@ -44,16 +44,13 @@ import java.util.UUID;
  * enabled. The xsrf field will be validated on every request by the {@link XsrfAccessTokenValidator}. Xsrf protection
  * can be disabled with {@link ScmConfiguration#setEnabledXsrfProtection(boolean)}.
  *
- * @author Sebastian Sdorra
  * @see <a href="https://goo.gl/s67xO3">Issue 793</a>
  * @since 2.0.0
  */
 @Extension
 public class XsrfAccessTokenEnricher implements AccessTokenEnricher {
 
-  /**
-   * the logger for XsrfAccessTokenEnricher
-   */
+ 
   private static final Logger LOG = LoggerFactory.getLogger(XsrfAccessTokenEnricher.class);
 
   private final ScmConfiguration configuration;

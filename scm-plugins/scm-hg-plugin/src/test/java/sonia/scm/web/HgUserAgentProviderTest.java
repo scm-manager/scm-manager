@@ -24,15 +24,12 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Locale;
 
@@ -43,34 +40,20 @@ import java.util.Locale;
 public class HgUserAgentProviderTest
 {
 
-  /** Field description */
   private static final String UA_1 = "mercurial/proto-1.0";
 
-  /** Field description */
   private static final String UA_2 =
     "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.124 Safari/537.36";
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testParseUserAgent()
   {
     assertEquals(HgUserAgentProvider.HG, parse(UA_1));
     assertNull(parse(UA_2));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param v
-   *
-   * @return
-   */
+
   private UserAgent parse(String v)
   {
     return provider.parseUserAgent(
@@ -79,6 +62,5 @@ public class HgUserAgentProviderTest
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private final HgUserAgentProvider provider = new HgUserAgentProvider();
 }

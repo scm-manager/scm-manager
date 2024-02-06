@@ -24,14 +24,11 @@
     
 package sonia.scm.io;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,30 +39,17 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class ZipUnArchiver extends AbstractUnArchiver
 {
 
-  /** Field description */
   public static final String EXTENSION = ".zip";
 
-  /** the logger for ZipUnArchiver */
   private static final Logger logger =
     LoggerFactory.getLogger(ZipUnArchiver.class);
 
-  //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @param inputStream
-   * @param outputDirectory
-   *
-   * @throws IOException
    * @since 1.21
    */
   public void extractArchive(InputStream inputStream, File outputDirectory)
@@ -82,15 +66,6 @@ public class ZipUnArchiver extends AbstractUnArchiver
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param archive
-   * @param outputDirectory
-   *
-   * @throws IOException
-   */
   @Override
   protected void extractArchive(File archive, File outputDirectory)
     throws IOException
@@ -114,15 +89,6 @@ public class ZipUnArchiver extends AbstractUnArchiver
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param outputDirectory
-   * @param name
-   *
-   * @return
-   */
   private File createFile(File outputDirectory, String name)
   {
     if (name.contains(".."))
@@ -133,16 +99,6 @@ public class ZipUnArchiver extends AbstractUnArchiver
     return new File(outputDirectory, name);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param outputDirectory
-   * @param input
-   * @param entry
-   *
-   * @throws IOException
-   */
   private void extractEntry(File outputDirectory, ZipInputStream input,
     ZipEntry entry)
     throws IOException
@@ -176,15 +132,6 @@ public class ZipUnArchiver extends AbstractUnArchiver
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param input
-   * @param outputFile
-   *
-   * @throws IOException
-   */
   private void extractFile(ZipInputStream input, File outputFile)
     throws IOException
   {

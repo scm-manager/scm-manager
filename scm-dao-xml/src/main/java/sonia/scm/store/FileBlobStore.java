@@ -24,7 +24,6 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -35,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.security.KeyGenerator;
 
-//~--- JDK imports ------------------------------------------------------------
+
 import java.io.File;
 import java.io.IOException;
 
@@ -44,13 +43,10 @@ import java.util.List;
 /**
  * File based implementation of {@link BlobStore}.
  *
- * @author Sebastian Sdorra
  */
 public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore {
 
-  /**
-   * the logger for FileBlobStore
-   */
+ 
   private static final Logger LOG
     = LoggerFactory.getLogger(FileBlobStore.class);
 

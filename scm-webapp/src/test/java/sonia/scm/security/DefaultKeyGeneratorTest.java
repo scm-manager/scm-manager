@@ -24,7 +24,6 @@
     
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Sets;
 import org.junit.Test;
@@ -34,20 +33,11 @@ import java.util.concurrent.*;
 
 import static org.junit.Assert.*;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class DefaultKeyGeneratorTest
 {
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testCreateRandom()
   {
     DefaultKeyGenerator gen = new DefaultKeyGenerator();
@@ -128,11 +118,7 @@ public class DefaultKeyGeneratorTest
 
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testSimple()
   {
     DefaultKeyGenerator generator = new DefaultKeyGenerator();
@@ -143,11 +129,7 @@ public class DefaultKeyGeneratorTest
     assertTrue(key.length() > 0);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testUniqueness()
   {
     DefaultKeyGenerator generator = new DefaultKeyGenerator();

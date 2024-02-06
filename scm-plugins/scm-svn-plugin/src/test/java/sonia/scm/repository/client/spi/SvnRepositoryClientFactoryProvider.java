@@ -43,7 +43,6 @@ import sonia.scm.repository.client.api.RepositoryClientException;
 /**
  * Client provider factory for subversion.
  * 
- * @author Sebastian Sdorra
  * @since 1.51
  */
 public class SvnRepositoryClientFactoryProvider implements RepositoryClientFactoryProvider {

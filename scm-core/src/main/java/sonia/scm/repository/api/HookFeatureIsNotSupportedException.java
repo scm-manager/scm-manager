@@ -28,36 +28,21 @@ package sonia.scm.repository.api;
  * This exception is thrown if the underlying provider of the 
  * {@link HookContext} does not support the requested {@link HookFeature}.
  *
- * @author Sebastian Sdorra
  * @since 1.33
  */
 public class HookFeatureIsNotSupportedException extends HookException
 {
 
-  /** Field description */
   private static final long serialVersionUID = -7670872902321373610L;
 
-  //~--- constructors ---------------------------------------------------------
+  private HookFeature unsupportedFeature;
 
-  /**
-   * Constructs a new {@link HookFeatureIsNotSupportedException}.
-   *
-   *
-   * @param unsupportedFeature feature which is not supported
-   */
   public HookFeatureIsNotSupportedException(HookFeature unsupportedFeature)
   {
     super(unsupportedFeature.toString().concat(" is not supported"));
     this.unsupportedFeature = unsupportedFeature;
   }
 
-  /**
-   * Constructs a new {@link HookFeatureIsNotSupportedException}.
-   *
-   *
-   * @param message message for the exception
-   * @param unsupportedFeature feature which is not supported
-   */
   public HookFeatureIsNotSupportedException(String message,
     HookFeature unsupportedFeature)
   {
@@ -65,21 +50,10 @@ public class HookFeatureIsNotSupportedException extends HookException
     this.unsupportedFeature = unsupportedFeature;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Returns the feature which is not supported.
-   *
-   *
-   * @return unsupported hook feature
-   */
   public HookFeature getUnsupportedFeature()
   {
     return unsupportedFeature;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** unsupported hook feature */
-  private HookFeature unsupportedFeature;
 }

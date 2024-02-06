@@ -24,7 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Throwables;
@@ -45,24 +44,23 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Default implementation of the {@link UberWebResourceLoader}.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public class DefaultUberWebResourceLoader implements UberWebResourceLoader
 {
 
-  /**
-   * the logger for DefaultUberWebResourceLoader
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultUberWebResourceLoader.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final Cache<String, URL> cache;
+
+  private final Iterable<InstalledPlugin> plugins;
+
+  private final ServletContext servletContext;
 
   public DefaultUberWebResourceLoader(ServletContext servletContext, Iterable<InstalledPlugin> plugins) {
     this(servletContext, plugins, SCMContext.getContext().getStage());
@@ -81,16 +79,8 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
     return CacheBuilder.newBuilder().build();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
+
   @Override
   public URL getResource(String path)
   {
@@ -121,14 +111,7 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
     cache.put(path, url);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
+
   @Override
   public List<URL> getResources(String path)
   {
@@ -166,28 +149,15 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
     return resources.build();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @VisibleForTesting
   Cache<String, URL> getCache()
   {
     return cache;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
+
   private URL find(String path)
   {
     URL resource;
@@ -246,14 +216,4 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
     return false;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final Cache<String, URL> cache;
-
-  /** Field description */
-  private final Iterable<InstalledPlugin> plugins;
-
-  /** Field description */
-  private final ServletContext servletContext;
 }

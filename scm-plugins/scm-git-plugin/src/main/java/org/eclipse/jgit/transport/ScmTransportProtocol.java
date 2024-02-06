@@ -24,7 +24,6 @@
 
 package org.eclipse.jgit.transport;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
@@ -43,11 +42,7 @@ import sonia.scm.web.GitReceiveHook;
 import java.io.File;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 public class ScmTransportProtocol extends TransportProtocol {
 
   public static final String NAME = "scm";

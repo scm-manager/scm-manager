@@ -24,7 +24,6 @@
     
 package sonia.scm.event;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
 
@@ -41,22 +40,13 @@ import sonia.scm.user.UserEvent;
 
 import static org.junit.Assert.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GuavaScmEventBusTest extends AbstractTestBase
 {
 
-  /**
-   * Method description
-   *
-   */
-  @Before
+   @Before
   public void createSubject()
   {
     Subject.Builder builder = new Subject.Builder(new DefaultSecurityManager());
@@ -68,12 +58,7 @@ public class GuavaScmEventBusTest extends AbstractTestBase
     setSubject(subject);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws InterruptedException
-   */
+
   @Test
   public void testAsyncPost() throws InterruptedException
   {
@@ -97,11 +82,7 @@ public class GuavaScmEventBusTest extends AbstractTestBase
     assertNotEquals(thread, currentThread);
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testSyncPost()
   {
     thread = null;
@@ -147,11 +128,7 @@ public class GuavaScmEventBusTest extends AbstractTestBase
     eventBus.post(new Object());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test(expected = RuntimeException.class)
+   @Test(expected = RuntimeException.class)
   public void testSyncPostWithRuntimeException()
   {
     LegmanScmEventBus eventBus = new LegmanScmEventBus();
@@ -172,6 +149,5 @@ public class GuavaScmEventBusTest extends AbstractTestBase
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private String thread;
 }

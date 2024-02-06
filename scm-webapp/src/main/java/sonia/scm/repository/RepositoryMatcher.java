@@ -37,7 +37,6 @@ import java.util.Set;
 /**
  * RepositoryMatcher is able to check if a repository matches the requested path.
  * 
- * @author Sebastian Sdorra
  * @since 1.54
  */
 public final class RepositoryMatcher {

@@ -24,11 +24,8 @@
     
 package sonia.scm.logging;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,7 +34,6 @@ import java.io.OutputStream;
  * An OutputStream that flushes out to a Logger.
  * Based on LoggingOutputStream by Jim Moore
  * 
- * @author Sebastian Sdorra
  */
 public class LoggingOutputStream extends OutputStream
 {
@@ -47,22 +43,40 @@ public class LoggingOutputStream extends OutputStream
    */
   public static final int DEFAULT_BUFFER_LENGTH = 2048;
 
-  /** Field description */
   public static final int LEVEL_DEBUG = 1;
 
-  /** Field description */
   public static final int LEVEL_ERROR = 4;
 
-  /** Field description */
   public static final int LEVEL_INFO = 2;
 
-  /** Field description */
   public static final int LEVEL_TRACE = 0;
 
-  /** Field description */
   public static final int LEVEL_WARN = 3;
 
-  //~--- constructors ---------------------------------------------------------
+  /**
+   * The internal buffer where data is stored.
+   */
+  private byte[] buffer;
+
+  /**
+   * Remembers the size of the buffer for speed.
+   */
+  private int bufferLength;
+
+  private boolean closed = false;
+
+  /**
+   * The number of valid bytes in the buffer. This value is always
+   * in the range <tt>0</tt> through <tt>buf.length</tt>; elements
+   * <tt>buf[0]</tt> through <tt>buf[count-1]</tt> contain valid
+   * byte data.
+   */
+  private int count;
+
+  private int level = -1;
+
+  /** The logger to write to. */
+  private Logger logger;
 
   /**
    * Creates the LoggingOutputStream to flush to the given Logger.
@@ -87,7 +101,6 @@ public class LoggingOutputStream extends OutputStream
     count = 0;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Closes this output stream and releases any system resources
@@ -152,12 +165,6 @@ public class LoggingOutputStream extends OutputStream
     reset();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param message
-   */
   public void log(String message)
   {
     switch (level)
@@ -228,41 +235,9 @@ public class LoggingOutputStream extends OutputStream
     count++;
   }
 
-  /**
-   * Method description
-   *
-   */
-  private void reset()
+   private void reset()
   {
     count = 0;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * The internal buffer where data is stored.
-   */
-  private byte[] buffer;
-
-  /**
-   * Remembers the size of the buffer for speed.
-   */
-  private int bufferLength;
-
-  /** Field description */
-  private boolean closed = false;
-
-  /**
-   * The number of valid bytes in the buffer. This value is always
-   * in the range <tt>0</tt> through <tt>buf.length</tt>; elements
-   * <tt>buf[0]</tt> through <tt>buf[count-1]</tt> contain valid
-   * byte data.
-   */
-  private int count;
-
-  /** Field description */
-  private int level = -1;
-
-  /** The logger to write to. */
-  private Logger logger;
 }

@@ -24,7 +24,6 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -37,50 +36,23 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.RepositoryHookType;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class GitHooks
 {
 
-  /** Field description */
   public static final String PREFIX_MSG = "[SCM] ";
 
-  /**
-   * the logger for GitHooks
-   */
+ 
   private static final Logger logger = LoggerFactory.getLogger(GitHooks.class);
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param rpack
-   * @param commands
-   */
   public static void abortIfPossible(RepositoryHookType type,
     ReceivePack rpack, Iterable<ReceiveCommand> commands)
   {
     abortIfPossible(type, rpack, commands, null);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param rpack
-   * @param commands
-   * @param message
-   */
   public static void abortIfPossible(RepositoryHookType type,
     ReceivePack rpack, Iterable<ReceiveCommand> commands, String message)
   {
@@ -98,15 +70,7 @@ public final class GitHooks
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param commands
-   *
-   * @return
-   */
+
   public static List<ReceiveCommand> filterReceiveable(RepositoryHookType type,
     Iterable<ReceiveCommand> commands)
   {
@@ -128,54 +92,26 @@ public final class GitHooks
     return receiveable;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param rpack
-   * @param message
-   */
+
   public static void sendPrefixedError(ReceivePack rpack, String message)
   {
     rpack.sendError(createPrefixedMessage(message));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param rpack
-   * @param message
-   */
+
   public static void sendPrefixedMessage(ReceivePack rpack, String message)
   {
     rpack.sendMessage(createPrefixedMessage(message));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param message
-   *
-   * @return
-   */
+
   private static String createPrefixedMessage(String message)
   {
     return PREFIX_MSG.concat(Strings.nullToEmpty(message));
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param rc
-   * @param type
-   *
-   * @return
-   */
+
   private static boolean isReceiveable(RepositoryHookType type,
     ReceiveCommand rc)
   {

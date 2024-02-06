@@ -24,7 +24,6 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Multimap;
@@ -34,41 +33,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public final class Util
 {
 
-  /** Field description */
   public static final String DATE_PATTERN = "yyyy-MM-dd HH-mm-ss";
 
-  /** Field description */
   public static final String EMPTY_STRING = "";
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private Util() {}
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   * @param otherObject
-   * @param <T>
-   *
-   * @return
-   */
   @SuppressWarnings("unchecked")
   public static <T extends Comparable> int compare(T object, T otherObject)
   {
@@ -90,16 +65,6 @@ public final class Util
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param collection
-   * @param other
-   * @param <T>
-   *
-   * @return
-   */
   public static <T> boolean containsOne(Collection<T> collection,
     Collection<T> other)
   {
@@ -118,14 +83,6 @@ public final class Util
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param time
-   *
-   * @return
-   */
   public static String convertTime(long time)
   {
     String suffix = "ms";
@@ -151,14 +108,6 @@ public final class Util
     return time + suffix;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param timeString
-   *
-   * @return
-   */
   public static long convertTime(String timeString)
   {
     char suffix = timeString.charAt(timeString.length() - 1);
@@ -179,16 +128,6 @@ public final class Util
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param values
-   * @param comparator
-   * @param start
-   * @param limit
-   * @param <T>
-   *
-   * @return
    * @since 1.4
    */
   public static <T> Collection<T> createSubCollection(Collection<T> values,
@@ -198,15 +137,6 @@ public final class Util
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param values
-   * @param start
-   * @param limit
-   * @param <T>
-   *
-   * @return
    * @since 1.4
    */
   public static <T> Collection<T> createSubCollection(Collection<T> values,
@@ -216,16 +146,6 @@ public final class Util
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param values
-   * @param appender
-   * @param start
-   * @param limit
-   * @param <T>
-   *
-   * @return
    * @since 1.4
    */
   public static <T> Collection<T> createSubCollection(Collection<T> values,
@@ -235,18 +155,6 @@ public final class Util
   }
 
   /**
-   * Method description
-   *
-   *
-   *
-   * @param values
-   * @param comparator
-   * @param appender
-   * @param start
-   * @param limit
-   * @param <T>
-   *
-   * @return
    * @since 1.4
    */
   public static <T> Collection<T> createSubCollection(Collection<T> values,
@@ -289,15 +197,6 @@ public final class Util
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param date
-   * @param tz
-   *
-   * @return
-   */
   public static String formatDate(Date date, TimeZone tz)
   {
     SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
@@ -310,35 +209,19 @@ public final class Util
     return sdf.format(date);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param date
-   *
-   * @return
-   */
   public static String formatDate(Date date)
   {
     return formatDate(date, null);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
   public static byte[] fromHexString(String value)
   {
     return new BigInteger(value, 16).toByteArray();
   }
 
   /**
-   * Returns an emtpy string, if the object is null. Otherwise the result of
-   * the toString method of the object is returned is returned.
+   * Returns an emtpy string, if the object is null. Otherwise, the result of
+   * the toString method of the object is returned.
    *
    * @param value object
    *
@@ -354,7 +237,7 @@ public final class Util
   }
 
   /**
-   * Returns an emtpy string, if the string is null. Otherwise the string
+   * Returns an empty string, if the string is null. Otherwise, the string
    * is returned. The method is available to fix a possible linkage error which
    * was introduced with version 1.14. Please have a look at:
    * https://bitbucket.org/sdorra/scm-manager/issue/569/active-directory-plugin-not-working-in
@@ -370,17 +253,6 @@ public final class Util
     return Strings.nullToEmpty(value);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param dateString
-   * @param tz
-   *
-   * @return
-   *
-   * @throws ParseException
-   */
   public static Date parseDate(String dateString, TimeZone tz)
     throws ParseException
   {
@@ -394,16 +266,6 @@ public final class Util
     return sdf.parse(dateString);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param dateString
-   *
-   * @return
-   *
-   * @throws ParseException
-   */
   public static Date parseDate(String dateString) throws ParseException
   {
     return parseDate(dateString, null);
@@ -428,14 +290,6 @@ public final class Util
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param value
-   * @param start
-   *
-   * @return
-   *
    * @since 1.17
    */
   public static boolean startWithIgnoreCase(String value, String start)
@@ -444,14 +298,6 @@ public final class Util
       && value.toUpperCase(Locale.ENGLISH).startsWith(start);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param collection
-   *
-   * @return
-   */
   public static String toString(Collection<? extends Object> collection)
   {
     StringBuilder sb = new StringBuilder();
@@ -474,14 +320,6 @@ public final class Util
     return sb.toString();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param byteValue
-   *
-   * @return
-   */
   public static String toString(byte[] byteValue)
   {
     StringBuilder buffer = new StringBuilder();
@@ -499,16 +337,8 @@ public final class Util
     return buffer.toString();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @param iterable
-   * @param <T>
-   *
-   * @return
    * @since 1.5
    */
   public static <T> T getFirst(Iterable<T> iterable)
@@ -524,13 +354,6 @@ public final class Util
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param iterator
-   * @param <T>
-   *
-   * @return
    * @since 1.5
    */
   public static <T> T getFirst(Iterator<T> iterator)
@@ -545,68 +368,26 @@ public final class Util
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
   public static boolean isEmpty(String value)
   {
     return (value == null) || (value.trim().length() == 0);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param collection
-   *
-   * @return
-   */
   public static boolean isEmpty(Collection<?> collection)
   {
     return (collection == null) || collection.isEmpty();
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param map
-   *
-   * @return
-   */
   public static boolean isEmpty(Map<?, ?> map)
   {
     return (map == null) || map.isEmpty();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param array
-   *
-   * @return
-   */
   public static boolean isEmpty(Object[] array)
   {
     return (array == null) || (array.length == 0);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   * @param other
-   *
-   * @return
-   */
   public static boolean isEquals(Object object, Object other)
   {
     return (object == null)
@@ -614,68 +395,26 @@ public final class Util
       : object.equals(other);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
   public static boolean isNotEmpty(String value)
   {
     return (value != null) && (value.trim().length() > 0);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param collection
-   *
-   * @return
-   */
   public static boolean isNotEmpty(Collection<?> collection)
   {
     return (collection != null) &&!collection.isEmpty();
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param map
-   *
-   * @return
-   */
   public static boolean isNotEmpty(Map<?, ?> map)
   {
     return (map != null) &&!map.isEmpty();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param array
-   *
-   * @return
-   */
   public static boolean isNotEmpty(Object[] array)
   {
     return (array != null) && (array.length > 0);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   * @param other
-   *
-   * @return
-   */
   public static boolean isNotEquals(Object object, Object other)
   {
     return !isEquals(object, other);

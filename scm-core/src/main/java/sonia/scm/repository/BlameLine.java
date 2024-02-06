@@ -24,47 +24,36 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Single line of a file, in a {@link  BlameResult}.
  *
- * @author Sebastian Sdorra
  * @since 1.8
  */
 public class BlameLine implements Serializable
 {
 
-  /** Field description */
   private static final long serialVersionUID = 2816601606921153670L;
 
-  //~--- constructors ---------------------------------------------------------
+  private Person author;
 
-  /**
-   * Constructs ...
-   *
-   */
+  private String code;
+
+  private String description;
+
+  private int lineNumber;
+
+  private String revision;
+
+  private Long when;
+
   public BlameLine() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param author
-   * @param when
-   * @param revision
-   * @param description
-   * @param code
-   * @param lineNumber
-   */
   public BlameLine(int lineNumber, String revision, Long when, Person author,
                    String description, String code)
   {
@@ -76,16 +65,7 @@ public class BlameLine implements Serializable
     this.code = code;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
   @Override
   public boolean equals(Object obj)
   {
@@ -109,12 +89,6 @@ public class BlameLine implements Serializable
            && Objects.equal(description, other.description);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
   @Override
   public int hashCode()
   {
@@ -122,12 +96,6 @@ public class BlameLine implements Serializable
                             description);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
   @Override
   public String toString()
   {
@@ -143,159 +111,78 @@ public class BlameLine implements Serializable
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public Person getAuthor()
   {
     return author;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public String getCode()
   {
     return code;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public String getDescription()
   {
     return description;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public int getLineNumber()
   {
     return lineNumber;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public String getRevision()
   {
     return revision;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public Long getWhen()
   {
     return when;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param author
-   */
+
   public void setAuthor(Person author)
   {
     this.author = author;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param code
-   */
+
   public void setCode(String code)
   {
     this.code = code;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param description
-   */
+
   public void setDescription(String description)
   {
     this.description = description;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param lineNumber
-   */
+
   public void setLineNumber(int lineNumber)
   {
     this.lineNumber = lineNumber;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param revision
-   */
+
   public void setRevision(String revision)
   {
     this.revision = revision;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param when
-   */
+
   public void setWhen(Long when)
   {
     this.when = when;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Person author;
-
-  /** Field description */
-  private String code;
-
-  /** Field description */
-  private String description;
-
-  /** Field description */
-  private int lineNumber;
-
-  /** Field description */
-  private String revision;
-
-  /** Field description */
-  private Long when;
 }

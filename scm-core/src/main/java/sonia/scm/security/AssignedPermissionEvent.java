@@ -24,7 +24,6 @@
     
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -33,31 +32,22 @@ import sonia.scm.event.Event;
 
 import java.io.Serializable;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Event which is fired after a {@link StoredAssignedPermission} was added,
  * removed or changed.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 @Event
 public final class AssignedPermissionEvent implements Serializable
 {
+  /** changed permission */
+  private AssignedPermission permission;
 
-  /** serial version uid */
+  private HandlerEventType type;
+
   private static final long serialVersionUID = 706824497813169009L;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs a new AssignedPermissionEvent.
-   *
-   *
-   * @param type type of the event
-   * @param permission permission object which has changed
-   */
   public AssignedPermissionEvent(HandlerEventType type,
                                  AssignedPermission permission)
   {
@@ -65,11 +55,8 @@ public final class AssignedPermissionEvent implements Serializable
     this.permission = permission;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public boolean equals(Object obj)
   {
@@ -90,18 +77,14 @@ public final class AssignedPermissionEvent implements Serializable
       && Objects.equal(permission, other.permission);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public int hashCode()
   {
     return Objects.hashCode(type, permission);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public String toString()
   {
@@ -113,14 +96,6 @@ public final class AssignedPermissionEvent implements Serializable
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Return the type of the event.
-   *
-   *
-   * @return type of event
-   */
   public HandlerEventType getEventType()
   {
     return type;
@@ -128,20 +103,10 @@ public final class AssignedPermissionEvent implements Serializable
 
   /**
    * Returns the changed permission object.
-   *
-   *
-   * @return changed permission
    */
   public AssignedPermission getPermission()
   {
     return permission;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** changed permission */
-  private AssignedPermission permission;
-
-  /** type of the event */
-  private HandlerEventType type;
 }

@@ -24,7 +24,6 @@
     
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
@@ -36,26 +35,20 @@ import sonia.scm.xml.XmlMapStringAdapter;
 import java.io.Serializable;
 import java.util.Map;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Default implementation of {@link PropertiesAware} interface.
  *
- * @author Sebastian Sdorra
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class BasicPropertiesAware implements PropertiesAware, Serializable
 {
 
-  /** Field description */
   private static final long serialVersionUID = -536608122577385802L;
 
-  //~--- methods --------------------------------------------------------------
+  /** map to hold the properties */
+  @XmlJavaTypeAdapter(XmlMapStringAdapter.class)
+  protected Map<String, String> properties;
 
-  /**
-   * {@inheritDoc}
-   *
-   */
   @Override
   public boolean equals(Object obj)
   {
@@ -74,32 +67,22 @@ public class BasicPropertiesAware implements PropertiesAware, Serializable
     return Objects.equal(properties, other.properties);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   */
+
   @Override
   public int hashCode()
   {
     return Objects.hashCode(properties);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   */
+
   @Override
   public void removeProperty(String key)
   {
     getProperties().remove(key);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   *
-   */
+
   @Override
   public Map<String, String> getProperties()
   {
@@ -111,41 +94,26 @@ public class BasicPropertiesAware implements PropertiesAware, Serializable
     return properties;
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   */
+
   @Override
   public String getProperty(String key)
   {
     return getProperties().get(key);
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   *
-   */
+
   @Override
   public void setProperties(Map<String, String> properties)
   {
     this.properties = properties;
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   */
+
   @Override
   public void setProperty(String key, String value)
   {
     getProperties().put(key, value);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** map to hold the properties */
-  @XmlJavaTypeAdapter(XmlMapStringAdapter.class)
-  protected Map<String, String> properties;
 }

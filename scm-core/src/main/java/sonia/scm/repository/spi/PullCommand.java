@@ -24,31 +24,15 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.api.PullResponse;
 
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
- *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public interface PullCommand
 {
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   PullResponse pull(PullCommandRequest request) throws IOException;
 }

@@ -34,10 +34,7 @@ import sonia.scm.util.IOUtil;
 
 import java.io.File;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Singleton
 public class JAXBDataStoreFactory extends FileBasedStoreFactory
   implements DataStoreFactory {

@@ -21,13 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 /**
  * Base interface for all handler objects.
  *
- * @author Sebastian Sdorra
  *
  * @param <T> a typed object
  */
@@ -35,17 +34,11 @@ public interface Handler<T extends TypedObject> extends HandlerBase<T> {
 
   /**
    * Returns the type object of the handler.
-   *
-   *
-   * @return type object of the handler
    */
   Type getType();
 
   /**
    * Returns true if the hanlder is configured.
-   *
-   *
-   * @return true if the hanlder is configured
    */
   boolean isConfigured();
 }

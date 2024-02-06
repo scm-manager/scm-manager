@@ -24,7 +24,6 @@
     
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
@@ -49,34 +48,30 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Resolve secure keys which can be used for signing token and messages.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Singleton
 public class SecureKeyResolver extends SigningKeyResolverAdapter
 {
 
-  /** key length */
   private static final int KEY_LENGTH = 64;
 
   /** name of the configuration store */
   @VisibleForTesting
   static final String STORE_NAME = "keys";
 
-  /**
-   * the logger for SecureKeyResolver
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(SecureKeyResolver.class);
 
-  //~--- constructors ---------------------------------------------------------
+  /** secure randon */
+  private final Random random;
 
-  /**
-   * Constructs a new SecureKeyResolver
-   *
-   *
-   * @param storeFactory store factory
-   */
+  /** configuration entry store */
+  private final ConfigurationEntryStore<SecureKey> store;
+
+  private final JwtSettingsStore jwtSettingsStore;
+
   @Inject
   @SuppressWarnings("unchecked")
   public SecureKeyResolver(ConfigurationEntryStoreFactory storeFactory, JwtSettingsStore jwtSettingsStore) {
@@ -93,11 +88,8 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
     this.random = random;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public byte[] resolveSigningKeyBytes(JwsHeader header, Claims claims)
   {
@@ -110,7 +102,6 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
     return getSecureKey(subject).getBytes();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the secure key for the given subject, if there is no key for the
@@ -118,7 +109,6 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
    *
    * @param subject subject
    *
-   * @return secure key
    */
   public SecureKey getSecureKey(String subject)
   {
@@ -140,14 +130,6 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
     return key.getCreationDate() < settings.getKeysValidAfterTimestampInMs();
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Creates a new secure key.
-   *
-   *
-   * @return new secure key
-   */
   private SecureKey createNewKey()
   {
     byte[] bytes = new byte[KEY_LENGTH];
@@ -157,13 +139,4 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
     return new SecureKey(bytes, System.currentTimeMillis());
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** secure randon */
-  private final Random random;
-
-  /** configuration entry store */
-  private final ConfigurationEntryStore<SecureKey> store;
-
-  private final JwtSettingsStore jwtSettingsStore;
 }

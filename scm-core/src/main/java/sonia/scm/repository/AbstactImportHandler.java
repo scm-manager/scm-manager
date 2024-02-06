@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,13 +33,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Abstract base class for directory based {@link ImportHandler} and
  * {@link AdvancedImportHandler}.
  *
- * @author Sebastian Sdorra
  * @since 1.12
  * @deprecated
  */
@@ -48,60 +44,29 @@ import java.util.List;
 public abstract class AbstactImportHandler implements AdvancedImportHandler
 {
 
-  /**
-   * the logger for AbstactImportHandler
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(AbstactImportHandler.class);
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Returns array of repository directory names.
-   *
-   *
-   * @return repository directory names
-   */
   protected abstract String[] getDirectoryNames();
 
-  /**
-   * Returns repository handler.
-   *
-   *
-   * @return repository handler
-   */
   protected abstract AbstractRepositoryHandler<?> getRepositoryHandler();
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public List<String> importRepositories(RepositoryManager manager) throws IOException {
     return doRepositoryImport(manager, true).getImportedDirectories();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public ImportResult importRepositoriesFromDirectory(RepositoryManager manager)
   {
     return doRepositoryImport(manager, false);
   }
 
-  /**
-   * Creates a repository.
-   *
-   *
-   * @param repositoryDirectory repository base directory
-   * @param repositoryName name of the repository
-   *
-   * @return repository
-   *
-   * @throws IOException
-   */
   protected Repository createRepository(File repositoryDirectory, String repositoryName) throws IOException {
     Repository repository = new Repository();
 
@@ -149,16 +114,6 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
     return builder.build();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param ex
-   * @param throwExceptions
-   * @param <T>
-   *
-   * @throws T
-   */
   private <T extends Exception> void handleException(T ex,
     boolean throwExceptions)
     throws T
@@ -171,17 +126,6 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param manager
-   * @param builder
-   * @param throwExceptions
-   * @param directoryName
-   *
-   * @throws IOException
-   */
   private void importRepository(RepositoryManager manager, Builder builder,
     boolean throwExceptions, String directoryName)
     throws IOException
@@ -223,14 +167,8 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
 
 
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   private String getTypeName()
   {
     return getRepositoryHandler().getType().getName();

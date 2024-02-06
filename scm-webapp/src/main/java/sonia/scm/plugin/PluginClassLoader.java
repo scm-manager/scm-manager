@@ -28,6 +28,5 @@ package sonia.scm.plugin;
  * The PluginClassLoader interface is mainly a marker to find the class loader
  * in a memory dump. This should make it easier to find class loader leaks.
  *
- * @author Sebastian Sdorra
  */
 public interface PluginClassLoader {}

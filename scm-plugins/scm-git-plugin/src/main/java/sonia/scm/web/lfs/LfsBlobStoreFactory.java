@@ -33,7 +33,6 @@ import sonia.scm.store.BlobStoreFactory;
 /**
  * Creates {@link BlobStore} objects to store lfs objects.
  *
- * @author Sebastian Sdorra
  * @since 1.54
  */
 @Singleton
@@ -43,11 +42,6 @@ public class LfsBlobStoreFactory {
 
   private final BlobStoreFactory blobStoreFactory;
 
-  /**
-   * Create a new instance.
-   *
-   * @param blobStoreFactory blob store factory
-   */
   @Inject
   public LfsBlobStoreFactory(BlobStoreFactory blobStoreFactory) {
     this.blobStoreFactory = blobStoreFactory;

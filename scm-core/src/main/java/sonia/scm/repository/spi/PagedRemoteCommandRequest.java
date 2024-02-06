@@ -24,21 +24,19 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public abstract class PagedRemoteCommandRequest extends RemoteCommandRequest
 {
+  private int pagingLimit = 20;
 
-  /**
-   * {@inheritDoc}
-   */
+  private int pagingStart = 0;
+ 
   @Override
   public boolean equals(Object obj)
   {
@@ -59,18 +57,14 @@ public abstract class PagedRemoteCommandRequest extends RemoteCommandRequest
       && Objects.equal(pagingLimit, other.pagingLimit);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public int hashCode()
   {
     return Objects.hashCode(remoteRepository, pagingStart, pagingLimit);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public String toString()
   {
@@ -84,59 +78,30 @@ public abstract class PagedRemoteCommandRequest extends RemoteCommandRequest
     //J+
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param pagingLimit
-   */
+
   public void setPagingLimit(int pagingLimit)
   {
     this.pagingLimit = pagingLimit;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param pagingStart
-   */
+
   public void setPagingStart(int pagingStart)
   {
     this.pagingStart = pagingStart;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   int getPagingLimit()
   {
     return pagingLimit;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   int getPagingStart()
   {
     return pagingStart;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private int pagingLimit = 20;
-
-  /** Field description */
-  private int pagingStart = 0;
 }

@@ -24,7 +24,6 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.tmatesoft.svn.core.internal.server.dav.CollectionRenderer;
 import org.tmatesoft.svn.core.internal.server.dav.DAVConfig;
@@ -34,14 +33,9 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.SvnRepositoryHandler;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class SvnDAVConfig extends DAVConfig
 {
 
@@ -64,50 +58,29 @@ public class SvnDAVConfig extends DAVConfig
     this.repositoryProvider = repositoryProvider;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String getActivitiesDBPath()
   {
     return null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public CollectionRenderer getCollectionRenderer()
   {
     return collectionRenderer;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String getRepositoryName()
   {
     return davConfig.getRepositoryName();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String getRepositoryParentPath()
   {
@@ -126,12 +99,7 @@ public class SvnDAVConfig extends DAVConfig
     return path;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String getRepositoryPath()
   {
@@ -150,132 +118,77 @@ public class SvnDAVConfig extends DAVConfig
     return path;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public SVNPathBasedAccess getSVNAccess()
   {
     return davConfig.getSVNAccess();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String getXSLTIndex()
   {
     return davConfig.getXSLTIndex();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isAllowBulkUpdates()
   {
     return davConfig.isAllowBulkUpdates();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isAllowDepthInfinity()
   {
     return davConfig.isAllowDepthInfinity();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isAnonymousAllowed()
   {
     return davConfig.isAnonymousAllowed();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isAutoVersioning()
   {
     return davConfig.isAutoVersioning();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isListParentPath()
   {
     return davConfig.isListParentPath();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isNoAuthIfAnonymousAllowed()
   {
     return davConfig.isNoAuthIfAnonymousAllowed();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isUsingPBA()
   {
     return davConfig.isUsingPBA();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public boolean isUsingRepositoryPathDirective()
   {
     return true;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   private File getRepositoryDirectory()
   {
     File directory = null;
@@ -291,15 +204,11 @@ public class SvnDAVConfig extends DAVConfig
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private final CollectionRenderer collectionRenderer;
 
-  /** Field description */
   private final DAVConfig davConfig;
 
-  /** Field description */
   private final SvnRepositoryHandler handler;
 
-  /** Field description */
   private final RepositoryProvider repositoryProvider;
 }

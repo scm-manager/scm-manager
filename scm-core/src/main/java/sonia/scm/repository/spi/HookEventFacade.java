@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -41,19 +40,15 @@ import static sonia.scm.NotFoundException.notFound;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.33
  */
 public final class HookEventFacade
 {
+  private final HookContextFactory hookContextFactory;
+
+  private final Provider<RepositoryManager> repositoryManagerProvider;
 
   /**
-   * Constructs ...
-   *
-   *
-   * @param repositoryManagerProvider
-   * @param hookContextFactory
-   *
    * @since 1.38
    */
   @Inject
@@ -64,7 +59,6 @@ public final class HookEventFacade
     this.hookContextFactory = hookContextFactory;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   public HookEventHandler handle(String id) {
     Repository repository = repositoryManagerProvider.get().get(id);
@@ -89,26 +83,17 @@ public final class HookEventFacade
       hookContextFactory, repository);
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 13/07/21
-   * @author         Enter your name here...
-   */
+
+
   public static class HookEventHandler
   {
+    private final HookContextFactory hookContextFactory;
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param repositoryManager
-     * @param hookContextFactory
-     * @param repository
-     */
+    private final Repository repository;
+
+    private final RepositoryManager repositoryManager;
+
     public HookEventHandler(RepositoryManager repositoryManager,
       HookContextFactory hookContextFactory, Repository repository)
     {
@@ -117,15 +102,6 @@ public final class HookEventFacade
       this.repository = repository;
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param type
-     * @param hookContextProvider
-     */
     public void fireHookEvent(RepositoryHookType type,
       HookContextProvider hookContextProvider)
     {
@@ -138,24 +114,6 @@ public final class HookEventFacade
       hookContextProvider.handleClientDisconnect();
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final HookContextFactory hookContextFactory;
-
-    /** Field description */
-    private final Repository repository;
-
-    /** Field description */
-    private final RepositoryManager repositoryManager;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final HookContextFactory hookContextFactory;
-
-  /** Field description */
-  private final Provider<RepositoryManager> repositoryManagerProvider;
 }

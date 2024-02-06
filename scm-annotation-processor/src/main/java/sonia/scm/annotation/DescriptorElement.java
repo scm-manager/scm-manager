@@ -24,24 +24,14 @@
     
 package sonia.scm.annotation;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public interface DescriptorElement
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param doc
-   * @param root
-   */
+
   public void append(Document doc, Element root);
 }

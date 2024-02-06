@@ -24,7 +24,6 @@
 
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
@@ -51,10 +50,7 @@ import java.util.logging.Logger;
 import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertTrue;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class AbstractTestBase
 {
 
@@ -79,11 +75,7 @@ public class AbstractTestBase
     postSetUp();
   }
 
-  /**
-   * Method description
-   *
-   */
-  @AfterAll
+   @AfterAll
   @AfterClass
   public static void tearDownShiro()
   {
@@ -108,40 +100,23 @@ public class AbstractTestBase
     setSecurityManager(null);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected static org.apache.shiro.mgt.SecurityManager getSecurityManager()
   {
     return SecurityUtils.getSecurityManager();
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param securityManager
-   */
+
   protected static void setSecurityManager(
     org.apache.shiro.mgt.SecurityManager securityManager)
   {
     SecurityUtils.setSecurityManager(securityManager);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  private static void doClearSubject()
+   private static void doClearSubject()
   {
     if (subjectThreadState != null)
     {
@@ -150,12 +125,7 @@ public class AbstractTestBase
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
+
   @AfterEach
   @After
   public void tearDownTest() throws Exception
@@ -185,49 +155,25 @@ public class AbstractTestBase
     doClearSubject();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param subject
-   *
-   * @return
-   */
+
   protected ThreadState createThreadState(Subject subject)
   {
     return new SubjectThreadState(subject);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
+
   protected void postSetUp() throws Exception {}
 
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
+
   protected void preTearDown() throws Exception {}
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected Subject getSubject()
   {
     return SecurityUtils.getSubject();
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Allows subclasses to set the currently executing {@link Subject} instance.

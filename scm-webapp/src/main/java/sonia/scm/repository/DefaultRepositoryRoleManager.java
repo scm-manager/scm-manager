@@ -51,11 +51,13 @@ import java.util.stream.Collectors;
 @EagerSingleton
 public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager {
 
-  /**
-   * the logger for XmlRepositoryRoleManager
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultRepositoryRoleManager.class);
+
+  private final RepositoryRoleDAO repositoryRoleDAO;
+  private final ManagerDaoAdapter<RepositoryRole> managerDaoAdapter;
+  private final RepositoryPermissionProvider repositoryPermissionProvider;
 
   @Inject
   public DefaultRepositoryRoleManager(RepositoryRoleDAO repositoryRoleDAO,
@@ -197,7 +199,4 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager 
     return repositoryRoleDAO.getLastModified();
   }
 
-  private final RepositoryRoleDAO repositoryRoleDAO;
-  private final ManagerDaoAdapter<RepositoryRole> managerDaoAdapter;
-  private final RepositoryPermissionProvider repositoryPermissionProvider;
 }

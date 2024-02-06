@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 
 import jakarta.annotation.Nonnull;
@@ -47,11 +46,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 

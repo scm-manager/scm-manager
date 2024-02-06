@@ -24,8 +24,6 @@
     
 package sonia.scm.repository.api;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -33,45 +31,28 @@ import jakarta.xml.bind.annotation.XmlElement;
 /**
  * Abstract base class for {@link PushResponse} and {@link PullResponse}.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class AbstractPushOrPullResponse
 {
+  /** count of pushed/pulled changesets */
+  @XmlElement(name = "changeset-count")
+  private long changesetCount;
 
-  /**
-   * Constructs a new AbstractPushOrPullResponse.
-   *
-   */
   public AbstractPushOrPullResponse() {}
 
-  /**
-   * Constructs a new AbstractPushOrPullResponse.
-   *
-   * @param changesetCount count of pushed/pulled changesets
-   */
   public AbstractPushOrPullResponse(long changesetCount)
   {
     this.changesetCount = changesetCount;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Returns the count of pushed/pulled changesets.
-   *
-   *
-   * @return count of pushed/pulled changesets
    */
   public long getChangesetCount()
   {
     return changesetCount;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** count of pushed/pulled changesets */
-  @XmlElement(name = "changeset-count")
-  private long changesetCount;
 }

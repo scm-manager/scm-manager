@@ -24,16 +24,10 @@
 
 package sonia.scm.it.webapp;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import static sonia.scm.it.webapp.IntegrationTestUtil.createAdminClient;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class AbstractAdminITCaseBase
 {
   public AbstractAdminITCaseBase() {
@@ -42,6 +36,5 @@ public class AbstractAdminITCaseBase
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   protected final ScmClient client;
 }

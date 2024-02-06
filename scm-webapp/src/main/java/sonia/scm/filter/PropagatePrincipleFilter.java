@@ -24,7 +24,6 @@
     
 package sonia.scm.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
@@ -43,12 +42,7 @@ import sonia.scm.web.filter.PropagatePrincipleServletRequestWrapper;
 
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @Priority(Filters.PRIORITY_AUTHORIZATION)
 public class PropagatePrincipleFilter extends HttpFilter
 {

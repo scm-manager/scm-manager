@@ -24,65 +24,40 @@
     
 package sonia.scm.io;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public abstract class ResourceProcessorTestBase
 {
 
-  /** Field description */
   public static final String TEXT_1 = "Hello Tricia McMillan!";
 
-  /** Field description */
   public static final String TEXT_2 = "Hello ${person}!";
 
-  /** Field description */
   public static final String TEXT_3 = "Hello ${person} and ${secondPerson}!";
 
-  /** Field description */
   public static final String TEXT_4 = "<h1>Hello ${person}</h1>";
 
-  /** Field description */
   public static final String VAR_PERSON = "person";
 
-  /** Field description */
   public static final String VAR_PERSON_VALUE = "Tricia McMillan";
 
-  /** Field description */
   public static final String VAR_SECONDPERSON = "secondPerson";
 
-  /** Field description */
   public static final String VAR_SECONDPERSON_VALUE = "Zaphod Beeblebrox";
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected abstract ResourceProcessor createNewResourceProcessor();
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testHtml() throws IOException
   {
@@ -96,12 +71,7 @@ public abstract class ResourceProcessorTestBase
     assertEquals("<h1>Hello Tricia McMillan</h1>", output.toString());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testWithNonExistingVar() throws IOException
   {
@@ -112,12 +82,7 @@ public abstract class ResourceProcessorTestBase
     assertEquals(TEXT_2, output.toString());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testWithVar() throws IOException
   {
@@ -131,12 +96,7 @@ public abstract class ResourceProcessorTestBase
     assertEquals(TEXT_1, output.toString());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testWithVars() throws IOException
   {
@@ -152,12 +112,7 @@ public abstract class ResourceProcessorTestBase
                  output.toString());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testWithoutVars() throws IOException
   {

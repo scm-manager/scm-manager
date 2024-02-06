@@ -24,14 +24,11 @@
     
 package sonia.scm.template;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.FileReader;
@@ -41,26 +38,15 @@ import java.io.Writer;
 /**
  * Util class for the template framework of scm-manager.
  *
- * @author Sebastian Sdorra
  * @since 1.22
  */
 public final class Templates
 {
-
-  /**
-   * the logger for Templates
-   */
   private static final Logger logger = LoggerFactory.getLogger(Templates.class);
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private Templates() {}
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Renders the given template file with the {@link TemplateEngine} which is

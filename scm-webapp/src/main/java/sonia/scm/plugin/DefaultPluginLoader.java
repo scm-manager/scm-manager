@@ -24,7 +24,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
@@ -39,30 +38,24 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class DefaultPluginLoader implements PluginLoader
 {
 
-  /** Field description */
   public static final String PATH_MODULECONFIG = "META-INF/scm/module.xml";
 
-  /** Field description */
   public static final String PATH_PLUGINCONFIG = "META-INF/scm/plugin.xml";
 
-  //~--- constructors ---------------------------------------------------------
+  private final ExtensionProcessor extensionProcessor;
 
-  /**
-   * Constructs ...
-   *
-   * @param servletContext
-   * @param parent
-   * @param installedPlugins
-   */
+  private final Set<InstalledPlugin> installedPlugins;
+
+  private final Set<ScmModule> modules;
+
+  private final ClassLoader uberClassLoader;
+
+  private final UberWebResourceLoader uberWebResourceLoader;
+
   public DefaultPluginLoader(ServletContext servletContext, ClassLoader parent,
     Set<InstalledPlugin> installedPlugins, ConfigurationResolver configurationResolver)
   {
@@ -87,84 +80,43 @@ public class DefaultPluginLoader implements PluginLoader
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public ExtensionProcessor getExtensionProcessor()
   {
     return extensionProcessor;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Collection<ScmModule> getInstalledModules()
   {
     return modules;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Collection<InstalledPlugin> getInstalledPlugins()
   {
     return installedPlugins;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public ClassLoader getUberClassLoader()
   {
     return uberClassLoader;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public UberWebResourceLoader getUberWebResourceLoader()
   {
     return uberWebResourceLoader;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param classLoader
-   * @param context
-   * @param path
-   * @param <T>
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws JAXBException
-   */
   @SuppressWarnings("unchecked")
   private <T> Set<T> getInstalled(ClassLoader classLoader, JAXBContext context,
     String path)
@@ -184,20 +136,4 @@ public class DefaultPluginLoader implements PluginLoader
     return builder.build();
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final ExtensionProcessor extensionProcessor;
-
-  /** Field description */
-  private final Set<InstalledPlugin> installedPlugins;
-
-  /** Field description */
-  private final Set<ScmModule> modules;
-
-  /** Field description */
-  private final ClassLoader uberClassLoader;
-
-  /** Field description */
-  private final UberWebResourceLoader uberWebResourceLoader;
 }

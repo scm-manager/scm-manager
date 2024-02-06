@@ -24,26 +24,9 @@
     
 package sonia.scm.search;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Collection;
 
-/**
- *
- * @author Sebastian Sdorra
- *
- * @param <T>
- */
 public interface Searchable<T>
 {
-
-  /**
-   * Method description
-   *
-   *
-   * @param searchRequest
-   *
-   * @return
-   */
   public Collection<T> search(SearchRequest searchRequest);
 }

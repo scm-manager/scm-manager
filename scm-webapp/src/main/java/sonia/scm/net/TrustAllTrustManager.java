@@ -24,53 +24,26 @@
     
 package sonia.scm.net;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.net.ssl.X509TrustManager;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class TrustAllTrustManager implements X509TrustManager
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param chain
-   * @param authType
-   *
-   * @throws CertificateException
-   */
+
   @Override
   public void checkClientTrusted(X509Certificate[] chain, String authType)
           throws CertificateException {}
 
-  /**
-   * Method description
-   *
-   *
-   * @param chain
-   * @param authType
-   *
-   * @throws CertificateException
-   */
+
   @Override
   public void checkServerTrusted(X509Certificate[] chain, String authType)
           throws CertificateException {}
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public X509Certificate[] getAcceptedIssuers()
   {

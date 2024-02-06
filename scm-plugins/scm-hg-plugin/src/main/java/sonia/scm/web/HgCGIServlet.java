@@ -53,16 +53,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Singleton
 public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet {
 
   private static final long serialVersionUID = -3492811300905099810L;
 
-  /** the logger for HgCGIServlet */
+  
   private static final Logger logger =
     LoggerFactory.getLogger(HgCGIServlet.class);
 

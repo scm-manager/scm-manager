@@ -63,7 +63,6 @@ import static sonia.scm.it.webapp.RepositoryITUtil.deleteRepository;
 /**
  * Integration tests for repository hooks.
  *
- * @author Sebastian Sdorra
  */
 @RunWith(Parameterized.class)
 public class RepositoryHookITCase extends AbstractAdminITCaseBase

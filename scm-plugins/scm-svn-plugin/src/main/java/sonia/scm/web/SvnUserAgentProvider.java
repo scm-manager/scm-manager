@@ -24,7 +24,6 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
@@ -57,16 +56,8 @@ public final class SvnUserAgentProvider implements UserAgentProvider
     UserAgent.scmClient("Subversion")
              .basicAuthenticationCharset(Charsets.UTF_8).build();
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param userAgentString
-   *
-   * @return
-   */
+
   @Override
   public UserAgent parseUserAgent(String userAgentString)
   {

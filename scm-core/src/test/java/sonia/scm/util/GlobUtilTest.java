@@ -24,24 +24,16 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GlobUtilTest
 {
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void convertGlobToRegExTest()
   {
     assertEquals("/test/path/.*", GlobUtil.convertGlobToRegEx("/test/path/*"));
@@ -50,11 +42,7 @@ public class GlobUtilTest
     assertEquals("a.d", GlobUtil.convertGlobToRegEx("a?d"));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void matchesTest()
   {
     assertTrue(GlobUtil.matches("/test/path/*", "/test/path/somefile.txt"));

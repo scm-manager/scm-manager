@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.client.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -32,31 +31,20 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.client.api.RepositoryClientException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import org.eclipse.jgit.lib.Ref;
 import sonia.scm.repository.GitUtil;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GitBranchCommand implements BranchCommand
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param git
-   */
+ 
   GitBranchCommand(Git git)
   {
     this.git = git;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   @Override
   public Branch branch(String name) throws IOException
@@ -74,6 +62,5 @@ public class GitBranchCommand implements BranchCommand
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private Git git;
 }

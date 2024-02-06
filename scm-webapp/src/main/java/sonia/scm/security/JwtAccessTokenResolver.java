@@ -39,15 +39,12 @@ import java.util.Set;
 /**
  * Jwt implementation of {@link AccessTokenResolver}.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Extension
 public final class JwtAccessTokenResolver implements AccessTokenResolver {
 
-  /**
-   * the logger for JwtAccessTokenResolver
-   */
+ 
   private static final Logger LOG = LoggerFactory.getLogger(JwtAccessTokenResolver.class);
 
   private final SecureKeyResolver keyResolver;

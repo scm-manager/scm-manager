@@ -30,7 +30,6 @@ import java.util.Map;
 /**
  * In memory configuration store factory for testing purposes.
  *
- * @author Sebastian Sdorra
  *
  * @deprecated Use the {@link InMemoryByteConfigurationStoreFactory} to verify JaxB serialization, too.
  */

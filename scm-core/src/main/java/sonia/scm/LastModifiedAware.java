@@ -27,16 +27,12 @@ package sonia.scm;
 /**
  * Base interface of all objects which have a last modified date.
  *
- * @author Sebastian Sdorra
  */
 public interface LastModifiedAware
 {
 
   /**
    * Returns a timestamp of the last modified date.
-   *
-   *
-   * @return timestamp of the last modified date
    */
   public Long getLastModified();
 }

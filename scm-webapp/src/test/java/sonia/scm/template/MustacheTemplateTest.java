@@ -24,60 +24,36 @@
     
 package sonia.scm.template;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 
 import com.google.common.base.Function;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
 import java.util.Map;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class MustacheTemplateTest extends TemplateTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   @Override
   public Template getFailureTemplate() throws IOException
   {
     return getTemplate("sonia/scm/template/003.mustache");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Template getHelloTemplate()
   {
     return getTemplate("sonia/scm/template/001.mustache");
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param env
-   */
+
   @Override
   protected void prepareEnv(Map<String, Object> env)
   {
@@ -86,16 +62,8 @@ public class MustacheTemplateTest extends TemplateTestBase
     });
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
+
   private Template getTemplate(String path)
   {
     DefaultMustacheFactory factory = new DefaultMustacheFactory();

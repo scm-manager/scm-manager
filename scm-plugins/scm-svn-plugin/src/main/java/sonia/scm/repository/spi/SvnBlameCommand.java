@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
 import org.tmatesoft.svn.core.SVNException;
@@ -43,12 +42,7 @@ import sonia.scm.util.Util;
 import java.io.File;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class SvnBlameCommand extends AbstractSvnCommand implements BlameCommand
 {
 

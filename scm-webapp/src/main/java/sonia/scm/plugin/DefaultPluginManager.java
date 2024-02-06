@@ -51,11 +51,7 @@ import java.util.stream.Collectors;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 @Singleton
 public class DefaultPluginManager implements PluginManager {
 

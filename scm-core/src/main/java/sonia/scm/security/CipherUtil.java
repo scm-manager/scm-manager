@@ -29,7 +29,6 @@ import sonia.scm.util.ServiceUtil;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.7
  */
 public final class CipherUtil {

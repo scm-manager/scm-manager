@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import org.slf4j.Logger;
@@ -34,37 +33,33 @@ import sonia.scm.util.Util;
 import java.util.Collection;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public class PreProcessorUtil
 {
 
-  /**
-   * the logger for PreProcessorUtil
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(PreProcessorUtil.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final Collection<BlameLinePreProcessorFactory> blameLinePreProcessorFactorySet;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param changesetPreProcessorSet
-   * @param changesetPreProcessorFactorySet
-   * @param fileObjectPreProcessorSet
-   * @param fileObjectPreProcessorFactorySet
-   * @param blameLinePreProcessorSet
-   * @param blameLinePreProcessorFactorySet
-   * @param modificationsPreProcessorFactorySet
-   * @param modificationsPreProcessorSet
-   */
+  private final Collection<BlameLinePreProcessor> blameLinePreProcessorSet;
+
+  private final Collection<ChangesetPreProcessorFactory> changesetPreProcessorFactorySet;
+
+  private final Collection<ChangesetPreProcessor> changesetPreProcessorSet;
+
+  private final Collection<ModificationsPreProcessorFactory> modificationsPreProcessorFactorySet;
+
+  private final Collection<ModificationsPreProcessor> modificationsPreProcessorSet;
+
+  private final Collection<FileObjectPreProcessorFactory> fileObjectPreProcessorFactorySet;
+
+  private final Collection<FileObjectPreProcessor> fileObjectPreProcessorSet;
+
   @Inject
   public PreProcessorUtil(Set<ChangesetPreProcessor> changesetPreProcessorSet,
                           Set<ChangesetPreProcessorFactory> changesetPreProcessorFactorySet,
@@ -85,15 +80,8 @@ public class PreProcessorUtil
     this.modificationsPreProcessorSet = modificationsPreProcessorSet;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param blameLine
-   */
+
   public void prepareForReturn(Repository repository, BlameLine blameLine)
   {
     if (logger.isTraceEnabled())
@@ -105,13 +93,7 @@ public class PreProcessorUtil
     handlePreProcess(repository,blameLine,blameLinePreProcessorFactorySet, blameLinePreProcessorSet);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param blameResult
-   */
+
   public void prepareForReturn(Repository repository, BlameResult blameResult)
   {
     if (logger.isTraceEnabled())
@@ -123,13 +105,7 @@ public class PreProcessorUtil
     handlePreProcessForIterable(repository, blameResult.getBlameLines(),blameLinePreProcessorFactorySet, blameLinePreProcessorSet);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param changeset
-   */
+
   public void prepareForReturn(Repository repository, Changeset changeset)
   {
     logger.trace("prepare changeset {} of repository {} for return", changeset.getId(), repository);
@@ -141,13 +117,7 @@ public class PreProcessorUtil
     handlePreProcess(repository, modifications, modificationsPreProcessorFactorySet, modificationsPreProcessorSet);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param result
-   */
+
   public void prepareForReturn(Repository repository, BrowserResult result)
   {
     if (logger.isTraceEnabled())
@@ -169,13 +139,7 @@ public class PreProcessorUtil
     handler.callPreProcessors(fileObject);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param result
-   */
+
   public void prepareForReturn(Repository repository, ChangesetPagingResult result)
   {
     if (logger.isTraceEnabled())
@@ -203,28 +167,14 @@ public class PreProcessorUtil
     handler.callPreProcessorFactories(processedObjects);
   }
 
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @param <T>
-   *
-   * @version        Enter version here..., 12/06/16
-   * @author         Enter your name here...
-   */
   private static class PreProcessorHandler<T>
   {
+    private final Collection<? extends PreProcessorFactory<T>> preProcessorFactorySet;
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param preProcessorFactorySet
-     * @param preProcessorSet
-     * @param repository
-     */
+    private final Collection<? extends PreProcessor<T>> preProcessorSet;
+
+    private final Repository repository;
+
     public PreProcessorHandler(
       Collection<? extends PreProcessorFactory<T>> preProcessorFactorySet,
       Collection<? extends PreProcessor<T>> preProcessorSet,
@@ -235,20 +185,6 @@ public class PreProcessorUtil
       this.repository = repository;
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     *
-     *
-     * @param preProcessorFactorySet
-     * @param repository
-     * @param changesets
-     * @param items
-     * @param <T>
-     */
     public void callPreProcessorFactories(Iterable<T> items)
     {
       if (Util.isNotEmpty(preProcessorFactorySet))
@@ -268,16 +204,6 @@ public class PreProcessorUtil
       }
     }
 
-    /**
-     * Method description
-     *
-     *
-     *
-     * @param preProcessorFactorySet
-     * @param repository
-     * @param item
-     * @param <T>
-     */
     public void callPreProcessorFactories(T item)
     {
       if (Util.isNotEmpty(preProcessorFactorySet))
@@ -294,16 +220,6 @@ public class PreProcessorUtil
       }
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @param changesets
-     *
-     * @param preProcessorSet
-     * @param items
-     * @param <T>
-     */
     public void callPreProcessors(Iterable<T> items)
     {
       if (Util.isNotEmpty(preProcessorSet))
@@ -315,16 +231,6 @@ public class PreProcessorUtil
       }
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @param c
-     *
-     * @param preProcessorSet
-     * @param item
-     * @param <T>
-     */
     public void callPreProcessors(T item)
     {
       if (Util.isNotEmpty(preProcessorSet))
@@ -336,40 +242,6 @@ public class PreProcessorUtil
       }
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final Collection<? extends PreProcessorFactory<T>> preProcessorFactorySet;
-
-    /** Field description */
-    private final Collection<? extends PreProcessor<T>> preProcessorSet;
-
-    /** Field description */
-    private final Repository repository;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final Collection<BlameLinePreProcessorFactory> blameLinePreProcessorFactorySet;
-
-  /** Field description */
-  private final Collection<BlameLinePreProcessor> blameLinePreProcessorSet;
-
-  /** Field description */
-  private final Collection<ChangesetPreProcessorFactory> changesetPreProcessorFactorySet;
-
-  /** Field description */
-  private final Collection<ChangesetPreProcessor> changesetPreProcessorSet;
-
-  private final Collection<ModificationsPreProcessorFactory> modificationsPreProcessorFactorySet;
-
-  private final Collection<ModificationsPreProcessor> modificationsPreProcessorSet;
-
-  /** Field description */
-  private final Collection<FileObjectPreProcessorFactory> fileObjectPreProcessorFactorySet;
-
-  /** Field description */
-  private final Collection<FileObjectPreProcessor> fileObjectPreProcessorSet;
 }

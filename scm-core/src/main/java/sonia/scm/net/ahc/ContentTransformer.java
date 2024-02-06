@@ -34,7 +34,6 @@ import sonia.scm.plugin.ExtensionPoint;
  * annotate the implementation with the {@link sonia.scm.plugin.Extension}
  * annotation.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 @ExtensionPoint
@@ -47,8 +46,6 @@ public interface ContentTransformer
    * 
    * @param type object type
    * @param contentType content type
-   * 
-   * @return {@code true} if the transformer is responsible
    */
   public boolean isResponsible(Class<?> type, String contentType);
 
@@ -69,8 +66,6 @@ public interface ContentTransformer
    * @param type type of result object
    * @param content content
    * @param <T> type of result object
-   *
-   * @return
    */
   public <T> T unmarshall(Class<T> type, ByteSource content);
 }

@@ -24,13 +24,11 @@
     
 package sonia.scm.lifecycle;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.event.Event;
 
 /**
  * This event indicates a forced restart of scm-manager.
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Event
@@ -46,8 +44,6 @@ public class RestartEvent {
 
   /**
    * The class which has fired the restart event.
-   *
-   * @return class which has fired the restart event
    */
   public Class<?> getCause() {
     return cause;
@@ -55,8 +51,6 @@ public class RestartEvent {
 
   /**
    * Returns the reason for the restart.
-   *
-   * @return reason for restart
    */
   public String getReason() {
     return reason;

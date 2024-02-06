@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi.javahg;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.javahg.DateTime;
 import org.javahg.Repository;
@@ -43,16 +42,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public abstract class AbstractChangesetCommand extends AbstractCommand
 {
 
-  /** Field description */
   public static final String BRANCH_DEFAULT = "default";
 
   /**
@@ -63,17 +56,14 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
    */
   private static final byte[] CHANGESET_PATTERN = Utils.randomBytes();
 
-  /** Field description */
   public static final String CHANGESET_LAZY_STYLE_PATH =
     Utils.resourceAsFile("/sonia/scm/styles/changesets-lazy.style",
       ImmutableMap.of("pattern", CHANGESET_PATTERN)).getPath();
 
-  /** Field description */
   protected static final String CHANGESET_EAGER_STYLE_PATH =
     Utils.resourceAsFile("/sonia/scm/styles/changesets-eager.style",
       ImmutableMap.of("pattern", CHANGESET_PATTERN)).getPath();
 
-  /** Field description */
   private static final String NULL_ID =
     "0000000000000000000000000000000000000000";
 
@@ -89,15 +79,8 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
   /** changeset property for node revision */
   private static final String PROPERTY_REVISION = "hg.rev";
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repository
-   * @param config
-   */
+  private HgConfig config;
+ 
   AbstractChangesetCommand(Repository repository, HgConfig config)
   {
     super(repository);
@@ -105,16 +88,8 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
     withDebugFlag();
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param stream
-   *
-   * @return
-   */
+
   protected List<Integer> loadRevisionsFromStream(HgInputStream stream)
   {
     List<Integer> revisions = Lists.newArrayList();
@@ -140,14 +115,7 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
     return revisions;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param in
-   *
-   * @return
-   */
+
   protected List<Changeset> readListFromStream(HgInputStream in)
   {
     List<Changeset> changesets = Lists.newArrayList();
@@ -182,16 +150,7 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
     return changesets;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param in
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   private Changeset createFromInputStream(HgInputStream in) throws IOException
   {
     Changeset changeset = new Changeset();
@@ -276,18 +235,6 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
     return hgModificationParser.getModifications();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param in
-   * @param changeset
-   * @param propertyKey
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   private String readId(HgInputStream in, Changeset changeset,
     String propertyKey)
     throws IOException
@@ -307,24 +254,12 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
     return in.nextAsText(40);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
+
   private boolean isNullId(String id)
   {
     return ((id != null) && id.equals("-1:".concat(NULL_ID)))
       || NULL_ID.equals(id);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private HgConfig config;
 }

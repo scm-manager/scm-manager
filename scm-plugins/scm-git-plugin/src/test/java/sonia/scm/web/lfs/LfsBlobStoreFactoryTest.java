@@ -42,7 +42,6 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link LfsBlobStoreFactory}.
  * 
- * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LfsBlobStoreFactoryTest {

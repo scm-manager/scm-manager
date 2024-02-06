@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import org.apache.shiro.SecurityUtils;
@@ -71,37 +70,22 @@ import static sonia.scm.NotFoundException.notFound;
 import static sonia.scm.repository.GitUtil.getBranchIdOrCurrentHead;
 import static sonia.scm.repository.spi.IntegrateChangesFromWorkdirException.forMessage;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 class AbstractGitCommand {
 
-  /**
-   * the logger for AbstractGitCommand
-   */
+ 
   private static final Logger logger = LoggerFactory.getLogger(AbstractGitCommand.class);
   private static final Collection<RemoteRefUpdate.Status> ACCEPTED_UPDATE_STATUS = asList(OK, UP_TO_DATE, NON_EXISTING);
 
-  /**
-   * Constructs ...
-   *
-   * @param context
-   */
+  protected GitContext context;
+
+  protected sonia.scm.repository.Repository repository;
+
   AbstractGitCommand(GitContext context) {
     this.repository = context.getRepository();
     this.context = context;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @return
-   * @throws IOException
-   */
   Repository open() throws IOException {
     return context.open();
   }
@@ -311,16 +295,4 @@ class AbstractGitCommand {
       }
     }
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * Field description
-   */
-  protected GitContext context;
-
-  /**
-   * Field description
-   */
-  protected sonia.scm.repository.Repository repository;
 }

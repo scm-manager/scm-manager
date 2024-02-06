@@ -34,7 +34,6 @@ import java.util.Date;
 /**
  * Received data from repository hook event.
  *
- * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "hook")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -44,7 +43,7 @@ public class DebugHookData
   private Collection<String> changesets;
 
   /**
-   * Constructs a new instance. This constructor should only be used by JAXB.
+   * This constructor should only be used by JAXB.
    */
   public DebugHookData()
   {
@@ -63,8 +62,6 @@ public class DebugHookData
 
   /**
    * Returns the receiving date.
-   * 
-   * @return receiving date
    */
   public Date getDate()
   {
@@ -73,8 +70,6 @@ public class DebugHookData
 
   /**
    * Return collection of changeset ids.
-   * 
-   * @return collection of changeset ids
    */
   public Collection<String> getChangesets()
   {

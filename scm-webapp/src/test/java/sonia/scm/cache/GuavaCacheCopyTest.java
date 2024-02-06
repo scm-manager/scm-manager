@@ -24,25 +24,14 @@
     
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.cache.CacheBuilder;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GuavaCacheCopyTest extends CacheCopyTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param strategy
-   *
-   * @return
-   */
+
   @Override
   @SuppressWarnings("unchecked")
   protected Cache<String, MutableObject> createCache(CopyStrategy strategy)

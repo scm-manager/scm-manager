@@ -24,7 +24,6 @@
     
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.shiro.authz.Permission;
 
@@ -32,17 +31,9 @@ import org.apache.shiro.authz.Permission;
  * Permission that can be represented by a string. {@link StringablePermission}
  * are the only permissions which are pushed to the ui.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public interface StringablePermission extends Permission
 {
-
-  /**
-   * Return string representation of the permission.
-   *
-   *
-   * @return string representation of the permission
-   */
   public String getAsString();
 }

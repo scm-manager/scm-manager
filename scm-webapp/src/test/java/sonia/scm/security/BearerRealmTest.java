@@ -44,7 +44,6 @@ import static sonia.scm.security.BearerToken.valueOf;
 /**
  * Unit tests for {@link BearerRealm}.
  *
- * @author Sebastian Sdorra
  */
 @ExtendWith(MockitoExtension.class)
 class BearerRealmTest {

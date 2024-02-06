@@ -34,9 +34,6 @@ public interface NamespaceStrategy {
 
   /**
    * Create new namespace for the given repository.
-   *
-   * @param repository repository
-   * @return namespace
    */
   String createNamespace(Repository repository);
 

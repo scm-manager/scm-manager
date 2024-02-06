@@ -30,7 +30,6 @@ import sonia.scm.plugin.ExtensionPoint;
  * Validates an {@link AccessToken}. The validator is called during authentication
  * with an {@link AccessToken}.
  * 
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @ExtensionPoint
@@ -41,8 +40,6 @@ public interface AccessTokenValidator {
    * method returns {@code false}, the authentication is treated as failed.
    * 
    * @param token the access token to verify
-   * 
-   * @return {@code true} if the token is valid
    */
   boolean validate(AccessToken token);
 }

@@ -35,20 +35,16 @@ public interface RepositoryCoordinates extends TypedObject {
 
   /**
    * Returns the internal id of the repository.
-   * @return internal id
    */
   String getId();
 
   /**
    * Returns the namespace of the repository.
-   *
-   * @return namespace
    */
   String getNamespace();
 
   /**
    * Returns the name of the repository.
-   * @return name
    */
   String getName();
 }

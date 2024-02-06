@@ -32,7 +32,6 @@ import sonia.scm.event.Event;
  * This class is wrapper of {@link RepositoryHookEvent} for the event system of
  * SCM-Manager.
  *
- * @author Sebastian Sdorra
  * @since 2.14.0
  */
 @Event

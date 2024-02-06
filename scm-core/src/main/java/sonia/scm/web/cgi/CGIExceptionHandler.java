@@ -24,22 +24,19 @@
     
 package sonia.scm.web.cgi;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Handles exception thrown by an {@link CGIExecutor}
  *
- * @author Sebastian Sdorra
  * @since 1.8
  */
 public interface CGIExceptionHandler
 {
 
   /**
-   * Handles a exception which is ocurred during cgi execution.
+   * Handles an exception which occurred during cgi execution.
    *
    *
    * @param request current http request

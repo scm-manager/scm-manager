@@ -24,53 +24,22 @@
     
 package sonia.scm.i18n;
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class I18nException extends RuntimeException
 {
-
-  /** Field description */
   private static final long serialVersionUID = 1845326427312983227L;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
   public I18nException() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
   public I18nException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
   public I18nException(Throwable cause)
   {
     super(cause);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
   public I18nException(String message, Throwable cause)
   {
     super(message, cause);

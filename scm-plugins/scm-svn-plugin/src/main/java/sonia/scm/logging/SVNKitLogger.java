@@ -24,7 +24,6 @@
     
 package sonia.scm.logging;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Maps;
 
@@ -34,58 +33,33 @@ import org.slf4j.LoggerFactory;
 import org.tmatesoft.svn.util.SVNDebugLogAdapter;
 import org.tmatesoft.svn.util.SVNLogType;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Map;
 import java.util.logging.Level;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class SVNKitLogger extends SVNDebugLogAdapter
 {
 
-  /** Field description */
   private static final int MAX_SIZE = 128 * 1024;
 
-  /** Field description */
   private static final int TRACE_LEVEL_THRESHOLD = Level.FINEST.intValue();
 
-  /** Field description */
   private static final int INFO_LEVEL_THRESHOLD = Level.INFO.intValue();
 
-  /** Field description */
   private static final int DEBUG_LEVEL_THRESHOLD = Level.FINE.intValue();
 
-  /** Field description */
   private static final int WARN_LEVEL_THRESHOLD = Level.WARNING.intValue();
 
-  /** Field description */
   private static final String LINE_SEPARATOR =
     System.getProperty("line.separator");
 
-  //~--- constructors ---------------------------------------------------------
+  private Map<SVNLogType, Logger> loggerMap;
 
-  /**
-   * Constructs ...
-   *
-   */
   public SVNKitLogger()
   {
     loggerMap = Maps.newHashMap();
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param logType
-   * @param th
-   * @param logLevel
-   */
   @Override
   public void log(SVNLogType logType, Throwable th, Level logLevel)
   {
@@ -113,14 +87,7 @@ public class SVNKitLogger extends SVNDebugLogAdapter
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param logType
-   * @param message
-   * @param logLevel
-   */
+
   @Override
   public void log(SVNLogType logType, String message, Level logLevel)
   {
@@ -148,14 +115,7 @@ public class SVNKitLogger extends SVNDebugLogAdapter
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param logType
-   * @param message
-   * @param data
-   */
+ 
   @Override
   public void log(SVNLogType logType, String message, byte[] data)
   {
@@ -178,36 +138,17 @@ public class SVNKitLogger extends SVNDebugLogAdapter
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   */
+
   private String parseName(String name)
   {
     return name.replace('-', '.');
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
-   */
+
   private Logger getLogger(SVNLogType type)
   {
     return loggerMap.computeIfAbsent(type, t -> LoggerFactory.getLogger(parseName(t.getName())));
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Map<SVNLogType, Logger> loggerMap;
 }

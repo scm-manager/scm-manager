@@ -30,9 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public final class GitSubModuleParser {
 
   private GitSubModuleParser() {

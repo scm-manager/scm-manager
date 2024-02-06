@@ -24,7 +24,6 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
@@ -43,19 +42,13 @@ import sonia.scm.repository.RepositoryProvider;
 import java.io.File;
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class GitRepositoryResolver implements RepositoryResolver<HttpServletRequest>
 {
-
-  /** the logger for GitRepositoryResolver */
   private static final Logger logger = LoggerFactory.getLogger(GitRepositoryResolver.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final GitRepositoryHandler handler;
+  private final RepositoryProvider repositoryProvider;
 
   @Inject
   public GitRepositoryResolver(GitRepositoryHandler handler, RepositoryProvider repositoryProvider)
@@ -64,19 +57,10 @@ public class GitRepositoryResolver implements RepositoryResolver<HttpServletRequ
     this.repositoryProvider = repositoryProvider;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @param request http request
-   * @param repositoryName repository name
-   *
    * @return jgit repository
    *
-   * @throws RepositoryNotFoundException
-   * @throws ServiceNotEnabledException
    */
   @Override
   public Repository open(HttpServletRequest request, String repositoryName) throws RepositoryNotFoundException, ServiceNotEnabledException
@@ -118,8 +102,4 @@ public class GitRepositoryResolver implements RepositoryResolver<HttpServletRequ
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  private final GitRepositoryHandler handler;
-  private final RepositoryProvider repositoryProvider;
 }

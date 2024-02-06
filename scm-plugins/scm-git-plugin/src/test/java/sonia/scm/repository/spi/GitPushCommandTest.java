@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -41,12 +40,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class GitPushCommandTest extends AbstractRemoteCommandTestBase
 {
 
@@ -130,12 +124,7 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
     assertThat(commits.hasNext()).isFalse();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   private GitPushCommand createCommand()
   {
     return new GitPushCommand(handler, new GitContext(outgoingDirectory, outgoingRepository, null, new GitConfig()));

@@ -24,8 +24,6 @@
     
 package sonia.scm.security;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -33,7 +31,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 /**
  * Permission object which is stored and assigned to a specific user or group.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,24 +38,15 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class StoredAssignedPermission extends AssignedPermission
 {
 
-  /** serial version uid */
   private static final long serialVersionUID = -4593919877023168090L;
 
-  //~--- constructors ---------------------------------------------------------
+  private String id;
 
   /**
    * Constructor is only visible for JAXB.
-   *
    */
   public StoredAssignedPermission() {}
 
-  /**
-   * Constructs a new StoredAssignedPermission.
-   *
-   *
-   * @param id id of the permission object
-   * @param permission assigned permission object
-   */
   public StoredAssignedPermission(String id, AssignedPermission permission)
   {
     super(permission);
@@ -66,21 +54,9 @@ public class StoredAssignedPermission extends AssignedPermission
 
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns the id of the stored permission object.
-   *
-   *
-   * @return id of permission
-   */
   public String getId()
   {
     return id;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** id */
-  private String id;
 }

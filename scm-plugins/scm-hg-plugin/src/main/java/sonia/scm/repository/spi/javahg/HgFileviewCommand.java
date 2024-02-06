@@ -24,14 +24,11 @@
 
 package sonia.scm.repository.spi.javahg;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.javahg.Repository;
 import org.javahg.internals.AbstractCommand;
 import org.javahg.internals.HgInputStream;
 import sonia.scm.repository.FileObject;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.util.Optional;
@@ -39,7 +36,6 @@ import java.util.Optional;
 /**
  * Mercurial command to list files of a repository.
  *
- * @author Sebastian Sdorra
  */
 public class HgFileviewCommand extends AbstractCommand
 {
@@ -65,8 +61,6 @@ public class HgFileviewCommand extends AbstractCommand
 
   /**
    * Disable last commit fetching for file objects.
-   *
-   * @return {@code this}
    */
   public HgFileviewCommand disableLastCommit() {
     disableLastCommit = true;
@@ -77,8 +71,6 @@ public class HgFileviewCommand extends AbstractCommand
 
   /**
    * Disables sub repository detection
-   *
-   * @return {@code this}
    */
   public HgFileviewCommand disableSubRepositoryDetection() {
     cmdAppend("-s");
@@ -176,8 +168,6 @@ public class HgFileviewCommand extends AbstractCommand
 
   /**
    * Returns the name of the mercurial command.
-   *
-   * @return command name
    */
   @Override
   public String getCommandName()

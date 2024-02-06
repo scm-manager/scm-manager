@@ -28,52 +28,28 @@ package sonia.scm.repository.api;
  * Base exception for all exceptions which can occur during the hook
  * initialization.
  *
- * @author Sebastian Sdorra
  * @since 1.33
  */
 public class HookException extends RuntimeException
 {
 
-  /** Field description */
   private static final long serialVersionUID = 2572704247316715734L;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   public HookException() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
+
   public HookException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
   public HookException(Throwable cause)
   {
     super(cause);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
+ 
   public HookException(String message, Throwable cause)
   {
     super(message, cause);

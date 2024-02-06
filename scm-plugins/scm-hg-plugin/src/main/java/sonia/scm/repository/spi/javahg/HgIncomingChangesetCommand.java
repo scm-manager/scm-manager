@@ -24,55 +24,30 @@
 
 package sonia.scm.repository.spi.javahg;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.javahg.Repository;
 
 import sonia.scm.repository.HgConfig;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class HgIncomingChangesetCommand
   extends HgIncomingOutgoingChangesetCommand
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repository
-   * @param config
-   */
+ 
   private HgIncomingChangesetCommand(Repository repository, HgConfig config)
   {
     super(repository, config);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param config
-   *
-   * @return
-   */
+
   public static HgIncomingChangesetCommand on(Repository repository, HgConfig config) {
     return new HgIncomingChangesetCommand(repository, config);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String getCommandName()
   {

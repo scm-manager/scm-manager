@@ -24,7 +24,6 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.Closeables;
 import com.google.common.io.Resources;
@@ -42,32 +41,19 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class JAXBConfigurationEntryStoreTest
   extends ConfigurationEntryStoreTestBase
 {
 
-  /** Field description */
   private static final String RESOURCE_FIXED =
     "sonia/scm/store/fixed.format.xml";
 
-  /** Field description */
   private static final String RESOURCE_WRONG =
     "sonia/scm/store/wrong.format.xml";
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testLoad() throws IOException
   {
@@ -86,12 +72,7 @@ public class JAXBConfigurationEntryStoreTest
     assertEquals("tuser3", a3.getName());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testLoadWrongFormat() throws IOException
   {
@@ -145,27 +126,14 @@ public class JAXBConfigurationEntryStoreTest
     assertEquals("abc_value", storeObject.getValue());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected ConfigurationEntryStoreFactory  createConfigurationStoreFactory()
   {
     return new JAXBConfigurationEntryStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator(), null, new StoreCacheConfigProvider(false));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param resource
-   * @param name
-   *
-   * @throws IOException
-   */
+
   private void copy(String resource, String name) throws IOException
   {
     URL url = Resources.getResource(resource);
@@ -184,16 +152,7 @@ public class JAXBConfigurationEntryStoreTest
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param resource
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   private ConfigurationEntryStore<AssignedPermission> createPermissionStore(
     String resource)
     throws IOException

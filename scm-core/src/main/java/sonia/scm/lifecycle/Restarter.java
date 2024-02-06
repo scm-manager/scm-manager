@@ -32,8 +32,6 @@ public interface Restarter {
 
   /**
    * Return {@code true} if restarting scm-manager is supported.
-   *
-   * @return {@code true} if restart is supported
    */
   boolean isSupported();
 

@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -35,12 +34,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.text.MessageFormat;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Single failure of a {@link HealthCheck}.
  *
- * @author Sebastian Sdorra
  * @since 1.36
  */
 @XmlRootElement(name = "healthCheckFailure")
@@ -51,10 +47,19 @@ public final class HealthCheckFailure implements Serializable
   private static final String URL_TEMPLATE = "https://scm-manager.org/docs/{0}/en/user/repo/health-checks/%s";
   private static final String LATEST_VERSION = "latest";
 
+  private String description;
+
+  private String id;
+
+  private String summary;
+
+  private String url;
+
+  /** Flag whether the url is a template or not */
+  private boolean urlTemplated = false;
+
   /**
-   * Constructs a new {@link HealthCheckFailure}.
    * This constructor is only for JAXB.
-   *
    */
   HealthCheckFailure() {}
 
@@ -119,7 +124,7 @@ public final class HealthCheckFailure implements Serializable
   /**
    * Use this to create {@link HealthCheckFailure} instances with a custom url for core health check
    * failures. If this url can be customized with a concrete version of SCM-Manager, you can use <code>{0}</code>
-   * as a placeholder for the version. This will be replaces later on.
+   * as a placeholder for the version. This will be replaced later on.
    * @param urlTemplate The url for this failure.
    * @since 2.17.0
    */
@@ -171,8 +176,6 @@ public final class HealthCheckFailure implements Serializable
 
   /**
    * Returns the description of this failure.
-   *
-   * @return description of this failure
    */
   public String getDescription()
   {
@@ -181,8 +184,6 @@ public final class HealthCheckFailure implements Serializable
 
   /**
    * Returns the id of this failure.
-   *
-   * @return id of this failure
    */
   public String getId()
   {
@@ -191,8 +192,6 @@ public final class HealthCheckFailure implements Serializable
 
   /**
    * Returns the summary of the failure.
-   *
-   * @return summary of the failure
    */
   public String getSummary()
   {
@@ -225,21 +224,6 @@ public final class HealthCheckFailure implements Serializable
       return url;
     }
   }
-
-  /** description of failure */
-  private String description;
-
-  /** id of failure */
-  private String id;
-
-  /** summary of failure */
-  private String summary;
-
-  /** url of failure */
-  private String url;
-
-  /** Flag whether the url is a template or not */
-  private boolean urlTemplated = false;
 
   public static final class UrlTemplate {
     private final String url;

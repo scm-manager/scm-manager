@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.javahg.Changeset;
 import org.junit.Test;
@@ -38,21 +37,11 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class HgIncomingCommandTest extends IncomingOutgoingTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testGetIncomingChangesets() throws IOException {
     writeNewFile(outgoing, outgoingDirectory, "a.txt", "Content of file a.txt");

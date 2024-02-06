@@ -24,24 +24,18 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
 
 import java.net.URL;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class PathWebResourceLoaderTest extends WebResourceLoaderTestBase {
 
   @Test

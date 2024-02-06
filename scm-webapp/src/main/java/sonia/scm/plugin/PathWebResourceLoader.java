@@ -35,7 +35,6 @@ import java.nio.file.Path;
 /**
  * Load web resources from a plugin webapp directory.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public class PathWebResourceLoader implements WebResourceLoader {
@@ -44,9 +43,7 @@ public class PathWebResourceLoader implements WebResourceLoader {
 
   private final Path directory;
 
-  /**
-   * the logger for PathWebResourceLoader
-   */
+ 
   private static final Logger LOG = LoggerFactory.getLogger(PathWebResourceLoader.class);
 
   public PathWebResourceLoader(Path directory) {

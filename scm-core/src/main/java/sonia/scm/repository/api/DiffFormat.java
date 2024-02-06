@@ -27,7 +27,6 @@ package sonia.scm.repository.api;
 /**
  * Specifies the output format of a diff command.
  *
- * @author Sebastian Sdorra
  * @since 1.34
  */
 public enum DiffFormat

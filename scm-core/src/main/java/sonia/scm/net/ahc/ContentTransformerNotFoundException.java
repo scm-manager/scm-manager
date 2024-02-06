@@ -28,24 +28,14 @@ package sonia.scm.net.ahc;
  * The ContentTransformerNotFoundException is thrown, if no
  * {@link ContentTransformer} could be found for the given type.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public class ContentTransformerNotFoundException
   extends ContentTransformerException
 {
 
-  /** Field description */
   private static final long serialVersionUID = 6374525163951460938L;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs a new ContentTransformerNotFoundException.
-   *
-   *
-   * @param message exception message
-   */
   public ContentTransformerNotFoundException(String message)
   {
     super(message);

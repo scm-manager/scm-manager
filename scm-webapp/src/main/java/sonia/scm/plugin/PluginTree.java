@@ -35,16 +35,12 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public final class PluginTree {
 
   private static final int SCM_VERSION = 3;
 
-  /**
-   * the logger for PluginTree
-   */
+ 
   private static final Logger LOG = LoggerFactory.getLogger(PluginTree.class);
 
   private final Stage stage;

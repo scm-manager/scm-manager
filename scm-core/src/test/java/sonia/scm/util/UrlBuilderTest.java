@@ -24,24 +24,16 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class UrlBuilderTest
 {
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testAppendParameter()
   {
     UrlBuilder builder = new UrlBuilder("http://www.short.de");
@@ -53,11 +45,7 @@ public class UrlBuilderTest
     assertEquals("http://www.short.de?i=123&s=abc&b=true&l=321&c=a%20b", builder.toString());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testAppendUrlPart()
   {
     UrlBuilder builder = new UrlBuilder("http://www.short.de");
@@ -66,11 +54,7 @@ public class UrlBuilderTest
     assertEquals("http://www.short.de/test", builder.toString());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test(expected = IllegalStateException.class)
+   @Test(expected = IllegalStateException.class)
   public void testState()
   {
     UrlBuilder builder = new UrlBuilder("http://www.short.de");

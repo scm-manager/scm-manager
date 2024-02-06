@@ -24,45 +24,26 @@
     
 package sonia.scm.repository.client.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import sonia.scm.repository.client.api.RepositoryClientException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GitRemoveCommand implements RemoveCommand
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param git
-   */
+ 
   GitRemoveCommand(Git git)
   {
     this.git = git;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @throws IOException
-   */
+  
   @Override
   public void remove(String path) throws IOException
   {
@@ -78,6 +59,5 @@ public class GitRemoveCommand implements RemoveCommand
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private Git git;
 }

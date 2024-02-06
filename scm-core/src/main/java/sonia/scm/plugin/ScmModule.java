@@ -34,7 +34,6 @@ import sonia.scm.config.ConfigElement;
 import java.util.Set;
 
 /**
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @XmlRootElement(name = "module")

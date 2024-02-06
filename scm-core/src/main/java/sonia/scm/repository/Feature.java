@@ -27,7 +27,6 @@ package sonia.scm.repository;
 /**
  * Features which are supported by a {@link Repository}.
  *
- * @author Sebastian Sdorra
  * @since 1.25
  */
 public enum Feature

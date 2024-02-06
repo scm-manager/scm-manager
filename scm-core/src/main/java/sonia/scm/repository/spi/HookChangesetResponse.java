@@ -31,7 +31,6 @@ import static java.util.Collections.emptyList;
 /**
  * Response object to retrieve {@link Changeset}s during a hook.
  *
- * @author Sebastian Sdorra
  * @since 1.33
  */
 public final class HookChangesetResponse {
@@ -47,11 +46,8 @@ public final class HookChangesetResponse {
     this(changesets, emptyList());
   }
 
-
   /**
    * Return added changesets.
-   *
-   * @return added changesets
    */
   public Iterable<Changeset> getChangesets() {
     return addedChangesets;
@@ -60,8 +56,7 @@ public final class HookChangesetResponse {
   /**
    * Return removed changesets.
    *
-   * @return removed changesets
-   * @since 2.39.0
+   *  @since 2.39.0
    */
   public Iterable<Changeset> getRemovedChangesets() {
     return removedChangesets;

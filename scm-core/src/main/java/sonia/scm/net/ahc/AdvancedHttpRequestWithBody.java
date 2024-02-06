@@ -21,14 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.ByteSource;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 
@@ -38,20 +35,15 @@ import java.nio.charset.StandardCharsets;
 /**
  * Http request with body.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public class AdvancedHttpRequestWithBody
   extends BaseHttpRequest<AdvancedHttpRequestWithBody>
 {
+  private Content content;
 
   /**
    * Constructs a new {@link AdvancedHttpRequestWithBody}.
-   *
-   *
-   * @param client http client
-   * @param method http method
-   * @param url url
    */
   AdvancedHttpRequestWithBody(AdvancedHttpClient client, String method,
     String url)
@@ -64,9 +56,6 @@ public class AdvancedHttpRequestWithBody
   /**
    * Sets the content length for the request.
    *
-   *
-   * @param length content length
-   *
    * @return {@code this}
    */
   public AdvancedHttpRequestWithBody contentLength(long length)
@@ -77,9 +66,6 @@ public class AdvancedHttpRequestWithBody
   /**
    * Sets the content type for the request.
    *
-   *
-   * @param contentType content type
-   *
    * @return {@code this}
    */
   public AdvancedHttpRequestWithBody contentType(String contentType)
@@ -89,9 +75,6 @@ public class AdvancedHttpRequestWithBody
 
   /**
    * Sets the content of the file as request content.
-   *
-   *
-   * @param file file
    *
    * @return {@code this}
    */
@@ -133,9 +116,6 @@ public class AdvancedHttpRequestWithBody
   /**
    * Sets the raw data as request content.
    *
-   *
-   * @param data raw data
-   *
    * @return {@code this}
    */
   public AdvancedHttpRequestWithBody rawContent(byte[] data)
@@ -147,9 +127,6 @@ public class AdvancedHttpRequestWithBody
 
   /**
    * Sets the raw data as request content.
-   *
-   *
-   * @param source byte source
    *
    * @return {@code this}
    */
@@ -163,9 +140,6 @@ public class AdvancedHttpRequestWithBody
   /**
    * Sets the string as request content.
    *
-   *
-   * @param content string content
-   *
    * @return {@code this}
    */
   public AdvancedHttpRequestWithBody stringContent(String content)
@@ -175,7 +149,6 @@ public class AdvancedHttpRequestWithBody
 
   /**
    * Sets the string as request content.
-   *
    *
    * @param content string content
    * @param charset charset of content
@@ -241,35 +214,20 @@ public class AdvancedHttpRequestWithBody
     return transformedContent(ContentType.XML, object);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the content or the request.
-   *
-   *
-   * @return request content
    */
   public Content getContent()
   {
     return content;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Returns {@code this}.
-   *
-   *
-   * @return {@code this}
-   */
   @Override
   protected AdvancedHttpRequestWithBody self()
   {
     return this;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** request content */
-  private Content content;
 }

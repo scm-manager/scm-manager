@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
 
@@ -37,23 +36,17 @@ import sonia.scm.cache.Cache;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.6
  */
 public class CacheClearHook
 {
-
-  /** the logger for CacheClearHook */
   private static final Logger logger =
     LoggerFactory.getLogger(CacheClearHook.class);
 
-  //~--- methods --------------------------------------------------------------
+  private Cache<?, ?> cache;
 
   /**
-   * Method description
-   *
    * @since 1.7
-   *
    */
   public void clearCache()
   {
@@ -61,11 +54,7 @@ public class CacheClearHook
   }
 
   /**
-   * Method description
-   *
    * @since 1.9
-   *
-   * @param predicate
    */
   @SuppressWarnings("unchecked")
   public void clearCache(Predicate predicate)
@@ -90,12 +79,7 @@ public class CacheClearHook
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param event
-   */
+
   @Subscribe
   public void onEvent(PostReceiveRepositoryHookEvent event)
   {
@@ -109,32 +93,17 @@ public class CacheClearHook
   }
 
   /**
-   * Method description
-   *
    * @since 1.9
-   *
-   *
-   * @param event
-   * @return
    */
   protected Predicate<?> createPredicate(RepositoryHookEvent event)
   {
     return null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param cache
-   */
+
   protected void init(Cache<?, ?> cache)
   {
     this.cache = cache;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Cache<?, ?> cache;
 }

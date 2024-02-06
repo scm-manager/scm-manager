@@ -24,7 +24,6 @@
 
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -37,12 +36,9 @@ import sonia.scm.auditlog.AuditLogEntity;
 
 import java.io.Serializable;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Permission object which is assigned to a specific user or group.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -51,23 +47,23 @@ import java.io.Serializable;
 public class AssignedPermission implements PermissionObject, Serializable, AuditLogEntity
 {
 
-  /** serial version uid */
   private static final long serialVersionUID = -7411338422110323879L;
 
-  //~--- constructors ---------------------------------------------------------
+  /** group permission indicator */
+  @XmlElement(name = "group-permission")
+  private boolean groupPermission;
+
+  /** name of the user or group */
+  private String name;
+
+  /** string representation of the permission */
+  private PermissionDescriptor permission;
 
   /**
    * Constructor is only visible for JAXB.
-   *
    */
   public AssignedPermission() {}
 
-  /**
-   * Constructs a new AssignedPermission.
-   *
-   *
-   * @param permission assigned permission
-   */
   public AssignedPermission(AssignedPermission permission)
   {
     this.name = permission.name;
@@ -75,13 +71,6 @@ public class AssignedPermission implements PermissionObject, Serializable, Audit
     this.permission = permission.permission;
   }
 
-  /**
-   * Constructs a new AssingnedPermmission.
-   *
-   *
-   * @param name name of the user
-   * @param permission permission string
-   */
   public AssignedPermission(String name, String permission)
   {
     this(name, new PermissionDescriptor(permission));
@@ -92,14 +81,6 @@ public class AssignedPermission implements PermissionObject, Serializable, Audit
     this(name, false, permission);
   }
 
-  /**
-   * Constructs a new AssingnedPermmission.
-   *
-   *
-   * @param name name of the user or group
-   * @param groupPermission true if the permission should be assigned to a group
-   * @param permission permission string
-   */
   public AssignedPermission(String name, boolean groupPermission,
     String permission)
   {
@@ -114,11 +95,8 @@ public class AssignedPermission implements PermissionObject, Serializable, Audit
     this.permission = permission;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public boolean equals(Object obj)
   {
@@ -139,18 +117,14 @@ public class AssignedPermission implements PermissionObject, Serializable, Audit
       && Objects.equal(permission, other.permission);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public int hashCode()
   {
     return Objects.hashCode(name, groupPermission, permission);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public String toString()
   {
@@ -163,13 +137,9 @@ public class AssignedPermission implements PermissionObject, Serializable, Audit
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the name of the user or group which the permission is assigned.
-   *
-   *
-   * @return name of user or group
    */
   @Override
   public String getName()
@@ -187,27 +157,12 @@ public class AssignedPermission implements PermissionObject, Serializable, Audit
 
   /**
    * Returns true if the permission is assigned to a group.
-   *
-   *
-   * @return true if the permission is assigned to a group
    */
   @Override
   public boolean isGroupPermission()
   {
     return groupPermission;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** group permission indicator */
-  @XmlElement(name = "group-permission")
-  private boolean groupPermission;
-
-  /** name of the user or group */
-  private String name;
-
-  /** string representation of the permission */
-  private PermissionDescriptor permission;
 
   @Override
   public String getEntityName() {

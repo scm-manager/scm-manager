@@ -24,7 +24,6 @@
 
 package sonia.scm.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.WriteListener;
@@ -40,41 +39,31 @@ import java.util.zip.GZIPOutputStream;
 /**
  * Response stream for gzip encoding.
  *
- * @author Sebastian Sdorra
  * @since 1.15
  */
 public class GZipResponseStream extends ServletOutputStream
 {
 
-  /**
-   * the logger for GZipResponseStream
-   */
+  protected ByteArrayOutputStream baos = null;
+
+  protected GZIPOutputStream gzipstream = null;
+
+  protected boolean closed = false;
+
+  protected ServletOutputStream output = null;
+
+  protected HttpServletResponse response = null;
+
   private static final Logger logger =
     LoggerFactory.getLogger(GZipResponseStream.class);
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param response
-   *
-   * @throws IOException
-   */
   public GZipResponseStream(HttpServletResponse response) throws IOException
   {
     this(response, null);
   }
 
   /**
-   * Constructs ...
-   *
-   *
-   * @param response
-   * @param config
-   *
-   * @throws IOException
    * @since 1.16
    */
   public GZipResponseStream(HttpServletResponse response,
@@ -108,14 +97,7 @@ public class GZipResponseStream extends ServletOutputStream
     }
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
   public void close() throws IOException
   {
@@ -147,12 +129,6 @@ public class GZipResponseStream extends ServletOutputStream
     closed = true;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
   public void flush() throws IOException
   {
@@ -164,24 +140,12 @@ public class GZipResponseStream extends ServletOutputStream
     gzipstream.flush();
   }
 
-  /**
-   * Method description
-   *
-   */
-  public void reset()
+   public void reset()
   {
 
     // noop
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param b
-   *
-   * @throws IOException
-   */
   @Override
   public void write(int b) throws IOException
   {
@@ -193,30 +157,12 @@ public class GZipResponseStream extends ServletOutputStream
     gzipstream.write((byte) b);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param b
-   *
-   * @throws IOException
-   */
   @Override
   public void write(byte b[]) throws IOException
   {
     write(b, 0, b.length);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param b
-   * @param off
-   * @param len
-   *
-   * @throws IOException
-   */
   @Override
   public void write(byte b[], int off, int len) throws IOException
   {
@@ -228,14 +174,7 @@ public class GZipResponseStream extends ServletOutputStream
     gzipstream.write(b, off, len);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Returns true if the stream is closed.
-   *
-   *
-   * @return true if the stream is closed
-   */
   public boolean isClosed()
   {
     return closed;
@@ -255,20 +194,4 @@ public class GZipResponseStream extends ServletOutputStream
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected ByteArrayOutputStream baos = null;
-
-  /** Field description */
-  protected GZIPOutputStream gzipstream = null;
-
-  /** Field description */
-  protected boolean closed = false;
-
-  /** Field description */
-  protected ServletOutputStream output = null;
-
-  /** Field description */
-  protected HttpServletResponse response = null;
 }

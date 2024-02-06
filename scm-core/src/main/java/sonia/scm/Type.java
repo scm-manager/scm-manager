@@ -24,7 +24,6 @@
     
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 import sonia.scm.util.AssertUtil;
@@ -33,11 +32,15 @@ import sonia.scm.util.Util;
 /**
  * Base class for all objects which supports different types.
  *
- * @author Sebastian Sdorra
  */
 @XmlRootElement
 public class Type
 {
+  /** display name of the type */
+  private String displayName;
+
+  /** unique name of the type */
+  private String name;
 
   /**
    * Constructs {@link Type} object.
@@ -68,15 +71,12 @@ public class Type
     }
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
-   * Returns true if the given ovject is equals.
+   * Returns true if the given object is equals.
    *
    *
    * @param obj
-   *
-   * @return true if the given ovject is equals
    */
   @Override
   public boolean equals(Object obj)
@@ -112,9 +112,6 @@ public class Type
 
   /**
    * Returns the hash code of the object.
-   *
-   *
-   * @return hash code of the object
    */
   @Override
   public int hashCode()
@@ -131,12 +128,6 @@ public class Type
     return hash;
   }
 
-  /**
-   * Returns {@link String} representation of the type.
-   *
-   *
-   * @return {@link String} representation of the type
-   */
   @Override
   public String toString()
   {
@@ -147,13 +138,9 @@ public class Type
     return out.toString();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the display name of the type.
-   *
-   *
-   * @return display name of the type
    */
   public String getDisplayName()
   {
@@ -162,16 +149,12 @@ public class Type
 
   /**
    * Returns the unique name of the type.
-   *
-   *
-   * @return unique name of the type
    */
   public String getName()
   {
     return name;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Setter for the display name of the type
@@ -196,11 +179,4 @@ public class Type
     this.name = name;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** display name of the type */
-  private String displayName;
-
-  /** unique name of the type */
-  private String name;
 }

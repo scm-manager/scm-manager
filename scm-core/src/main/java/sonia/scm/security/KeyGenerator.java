@@ -26,17 +26,11 @@ package sonia.scm.security;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.7
  */
 public interface KeyGenerator
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public String createKey();
 }

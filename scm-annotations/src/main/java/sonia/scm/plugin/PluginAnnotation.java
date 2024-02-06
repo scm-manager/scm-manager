@@ -24,8 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -34,7 +32,6 @@ import java.lang.annotation.Target;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Documented

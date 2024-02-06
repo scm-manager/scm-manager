@@ -30,7 +30,6 @@ import sonia.scm.event.Event;
  * The {@link ScmConfigurationChangedEvent} is fired whenever the
  * {@link ScmConfiguration} changes.
  *
- * @author Sebastian Sdorra
  * @since 1.34
  */
 @Event

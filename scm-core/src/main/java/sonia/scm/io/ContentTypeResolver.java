@@ -54,7 +54,6 @@ public interface ContentTypeResolver {
   /**
    * Returns a map of syntax highlighting modes such as ace, codemirror or prism by language.
    * @param language name of the coding language
-   * @return map of syntax highlighting modes
    * @since 2.28.0
    */
   default Map<String, String> findSyntaxModesByLanguage(String language) {

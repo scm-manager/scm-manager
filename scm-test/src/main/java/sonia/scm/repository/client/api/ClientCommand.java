@@ -26,7 +26,6 @@ package sonia.scm.repository.client.api;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public enum ClientCommand

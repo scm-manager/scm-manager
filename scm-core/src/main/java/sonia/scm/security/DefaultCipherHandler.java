@@ -24,7 +24,6 @@
 
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
@@ -56,7 +55,6 @@ import java.util.Base64;
  * Default implementation of the {@link CipherHandler}, which uses AES for
  * encryption and decryption.
  *
- * @author Sebastian Sdorra
  * @since 1.7
  */
 public class DefaultCipherHandler implements CipherHandler {
@@ -73,16 +71,12 @@ public class DefaultCipherHandler implements CipherHandler {
   /** prefix to detect new format */
   public static final String PREFIX_FORMAT_V2 = "v2:";
 
-  /** digest type for key generation */
   public static final String DIGEST_TYPE = "SHA-512";
 
-  /** string encoding */
   public static final Charset ENCODING = StandardCharsets.UTF_8;
 
-  /** default key length */
   public static final int KEY_LENGTH = 16;
 
-  /** default salt length */
   public static final int SALT_LENGTH = 16;
 
   @VisibleForTesting
@@ -97,7 +91,6 @@ public class DefaultCipherHandler implements CipherHandler {
 
   private static final String KEY_TYPE = "AES";
 
-  /** the logger for DefaultCipherHandler */
   private static final Logger LOG = LoggerFactory.getLogger(DefaultCipherHandler.class);
 
   private final SecureRandom random = new SecureRandom();
@@ -142,7 +135,6 @@ public class DefaultCipherHandler implements CipherHandler {
     }
   }
 
-  //~--- methods --------------------------------------------------------------
 
   @Override
   public String decode(String value) {
@@ -154,8 +146,6 @@ public class DefaultCipherHandler implements CipherHandler {
    *
    * @param plainKey key which is used for decoding
    * @param value encrypted value
-   *
-   * @return decrypted value
    */
   public String decode(char[] plainKey, String value) {
     Base64.Decoder decoder = Base64.getUrlDecoder();
@@ -201,8 +191,6 @@ public class DefaultCipherHandler implements CipherHandler {
    *
    * @param plainKey key which is used for encoding
    * @param value plain text value to encrypt
-   *
-   * @return encrypted value
    */
   public String encode(char[] plainKey, String value) {
     String res = null;

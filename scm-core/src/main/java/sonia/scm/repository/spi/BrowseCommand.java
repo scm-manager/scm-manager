@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.BrowserResult;
 
@@ -33,26 +32,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public interface BrowseCommand
 {
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   BrowserResult getBrowserResult(BrowseCommandRequest request) throws IOException;
 
   default <T> void sort(List<T> entries, Function<T, Boolean> isDirectory, Function<T, String> nameOf) {

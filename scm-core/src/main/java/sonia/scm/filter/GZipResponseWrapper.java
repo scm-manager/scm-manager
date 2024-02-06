@@ -24,7 +24,6 @@
     
 package sonia.scm.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,18 +37,19 @@ import java.io.PrintWriter;
 /**
  * Response wrapper for gzip encoding.
  *
- * @author Sebastian Sdorra
  * @since 1.15
  */
 public class GZipResponseWrapper extends HttpServletResponseWrapper
 {
+  protected GZipFilterConfig config = null;
 
-  /**
-   * Constructs a new GZipResponseWrapper
-   *
-   *
-   * @param response http response to wrap
-   */
+  protected HttpServletResponse origResponse = null;
+
+  protected GZipResponseStream stream = null;
+
+  /** response writer */
+  protected PrintWriter writer = null;
+
   public GZipResponseWrapper(HttpServletResponse response)
   {
     super(response);
@@ -57,12 +57,7 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
   }
 
   /**
-   * Constructs ...
-   *
-   *
-   * @param response
    * @since 1.16
-   * @param config
    */
   public GZipResponseWrapper(HttpServletResponse response,
                              GZipFilterConfig config)
@@ -72,13 +67,8 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
     this.config = config;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  public void finishResponse()
+   public void finishResponse()
   {
     IOUtil.close(writer);
 
@@ -88,12 +78,6 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
   public void flushBuffer() throws IOException
   {
@@ -103,27 +87,11 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public GZipFilterConfig getConfig()
   {
     return config;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   @Override
   public ServletOutputStream getOutputStream() throws IOException
   {
@@ -140,14 +108,6 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
     return stream;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   @Override
   public PrintWriter getWriter() throws IOException
   {
@@ -168,43 +128,14 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
     return writer;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param length
-   */
   @Override
   public void setContentLength(int length) {}
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   private GZipResponseStream createOutputStream() throws IOException
   {
     return new GZipResponseStream(origResponse, config);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** gzip filter config */
-  protected GZipFilterConfig config = null;
-
-  /** original http response */
-  protected HttpServletResponse origResponse = null;
-
-  /** gzip stream */
-  protected GZipResponseStream stream = null;
-
-  /** response writer */
-  protected PrintWriter writer = null;
 }

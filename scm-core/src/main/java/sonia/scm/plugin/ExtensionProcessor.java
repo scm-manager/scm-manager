@@ -24,7 +24,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Binder;
 import sonia.scm.config.ConfigBinding;
@@ -34,7 +33,6 @@ import static java.util.Collections.emptySet;
 /**
  * Process and resolve extensions.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public interface ExtensionProcessor
@@ -64,19 +62,12 @@ public interface ExtensionProcessor
 
   /**
    * Process auto bind extensions.
-   *
-   *
-   * @param binder injection binder
    */
   void processAutoBindExtensions(Binder binder);
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns all collected web elements (servlets and filters).
-   *
-   *
-   * @return collected web elements
    */
   Iterable<WebElementExtension> getWebElements();
 
@@ -89,8 +80,6 @@ public interface ExtensionProcessor
 
   /**
    * Returns all collected indexable types.
-   *
-   * @return collected indexable types
    * @since 2.21.0
    */
   default Iterable<Class<?>> getIndexedTypes() {

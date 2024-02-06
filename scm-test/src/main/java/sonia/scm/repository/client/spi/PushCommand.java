@@ -24,13 +24,10 @@
     
 package sonia.scm.repository.client.spi;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public interface PushCommand

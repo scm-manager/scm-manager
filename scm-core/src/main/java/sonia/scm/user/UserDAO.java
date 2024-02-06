@@ -24,16 +24,14 @@
     
 package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.GenericDAO;
 
 /**
- * Data access object for users. This class should only used by the
+ * Data access object for users. This class should only be used by the
  * {@link UserManager}. Plugins and other classes should use the
  * {@link UserManager} instead.
  *
- * @author Sebastian Sdorra
  * @since 1.14
  */
 public interface UserDAO extends GenericDAO<User> {}

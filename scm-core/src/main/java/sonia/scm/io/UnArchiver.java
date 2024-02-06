@@ -24,39 +24,14 @@
     
 package sonia.scm.io;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public interface UnArchiver
 {
-
-  /**
-   * Method description
-   *
-   *
-   * @param archive
-   * @param outputDirectory
-   * @param force
-   *
-   * @throws IOException
-   */
   public void extract(File archive, File outputDirectory, boolean force)
           throws IOException;
 
-  /**
-   * Method description
-   *
-   *
-   * @param archive
-   * @param outputDirectory
-   *
-   * @throws IOException
-   */
   public void extract(File archive, File outputDirectory) throws IOException;
 }

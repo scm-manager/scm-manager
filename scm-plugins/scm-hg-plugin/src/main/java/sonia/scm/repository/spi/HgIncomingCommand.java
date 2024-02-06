@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
@@ -39,27 +38,15 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class HgIncomingCommand extends AbstractCommand
   implements IncomingCommand
 {
 
-  /** Field description */
   private static final int NO_INCOMING_CHANGESETS = 1;
 
-  //~--- constructors ---------------------------------------------------------
+  private HgRepositoryHandler handler;
 
-  /**
-   * Constructs ...
-   *
-   *  @param context
-   * @param handler
-   */
   @Inject
   HgIncomingCommand(@Assisted HgCommandContext context, HgRepositoryHandler handler)
   {
@@ -67,7 +54,6 @@ public class HgIncomingCommand extends AbstractCommand
     this.handler = handler;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   @SuppressWarnings("unchecked")
@@ -101,26 +87,13 @@ public class HgIncomingCommand extends AbstractCommand
     return new ChangesetPagingResult(changesets.size(), changesets);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
+
   private HgIncomingChangesetCommand on(
     org.javahg.Repository repository)
   {
     return HgIncomingChangesetCommand.on(repository, getContext().getConfig());
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private HgRepositoryHandler handler;
 
   public interface Factory {
     HgIncomingCommand create(HgCommandContext context);

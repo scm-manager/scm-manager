@@ -24,14 +24,10 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.Repository;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class AbstractCommand
 {
 

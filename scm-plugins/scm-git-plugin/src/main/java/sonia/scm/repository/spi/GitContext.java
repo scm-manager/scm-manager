@@ -38,18 +38,18 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GitContext implements Closeable, RepositoryProvider
 {
-
-  /**
-   * the logger for GitContext
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(GitContext.class);
+
+  private final File directory;
+  private final Repository repository;
+  private final GitRepositoryConfigStoreProvider storeProvider;
+  private final GitConfig config;
+
+  private org.eclipse.jgit.lib.Repository gitRepository;
 
   public GitContext(File directory, Repository repository, GitRepositoryConfigStoreProvider storeProvider, GitConfig config)
   {
@@ -59,13 +59,8 @@ public class GitContext implements Closeable, RepositoryProvider
     this.config = config;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Override
+   @Override
   public void close()
   {
     logger.trace("close git repository {}", directory);
@@ -74,14 +69,7 @@ public class GitContext implements Closeable, RepositoryProvider
     gitRepository = null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   public org.eclipse.jgit.lib.Repository open() throws IOException
   {
     if (gitRepository == null)
@@ -129,14 +117,4 @@ public class GitContext implements Closeable, RepositoryProvider
     return config;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final File directory;
-  private final Repository repository;
-  private final GitRepositoryConfigStoreProvider storeProvider;
-  private final GitConfig config;
-
-  /** Field description */
-  private org.eclipse.jgit.lib.Repository gitRepository;
 }

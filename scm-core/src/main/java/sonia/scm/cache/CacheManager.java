@@ -24,8 +24,6 @@
 
 package sonia.scm.cache;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.Closeable;
 
 /**
@@ -33,7 +31,6 @@ import java.io.Closeable;
  * and manages their creation.
  * This class is a singleton which can be retrieved via injection.
  *
- * @author Sebastian Sdorra
  */
 public interface CacheManager extends Closeable {
 

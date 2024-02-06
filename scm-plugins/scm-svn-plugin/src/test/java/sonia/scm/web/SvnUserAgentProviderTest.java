@@ -24,14 +24,11 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
 
 import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Locale;
 
@@ -42,27 +39,18 @@ import java.util.Locale;
 public class SvnUserAgentProviderTest
 {
 
-  /** Field description */
   private static final String UA_1 =
     "SVN/1.8.8 (x64-microsoft-windows) serf/1.3.4 TortoiseSVN-1.8.6.25419";
 
-  /** Field description */
   private static final String UA_2 = "SVN/1.5.4 (r33841) neon/0.28.3";
 
-  /** Field description */
   private static final String UA_3 = "SVN/1.6.3 (r38063) neon/0.28.4";
 
-  /** Field description */
   private static final String UA_4 =
     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0;Google Wireless Transcoder;)";
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testParseUserAgent()
   {
     assertEquals(SvnUserAgentProvider.TORTOISE_SVN, parse(UA_1));
@@ -71,14 +59,7 @@ public class SvnUserAgentProviderTest
     assertNull(parse(UA_4));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param ua
-   *
-   * @return
-   */
+
   private UserAgent parse(String ua)
   {
     return suap.parseUserAgent(ua.toLowerCase(Locale.ENGLISH));
@@ -86,6 +67,5 @@ public class SvnUserAgentProviderTest
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private final SvnUserAgentProvider suap = new SvnUserAgentProvider();
 }

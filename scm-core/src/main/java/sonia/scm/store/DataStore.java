@@ -24,15 +24,12 @@
     
 package sonia.scm.store;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Map;
 
 /**
  * A DataStore can be used to store any structured data. Note: the default 
  * implementation use JAXB to marshall the items.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  *
  * @param <T> type of store items
@@ -58,7 +55,6 @@ public interface DataStore<T> extends MultiEntryStore<T> {
    */
   public void put(String id, T item);
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns a map of all stored items. The key of the map is the item id and 

@@ -55,7 +55,6 @@ import static org.junit.Assert.assertNotNull;
  * * 36b19e4 b
  * * c2190a9 a
  * </pre>
- * @author Sebastian Sdorra
  */
 public class GitLogCommandAncestorTest extends AbstractGitCommandTestBase
 {

@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.client.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.ClientCommandNotSupportedException;
@@ -34,54 +33,29 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public abstract class RepositoryClientProvider implements Closeable
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public abstract Set<ClientCommand> getSupportedClientCommands();
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Override
   public void close() throws IOException {}
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public AddCommand getAddCommand()
   {
     throw new ClientCommandNotSupportedException(ClientCommand.ADD);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public BranchCommand getBranchCommand()
   {
     throw new ClientCommandNotSupportedException(ClientCommand.BRANCH);
@@ -95,45 +69,25 @@ public abstract class RepositoryClientProvider implements Closeable
     throw new ClientCommandNotSupportedException(ClientCommand.CHECKOUT);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public CommitCommand getCommitCommand()
   {
     throw new ClientCommandNotSupportedException(ClientCommand.COMMIT);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public PushCommand getPushCommand()
   {
     throw new ClientCommandNotSupportedException(ClientCommand.PUSH);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public RemoveCommand getRemoveCommand()
   {
     throw new ClientCommandNotSupportedException(ClientCommand.REMOVE);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public TagCommand getTagCommand()
   {
     throw new ClientCommandNotSupportedException(ClientCommand.TAG);

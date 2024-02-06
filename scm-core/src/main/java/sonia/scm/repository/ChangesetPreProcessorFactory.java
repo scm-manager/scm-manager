@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.plugin.ExtensionPoint;
 
@@ -32,7 +31,6 @@ import sonia.scm.plugin.ExtensionPoint;
  * The ChangesetPreProcessorFactory create {@link ChangesetPreProcessor}
  * objects for a specific repository.
  *
- * @author Sebastian Sdorra
  * @since 1.7
  */
 @ExtensionPoint
@@ -42,12 +40,7 @@ public interface ChangesetPreProcessorFactory
 
   /**
    * Create a new {@link ChangesetPreProcessor} for the given repository.
-   *
-   *
-   * @param repository repository
-   *
-   * @return {@link ChangesetPreProcessor} for the given repository
    */
   @Override
-  public ChangesetPreProcessor createPreProcessor(Repository repository);
+  ChangesetPreProcessor createPreProcessor(Repository repository);
 }

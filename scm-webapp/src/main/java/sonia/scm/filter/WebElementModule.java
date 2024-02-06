@@ -24,7 +24,6 @@
 
 package sonia.scm.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
@@ -35,16 +34,12 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.WebElementDescriptor;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class WebElementModule extends ServletModule {
 
-  /**
-   * the logger for WebElementModule
-   */
   private static final Logger LOG = LoggerFactory.getLogger(WebElementModule.class);
+
+  private final WebElementCollector collector;
 
   public WebElementModule(PluginLoader pluginLoader)
   {
@@ -113,8 +108,4 @@ public class WebElementModule extends ServletModule {
     builder.with(clazz);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final WebElementCollector collector;
 }

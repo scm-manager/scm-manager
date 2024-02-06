@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 import org.mockito.stubbing.Answer;
@@ -43,11 +42,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
 
   protected Path repoPath;

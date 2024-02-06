@@ -24,42 +24,23 @@
     
 package sonia.scm.io;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.TimerTask;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class ProcessInterruptScheduler extends TimerTask
 {
+  private Process process;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param process
-   */
   public ProcessInterruptScheduler(Process process)
   {
     this.process = process;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Override
+   @Override
   public void run()
   {
     process.destroy();
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Process process;
 }

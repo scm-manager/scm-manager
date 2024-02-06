@@ -24,7 +24,6 @@
 
 package sonia.scm.template;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableMap;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
@@ -40,23 +39,11 @@ import java.io.StringWriter;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class MustacheTemplateEngineTest extends TemplateEngineTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   *
-   * @return
-   */
+
   @Override
   public TemplateEngine createEngine(ServletContext context)
   {
@@ -74,26 +61,15 @@ public class MustacheTemplateEngineTest extends TemplateEngineTestBase
     return new MustacheTemplateEngine(context, pluginLoaderHolder, meterRegistryHolder);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public String getDefectTemplateResource()
   {
     return "sonia/scm/template/005.mustache";
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public String getTemplateResource()
   {
@@ -105,14 +81,7 @@ public class MustacheTemplateEngineTest extends TemplateEngineTestBase
     return "sonia/scm/template/loc.mustache";
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param resource
-   *
-   * @return
-   */
+
   @Override
   protected InputStream getResource(String resource)
   {

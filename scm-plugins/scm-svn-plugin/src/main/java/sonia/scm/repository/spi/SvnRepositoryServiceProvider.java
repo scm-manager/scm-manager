@@ -39,9 +39,7 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
 
   public static final Set<Command> COMMANDS = ImmutableSet.of(

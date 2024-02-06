@@ -24,12 +24,9 @@
 
 package sonia.scm.io;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,28 +37,20 @@ import java.io.ObjectStreamClass;
  * {@link ObjectInputStream} implementation which uses the context class loader
  * to resolve classes.
  *
- * @author Sebastian Sdorra
  * @since 1.36
  */
 public class ScmObjectInputStream extends ObjectInputStream {
 
-  /**
-   * the logger for ScmObjectInputStream
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(ScmObjectInputStream.class);
 
-  //~--- constructors ---------------------------------------------------------
 
   public ScmObjectInputStream(InputStream stream) throws IOException {
     super(stream);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   protected Class<?> resolveClass(ObjectStreamClass desc)
     throws IOException, ClassNotFoundException {
@@ -82,15 +71,6 @@ public class ScmObjectInputStream extends ObjectInputStream {
     return clazz;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns the context class loader if available. If the context class loader
-   * is not available the method will fall back to the class loader which has
-   * load this class.
-   *
-   * @return context class loader or default class loader
-   */
   private ClassLoader getClassLoader() {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 

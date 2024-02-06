@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.event;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -33,7 +32,6 @@ import sonia.scm.HandlerEventType;
 /**
  * Abstract base class for {@link HandlerEvent}.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  *
  * @param <T>
@@ -41,26 +39,18 @@ import sonia.scm.HandlerEventType;
 public class AbstractHandlerEvent<T> implements HandlerEvent<T>
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param eventType
-   * @param item
-   */
+  private final HandlerEventType eventType;
+
+  /** changed item */
+  private final T item;
+
+  private final T oldItem;
+
   public AbstractHandlerEvent(HandlerEventType eventType, T item)
   {
     this(eventType, item, null);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param eventType
-   * @param item
-   * @param oldItem
-   */
   public AbstractHandlerEvent(HandlerEventType eventType, T item, T oldItem)
   {
     this.eventType = eventType;
@@ -68,16 +58,7 @@ public class AbstractHandlerEvent<T> implements HandlerEvent<T>
     this.oldItem = oldItem;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
   @Override
   public boolean equals(Object obj)
   {
@@ -98,24 +79,14 @@ public class AbstractHandlerEvent<T> implements HandlerEvent<T>
       && Objects.equal(oldItem, other.oldItem);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public int hashCode()
   {
     return Objects.hashCode(eventType, item, oldItem);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public String toString()
   {
@@ -128,13 +99,9 @@ public class AbstractHandlerEvent<T> implements HandlerEvent<T>
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the type of the event.
-   *
-   *
-   * @return type of the event
    */
   @Override
   public HandlerEventType getEventType()
@@ -144,9 +111,6 @@ public class AbstractHandlerEvent<T> implements HandlerEvent<T>
 
   /**
    * Returns changed item.
-   *
-   *
-   * @return changed item
    */
   @Override
   public T getItem()
@@ -155,7 +119,7 @@ public class AbstractHandlerEvent<T> implements HandlerEvent<T>
   }
 
   /**
-   * Returns old item or null. This method will always return null expect of 
+   * Returns old item or null. This method will always return null expect of
    * modification events.
    *
    *
@@ -167,14 +131,4 @@ public class AbstractHandlerEvent<T> implements HandlerEvent<T>
     return oldItem;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** event type */
-  private final HandlerEventType eventType;
-
-  /** changed item */
-  private final T item;
-
-  /** old item */
-  private final T oldItem;
 }

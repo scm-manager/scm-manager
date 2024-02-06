@@ -30,7 +30,6 @@ import com.google.inject.AbstractModule;
  * DebugModule binds all required classes around the {@link DebugService}. The module will only be activated, if the
  * application was started in development stage.
  * 
- * @author Sebastian Sdorra
  */
 public final class DebugModule extends AbstractModule
 {

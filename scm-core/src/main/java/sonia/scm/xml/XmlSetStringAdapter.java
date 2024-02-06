@@ -24,31 +24,17 @@
     
 package sonia.scm.xml;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class XmlSetStringAdapter extends XmlAdapter<String, Set<String>>
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   *
-   * @throws Exception
-   */
+ 
   @Override
   public String marshal(Set<String> value) throws Exception
   {
@@ -68,16 +54,6 @@ public class XmlSetStringAdapter extends XmlAdapter<String, Set<String>>
     return buffer.toString();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param rawString
-   *
-   * @return
-   *
-   * @throws Exception
-   */
   @Override
   public Set<String> unmarshal(String rawString) throws Exception
   {

@@ -24,7 +24,6 @@
 
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,22 +47,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public final class IOUtil
 {
 
-  /** Field description */
   public static final int DEFAULT_BUFFERSIZE = 8192;
 
-  /** Field description */
   private static final String DEFAULT_CHECKPARAMETER = "--version";
 
-  /** Field description */
   private static final String[] DEFAULT_PATH = new String[]
   {
 
@@ -80,34 +71,18 @@ public final class IOUtil
     "/opt/csw/bin"
   };
 
-  /** Field description */
   private static final String[] EXTENSION_SCRIPT_UNIX = { ".sh", ".csh",
     ".bsh" };
 
-  /** Field description */
   private static final String[] EXTENSION_SCRIPT_WINDOWS = { ".bat", ".cmd",
     ".exe" };
 
-  /** Field description */
   private static final Logger logger =
     LoggerFactory.getLogger(IOUtil.class.getName());
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private IOUtil() {}
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param closeable
-   */
   public static void close(Closeable closeable)
   {
     if (closeable != null)
@@ -123,16 +98,6 @@ public final class IOUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param reader
-   * @param writer
-   * @param bufferSize
-   *
-   * @throws IOException
-   */
   public static void copy(Reader reader, Writer writer, int bufferSize)
     throws IOException
   {
@@ -144,44 +109,16 @@ public final class IOUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param reader
-   * @param writer
-   *
-   * @throws IOException
-   */
   public static void copy(Reader reader, Writer writer) throws IOException
   {
     copy(reader, writer, DEFAULT_BUFFERSIZE);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param in
-   * @param out
-   *
-   * @throws IOException
-   */
   public static void copy(InputStream in, OutputStream out) throws IOException
   {
     copy(in, out, DEFAULT_BUFFERSIZE);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param in
-   * @param out
-   * @param bufferSize
-   *
-   * @throws IOException
-   */
   public static void copy(InputStream in, OutputStream out, int bufferSize)
     throws IOException
   {
@@ -195,17 +132,6 @@ public final class IOUtil
     out.flush();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param in
-   * @param out
-   * @param bufferSize
-   * @param byteCount
-   *
-   * @throws IOException
-   */
   public static void copy(InputStream in, OutputStream out, int bufferSize,
     int byteCount)
     throws IOException
@@ -250,15 +176,6 @@ public final class IOUtil
     out.flush();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param source
-   * @param target
-   *
-   * @throws IOException
-   */
   public static void copy(File source, File target) throws IOException
   {
     if (source.isDirectory())
@@ -294,65 +211,27 @@ public final class IOUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param reader
-   * @param writer
-   */
   public static void copyThread(Reader reader, Writer writer)
   {
     copyThread(reader, writer, DEFAULT_BUFFERSIZE);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param input
-   * @param output
-   */
   public static void copyThread(InputStream input, OutputStream output)
   {
     copyThread(input, output, DEFAULT_BUFFERSIZE);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param reader
-   * @param writer
-   * @param bufferSize
-   */
   public static void copyThread(Reader reader, Writer writer, int bufferSize)
   {
     new Thread(new IOCopyThread(reader, writer, bufferSize)).start();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param input
-   * @param output
-   * @param bufferSize
-   */
   public static void copyThread(InputStream input, OutputStream output,
     int bufferSize)
   {
     new Thread(new IOStreamCopyThread(input, output, bufferSize)).start();
   }
 
-  /**
-   *   Method description
-   *
-   *
-   *   @param file
-   *
-   *   @throws IOException
-   */
   public static void delete(File file) throws IOException
   {
     delete(file, false);
@@ -367,15 +246,6 @@ public final class IOUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   * @param silent
-   *
-   * @throws IOException
-   */
   public static void delete(File file, boolean silent) throws IOException
   {
     if (file.isDirectory())
@@ -416,15 +286,6 @@ public final class IOUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param archive
-   * @param outputDirectory
-   *
-   * @throws IOException
-   */
   public static void extract(File archive, File outputDirectory)
     throws IOException
   {
@@ -433,16 +294,6 @@ public final class IOUtil
     extract(archive, outputDirectory, name);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param archive
-   * @param outputDirectory
-   * @param type
-   *
-   * @throws IOException
-   */
   public static void extract(File archive, File outputDirectory, String type)
     throws IOException
   {
@@ -456,12 +307,6 @@ public final class IOUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   */
   public static void mkdirs(File directory)
   {
     if (!directory.exists() &&!directory.mkdirs())
@@ -477,26 +322,11 @@ public final class IOUtil
     }
   }
 
-  /**
-   *
-   *
-   * @param cmd
-   *
-   * @return
-   */
   public static String search(String cmd)
   {
     return search(DEFAULT_PATH, cmd, DEFAULT_CHECKPARAMETER);
   }
 
-  /**
-   *
-   *
-   * @param path
-   * @param cmd
-   *
-   * @return
-   */
   public static String search(String[] path, String cmd)
   {
     return search(path, cmd, DEFAULT_CHECKPARAMETER);
@@ -504,14 +334,6 @@ public final class IOUtil
 
   /**
    * TODO check for windows
-   *
-   *
-   *
-   * @param path
-   * @param cmd
-   * @param checkParameter
-   *
-   * @return
    */
   public static String search(String[] path, String cmd, String checkParameter)
   {
@@ -553,43 +375,16 @@ public final class IOUtil
     return cmdPath;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param cmd
-   *
-   * @return
-   */
   public static List<String> searchAll(String cmd)
   {
     return searchAll(DEFAULT_PATH, cmd, DEFAULT_CHECKPARAMETER);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   * @param cmd
-   *
-   * @return
-   */
   public static List<String> searchAll(String[] path, String cmd)
   {
     return searchAll(path, cmd, DEFAULT_CHECKPARAMETER);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   * @param cmd
-   * @param checkParameter
-   *
-   * @return
-   */
   public static List<String> searchAll(String[] path, String cmd,
     String checkParameter)
   {
@@ -615,12 +410,6 @@ public final class IOUtil
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
    * @since 1.9
    */
   public static String trimSeperatorChars(String name)
@@ -638,18 +427,9 @@ public final class IOUtil
     return name;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @param in
-   *
-   * @return
    * @since 1.8
-   *
-   * @throws IOException
    */
   public static String getContent(InputStream in) throws IOException
   {
@@ -672,13 +452,7 @@ public final class IOUtil
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param basePath
-   *
    * @since 1.6
-   * @return
    */
   public static File getScript(String basePath)
   {
@@ -686,13 +460,7 @@ public final class IOUtil
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param baseFile
-   *
    * @since 1.6
-   * @return
    */
   public static File getScript(File baseFile)
   {
@@ -706,8 +474,6 @@ public final class IOUtil
    * @param parent parent file
    * @param child chile file
    * @since 1.9
-   *
-   * @return true if the second file parameter is a child of the first one
    *
    */
   public static boolean isChild(File parent, File child)
@@ -733,12 +499,6 @@ public final class IOUtil
   }
 
   /**
-   * Returns true if the given directory is empty.
-   *
-   *
-   * @param directory directory to check
-   *
-   * @return true if the directory is empty
    * @since 1.16
    */
   public static boolean isEmpty(File directory)
@@ -746,18 +506,6 @@ public final class IOUtil
     return Util.isEmpty(directory.listFiles());
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param parentPath
-   * @param cmd
-   * @param potentialExtensions
-   *
-   * @return
-   */
   private static File findFileByExtension(String parentPath, String cmd,
     List<String> potentialExtensions)
   {
@@ -779,13 +527,11 @@ public final class IOUtil
     return file;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns a list of file extensions to use when searching for executables.
    * The list is in priority order, with the highest priority first.
    *
-   * @return
    */
   private static List<String> getExecutableSearchExtensions()
   {
@@ -804,14 +550,7 @@ public final class IOUtil
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param baseFile
-   * @param basePath
-   *
    * @since 1.6
-   * @return
    */
   private static File getScript(File baseFile, String basePath)
   {
@@ -850,15 +589,6 @@ public final class IOUtil
     return script;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param cmd
-   * @param checkParameter
-   *
-   * @return
-   */
   private static boolean isCommandAvailable(String cmd, String checkParameter)
   {
     boolean success = false;
@@ -881,26 +611,14 @@ public final class IOUtil
     return success;
   }
 
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 10/09/28
-   * @author         Enter your name here...
-   */
   private static class IOCopyThread implements Runnable
   {
+    private int bufferSize;
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param reader
-     * @param writer
-     * @param bufferSize
-     */
+    private Reader reader;
+
+    private Writer writer;
+
     public IOCopyThread(Reader reader, Writer writer, int bufferSize)
     {
       this.reader = reader;
@@ -908,12 +626,8 @@ public final class IOUtil
       this.bufferSize = bufferSize;
     }
 
-    //~--- methods ------------------------------------------------------------
+    
 
-    /**
-     * Method description
-     *
-     */
     @Override
     public void run()
     {
@@ -931,38 +645,16 @@ public final class IOUtil
         close(writer);
       }
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private int bufferSize;
-
-    /** Field description */
-    private Reader reader;
-
-    /** Field description */
-    private Writer writer;
   }
 
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 2010-12-27
-   * @author         Sebastian Sdorra
-   */
   private static class IOStreamCopyThread implements Runnable
   {
+    private int bufferSize;
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param input
-     * @param output
-     * @param bufferSize
-     */
+    private InputStream input;
+
+    private OutputStream output;
+
     public IOStreamCopyThread(InputStream input, OutputStream output,
       int bufferSize)
     {
@@ -971,12 +663,8 @@ public final class IOUtil
       this.bufferSize = bufferSize;
     }
 
-    //~--- methods ------------------------------------------------------------
+    
 
-    /**
-     * Method description
-     *
-     */
     @Override
     public void run()
     {
@@ -994,16 +682,5 @@ public final class IOUtil
         close(output);
       }
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private int bufferSize;
-
-    /** Field description */
-    private InputStream input;
-
-    /** Field description */
-    private OutputStream output;
   }
 }

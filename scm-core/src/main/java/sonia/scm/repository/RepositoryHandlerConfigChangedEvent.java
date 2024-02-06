@@ -28,7 +28,6 @@ import sonia.scm.event.Event;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Event

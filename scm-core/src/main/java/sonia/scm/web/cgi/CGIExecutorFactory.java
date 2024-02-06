@@ -24,32 +24,15 @@
     
 package sonia.scm.web.cgi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import sonia.scm.config.ScmConfiguration;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public interface CGIExecutorFactory
 {
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param configuration
-   * @param context
-   * @param request
-   * @param response
-   *
-   * @return
-   */
   public CGIExecutor createExecutor(ScmConfiguration configuration,
                                     ServletContext context,
                                     HttpServletRequest request,

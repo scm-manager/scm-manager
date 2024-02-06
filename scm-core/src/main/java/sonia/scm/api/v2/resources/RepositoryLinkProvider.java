@@ -32,7 +32,6 @@ public interface RepositoryLinkProvider {
    * Returns the internal api link for the given repository.
    *
    * @param namespaceAndName The namespace and name of the repository.
-   * @return Internal api link for the given repository.
    */
   String get(NamespaceAndName namespaceAndName);
 }

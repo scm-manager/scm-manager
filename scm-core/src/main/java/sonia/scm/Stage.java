@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 /**
@@ -29,11 +29,9 @@ package sonia.scm;
  * SCM_Manager instance. The stage can be queried by calling
  * {@link SCMContextProvider#getStage()}.
  *
- * @author Sebastian Sdorra
  * @since 1.12
  */
-public enum Stage
-{
+public enum Stage {
 
   /**
    * This value indicates SCM-Manager is right now in development.
@@ -47,38 +45,24 @@ public enum Stage
 
   /**
    * This value indicates SCM-Manager is right now in development but specifically configured for testing.
+   *
    * @since 2.47.0
    */
   TESTING(com.google.inject.Stage.DEVELOPMENT);
 
-  /**
-   * Constructs a new Stage
-   *
-   *
-   * @param injectionStage injection stage
-   */
-  private Stage(com.google.inject.Stage injectionStage)
-  {
+  private final com.google.inject.Stage injectionStage;
+
+  private Stage(com.google.inject.Stage injectionStage) {
     this.injectionStage = injectionStage;
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the injection stage
    *
-   *
-   * @return injection stage
-   * 
    * @since 2.0.0
    */
-  public com.google.inject.Stage getInjectionStage()
-  {
+  public com.google.inject.Stage getInjectionStage() {
     return injectionStage;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** injection stage */
-  private final com.google.inject.Stage injectionStage;
 }

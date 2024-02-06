@@ -24,42 +24,30 @@
     
 package sonia.scm.annotation;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class SubscriberElement implements DescriptorElement
 {
 
-  /** Field description */
   private static final String EL_CLASS = "class";
 
-  /** Field description */
   private static final String EL_DESCRIPTION = "description";
 
-  /** Field description */
   private static final String EL_EVENT = "event";
 
-  /** Field description */
   private static final String EL_SUBSCRIBER = "subscriber";
 
-  //~--- constructors ---------------------------------------------------------
+  private final String description;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param subscriberType
-   * @param eventType
-   * @param description
-   */
+  private final String eventType;
+
+  private final String subscriberType;
+
   public SubscriberElement(String subscriberType, String eventType,
     String description)
   {
@@ -68,15 +56,8 @@ public class SubscriberElement implements DescriptorElement
     this.description = description;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param doc
-   * @param root
-   */
+
   @Override
   public void append(Document doc, Element root)
   {
@@ -102,14 +83,4 @@ public class SubscriberElement implements DescriptorElement
     root.appendChild(subscriberEl);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final String description;
-
-  /** Field description */
-  private final String eventType;
-
-  /** Field description */
-  private final String subscriberType;
 }

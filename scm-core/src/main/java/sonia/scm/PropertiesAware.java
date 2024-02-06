@@ -24,45 +24,32 @@
     
 package sonia.scm;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Map;
 
 /**
  * Base interface of all objects which have properties.
  *
  * @since 1.6
- * @author Sebastian Sdorra
  */
 public interface PropertiesAware
 {
 
-  /**
-   * Removes a existing property.
-   *
-   * @param key - the key of the property
-   */
   public void removeProperty(String key);
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns all properties.
-   *
-   * @return all properties
    */
   public Map<String, String> getProperties();
 
   /**
    * Returns the property value for the given key
-   * or null if the key does not exists.
+   * or null if the key does not exist.
    *
    * @param key - the key of the property
-   * @return the value of the property
    */
   public String getProperty(String key);
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Sets all properties and overwrites existing ones.

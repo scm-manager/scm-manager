@@ -24,27 +24,16 @@
     
 package sonia.scm.log;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.javahg.log.Logger;
 
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class HgLoggerFactory extends org.javahg.log.LoggerFactory
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param cls
-   *
-   * @return
-   */
+
   @Override
   protected Logger getLoggerInstance(Class<?> cls)
   {

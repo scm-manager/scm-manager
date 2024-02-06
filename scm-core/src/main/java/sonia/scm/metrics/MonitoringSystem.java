@@ -37,17 +37,10 @@ import java.util.Optional;
 @ExtensionPoint
 public interface MonitoringSystem {
 
-  /**
-   * Returns name of monitoring system.
-   *
-   * @return name of monitoring system
-   */
   String getName();
 
   /**
    * Returns registry of metrics provider.
-   *
-   * @return metrics registry
    */
   MeterRegistry getRegistry();
 

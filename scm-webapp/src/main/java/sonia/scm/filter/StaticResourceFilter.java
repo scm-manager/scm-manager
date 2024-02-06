@@ -24,7 +24,6 @@
     
 package sonia.scm.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Singleton;
 import jakarta.servlet.FilterChain;
@@ -41,47 +40,23 @@ import sonia.scm.web.filter.HttpFilter;
 import java.io.File;
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @Singleton
 public class StaticResourceFilter extends HttpFilter
 {
 
-  /** Field description */
   private static final Logger logger =
     LoggerFactory.getLogger(StaticResourceFilter.class);
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param filterConfig
-   *
-   * @throws ServletException
-   */
+  private ServletContext context;
+  
   @Override
   public void init(FilterConfig filterConfig) throws ServletException
   {
     this.context = filterConfig.getServletContext();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param chain
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
+
   @Override
   protected void doFilter(HttpServletRequest request,
                           HttpServletResponse response, FilterChain chain)
@@ -115,17 +90,8 @@ public class StaticResourceFilter extends HttpFilter
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param uri
-   *
-   * @return
-   */
+
   private File getResourceFile(HttpServletRequest request, String uri)
   {
     String path = uri.substring(request.getContextPath().length());
@@ -133,8 +99,4 @@ public class StaticResourceFilter extends HttpFilter
     return new File(context.getRealPath(path));
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private ServletContext context;
 }

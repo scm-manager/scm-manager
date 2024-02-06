@@ -24,7 +24,6 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,12 +35,9 @@ import sonia.scm.util.IOUtil;
 import java.io.File;
 import java.nio.file.Path;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Abstract store factory for file based stores.
  *
- * @author Sebastian Sdorra
  */
 public abstract class FileBasedStoreFactory {
 

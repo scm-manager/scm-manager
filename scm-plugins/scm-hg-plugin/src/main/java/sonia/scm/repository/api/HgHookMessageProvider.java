@@ -24,55 +24,33 @@
     
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
 
 import sonia.scm.repository.api.HgHookMessage.Severity;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class HgHookMessageProvider implements HookMessageProvider
 {
+  private List<HgHookMessage> messages;
 
-  /**
-   * Method description
-   *
-   *
-   * @param message
-   */
   @Override
   public void sendError(String message)
   {
     getMessages().add(new HgHookMessage(Severity.ERROR, message));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param message
-   */
+
   @Override
   public void sendMessage(String message)
   {
     getMessages().add(new HgHookMessage(Severity.NOTE, message));
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public List<HgHookMessage> getMessages()
   {
     if (messages == null)
@@ -83,8 +61,4 @@ public class HgHookMessageProvider implements HookMessageProvider
     return messages;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private List<HgHookMessage> messages;
 }

@@ -53,7 +53,6 @@ import java.util.Set;
 /**
  * Source code repository.
  *
- * @author Sebastian Sdorra
  */
 @IndexedType(namespaceScoped = true)
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -96,7 +95,6 @@ public class Repository
   private boolean archived;
 
   /**
-   * Constructs a new {@link Repository}.
    * This constructor is used by JAXB.
    */
   public Repository() {
@@ -154,8 +152,6 @@ public class Repository
 
   /**
    * Returns a timestamp of the creation date of the {@link Repository}.
-   *
-   * @return a timestamp of the creation date of the {@link Repository}
    */
   public Long getCreationDate() {
     return creationDate;
@@ -163,8 +159,6 @@ public class Repository
 
   /**
    * Returns a short description of the {@link Repository}.
-   *
-   * @return short description
    */
   public String getDescription() {
     return description;
@@ -216,8 +210,6 @@ public class Repository
 
   /**
    * Returns the type (hg, git, svn ...) of the {@link Repository}.
-   *
-   * @return type of the repository
    */
   @Override
   public String getType() {
@@ -352,12 +344,6 @@ public class Repository
     // do not copy health check results
   }
 
-  /**
-   * Returns true if the {@link Repository} is the same as the obj argument.
-   *
-   * @param obj the reference object with which to compare
-   * @return true if the {@link Repository} is the same as the obj argument
-   */
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {

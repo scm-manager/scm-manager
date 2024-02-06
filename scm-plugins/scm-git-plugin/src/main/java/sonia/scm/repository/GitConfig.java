@@ -24,8 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import com.google.common.base.Strings;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -34,9 +32,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import sonia.scm.auditlog.AuditEntry;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @XmlRootElement(name = "config")
 @XmlAccessorType(XmlAccessType.FIELD)
 @AuditEntry(labels = {"git", "config"})

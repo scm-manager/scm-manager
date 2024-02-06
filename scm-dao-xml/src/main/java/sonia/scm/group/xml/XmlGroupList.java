@@ -24,7 +24,6 @@
     
 package sonia.scm.group.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -36,76 +35,42 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlGroupList implements Iterable<Group>
 {
+  @XmlElement(name = "group")
+  private LinkedList<Group> groups;
 
-  /**
-   * Constructs ...
-   *
-   */
   public XmlGroupList() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param groupMap
-   */
+
   public XmlGroupList(Map<String, Group> groupMap)
   {
     this.groups = new LinkedList<>(groupMap.values());
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   public Iterator<Group> iterator()
   {
     return groups.iterator();
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   public LinkedList<Group> getGroups()
   {
     return groups;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param groups
-   */
+
   public void setGroups(LinkedList<Group> groups)
   {
     this.groups = groups;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "group")
-  private LinkedList<Group> groups;
 }

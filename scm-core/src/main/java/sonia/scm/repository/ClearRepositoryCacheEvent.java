@@ -29,7 +29,6 @@ import sonia.scm.event.Event;
 /**
  * Event which causes clearing of repository cache.
  * 
- * @author Sebastian Sdorra
  * @since 1.50
  */
 @Event
@@ -37,20 +36,10 @@ public class ClearRepositoryCacheEvent {
   
   private final Repository repository;
 
-  /**
-   * Constructs a new instance.
-   * 
-   * @param repository repository
-   */
   public ClearRepositoryCacheEvent(Repository repository) {
     this.repository = repository;
   }
 
-  /**
-   * Returns repository.
-   * 
-   * @return repository
-   */
   public Repository getRepository() {
     return repository;
   }

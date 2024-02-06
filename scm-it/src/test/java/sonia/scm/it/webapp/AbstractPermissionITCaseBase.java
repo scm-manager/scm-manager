@@ -24,7 +24,6 @@
 
 package sonia.scm.it.webapp;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.Invocation;
@@ -46,24 +45,11 @@ import static sonia.scm.it.webapp.IntegrationTestUtil.createAdminClient;
 import static sonia.scm.it.webapp.IntegrationTestUtil.createResource;
 import static sonia.scm.it.webapp.IntegrationTestUtil.post;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- *
- * @param <T>
- */
 public abstract class AbstractPermissionITCaseBase<T>
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param credentials
-   */
+
   public AbstractPermissionITCaseBase(Credentials credentials)
   {
     this.credentials = credentials;
@@ -75,13 +61,8 @@ public abstract class AbstractPermissionITCaseBase<T>
     TestData.cleanup();
   }
 
-  //~--- methods --------------------------------------------------------------
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
+  
   @Parameters(name = "{1}")
   public static Collection<Object[]> createParameters()
   {
@@ -91,12 +72,7 @@ public abstract class AbstractPermissionITCaseBase<T>
     );
   }
 
-  /**
-   * Method description
-   *
-   *
-   */
-  @BeforeClass
+   @BeforeClass
   public static void createTestUser()
   {
     User trillian = UserTestData.createTrillian();
@@ -112,86 +88,35 @@ public abstract class AbstractPermissionITCaseBase<T>
     response.close();
   }
 
-  /**
-   * Method description
-   *
-   */
   @AfterClass
   public static void removeTestUser()
   {
     ScmClient client = createAdminClient();
     createResource(client, "users/trillian").delete();
   }
-
-
-  //~--- get methods ----------------------------------------------------------
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected abstract String getBasePath();
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   protected abstract T getCreateItem();
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   protected abstract String getDeletePath();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected abstract String getGetPath();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected abstract T getModifyItem();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected abstract String getModifyPath();
 
   protected abstract String getMediaType();
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void create()
   {
     checkResponse(post(client, getBasePath(), getMediaType(), getCreateItem()));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void delete()
   {
     Invocation.Builder wr = createResource(client, getDeletePath());
@@ -199,11 +124,7 @@ public abstract class AbstractPermissionITCaseBase<T>
     checkResponse(wr.delete(Response.class));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void modify()
   {
     Invocation.Builder wr = createResource(client, getModifyPath(), getMediaType());
@@ -211,13 +132,8 @@ public abstract class AbstractPermissionITCaseBase<T>
     checkResponse(wr.put(Entity.entity(getModifyItem(), getMediaType()), Response.class));
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void get()
   {
     Invocation.Builder wr = createResource(client, getGetPath());
@@ -225,11 +141,7 @@ public abstract class AbstractPermissionITCaseBase<T>
     checkGetResponse(wr.buildGet().invoke());
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void getAll()
   {
     Invocation.Builder wr = createResource(client, getBasePath());
@@ -237,36 +149,20 @@ public abstract class AbstractPermissionITCaseBase<T>
     checkGetAllResponse(wr.buildGet().invoke());
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   */
+
   protected void checkGetAllResponse(Response response)
   {
     checkResponse(response);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   */
+
   protected void checkGetResponse(Response response)
   {
     checkResponse(response);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   */
+
   private void checkResponse(Response response)
   {
     assertNotNull(response);

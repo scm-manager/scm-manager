@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
@@ -36,12 +35,7 @@ import sonia.scm.repository.GitRepositoryHandler;
 
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class GitIncomingCommand extends AbstractGitIncomingOutgoingCommand
   implements IncomingCommand {
 
@@ -50,25 +44,12 @@ public class GitIncomingCommand extends AbstractGitIncomingOutgoingCommand
     super(context, handler, converterFactory);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   public ChangesetPagingResult getIncomingChangesets(IncomingCommandRequest request) throws IOException {
     return getIncomingOrOutgoingChangesets(request);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param logCommand
-   * @param localId
-   * @param remoteId
-   *
-   * @throws IOException
-   */
   @Override
   protected void prepareLogCommand(LogCommand logCommand, ObjectId localId,
     ObjectId remoteId)
@@ -82,15 +63,7 @@ public class GitIncomingCommand extends AbstractGitIncomingOutgoingCommand
     logCommand.add(remoteId);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param localId
-   * @param remoteId
-   *
-   * @return
-   */
+
   @Override
   protected boolean retrieveChangesets(ObjectId localId, ObjectId remoteId)
   {

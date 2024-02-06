@@ -24,40 +24,22 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 
-/**
- *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
- */
 public class AbstractHgPushOrPullCommand extends AbstractCommand
 {
+  protected final HgRepositoryHandler handler;
 
-  /**
-   * Constructs ...
-   *
-   *  @param handler
-   * @param context
-   */
   protected AbstractHgPushOrPullCommand(HgRepositoryHandler handler, HgCommandContext context)
   {
     super(context);
     this.handler = handler;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
+
   protected String getRemoteUrl(RemoteCommandRequest request)
   {
     String url;
@@ -80,8 +62,4 @@ public class AbstractHgPushOrPullCommand extends AbstractCommand
     return url;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected final HgRepositoryHandler handler;
 }

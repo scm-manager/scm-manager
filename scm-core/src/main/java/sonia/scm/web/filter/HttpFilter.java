@@ -24,8 +24,6 @@
     
 package sonia.scm.web.filter;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -37,51 +35,24 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public abstract class HttpFilter implements Filter
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param chain
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
+
   protected abstract void doFilter(HttpServletRequest request,
                                    HttpServletResponse response,
                                    FilterChain chain)
           throws IOException, ServletException;
 
-  /**
-   * Method description
-   *
-   */
-  @Override
+   @Override
   public void destroy()
   {
 
     // do nothing
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param chain
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
+
   @Override
   public void doFilter(ServletRequest request, ServletResponse response,
                        FilterChain chain)
@@ -99,14 +70,7 @@ public abstract class HttpFilter implements Filter
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param filterConfig
-   *
-   * @throws ServletException
-   */
+  
   @Override
   public void init(FilterConfig filterConfig) throws ServletException
   {

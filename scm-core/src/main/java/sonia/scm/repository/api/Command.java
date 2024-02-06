@@ -27,7 +27,6 @@ package sonia.scm.repository.api;
 /**
  * Enumeration of available commands.
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 public enum Command

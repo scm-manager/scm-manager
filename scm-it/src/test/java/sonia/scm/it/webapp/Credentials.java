@@ -24,66 +24,36 @@
 
 package sonia.scm.it.webapp;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.util.Util;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class Credentials
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   public Credentials() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param username
-   * @param password
-   */
+ 
   public Credentials(String username, String password)
   {
     this.password = password;
     this.username = username;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getPassword()
   {
     return password;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getUsername()
   {
     return username;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isAnonymous()
   {
     return Util.isEmpty(username) && Util.isEmpty(password);
@@ -91,9 +61,7 @@ public class Credentials
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private String password;
 
-  /** Field description */
   private String username;
 }

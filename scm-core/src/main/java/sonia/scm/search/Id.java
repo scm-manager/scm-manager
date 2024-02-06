@@ -63,7 +63,6 @@ public final class Id<T> {
    * Creates a new combined id by adding a new type and value.
    * @param type other type
    * @param id other id
-   * @return new combined id
    * @since 2.23.0
    */
   public Id<T> and(Class<?> type, String id) {
@@ -83,7 +82,6 @@ public final class Id<T> {
    * Creates a new combined id by adding a new type and value.
    * @param type other type
    * @param idObject object which holds id
-   * @return new combined id
    * @since 2.23.0
    */
   public Id<T> and(Class<?> type, ModelObject idObject) {
@@ -94,7 +92,6 @@ public final class Id<T> {
   /**
    * Creates a new combined id by adding the given repository.
    * @param repository repository to add
-   * @return new combined id
    * @since 2.23.0
    */
   public Id<T> and(Repository repository) {
@@ -107,8 +104,6 @@ public final class Id<T> {
    *
    * @param mainType main type of the id
    * @param mainId main id of the id
-   *
-   * @return new id
    */
   public static <T> Id<T> of(Class<T> mainType, String mainId) {
     Preconditions.checkArgument(mainType != null, "main type is required");
@@ -121,8 +116,6 @@ public final class Id<T> {
    *
    * @param mainType main type of the id
    * @param mainIdObject object which holds the main id
-   *
-   * @return new id
    */
   public static <T> Id<T> of(Class<T> mainType, ModelObject mainIdObject) {
     Preconditions.checkArgument(mainIdObject != null, "main id object is required");

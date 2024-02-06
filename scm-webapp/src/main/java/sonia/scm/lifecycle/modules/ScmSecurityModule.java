@@ -24,7 +24,6 @@
 
 package sonia.scm.lifecycle.modules;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.name.Names;
 import jakarta.servlet.ServletContext;
@@ -48,44 +47,25 @@ import sonia.scm.security.DisabledRememberMeManager;
 import sonia.scm.security.ScmAtLeastOneSuccessfulStrategy;
 import sonia.scm.security.ScmPermissionResolver;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class ScmSecurityModule extends ShiroWebModule
 {
 
-  /** Field description */
   private static final int ITERATIONS = 8192;
 
-  /**
-   *   the logger for ScmSecurityModule
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(ScmSecurityModule.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param servletContext
-   * @param extensionProcessor
-   */
+  private final ExtensionProcessor extensionProcessor;
+ 
   public ScmSecurityModule(ServletContext servletContext, ExtensionProcessor extensionProcessor)
   {
     super(servletContext);
     this.extensionProcessor = extensionProcessor;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Override
+   @Override
   @SuppressWarnings("unchecked")
   protected void configureShiroWeb()
   {
@@ -152,11 +132,6 @@ public class ScmSecurityModule extends ShiroWebModule
 
     return passwordService;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final ExtensionProcessor extensionProcessor;
 
   static class IdempotentPasswordService extends DefaultPasswordService {
 

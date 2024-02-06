@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
@@ -42,17 +41,10 @@ import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand {
 
-  /**
-   * the logger for SvnDiffCommand
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(SvnDiffCommand.class);
 

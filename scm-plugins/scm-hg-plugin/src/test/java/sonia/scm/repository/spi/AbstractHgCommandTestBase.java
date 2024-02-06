@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.After;
 import org.junit.Before;
@@ -36,23 +35,13 @@ import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.util.MockUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   */
-  @After
+   @After
   public void close() {
     if (cmdContext != null)
     {
@@ -71,38 +60,22 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
     cmdContext = new HgCommandContext(resolver, factory, RepositoryTestData.createHeartOfGold());
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Before
+   @Before
   public void setUp()
   {
     setSubject(MockUtil.createAdminSubject());
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String getType()
   {
     return "hg";
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected String getZippedRepositoryResource()
   {
@@ -111,9 +84,7 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   protected HgCommandContext cmdContext;
 
-  /** Field description */
   protected HgRepositoryHandler handler;
 }

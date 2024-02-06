@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -32,80 +31,49 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.36
  */
 public abstract class DirectoryHealthCheck implements HealthCheck
 {
 
-  /** Field description */
   private static final HealthCheckFailure NO_TYPE =
     new HealthCheckFailure("2OOTx6ta71", "Repository has no type",
       "The repository does not have a configured type.");
 
-  /** Field description */
   private static final HealthCheckFailure NO_HANDLER =
     new HealthCheckFailure("CqOTx7Jkq1", "No handler for repository type",
       "There is no registered repository handler for the type of the repository.");
 
-  /** Field description */
   private static final HealthCheckFailure NO_DIRECTORY =
     new HealthCheckFailure("AcOTx7fD51", "handler could not return directory",
       "The repository handler was not able to return a directory for the repository");
 
-  /** Field description */
   private static final HealthCheckFailure DIRECTORY_DOES_NOT_EXISTS =
     new HealthCheckFailure("1oOTx803F1",
       "repository directory does not exists",
       "The repository does not exists. Perhaps it was deleted outside of scm-manager.");
 
-  /**
-   * the logger for DirectoryHealthCheck
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(DirectoryHealthCheck.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repositoryManager
-   */
+  private final RepositoryManager repositoryManager;
+ 
   protected DirectoryHealthCheck(RepositoryManager repositoryManager)
   {
     this.repositoryManager = repositoryManager;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @return
-   */
+
   protected abstract HealthCheckResult check(Repository repository,
     File directory);
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
+
   @Override
   public HealthCheckResult check(Repository repository)
   {
@@ -126,31 +94,15 @@ public abstract class DirectoryHealthCheck implements HealthCheck
     return result;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
+
   protected boolean isCheckResponsible(Repository repository)
   {
     return true;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
+
   private HealthCheckResult doCheck(Repository repository)
   {
     HealthCheckResult result;
@@ -198,8 +150,4 @@ public abstract class DirectoryHealthCheck implements HealthCheck
     return result;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final RepositoryManager repositoryManager;
 }

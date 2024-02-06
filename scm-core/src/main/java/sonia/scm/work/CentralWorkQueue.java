@@ -101,8 +101,6 @@ public interface CentralWorkQueue {
 
   /**
    * Returns the count of pending or running tasks.
-   *
-   * @return count of pending or running tasks
    */
   int getSize();
 

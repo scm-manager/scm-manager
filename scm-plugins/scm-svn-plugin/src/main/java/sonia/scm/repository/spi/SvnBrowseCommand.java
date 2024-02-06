@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
@@ -50,17 +49,11 @@ import static org.tmatesoft.svn.core.SVNErrorCode.FS_NO_SUCH_REVISION;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 public class SvnBrowseCommand extends AbstractSvnCommand
   implements BrowseCommand {
 
-  /**
-   * the logger for SvnBrowseCommand
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(SvnBrowseCommand.class);
 
@@ -111,7 +104,6 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     return result;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   @SuppressWarnings("unchecked")
   private void traverse(SVNRepository svnRepository, long revisionNumber, BrowseCommandRequest request,

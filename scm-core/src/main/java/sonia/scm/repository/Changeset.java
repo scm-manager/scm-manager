@@ -39,16 +39,12 @@ import java.util.List;
 /**
  * Represents a changeset/commit of a repository.
  *
- * @author Sebastian Sdorra
  */
 @EqualsAndHashCode(callSuper = true)
 public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   private static final long serialVersionUID = -8373308448928993039L;
 
-  /**
-   * The author of the changeset
-   */
   private Person author;
 
   /**
@@ -61,14 +57,8 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
    */
   private Long date;
 
-  /**
-   * The text of the changeset description
-   */
   private String description;
 
-  /**
-   * The changeset identification string
-   */
   private String id;
 
   /**
@@ -127,8 +117,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Returns a timestamp of the creation date of the {@link Changeset}.
-   *
-   * @return a timestamp of the creation date of the {@link Changeset}
    */
   public Long getCreationDate() {
     return getDate();
@@ -141,8 +129,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Returns the author of the changeset.
-   *
-   * @return author of the changeset
    */
   public Person getAuthor() {
     return author;
@@ -165,8 +151,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Returns the creation date of the changeset.
-   *
-   * @return date of the changeset
    */
   public Long getDate() {
     return date;
@@ -174,8 +158,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Return the description (commit message) of the changeset.
-   *
-   * @return description of the changeset
    */
   public String getDescription() {
     return description;
@@ -183,8 +165,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Returns the id of the changeset.
-   *
-   * @return id of the changeset
    */
   @Override
   public String getId() {
@@ -259,8 +239,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Sets the author of the changeset.
-   *
-   * @param author author of the changeset
    */
   public void setAuthor(Person author) {
     this.author = author;
@@ -268,8 +246,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Sets the branches of the changeset.
-   *
-   * @param branches branches of the changeset
    */
   public void setBranches(List<String> branches) {
     this.branches = branches;
@@ -277,8 +253,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Sets the date of the changeset.
-   *
-   * @param date date of the changeset
    */
   public void setDate(Long date) {
     this.date = date;
@@ -286,8 +260,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Sets the description (commit message) of the changeset.
-   *
-   * @param description description of the changeset
    */
   public void setDescription(String description) {
     this.description = description;
@@ -295,8 +267,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Sets the id of the changeset.
-   *
-   * @param id id of the changeset
    */
   public void setId(String id) {
     this.id = id;
@@ -314,8 +284,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Sets the tags of the changeset
-   *
-   * @param tags tags of the changeset
    */
   public void setTags(List<String> tags) {
     this.tags = tags;
@@ -323,7 +291,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Sets the collection of contributors.
-   * @param contributors collection of contributors
+   *
    * @since 2.1.0
    */
   public void setContributors(Collection<Contributor> contributors) {
@@ -332,7 +300,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Adds a contributor to the list of contributors.
-   * @param contributor contributor to add
+   *
    * @since 2.1.0
    */
   public void addContributor(Contributor contributor) {
@@ -344,7 +312,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   /**
    * Adds all contributors from the given collection to the list of contributors.
-   * @param contributors collection of contributor
+   *
    * @since 2.1.0
    */
   public void addContributors(Collection<Contributor> contributors) {

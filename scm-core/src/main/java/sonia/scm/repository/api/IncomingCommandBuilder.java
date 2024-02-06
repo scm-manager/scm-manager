@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -39,17 +38,23 @@ import sonia.scm.repository.spi.IncomingCommandRequest;
 
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * The incoming command shows new {@link Changeset}s found in a different
  * repository location.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 public final class IncomingCommandBuilder
 {
+  private IncomingCommand command;
+
+  /** disable the execution of pre processors */
+  private boolean disablePreProcessors = false;
+
+  /** disable the execution of pre processors */
+  private PreProcessorUtil preProcessorUtil;
+
+  private IncomingCommandRequest request = new IncomingCommandRequest();
 
   /**
    * Constructs a new {@link IncomingCommandBuilder}, this constructor should
@@ -67,7 +72,6 @@ public final class IncomingCommandBuilder
     this.preProcessorUtil = preProcessorUtil;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the incoming changesets for the remote repository.
@@ -100,7 +104,6 @@ public final class IncomingCommandBuilder
     return cpr;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Disable the execution of pre processors.
@@ -150,17 +153,4 @@ public final class IncomingCommandBuilder
     return this;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** incoming command implementation */
-  private IncomingCommand command;
-
-  /** disable the execution of pre processors */
-  private boolean disablePreProcessors = false;
-
-  /** disable the execution of pre processors */
-  private PreProcessorUtil preProcessorUtil;
-
-  /** request object */
-  private IncomingCommandRequest request = new IncomingCommandRequest();
 }

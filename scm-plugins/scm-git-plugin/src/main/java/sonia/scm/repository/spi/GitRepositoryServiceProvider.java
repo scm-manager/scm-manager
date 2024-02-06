@@ -32,9 +32,7 @@ import sonia.scm.repository.api.Command;
 import java.util.EnumSet;
 import java.util.Set;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
 
   public static final Set<Command> COMMANDS = ImmutableSet.of(
@@ -71,7 +69,6 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
   private final Injector injector;
   private final GitContext context;
 
-  //~--- constructors ---------------------------------------------------------
 
   GitRepositoryServiceProvider(Injector injector, GitContext context) {
     this.injector = injector;

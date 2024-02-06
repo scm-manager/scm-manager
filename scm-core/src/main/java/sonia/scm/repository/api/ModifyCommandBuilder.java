@@ -260,7 +260,7 @@ public class ModifyCommandBuilder {
     }
 
     /**
-     * Set this to <code>true</code> to overwrite the file if it already exists. Otherwise an
+     * Set this to <code>true</code> to overwrite the file if it already exists. Otherwise, an
      * {@link sonia.scm.AlreadyExistsException} will be thrown.
      * @return This loader instance.
      */

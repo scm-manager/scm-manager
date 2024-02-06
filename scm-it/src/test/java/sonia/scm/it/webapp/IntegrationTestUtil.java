@@ -24,7 +24,6 @@
 
 package sonia.scm.it.webapp;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.Resources;
 import de.otto.edison.hal.HalRepresentation;
@@ -44,21 +43,14 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public final class IntegrationTestUtil
 {
 
   public static final Person AUTHOR = new Person("SCM Administrator", "scmadmin@scm-manager.org");
 
-  /** Field description */
   public static final String ADMIN_PASSWORD = "scmadmin";
 
-  /** Field description */
   public static final String ADMIN_USERNAME = "scmadmin";
 
   /** scm-manager base url */
@@ -67,15 +59,9 @@ public final class IntegrationTestUtil
   /** scm-manager base url for the rest api */
   public static final String REST_BASE_URL = BASE_URL.concat("api/v2/");
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private IntegrationTestUtil() {}
 
-  //~--- methods --------------------------------------------------------------
 
 
   public static ScmClient createAdminClient()
@@ -83,11 +69,7 @@ public final class IntegrationTestUtil
     return new ScmClient("scmadmin", "scmadmin");
   }
 
-  /**
-   * Method description
-   *
-   * @return
-   */
+
   public static Client createClient()
   {
     return ClientBuilder.newBuilder().register(new CustomJacksonMapperProvider()).build();
@@ -134,14 +116,7 @@ public final class IntegrationTestUtil
       .post(serialize(o, mediaType));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param url
-   *
-   * @return
-   */
+
   public static URI createResourceUrl(String url)
   {
     return URI.create(REST_BASE_URL).resolve(url);

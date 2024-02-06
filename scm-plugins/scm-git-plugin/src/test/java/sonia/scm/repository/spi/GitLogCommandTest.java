@@ -55,7 +55,6 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link GitLogCommand}.
  *
- * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GitLogCommandTest extends AbstractGitCommandTestBase

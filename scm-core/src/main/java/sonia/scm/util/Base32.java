@@ -24,14 +24,11 @@
     
 package sonia.scm.util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.math.BigInteger;
 
 /**
  * Provides Base32 encoding and decoding for long values.
  *
- * @author Sebastian Sdorra
  * @since 1.21
  */
 public final class Base32 extends AbstractBase
@@ -43,7 +40,6 @@ public final class Base32 extends AbstractBase
   /** char table */
   private static final String CHARS = "0123456789bcdefghjkmnpqrstuvwxyz";
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Decode a Base32 string to a long value.

@@ -27,29 +27,15 @@ package sonia.scm.repository;
 /**
  * Base class for {@link RepositoryHookEvent} wrappers.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 public class WrappedRepositoryHookEvent extends RepositoryHookEvent {
 
-  /**
-   * Constructs a new WrappedRepositoryHookEvent.
-   *
-   * @param wrappedEvent event to wrap
-   */
   protected WrappedRepositoryHookEvent(RepositoryHookEvent wrappedEvent) {
     super(wrappedEvent.getContext(), wrappedEvent.getRepository(),
       wrappedEvent.getType());
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Returns a wrapped instance of the {@link RepositoryHookEvent}-
-   *
-   * @param event event to wrap
-   * @return wrapper
-   */
   public static WrappedRepositoryHookEvent wrap(RepositoryHookEvent event) {
     WrappedRepositoryHookEvent wrappedEvent = null;
 

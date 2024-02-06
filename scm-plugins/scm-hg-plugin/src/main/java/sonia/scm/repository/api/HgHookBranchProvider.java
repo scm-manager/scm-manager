@@ -38,7 +38,6 @@ import java.util.List;
 /**
  * Mercurial hook branch provider implementation.
  *
- * @author Sebastian Sdorra
  */
 public class HgHookBranchProvider implements HookBranchProvider
 {
@@ -48,20 +47,17 @@ public class HgHookBranchProvider implements HookBranchProvider
   private static final HookChangesetRequest REQUEST =
     new HookChangesetRequest();
 
-  //~--- constructors ---------------------------------------------------------
+  private final HookChangesetProvider changesetProvider;
 
-  /**
-   * Constructs a new instance.
-   *
-   *
-   * @param changesetProvider changeset provider
-   */
+  private List<String> createdOrModified;
+
+  private List<String> deletedOrClosed;
+
   public HgHookBranchProvider(HookChangesetProvider changesetProvider)
   {
     this.changesetProvider = changesetProvider;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   public List<String> getCreatedOrModified()
@@ -85,7 +81,6 @@ public class HgHookBranchProvider implements HookBranchProvider
     return deletedOrClosed;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   private List<String> appendBranches(Builder<String> builder, Changeset c)
   {
@@ -131,11 +126,4 @@ public class HgHookBranchProvider implements HookBranchProvider
     deletedOrClosed = deletedOrClosedBuilder.build();
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  private final HookChangesetProvider changesetProvider;
-
-  private List<String> createdOrModified;
-
-  private List<String> deletedOrClosed;
 }

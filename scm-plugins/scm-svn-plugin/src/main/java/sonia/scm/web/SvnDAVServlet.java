@@ -44,35 +44,27 @@ import sonia.scm.util.HttpUtil;
 
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Singleton
 public class SvnDAVServlet extends DAVServlet implements ScmProviderHttpServlet
 {
 
-  /** Field description */
   private static final String HEADER_CONTEXTPATH = "X-Forwarded-Ctx";
 
-  /** Field description */
   private static final long serialVersionUID = -1462257085465785945L;
 
-  /** the logger for SvnDAVServlet */
+  
   private static final Logger logger =
     LoggerFactory.getLogger(SvnDAVServlet.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final SvnCollectionRenderer collectionRenderer;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   * @param collectionRenderer
-   * @param repositoryProvider
-   * @param repositoryRequestListenerUtil
-   */
+  private final SvnRepositoryHandler handler;
+
+  private final RepositoryProvider repositoryProvider;
+
+  private final RepositoryRequestListenerUtil repositoryRequestListenerUtil;
+
   @Inject
   public SvnDAVServlet(SvnRepositoryHandler handler,
     SvnCollectionRenderer collectionRenderer,
@@ -85,18 +77,7 @@ public class SvnDAVServlet extends DAVServlet implements ScmProviderHttpServlet
     this.repositoryRequestListenerUtil = repositoryRequestListenerUtil;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   @Override
   public void service(HttpServletRequest request, HttpServletResponse response, Repository repository)
     throws ServletException, IOException
@@ -113,14 +94,8 @@ public class SvnDAVServlet extends DAVServlet implements ScmProviderHttpServlet
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected DAVConfig getDAVConfig()
   {
@@ -128,18 +103,13 @@ public class SvnDAVServlet extends DAVServlet implements ScmProviderHttpServlet
       repositoryProvider);
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 11/10/23
-   * @author         Enter your name here...
-   */
+
+
   private static class SvnHttpServletRequestWrapper
     extends HttpServletRequestWrapper
   {
+    private final Repository repository;
 
     public SvnHttpServletRequestWrapper(HttpServletRequest request,
       Repository repository)
@@ -148,14 +118,7 @@ public class SvnDAVServlet extends DAVServlet implements ScmProviderHttpServlet
       this.repository = repository;
     }
 
-    //~--- get methods --------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     @Override
     public String getContextPath()
     {
@@ -169,12 +132,7 @@ public class SvnDAVServlet extends DAVServlet implements ScmProviderHttpServlet
       return header;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     @Override
     public String getPathInfo()
     {
@@ -195,12 +153,7 @@ public class SvnDAVServlet extends DAVServlet implements ScmProviderHttpServlet
       return pathInfo;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     @Override
     public String getServletPath()
     {
@@ -219,14 +172,7 @@ public class SvnDAVServlet extends DAVServlet implements ScmProviderHttpServlet
       return servletPath;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @param ctx
-     *
-     * @return
-     */
+    
     private boolean isValidContextPath(String ctx)
     {
       int length = ctx.length();
@@ -245,23 +191,6 @@ public class SvnDAVServlet extends DAVServlet implements ScmProviderHttpServlet
       return result;
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final Repository repository;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final SvnCollectionRenderer collectionRenderer;
-
-  /** Field description */
-  private final SvnRepositoryHandler handler;
-
-  /** Field description */
-  private final RepositoryProvider repositoryProvider;
-
-  /** Field description */
-  private final RepositoryRequestListenerUtil repositoryRequestListenerUtil;
 }

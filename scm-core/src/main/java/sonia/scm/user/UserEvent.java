@@ -24,7 +24,6 @@
     
 package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.AbstractHandlerEvent;
@@ -33,7 +32,6 @@ import sonia.scm.event.Event;
 /**
  * The UserEvent is fired if a user object changes.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 @Event

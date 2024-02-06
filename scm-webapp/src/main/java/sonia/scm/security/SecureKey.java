@@ -24,51 +24,39 @@
     
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Secure key can be used for singing messages and tokens.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @XmlRootElement(name = "secure-key")
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class SecureKey
 {
+  /** bytes of key */
+  private byte[] bytes;
+
+  private long creationDate;
 
   /**
-   * Constructs a new secure key.
    * This constructor should only be used by jaxb.
-   *
    */
   SecureKey() {}
 
-  /**
-   * Constructs a new secure key.
-   *
-   *
-   * @param bytes bytes of key
-   * @param creationDate creation date
-   */
   public SecureKey(byte[] bytes, long creationDate)
   {
     this.bytes = bytes;
     this.creationDate = creationDate;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public boolean equals(Object obj)
   {
@@ -88,44 +76,22 @@ public final class SecureKey
       && Objects.equal(creationDate, other.creationDate);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public int hashCode()
   {
     return Objects.hashCode(bytes, creationDate);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Returns the bytes of the key.
-   *
-   *
-   * @return bytes of key
-   */
   public byte[] getBytes()
   {
     return bytes;
   }
 
-  /**
-   * Returns the creation date of the key.
-   *
-   *
-   * @return key creation date
-   */
   public long getCreationDate()
   {
     return creationDate;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** bytes of key */
-  private byte[] bytes;
-
-  /** creation date */
-  private long creationDate;
 }

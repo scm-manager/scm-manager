@@ -35,7 +35,6 @@ public interface PrivateKey {
 
   /**
    * Returns the key's id.
-   * @return id
    */
   String getId();
 

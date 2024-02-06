@@ -49,14 +49,11 @@ import java.util.Set;
  * Default implementation of the {@link AdvancedHttpClient}. The default
  * implementation uses {@link HttpURLConnection}.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public class DefaultAdvancedHttpClient extends AdvancedHttpClient {
 
-  /**
-   * the logger for DefaultAdvancedHttpClient
-   */
+ 
   private static final Logger LOG = LoggerFactory.getLogger(DefaultAdvancedHttpClient.class);
 
   private final HttpURLConnectionFactory connectionFactory;

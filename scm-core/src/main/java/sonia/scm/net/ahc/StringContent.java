@@ -24,26 +24,16 @@
     
 package sonia.scm.net.ahc;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.nio.charset.Charset;
 
 /**
  * String content for {@link AdvancedHttpRequestWithBody}.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public class StringContent extends RawContent
 {
 
-  /**
-   * Constructs a new {@link StringContent}.
-   *
-   *
-   * @param content content
-   * @param charset charset
-   */
   public StringContent(String content, Charset charset)
   {
     super(content.getBytes(charset));

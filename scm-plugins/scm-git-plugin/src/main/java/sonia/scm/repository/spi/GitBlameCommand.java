@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -49,22 +48,14 @@ import java.util.List;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
 {
 
-  /**
-   * the logger for GitBlameCommand
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(GitBlameCommand.class);
 
-  //~--- constructors ---------------------------------------------------------
 
   @Inject
   public GitBlameCommand(@Assisted GitContext context)
@@ -72,7 +63,6 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
     super(context);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   public BlameResult getBlameResult(BlameCommandRequest request)

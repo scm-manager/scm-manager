@@ -24,7 +24,6 @@
     
 package sonia.scm.api.rest;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -32,20 +31,11 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
-/**
- *
- * @author Sebastian Sdorra
- * @param <E>
- */
 public class StatusExceptionMapper<E extends Throwable>
   implements ExceptionMapper<E>
 {
 
-  /**
-   * the logger for StatusExceptionMapper
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(StatusExceptionMapper.class);
 

@@ -53,7 +53,6 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link HookContext}.
  *
- * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
 public class HookContextTest {

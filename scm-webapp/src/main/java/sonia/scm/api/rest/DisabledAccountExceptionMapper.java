@@ -24,25 +24,17 @@
     
 package sonia.scm.api.rest;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 import org.apache.shiro.authc.DisabledAccountException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Provider
 public class DisabledAccountExceptionMapper
   extends StatusExceptionMapper<DisabledAccountException>
 {
 
-  /**
-   * Constructs ...
-   *
-   */
   public DisabledAccountExceptionMapper()
   {
     super(DisabledAccountException.class, Response.Status.FORBIDDEN);

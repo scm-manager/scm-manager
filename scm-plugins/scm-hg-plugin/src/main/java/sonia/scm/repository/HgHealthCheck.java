@@ -24,59 +24,38 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 
 import sonia.scm.plugin.Extension;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 
 /**
  * Simple {@link HealthCheck} for mercurial repositories.
  *
- * @author Sebastian Sdorra
  * @since 1.39
  */
 @Extension
 public final class HgHealthCheck extends DirectoryHealthCheck
 {
 
-  /** Field description */
   private static final HealthCheckFailure COULD_NOT_FIND_DOT_HG_DIRECTORY =
     new HealthCheckFailure("6bOdhOXpB1", "Could not find .hg directory",
       "The mercurial repository does not contain .hg directory.");
 
-  /** Field description */
   private static final String DOT_HG = ".hg";
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repositoryManager
-   */
+ 
   @Inject
   public HgHealthCheck(RepositoryManager repositoryManager)
   {
     super(repositoryManager);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @return
-   */
+
   @Override
   protected HealthCheckResult check(Repository repository, File directory)
   {
@@ -91,7 +70,6 @@ public final class HgHealthCheck extends DirectoryHealthCheck
     return result;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns {@code true} if the repository is from type mercurial.

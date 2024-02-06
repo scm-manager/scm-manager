@@ -32,14 +32,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Writer;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class MustacheTemplate implements Template {
 
-  /**
-   * the logger for MustacheTemplae
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(MustacheTemplate.class);
 

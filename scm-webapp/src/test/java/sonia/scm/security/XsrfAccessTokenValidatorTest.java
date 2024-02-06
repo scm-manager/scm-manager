@@ -44,7 +44,6 @@ import static org.mockito.Mockito.when;
 /**
  * Tests {@link XsrfAccessTokenValidator}.
  *
- * @author Sebastian Sdorra
  */
 @ExtendWith(MockitoExtension.class)
 class XsrfAccessTokenValidatorTest {

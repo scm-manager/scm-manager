@@ -24,63 +24,34 @@
     
 package sonia.scm.api.rest;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @XmlRootElement(name = "result")
 public class RestActionResult
 {
+  private boolean success = false;
 
-  /**
-   * Constructs ...
-   *
-   */
   public RestActionResult() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param success
-   */
+ 
   public RestActionResult(boolean success)
   {
     this.success = success;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isSuccess()
   {
     return success;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param success
-   */
+
   public void setSuccess(boolean success)
   {
     this.success = success;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private boolean success = false;
 }

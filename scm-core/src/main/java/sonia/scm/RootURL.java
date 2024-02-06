@@ -28,7 +28,7 @@ import java.net.URL;
 
 /**
  * RootURL is able to return the root url of the SCM-Manager instance,
- * regardless of the scope (web request, async hook, ssh command, etc).
+ * regardless of the scope (web request, async hook, ssh command, etc.).
  *
  * @since 2.3.1
  */
@@ -43,8 +43,6 @@ public interface RootURL {
 
   /**
    * Returns the root url of the SCM-Manager instance as string.
-   *
-   * @return root url as string
    */
   default String getAsString() {
     return get().toExternalForm();

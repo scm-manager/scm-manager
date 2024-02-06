@@ -49,22 +49,26 @@ import java.io.IOException;
  * BranchesCommandBuilder branchesCommand = repositoryService.getBranchesCommand();
  * Branches branches = tagsCommand.getBranches();
  * </code></pre>
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public final class BranchesCommandBuilder
 {
 
-  /** name of the cache */
   static final String CACHE_NAME = "sonia.cache.cmd.branches";
 
-  /**
-   * the logger for BranchesCommandBuilder
-   */
+  /** branches command implementation */
+  private final BranchesCommand branchesCommand;
+
+  /** cache for branches */
+  private final Cache<CacheKey, Branches> cache;
+
+  private boolean disableCache = false;
+
+  private final Repository repository;
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(BranchesCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new {@link BlameCommandBuilder}, this constructor should
@@ -82,7 +86,6 @@ public final class BranchesCommandBuilder
     this.repository = repository;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns all branches from the repository.
@@ -131,12 +134,11 @@ public final class BranchesCommandBuilder
     return branches;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Disables the cache for tags. This means that every {@link Branch}
    * is directly retrieved from the {@link Repository}. <b>Note: </b> Disabling
-   * the cache cost a lot of performance and could be much more slower.
+   * the cache cost a lot of performance and could be much slower.
    *
    *
    * @param disableCache true to disable the cache
@@ -150,55 +152,29 @@ public final class BranchesCommandBuilder
     return this;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   private Branches getBranchesFromCommand()
     throws IOException
   {
     return new Branches(branchesCommand.getBranchesWithStaleFlags(new BranchXDaysOlderThanDefaultStaleComputer()));
   }
 
-  //~--- inner classes --------------------------------------------------------
+
 
   /**
    * Key for caching branches;
-   *
-   *
-   * @version        Enter version here..., 12/07/05
-   * @author         Enter your name here...
    */
   static class CacheKey implements RepositoryCacheKey
   {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param repository
-     */
+    private final String repositoryId;
+  
     public CacheKey(Repository repository)
     {
       this.repositoryId = repository.getId();
     }
 
-    //~--- methods ------------------------------------------------------------
 
-    /**
-     * Method description
-     *
-     *
-     * @param obj
-     *
-     * @return
-     */
     @Override
     public boolean equals(Object obj)
     {
@@ -217,50 +193,19 @@ public final class BranchesCommandBuilder
       return Objects.equal(repositoryId, other.repositoryId);
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+  
     @Override
     public int hashCode()
     {
       return Objects.hashCode(repositoryId);
     }
 
-    //~--- get methods --------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
+    
     @Override
     public String getRepositoryId()
     {
       return repositoryId;
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** repository id */
-    private final String repositoryId;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** branches command implementation */
-  private final BranchesCommand branchesCommand;
-
-  /** cache for branches */
-  private final Cache<CacheKey, Branches> cache;
-
-  /** disable cache */
-  private boolean disableCache = false;
-
-  /** repository */
-  private final Repository repository;
 }

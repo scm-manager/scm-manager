@@ -43,7 +43,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * Realm for authentication with {@link BearerToken}.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Singleton
@@ -58,12 +57,7 @@ public class BearerRealm extends AuthenticatingRealm {
   private final DAORealmHelper helper;
   private final AccessTokenResolver tokenResolver;
 
-  /**
-   * Constructs ...
-   *
-   * @param helperFactory dao realm helper factory
-   * @param tokenResolver resolve access token from bearer
-   */
+
   @Inject
   public BearerRealm(DAORealmHelperFactory helperFactory, AccessTokenResolver tokenResolver) {
     this.helper = helperFactory.create(REALM);

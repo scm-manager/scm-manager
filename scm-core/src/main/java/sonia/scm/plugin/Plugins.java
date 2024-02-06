@@ -24,7 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 import com.google.common.io.ByteSource;
@@ -39,16 +38,12 @@ import java.nio.file.Path;
 /**
  * Util methods to handle plugins.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class Plugins
 {
 
-  /** Field description */
   private static JAXBContext context;
-
-  //~--- static initializers --------------------------------------------------
 
   static
   {
@@ -62,37 +57,15 @@ public final class Plugins
     }
   }
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   private Plugins() {}
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
   public static InstalledPluginDescriptor parsePluginDescriptor(Path path)
   {
     return parsePluginDescriptor(Files.asByteSource(path.toFile()));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param data
-   *
-   * @return
-   */
   public static InstalledPluginDescriptor parsePluginDescriptor(ByteSource data)
   {
     Preconditions.checkNotNull(data, "data parameter is required");

@@ -24,7 +24,6 @@
     
 package sonia.scm.group;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
@@ -33,7 +32,6 @@ import sonia.scm.event.ScmEventBus;
  * Abstract base class for {@link GroupManager} implementations. This class
  * implements the listener methods of the {@link GroupManager} interface.
  *
- * @author Sebastian Sdorra
  */
 public abstract class AbstractGroupManager implements GroupManager
 {

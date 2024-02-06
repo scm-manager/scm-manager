@@ -37,7 +37,6 @@ public interface ReadOnlyCheck {
 
   /**
    * Returns the reason for the write protection.
-   * @return reason for write protection
    */
   String getReason();
 

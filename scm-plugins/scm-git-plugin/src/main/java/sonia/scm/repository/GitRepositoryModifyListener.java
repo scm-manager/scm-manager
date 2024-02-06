@@ -34,7 +34,6 @@ import sonia.scm.plugin.Extension;
 /**
  * Repository listener which handles git related repository events.
  *
- * @author Sebastian Sdorra
  * @since 1.50
  */
 @Extension

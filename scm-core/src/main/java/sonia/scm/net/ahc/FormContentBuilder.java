@@ -42,7 +42,6 @@ import java.util.function.Supplier;
 /**
  * The form builder is able to add form parameters to a request.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public class FormContentBuilder {
@@ -52,11 +51,6 @@ public class FormContentBuilder {
   private final List<FileFormEntry> fileEntries = new ArrayList<>();
   private final Supplier<String> boundaryFactory;
 
-  /**
-   * Constructs a new {@link FormContentBuilder}.
-   *
-   * @param request request
-   */
   public FormContentBuilder(AdvancedHttpRequestWithBody request) {
     this(request, () -> "------------------------" + System.currentTimeMillis());
   }

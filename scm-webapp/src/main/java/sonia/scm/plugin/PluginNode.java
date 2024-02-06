@@ -24,69 +24,39 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class PluginNode
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param plugin
-   */
+ 
   public PluginNode(ExplodedSmp plugin)
   {
     this.plugin = plugin;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param node
-   */
+
   public void addChild(PluginNode node)
   {
     this.children.add(node);
     node.addParent(this);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param node
-   */
+
   private void addParent(PluginNode node)
   {
     this.parents.add(node);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
+
   public PluginNode getChild(final String id)
   {
     return Iterables.find(children, new Predicate<PluginNode>()
@@ -100,69 +70,38 @@ public final class PluginNode
     });
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public List<PluginNode> getChildren()
   {
     return children;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getId()
   {
     return plugin.getPlugin().getInformation().getName(false);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public List<PluginNode> getParents()
   {
     return parents;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public ExplodedSmp getPlugin()
   {
     return plugin;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public InstalledPlugin getWrapper()
   {
     return wrapper;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param wrapper
-   */
+
   public void setWrapper(InstalledPlugin wrapper)
   {
     this.wrapper = wrapper;
@@ -186,15 +125,11 @@ public final class PluginNode
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private final List<PluginNode> parents = Lists.newArrayList();
 
-  /** Field description */
   private final List<PluginNode> children = Lists.newArrayList();
 
-  /** Field description */
   private final ExplodedSmp plugin;
 
-  /** Field description */
   private InstalledPlugin wrapper;
 }

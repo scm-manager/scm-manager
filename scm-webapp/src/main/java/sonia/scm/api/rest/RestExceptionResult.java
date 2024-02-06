@@ -24,7 +24,6 @@
     
 package sonia.scm.api.rest;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -33,69 +32,38 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "exception")
 public class RestExceptionResult
 {
+  private String message;
 
-  /**
-   * Constructs ...
-   *
-   */
+  private String stacktrace;
+
   public RestExceptionResult() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param throwable
-   */
+ 
   public RestExceptionResult(Throwable throwable)
   {
     this(throwable.getMessage(), throwable);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param stacktrace
-   */
+ 
   public RestExceptionResult(String message, String stacktrace)
   {
     this.message = message;
     this.stacktrace = stacktrace;
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param throwable
-   */
+
   public RestExceptionResult(String message, Throwable throwable)
   {
     this(message, Throwables.getStackTraceAsString(throwable));
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
+
   @Override
   public boolean equals(Object obj)
   {
@@ -115,24 +83,14 @@ public class RestExceptionResult
            && Objects.equal(stacktrace, other.stacktrace);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public int hashCode()
   {
     return Objects.hashCode(message, stacktrace);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String toString()
   {
@@ -144,59 +102,30 @@ public class RestExceptionResult
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getMessage()
   {
     return message;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getStacktrace()
   {
     return stacktrace;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param message
-   */
+
   public void setMessage(String message)
   {
     this.message = message;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param stacktrace
-   */
+
   public void setStacktrace(String stacktrace)
   {
     this.stacktrace = stacktrace;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String message;
-
-  /** Field description */
-  private String stacktrace;
 }

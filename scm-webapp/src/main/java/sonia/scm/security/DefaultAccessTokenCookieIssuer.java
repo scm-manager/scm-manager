@@ -45,14 +45,11 @@ import static sonia.scm.initialization.InitializationWebTokenGenerator.INIT_TOKE
 /**
  * Generates cookies and invalidates access token cookies.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIssuer, InitializationCookieIssuer {
 
-  /**
-   * the logger for DefaultAccessTokenCookieIssuer
-   */
+ 
   private static final Logger LOG = LoggerFactory.getLogger(DefaultAccessTokenCookieIssuer.class);
 
   private static final int DEFAULT_COOKIE_EXPIRATION_AMOUNT = 365;

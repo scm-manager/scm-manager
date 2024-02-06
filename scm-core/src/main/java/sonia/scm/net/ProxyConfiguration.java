@@ -33,45 +33,35 @@ import java.util.Collection;
  */
 public interface ProxyConfiguration {
 
-  /**
-   * Returns {@code true} if proxy configuration is enabled.
-   * @return {@code true} if enabled
-   */
   boolean isEnabled();
 
   /**
    * Return the hostname or ip address of the proxy server.
-   * @return proxy server hostname or ip address
    */
   String getHost();
 
   /**
    * Returns port of the proxy server.
-   * @return port of proxy server
    */
   int getPort();
 
   /**
    * Returns a list of hostnames which should not be routed over the proxy server.
-   * @return list of excluded hostnames
    */
   Collection<String> getExcludes();
 
   /**
    * Returns the username for proxy server authentication.
-   * @return username for authentication
    */
   String getUsername();
 
   /**
    * Returns thr password for proxy server authentication.
-   * @return password for authentication
    */
   String getPassword();
 
   /**
    * Return {@code true} if the proxy server required authentication.
-   * @return {@code true} if authentication is required
    */
   boolean isAuthenticationRequired();
 }

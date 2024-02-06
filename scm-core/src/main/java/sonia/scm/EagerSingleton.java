@@ -24,8 +24,6 @@
     
 package sonia.scm;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -34,7 +32,6 @@ import java.lang.annotation.Target;
 /**
  * Eager singleton scope for injection.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })

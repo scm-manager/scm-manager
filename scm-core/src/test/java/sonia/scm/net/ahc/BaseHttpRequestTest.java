@@ -38,10 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @ExtendWith(MockitoExtension.class)
 class BaseHttpRequestTest {
 

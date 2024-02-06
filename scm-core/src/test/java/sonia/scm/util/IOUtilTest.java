@@ -24,7 +24,6 @@
     
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
 
@@ -32,24 +31,14 @@ import static org.junit.Assert.*;
 
 import static org.mockito.Mockito.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class IOUtilTest
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
   public void testIsChild() throws IOException
   {
@@ -63,16 +52,7 @@ public class IOUtilTest
     assertFalse(isChild("/tmp/test", "/asd/a/b"));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param canonicalPath
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   private File createMockFile(String canonicalPath) throws IOException
   {
     File file = mock(File.class);
@@ -82,7 +62,6 @@ public class IOUtilTest
     return file;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description

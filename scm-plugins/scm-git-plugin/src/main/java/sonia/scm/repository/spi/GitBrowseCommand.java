@@ -76,25 +76,16 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 import static sonia.scm.repository.spi.SyncAsyncExecutor.ExecutionType.ASYNCHRONOUS;
 
-/**
- * @author Sebastian Sdorra
- */
+
 public class GitBrowseCommand extends AbstractGitCommand
   implements BrowseCommand {
 
-  /**
-   * Field description
-   */
+  
   public static final String PATH_MODULES = ".gitmodules";
 
-  /**
-   * the logger for GitBrowseCommand
-   */
+ 
   private static final Logger logger = LoggerFactory.getLogger(GitBrowseCommand.class);
 
-  /**
-   * sub repository cache
-   */
   private final Map<ObjectId, Map<String, SubRepository>> subrepositoryCache = Maps.newHashMap();
 
   private final Object asyncMonitor = new Object();

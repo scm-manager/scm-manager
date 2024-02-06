@@ -39,12 +39,9 @@ import sonia.scm.repository.api.HookTagProvider;
 import java.util.EnumSet;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Mercurial implementation of {@link HookContextProvider}.
  *
- * @author Sebastian Sdorra
  */
 public class HgHookContextProvider extends HookContextProvider {
 

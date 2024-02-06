@@ -24,7 +24,6 @@
     
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -34,27 +33,22 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Descriptor for available permission objects.
  *
- * @author Sebastian Sdorra
  * @since 1.31
  */
 @XmlRootElement(name = "permission")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PermissionDescriptor implements Serializable
 {
+  private String value;
 
-  /** Field description */
   private static final long serialVersionUID = -9141065458354047154L;
 
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructor is only visible for JAXB.
-   *
    */
   public PermissionDescriptor() {}
 
@@ -63,11 +57,8 @@ public class PermissionDescriptor implements Serializable
     this.value = value;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public boolean equals(Object obj)
   {
@@ -86,18 +77,14 @@ public class PermissionDescriptor implements Serializable
     return Objects.equal(value, other.value);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public int hashCode()
   {
     return value == null? -1: value.hashCode();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public String toString()
   {
@@ -110,21 +97,12 @@ public class PermissionDescriptor implements Serializable
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the string representation of the permission.
-   *
-   *
-   * @return string representation
    */
   public String getValue()
   {
     return value;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** value */
-  private String value;
 }

@@ -24,14 +24,12 @@
     
 package sonia.scm.event;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.HandlerEventType;
 
 /**
  * Base class for handler events.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  *
  * @param <T>
@@ -39,19 +37,10 @@ import sonia.scm.HandlerEventType;
 public interface HandlerEvent<T>
 {
 
-  /**
-   * Returns the type of the event,
-   *
-   *
-   * @return event type
-   */
   public HandlerEventType getEventType();
 
   /**
    * Returns the item which has changed.
-   *
-   *
-   * @return changed item
    */
   public T getItem();
 

@@ -29,20 +29,10 @@ import sonia.scm.repository.Repository;
 
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.17
  */
 @ExtensionPoint
 public interface RepositoryServiceResolver
 {
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
   public RepositoryServiceProvider resolve(Repository repository);
 }

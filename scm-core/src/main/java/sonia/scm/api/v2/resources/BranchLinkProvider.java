@@ -33,7 +33,6 @@ public interface BranchLinkProvider {
    *
    * @param namespaceAndName The namespace and name of the repository.
    * @param branch           The name of the branch.
-   * @return Internal api link for the given branch.
    */
   String get(NamespaceAndName namespaceAndName, String branch);
 }

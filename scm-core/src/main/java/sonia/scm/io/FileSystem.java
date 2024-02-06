@@ -24,42 +24,18 @@
     
 package sonia.scm.io;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.plugin.ExtensionPoint;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @ExtensionPoint(multi=false)
 public interface FileSystem
 {
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param directory
-   *
-   * @throws IOException
-   */
   public void create(File directory) throws IOException;
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param directory
-   *
-   * @throws IOException
-   */
   public void destroy(File directory) throws IOException;
 }

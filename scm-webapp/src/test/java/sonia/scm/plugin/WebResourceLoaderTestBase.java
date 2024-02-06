@@ -24,7 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -34,15 +33,10 @@ import org.junit.rules.TemporaryFolder;
 
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public abstract class WebResourceLoaderTestBase
 {
 
@@ -70,7 +64,6 @@ public abstract class WebResourceLoaderTestBase
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   @Rule
   public TemporaryFolder temp = new TemporaryFolder();
 }

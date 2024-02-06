@@ -29,7 +29,6 @@ import java.io.Closeable;
 /**
  * Scheduler is able to run tasks on the future in a background thread. Task can be scheduled with cron like expression.
  * <strong>Note:</strong> Task are always executed in an administrative context.
- * @author Sebastian Sdorra
  * @since 1.47
  */
 public interface Scheduler extends Closeable {

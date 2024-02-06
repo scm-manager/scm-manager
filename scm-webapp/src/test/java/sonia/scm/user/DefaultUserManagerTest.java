@@ -45,9 +45,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Sebastian Sdorra
- */
+
 @SubjectAware(
   username = "trillian",
   password = "secret",

@@ -41,7 +41,6 @@ import sonia.scm.util.IOUtil;
 /**
  * Mercurial implementation of the {@link RepositoryClientFactoryProvider}.
  *
- * @author Sebastian Sdorra
  */
 public class HgRepositoryClientFactoryProvider implements RepositoryClientFactoryProvider
 {

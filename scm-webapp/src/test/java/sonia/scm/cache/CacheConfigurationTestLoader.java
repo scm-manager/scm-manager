@@ -24,7 +24,6 @@
     
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
@@ -42,21 +41,11 @@ import static java.util.Collections.emptyIterator;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class CacheConfigurationTestLoader implements CacheConfigurationLoader
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param tempFolder
-   */
+ 
   public CacheConfigurationTestLoader(TemporaryFolder tempFolder)
   {
     this.tempFolder = tempFolder;
@@ -114,14 +103,8 @@ public class CacheConfigurationTestLoader implements CacheConfigurationLoader
     this.manualConfiguration = manualConfiguration;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public URL getDefaultResource()
   {
@@ -135,12 +118,7 @@ public class CacheConfigurationTestLoader implements CacheConfigurationLoader
     return url;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public File getManualFileResource()
   {
@@ -171,12 +149,7 @@ public class CacheConfigurationTestLoader implements CacheConfigurationLoader
     return file;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Iterator<URL> getModuleResources()
   {
@@ -203,14 +176,7 @@ public class CacheConfigurationTestLoader implements CacheConfigurationLoader
     return urlIterator;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   */
+
   private URL getResource(String name)
   {
     return Resources.getResource("sonia/scm/cache/".concat(name));
@@ -218,15 +184,11 @@ public class CacheConfigurationTestLoader implements CacheConfigurationLoader
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private String defaultConfiguration;
 
-  /** Field description */
   private String manualConfiguration;
 
-  /** Field description */
   private Iterator<String> moduleConfigurations;
 
-  /** Field description */
   private TemporaryFolder tempFolder;
 }

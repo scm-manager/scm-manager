@@ -24,7 +24,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
@@ -57,10 +56,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 
 @ExtendWith(MockitoExtension.class)
 class PluginProcessorTest {

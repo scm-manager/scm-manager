@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,29 +38,17 @@ import sonia.scm.repository.SvnUtil;
 
 import java.io.File;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class SvnPreReceiveHookChangesetProvier
   extends AbstractSvnHookChangesetProvider
 {
-
-  /** the logger for SvnPreReceiveHookChangesetProvier */
   private static final Logger logger =
     LoggerFactory.getLogger(SvnPreReceiveHookChangesetProvier.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private File repositoryDirectory;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repositoryDirectory
-   * @param transaction
-   */
+  private String transaction;
+ 
   public SvnPreReceiveHookChangesetProvier(File repositoryDirectory,
     String transaction)
   {
@@ -69,28 +56,16 @@ public class SvnPreReceiveHookChangesetProvier
     this.transaction = transaction;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public RepositoryHookType getType()
   {
     return RepositoryHookType.PRE_RECEIVE;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   protected Changeset fetchChangeset()
   {
@@ -130,11 +105,4 @@ public class SvnPreReceiveHookChangesetProvier
     return changeset;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private File repositoryDirectory;
-
-  /** Field description */
-  private String transaction;
 }

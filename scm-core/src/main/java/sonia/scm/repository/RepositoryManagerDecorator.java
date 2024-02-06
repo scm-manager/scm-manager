@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.ManagerDecorator;
 import sonia.scm.Type;
@@ -32,58 +31,41 @@ import sonia.scm.Type;
 import java.io.IOException;
 import java.util.Collection;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Decorator for {@link RepositoryManager}.
  *
- * @author Sebastian Sdorra
  * @since 1.23
  */
 public class RepositoryManagerDecorator
   extends ManagerDecorator<Repository>
   implements RepositoryManager {
 
-  /**
-   * Constructs ...
-   *
-   * @param decorated
-   */
+  private final RepositoryManager decorated;
+
   public RepositoryManagerDecorator(RepositoryManager decorated) {
     super(decorated);
     this.decorated = decorated;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void fireHookEvent(RepositoryHookEvent event) {
     decorated.fireHookEvent(event);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+ 
   @Override
   public void importRepository(Repository repository) throws IOException {
     decorated.importRepository(repository);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   public Repository get(NamespaceAndName namespaceAndName) {
     return decorated.get(namespaceAndName);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   * @return
-   */
   @Override
   public Collection<RepositoryType> getConfiguredTypes() {
     return decorated.getConfiguredTypes();
@@ -99,33 +81,17 @@ public class RepositoryManagerDecorator
     return decorated;
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   * @param type
-   * @return
-   */
   @Override
   @SuppressWarnings("unchecked")
   public RepositoryHandler getHandler(String type) {
     return decorated.getHandler(type);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   * @return
-   */
   @Override
   public Collection<Type> getTypes() {
     return decorated.getTypes();
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   * @return
-   */
   @Override
   public Repository rename(Repository repository, String newNamespace, String newName) {
     return decorated.rename(repository, newNamespace, newName);
@@ -146,10 +112,4 @@ public class RepositoryManagerDecorator
     decorated.unarchive(repository);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * Field description
-   */
-  private final RepositoryManager decorated;
 }

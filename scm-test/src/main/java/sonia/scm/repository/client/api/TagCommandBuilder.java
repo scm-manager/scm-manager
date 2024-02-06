@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.client.api;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,47 +33,28 @@ import sonia.scm.repository.client.spi.TagRequest;
 
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public final class TagCommandBuilder
 {
 
-  /**
-   * the logger for TagCommandBuilder
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(TagCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private TagCommand command;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param command
-   */
+  private TagRequest request = new TagRequest();
+ 
   TagCommandBuilder(TagCommand command)
   {
     this.command = command;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   *
-   * @throws IOException
-   */
+
   public Tag tag(String name, String username) throws IOException
   {
     request.setName(name);
@@ -92,16 +72,8 @@ public final class TagCommandBuilder
     return tag;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param revision
-   *
-   * @return
-   */
+
   public TagCommandBuilder setRevision(String revision)
   {
     request.setRevision(revision);
@@ -109,11 +81,4 @@ public final class TagCommandBuilder
     return this;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private TagCommand command;
-
-  /** Field description */
-  private TagRequest request = new TagRequest();
 }

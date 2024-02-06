@@ -24,53 +24,28 @@
     
 package sonia.scm.template;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public final class MustacheTemplateNotFoundException extends RuntimeException
 {
 
-  /** Field description */
   private static final long serialVersionUID = -1998700779900576217L;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
   public MustacheTemplateNotFoundException() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
+
   public MustacheTemplateNotFoundException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
+ 
   public MustacheTemplateNotFoundException(Throwable cause)
   {
     super(cause);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
+ 
   public MustacheTemplateNotFoundException(String message, Throwable cause)
   {
     super(message, cause);

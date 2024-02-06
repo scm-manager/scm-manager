@@ -52,12 +52,6 @@ public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolP
   private volatile boolean isInitialized = false;
 
   /**
-   * Constructs a new {@link InitializingHttpScmProtocolWrapper}.
-   *
-   * @param delegateProvider injection provider for the servlet delegate
-   * @param pathInfoStore url info store
-   * @param scmConfiguration scm-manager main configuration
-   *
    * @deprecated use {@link InitializingHttpScmProtocolWrapper(Provider, RootURL)} instead.
    */
   @Deprecated
@@ -67,11 +61,6 @@ public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolP
   }
 
   /**
-   * Constructs a new {@link InitializingHttpScmProtocolWrapper}.
-   *
-   * @param delegateProvider injection provider for the servlet delegate
-   * @param rootURL root url
-   *
    * @since 2.3.1
    */
   public InitializingHttpScmProtocolWrapper(Provider<? extends ScmProviderHttpServlet> delegateProvider, RootURL rootURL) {

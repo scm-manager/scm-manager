@@ -24,7 +24,6 @@
     
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Sets;
 
@@ -33,8 +32,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
@@ -47,38 +44,23 @@ import java.util.concurrent.Future;
 
 /**
  *
- * @author Sebastian Sdorra
  *
  * @param <C>
  */
 public abstract class CacheManagerTestBase<C extends Cache>
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   protected abstract CacheManager createCacheManager();
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @After
   public void tearDown() throws IOException
   {
     cacheManager.close();
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
+   @Test
   public void testSameReference()
   {
     Cache<String, String> c1 = cacheManager.getCache("test-1");
@@ -143,58 +125,34 @@ public abstract class CacheManagerTestBase<C extends Cache>
     }
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   */
-  @Before
+   @Before
   public void setUp()
   {
     cacheManager = createCacheManager();
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param c1
-   * @param c2
-   */
+
   protected void assertIsSame(Cache<String, String> c1, Cache<String, String> c2)
   {
     assertSame(c1, c2);
   }
 
-  //~--- inner classes --------------------------------------------------------
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 13/03/25
-   * @author         Enter your name here...
-   */
+
+
   private static class AcquireCacheCallable implements Callable<Cache>
   {
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param cacheManager
-     * @param name
-     */
+  
     public AcquireCacheCallable(CacheManager cacheManager, String name)
     {
       this.cacheManager = cacheManager;
       this.name = name;
     }
 
-    //~--- methods ------------------------------------------------------------
+    
 
     /**
      * Method description
@@ -212,16 +170,13 @@ public abstract class CacheManagerTestBase<C extends Cache>
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
-    private final CacheManager cacheManager;
+      private final CacheManager cacheManager;
 
-    /** Field description */
-    private final String name;
+      private final String name;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private CacheManager cacheManager;
 }

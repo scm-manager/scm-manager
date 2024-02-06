@@ -24,19 +24,11 @@
     
 package sonia.scm.cache;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class GuavaCacheManagerTest extends CacheManagerTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
   protected CacheManager createCacheManager()
   {

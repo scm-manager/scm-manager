@@ -24,7 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -44,36 +43,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @XmlRootElement(name = "conditions")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PluginCondition implements Cloneable, Serializable
 {
 
-  /** Field description */
   private static final long serialVersionUID = 2406156062634968672L;
 
-  //~--- constructors ---------------------------------------------------------
+  private String arch;
 
-  /**
-   * Constructs ...
-   *
-   */
+  @XmlElement(name = "min-version")
+  private String minVersion;
+
+  @XmlElement(name = "name")
+  @XmlElementWrapper(name = "os")
+  private List<String> os;
+
   public PluginCondition() {}
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param minVersion
-   * @param os
-   * @param arch
-   */
   public PluginCondition(String minVersion, List<String> os, String arch)
   {
     this.minVersion = minVersion;
@@ -81,13 +69,8 @@ public class PluginCondition implements Cloneable, Serializable
     this.arch = arch;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @return
    * @since 1.11
    */
   @Override
@@ -103,14 +86,6 @@ public class PluginCondition implements Cloneable, Serializable
     return clone;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
   @Override
   public boolean equals(Object obj)
   {
@@ -131,24 +106,14 @@ public class PluginCondition implements Cloneable, Serializable
       && Objects.equal(os, other.os);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public int hashCode()
   {
     return Objects.hashCode(arch, minVersion, os);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String toString()
   {
@@ -161,63 +126,32 @@ public class PluginCondition implements Cloneable, Serializable
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getArch()
   {
     return arch;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public String getMinVersion()
   {
     return minVersion;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public List<String> getOs()
   {
     return os;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public boolean isSupported()
   {
     return isSupported(SCMContext.getContext().getVersion(),
       SystemUtil.getOS(), SystemUtil.getArch());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param version
-   * @param os
-   * @param arch
-   *
-   * @return
-   */
   public boolean isSupported(String version, String os, String arch)
   {
     boolean supported = true;
@@ -253,52 +187,23 @@ public class PluginCondition implements Cloneable, Serializable
     return supported;
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param arch
-   */
   public void setArch(String arch)
   {
     this.arch = arch;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param minVersion
-   */
   public void setMinVersion(String minVersion)
   {
     this.minVersion = minVersion;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param os
-   */
   public void setOs(List<String> os)
   {
     this.os = os;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param osType
-   * @param type
-   *
-   * @return
-   */
   private boolean isOs(String osType, PlatformType type)
   {
     osType = osType.toLowerCase(Locale.ENGLISH);
@@ -315,17 +220,4 @@ public class PluginCondition implements Cloneable, Serializable
     //J+
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String arch;
-
-  /** Field description */
-  @XmlElement(name = "min-version")
-  private String minVersion;
-
-  /** Field description */
-  @XmlElement(name = "name")
-  @XmlElementWrapper(name = "os")
-  private List<String> os;
 }

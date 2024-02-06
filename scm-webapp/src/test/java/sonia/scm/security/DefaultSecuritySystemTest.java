@@ -53,10 +53,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class DefaultSecuritySystemTest extends AbstractTestBase
 {
 

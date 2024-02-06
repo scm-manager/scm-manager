@@ -24,7 +24,6 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
@@ -39,13 +38,10 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * {@link ClassLoader} which is able to load classes and resources from all
  * plugins.
  *
- * @author Sebastian Sdorra
  */
 public final class UberClassLoader extends ClassLoader {
 

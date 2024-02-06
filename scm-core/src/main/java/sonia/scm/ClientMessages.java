@@ -24,22 +24,20 @@
     
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import jakarta.servlet.http.HttpServletRequest;
 import sonia.scm.i18n.I18nMessages;
-
-//~--- JDK imports ------------------------------------------------------------
 
 
 /**
  * I18n messages which are send back to client.
  *
- * @author Sebastian Sdorra
  * @since 1.37
  */
 public final class ClientMessages
 {
+  private String failedAuthentication;
+  private String notEnoughPrivileges;
 
   /**
    * Constructs a new instance of ClientMessages. This constructor should not be 
@@ -48,13 +46,9 @@ public final class ClientMessages
    */
   public ClientMessages() {}
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Returns the localized string for a failed authentication.
-   *
-   *
-   * @return localized string
    */
   public String failedAuthentication()
   {
@@ -62,35 +56,21 @@ public final class ClientMessages
   }
 
   /**
-   * Returns the localized string for "not enough privileges.
-   *
-   *
-   * @return localized string
+   * Returns the localized string for not enough privileges.
    */
   public String notEnoughPrivileges()
   {
     return notEnoughPrivileges;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns an instance {@link ClientMessages}.
    *
    * @param request servlet request
-   * 
-   * @return instance of client messages
    */
   public static ClientMessages get(HttpServletRequest request)
   {
     return I18nMessages.get(ClientMessages.class, request);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** failed authentication */
-  private String failedAuthentication;
-
-  /** not enough privileges */
-  private String notEnoughPrivileges;
 }

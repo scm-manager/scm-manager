@@ -24,7 +24,6 @@
     
 package sonia.scm.lifecycle.modules;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Sets;
 import com.google.inject.AbstractModule;
@@ -38,13 +37,10 @@ import sonia.scm.EagerSingleton;
 
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Guice module which captures all classes which are annotated with {@link EagerSingleton}. These classes can be later
  * initialized.
  *
- * @author Sebastian Sdorra
  */
 public class EagerSingletonModule extends AbstractModule {
 

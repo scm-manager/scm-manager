@@ -24,8 +24,6 @@
     
 package sonia.scm.web.filter;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 

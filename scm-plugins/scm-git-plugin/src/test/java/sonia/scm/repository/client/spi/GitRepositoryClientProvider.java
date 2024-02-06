@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.client.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableSet;
 import org.eclipse.jgit.api.Git;
@@ -36,82 +35,46 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class GitRepositoryClientProvider extends RepositoryClientProvider
 {
 
-  /** Field description */
   private static final Set<ClientCommand> SUPPORTED_COMMANDS =
     ImmutableSet.of(ClientCommand.ADD, ClientCommand.REMOVE,
       ClientCommand.COMMIT, ClientCommand.TAG, ClientCommand.BRANCH,
       ClientCommand.DELETE_REMOTE_BRANCH, ClientCommand.MERGE, ClientCommand.PUSH);
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param git
-   * @param credentialsProvider
-   */
+ 
   GitRepositoryClientProvider(Git git)
   {
     this(git, null);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param git
-   * @param credentialsProvider
-   */
+ 
   GitRepositoryClientProvider(Git git, CredentialsProvider credentialsProvider)
   {
     this.git = git;
     this.credentialsProvider = credentialsProvider;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Override
   public void close() throws IOException
   {
     GitUtil.close(git.getRepository());
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public AddCommand getAddCommand()
   {
     return new GitAddCommand(git);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public BranchCommand getBranchCommand()
   {
@@ -128,60 +91,35 @@ public class GitRepositoryClientProvider extends RepositoryClientProvider
     return new GitCheckoutCommand(git);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public CommitCommand getCommitCommand()
   {
     return new GitCommitCommand(git);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public PushCommand getPushCommand()
   {
     return new GitPushCommand(git, credentialsProvider);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public RemoveCommand getRemoveCommand()
   {
     return new GitRemoveCommand(git);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Set<ClientCommand> getSupportedClientCommands()
   {
     return SUPPORTED_COMMANDS;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public TagCommand getTagCommand()
   {
@@ -200,9 +138,7 @@ public class GitRepositoryClientProvider extends RepositoryClientProvider
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private CredentialsProvider credentialsProvider;
 
-  /** Field description */
   private Git git;
 }

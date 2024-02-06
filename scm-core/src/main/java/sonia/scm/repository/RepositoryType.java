@@ -21,15 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.Type;
 import sonia.scm.repository.api.Command;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collections;
 import java.util.Set;
@@ -37,16 +34,16 @@ import java.util.Set;
 /**
  * The type (mercurial, subversion, git) of a {@link Repository}.
  *
- * @author Sebastian Sdorra
  * @since 1.18
  */
 public class RepositoryType extends Type
 {
+  private Set<Command> supportedCommands;
+
+  private Set<Feature> supportedFeatures;
 
   /**
-   * Constructs {@link RepositoryType} object.
    * This constructor is required for JAXB.
-   *
    */
   public RepositoryType() {}
 
@@ -84,13 +81,9 @@ public class RepositoryType extends Type
     this.supportedFeatures = supportedFeatures;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns a set of commands, which are supported by the repository type.
-   *
-   *
-   * @return set of supported commands
    */
   public Set<Command> getSupportedCommands()
   {
@@ -99,9 +92,6 @@ public class RepositoryType extends Type
 
   /**
    * Returns a set of features, which are supported by the repository type.
-   *
-   *
-   * @return set of supported features
    * @since 1.25
    */
   public Set<Feature> getSupportedFeatures()
@@ -109,11 +99,4 @@ public class RepositoryType extends Type
     return supportedFeatures;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** set of supported commands */
-  private Set<Command> supportedCommands;
-
-  /** set of supported features */
-  private Set<Feature> supportedFeatures;
 }

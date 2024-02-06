@@ -24,41 +24,20 @@
     
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public interface PluginLoader
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public ExtensionProcessor getExtensionProcessor();
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Collection<ScmModule> getInstalledModules();
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public Collection<InstalledPlugin> getInstalledPlugins();
 
   /**

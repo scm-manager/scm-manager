@@ -39,11 +39,11 @@ import java.util.Set;
 /**
  * Repository type specific provider for {@link HookContext}.
  *
- * @author Sebastian Sdorra
  * @since 1.33
  */
 public abstract class HookContextProvider
 {
+  private boolean clientDisconnected = false;
 
   /**
    * Return the provider specific {@link HookMessageProvider} or throws a {@link HookFeatureIsNotSupportedException}.
@@ -62,7 +62,6 @@ public abstract class HookContextProvider
     return createMessageProvider();
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Mark client connection as disconnected.
@@ -73,7 +72,6 @@ public abstract class HookContextProvider
     clientDisconnected = true;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns a set of supported hook features of the client.
@@ -130,7 +128,6 @@ public abstract class HookContextProvider
     throw new HookFeatureIsNotSupportedException(HookFeature.MODIFICATIONS_PROVIDER);
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Creates a new provider specific {@link HookMessageProvider} or throws a {@link HookFeatureIsNotSupportedException}.
@@ -142,7 +139,4 @@ public abstract class HookContextProvider
     throw new HookFeatureIsNotSupportedException(HookFeature.MESSAGE_PROVIDER);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  private boolean clientDisconnected = false;
 }

@@ -24,7 +24,6 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -32,34 +31,18 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 
-/**
- *
- * @author Sebastian Sdorra
- *
- * @param <T>
- */
+
 public abstract class FileBasedStore<T> implements MultiEntryStore<T>
 {
 
-  /**
-   * the logger for FileBasedStore
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(FileBasedStore.class);
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param directory
-   * @param suffix
-   */
+ 
   public FileBasedStore(File directory, String suffix, boolean readOnly)
   {
     this.directory = directory;
@@ -67,23 +50,11 @@ public abstract class FileBasedStore<T> implements MultiEntryStore<T>
     this.readOnly = readOnly;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   *
-   * @return
-   */
+
   protected abstract T read(File file);
 
-  /**
-   * Method description
-   *
-   */
-  @Override
+   @Override
   public void clear()
   {
     logger.debug("clear store");
@@ -94,12 +65,7 @@ public abstract class FileBasedStore<T> implements MultiEntryStore<T>
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
+
   @Override
   public void remove(String id)
   {
@@ -112,16 +78,8 @@ public abstract class FileBasedStore<T> implements MultiEntryStore<T>
     remove(file);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
+
   @Override
   public T get(String id)
   {
@@ -134,14 +92,8 @@ public abstract class FileBasedStore<T> implements MultiEntryStore<T>
     return read(file);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   */
+
   protected void remove(File file)
   {
     logger.trace("delete store entry {}", file);
@@ -155,16 +107,8 @@ public abstract class FileBasedStore<T> implements MultiEntryStore<T>
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
+
   protected File getFile(String id)
   {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(id),
@@ -173,14 +117,7 @@ public abstract class FileBasedStore<T> implements MultiEntryStore<T>
     return new File(directory, id.concat(suffix));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   *
-   * @return
-   */
+
   protected String getId(File file)
   {
     String name = file.getName();
@@ -196,10 +133,8 @@ public abstract class FileBasedStore<T> implements MultiEntryStore<T>
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   protected File directory;
 
-  /** Field description */
   private final String suffix;
 
   private final boolean readOnly;

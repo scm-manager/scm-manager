@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -53,11 +52,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 public class AbstractRemoteCommandTestBase {
 
   /**
@@ -97,7 +92,6 @@ public class AbstractRemoteCommandTestBase {
     Transport.unregister(proto);
   }
 
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -110,7 +104,6 @@ public class AbstractRemoteCommandTestBase {
     Transport.register(proto);
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -127,14 +120,7 @@ public class AbstractRemoteCommandTestBase {
     assertEquals(expected.getShortMessage(), actual.getDescription());
   }
 
-  /**
-   * Method description
-   *
-   * @param git
-   * @param message
-   * @return
-   * @throws GitAPIException
-   */
+
   protected RevCommit commit(Git git, String message) throws GitAPIException {
     User trillian = UserTestData.createTrillian();
     CommitCommand cc = git.commit();
@@ -165,50 +151,32 @@ public class AbstractRemoteCommandTestBase {
 
   //~--- fields ---------------------------------------------------------------
 
-  /**
-   * Field description
-   */
+  
   @Rule
   public TemporaryFolder tempFolder = new TemporaryFolder();
 
-  /**
-   * Field description
-   */
+  
   protected GitRepositoryHandler handler;
 
-  /**
-   * Field description
-   */
+  
   protected Repository incomingRepository;
 
-  /**
-   * Field description
-   */
+  
   protected Git incoming;
 
-  /**
-   * Field description
-   */
+  
   protected File incomingDirectory;
 
-  /**
-   * Field description
-   */
+  
   protected Git outgoing;
 
-  /**
-   * Field description
-   */
+  
   protected File outgoingDirectory;
 
-  /**
-   * Field description
-   */
+  
   protected Repository outgoingRepository;
 
-  /**
-   * Field description
-   */
+  
   private ScmTransportProtocol proto;
 
   protected ScmEventBus eventBus;

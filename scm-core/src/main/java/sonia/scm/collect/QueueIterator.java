@@ -24,11 +24,8 @@
     
 package sonia.scm.collect;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.UnmodifiableIterator;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
@@ -38,13 +35,15 @@ import java.util.concurrent.TimeUnit;
  * only be created from the {@link IterableQueue} by calling the
  * {@link IterableQueue#iterator()}.
  *
- * @author Sebastian Sdorra
  *
  * @since 1.29
  * @param <T> type of the queued items
  */
 public final class QueueIterator<T> extends UnmodifiableIterator<T>
 {
+  private final IterableQueue<T> queue;
+
+  private int index = 0;
 
   /**
    * Constructs a new {@link QueueIterator} for the given {@link IterableQueue}.
@@ -57,7 +56,6 @@ public final class QueueIterator<T> extends UnmodifiableIterator<T>
     this.queue = queue;
   }
 
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Returns the next item in the queue. This method will block until the next
@@ -79,16 +77,11 @@ public final class QueueIterator<T> extends UnmodifiableIterator<T>
     return queue.get(index++);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns {@code true} {@code true} if the queue has more items.
+   * Returns {@code true} if the queue has more items.
    * This method will block until the next item is pushed to the queue, if the
-   * queue is empty and the end is not
-   * reached.
-   *
-   *
-   * @return {@code true} {@code true} if the queue has more items
+   * queue is empty and the end is not reached.
    */
   @Override
   public boolean hasNext()
@@ -118,11 +111,4 @@ public final class QueueIterator<T> extends UnmodifiableIterator<T>
     return result;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** queue for the iterator */
-  private final IterableQueue<T> queue;
-
-  /** current index */
-  private int index = 0;
 }

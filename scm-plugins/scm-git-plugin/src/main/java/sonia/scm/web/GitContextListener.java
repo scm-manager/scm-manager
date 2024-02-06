@@ -24,7 +24,6 @@
     
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import jakarta.servlet.ServletContextEvent;
@@ -35,42 +34,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.Extension;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Extension
 public class GitContextListener implements ServletContextListener
 {
-
-  /**
-   * the logger for GitContextListener
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(GitContextListener.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param transportProtocol
-   */
+  private ScmTransportProtocol transportProtocol;
+ 
   @Inject
   public GitContextListener(ScmTransportProtocol transportProtocol)
   {
     this.transportProtocol = transportProtocol;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param sce
-   */
+
   @Override
   public void contextDestroyed(ServletContextEvent sce)
   {
@@ -78,12 +58,7 @@ public class GitContextListener implements ServletContextListener
     // do nothing
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param sce
-   */
+
   @Override
   public void contextInitialized(ServletContextEvent sce)
   {
@@ -91,8 +66,4 @@ public class GitContextListener implements ServletContextListener
     Transport.register(transportProtocol);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private ScmTransportProtocol transportProtocol;
 }

@@ -38,23 +38,15 @@ import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 /**
  * {@link PostReceiveRepositoryHookEvent} which stores receives data and passes it to the {@link DebugService}.
  *
- * @author Sebastian Sdorra
  */
 @EagerSingleton
 public final class DebugHook
 {
-  /**
-   * the logger for DebugHook
-   */
+ 
   private static final Logger LOG = LoggerFactory.getLogger(DebugHook.class);
 
   private final DebugService debugService;
 
-  /**
-   * Constructs a new instance.
-   *
-   * @param debugService debug service
-   */
   @Inject
   public DebugHook(DebugService debugService)
   {

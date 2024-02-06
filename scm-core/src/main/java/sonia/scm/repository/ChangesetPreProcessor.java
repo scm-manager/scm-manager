@@ -21,18 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
- * A pre processor for {@link Changeset} objects. A pre processor is able to 
+ * A pre processor for {@link Changeset} objects. A pre processor is able to
  * modify the object before it is delivered to the user interface.
- * 
- * @author Sebastian Sdorra
+ *
  */
 @ExtensionPoint
 public interface ChangesetPreProcessor extends PreProcessor<Changeset>
@@ -40,9 +38,6 @@ public interface ChangesetPreProcessor extends PreProcessor<Changeset>
 
   /**
    * Process the given changeset.
-   *
-   *
-   * @param changeset changeset to process
    */
   @Override
   public void process(Changeset changeset);

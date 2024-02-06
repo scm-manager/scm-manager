@@ -37,25 +37,18 @@ import java.util.Optional;
 public interface NamespaceManager {
 
   /**
-   * Returns the Namespace with the given name.
-   *
-   * @param namespace The name of the requested namespace.
-   * @return Optional with the namespace for the given name, or an empty Optional if there is no such namespace
-   * (that is, there is no repository with this namespace).
+   * Returns {@link Optional} with the namespace for the given name, or an empty {@link Optional} if there is no such
+   * namespace (that is, there is no repository with this namespace).
    */
   Optional<Namespace> get(String namespace);
 
   /**
    * Returns a {@link java.util.Collection} of all namespaces.
-   *
-   * @return all namespaces
    */
   Collection<Namespace> getAll();
 
   /**
    * Modifies the given namespace.
-   *
-   * @param namespace The namespace to be modified.
    */
   void modify(Namespace namespace);
 }

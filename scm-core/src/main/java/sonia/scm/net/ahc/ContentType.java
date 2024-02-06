@@ -27,19 +27,15 @@ package sonia.scm.net.ahc;
 /**
  * Content-Types.
  *
- * @author Sebastian Sdorra
  * @since 1.46
  */
 public final class ContentType
 {
 
-  /** json content type */
   public static final String JSON = "application/json";
 
-  /** xml content type */
   public static final String XML = "application/xml";
 
-  //~--- constructors ---------------------------------------------------------
 
   private ContentType() {}
 }

@@ -24,80 +24,48 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Stage;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class TempSCMContextProvider implements SCMContextProvider
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public File getBaseDirectory()
   {
     return baseDirectory;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Stage getStage()
   {
     return Stage.DEVELOPMENT;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public Throwable getStartupError()
   {
     return null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public String getVersion()
   {
     return "900.0.1-SNAPSHOT";
   }
 
-  //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param baseDirectory
-   */
+
   public void setBaseDirectory(File baseDirectory)
   {
     this.baseDirectory = baseDirectory;
@@ -110,6 +78,5 @@ public class TempSCMContextProvider implements SCMContextProvider
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private File baseDirectory;
 }

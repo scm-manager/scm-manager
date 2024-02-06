@@ -27,54 +27,28 @@ package sonia.scm;
 /**
  * Exception for problems with the SCM-Manager configuration.
  *
- * @author Sebastian Sdorra
  */
 public class ConfigurationException extends RuntimeException
 {
 
-  /** Field description */
   private static final long serialVersionUID = 3462977946341972841L;
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs a {@link ConfigurationException}
-   *
-   */
   public ConfigurationException()
   {
     super();
   }
 
-  /**
-   * Constructs a {@link ConfigurationException}
-   *
-   *
-   * @param message
-   */
   public ConfigurationException(String message)
   {
     super(message);
   }
 
-  /**
-   * Constructs a {@link ConfigurationException}
-   *
-   *
-   * @param cause
-   */
   public ConfigurationException(Throwable cause)
   {
     super(cause);
   }
 
-  /**
-   * Constructs a {@link ConfigurationException}
-   *
-   *
-   * @param message
-   * @param cause
-   */
   public ConfigurationException(String message, Throwable cause)
   {
     super(message, cause);

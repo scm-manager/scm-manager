@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import sonia.scm.event.HandlerEvent;
@@ -30,16 +30,13 @@ import sonia.scm.event.HandlerEvent;
  * Extension to the {@link ModificationHandlerEvent}.
  *
  * @param <T> type of changed item
- * 
- * @author Sebastian Sdorra
+ *
  * @since 1.48
  */
 public interface ModificationHandlerEvent<T> extends HandlerEvent<T>
 {
   /**
    * Returns item, before it was modified.
-   * 
-   * @return item before modification
    */
   public T getItemBeforeModification();
 }

@@ -31,7 +31,6 @@ import sonia.scm.plugin.ExtensionPoint;
  * AccessTokenEnricher can be used to add custom fields to the {@link AccessToken}. The enricher is always called before
  * an {@link AccessToken} is build by the {@link AccessTokenBuilder}.
  * 
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @ExtensionPoint

@@ -24,7 +24,6 @@
     
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,61 +39,39 @@ import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 
 import java.util.Collection;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 public class SvnPostReceiveHookChangesetProvier
   extends AbstractSvnHookChangesetProvider
 {
 
-  /** the logger for SvnPostReceiveHookChangesetProvier */
+  
   private static final Logger logger =
     LoggerFactory.getLogger(SvnPostReceiveHookChangesetProvier.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private File repositoryDirectory;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repositoryDirectory
-   * @param revision
-   */
+  private long revision;
+ 
   public SvnPostReceiveHookChangesetProvier(File repositoryDirectory, long revision)
   {
     this.repositoryDirectory = repositoryDirectory;
     this.revision = revision;
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   public RepositoryHookType getType()
   {
     return RepositoryHookType.POST_RECEIVE;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   @Override
   @SuppressWarnings("unchecked")
   protected Changeset fetchChangeset()
@@ -132,11 +109,4 @@ public class SvnPostReceiveHookChangesetProvier
     return changeset;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private File repositoryDirectory;
-
-  /** Field description */
-  private long revision;
 }

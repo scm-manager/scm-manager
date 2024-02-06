@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;
@@ -42,81 +41,53 @@ import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
 import sonia.scm.plugin.Extension;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
 
 import java.util.List;
 import java.util.Set;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+
 @Extension
 public class DBFormatHealthCheck extends DirectoryHealthCheck
 {
 
-  /**
-   * the logger for DBFormatHealthCheck
-   */
+ 
   private static final Logger logger =
     LoggerFactory.getLogger(DBFormatHealthCheck.class);
 
-  /** Field description */
   private static final Set<String> INVALID_DBFORMAT = ImmutableSet.of("5");
 
-  /** Field description */
   private static final HealthCheckFailure INCOMPATIBLE_DB_FORMAT =
     new HealthCheckFailure("AnOTx99ex1", "Incompatible DB Format",
       "https://github.com/scm-manager/scm-manager/blob/develop/docs/healthchecks/svn-incompatible-dbformat.md",
       "The subversion db format is incompatible with the svn version used within scm-manager.");
 
-  /** Field description */
   private static final String DBFORMAT =
     "db".concat(File.separator).concat("format");
 
-  /** Field description */
   private static final HealthCheckFailure COULD_NOT_READ_DB_FILE =
     new HealthCheckFailure("4IOTx8pvv1", "Could not read db/format file",
       "The db/format file of the repository was not readable.");
 
-  /** Field description */
   private static final HealthCheckFailure COULD_NOT_OPEN_REPOSITORY =
     new HealthCheckFailure("6TOTx9RLD1", "Could not open svn repository",
       "The repository is not openable.");
 
-  /** Field description */
   private static final HealthCheckFailure COULD_NOT_FIND_DB_FILE =
     new HealthCheckFailure("A9OTx8leC1", "Could not find db/format file",
       "The subversion repository does not contain the db/format file.");
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repositoryManager
-   */
+ 
   @Inject
   public DBFormatHealthCheck(RepositoryManager repositoryManager)
   {
     super(repositoryManager);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @return
-   */
+
   @Override
   protected HealthCheckResult check(Repository repository, File directory)
   {
@@ -130,16 +101,8 @@ public class DBFormatHealthCheck extends DirectoryHealthCheck
       : HealthCheckResult.unhealthy(failures);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
+
   @Override
   protected boolean isCheckResponsible(Repository repository)
   {
@@ -147,16 +110,8 @@ public class DBFormatHealthCheck extends DirectoryHealthCheck
       repository.getType());
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param failures
-   * @param repository
-   * @param directory
-   */
+ 
   private void checkForBadDBVersion(List<HealthCheckFailure> failures,
     Repository repository, File directory)
   {
@@ -188,14 +143,7 @@ public class DBFormatHealthCheck extends DirectoryHealthCheck
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param failures
-   * @param repository
-   * @param directory
-   */
+ 
   private void checkIfRepositoryIsOpenable(List<HealthCheckFailure> failures,
     Repository repository, File directory)
   {

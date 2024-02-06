@@ -44,7 +44,6 @@ import sonia.scm.security.DAORealmHelperFactory;
 /**
  * Support for SCM-Manager 1.x password hashes.
  *
- * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Extension
@@ -60,18 +59,11 @@ public class LegacyRealm extends AuthenticatingRealm {
     .or(CharMatcher.inRange('A', 'F')
     );
 
-  /**
-   * the logger for LegacyRealm
-   */
+ 
   private static final Logger LOG = LoggerFactory.getLogger(LegacyRealm.class);
 
   private final DAORealmHelper helper;
 
-  /**
-   * Constructs a new instance.
-   *
-   * @param helperFactory dao realm helper factory
-   */
   @Inject
   public LegacyRealm(DAORealmHelperFactory helperFactory) {
     this.helper = helperFactory.create(REALM);

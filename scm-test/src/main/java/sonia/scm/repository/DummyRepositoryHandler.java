@@ -24,7 +24,6 @@
     
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Sets;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -35,11 +34,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
 
-/**
- * @author Sebastian Sdorra
- */
 public class DummyRepositoryHandler
   extends AbstractSimpleRepositoryHandler<DummyRepositoryHandler.DummyRepositoryConfig> {
 
