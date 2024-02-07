@@ -118,6 +118,10 @@ public final class ServerConfiguration {
     connector.setHost(configYaml.getAddressBinding());
     System.out.println("Set http port to " + configYaml.getPort());
     connector.setPort(configYaml.getPort());
+    if (configYaml.getIdleTimeout() > 0) {
+      System.out.println("Set http idle timeout to " + configYaml.getIdleTimeout());
+      connector.setIdleTimeout(configYaml.getIdleTimeout());
+    }
     server.addConnector(connector);
   }
 

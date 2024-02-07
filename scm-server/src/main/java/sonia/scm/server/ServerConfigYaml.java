@@ -37,6 +37,7 @@ public class ServerConfigYaml {
   private String tempDir = "work/scm";
   // Resolves the client ip instead of the reverse proxy ip if the X-Forwarded-For header is present
   private boolean forwardHeadersEnabled = false;
+  private int idleTimeout = 0;
 
   // ### SSL-related config
   // Only configure SSL if the key store path is set
@@ -147,6 +148,14 @@ public class ServerConfigYaml {
 
   public void setForwardHeadersEnabled(boolean forwardHeadersEnabled) {
     this.forwardHeadersEnabled = forwardHeadersEnabled;
+  }
+
+  public int getIdleTimeout() {
+    return getEnvWithDefault("IDLE_TIMEOUT", idleTimeout);
+  }
+
+  public void setIdleTimeout(int idleTimeout) {
+    this.idleTimeout = idleTimeout;
   }
 
   static int getEnvWithDefault(String envKey, int configValue) {

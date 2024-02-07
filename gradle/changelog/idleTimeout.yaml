@@ -1,0 +1,2 @@
+- type: fixed
+  description: Added configuration option for idle timeout
