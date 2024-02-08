@@ -3,7 +3,15 @@
     "menu": {
       "navigationLabel": "Namespace",
       "settingsNavLink": "Einstellungen",
-      "permissionsNavLink": "Berechtigungen"
+      "permissionsNavLink": "Berechtigungen",
+      "informationNavLink": "Informationen"
+    },
+    "infoPage": {
+      "subtitle": "Informationen",
+      "repository": "Repository",
+      "type": "Typ",
+      "contact": "Kontakt",
+      "lastModified": "Zuletzt geändert"
     }
   },
   "repositoryOverview": {

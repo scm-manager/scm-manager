@@ -39,16 +39,23 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.store.InMemoryDataStore;
 import sonia.scm.store.InMemoryDataStoreFactory;
+import sonia.scm.web.security.AdministrationContext;
+import sonia.scm.web.security.PrivilegedAction;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static sonia.scm.HandlerEventType.CREATE;
 import static sonia.scm.HandlerEventType.DELETE;
 import static sonia.scm.HandlerEventType.MODIFY;
 
@@ -60,6 +67,8 @@ class DefaultNamespaceManagerTest {
   RepositoryManager repositoryManager;
   @Mock
   ScmEventBus eventBus;
+  @Mock
+  AdministrationContext administrationContext;
   @Mock
   Subject subject;
 
@@ -84,7 +93,7 @@ class DefaultNamespaceManagerTest {
     universe = new Namespace("universe");
     rest = new Namespace("rest");
 
-    manager = new DefaultNamespaceManager(repositoryManager, dao, eventBus);
+    manager = new DefaultNamespaceManager(repositoryManager, dao, eventBus, administrationContext);
   }
 
   @BeforeEach
@@ -108,7 +117,7 @@ class DefaultNamespaceManagerTest {
   void shouldCleanUpPermissionWhenLastRepositoryOfNamespaceWasDeleted() {
     when(repositoryManager.getAllNamespaces()).thenReturn(asList("universe", "rest"));
 
-    manager.cleanupDeletedNamespaces(new RepositoryEvent(DELETE, new Repository("1", "git", "life", "earth")));
+    manager.handleRepositoryEvent(new RepositoryEvent(DELETE, new Repository("1", "git", "life", "earth")));
 
     assertThat(dao.get("life")).isEmpty();
   }
@@ -117,13 +126,33 @@ class DefaultNamespaceManagerTest {
   void shouldCleanUpPermissionWhenLastRepositoryOfNamespaceWasRenamed() {
     when(repositoryManager.getAllNamespaces()).thenReturn(asList("universe", "rest", "highway"));
 
-    manager.cleanupDeletedNamespaces(
+    manager.handleRepositoryEvent(
       new RepositoryModificationEvent(
         MODIFY,
         new Repository("1", "git", "highway", "earth"),
         new Repository("1", "git", "life", "earth")));
 
     assertThat(dao.get("life")).isEmpty();
+  }
+
+  @Test
+  void shouldCreateOwnerPermissionWhenFirstRepositoryOfNamespaceWasCreated() {
+    when(subject.getPrincipal()).thenReturn("trillian");
+    when(repositoryManager.getAllNamespaces()).thenReturn(asList("rest", "highway", "universe"));
+    when(repositoryManager.getAll(any()))
+      .thenAnswer(invocation -> Stream.of(new Repository("1", "git", "universe", "earth")).filter(invocation.getArgument(0, Predicate.class)).toList());
+    doAnswer(invocation -> {
+      invocation.getArgument(0, Runnable.class).run();
+      return null;
+    }).when(administrationContext).runAsAdmin(any(PrivilegedAction.class));
+    manager.handleRepositoryEvent(
+      new RepositoryModificationEvent(
+        CREATE,
+        new Repository("1", "git", "universe", "earth"),
+        null));
+
+    assertThat(dao.get("universe")).isNotEmpty();
+    assertThat(dao.get("universe").get().getPermissions()).extracting("name").contains("trillian");
   }
 
   @Nested
@@ -183,8 +212,8 @@ class DefaultNamespaceManagerTest {
 
     @BeforeEach
     void grantReadPermission() {
-      when(subject.isPermitted("namespace:permissionRead")).thenReturn(false);
-      lenient().doThrow(AuthorizationException.class).when(subject).checkPermission("namespace:permissionWrite");
+      when(subject.isPermitted("namespace:permissionRead:*")).thenReturn(false);
+      lenient().doThrow(AuthorizationException.class).when(subject).checkPermission("namespace:permissionWrite:*");
     }
 
     @Test

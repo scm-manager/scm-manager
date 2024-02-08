@@ -24,11 +24,12 @@
 
 import React, { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
 import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
   Loading,
+  NavLink,
   Page,
   PrimaryContentColumn,
   SecondaryNavigation,
@@ -37,9 +38,10 @@ import {
   urls,
 } from "@scm-manager/ui-components";
 import Permissions from "../../permissions/containers/Permissions";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import PermissionsNavLink from "./PermissionsNavLink";
 import { useNamespace, useNamespaceAndNameContext } from "@scm-manager/ui-api";
+import NamespaceInformation from "./NamespaceInformation";
 
 type Params = {
   namespaceName: string;
@@ -81,7 +83,9 @@ const NamespaceRoot: FC = () => {
       <CustomQueryFlexWrappedColumns>
         <PrimaryContentColumn>
           <Switch>
-            <Redirect exact from={`${url}/settings`} to={`${url}/settings/permissions`} />
+            <Route path={`${url}/info`}>
+              <NamespaceInformation namespace={namespace} />
+            </Route>
             <Route path={`${url}/settings/permissions`}>
               <Permissions namespaceOrRepository={namespace} />
             </Route>
@@ -94,23 +98,31 @@ const NamespaceRoot: FC = () => {
         </PrimaryContentColumn>
         <SecondaryNavigationColumn>
           <SecondaryNavigation label={t("namespaceRoot.menu.navigationLabel")}>
+            <NavLink
+              to={`${url}/info`}
+              icon="fas fa-info-circle"
+              label={t("namespaceRoot.menu.informationNavLink")}
+              title={t("namespaceRoot.menu.informationNavLink")}
+            />
             <ExtensionPoint<extensionPoints.NamespaceTopLevelNavigation>
               name="namespace.navigation.topLevel"
               props={extensionProps}
               renderAll={true}
             />
-            <SubNavigation
-              to={`${url}/settings`}
-              label={t("namespaceRoot.menu.settingsNavLink")}
-              title={t("namespaceRoot.menu.settingsNavLink")}
-            >
-              <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} namespace={namespace} />
-              <ExtensionPoint<extensionPoints.NamespaceSetting>
-                name="namespace.setting"
-                props={extensionProps}
-                renderAll={true}
-              />
-            </SubNavigation>
+            {binder.hasExtension("namespace.setting", extensionProps) || namespace._links.permissions ? (
+              <SubNavigation
+                to={`${url}/settings/`}
+                label={t("namespaceRoot.menu.settingsNavLink")}
+                title={t("namespaceRoot.menu.settingsNavLink")}
+              >
+                <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} namespace={namespace} />
+                <ExtensionPoint<extensionPoints.NamespaceSetting>
+                  name="namespace.setting"
+                  props={extensionProps}
+                  renderAll={true}
+                />
+              </SubNavigation>
+            ) : null}
           </SecondaryNavigation>
         </SecondaryNavigationColumn>
       </CustomQueryFlexWrappedColumns>

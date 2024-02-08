@@ -75,7 +75,7 @@ public abstract class NamespaceToNamespaceDtoMapper extends BaseMapper<Namespace
       .self(links.namespace().self(namespace.getNamespace()))
       .single(link("repositories", links.repositoryCollection().forNamespace(namespace.getNamespace())));
 
-    if (NamespacePermissions.permissionRead().isPermitted()) {
+    if (NamespacePermissions.permissionRead().isPermitted(namespace)) {
       linkingTo
         .single(link("permissions", links.namespacePermission().all(namespace.getNamespace())));
     }

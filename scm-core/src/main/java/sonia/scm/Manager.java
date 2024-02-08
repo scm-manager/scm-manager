@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import java.util.Collection;
@@ -66,11 +66,22 @@ public interface Manager<T extends ModelObject>
   Collection<T> getAll();
 
   /**
+   * Returns all object of the store unsorted
+   *
+   * @param filter to filter the returned objects
+   * @since 3.1.0
+   * @return all object of the store sorted by the given {@link java.util.Comparator}
+   */
+  default Collection<T> getAll(Predicate<T> filter) {
+    return getAll(filter, null);
+  }
+
+  /**
    * Returns all object of the store sorted by the given {@link java.util.Comparator}
    *
    *
    * @param filter to filter the returned objects
-   * @param comparator to sort the returned objects
+   * @param comparator to sort the returned objects (may be null if no sorting is needed)
    * @since 1.4
    * @return all object of the store sorted by the given {@link java.util.Comparator}
    */

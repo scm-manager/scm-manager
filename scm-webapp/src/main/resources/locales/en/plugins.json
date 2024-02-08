@@ -117,12 +117,16 @@
     },
     "namespace": {
       "permissionRead": {
-        "displayName": "Read permissions on namespaces",
-        "description": "May see the permissions set for namespaces"
+        "*": {
+          "displayName": "Read permissions on namespaces",
+          "description": "May see the permissions set for namespaces"
+        }
       },
       "permissionRead,permissionWrite": {
-        "displayName": "Modify permissions on namespaces",
-        "description": "May read and modify the permissions set for namespaces"
+        "*": {
+          "displayName": "Modify permissions on namespaces",
+          "description": "May read and modify the permissions set for namespaces"
+        }
       }
     },
     "metrics": {

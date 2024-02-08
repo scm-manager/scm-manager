@@ -53,10 +53,10 @@
     <value>repository:read,export:*</value>
   </permission>
   <permission>
-    <value>namespace:permissionRead</value>
+    <value>namespace:permissionRead:*</value>
   </permission>
   <permission>
-    <value>namespace:permissionRead,permissionWrite</value>
+    <value>namespace:permissionRead,permissionWrite:*</value>
   </permission>
   <permission>
     <value>user:*</value>

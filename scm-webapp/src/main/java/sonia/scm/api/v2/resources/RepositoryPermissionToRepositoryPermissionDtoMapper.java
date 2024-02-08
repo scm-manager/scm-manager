@@ -72,7 +72,7 @@ public abstract class RepositoryPermissionToRepositoryPermissionDtoMapper {
     String permissionName = getUrlPermissionName(target);
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.namespacePermission().self(namespace.getNamespace(), permissionName));
-    if (NamespacePermissions.permissionWrite().isPermitted()) {
+    if (NamespacePermissions.permissionWrite().isPermitted(namespace)) {
       linksBuilder.single(link("update", resourceLinks.namespacePermission().update(namespace.getNamespace(), permissionName)));
       linksBuilder.single(link("delete", resourceLinks.namespacePermission().delete(namespace.getNamespace(), permissionName)));
     }

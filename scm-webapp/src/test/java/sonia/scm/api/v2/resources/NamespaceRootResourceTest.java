@@ -132,8 +132,8 @@ class NamespaceRootResourceTest {
     @BeforeEach
     void mockNoPermissions() {
       lenient().when(subject.isPermitted(anyString())).thenReturn(false);
-      lenient().doThrow(AuthorizationException.class).when(subject).checkPermission("namespace:permissionRead");
-      lenient().doThrow(AuthorizationException.class).when(subject).checkPermission("namespace:permissionWrite");
+      lenient().doThrow(AuthorizationException.class).when(subject).checkPermission("namespace:permissionRead:space");
+      lenient().doThrow(AuthorizationException.class).when(subject).checkPermission("namespace:permissionWrite:space");
     }
 
     @Test
@@ -202,8 +202,8 @@ class NamespaceRootResourceTest {
 
     @BeforeEach
     void grantReadPermission() {
-      lenient().when(subject.isPermitted("namespace:permissionRead")).thenReturn(true);
-      lenient().when(subject.isPermitted("namespace:permissionWrite")).thenReturn(false);
+      lenient().when(subject.isPermitted("namespace:permissionRead:space")).thenReturn(true);
+      lenient().when(subject.isPermitted("namespace:permissionWrite:space")).thenReturn(false);
       lenient().doThrow(AuthorizationException.class).when(subject).checkPermission("namespace:permissionWrite");
     }
 
@@ -259,8 +259,10 @@ class NamespaceRootResourceTest {
 
       @BeforeEach
       void grantWritePermission() {
-        lenient().when(subject.isPermitted("namespace:permissionWrite")).thenReturn(true);
-        lenient().doNothing().when(subject).checkPermission("namespace:permissionWrite");
+        lenient().when(subject.isPermitted("namespace:permissionWrite:space")).thenReturn(true);
+        lenient().when(subject.isPermitted("namespace:permissionWrite:hitchhiker")).thenReturn(true);
+        lenient().doNothing().when(subject).checkPermission("namespace:permissionWrite:space");
+        lenient().doNothing().when(subject).checkPermission("namespace:permissionWrite:hitchhiker");
       }
 
       @Test

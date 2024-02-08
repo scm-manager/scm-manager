@@ -41,8 +41,7 @@ import static java.util.Collections.unmodifiableCollection;
 
 @StaticPermissions(
   value = "namespace",
-  globalPermissions = {"permissionRead", "permissionWrite"},
-  permissions = {},
+  permissions = {"permissionRead", "permissionWrite"},
   custom = true, customGlobal = true
 )
 @XmlAccessorType(XmlAccessType.FIELD)
