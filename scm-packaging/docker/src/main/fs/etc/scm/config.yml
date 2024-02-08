@@ -10,8 +10,8 @@ forwardHeadersEnabled: false
 ## increase http header size for mercurial
 httpHeaderSize: 16384
 
-## set http idle timeout
-idleTimeout:
+## set http idle timeout (set to 0 for default)
+idleTimeout: 0
 
 # ssl config - ssl is only evaluated if key store path is set
 ## path to your cert file
