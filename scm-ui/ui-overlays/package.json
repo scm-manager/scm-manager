@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/ui-overlays",
   "private": false,
-  "version": "3.0.3",
+  "version": "3.0.4-SNAPSHOT",
   "main": "index.ts",
   "license": "MIT",
   "devDependencies": {
@@ -10,7 +10,7 @@
     "@scm-manager/tsconfig": "^2.13.0"
   },
   "peerDependencies": {
-    "@scm-manager/ui-core": "3.0.3"
+    "@scm-manager/ui-core": "3.0.4-SNAPSHOT"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
