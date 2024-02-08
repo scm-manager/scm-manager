@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.3] - 2024-02-08
+### Fixed
+- Default value for idle timeout in configuration
+
 ## [3.0.2] - 2024-02-07
 ### Fixed
 - Added configuration option for idle timeout
@@ -1471,3 +1475,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.0.0]: https://scm-manager.org/download/3.0.0
 [3.0.1]: https://scm-manager.org/download/3.0.1
 [3.0.2]: https://scm-manager.org/download/3.0.2
+[3.0.3]: https://scm-manager.org/download/3.0.3
