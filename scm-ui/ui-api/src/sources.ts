@@ -113,12 +113,17 @@ const merge = (files?: File[]): File | undefined => {
     children.push(...(page._embedded?.children || []));
   }
   const lastPage = files[files.length - 1];
+  const firstPage = files[0];
   return {
     ...lastPage,
     _embedded: {
       ...lastPage._embedded,
       children,
     },
+    _links: {
+      ...firstPage._links,
+      proceed: lastPage._links.proceed,
+    }
   };
 };
 
