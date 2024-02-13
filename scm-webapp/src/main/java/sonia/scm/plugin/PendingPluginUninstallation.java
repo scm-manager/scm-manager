@@ -53,4 +53,8 @@ class PendingPluginUninstallation {
       throw new PluginFailedToCancelInstallationException("failed to cancel uninstallation", name, ex);
     }
   }
+
+  InstalledPlugin getPlugin() {
+    return plugin;
+  }
 }

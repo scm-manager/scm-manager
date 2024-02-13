@@ -1,0 +1,2 @@
+- type: fixed
+  description: Required plugins can be uninstalled even when dependent plugins are still installed

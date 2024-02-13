@@ -390,6 +390,7 @@ public class DefaultPluginManager implements PluginManager {
     PluginPermissions.write().check();
     pendingUninstallQueue.forEach(PendingPluginUninstallation::cancel);
     pendingInstallQueue.forEach(PendingPluginInstallation::cancel);
+    pendingUninstallQueue.forEach(pendingPluginUninstallation -> dependencyTracker.addInstalled(pendingPluginUninstallation.getPlugin().getDescriptor()));
     pendingUninstallQueue.clear();
     pendingInstallQueue.clear();
     updateMayUninstallFlag();

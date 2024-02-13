@@ -57,8 +57,10 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.anyOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -98,6 +100,9 @@ class DefaultPluginManagerTest {
 
   @Captor
   private ArgumentCaptor<PluginInstallationContext> contextCaptor;
+
+  @Captor
+  private ArgumentCaptor<Boolean> booleanCaptor;
 
   private DefaultPluginManager manager;
 
@@ -458,7 +463,7 @@ class DefaultPluginManagerTest {
     }
 
     @Test
-    void shouldUseDependencyTrackerForUninstall() {
+    void shouldPreventUninstallationOfRequiredPlugin() {
       InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
       InstalledPlugin reviewPlugin = createInstalled("scm-review-plugin");
       when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
@@ -551,6 +556,27 @@ class DefaultPluginManagerTest {
       manager.uninstall("scm-review-plugin", false);
 
       verify(mailPlugin).setUninstallable(true);
+    }
+
+    @Test
+    void shouldUpdateMayUninstallFlagAfterCancelingUninstallationOfDependentPlugin() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      InstalledPlugin reviewPlugin = createInstalled("scm-review-plugin");
+      when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
+
+      when(loader.getInstalledPlugins()).thenReturn(asList(mailPlugin, reviewPlugin));
+
+      doNothing().when(mailPlugin).setUninstallable(booleanCaptor.capture());
+      
+      manager.computeInstallationDependencies();
+
+      manager.uninstall("scm-review-plugin", false);
+
+      manager.cancelPending();
+
+      List<Boolean> values = booleanCaptor.getAllValues();
+
+      assertThat(values).containsExactly(false, true, false);
     }
 
     @Test
