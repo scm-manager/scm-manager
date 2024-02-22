@@ -428,6 +428,18 @@
     "3ITWbABz91": {
       "displayName": "API Schlüssel deaktiviert",
       "description": "Die Nutzung von API Schlüsseln ist in der globalen Konfiguration deaktiviert. Zur Nutzung der API Schlüssel muss diese Option wieder aktiviert werden."
+    },
+    "5HU4ouwQr1": {
+      "displayName": "Plugin-Bedingung nicht erfüllt: Version",
+      "description": "Die aktuelle Version des SCM-Managers ist nicht ausreichend. Nähere Informationen zu den Bedingungen finden sich im Log."
+    },
+    "5gU4pegil1": {
+      "displayName": "Plugin-Bedingung nicht erfüllt: Betriebssystem",
+      "description": "Das aktuell verwendete Betriebssystem wird nicht unterstützt. Nähere Informationen zu den Bedingungen finden sich im Log."
+    },
+    "DHU4pfOtA1": {
+      "displayName": "Plugin-Bedingung nicht erfüllt: Architektur",
+      "description": "Die derzeitige Prozessor Architektur erfüllt nicht die Anforderungen. Nähere Informationen zu den Bedingungen finden sich im Log."
     }
   },
   "healthCheckFailures": {

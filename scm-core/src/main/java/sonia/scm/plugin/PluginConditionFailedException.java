@@ -21,34 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 /**
- *
  * @since 1.21
  */
-public final class PluginConditionFailedException extends PluginException
-{
+public final class PluginConditionFailedException extends PluginException {
+
   private final PluginCondition condition;
+  private final String pluginName;
 
   private static final long serialVersionUID = 3257937172323964102L;
 
 
-  public PluginConditionFailedException(PluginCondition condition)
-  {
+  public PluginConditionFailedException(String pluginName, PluginCondition condition) {
+    super(String.format(
+      "could not load plugin %s, the plugin condition does not match: %s",
+      pluginName, condition
+    ));
+    this.pluginName = pluginName;
     this.condition = condition;
   }
 
-  public PluginConditionFailedException(PluginCondition condition,
-    String message)
-  {
-    super(message);
-    this.condition = condition;
+  public String getPluginName() {
+    return pluginName;
   }
 
-  public PluginCondition getCondition()
-  {
+  public PluginCondition getCondition() {
     return condition;
   }
 }

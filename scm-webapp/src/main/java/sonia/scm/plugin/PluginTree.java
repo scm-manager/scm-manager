@@ -40,7 +40,7 @@ public final class PluginTree {
 
   private static final int SCM_VERSION = 3;
 
- 
+
   private static final Logger LOG = LoggerFactory.getLogger(PluginTree.class);
 
   private final Stage stage;
@@ -72,18 +72,12 @@ public final class PluginTree {
   }
 
   private void checkIfConditionsMatch(ExplodedSmp smp, InstalledPluginDescriptor plugin) {
-    PluginCondition condition = plugin.getCondition();
-    if (!condition.isSupported()) {
+    PluginCondition pluginCondition = plugin.getCondition();
+    if (!pluginCondition.getConditionCheckResult().equals(PluginCondition.CheckResult.OK)) {
       if (smp.isCore() && stage == Stage.DEVELOPMENT) {
-        LOG.warn("plugin {} does not match conditions {}", plugin.getInformation().getId(), condition);
+        LOG.warn("plugin {} does not match conditions {}", plugin.getInformation().getId(), pluginCondition);
       } else {
-        throw new PluginConditionFailedException(
-          condition,
-          String.format(
-            "could not load plugin %s, the plugin condition does not match: %s",
-            plugin.getInformation().getId(), condition
-          )
-        );
+        throw new PluginConditionFailedException(plugin.getInformation().getId(), pluginCondition);
       }
     }
   }

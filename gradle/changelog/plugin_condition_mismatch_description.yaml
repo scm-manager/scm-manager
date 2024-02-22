@@ -1,0 +1,2 @@
+- type: fixed
+  description: Plugin condition mismatch description to show condition and display specialised error message

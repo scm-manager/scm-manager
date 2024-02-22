@@ -55,14 +55,11 @@ public final class PluginInstallationVerifier {
 
   private void verifyConditions() {
     // TODO we should provide more details here, which condition has failed
-    if (!descriptor.getCondition().isSupported()) {
-      throw new PluginConditionFailedException(
-        descriptor.getCondition(),
-        String.format(
-          "could not load plugin %s, the plugin condition does not match",
-          descriptor.getInformation().getName()
-        )
-      );
+
+    PluginCondition pluginCondition =descriptor.getCondition();
+    PluginCondition.CheckResult pluginConditionCheckResult = pluginCondition.getConditionCheckResult();
+    if (!pluginConditionCheckResult.equals(PluginCondition.CheckResult.OK)) {
+      throw new PluginConditionFailedException(descriptor.getInformation().getName(), pluginCondition);
     }
   }
 

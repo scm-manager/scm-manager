@@ -432,6 +432,18 @@
     "E4TrutUSv1": {
       "displayName": "Failed to store the repository",
       "description": "An error occurred while storing the repository. Further information can be found in the server log."
+    },
+    "5HU4ouwQr1": {
+      "displayName": "Plugin condition not fulfilled: version",
+      "description": "The current version of SCM-Manager is not sufficient. Further information on the conditions can be found in the server log."
+    },
+    "5gU4pegil1": {
+      "displayName": "Plugin condition not fulfilled: OS",
+      "description": "The currently used operating system (OS) is not supported. Further information on the conditions can be found in the server log."
+    },
+    "DHU4pfOtA1": {
+      "displayName": "Plugin condition not fulfilled: architecture",
+      "description": "The current processor architecture does not meet the condition. Further information on the conditions can be found in the server log."
     }
   },
   "healthChecksFailures": {

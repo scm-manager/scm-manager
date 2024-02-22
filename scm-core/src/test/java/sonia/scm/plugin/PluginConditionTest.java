@@ -21,68 +21,155 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 
 import org.junit.Test;
+import sonia.scm.plugin.PluginCondition.CheckResult;
 
-import static org.junit.Assert.*;
+import java.util.List;
 
-import java.util.Arrays;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 
-public class PluginConditionTest
-{
+public class PluginConditionTest {
 
   @Test
   public void testEmptyShouldBeSupported() {
-    assertTrue(new PluginCondition().isSupported());
+    assertThat(new PluginCondition().getConditionCheckResult()).isEqualTo(CheckResult.OK);
   }
 
-   @Test
-  public void testArchIsSupported()
-  {
-    assertTrue(new PluginCondition(null, null, "32").isSupported(null, null,
-                                   "32"));
-    assertFalse(new PluginCondition(null, null, "32").isSupported(null, null,
-                                    "64"));
+  @Test
+  public void testArchIsSupported() {
+    assertThat(new PluginCondition(null, null, "32")
+      .getConditionCheckResult(null, null, "32"))
+      .isEqualTo(CheckResult.OK);
+    assertThat(new PluginCondition(null, null, "32")
+      .getConditionCheckResult(null, null, "64"))
+      .isEqualTo(CheckResult.ARCHITECTURE_MISMATCH);
   }
 
-   @Test
-  public void testIsOsSupported()
-  {
-    assertTrue(new PluginCondition(null, Arrays.asList("linux"),
-                                   null).isSupported(null, "linux", null));
-    assertTrue(new PluginCondition(null, Arrays.asList("unix"),
-                                   null).isSupported(null, "Mac OS X", null));
-    assertTrue(new PluginCondition(null, Arrays.asList("unix"),
-                                   null).isSupported(null, "Solaris", null));
-    assertTrue(new PluginCondition(null, Arrays.asList("posix"),
-                                   null).isSupported(null, "Linux", null));
-    assertTrue(new PluginCondition(null, Arrays.asList("win"),
-                                   null).isSupported(null, "Windows 2000",
-                                     null));
-    assertFalse(new PluginCondition(null, Arrays.asList("win"),
-                                    null).isSupported(null, "Mac OS X", null));
+  @Test
+  public void testIsOsSupported() {
+    assertThat(new PluginCondition(null, List.of("linux"), null)
+      .getConditionCheckResult(null, "linux", null))
+      .isEqualTo(CheckResult.OK);
+    assertThat(new PluginCondition(null, List.of("unix"), null)
+      .getConditionCheckResult(null, "Mac OS X", null))
+      .isEqualTo(CheckResult.OK);
+    assertThat(new PluginCondition(null, List.of("unix"), null)
+      .getConditionCheckResult(null, "Solaris", null))
+      .isEqualTo(CheckResult.OK);
+    assertThat(new PluginCondition(null, List.of("posix"), null)
+      .getConditionCheckResult(null, "Linux", null))
+      .isEqualTo(CheckResult.OK);
+    assertThat(new PluginCondition(null, List.of("win"), null)
+      .getConditionCheckResult(null, "Windows 2000", null))
+      .isEqualTo(CheckResult.OK);
+    assertThat(new PluginCondition(null, List.of("win"), null)
+      .getConditionCheckResult(null, "Mac OS X", null))
+      .isEqualTo(CheckResult.OS_MISMATCH);
   }
 
-   @Test
-  public void testIsSupported()
-  {
-    assertTrue(new PluginCondition("1.2", Arrays.asList("Mac"),
-                                   "64").isSupported("1.4", "Mac OS X", "64"));
+  @Test
+  public void testIsSupported() {
+    assertTrue(new PluginCondition("1.2", List.of("Mac"), "64")
+      .isSupported("1.4", "Mac OS X", "64"));
   }
 
-   @Test
-  public void testVersionIsSupported()
-  {
-    assertTrue(new PluginCondition("1.1", null, null).isSupported("1.2", null,
-                                   null));
-    assertTrue(new PluginCondition("1.0", null,
-                                   null).isSupported("1.1-SNAPSHOT", null,
-                                     null));
-    assertTrue(new PluginCondition("1.1", null, null).isSupported("1.1", null,
-                                   null));
+  @Test
+  public void testVersionIsSupported() {
+    assertThat(new PluginCondition("1.1", null, null)
+      .getConditionCheckResult("1.2", null, null))
+      .isEqualTo(CheckResult.OK);
+    assertThat(new PluginCondition("1.0", null, null)
+      .getConditionCheckResult("1.1-SNAPSHOT", null, null))
+      .isEqualTo(CheckResult.OK);
+    assertThat(new PluginCondition("1.1", null, null)
+      .getConditionCheckResult("1.1", null, null))
+      .isEqualTo(CheckResult.OK);
+  }
+
+  @Test
+  public void testConditionCheckResultIsOk() {
+    assertThat(new PluginCondition("1.2", List.of("Mac"), "64")
+      .getConditionCheckResult("1.4", "Mac OS X", "64")).isEqualTo(CheckResult.OK);
+  }
+
+  @Test
+  public void testConditionCheckResultIsVersionMismatch() {
+    assertThat(new PluginCondition("1.4", List.of("Mac"), "64")
+      .getConditionCheckResult("1.2", "Mac OS X", "64"))
+      .isEqualTo(CheckResult.VERSION_MISMATCH);
+  }
+
+  @Test
+  public void testConditionCheckResultIsOSMismatch() {
+    assertThat(new PluginCondition("1.2", List.of("Win"), "64")
+      .getConditionCheckResult("1.4", "Mac OS X", "64"))
+      .isEqualTo(CheckResult.OS_MISMATCH);
+  }
+
+  @Test
+  public void testConditionCheckResultIsArchMismatch() {
+    assertThat(new PluginCondition("1.2", List.of("Mac"), "64")
+      .getConditionCheckResult("1.4", "Mac OS X", "32"))
+      .isEqualTo(CheckResult.ARCHITECTURE_MISMATCH);
+  }
+
+  @Test
+  public void testToStringWithAllConditions() {
+    assertThat(new PluginCondition("1.2", asList("Mac", "Win"), "64").toString())
+      .isEqualTo("Required conditions: minimal SCM version: 1.2; supported OS: Mac Win; architecture: 64");
+  }
+
+  @Test
+  public void testToStringWithZeroConditions() {
+    assertThat(new PluginCondition().toString()).isEqualTo("No required conditions.");
+  }
+
+  @Test
+  public void testToStringWithVersionCondition() {
+    assertThat(new PluginCondition("1.2", null, null).toString())
+      .isEqualTo("Required conditions: minimal SCM version: 1.2");
+  }
+
+  @Test
+  public void testToStringWithOneOSCondition() {
+    assertThat(new PluginCondition(null, List.of("Mac"), null).toString())
+      .isEqualTo("Required conditions: supported OS: Mac");
+  }
+
+  @Test
+  public void testToStringWithMultipleOSCondition() {
+    assertThat(new PluginCondition(null, asList("Mac", "Win"), null).toString())
+      .isEqualTo("Required conditions: supported OS: Mac Win");
+  }
+
+  @Test
+  public void testToStringWithArchCondition() {
+    assertThat(new PluginCondition(null, null, "64").toString())
+      .isEqualTo("Required conditions: architecture: 64");
+  }
+
+  @Test
+  public void testToStringWithVersionAndOSCondition() {
+    assertThat(new PluginCondition("1.2", List.of("Mac"), null).toString())
+      .isEqualTo("Required conditions: minimal SCM version: 1.2; supported OS: Mac");
+  }
+
+  @Test
+  public void testToStringWithVersionAndArchCondition() {
+    assertThat(new PluginCondition("1.2", null, "64").toString())
+      .isEqualTo("Required conditions: minimal SCM version: 1.2; architecture: 64");
+  }
+
+  @Test
+  public void testToStringWithOSAndArchCondition() {
+    assertThat(new PluginCondition(null, List.of("Mac"), "64").toString())
+      .isEqualTo("Required conditions: supported OS: Mac; architecture: 64");
   }
 }

@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 
-import com.google.common.base.MoreObjects;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -46,8 +46,7 @@ import java.util.Locale;
 
 @XmlRootElement(name = "conditions")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class PluginCondition implements Cloneable, Serializable
-{
+public class PluginCondition implements Cloneable, Serializable {
 
   private static final long serialVersionUID = 2406156062634968672L;
 
@@ -60,10 +59,10 @@ public class PluginCondition implements Cloneable, Serializable
   @XmlElementWrapper(name = "os")
   private List<String> os;
 
-  public PluginCondition() {}
+  public PluginCondition() {
+  }
 
-  public PluginCondition(String minVersion, List<String> os, String arch)
-  {
+  public PluginCondition(String minVersion, List<String> os, String arch) {
     this.minVersion = minVersion;
     this.os = os;
     this.arch = arch;
@@ -74,12 +73,10 @@ public class PluginCondition implements Cloneable, Serializable
    * @since 1.11
    */
   @Override
-  public PluginCondition clone()
-  {
+  public PluginCondition clone() {
     PluginCondition clone = new PluginCondition(minVersion, null, arch);
 
-    if (Util.isNotEmpty(os))
-    {
+    if (Util.isNotEmpty(os)) {
       clone.setOs(new ArrayList<String>(os));
     }
 
@@ -87,15 +84,12 @@ public class PluginCondition implements Cloneable, Serializable
   }
 
   @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
+  public boolean equals(Object obj) {
+    if (obj == null) {
       return false;
     }
 
-    if (getClass() != obj.getClass())
-    {
+    if (getClass() != obj.getClass()) {
       return false;
     }
 
@@ -106,106 +100,142 @@ public class PluginCondition implements Cloneable, Serializable
       && Objects.equal(os, other.os);
   }
 
-  
+
   @Override
-  public int hashCode()
-  {
+  public int hashCode() {
     return Objects.hashCode(arch, minVersion, os);
   }
 
-  
+
   @Override
-  public String toString()
-  {
-    //J-
-    return MoreObjects.toStringHelper(this)
-                  .add("arch", arch)
-                  .add("minVersion", minVersion)
-                  .add("os", os)
-                  .toString();
-    //J+
+  public String toString() {
+    if (minVersion == null && os == null && arch == null) {
+      return "No required conditions.";
+    }
+
+    StringBuilder message = new StringBuilder("Required conditions: ");
+
+    if (minVersion != null) {
+      message.append("minimal SCM version: ").append(minVersion);
+
+      if (os != null || arch != null) {
+        message.append("; ");
+      }
+    }
+
+    if (os != null) {
+      message.append("supported OS:");
+
+      for (String currentOS : os) {
+        message.append(" ").append(currentOS);
+      }
+
+      if (arch != null) {
+        message.append("; ");
+      }
+    }
+
+    if (arch != null) {
+      message.append("architecture: ").append(arch);
+    }
+
+
+    return message.toString();
   }
 
 
-  
-  public String getArch()
-  {
+  public String getArch() {
     return arch;
   }
 
-  
-  public String getMinVersion()
-  {
+
+  public String getMinVersion() {
     return minVersion;
   }
 
-  
-  public List<String> getOs()
-  {
+
+  public List<String> getOs() {
     return os;
   }
 
-  
-  public boolean isSupported()
-  {
+  /**
+   * @deprecated Please use {@link #getConditionCheckResult()} instead.
+   */
+  @Deprecated
+  public boolean isSupported() {
     return isSupported(SCMContext.getContext().getVersion(),
       SystemUtil.getOS(), SystemUtil.getArch());
   }
 
-  public boolean isSupported(String version, String os, String arch)
-  {
-    boolean supported = true;
+  @VisibleForTesting
+  boolean isSupported(String version, String os, String arch) {
+    return getConditionCheckResult(version, os, arch) == CheckResult.OK;
+  }
 
-    if (Util.isNotEmpty(minVersion) && Util.isNotEmpty(version))
-    {
-      supported = (minVersion.equalsIgnoreCase(version)
-        || Version.parse(version).isNewer(minVersion));
+  public CheckResult getConditionCheckResult() {
+    return getConditionCheckResult(SCMContext.getContext().getVersion(), SystemUtil.getOS(), SystemUtil.getArch());
+  }
+
+  public CheckResult getConditionCheckResult(String version, String os, String arch) {
+    if (!isVersionConditionMet(version)) {
+      return CheckResult.VERSION_MISMATCH;
+    } else if (!isOsConditionMet(os)) {
+      return CheckResult.OS_MISMATCH;
+    } else if (!isArchConditionMet(arch)) {
+      return CheckResult.ARCHITECTURE_MISMATCH;
+    } else {
+      return CheckResult.OK;
     }
+  }
 
-    if (supported && Util.isNotEmpty(this.os) && Util.isNotEmpty(os))
-    {
-      supported = false;
+  private boolean isArchConditionMet(String arch) {
+    if (!(arch != null && this.arch == null) && Util.isNotEmpty(arch) && Util.isNotEmpty(arch)) {
+      return arch.equals(this.arch);
+    }
+    return this.arch == null;
+  }
+
+  private boolean isOsConditionMet(String os) {
+    if (!(os != null && this.os == null) && Util.isNotEmpty(this.os) && Util.isNotEmpty(os)) {
 
       PlatformType platformType = PlatformType.createPlatformType(os);
 
-      for (String osType : this.os)
-      {
-        supported = isOs(osType, platformType);
+      for (String osType : this.os) {
 
-        if (supported)
-        {
-          break;
+        if (isOs(osType, platformType)) {
+          return true;
         }
       }
+      return false;
     }
+    return this.os == null;
+  }
 
-    if (supported && Util.isNotEmpty(this.arch) && Util.isNotEmpty(arch))
-    {
-      supported = arch.equals(this.arch);
+  private boolean isVersionConditionMet(String version) {
+
+    if (!(version != null && minVersion == null) && Util.isNotEmpty(minVersion) && Util.isNotEmpty(version)) {
+      return minVersion.equalsIgnoreCase(version) || Version.parse(version).isNewer(minVersion);
+
+    } else {
+      return minVersion == null;
     }
-
-    return supported;
   }
 
 
-  public void setArch(String arch)
-  {
+  public void setArch(String arch) {
     this.arch = arch;
   }
 
-  public void setMinVersion(String minVersion)
-  {
+  public void setMinVersion(String minVersion) {
     this.minVersion = minVersion;
   }
 
-  public void setOs(List<String> os)
-  {
+  public void setOs(List<String> os) {
     this.os = os;
   }
 
 
-  private boolean isOs(String osType, PlatformType type)
-  {
+  private boolean isOs(String osType, PlatformType type) {
     osType = osType.toLowerCase(Locale.ENGLISH);
 
     //J-
@@ -214,10 +244,16 @@ public class PluginCondition implements Cloneable, Serializable
       || ((osType.indexOf("posix") >= 0) && type.isPosix())
       || ((osType.indexOf("mac") >= 0) && (PlatformType.MAC == type))
       || ((osType.indexOf("linux") >= 0) && (PlatformType.LINUX == type))
-      || ((osType.indexOf("solaris") >= 0) && (PlatformType.SOLARIS == type)) 
-      || ((osType.indexOf("openbsd") >= 0) && (PlatformType.OPENBSD == type)) 
+      || ((osType.indexOf("solaris") >= 0) && (PlatformType.SOLARIS == type))
+      || ((osType.indexOf("openbsd") >= 0) && (PlatformType.OPENBSD == type))
       || ((osType.indexOf("freebsd") >= 0) && (PlatformType.FREEBSD == type));
     //J+
   }
 
+  public enum CheckResult {
+    OK,
+    VERSION_MISMATCH,
+    OS_MISMATCH,
+    ARCHITECTURE_MISMATCH
+  }
 }
