@@ -237,10 +237,15 @@ These HTTP headers are being appended to the requests which are redirected by yo
 this option set, your SCM-Server may run into connection issues. This option is disabled by default, because without a
 reverse proxy it could cause security issues.
 
+Many reverse proxies will also cache response streams. This can lead to timeouts, especially when working with large
+repositories. To avoid this, you might want to increase the `idleTimeout` to a higher value, depending on the size of
+your repositories (you might want to start with `300000`, that would be five minutes).
+
 **Example**
 
 ```yaml
 forwardHeadersEnabled: true
+idleTimeout: 300000
 ```
 
 ## Webapp
