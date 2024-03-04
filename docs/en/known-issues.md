@@ -59,3 +59,10 @@ public class DemoHook {
 
 }
 ```
+
+## Percent signs are not encoded correctly
+
+If a branch, path or file with a percent sign in its name is called directly via url, the server responds with an error 400.
+This is due to incorrect encoding of percent signs in the URI, which itself is used for client side routing.
+
+It also applies to forwarding in editor-plugin after creating a file with the above-mentioned properties. The actual file is created correctly though.
