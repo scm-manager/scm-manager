@@ -1,0 +1,2 @@
+- type: fixed
+  description: Sort global config and repository config the same way

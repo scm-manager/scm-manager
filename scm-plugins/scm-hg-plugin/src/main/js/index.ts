@@ -54,4 +54,4 @@ binder.bind<extensionPoints.RepoConfigRoute>("repo-config.route", HgRepositoryCo
 
 // bind global configuration
 
-cfgBinder.bindGlobal("/hg", "scm-hg-plugin.config.link", "hgConfig", HgGlobalConfiguration);
+cfgBinder.bindGlobal("/hg", "scm-hg-plugin.config.link", "hgConfig", HgGlobalConfiguration, "mercurial");

@@ -64,7 +64,7 @@ class ConfigurationBinder {
     return <Route path={urls.escapeUrlForRoute(path)}>{Component}</Route>;
   }
 
-  bindGlobal(to: string, labelI18nKey: string, linkName: string, ConfigurationComponent: any) {
+  bindGlobal(to: string, labelI18nKey: string, linkName: string, ConfigurationComponent: any, sortKey?: string) {
     // create predicate based on the link name of the index resource
     // if the linkname is not available, the navigation link and the route are not bound to the extension points
     const configPredicate = (props: any) => {
@@ -77,7 +77,7 @@ class ConfigurationBinder {
     });
 
     // bind navigation link to extension point
-    binder.bind("admin.setting", ConfigNavLink, configPredicate, labelI18nKey);
+    binder.bind("admin.setting", ConfigNavLink, configPredicate, sortKey ?? linkName);
 
     // route for global configuration, passes the link from the index resource to component
     const ConfigRoute = ({ url, links, ...additionalProps }: GlobalRouteProps) => {
@@ -145,7 +145,7 @@ class ConfigurationBinder {
     binder.bind("repository.route", RepoRoute, repoPredicate);
   }
 
-  bindRepositorySetting(to: string, labelI18nKey: string, linkName: string, RepositoryComponent: any) {
+  bindRepositorySetting(to: string, labelI18nKey: string, linkName: string, RepositoryComponent: any, sortKey?: string) {
     // create predicate based on the link name of the current repository route
     // if the linkname is not available, the navigation link and the route are not bound to the extension points
     const repoPredicate = (props: any) => {
@@ -158,7 +158,7 @@ class ConfigurationBinder {
     });
 
     // bind navigation link to extension point
-    binder.bind("repository.setting", RepoNavLink, repoPredicate);
+    binder.bind("repository.setting", RepoNavLink, repoPredicate, sortKey ?? linkName);
 
     // route for global configuration, passes the current repository to component
     const RepoRoute = ({ url, repository, ...additionalProps }: RepositoryRouteProps) => {
