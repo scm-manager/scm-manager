@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-types",
-  "version": "2.46.2-SNAPSHOT",
+  "version": "2.46.2",
   "description": "Typescript types for SCM-Manager related Objects",
   "main": "src/index.ts",
   "files": [
