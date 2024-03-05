@@ -230,16 +230,38 @@ Creating a new branch over the SCM-Manager UI would lead to the following action
 The SCM-Manager Subversion API does not support the branch and branches commands, so this feature is not available for Subversion repositories. 
 
 ```uml
-Frontend -> SCM_REST_API: POST Request "create(BranchRequestDto)"
+Frontend -> SCM_REST_API: POST Request "create"
+activate SCM_REST_API
 SCM_REST_API -> Repository_Service_Factory: create(Repository)
-Repository_Service_Factory --> SCM_REST_API: Returns repository service
-SCM_REST_API -> Repository_Branches_Command: getBranchesCommand()
-Repository_Branches_Command --> SCM_REST_API: Returns branches command builder
-SCM_REST_API -> Repository_Branches_Command: checkIfBranchDoesNotAlreadyExist()
-SCM_REST_API -> Repository_Branch_Command: getBranchCommand()
-Repository_Branch_Command --> SCM_REST_API: Returns branch command builder
-SCM_REST_API -> Repository_Branch_Command_Builder: from(String parent)
-SCM_REST_API -> Repository_Branch_Command_Builder: name(String branchName)
-Repository_Branch_Command_Builder --> SCM_REST_API: Returns new branch
-SCM_REST_API --> Frontend: Returns location of the new branch
+activate Repository_Service_Factory
+Repository_Service_Factory -> Repository_Service **
+Repository_Service_Factory  --> SCM_REST_API: Returns repository service
+deactivate Repository_Service_Factory
+
+SCM_REST_API -> Repository_Service: getBranchesCommand()
+activate Repository_Service
+Repository_Service -> Branches_Command_Builder **
+Repository_Service --> SCM_REST_API: Returns branches command builder
+deactivate Repository_Service
+
+SCM_REST_API -> Branches_Command_Builder: getBranches()
+activate Branches_Command_Builder
+Branches_Command_Builder --> SCM_REST_API: Returns all branches
+deactivate Branches_Command_Builder
+
+SCM_REST_API -> SCM_REST_API: checkIfBranchDoesNotAlreadyExist
+
+SCM_REST_API -> Repository_Service: getBranchCommand()
+activate Repository_Service
+Repository_Service -> Branch_Command_Builder **
+Repository_Service --> SCM_REST_API: Returns branch command builder
+deactivate Repository_Service
+
+SCM_REST_API -> Branch_Command_Builder: from(String parent)
+activate Branch_Command_Builder
+SCM_REST_API -> Branch_Command_Builder: branch(String branchName)
+return: Returns new branch
+deactivate Branch_Command_Builder
+SCM_REST_API --> Frontend: Response
+deactivate SCM_REST_API
 ```
