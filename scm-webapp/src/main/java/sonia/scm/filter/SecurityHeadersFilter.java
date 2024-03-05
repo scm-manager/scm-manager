@@ -54,8 +54,8 @@ public class SecurityHeadersFilter extends HttpFilter {
       response.setHeader("X-Content-Type-Options", "nosniff");
       response.setHeader("Content-Security-Policy",
         "form-action 'self'; " +
-          "object-src 'none'; " +
-          "frame-ancestors 'none'; " +
+          "object-src 'self'; " +
+          "frame-ancestors 'self'; " +
           "block-all-mixed-content"
       );
       response.setHeader("Permissions-Policy",

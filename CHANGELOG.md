@@ -107,6 +107,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The chip input api now provides an external add button
 - OmniSearchbar now makes use of the Combobox
 
+## [2.46.2] - 2024-03-04
+### Fixed
+- Rendering PDF files in source view
+
 ## [2.46.1] - 2023-09-01
 ### Fixed
 - Loading LFS files for imports and mirrors (from 2.44.3)
@@ -1468,6 +1472,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.45.1]: https://scm-manager.org/download/2.45.1
 [2.46.0]: https://scm-manager.org/download/2.46.0
 [2.46.1]: https://scm-manager.org/download/2.46.1
+[2.46.2]: https://scm-manager.org/download/2.46.2
 [2.47.0]: https://scm-manager.org/download/2.47.0
 [2.48.0]: https://scm-manager.org/download/2.48.0
 [2.48.1]: https://scm-manager.org/download/2.48.1
