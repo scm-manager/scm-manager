@@ -125,3 +125,18 @@ export function escapeUrlForRoute(url: string) {
 export function unescapeUrlForRoute(url: string) {
   return url.replace(/\\/g, "");
 }
+
+const prevSourcePathQueryName = "prevSourcePath";
+
+export function getPrevSourcePathFromLocation(location: { search?: string }): string | undefined {
+  if (location.search) {
+    const prevSourcePath = queryString.parse(location.search)[prevSourcePathQueryName];
+    if (prevSourcePath && !Array.isArray(prevSourcePath)) {
+      return prevSourcePath;
+    }
+  }
+}
+
+export const createPrevSourcePathQuery = (filePath: string) => {
+  return filePath ? `${prevSourcePathQueryName}=${encodeURIComponent(filePath)}` : "";
+};

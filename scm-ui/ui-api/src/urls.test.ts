@@ -24,7 +24,9 @@
 
 import {
   concat,
+  createPrevSourcePathQuery,
   getNamespaceAndPageFromMatch,
+  getPrevSourcePathFromLocation,
   getQueryStringFromLocation,
   getValueStringFromLocationByKey,
   withEndingSlash,
@@ -141,5 +143,34 @@ describe("tests for getValueStringFromLocationByKey", () => {
   it("should return undefined if q is not available", () => {
     const location = createLocation("?x=a&y=b&z=c");
     expect(getValueStringFromLocationByKey(location, "namespace")).toBeUndefined();
+  });
+});
+
+describe("tests for getPrevSourcePathFromLocation", () => {
+  it("should return the value string", () => {
+    const location = { search: "?prevSourcePath=src%2Fsub%25%2Ffile%26%252F.abc" };
+    expect(getPrevSourcePathFromLocation(location)).toBe("src/sub%/file&%2F.abc");
+  });
+
+  it("should return undefined, because query parameter is missing", () => {
+    const location = { search: "?q=abc" };
+    expect(getPrevSourcePathFromLocation(location)).toBeUndefined();
+  });
+
+  it("should return undefined, because query parameter is missing", () => {
+    const location = { search: "?q=abc" };
+    expect(getPrevSourcePathFromLocation(location)).toBeUndefined();
+  });
+});
+
+describe("tests for createPrevSourcePathQuery", () => {
+  it("should return empty string if file path is empty", () => {
+    const encodedPath = createPrevSourcePathQuery("");
+    expect(encodedPath).toBe("");
+  });
+
+  it("should return the encoded path as query parameter", () => {
+    const encodedPath = createPrevSourcePathQuery("src/sub%/file&%2F.abc");
+    expect(encodedPath).toBe("prevSourcePath=src%2Fsub%25%2Ffile%26%252F.abc");
   });
 });

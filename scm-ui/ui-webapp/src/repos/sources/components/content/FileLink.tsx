@@ -62,6 +62,11 @@ export const encodePart = (part: string) => {
   return encodeURIComponent(part);
 };
 
+export const encodeFilePath = (filePath: string) => {
+  const encodedUri = encodePart(filePath);
+  return encodedUri.replace(/%2F/g, "/");
+};
+
 export const createRelativeLink = (
   repositoryUrl: string,
   contextPath: string,

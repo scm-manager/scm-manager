@@ -32,6 +32,7 @@ import { createA11yId, ErrorNotification, FilterInput, Help, Icon, Loading } fro
 import CodeActionBar from "../components/CodeActionBar";
 import FileSearchResults from "../components/FileSearchResults";
 import { filepathSearch } from "../utils/filepathSearch";
+import { encodeFilePath } from "../../sources/components/content/FileLink";
 
 type Props = {
   repository: Repository;
@@ -64,7 +65,10 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
   const { isLoading, error, data } = usePaths(repository, revision);
   const [result, setResult] = useState<string[]>([]);
   const query = urls.getQueryStringFromLocation(location) || "";
+  const prevSourcePath = urls.getPrevSourcePathFromLocation(location) || "";
   const [t] = useTranslation("repos");
+  const [firstSelectedBranch, setBranchChanged] = useState<string | undefined>(selectedBranch);
+
   useEffect(() => {
     if (query.length > 1 && data) {
       setResult(filepathSearch(data.paths, query));
@@ -74,20 +78,35 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
   }, [data, query]);
 
   const search = (query: string) => {
-    history.push(`${location.pathname}?q=${encodeURIComponent(query)}`);
+    const prevSourceQuery = urls.createPrevSourcePathQuery(prevSourcePath);
+    history.push(`${location.pathname}?q=${encodeURIComponent(query)}${prevSourceQuery ? `&${prevSourceQuery}` : ""}`);
   };
 
   const onSelectBranch = (branch?: Branch) => {
     if (branch) {
-      history.push(`${baseUrl}/search/${encodeURIComponent(branch.name)}?q=${query}`);
+      const prevSourceQuery = urls.createPrevSourcePathQuery(prevSourcePath);
+      history.push(
+        `${baseUrl}/search/${encodeURIComponent(branch.name)}?q=${query}${prevSourceQuery ? `&${prevSourceQuery}` : ""}`
+      );
     }
   };
 
   const evaluateSwitchViewLink = (type: string) => {
-    if (type === "sources") {
-      return `${baseUrl}/sources/${revision}/`;
+    if (type === "sources" && repository.type !== "svn") {
+      return `${baseUrl}/sources/${revision}/${encodeFilePath(prevSourcePath)}`;
     }
-    return `${baseUrl}/changesets/${revision}/`;
+
+    if (type === "sources" && repository.type === "svn") {
+      return `${baseUrl}/sources/${encodeFilePath(prevSourcePath)}`;
+    }
+
+    if (repository.type !== "svn") {
+      return `${baseUrl}/branch/${revision}/changesets/${
+        prevSourcePath ? `?${urls.createPrevSourcePathQuery(prevSourcePath)}` : ""
+      }`;
+    }
+
+    return `${baseUrl}/changesets/${prevSourcePath ? `?${urls.createPrevSourcePathQuery(prevSourcePath)}` : ""}`;
   };
 
   const contentBaseUrl = `${baseUrl}/sources/${revision}/`;
@@ -113,8 +132,15 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
             "pb-0"
           )}
         >
-          <HomeLink className={classNames("mr-3", "pr-3")} to={contentBaseUrl}>
-            <HomeIcon title={t("fileSearch.home")} name="home" color="inherit" />
+          <HomeLink
+            className={classNames("mr-3", "pr-3")}
+            to={firstSelectedBranch !== selectedBranch ? contentBaseUrl : () => evaluateSwitchViewLink("sources")}
+          >
+            <HomeIcon
+              title={t("fileSearch.home")}
+              name={firstSelectedBranch !== selectedBranch ? "home" : "arrow-left"}
+              color="inherit"
+            />
           </HomeLink>
           <FilterInput
             className="is-full-width pr-2"

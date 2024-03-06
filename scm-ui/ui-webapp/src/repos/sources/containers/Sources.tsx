@@ -24,7 +24,7 @@
 import React, { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { RepositoryRevisionContextProvider, useSources } from "@scm-manager/ui-api";
+import { RepositoryRevisionContextProvider, urls, useSources } from "@scm-manager/ui-api";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import { Breadcrumb, ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import FileTree from "../components/FileTree";
@@ -52,7 +52,7 @@ const useUrlParams = () => {
   const { revision, path } = useParams<Params>();
   return {
     revision: revision ? decodeURIComponent(revision) : undefined,
-    path: path || ""
+    path: path || "",
   };
 };
 
@@ -70,12 +70,18 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
       );
     }
   }, [branches, selectedBranch, history, baseUrl]);
-  const { isLoading, error, data: file, isFetchingNextPage, fetchNextPage } = useSources(repository, {
+  const {
+    isLoading,
+    error,
+    data: file,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useSources(repository, {
     revision,
     path,
     // we have to wait until a branch is selected,
     // expect if we have no branches (svn)
-    enabled: !branches || !!selectedBranch
+    enabled: !branches || !!selectedBranch,
   });
 
   if (error) {
@@ -106,9 +112,16 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   };
 
   const evaluateSwitchViewLink = () => {
-    if (branches && selectedBranch && branches?.filter(b => b.name === selectedBranch).length !== 0) {
-      return `${baseUrl}/branch/${encodeURIComponent(selectedBranch)}/changesets/`;
+    if (branches && selectedBranch && branches?.filter((b) => b.name === selectedBranch).length !== 0) {
+      return `${baseUrl}/branch/${encodeURIComponent(selectedBranch)}/changesets/?${urls.createPrevSourcePathQuery(
+        file.path
+      )}`;
     }
+
+    if (repository.type === "svn") {
+      return `${baseUrl}/changesets/?${urls.createPrevSourcePathQuery(`${file.revision}/${file.path}`)}`;
+    }
+
     return `${baseUrl}/changesets/`;
   };
 
@@ -117,7 +130,14 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
 
     const buttons = [];
     if (repository._links.paths) {
-      buttons.push(<FileSearchButton baseUrl={baseUrl} revision={revision || file.revision} />);
+      buttons.push(
+        <FileSearchButton
+          baseUrl={baseUrl}
+          revision={revision || file.revision}
+          currentSource={file}
+          repository={repository}
+        />
+      );
     }
 
     return (
@@ -127,8 +147,8 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
         revision={revision || file.revision}
         path={path || ""}
         baseUrl={baseUrl + "/sources"}
-        branch={branches?.filter(b => b.name === selectedBranch)[0]}
-        defaultBranch={branches?.filter(b => b.defaultBranch === true)[0]}
+        branch={branches?.filter((b) => b.name === selectedBranch)[0]}
+        defaultBranch={branches?.filter((b) => b.defaultBranch === true)[0]}
         sources={file}
         permalink={permalink}
       />
