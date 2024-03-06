@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.base.Strings;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import jakarta.inject.Inject;
@@ -51,9 +52,11 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.emptyToNull;
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
+import static java.util.Optional.ofNullable;
 
 @Mapper
 public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMapper implements InstantAttributeMapper, ChangesetToChangesetDtoMapper {
@@ -88,7 +91,7 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
 
   @ObjectFactory
   SignatureDto createDto(Signature signature) {
-    final Optional<RawGpgKey> key = publicKeyStore.findById(signature.getKeyId());
+    Optional<RawGpgKey> key = ofNullable(emptyToNull(signature.getKeyId())).flatMap(publicKeyStore::findById);
     if (signature.getType().equals("gpg") && key.isPresent()) {
       final Links.Builder linkBuilder =
         linkingTo()

@@ -1,0 +1,2 @@
+- type: fixed
+  description: Internal server error for commits with SSH signatures
