@@ -1,11 +1,11 @@
 {
   "name": "@scm-manager/ui-shortcuts",
-  "version": "3.0.4",
+  "version": "3.0.5-SNAPSHOT",
   "license": "MIT",
   "private": true,
   "main": "index.ts",
   "peerDependencies": {
-    "@scm-manager/ui-core": "3.0.4"
+    "@scm-manager/ui-core": "3.0.5-SNAPSHOT"
   },
   "devDependencies": {
     "@scm-manager/eslint-config": "^2.16.0",
