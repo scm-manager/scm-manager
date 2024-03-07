@@ -34,7 +34,6 @@ import {
   FileControlFactory,
   HealthCheckFailureDetail,
   JumpToFileButton,
-  Loading,
   NavLink,
   Page,
   PrimaryContentColumn,
@@ -44,6 +43,7 @@ import {
   SubNavigation,
   urls,
 } from "@scm-manager/ui-components";
+import { Loading } from "@scm-manager/ui-core";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
 import BranchesOverview from "../branches/containers/BranchesOverview";
@@ -349,6 +349,16 @@ const RepositoryRoot = () => {
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("repositoryRoot.menu.navigationLabel")}>
+              <RepositoryNavLink
+                repository={repository}
+                linkName={codeLinkname}
+                to={evaluateDestinationForCodeLink()}
+                icon="fas fa-code"
+                label={t("repositoryRoot.menu.sourcesNavLink")}
+                activeWhenMatch={matchesCode}
+                activeOnlyWhenExact={false}
+                title={t("repositoryRoot.menu.sourcesNavLink")}
+              />
               <ExtensionPoint<extensionPoints.RepositoryNavigationTopLevel>
                 name="repository.navigation.topLevel"
                 props={extensionProps}
@@ -379,16 +389,6 @@ const RepositoryRoot = () => {
                 activeWhenMatch={matchesTags}
                 activeOnlyWhenExact={false}
                 title={t("repositoryRoot.menu.tagsNavLink")}
-              />
-              <RepositoryNavLink
-                repository={repository}
-                linkName={codeLinkname}
-                to={evaluateDestinationForCodeLink()}
-                icon="fas fa-code"
-                label={t("repositoryRoot.menu.sourcesNavLink")}
-                activeWhenMatch={matchesCode}
-                activeOnlyWhenExact={false}
-                title={t("repositoryRoot.menu.sourcesNavLink")}
               />
               <ExtensionPoint<extensionPoints.RepositoryNavigation>
                 name="repository.navigation"
