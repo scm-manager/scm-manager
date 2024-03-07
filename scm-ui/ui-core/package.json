@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-core",
-  "version": "3.0.4-SNAPSHOT",
+  "version": "3.0.4",
   "main": "./src/index.ts",
   "license": "MIT",
   "scripts": {
