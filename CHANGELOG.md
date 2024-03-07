@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.4] - 2024-03-07
+### Fixed
+- Sort global config and repository config the same way
+- Buttons from plugins in the code view will not be removed after fetching more sources
+- Required plugins can be uninstalled even when dependent plugins are still installed
+- Plugin condition mismatch description to show condition and display specialised error message
+- Internal server error for commits with SSH signatures
+
 ## [3.0.3] - 2024-02-08
 ### Fixed
 - Default value for idle timeout in configuration
@@ -1481,3 +1489,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.0.1]: https://scm-manager.org/download/3.0.1
 [3.0.2]: https://scm-manager.org/download/3.0.2
 [3.0.3]: https://scm-manager.org/download/3.0.3
+[3.0.4]: https://scm-manager.org/download/3.0.4
