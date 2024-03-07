@@ -402,6 +402,11 @@ export type ReposSourcesContentActionBar = RenderableExtensionPointDefinition<
   }
 >;
 
+export type RepositoryCodeOverviewContent = RenderableExtensionPointDefinition<
+  "repository.code.sources.content",
+  { sources: File; repository: Repository }
+>;
+
 export type RepositoryNavigation = RenderableExtensionPointDefinition<
   "repository.navigation",
   { repository: Repository; url: string; indexLinks: Links }

@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { RepositoryRevisionContextProvider, urls, useSources } from "@scm-manager/ui-api";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { Breadcrumb, ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
+import { Breadcrumb } from "@scm-manager/ui-components";
+import { Notification, ErrorNotification, Loading } from "@scm-manager/ui-core";
 import FileTree from "../components/FileTree";
 import Content from "./Content";
 import CodeActionBar from "../../codeSection/components/CodeActionBar";
@@ -35,6 +36,8 @@ import FileSearchButton from "../../codeSection/components/FileSearchButton";
 import { isEmptyDirectory, isRootFile } from "../utils/files";
 import CompareLink from "../../compare/CompareLink";
 import { encodePart } from "../components/content/FileLink";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { useScrollToElement } from "@scm-manager/ui-components";
 
 type Props = {
   repository: Repository;
@@ -61,15 +64,22 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   const history = useHistory();
   const location = useLocation();
   const [t] = useTranslation("repos");
+  const [contentRef, setContentRef] = useState<HTMLElement | null>();
+
+  useScrollToElement(contentRef, () => location.hash, location.hash);
+
   // redirect to default branch if no branch selected
   useEffect(() => {
     if (branches && branches.length > 0 && !selectedBranch) {
       const defaultBranch = branches?.filter((b) => b.defaultBranch === true)[0];
       history.replace(
-        `${baseUrl}/sources/${defaultBranch ? encodePart(defaultBranch.name) : encodePart(branches[0].name)}/`
+        `${baseUrl}/sources/${defaultBranch ? encodePart(defaultBranch.name) : encodePart(branches[0].name)}/${
+          location.hash
+        }`
       );
     }
-  }, [branches, selectedBranch, history, baseUrl]);
+  }, [branches, selectedBranch, history, baseUrl, location.hash]);
+
   const {
     isLoading,
     error,
@@ -108,7 +118,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
     } else {
       return;
     }
-    history.push(url);
+    history.push(`${url}${location.hash}`);
   };
 
   const evaluateSwitchViewLink = () => {
@@ -202,20 +212,27 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
 
   return (
     <RepositoryRevisionContextProvider revision={revision}>
-      {hasBranchesWhenSupporting(repository) && (
-        <CodeActionBar
-          selectedBranch={selectedBranch}
-          branches={branches}
-          onSelectBranch={onSelectBranch}
-          switchViewLink={evaluateSwitchViewLink()}
-          actions={
-            branches && selectedBranch ? (
-              <CompareLink repository={repository} source={encodeURIComponent(selectedBranch)} />
-            ) : null
-          }
+      <div ref={setContentRef}>
+        {hasBranchesWhenSupporting(repository) && (
+          <CodeActionBar
+            selectedBranch={selectedBranch}
+            branches={branches}
+            onSelectBranch={onSelectBranch}
+            switchViewLink={evaluateSwitchViewLink()}
+            actions={
+              branches && selectedBranch ? (
+                <CompareLink repository={repository} source={encodeURIComponent(selectedBranch)} />
+              ) : null
+            }
+          />
+        )}
+        {renderPanelContent()}
+        <ExtensionPoint<extensionPoints.RepositoryCodeOverviewContent>
+          name="repository.code.sources.content"
+          props={{ sources: file, repository }}
+          renderAll={true}
         />
-      )}
-      {renderPanelContent()}
+      </div>
     </RepositoryRevisionContextProvider>
   );
 };

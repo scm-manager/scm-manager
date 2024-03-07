@@ -58,7 +58,7 @@ export const createRemark2RehypeHeadingRendererAdapterFactory = (remarkRenderer:
     ({ node, children }: any) => {
       const renderProps = {
         id: node.properties.id,
-        level,
+        level: Math.min(level + 1, 6),
         permalink,
       };
       children = children || [];
