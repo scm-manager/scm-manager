@@ -49,7 +49,7 @@ const FileSearchButton: FC<Props> = ({ baseUrl, revision, currentSource, reposit
 
   return (
     <Link
-      to={`${baseUrl}/search/${encodeURIComponent(revision)}/?${currentSourcePath}`}
+      to={`${baseUrl}/search/${encodeURIComponent(revision)}?${currentSourcePath}`}
       aria-label={t("fileSearch.button.title")}
       data-testid="file_search_button"
     >
