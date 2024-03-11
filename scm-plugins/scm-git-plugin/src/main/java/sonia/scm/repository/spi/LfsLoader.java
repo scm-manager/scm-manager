@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.common.annotations.VisibleForTesting;
 import jakarta.inject.Inject;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lfs.Lfs;
@@ -51,7 +52,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 class LfsLoader {
 
@@ -71,8 +73,24 @@ class LfsLoader {
                    sonia.scm.repository.Repository repository,
                    HttpConnectionFactory httpConnectionFactory,
                    String url) {
-    EntryHandler entryHandler = new EntryHandler(repository, gitRepository, mirrorLog, lfsUpdateResult, httpConnectionFactory);
-    inspectTree(newObjectId, entryHandler, gitRepository, mirrorLog, lfsUpdateResult, url);
+    inspectTree(newObjectId, gitRepository, mirrorLog, lfsUpdateResult, repository, httpConnectionFactory, url, new HashSet<>(1000));
+  }
+
+  void inspectTree(ObjectId newObjectId,
+                   Repository gitRepository,
+                   LfsLoaderLogger mirrorLog,
+                   LfsUpdateResult lfsUpdateResult,
+                   sonia.scm.repository.Repository repository,
+                   HttpConnectionFactory httpConnectionFactory,
+                   String url,
+                   Set<ObjectId> alreadyVisited) {
+    EntryHandler entryHandler = createEntryHandler(gitRepository, mirrorLog, lfsUpdateResult, repository, httpConnectionFactory);
+    inspectTree(newObjectId, entryHandler, gitRepository, mirrorLog, lfsUpdateResult, url, alreadyVisited);
+  }
+
+  @VisibleForTesting
+  EntryHandler createEntryHandler(Repository gitRepository, LfsLoaderLogger mirrorLog, LfsUpdateResult lfsUpdateResult, sonia.scm.repository.Repository repository, HttpConnectionFactory httpConnectionFactory) {
+    return new EntryHandler(repository, gitRepository, mirrorLog, lfsUpdateResult, httpConnectionFactory);
   }
 
   private void inspectTree(ObjectId newObjectId,
@@ -80,20 +98,25 @@ class LfsLoader {
                            Repository gitRepository,
                            LfsLoaderLogger mirrorLog,
                            LfsUpdateResult lfsUpdateResult,
-                           String sourceUrl) {
+                           String sourceUrl,
+                           Set<ObjectId> alreadyVisited) {
     try {
       gitRepository
         .getConfig()
         .setString(ConfigConstants.CONFIG_SECTION_LFS, null, ConfigConstants.CONFIG_KEY_URL, computeLfsUrl(sourceUrl));
 
       TreeWalk treeWalk = new TreeWalk(gitRepository);
-      treeWalk.setFilter(new ScmLfsPointerFilter());
+      treeWalk.setFilter(new FilteringScmLfsPointerFilter(alreadyVisited));
       treeWalk.setRecursive(true);
 
       RevWalk revWalk = new RevWalk(gitRepository);
       revWalk.markStart(revWalk.parseCommit(newObjectId));
 
       for (RevCommit commit : revWalk) {
+        if (!alreadyVisited.add(commit.toObjectId())) {
+          LOG.trace("skipping commit {}", commit);
+          break;
+        }
         treeWalk.reset();
         treeWalk.addTree(commit.getTree());
         while (treeWalk.next()) {
@@ -115,7 +138,31 @@ class LfsLoader {
     }
   }
 
-  private class EntryHandler {
+  @VisibleForTesting
+  Path downloadLfsResource(Lfs lfs, Repository gitRepository, HttpConnectionFactory connectionFactory, LfsPointer lfsPointer) throws IOException {
+    return SmudgeFilter.downloadLfsResource(
+      lfs,
+      gitRepository,
+      connectionFactory,
+      lfsPointer
+    )
+      .iterator()
+      .next();
+  }
+
+  @VisibleForTesting
+  void storeLfsBlob(AnyLongObjectId oid, Path tempFilePath, BlobStore lfsBlobStore) throws IOException {
+    LOG.trace("temporary lfs file: {}", tempFilePath);
+    Files.copy(
+      tempFilePath,
+      lfsBlobStore
+        .create(oid.name())
+        .getOutputStream()
+    );
+  }
+
+  @VisibleForTesting
+  class EntryHandler {
 
     private final BlobStore lfsBlobStore;
     private final Repository gitRepository;
@@ -137,15 +184,19 @@ class LfsLoader {
       this.httpConnectionFactory = httpConnectionFactory;
     }
 
-    private void handleTreeEntry(TreeWalk treeWalk) {
+    @VisibleForTesting
+    void handleTreeEntry(TreeWalk treeWalk) {
       try (InputStream is = gitRepository.open(treeWalk.getObjectId(0), Constants.OBJ_BLOB).openStream()) {
         LfsPointer lfsPointer = LfsPointer.parseLfsPointer(is);
         AnyLongObjectId oid = lfsPointer.getOid();
 
         if (lfsBlobStore.get(oid.name()) == null) {
           Path tempFilePath = loadLfsFile(lfsPointer);
-          storeLfsBlob(oid, tempFilePath);
-          Files.delete(tempFilePath);
+          try {
+            storeLfsBlob(oid, tempFilePath, lfsBlobStore);
+          } finally {
+            Files.delete(tempFilePath);
+          }
         }
       } catch (Exception e) {
         LOG.warn("failed to load lfs file", e);
@@ -161,22 +212,11 @@ class LfsLoader {
       Lfs lfs = new Lfs(gitRepository);
       lfs.getMediaFile(lfsPointer.getOid());
 
-      Collection<Path> paths = SmudgeFilter.downloadLfsResource(
+      return downloadLfsResource(
         lfs,
         gitRepository,
         httpConnectionFactory,
         lfsPointer
-      );
-      return paths.iterator().next();
-    }
-
-    private void storeLfsBlob(AnyLongObjectId oid, Path tempFilePath) throws IOException {
-      LOG.trace("temporary lfs file: {}", tempFilePath);
-      Files.copy(
-        tempFilePath,
-        lfsBlobStore
-          .create(oid.name())
-          .getOutputStream()
       );
     }
   }
@@ -202,6 +242,24 @@ class LfsLoader {
     @Override
     public boolean include(TreeWalk walk) throws IOException {
       if (walk.getFileMode().equals(FileMode.GITLINK)) {
+        return false;
+      }
+      return super.include(walk);
+    }
+  }
+
+  private static class FilteringScmLfsPointerFilter extends ScmLfsPointerFilter {
+
+    private final Set<ObjectId> alreadyVisited;
+
+    private FilteringScmLfsPointerFilter(Set<ObjectId> alreadyVisited) {
+      this.alreadyVisited = alreadyVisited;
+    }
+
+    @Override
+    public boolean include(TreeWalk walk) throws IOException {
+      if (!alreadyVisited.add(walk.getObjectId(0))) {
+        LOG.trace("skipping object {}", walk.getObjectId(0));
         return false;
       }
       return super.include(walk);

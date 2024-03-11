@@ -51,6 +51,8 @@ import sonia.scm.repository.api.PullResponse;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class GitPullCommand extends AbstractGitPushOrPullCommand
@@ -225,6 +227,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   }
 
   private void fetchLfs(PullCommandRequest request, Git git, LfsLoader.LfsLoaderLogger lfsLoaderLogger) throws IOException {
+    Set<ObjectId> alreadyVisited = new HashSet<>(1000);
     open().getRefDatabase().getRefs().forEach(
       ref -> lfsLoader.inspectTree(
         ref.getObjectId(),
@@ -233,7 +236,8 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
         new MirrorCommandResult.LfsUpdateResult(),
         repository,
         pullHttpConnectionProvider.createHttpConnectionFactory(request),
-        request.getRemoteUrl().toString()
+        request.getRemoteUrl().toString(),
+        alreadyVisited
       )
     );
   }
