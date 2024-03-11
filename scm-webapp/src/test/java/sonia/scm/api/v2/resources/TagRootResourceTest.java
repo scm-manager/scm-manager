@@ -24,7 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -37,6 +36,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -48,6 +48,7 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.TagCommandBuilder;
 import sonia.scm.repository.api.TagsCommandBuilder;
+import sonia.scm.web.JsonMockHttpResponse;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
@@ -56,7 +57,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -66,7 +67,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Slf4j
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class TagRootResourceTest extends RepositoryTestBase {
 
@@ -84,7 +84,7 @@ public class TagRootResourceTest extends RepositoryTestBase {
   @Mock
   private RepositoryService repositoryService;
 
-  @Mock
+  @Mock(answer = Answers.RETURNS_SELF)
   private TagsCommandBuilder tagsCommandBuilder;
   @Mock
   private TagCommandBuilder tagCommandBuilder;
@@ -175,6 +175,23 @@ public class TagRootResourceTest extends RepositoryTestBase {
     assertEquals(500, response.getStatus());
   }
 
+  @Test
+  public void shouldGetTagsForRevision() throws Exception {
+    final JsonMockHttpResponse response = new JsonMockHttpResponse();
+    Tags tags = new Tags();
+    String tag1 = "v1.0";
+    String revision1 = "revision_1234";
+    tags.setTags(Lists.newArrayList(new Tag(tag1, revision1)));
+    when(tagsCommandBuilder.forRevision(revision1).getTags()).thenReturn(tags);
+
+    MockHttpRequest request = MockHttpRequest
+      .get(TAG_URL+ "contains/" + revision1)
+      .accept(VndMediaType.TAG_COLLECTION);
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getContentAsJson().get("_embedded").get("tags").get(0).get("name").asText()).isEqualTo(tag1);
+    assertThat(response.getContentAsJson().get("_links").get("self").get("href").asText()).isEqualTo("/v2/repositories/space/repo/tags/contains/revision_1234");
+  }
 
   @Test
   public void shouldGetTags() throws Exception {
@@ -191,8 +208,8 @@ public class TagRootResourceTest extends RepositoryTestBase {
       .accept(VndMediaType.TAG_COLLECTION);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
+
     assertEquals(200, response.getStatus());
-    log.info("the content: ", response.getContentAsString());
     assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", tag1)));
     assertTrue(response.getContentAsString().contains(String.format("\"revision\":\"%s\"", revision1)));
     assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", tag2)));
@@ -224,7 +241,6 @@ public class TagRootResourceTest extends RepositoryTestBase {
     response = new MockHttpResponse();
     dispatcher.invoke(request, response);
     assertEquals(200, response.getStatus());
-    log.info("the content: ", response.getContentAsString());
     assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", tag2)));
     assertTrue(response.getContentAsString().contains(String.format("\"revision\":\"%s\"", revision2)));
   }

@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tag;
 
@@ -53,6 +54,10 @@ public class TagCollectionToDtoMapper {
     return new HalRepresentation(createLinks(repository.getNamespace(), repository.getName()), embedDtos(getTagDtoList(tags, repository)));
   }
 
+  public HalRepresentation map(Collection<Tag> tags, Repository repository, String changeset) {
+    return new HalRepresentation(createLinks(repository.getNamespace(), repository.getName(), changeset), embedDtos(getTagDtoList(tags, repository)));
+  }
+
   public List<TagDto> getTagDtoList(Collection<Tag> tags, Repository repository) {
     return tags.stream().map(tag -> tagToTagDtoMapper.map(tag, repository)).collect(toList());
   }
@@ -72,6 +77,13 @@ public class TagCollectionToDtoMapper {
     return
       linkingTo()
         .self(resourceLinks.tag().all(namespace, name))
+        .build();
+  }
+
+  private Links createLinks(String namespace, String name, String changeset) {
+    return
+      linkingTo()
+        .self(resourceLinks.tag().getForChangeset(namespace, name, changeset))
         .build();
   }
 

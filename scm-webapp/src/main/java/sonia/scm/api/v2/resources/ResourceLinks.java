@@ -570,6 +570,10 @@ class ResourceLinks {
     String all(String namespace, String name) {
       return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("getAll").parameters().href();
     }
+
+    String getForChangeset(String namespace, String name, String changeset) {
+      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("getForChangeset").parameters(changeset).href();
+    }
   }
 
   public DiffLinks diff() {

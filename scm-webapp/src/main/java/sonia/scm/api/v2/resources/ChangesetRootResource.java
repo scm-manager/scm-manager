@@ -148,7 +148,7 @@ public class ChangesetRootResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("id") String id) throws IOException {
+  public ChangesetDto get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("id") String id) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
@@ -156,7 +156,7 @@ public class ChangesetRootResource {
       if (changeset == null) {
         throw notFound(entity(Changeset.class, id).in(repository));
       }
-      return Response.ok(changesetToChangesetDtoMapper.map(changeset, repository)).build();
+      return changesetToChangesetDtoMapper.map(changeset, repository);
     }
   }
 }

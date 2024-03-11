@@ -25,7 +25,6 @@
 package sonia.scm.api.v2.resources;
 
 
-import com.google.inject.util.Providers;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -34,59 +33,71 @@ import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.web.JsonMockHttpResponse;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mock.Strictness.LENIENT;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
-public class ChangesetRootResourceTest extends RepositoryTestBase {
+@ExtendWith(MockitoExtension.class)
+class ChangesetRootResourceTest extends RepositoryTestBase {
 
-  public static final String CHANGESET_PATH = "space/repo/changesets/";
-  public static final String CHANGESET_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + CHANGESET_PATH;
+  static final String CHANGESET_PATH = "space/repo/changesets/";
+  static final String CHANGESET_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + CHANGESET_PATH;
 
-  private RestDispatcher dispatcher = new RestDispatcher();
+  private final RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
-  @Mock
+  @Mock(strictness = LENIENT)
   private RepositoryServiceFactory serviceFactory;
 
-  @Mock
+  @Mock(strictness = LENIENT)
   private RepositoryService repositoryService;
 
-  @Mock
+  @Mock(strictness = LENIENT)
   private LogCommandBuilder logCommandBuilder;
+
+  @Mock
+  private TagCollectionToDtoMapper tagCollectionToDtoMapper;
 
   @InjectMocks
   private ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper;
+
 
   @InjectMocks
   private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
@@ -94,8 +105,8 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
-  @Before
-  public void prepareEnvironment() {
+  @BeforeEach
+  void prepareEnvironment() {
     changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     changesetRootResource = new ChangesetRootResource(serviceFactory, changesetCollectionToDtoMapper, changesetToChangesetDtoMapper);
     dispatcher.addSingletonResource(getRepositoryRootResource());
@@ -108,13 +119,13 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
     when(subject.isPermitted(any(String.class))).thenReturn(true);
   }
 
-  @After
-  public void cleanupContext() {
+  @AfterEach
+  void cleanupContext() {
     ThreadContext.unbindSubject();
   }
 
   @Test
-  public void shouldGetChangeSets() throws Exception {
+  void shouldGetChangeSets() throws Exception {
     String id = "revision_123";
     Instant creationDate = Instant.now();
     String authorName = "name";
@@ -142,7 +153,7 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldGetSinglePageOfChangeSets() throws Exception {
+  void shouldGetSinglePageOfChangeSets() throws Exception {
     String id = "revision_123";
     Instant creationDate = Instant.now();
     String authorName = "name";
@@ -169,33 +180,67 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
     assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
   }
 
-  @Test
-  public void shouldGetChangeSet() throws Exception {
-    String id = "revision_123";
-    Instant creationDate = Instant.now();
-    String authorName = "name";
-    String authorEmail = "em@i.l";
-    String commit = "my branch commit";
+  @Nested
+  class ForExistingChangeset {
 
-    when(logCommandBuilder.getChangeset(id)).thenReturn(
-      new Changeset(id, Date.from(creationDate).getTime(), new Person(authorName, authorEmail), commit)
-    );
+    private final String id = "revision_123";
+    private final Instant creationDate = Instant.now();
+    private final String authorName = "name";
+    private final String authorEmail = "em@i.l";
+    private final String commit = "my branch commit";
 
-    MockHttpRequest request = MockHttpRequest
-      .get(CHANGESET_URL + id)
-      .accept(VndMediaType.CHANGESET);
-    MockHttpResponse response = new MockHttpResponse();
-    dispatcher.invoke(request, response);
+    private final JsonMockHttpResponse response = new JsonMockHttpResponse();
 
-    assertEquals(200, response.getStatus());
-    assertTrue(response.getContentAsString().contains(String.format("\"id\":\"%s\"", id)));
-    assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", authorName)));
-    assertTrue(response.getContentAsString().contains(String.format("\"mail\":\"%s\"", authorEmail)));
-    assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
+    @BeforeEach
+    void prepareExistingChangeset() throws URISyntaxException, IOException {
+      when(logCommandBuilder.getChangeset(id)).thenReturn(
+        new Changeset(id, Date.from(creationDate).getTime(), new Person(authorName, authorEmail), commit)
+      );
+    }
+
+    private void executeRequest() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest
+        .get(CHANGESET_URL + id)
+        .accept(VndMediaType.CHANGESET);
+      dispatcher.invoke(request, response);
+    }
+
+    @Test
+    void shouldGetChangeSet() throws URISyntaxException {
+      executeRequest();
+
+      assertThat(response.getStatus()).isEqualTo(200);
+      assertThat(response.getContentAsJson().get("id").asText()).isEqualTo(id);
+      assertThat(response.getContentAsJson().get("author").get("name").asText()).isEqualTo(authorName);
+      assertThat(response.getContentAsJson().get("author").get("mail").asText()).isEqualTo(authorEmail);
+      assertThat(response.getContentAsJson().get("description").asText()).isEqualTo(commit);
+    }
+
+    @Test
+    void shouldContainLinkForTagCreation() throws URISyntaxException {
+      when(subject.isPermitted("repository:push:repoId")).thenReturn(true);
+      when(repositoryService.isSupported(Command.TAG)).thenReturn(true);
+
+      executeRequest();
+
+      assertThat(response.getContentAsJson().get("_links").get("tag").get("href").asText())
+        .isEqualTo("/v2/repositories/space/repo/tags/");
+    }
+
+    @Test
+    void shouldContainLinkForTagsForRevision() throws URISyntaxException {
+      when(repositoryService.isSupported(Command.TAGS)).thenReturn(true);
+      when(repositoryService.isSupported(Feature.TAGS_FOR_REVISION)).thenReturn(true);
+
+      executeRequest();
+
+      assertThat(response.getContentAsJson().get("_links").get("containedInTags").get("href").asText())
+        .isEqualTo("/v2/repositories/space/repo/tags/contains/revision_123");
+    }
   }
 
   @Test
-  public void shouldReturnNotFoundForNonExistingChangeset() throws Exception {
+  void shouldReturnNotFoundForNonExistingChangeset() throws Exception {
     MockHttpRequest request = MockHttpRequest
       .get(CHANGESET_URL + "abcd")
       .accept(VndMediaType.CHANGESET);

@@ -42,12 +42,13 @@ import {
   Icon,
   Level,
   SignatureIcon,
-  Tooltip,
   SubSubtitle,
+  Tooltip,
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
-import { Link as ReactLink } from "react-router-dom";
+import { Link, Link as ReactLink } from "react-router-dom";
 import CreateTagModal from "./CreateTagModal";
+import { useContainedInTags } from "@scm-manager/ui-api";
 
 type Props = {
   changeset: Changeset;
@@ -74,7 +75,7 @@ const countContributors = (changeset: Changeset) => {
   return 1;
 };
 
-const ContributorColumn = styled.p`
+const ContributorColumn = styled.div`
   flex-grow: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -82,7 +83,7 @@ const ContributorColumn = styled.p`
   min-width: 0;
 `;
 
-const CountColumn = styled.p`
+const CountColumn = styled.div`
   text-align: right;
   white-space: nowrap;
 `;
@@ -97,9 +98,12 @@ const SeparatedParents = styled.div`
 const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
   const [t] = useTranslation("repos");
   const [open, setOpen] = useState(false);
-  const signatureIcon = changeset?.signatures && changeset.signatures.length > 0 && (
-    <SignatureIcon className="mx-2" signatures={changeset.signatures} />
-  );
+  const signatureIcon =
+    changeset?.signatures && changeset.signatures.length > 0 ? (
+      <SignatureIcon className="mx-2" signatures={changeset.signatures} />
+    ) : (
+      <>&nbsp;</>
+    );
 
   if (open) {
     return (
@@ -116,22 +120,62 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
   }
 
   return (
-    <>
-      <div className="is-flex is-clickable" onClick={(e) => setOpen(!open)}>
-        <ContributorColumn className="is-ellipsis-overflow">
-          <Icon name="angle-right" alt={t("changeset.contributors.showList")} />{" "}
-          <ChangesetAuthor changeset={changeset} />
-        </ContributorColumn>
-        {signatureIcon}
-        <CountColumn className="is-hidden-mobile is-hidden-tablet-only is-hidden-desktop-only">
-          (
-          <span className="has-text-link">
-            {t("changeset.contributors.count", { count: countContributors(changeset) })}
-          </span>
-          )
-        </CountColumn>
+    <div className="is-flex is-clickable" onClick={(e) => setOpen(!open)}>
+      <ContributorColumn className="is-ellipsis-overflow">
+        <Icon name="angle-right" alt={t("changeset.contributors.showList")} /> <ChangesetAuthor changeset={changeset} />
+      </ContributorColumn>
+      {signatureIcon}
+      <CountColumn className="is-hidden-mobile is-hidden-tablet-only is-hidden-desktop-only">
+        (<span>{t("changeset.contributors.count", { count: countContributors(changeset) })}</span>)
+      </CountColumn>
+    </div>
+  );
+};
+
+const ContainedInTags: FC<{ changeset: Changeset; repository: Repository }> = ({ changeset, repository }) => {
+  const [t] = useTranslation("repos");
+  const [open, setOpen] = useState(false);
+  const { data, isLoading } = useContainedInTags(changeset, repository);
+
+  const tags = data?._embedded?.tags;
+
+  if (!tags || tags.length === 0 || isLoading) {
+    return <div className="mb-5"></div>;
+  }
+
+  if (open) {
+    return (
+      <div className="is-flex is-flex-direction-column mb-4">
+        <div className="is-flex">
+          <p className="is-ellipsis-overflow is-clickable mb-2" onClick={(e) => setOpen(!open)}>
+            <Icon name="angle-down" alt={t("changeset.containedInTags.hideAllTags")} />{" "}
+            {t("changeset.containedInTags.allTags")}
+          </p>
+        </div>
+        <div>
+          {" "}
+          {tags.map((tag) => (
+            <span className="tag is-info is-normal m-1">
+              <Link
+                to={`/repo/${repository.namespace}/${repository.name}/tag/${tag.name}`}
+                className="has-text-inherit"
+              >
+                {tag.name}
+              </Link>
+            </span>
+          ))}
+        </div>
       </div>
-    </>
+    );
+  }
+
+  return (
+    <div className="is-flex is-clickable" onClick={() => setOpen(!open)}>
+      <ContributorColumn className="is-ellipsis-overflow">
+        <Icon name="angle-right" alt={t("changeset.containedInTags.showAllTags")} />{" "}
+        {t("changeset.containedInTags.containedInTag", { count: tags.length })}
+      </ContributorColumn>
+    </div>
   );
 };
 
@@ -177,6 +221,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
           </AvatarWrapper>
           <div className="media-content">
             <Contributors changeset={changeset} />
+            <ContainedInTags changeset={changeset} repository={repository} />
             <div className="is-flex is-ellipsis-overflow">
               <p>
                 <Trans i18nKey="repos:changeset.summary" components={[id, date]} />

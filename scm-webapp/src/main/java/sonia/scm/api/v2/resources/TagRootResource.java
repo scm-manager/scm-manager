@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.HalRepresentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,6 +34,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -49,6 +51,7 @@ import sonia.scm.repository.Tags;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.TagCommandBuilder;
+import sonia.scm.repository.api.TagsCommandBuilder;
 import sonia.scm.web.VndMediaType;
 
 import java.io.IOException;
@@ -91,6 +94,13 @@ public class TagRootResource {
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the tags")
   @ApiResponse(
+    responseCode = "404",
+    description = "not found, repository does not exist",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
     responseCode = "500",
     description = "internal server error",
     content = @Content(
@@ -112,7 +122,7 @@ public class TagRootResource {
 
   @POST
   @Path("")
-  @Produces(VndMediaType.TAG_REQUEST)
+  @Consumes(VndMediaType.TAG_REQUEST)
   @Operation(summary = "Create tag",
     description = "Creates a new tag.",
     tags = "Repository",
@@ -140,11 +150,12 @@ public class TagRootResource {
   @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the tags")
   @ApiResponse(
     responseCode = "404",
-    description = "not found, no tag with the specified name available in the repository",
+    description = "not found, repository does not exist",
     content = @Content(
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
+  @ApiResponse(responseCode = "409", description = "conflict, tag with given id already exists in repository")
   @ApiResponse(
     responseCode = "500",
     description = "internal server error",
@@ -187,7 +198,7 @@ public class TagRootResource {
   @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the tags")
   @ApiResponse(
     responseCode = "404",
-    description = "not found, no tag with the specified name available in the repository",
+    description = "not found, no tag with the specified name available in the repository or the repository does not exist",
     content = @Content(
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
@@ -217,9 +228,43 @@ public class TagRootResource {
     }
   }
 
+  @GET
+  @Path("contains/{changeset}")
+  @Produces(VndMediaType.TAG_COLLECTION)
+  @Operation(summary = "Get tags for specific revision", description = "Returns all tags related to a given revision", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.TAG_COLLECTION,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the tags")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, repository does not exist",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  public HalRepresentation getForChangeset(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("changeset") String changeset) throws IOException {
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      TagsCommandBuilder tagsCommandBuilder = repositoryService.getTagsCommand();
+      return tagCollectionToDtoMapper.map(tagsCommandBuilder.forRevision(changeset).getTags().getTags(), repositoryService.getRepository(), changeset);
+  }
+  }
+
   @DELETE
   @Path("{tagName}")
-  @Produces(VndMediaType.TAG)
   @Operation(summary = "Delete tag", description = "Deletes the tag provided in the path", tags = "Repository")
   @ApiResponse(
     responseCode = "200",

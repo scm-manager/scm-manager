@@ -35,6 +35,7 @@ import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Contributor;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
@@ -124,6 +125,9 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
       }
       if (repositoryService.isSupported(Command.TAG) && RepositoryPermissions.push(repository).isPermitted()) {
         linksBuilder.single(link("tag", resourceLinks.tag().create(namespace, name)));
+      }
+      if (repositoryService.isSupported(Command.TAGS) && repositoryService.isSupported(Feature.TAGS_FOR_REVISION)) {
+        linksBuilder.single(link("containedInTags", resourceLinks.tag().getForChangeset(namespace, name, source.getId())));
       }
       if (repositoryService.isSupported(Command.BRANCHES)) {
         embeddedBuilder.with("branches", branchCollectionToDtoMapper.getBranchDtoList(repository,

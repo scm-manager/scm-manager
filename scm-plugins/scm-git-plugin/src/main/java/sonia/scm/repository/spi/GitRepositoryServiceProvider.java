@@ -63,7 +63,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
   protected static final Set<Feature> FEATURES = EnumSet.of(
     Feature.INCOMING_REVISION,
     Feature.MODIFICATIONS_BETWEEN_REVISIONS,
-    Feature.FORCE_PUSH
+    Feature.FORCE_PUSH,
+    Feature.TAGS_FOR_REVISION
   );
 
   private final Injector injector;

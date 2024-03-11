@@ -53,5 +53,11 @@ public enum Feature
    *
    * @since 2.47.0
    */
-  FORCE_PUSH
+  FORCE_PUSH,
+  /**
+   * The repository supports computation of tags for a given revision.
+   *
+   * @since 3.1.0
+   */
+  TAGS_FOR_REVISION
 }

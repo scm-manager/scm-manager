@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import { Changeset, Link, NamespaceAndName, Repository, Tag, TagCollection } from "@scm-manager/ui-types";
-import { requiredLink } from "./links";
+import { objectLink, requiredLink } from "./links";
 import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query";
 import { ApiResult } from "./base";
 import { repoQueryKey } from "./keys";
@@ -44,6 +44,23 @@ export const useTags = (repository: Repository): ApiResult<TagCollection> => {
   );
 };
 
+export const useContainedInTags = (changeset: Changeset, repository: Repository): ApiResult<TagCollection> => {
+  const link = objectLink(changeset, "containedInTags");
+
+  return useQuery<TagCollection, Error>(repoQueryKey(repository, "tags", changeset.id), () => {
+    if (link === null) {
+      return {
+        _embedded: {
+          tags: [],
+        },
+        _links: {},
+      };
+    }
+
+    return apiClient.get(link).then((response) => response.json());
+  });
+};
+
 export const useTag = (repository: Repository, name: string): ApiResult<Tag> => {
   const link = requiredLink(repository, "tags");
   return useQuery<Tag, Error>(tagQueryKey(repository, name), () =>
@@ -62,10 +79,14 @@ const invalidateCacheForTag = (queryClient: QueryClient, repository: NamespaceAn
 const createTag = (changeset: Changeset, link: string) => {
   return (name: string) => {
     return apiClient
-      .post(link, {
-        name,
-        revision: changeset.id,
-      })
+      .post(
+        link,
+        {
+          name,
+          revision: changeset.id,
+        },
+        "application/vnd.scmm-tagRequest+json;v=2"
+      )
       .then((response) => {
         const location = response.headers.get("Location");
         if (!location) {

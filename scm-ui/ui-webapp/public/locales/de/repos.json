@@ -307,6 +307,13 @@
     },
     "tag": {
       "create": "Tag erstellen"
+    },
+    "containedInTags": {
+      "containedInTag_one": "Enthalten in {{count}} Tag",
+      "containedInTag_other": "Enthalten in {{count}} Tags",
+      "allTags": "Alle Tags, in denen der Commit enthalten ist",
+      "showAllTags": "Alle Tags, in denen der Commit enthalten ist, einblenden",
+      "hideAllTags": "Alle Tags, in denen der Commit enthalten ist, ausblenden"
     }
   },
   "commit": {

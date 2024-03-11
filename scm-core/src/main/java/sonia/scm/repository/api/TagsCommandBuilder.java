@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
 import sonia.scm.repository.Tag;
@@ -50,18 +51,20 @@ import java.util.List;
  * TagsCommandBuilder tagsCommand = repositoryService.getTagsCommand();
  * Tags tags = tagsCommand.getTags();
  * </code></pre>
+ *
  * @since 1.18
  */
-public final class TagsCommandBuilder
-{
+public final class TagsCommandBuilder {
 
   static final String CACHE_NAME = "sonia.cache.cmd.tags";
 
- 
+
   private static final Logger logger =
     LoggerFactory.getLogger(TagsCommandBuilder.class);
 
-  /** cache for changesets */
+  /**
+   * cache for changesets
+   */
   private final Cache<CacheKey, Tags> cache;
 
   private final TagsCommand command;
@@ -70,17 +73,18 @@ public final class TagsCommandBuilder
 
   private boolean disableCache = false;
 
+  private String revision;
+
   /**
    * Constructs a new {@link TagsCommandBuilder}, this constructor should
    * only be called from the {@link RepositoryService}.
    *
    * @param cacheManager cache manager
-   * @param command implementation of the {@link TagsCommand}
-   * @param repository repository
+   * @param command      implementation of the {@link TagsCommand}
+   * @param repository   repository
    */
   TagsCommandBuilder(CacheManager cacheManager, TagsCommand command,
-    Repository repository)
-  {
+                     Repository repository) {
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.command = command;
     this.repository = repository;
@@ -91,97 +95,78 @@ public final class TagsCommandBuilder
    * Returns all tags from the repository.
    */
   public Tags getTags() throws IOException {
-    Tags tags;
-
-    if (disableCache)
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("get tags for repository {} with disabled cache",
-          repository.getName());
-      }
-
-      tags = getTagsFromCommand();
-    }
-    else
-    {
+    if (revision != null) {
+      logger.debug("get tags for repository {} with revision {}", repository, revision);
+      return getTagsFromCommandForRevision();
+    } else if (disableCache) {
+      logger.debug("get tags for repository {} with disabled cache", repository);
+      return getTagsFromCommand();
+    } else {
       CacheKey key = new CacheKey(repository);
-
-      tags = cache.get(key);
-
-      if (tags == null)
-      {
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("get tags for repository {}", repository);
-        }
-
+      Tags tags = cache.get(key);
+      if (tags == null) {
+        logger.debug("get tags for repository {}", repository);
         tags = getTagsFromCommand();
-
-        if (tags != null)
-        {
-          cache.put(key, tags);
-        }
+        cache.put(key, tags);
+      } else {
+        logger.debug("get tags for repository {} from cache", repository);
       }
-      else if (logger.isDebugEnabled())
-      {
-        logger.debug("get tags for repository {} from cache",
-          repository.getName());
-      }
+      return tags;
     }
-
-    return tags;
   }
-
 
   /**
    * Disables the cache for tags. This means that every {@link Tag}
    * is directly retrieved from the {@link Repository}. <b>Note: </b> Disabling
    * the cache cost a lot of performance and could be much slower.
    *
-   *
    * @param disableCache true to disable the cache
-   *
    * @return {@code this}
    */
-  public TagsCommandBuilder setDisableCache(boolean disableCache)
-  {
+  public TagsCommandBuilder setDisableCache(boolean disableCache) {
     this.disableCache = disableCache;
 
     return this;
   }
 
+  /**
+   * Set revision to show all tags containing the given revision. This is only supported for repositories supporting
+   * feature {@link sonia.scm.repository.Feature#TAGS_FOR_REVISION} (@see {@link RepositoryService#isSupported(Feature)}).
+   *
+   * @return {@code this}
+   * @since 3.1.0
+   */
+  public TagsCommandBuilder forRevision(String revision) {
+    this.revision = revision;
 
+    return this;
+  }
 
-  private Tags getTagsFromCommand() throws IOException
-  {
+  private Tags getTagsFromCommand() throws IOException {
     List<Tag> tagList = command.getTags();
 
     return new Tags(tagList);
   }
 
+  private Tags getTagsFromCommandForRevision() throws IOException {
+    return new Tags(command.getTags(revision));
+  }
 
 
-
-  static class CacheKey implements RepositoryCacheKey
-  {
+  static class CacheKey implements RepositoryCacheKey {
     private final String repositoryId;
-  
-    public CacheKey(Repository repository)
-    {
+
+    public CacheKey(Repository repository) {
       this.repositoryId = repository.getId();
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-      if (obj == null)
-      {
+    public boolean equals(Object obj) {
+      if (obj == null) {
         return false;
       }
 
-      if (getClass() != obj.getClass())
-      {
+      if (getClass() != obj.getClass()) {
         return false;
       }
 
@@ -190,17 +175,15 @@ public final class TagsCommandBuilder
       return Objects.equal(repositoryId, other.repositoryId);
     }
 
-  
+
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
       return Objects.hashCode(repositoryId);
     }
 
 
     @Override
-    public String getRepositoryId()
-    {
+    public String getRepositoryId() {
       return repositoryId;
     }
 

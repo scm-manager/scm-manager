@@ -29,8 +29,10 @@ import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevWalk;
+import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Tag;
 
@@ -54,8 +56,19 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
 
   @Override
   public List<Tag> getTags() throws IOException {
+    return getTags(null);
+  }
+
+  @Override
+  public List<Tag> getTags(String revision) throws IOException {
     try (Git git = new Git(open()); RevWalk revWalk = new RevWalk(git.getRepository())) {
-      List<Ref> tagList = git.tagList().call();
+      List<Ref> tagList;
+
+      if (revision != null) {
+        tagList = git.tagList().setContains(GitUtil.getRevisionId(git.getRepository(), revision)).call();
+      } else {
+        tagList = git.tagList().call();
+      }
 
       return tagList.stream()
         .map(ref -> gitTagConverter.buildTag(git.getRepository(), revWalk, ref))

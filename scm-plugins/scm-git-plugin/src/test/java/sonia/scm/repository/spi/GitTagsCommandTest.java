@@ -71,26 +71,50 @@ public class GitTagsCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldGetTagsForRevision() throws IOException {
+    GitContext gitContext = createContext();
+    GitTagsCommand tagsCommand = new GitTagsCommand(gitContext, new GitTagConverter(gpg));
+
+    List<Tag> tags = tagsCommand.getTags("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
+
+    assertThat(tags).hasSize(2);
+  }
+
+  @Test
+  public void shouldGetTagsForShortenedRevision() throws IOException {
+    GitContext gitContext = createContext();
+    GitTagsCommand tagsCommand = new GitTagsCommand(gitContext, new GitTagConverter(gpg));
+
+    List<Tag> tags = tagsCommand.getTags("86a6645");
+
+    assertThat(tags).hasSize(2);
+  }
+
+  @Test
   public void shouldGetSignatures() throws IOException {
     when(gpg.findPublicKeyId(ArgumentMatchers.any())).thenReturn("2BA27721F113C005CC16F06BAE63EFBC49F140CF");
     when(gpg.findPublicKey("2BA27721F113C005CC16F06BAE63EFBC49F140CF")).thenReturn(Optional.of(publicKey));
-    String signature = "-----BEGIN PGP SIGNATURE-----\n" +
-      "\n" +
-      "iQEzBAABCgAdFiEEK6J3IfETwAXMFvBrrmPvvEnxQM8FAl+9acoACgkQrmPvvEnx\n" +
-      "QM9abwgAnGP+Y/Ijli+PAsimfOmZQWYepjptoOv9m7i3bnHv8V+Qg6cm51I3E0YV\n" +
-      "R2QaxxzW9PgS4hcES+L1qs8Lwo18RurF469eZEmNb8DcUFJ3sEWeHlIl5wZNNo/v\n" +
-      "jJm0d9LNcSmtAIiQ8eDMoGdFXJzHewGickLOSsQGmfZgZus4Qlsh7r3BZTI1Zwd/\n" +
-      "6jaBFctX13FuepCTxq2SjEfRaQHIYkyFQq2o6mjL5S2qfYJ/S//gcCCzxllQrisF\n" +
-      "5fRW3LzLI4eXFH0vua7+UzNS2Rwpifg2OENJA/Kn+3R36LWEGxFK9pNqjVPRAcQj\n" +
-      "1vSkcjK26RqhAqCjNLSagM8ATZrh+g==\n" +
-      "=kUKm\n" +
-      "-----END PGP SIGNATURE-----\n";
-    String signedContent = "object 592d797cd36432e591416e8b2b98154f4f163411\n" +
-      "type commit\n" +
-      "tag signedtag\n" +
-      "tagger Arthur Dent <arthur.dent@hitchhiker.com> 1606248906 +0100\n" +
-      "\n" +
-      "this tag is signed\n";
+    String signature = """
+            -----BEGIN PGP SIGNATURE-----
+
+            iQEzBAABCgAdFiEEK6J3IfETwAXMFvBrrmPvvEnxQM8FAl+9acoACgkQrmPvvEnx
+            QM9abwgAnGP+Y/Ijli+PAsimfOmZQWYepjptoOv9m7i3bnHv8V+Qg6cm51I3E0YV
+            R2QaxxzW9PgS4hcES+L1qs8Lwo18RurF469eZEmNb8DcUFJ3sEWeHlIl5wZNNo/v
+            jJm0d9LNcSmtAIiQ8eDMoGdFXJzHewGickLOSsQGmfZgZus4Qlsh7r3BZTI1Zwd/
+            6jaBFctX13FuepCTxq2SjEfRaQHIYkyFQq2o6mjL5S2qfYJ/S//gcCCzxllQrisF
+            5fRW3LzLI4eXFH0vua7+UzNS2Rwpifg2OENJA/Kn+3R36LWEGxFK9pNqjVPRAcQj
+            1vSkcjK26RqhAqCjNLSagM8ATZrh+g==
+            =kUKm
+            -----END PGP SIGNATURE-----
+            """;
+    String signedContent = """
+            object 592d797cd36432e591416e8b2b98154f4f163411
+            type commit
+            tag signedtag
+            tagger Arthur Dent <arthur.dent@hitchhiker.com> 1606248906 +0100
+
+            this tag is signed
+            """;
     when(publicKey.verify(signedContent.getBytes(), signature.getBytes())).thenReturn(true);
 
     final GitContext gitContext = createContext();

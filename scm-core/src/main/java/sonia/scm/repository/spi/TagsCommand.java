@@ -21,19 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 
+import sonia.scm.FeatureNotSupportedException;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.Tag;
 
 import java.io.IOException;
 import java.util.List;
 
 
-public interface TagsCommand
-{
+public interface TagsCommand {
 
 
   public List<Tag> getTags() throws IOException;
+
+  default List<Tag> getTags(String revision) throws IOException{
+    throw new FeatureNotSupportedException(Feature.TAGS_FOR_REVISION.name());
+  }
 }
