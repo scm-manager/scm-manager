@@ -40,9 +40,12 @@ const useScrollToElement = (
         } else {
           tries++;
           const element = contentRef.querySelector(elementSelector);
-          if (element && element.scrollIntoView) {
+          if (element) {
+            const headerElement = document.querySelector(".navbar-brand");
+            const margin = headerElement ? headerElement.getBoundingClientRect().height : 45;
             clearInterval(intervalId);
-            element.scrollIntoView();
+            const y = element.getBoundingClientRect().top + window.pageYOffset - margin;
+            window.scrollTo({top: y});
           }
         }
       }, 200);

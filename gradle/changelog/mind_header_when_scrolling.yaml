@@ -1,0 +1,2 @@
+- type: fixed
+  description: The height of the navigation bar is now considered when scrolling to an element via anchor
