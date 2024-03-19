@@ -403,7 +403,7 @@ export type ReposSourcesContentActionBar = RenderableExtensionPointDefinition<
 >;
 
 export type RepositoryCodeOverviewContent = RenderableExtensionPointDefinition<
-  "repository.code.sources.content",
+  "repository.code.overview.content",
   { sources: File; repository: Repository }
 >;
 

@@ -228,7 +228,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
         )}
         {renderPanelContent()}
         <ExtensionPoint<extensionPoints.RepositoryCodeOverviewContent>
-          name="repository.code.sources.content"
+          name="repository.code.overview.content"
           props={{ sources: file, repository }}
           renderAll={true}
         />
