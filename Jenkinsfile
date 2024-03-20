@@ -120,7 +120,7 @@ pipeline {
       }
       steps {
         withPublishEnvironment {
-          gradle "-PenablePackaging publish"
+          gradle "-PenablePackaging publish -PisHotfix=${isHotfixBuild()}"
         }
       }
     }
@@ -264,6 +264,10 @@ void gradle(String command) {
 
 boolean isReleaseBuild() {
   return env.BRANCH_NAME.startsWith('release/')
+}
+
+boolean isHotfixBuild() {
+  return env.BRANCH_NAME.startsWith('hotfix/')
 }
 
 String getReleaseVersion() {

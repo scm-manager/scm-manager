@@ -41,6 +41,10 @@ variable "IMAGE" {
   default = "docker.io/cloudogu/scm-manager"
 }
 
+variable "IS_HOTFIX" {
+  default = false
+}
+
 target "base" {
   context = "."
   args = {
@@ -69,7 +73,7 @@ target "alpine" {
   inherits = ["base"]
   dockerfile = "Dockerfile.alpine"
   tags = [
-    "${IMAGE}:latest",
+    IS_HOTFIX ? "" : "${IMAGE}:latest",
     "${IMAGE}:${VERSION}",
     "${IMAGE}:${VERSION}-alpine"
   ]

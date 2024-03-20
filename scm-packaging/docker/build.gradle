@@ -94,6 +94,7 @@ task build(type: Exec) {
   environment "VERSION", dockerTag
   environment "COMMIT_SHA", revision
   environment "IMAGE", dockerRepository
+  environment "IS_HOTFIX", isHotfix
 
   doLast {
     File file = new File(project.buildDir, 'docker.tag')
@@ -107,6 +108,7 @@ task pushImages(type: Exec) {
   environment "VERSION", dockerTag
   environment "COMMIT_SHA", revision
   environment "IMAGE", dockerRepository
+  environment "IS_HOTFIX", isHotfix
 
   dependsOn 'build'
 }
