@@ -1,0 +1,2 @@
+- type: fixed
+  description: Blocking event bus with long running tasks (update of legman to v2.0.3)
