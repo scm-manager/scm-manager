@@ -31,7 +31,7 @@ import {
   isBackendError,
   TOKEN_EXPIRED_ERROR_CODE,
   TokenExpiredError,
-  UnauthorizedError
+  UnauthorizedError,
 } from "./errors";
 
 type SubscriptionEvent = {
@@ -63,12 +63,7 @@ type SubscriptionArgument = MessageListeners | SubscriptionContext;
 
 type Cancel = () => void;
 
-const sessionId = (
-  Date.now().toString(36) +
-  Math.random()
-    .toString(36)
-    .substr(2, 5)
-).toUpperCase();
+const sessionId = (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();
 
 const extractXsrfTokenFromJwt = (jwt: string) => {
   const parts = jwt.split(".");
@@ -103,7 +98,7 @@ const createRequestHeaders = () => {
     // identify the web interface
     "X-SCM-Client": "WUI",
     // identify the window session
-    "X-SCM-Session-ID": sessionId
+    "X-SCM-Session-ID": sessionId,
   };
 
   const xsrf = extractXsrfToken();
@@ -113,10 +108,10 @@ const createRequestHeaders = () => {
   return headers;
 };
 
-const applyFetchOptions: (p: RequestInit) => RequestInit = o => {
+const applyFetchOptions: (p: RequestInit) => RequestInit = (o) => {
   if (o.headers) {
     o.headers = {
-      ...createRequestHeaders()
+      ...createRequestHeaders(),
     };
   } else {
     o.headers = createRequestHeaders();
@@ -177,9 +172,7 @@ class ApiClient {
   requestListeners: RequestListener[] = [];
 
   get = (url: string): Promise<Response> => {
-    return this.request(url, applyFetchOptions({}))
-      .then(handleFailure)
-      .catch(this.notifyAndRethrow);
+    return this.request(url, applyFetchOptions({})).then(handleFailure).catch(this.notifyAndRethrow);
   };
 
   post = (
@@ -206,7 +199,19 @@ class ApiClient {
     const options: RequestInit = {
       method: "POST",
       body: formData,
-      headers: additionalHeaders
+      headers: additionalHeaders,
+    };
+    return this.httpRequestWithBinaryBody(options, url);
+  };
+
+  putBinary = (url: string, fileAppender: (p: FormData) => void, additionalHeaders: Record<string, string> = {}) => {
+    const formData = new FormData();
+    fileAppender(formData);
+
+    const options: RequestInit = {
+      method: "PUT",
+      body: formData,
+      headers: additionalHeaders,
     };
     return this.httpRequestWithBinaryBody(options, url);
   };
@@ -217,22 +222,18 @@ class ApiClient {
 
   head = (url: string) => {
     let options: RequestInit = {
-      method: "HEAD"
+      method: "HEAD",
     };
     options = applyFetchOptions(options);
-    return this.request(url, options)
-      .then(handleFailure)
-      .catch(this.notifyAndRethrow);
+    return this.request(url, options).then(handleFailure).catch(this.notifyAndRethrow);
   };
 
   delete = (url: string): Promise<Response> => {
     let options: RequestInit = {
-      method: "DELETE"
+      method: "DELETE",
     };
     options = applyFetchOptions(options);
-    return this.request(url, options)
-      .then(handleFailure)
-      .catch(this.notifyAndRethrow);
+    return this.request(url, options).then(handleFailure).catch(this.notifyAndRethrow);
   };
 
   httpRequestWithJSONBody = (
@@ -244,7 +245,7 @@ class ApiClient {
   ): Promise<Response> => {
     const options: RequestInit = {
       method: method,
-      headers: additionalHeaders
+      headers: additionalHeaders,
     };
     if (payload) {
       options.body = JSON.stringify(payload);
@@ -260,7 +261,7 @@ class ApiClient {
   ) => {
     const options: RequestInit = {
       method: method,
-      headers: additionalHeaders
+      headers: additionalHeaders,
     };
     options.body = payload;
     return this.httpRequestWithBinaryBody(options, url, "text/plain");
@@ -276,14 +277,12 @@ class ApiClient {
       options.headers["Content-Type"] = contentType;
     }
 
-    return this.request(url, options)
-      .then(handleFailure)
-      .catch(this.notifyAndRethrow);
+    return this.request(url, options).then(handleFailure).catch(this.notifyAndRethrow);
   };
 
   subscribe(url: string, argument: SubscriptionArgument): Cancel {
     const es = new EventSource(createUrlWithIdentifiers(url), {
-      withCredentials: true
+      withCredentials: true,
     });
 
     let listeners: MessageListeners;
@@ -324,11 +323,11 @@ class ApiClient {
   };
 
   private notifyRequestListeners = (url: string, options: RequestInit) => {
-    this.requestListeners.forEach(requestListener => requestListener(url, options));
+    this.requestListeners.forEach((requestListener) => requestListener(url, options));
   };
 
   private notifyAndRethrow = (error: Error): never => {
-    this.errorListeners.forEach(errorListener => errorListener(error));
+    this.errorListeners.forEach((errorListener) => errorListener(error));
     throw error;
   };
 }
