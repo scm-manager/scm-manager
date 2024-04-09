@@ -1,0 +1,2 @@
+- type: added
+  description: New `putBinary` function to send http put request with binary payload
