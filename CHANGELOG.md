@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2024-04-09
+### Added
+- New `putBinary` function to send http put request with binary payload
+- A new extension point was added, that is rendered below the file tree in the code view, it is for example used by the readme plugin, to render the readme document of the current directory
+- Display of all tags for a given changeset in the changeset detail view
+
+### Fixed
+- The height of the navigation bar is now considered when scrolling to an element via anchor
+- Blocking event bus with long running tasks (update of legman to v2.0.3)
+
+### Changed
+- Improved performance of LFS imports for imported repositories and mirrors
+- The headings of rendered markdown documents will now start at h2
+- The order of items in the repository side menu got changed, code is now always at the top
+
 ## [3.0.4] - 2024-03-07
 ### Fixed
 - Sort global config and repository config the same way
@@ -1490,3 +1505,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.0.2]: https://scm-manager.org/download/3.0.2
 [3.0.3]: https://scm-manager.org/download/3.0.3
 [3.0.4]: https://scm-manager.org/download/3.0.4
+[3.1.0]: https://scm-manager.org/download/3.1.0

@@ -1,6 +1,0 @@
-- type: added
-  description: A new extension point was added, that is rendered below the file tree in the code view, it is for example used by the readme plugin, to render the readme document of the current directory
-- type: changed
-  description: The headings of rendered markdown documents will now start at h2
-- type: changed
-  description: The order of items in the repository side menu got changed, code is now always at the top
