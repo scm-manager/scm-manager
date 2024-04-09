@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/scm-svn-plugin",
   "private": true,
-  "version": "3.1.0",
+  "version": "3.1.1-SNAPSHOT",
   "license": "MIT",
   "main": "./src/main/js/index.ts",
   "scripts": {
@@ -10,7 +10,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@scm-manager/ui-plugins": "3.1.0"
+    "@scm-manager/ui-plugins": "3.1.1-SNAPSHOT"
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.13.1",
