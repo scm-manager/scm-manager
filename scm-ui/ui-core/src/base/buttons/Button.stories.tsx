@@ -30,7 +30,9 @@ import {
   ButtonVariants,
   ExternalLinkButton as ExternalLinkButtonComponent,
   LinkButton as LinkButtonComponent,
+  IconButton as IconButtonComponent,
 } from "./Button";
+import Icon from "./Icon";
 import StoryRouter from "storybook-react-router";
 import { StoryFn } from "@storybook/react";
 
@@ -42,6 +44,7 @@ export default {
     Button: ButtonComponent,
     LinkButton: LinkButtonComponent,
     ExternalLinkButton: ExternalLinkButtonComponent,
+    IconButton: IconButtonComponent,
   },
   argTypes: {
     variant: {
@@ -62,6 +65,10 @@ const LinkButtonTemplate: StoryFn<ComponentProps<typeof LinkButtonComponent>> = 
 );
 const ExternalLinkButtonTemplate: StoryFn<ComponentProps<typeof ExternalLinkButtonComponent>> = (args) => (
   <ExternalLinkButtonComponent {...args} />
+);
+
+const IconButtonTemplate: StoryFn<ComponentProps<typeof IconButtonComponent>> = (args) => (
+  <IconButtonComponent {...args} />
 );
 
 export const Button = ButtonTemplate.bind({});
@@ -86,4 +93,42 @@ ExternalLinkButton.args = {
   children: "External Link Button",
   href: "https://scm-manager.org",
   variant: ButtonVariants.PRIMARY,
+};
+
+const smallIcon = <Icon className="is-small">trash</Icon>;
+const mediumIcon = <Icon className="is-medium">trash</Icon>;
+
+  /*
+
+    Variant and size are defaulted to medium and colored and do not have to be explicitly added as parameters.
+    However for the sake of documentation here they are still passed in
+
+   */
+export const IconButtonBorder = IconButtonTemplate.bind({});
+IconButtonBorder.args = {
+  children: mediumIcon,
+  variant: "colored",
+  size: "medium",
+};
+
+
+export const IconButtonBorderDefault = IconButtonTemplate.bind({});
+IconButtonBorderDefault.args = {
+  children: mediumIcon,
+  variant: "default",
+  size: "medium",
+};
+
+export const IconButtonBorderlessSmall = IconButtonTemplate.bind({});
+IconButtonBorderlessSmall.args = {
+  children: smallIcon,
+  variant: "colored",
+  size: "small",
+};
+
+export const IconButtonBorderlessSmallDefault = IconButtonTemplate.bind({});
+IconButtonBorderlessSmallDefault.args = {
+  children: smallIcon,
+  variant: "default",
+  size: "small",
 };
