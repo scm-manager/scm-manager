@@ -1,5 +1,6 @@
 import { Meta, Story } from "@storybook/addon-docs";
 import Tooltip from "./Tooltip"
+import ExpandableHint from "./ExpandableHint"
 import { List, LongText, ShortList } from "./Tooltip.examples";
 
 <Meta title="Tooltip"/>
@@ -49,4 +50,8 @@ Here will be some documentation for the Tooltip component.
   <Tooltip message="I should show where there is space" side="left">
     <button>Hover me</button>
   </Tooltip>
+</Story>
+
+<Story name="Accessibility Friendly Tooltip">
+  <ExpandableHint summary="Lorem Checksum Checksum Checksum Checksum" message="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."></ExpandableHint>
 </Story>
