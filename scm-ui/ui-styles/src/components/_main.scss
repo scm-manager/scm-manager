@@ -36,16 +36,18 @@
   --scm-danger-color: #{$danger};
   --scm-hover-color-blue: #{scale-color($blue, $alpha: -90%)};
 
+  --scm-navbar-main-height: 52px;
+
   --scm-secondary-least-color: #{$secondary-least};
   --scm-secondary-less-color: #{$secondary-less};
   --scm-secondary-color: #{$secondary};
   --scm-secondary-more-color: #{$secondary-more};
   --scm-secondary-most-color: #{$secondary-most};
-
   --scm-border-color: #{$border};
   --scm-border: #{$border-width} solid #{$border};
-
   --scm-popover-border-color: #{$popover-border-color};
+  --scm-panel-heading-color: #{$panel-heading-color};
+  --scm-panel-heading-background-color: #{$panel-heading-background-color};
 }
 
 // Workaround for https://github.com/radix-ui/primitives/issues/1572
@@ -918,7 +920,7 @@ form .field:not(.is-grouped) {
   }
 
   a:before {
-    font-family: "Font Awesome 5 Free"; /* NOSONAR */
+    font-family: "Font Awesome 5 Free", sans-serif;
     font-weight: 900;
     -webkit-font-smoothing: antialiased;
     display: inline-block;

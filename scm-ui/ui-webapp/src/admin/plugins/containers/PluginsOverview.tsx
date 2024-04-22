@@ -62,7 +62,7 @@ type Props = {
 
 const StickyHeader = styled.div`
   position: sticky;
-  top: 52px;
+  top: var(--scm-navbar-main-height);
   z-index: 10;
   margin-bottom: 1rem;
   margin-top: -1rem;

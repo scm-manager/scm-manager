@@ -79,13 +79,14 @@ export const MarginlessModalContent = styled.div`
   }
 `;
 
-export const PanelHeading = styled.div<{ sticky?: boolean }>`
-  ${(props) =>
-    props.sticky
-      ? `
+export const PanelHeading = styled.div<{ sticky?: boolean | number }>`
+  ${(props) => {
+    if (props.sticky) {
+      return `
    position: sticky;
-   top: 52px;
+   top: calc(${typeof props.sticky === "number" ? props.sticky : 0}px + var(--scm-navbar-main-height));
    z-index: 1;
-  `
-      : ""}
+  `;
+    }
+  }}
 `;

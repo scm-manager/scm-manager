@@ -64,7 +64,11 @@ export type DiffObjectProps = {
   isCollapsed?: (file: File) => boolean;
   onCollapseStateChange?: (file: File, newState?: boolean) => void;
   hunkClass?: (hunk: Hunk) => string;
-  stickyHeader?: boolean;
+  /**
+   * Toggle whether header of diff should be sticky
+   * If truthy, numeric value adds distance to top position
+   */
+  stickyHeader?: boolean | number;
   /**
    * Fontawesome Icon Unicode
    *

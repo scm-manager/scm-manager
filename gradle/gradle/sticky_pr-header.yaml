@@ -1,0 +1,2 @@
+- type: added
+  description: Possibility to specify StickyHeader top position of Diff component
