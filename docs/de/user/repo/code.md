@@ -52,6 +52,12 @@ Die Diffs können durch Klicken auf den blauen Balken schrittweise oder vollstä
 Falls sich Commit Links im Format "namespace/name@commitId" in der Changeset Beschreibung befinden, werden die zu relativen SCM-Manager Links erweitert.
 Beispielsweise wird der Text hitchhiker/HeartOfGold@1a2b3c4 zu einem Link zu dem Commit 1a2b3c4 im Repository hitchhiker/HeartOfGold umgewandelt.
 
+In der Diff Ansicht gibt es mehrere Buttons.
+- Der erste Button von Links ermöglicht eine direkte Gegenüberstellung von den Änderungen.
+- Mit der Lupe kann man die Änderungen auf den ganzen Bildschirm betrachten.
+- Der nächste Button schaltet Leerzeichen und Tabs ein bzw. aus.
+- Der letzte Button bringt Sie zur Quelldatei.
+
 ![Repository-Code-Changesets](assets/repository-code-changesetDetails.png)
 
 #### Tags

@@ -93,6 +93,7 @@ storiesOf("Repositories/Diff", module)
   .addDecorator((storyFn) => <Container>{storyFn()}</Container>)
   .add("Default", () => <Diff diff={diffFiles} />)
   .add("Side-By-Side", () => <Diff diff={diffFiles} sideBySide={true} />)
+  .add("Whitespace", () => <Diff diff={diffFiles} whitespace={true} />)
   .add("Collapsed", () => <Diff diff={diffFiles} defaultCollapse={true} fileControlFactory={fileControlFactory(two)} />)
   .add("File Controls", () => (
     <Diff

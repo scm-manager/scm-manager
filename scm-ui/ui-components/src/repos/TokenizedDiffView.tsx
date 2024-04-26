@@ -73,6 +73,7 @@ type Props = {
   file: FileDiff;
   viewType: "split" | "unified";
   className?: string;
+  whitespace: boolean;
 };
 
 const findSyntaxHighlightingLanguage = (file: FileDiff) => {
@@ -81,12 +82,12 @@ const findSyntaxHighlightingLanguage = (file: FileDiff) => {
   }
   return file.language;
 };
-
-const TokenizedDiffView: FC<Props> = ({ file, viewType, className, children }) => {
+const TokenizedDiffView: FC<Props> = ({ file, viewType, className, children, whitespace }) => {
   const worker = useSyntaxHighlightingWorker();
   const { tokens } = useTokenizeWorker(worker, {
     hunks: file.hunks,
-    language: determineLanguage(findSyntaxHighlightingLanguage(file))
+    language: determineLanguage(findSyntaxHighlightingLanguage(file)),
+    whitespace: whitespace,
   });
 
   return (

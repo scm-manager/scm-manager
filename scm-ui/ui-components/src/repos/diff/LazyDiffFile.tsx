@@ -25,14 +25,14 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { ButtonGroup } from "../../buttons";
-import Icon from "../../Icon";
+import { Icon } from "@scm-manager/ui-buttons";
 import { Hunk as HunkType, Link } from "@scm-manager/ui-types";
 import TokenizedDiffView from "../TokenizedDiffView";
 import DiffButton from "../DiffButton";
 import { MenuContext, OpenInFullscreenButton } from "@scm-manager/ui-components";
 import DiffExpander from "../DiffExpander";
 import { Modal } from "../../modals";
-import ErrorNotification from "../../ErrorNotification";
+import { ErrorNotification } from "@scm-manager/ui-core";
 import FileTitle from "./FileTitle";
 import { DiffFilePanel, FullWidthTitleHeader, MarginlessModalContent, PanelHeading } from "./styledElements";
 import ChangeTag from "./ChangeTag";
@@ -56,6 +56,7 @@ const DiffFile: FC<Props> = ({
   defaultCollapse: defaultCollapseProp,
   stickyHeader,
   sideBySide: sideBySideProp,
+  whitespace: whitespaceProp,
   markConflicts = true,
   fileControlFactory,
   fileAnnotationFactory,
@@ -69,6 +70,7 @@ const DiffFile: FC<Props> = ({
   const [collapsed, setCollapsed] = useState(true);
   const [file, setFile] = useState(fileProp);
   const [sideBySide, setSideBySide] = useState(sideBySideProp);
+  const [whitespace, setWhitespace] = useState(!!whitespaceProp);
   const diffExpander = useMemo(() => new DiffExpander(file), [file]);
   const [expansionError, setExpansionError] = useState<Error | null | undefined>();
   const viewType = useMemo(() => (sideBySide ? "split" : "unified"), [sideBySide]);
@@ -138,6 +140,14 @@ const DiffFile: FC<Props> = ({
     callback();
   }, []);
 
+  const toggleWhiteSpace = useCallback(
+    (callback: () => void) => {
+      setWhitespace(!whitespace);
+      callback();
+    },
+    [whitespace]
+  );
+
   const sideBySideToggle = useMemo(
     () =>
       canRenderSideBySide && (
@@ -160,6 +170,28 @@ const DiffFile: FC<Props> = ({
     [canRenderSideBySide, sideBySide, t, toggleSideBySide]
   );
 
+  const whitespaceToggle = useMemo(
+    () =>
+      hasContent && (
+        <MenuContext.Consumer>
+          {({ setCollapsed }) => (
+            <DiffButton
+              icon={whitespace ? "laptop" : "laptop-code"}
+              tooltip={t(whitespace ? "diff.hideWhitespace" : "diff.showWhitespace")}
+              onClick={() =>
+                toggleWhiteSpace(() => {
+                  if (whitespace) {
+                    setCollapsed(true);
+                  }
+                })
+              }
+            />
+          )}
+        </MenuContext.Consumer>
+      ),
+    [hasContent, t, toggleWhiteSpace, whitespace]
+  );
+
   const errorModal = useMemo(
     () =>
       expansionError ? (
@@ -178,7 +210,7 @@ const DiffFile: FC<Props> = ({
       <div className="panel-block p-0">
         {fileAnnotationFactory ? fileAnnotationFactory(file) : null}
         {hasContent ? (
-          <TokenizedDiffView className={viewType} viewType={viewType} file={file}>
+          <TokenizedDiffView className={viewType} viewType={viewType} file={file} whitespace={whitespace}>
             {(hunks: HunkType[]) =>
               hunks?.map((hunk, n) => (
                 <DiffFileHunk
@@ -225,6 +257,7 @@ const DiffFile: FC<Props> = ({
       oldFileLink,
       onClick,
       sideBySide,
+      whitespace,
       viewType,
     ]
   );
@@ -280,6 +313,7 @@ const DiffFile: FC<Props> = ({
             <ButtonGroup>
               {sideBySideToggle}
               {openInFullscreen}
+              {whitespaceToggle}
               {fileControlFactory ? fileControlFactory(file, setCollapsed) : null}
             </ButtonGroup>
           </div>

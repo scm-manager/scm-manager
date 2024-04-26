@@ -1,0 +1,2 @@
+- type: added
+  description: Button to toggle visibility of whitespaces and tabs inside of diffs

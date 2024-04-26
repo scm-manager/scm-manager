@@ -1078,3 +1078,20 @@ form .field:not(.is-grouped) {
     content: "\0002f";
   }
 }
+
+.space_char::before {
+  font-size: 0.75rem;
+  content: '·';
+  color: var(--diff-whitespace-color);
+  background: transparent;
+  position: absolute;
+}
+
+.tabulator_char::before {
+  font-size: 0.75rem;
+  content: '↦';
+  color: var(--diff-whitespace-color);
+  background: transparent;
+  position: absolute;
+  text-align: center;
+}

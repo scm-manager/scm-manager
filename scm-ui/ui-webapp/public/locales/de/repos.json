@@ -549,7 +549,9 @@
     },
     "renamedTo": "umbenannt in",
     "showContent": "Inhalt des Diffs einblenden",
-    "hideContent": "Inhalt des Diffs ausblenden"
+    "hideContent": "Inhalt des Diffs ausblenden",
+    "showWhitespace": "Leerzeichen und Tabs anzeigen",
+    "hideWhitespace": "Leerzeichen und Tabs ausblenden"
   },
   "fileUpload": {
     "clickHere": "Klicken Sie hier um Ihre Datei hochzuladen.",

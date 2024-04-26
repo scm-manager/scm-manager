@@ -55,6 +55,7 @@ export type FileControlFactory = (file: File, setCollapseState: (p: boolean) => 
 
 export type DiffObjectProps = {
   sideBySide?: boolean;
+  whitespace?: boolean;
   onClick?: DiffEventHandler;
   fileControlFactory?: FileControlFactory;
   fileAnnotationFactory?: FileAnnotationFactory;

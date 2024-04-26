@@ -53,6 +53,7 @@ export type TokenizeRequest = MessageData<
   {
     language: string;
     hunks: unknown;
+    whitespace?: boolean;
   }
 >;
 

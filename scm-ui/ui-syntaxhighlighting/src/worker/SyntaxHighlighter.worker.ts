@@ -154,15 +154,81 @@ const isTokenizeMessage = (message: Request): message is TokenizeRequest => {
 
 const TOKENIZE_NODE_LIMIT = 600;
 
+const replaceSpaces = (node: RefractorNode): RefractorNode => {
+  if (node?.type === "text") {
+    if (node.value.indexOf(" ") < 0 && node.value.indexOf("\t") < 0) {
+      return node;
+    }
+    return {
+      type: "element",
+      tagName: "span",
+      properties: {},
+      children: node.value.split("").flatMap((c) => {
+        if (c === " ") {
+          return [
+            {
+              type: "element",
+              tagName: "span",
+              children: [{ type: "text", value: " " }],
+              properties: {
+                className: ["space_char"],
+              },
+            },
+            {
+              type: "element",
+              tagName: "span",
+              children: [{ type: "text", value: "" }],
+              properties: {},
+            },
+          ];
+        } else if (c === "\t") {
+          return [
+            {
+              type: "element",
+              tagName: "span",
+              children: [{ type: "text", value: "\t" }],
+              properties: {
+                className: ["tabulator_char"],
+              },
+            },
+            {
+              type: "element",
+              tagName: "span",
+              children: [{ type: "text", value: "" }],
+              properties: {},
+            },
+          ];
+        } else {
+          return {
+            type: "element",
+            tagName: "span",
+            properties: {},
+            children: [{ type: "text", value: c }],
+          };
+        }
+      }),
+    };
+  } else if (node?.type === "element") {
+    return {
+      ...node,
+      children: node.children.map(replaceSpaces),
+    };
+  }
+  return node;
+};
+
 const runTokenize = ({ id, payload }: TokenizeRequest) => {
-  const { hunks, language } = payload;
+  const { hunks, language, whitespace } = payload;
 
   const options = {
-    highlight: language !== "text",
+    highlight: true, // we always want to run refractor to enable the display of whitespace characters
     language: language,
     refractor: {
       ...refractor,
       highlight: (value: string, lang: string) => {
+        if (whitespace) {
+          return refractor.highlight(value, lang).children.map(replaceSpaces);
+        }
         return refractor.highlight(value, lang).children;
       },
     },
