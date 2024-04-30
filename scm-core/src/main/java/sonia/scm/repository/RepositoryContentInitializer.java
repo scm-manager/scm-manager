@@ -60,6 +60,14 @@ public interface RepositoryContentInitializer {
     CreateFile create(String path);
 
     /**
+     * create new file which will be included in initial repository commit.
+     *
+     * @param path full path of the file to be created
+     * @param useDefaultPath Wether the default path of the repository should be prefixed to the specified path. For example "/trunk", if it is a SVN repository.
+     */
+    CreateFile createWithDefaultPath(String path, boolean useDefaultPath);
+
+    /**
      * Returns the context entry with the given key and unmarshalls it to the given type.
      * It no entry with the given key is available an empty optional is returned.
      *

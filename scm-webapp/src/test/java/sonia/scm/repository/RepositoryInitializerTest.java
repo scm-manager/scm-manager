@@ -80,6 +80,23 @@ class RepositoryInitializerTest {
   }
 
   @Test
+  void shouldNotCommitIfInitializerDidNotMakeAnyChanges() {
+    when(modifyCommand.isEmpty()).thenReturn(true);
+
+    Set<RepositoryContentInitializer> repositoryContentInitializers = ImmutableSet.of(
+      new NoOpInitializer()
+    );
+
+    RepositoryInitializer initializer = new RepositoryInitializer(repositoryServiceFactory, repositoryContentInitializers);
+    initializer.initialize(repository, Collections.emptyMap());
+
+    verify(modifyCommand, never()).setCommitMessage("initialize repository");
+    verify(modifyCommand, never()).execute();
+
+    verify(repositoryService).close();
+  }
+
+  @Test
   void shouldCallRepositoryContentInitializer() throws IOException {
     ModifyCommandBuilder.WithOverwriteFlagContentLoader readmeContentLoader = mockContentLoader("README.md");
     ModifyCommandBuilder.WithOverwriteFlagContentLoader licenseContentLoader = mockContentLoader("LICENSE.txt");
@@ -95,8 +112,8 @@ class RepositoryInitializerTest {
     verifyFileCreation(readmeContentLoader, "# HeartOfGold");
     verifyFileCreation(licenseContentLoader, "MIT");
 
-    verify(modifyCommand).setCommitMessage("initialize repository");
-    verify(modifyCommand).execute();
+    verify(modifyCommand, times(2)).setCommitMessage("initialize repository");
+    verify(modifyCommand, times(2)).execute();
 
     verify(repositoryService).close();
   }
@@ -254,6 +271,14 @@ class RepositoryInitializerTest {
     @Override
     public void initialize(InitializerContext context) throws IOException {
       context.create("LICENSE.txt").from("MIT");
+    }
+  }
+
+  @Priority(3)
+  private static class NoOpInitializer implements RepositoryContentInitializer {
+
+    @Override
+    public void initialize(InitializerContext context) {
     }
   }
 

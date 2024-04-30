@@ -60,18 +60,19 @@ public class RepositoryInitializer {
 
   public void initialize(Repository repository, Map<String, JsonNode> contextEntries) {
     try (RepositoryService service = serviceFactory.create(repository)) {
-      ModifyCommandBuilder modifyCommandBuilder = service.getModifyCommand();
-
-      InitializerContextImpl initializerContext = new InitializerContextImpl(repository, modifyCommandBuilder, contextEntries);
 
       for (RepositoryContentInitializer initializer : contentInitializers) {
+        ModifyCommandBuilder modifyCommandBuilder = service.getModifyCommand();
+        InitializerContextImpl initializerContext = new InitializerContextImpl(repository, modifyCommandBuilder, contextEntries);
+
         initializer.initialize(initializerContext);
+
+        if (!modifyCommandBuilder.isEmpty()) {
+          modifyCommandBuilder.setCommitMessage("initialize repository");
+          String revision = modifyCommandBuilder.execute();
+          LOG.info("initialized repository {} as revision {}", repository, revision);
+        }
       }
-
-      modifyCommandBuilder.setCommitMessage("initialize repository");
-      String revision = modifyCommandBuilder.execute();
-      LOG.info("initialized repository {} as revision {}", repository, revision);
-
     } catch (IOException e) {
       throw new InternalRepositoryException(repository, "failed to initialize repository", e);
     }
@@ -108,6 +109,11 @@ public class RepositoryInitializer {
     @Override
     public RepositoryContentInitializer.CreateFile create(String path) {
       return new CreateFileImpl(this, builder.useDefaultPath(true).createFile(path).setOverwrite(true));
+    }
+
+    @Override
+    public RepositoryContentInitializer.CreateFile createWithDefaultPath(String path, boolean useDefaultPath) {
+      return new CreateFileImpl(this, builder.useDefaultPath(useDefaultPath).createFile(path).setOverwrite(true));
     }
   }
 

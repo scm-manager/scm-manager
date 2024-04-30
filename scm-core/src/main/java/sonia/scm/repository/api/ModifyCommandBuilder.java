@@ -157,6 +157,10 @@ public class ModifyCommandBuilder {
     }
   }
 
+  public boolean isEmpty() {
+    return request.isEmpty();
+  }
+
   /**
    * Set the commit message for the new commit.
    * @return This builder instance.

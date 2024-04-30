@@ -65,6 +65,10 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
     this.requests.add(request);
   }
 
+  public boolean isEmpty() {
+    return requests.isEmpty();
+  }
+
   public void setAuthor(Person author) {
     this.author = author;
   }
