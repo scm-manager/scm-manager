@@ -32,6 +32,8 @@ import {
   CardDetails,
   CardDetailTag,
   CardLinkDetail,
+  CardVariants,
+  CardVariant
 } from "./card/CardDetail";
 import CardComponent from "./card/Card";
 import {
@@ -40,7 +42,7 @@ import {
   DataPageHeaderSetting,
   DataPageHeaderSettingField,
   DataPageHeaderSettingLabel,
-  DataPageHeaderSettings,
+  DataPageHeaderSettings
 } from "./templates/data-page/DataPageHeader";
 import TabsComponent from "./tabs/Tabs";
 import TabsContent from "./tabs/TabsContent";
@@ -91,3 +93,7 @@ export const Tabs = Object.assign(TabsComponent, {
   }),
   Content: TabsContent,
 });
+
+export { CardVariants } from "./card/CardDetail";
+export { CardVariant } from "./card/CardDetail";
+

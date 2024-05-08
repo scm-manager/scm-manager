@@ -36,6 +36,28 @@ type Props = {
   tooltipLocation: TooltipLocation;
 };
 
+/**
+ * @deprecated
+ *
+ * Please use your own component looking like this:
+ *<code>
+ * <pre>
+ * const RepositoryFlag: FC<Props> = ({ children, title, variant, ...props }) => (
+  <Tooltip message={title}>
+    <Card.Details.Detail.Tag
+      {...props}
+      cardVariant={variant}
+      className="is-relative"
+    >
+      {children}
+    </Card.Details.Detail.Tag>
+  </Tooltip>
+  );
+ * </pre>
+ * </code>
+ *
+ * For reference, look at the RepositoryFlag component in the Repository Mirror Plugin.
+ */
 const RepositoryFlag: FC<Props> = ({ children, title, size = "small", tooltipLocation = "bottom", ...props }) => (
   <Tooltip side={tooltipLocation} message={title}>
     <Card.Details.Detail.Tag {...props} className={`is-${size} is-relative`}>

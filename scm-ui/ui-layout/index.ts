@@ -22,4 +22,4 @@
  * SOFTWARE.
  */
 
-export { Card, CardList, CardListBox, DataPageHeader, Tabs, Collapsible } from "@scm-manager/ui-core";
+export { Card, CardVariants, CardList, CardListBox, DataPageHeader, Tabs, Collapsible } from "@scm-manager/ui-core";

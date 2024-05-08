@@ -27,7 +27,7 @@ import React, {
   ComponentProps,
   ComponentPropsWithoutRef,
   HTMLAttributes,
-  ReactNode,
+  ReactNode
 } from "react";
 import classNames from "classnames";
 import { useAriaId } from "../../helpers";
@@ -38,14 +38,20 @@ import { Icon } from "../../buttons";
 export const CardVariants = {
   LIGHT: "light",
   INFO: "info",
+  SUCCESS: "success",
+  DANGER: "danger",
+  WARNING: "warning",
 } as const;
 
-type CardVariant = typeof CardVariants[keyof typeof CardVariants];
+export type CardVariant = typeof CardVariants[keyof typeof CardVariants];
 
 const createCardVariantClasses = (variant?: string | undefined) =>
   classNames({
     "is-light": variant === "light" || !variant,
     "is-info": variant === "info",
+    "is-success": variant === "success",
+    "is-danger": variant === "danger",
+    "is-warning": variant === "warning",
   });
 
 type CardDetailProps = HTMLAttributes<HTMLSpanElement> & {
@@ -107,7 +113,7 @@ export const CardButtonDetail = React.forwardRef<HTMLButtonElement, ButtonHTMLAt
 );
 
 const StyledCardLinkDetail = styled(Link)`
-  ${InteractiveDetailStyles}
+  ${InteractiveDetailStyles};
 
   min-height: 2rem;
 `;
