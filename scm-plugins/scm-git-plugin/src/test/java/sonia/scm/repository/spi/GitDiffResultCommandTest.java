@@ -28,11 +28,14 @@ import org.junit.Test;
 import sonia.scm.repository.api.DiffFile;
 import sonia.scm.repository.api.DiffResult;
 import sonia.scm.repository.api.Hunk;
+import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
 
@@ -162,6 +165,48 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
     assertThat(diffResult.getOffset()).isZero();
   }
 
+  @Test
+  public void shouldIgnoreWhiteSpace() throws IOException {
+    GitDiffResultCommand gitDiffResultCommand = new GitDiffResultCommand(createContext());
+    DiffResultCommandRequest diffCommandRequest = new DiffResultCommandRequest();
+    diffCommandRequest.setRevision("whitespace");
+    diffCommandRequest.setIgnoreWhitespaceLevel(IgnoreWhitespaceLevel.ALL);
+
+    DiffResult diffResult = gitDiffResultCommand.getDiffResult(diffCommandRequest);
+    Iterator<DiffFile> iterator = diffResult.iterator();
+
+    DiffFile a = iterator.next();
+    Iterator<Hunk> hunks = a.iterator();
+
+    assertThat(hunks).isExhausted();
+  }
+
+  @Test
+  public void shouldNotIgnoreWhiteSpace() throws IOException {
+    GitDiffResultCommand gitDiffResultCommand = new GitDiffResultCommand(createContext());
+    DiffResultCommandRequest diffCommandRequest = new DiffResultCommandRequest();
+    diffCommandRequest.setRevision("whitespace");
+    diffCommandRequest.setIgnoreWhitespaceLevel(IgnoreWhitespaceLevel.NONE);
+
+    DiffResult diffResult = gitDiffResultCommand.getDiffResult(diffCommandRequest);
+    Iterator<DiffFile> iterator = diffResult.iterator();
+
+    DiffFile a = iterator.next();
+    Iterator<Hunk> hunks = a.iterator();
+
+    Hunk hunk = hunks.next();
+    assertThat(hunk.getOldStart()).isEqualTo(1);
+    assertThat(hunk.getOldLineCount()).isEqualTo(2);
+    assertThat(hunk.iterator())
+      .toIterable()
+      .extracting("content")
+      .containsExactly(
+        "a",
+        "line for blame",
+        "line                          for blame"
+      );
+  }
+
   private DiffResult createDiffResult(String s) throws IOException {
     return createDiffResult(s, null, null);
   }
@@ -174,5 +219,10 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
     diffCommandRequest.setLimit(limit);
 
     return gitDiffResultCommand.getDiffResult(diffCommandRequest);
+  }
+
+  @Override
+  protected String getZippedRepositoryResource() {
+    return "sonia/scm/repository/spi/scm-git-spi-whitespace-test.zip";
   }
 }

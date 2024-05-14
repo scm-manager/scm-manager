@@ -22830,11 +22830,9 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -23129,11 +23127,9 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 alt="diff.hideContent"
                 aria-hidden="true"
                 className="icon"
-                color="inherit"
-                name="angle-down"
               >
                 <i
-                  className="fas fa-fw fa-undefined"
+                  className="fas fa-fw fa-angle-down"
                 />
               </span>
               <h4
@@ -23766,11 +23762,9 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 alt="diff.hideContent"
                 aria-hidden="true"
                 className="icon"
-                color="inherit"
-                name="angle-down"
               >
                 <i
-                  className="fas fa-fw fa-undefined"
+                  className="fas fa-fw fa-angle-down"
                 />
               </span>
               <h4
@@ -24740,11 +24734,9 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 alt="diff.hideContent"
                 aria-hidden="true"
                 className="icon"
-                color="inherit"
-                name="angle-down"
               >
                 <i
-                  className="fas fa-fw fa-undefined"
+                  className="fas fa-fw fa-angle-down"
                 />
               </span>
               <h4
@@ -25285,11 +25277,9 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 alt="diff.hideContent"
                 aria-hidden="true"
                 className="icon"
-                color="inherit"
-                name="angle-down"
               >
                 <i
-                  className="fas fa-fw fa-undefined"
+                  className="fas fa-fw fa-angle-down"
                 />
               </span>
               <h4
@@ -25830,11 +25820,9 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 alt="diff.hideContent"
                 aria-hidden="true"
                 className="icon"
-                color="inherit"
-                name="angle-down"
               >
                 <i
-                  className="fas fa-fw fa-undefined"
+                  className="fas fa-fw fa-angle-down"
                 />
               </span>
               <h4
@@ -27065,11 +27053,9 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 alt="diff.hideContent"
                 aria-hidden="true"
                 className="icon"
-                color="inherit"
-                name="angle-down"
               >
                 <i
-                  className="fas fa-fw fa-undefined"
+                  className="fas fa-fw fa-angle-down"
                 />
               </span>
               <h4
@@ -27660,11 +27646,9 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               alt="diff.showContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-right"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-right"
               />
             </span>
             <h4
@@ -27790,11 +27774,9 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               alt="diff.showContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-right"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-right"
               />
             </span>
             <h4
@@ -27920,11 +27902,9 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               alt="diff.showContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-right"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-right"
               />
             </span>
             <h4
@@ -28050,11 +28030,9 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               alt="diff.showContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-right"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-right"
               />
             </span>
             <h4
@@ -28180,11 +28158,9 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               alt="diff.showContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-right"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-right"
               />
             </span>
             <h4
@@ -28310,11 +28286,9 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               alt="diff.showContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-right"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-right"
               />
             </span>
             <h4
@@ -28449,11 +28423,9 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               alt="diff.showContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-right"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-right"
               />
             </span>
             <h4
@@ -28543,11 +28515,9 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -29420,11 +29390,9 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -29893,11 +29861,9 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -30366,11 +30332,9 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               alt="diff.showContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-right"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-right"
               />
             </span>
             <h4
@@ -30460,11 +30424,9 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               alt="diff.showContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-right"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-right"
               />
             </span>
             <h4
@@ -30644,11 +30606,9 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -31281,11 +31241,9 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -32255,11 +32213,9 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -32800,11 +32756,9 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -33345,11 +33299,9 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -34580,11 +34532,9 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -35174,11 +35124,9 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -35811,11 +35759,9 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -36785,11 +36731,9 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -37330,11 +37274,9 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -37875,11 +37817,9 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -39110,11 +39050,9 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -39704,11 +39642,9 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -40308,11 +40244,9 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -41189,11 +41123,9 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -41666,11 +41598,9 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -42143,11 +42073,9 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -43227,11 +43155,9 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -43788,11 +43714,9 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -44403,11 +44327,9 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -45295,11 +45217,9 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -45783,11 +45703,9 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -46271,11 +46189,9 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -47366,11 +47282,9 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -47938,11 +47852,9 @@ exports[`Storyshots Repositories/Diff Highlight line on hover 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -48802,11 +48714,9 @@ exports[`Storyshots Repositories/Diff Hunk gutter hover icon 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -49666,11 +49576,9 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -50740,11 +50648,9 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -51352,11 +51258,9 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -52241,11 +52145,9 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -52714,11 +52616,9 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -53187,11 +53087,9 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -54267,11 +54165,9 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -54836,11 +54732,9 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -55476,11 +55370,9 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -56415,11 +56307,9 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -56918,11 +56808,9 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -57421,11 +57309,9 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -58577,11 +58463,9 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -59170,11 +59054,9 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -59863,11 +59745,9 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -60830,11 +60710,9 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -61355,11 +61233,9 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -61880,11 +61756,9 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -63129,11 +63003,9 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -63759,11 +63631,9 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -64141,11 +64011,9 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -64741,11 +64609,9 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -65618,11 +65484,9 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -66091,11 +65955,9 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -66564,11 +66426,9 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -67644,11 +67504,9 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -68201,11 +68059,9 @@ exports[`Storyshots Repositories/Diff Whitespace 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -68801,11 +68657,9 @@ exports[`Storyshots Repositories/Diff Whitespace 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -69678,11 +69532,9 @@ exports[`Storyshots Repositories/Diff Whitespace 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -70151,11 +70003,9 @@ exports[`Storyshots Repositories/Diff Whitespace 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -70624,11 +70474,9 @@ exports[`Storyshots Repositories/Diff Whitespace 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -71704,11 +71552,9 @@ exports[`Storyshots Repositories/Diff Whitespace 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -72261,11 +72107,9 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -72898,11 +72742,9 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -73872,11 +73714,9 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -74417,11 +74257,9 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -74962,11 +74800,9 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4
@@ -76197,11 +76033,9 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               alt="diff.hideContent"
               aria-hidden="true"
               className="icon"
-              color="inherit"
-              name="angle-down"
             >
               <i
-                className="fas fa-fw fa-undefined"
+                className="fas fa-fw fa-angle-down"
               />
             </span>
             <h4

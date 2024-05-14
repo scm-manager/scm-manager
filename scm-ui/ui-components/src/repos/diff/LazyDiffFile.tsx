@@ -281,9 +281,9 @@ const DiffFile: FC<Props> = ({
   const collapseIcon = useMemo(
     () =>
       isCollapsed ? (
-        <Icon name="angle-right" color="inherit" alt={t("diff.showContent")} />
+        <Icon alt={t("diff.showContent")}>angle-right</Icon>
       ) : (
-        <Icon name="angle-down" color="inherit" alt={t("diff.hideContent")} />
+        <Icon alt={t("diff.hideContent")}>angle-down</Icon>
       ),
     [isCollapsed, t]
   );

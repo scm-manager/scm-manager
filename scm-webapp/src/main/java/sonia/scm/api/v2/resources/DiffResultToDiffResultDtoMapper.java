@@ -58,7 +58,7 @@ class DiffResultToDiffResultDtoMapper {
   }
 
   public DiffResultDto mapForIncoming(Repository repository, DiffResult result, String source, String target) {
-    String baseLink = resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName(), source, target);
+    String baseLink = resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName(), source, target) + "?ignoreWhitespace=" + result.getIgnoreWhitespace().name();
     Links.Builder links = linkingTo().self(createSelfLink(result, baseLink));
     appendNextChunkLinkIfNeeded(links, result, baseLink);
     DiffResultDto dto = new DiffResultDto(links.build());
@@ -67,7 +67,7 @@ class DiffResultToDiffResultDtoMapper {
   }
 
   public DiffResultDto mapForRevision(Repository repository, DiffResult result, String revision) {
-    String baseLink = resourceLinks.diff().parsed(repository.getNamespace(), repository.getName(), revision);
+    String baseLink = resourceLinks.diff().parsed(repository.getNamespace(), repository.getName(), revision) + "?ignoreWhitespace=" + result.getIgnoreWhitespace().name();
     Links.Builder links = linkingTo().self(createSelfLink(result, baseLink));
     appendNextChunkLinkIfNeeded(links, result, baseLink);
     DiffResultDto dto = new DiffResultDto(links.build());
@@ -96,25 +96,29 @@ class DiffResultToDiffResultDtoMapper {
 
   private String createLinkWithLimitAndOffset(String baseLink, int offset, Integer limit) {
     if (limit == null) {
-      return String.format("%s?offset=%s", baseLink, offset);
+      return String.format("%s&offset=%s", baseLink, offset);
     } else {
-      return String.format("%s?offset=%s&limit=%s", baseLink, offset, limit);
+      return String.format("%s&offset=%s&limit=%s", baseLink, offset, limit);
     }
   }
 
   private void setFiles(DiffResult result, DiffResultDto dto, Repository repository, String revision) {
     List<DiffResultDto.FileDto> files = new ArrayList<>();
     for (DiffFile file : result) {
-      files.add(mapFile(file, repository, revision));
+      files.add(mapFile(file, result, repository, revision));
     }
     dto.setFiles(files);
     dto.setPartial(result.isPartial());
   }
 
-  private DiffResultDto.FileDto mapFile(DiffFile file, Repository repository, String revision) {
+  private DiffResultDto.FileDto mapFile(DiffFile file, DiffResult result, Repository repository, String revision) {
     Links.Builder links = linkingTo();
     if (file.iterator().hasNext()) {
-      links.single(linkBuilder("lines", resourceLinks.source().content(repository.getNamespace(), repository.getName(), revision, file.getNewPath()) + "?start={start}&end={end}").build());
+      links.single(
+        linkBuilder(
+          "lines",
+          resourceLinks.source().content(repository.getNamespace(), repository.getName(), revision, file.getNewPath()) + "?ignoreWhitespace=" + result.getIgnoreWhitespace().name() + "&start={start}&end={end}").build()
+      );
     }
     if (!file.getChangeType().equals(DiffFile.ChangeType.ADD)) {
       links.single(linkBuilder("oldFile", resourceLinks.source().content(repository.getNamespace(), repository.getName(), file.getOldRevision(), file.getOldPath())).build());

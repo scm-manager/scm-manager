@@ -24,29 +24,8 @@
 
 package sonia.scm.repository.api;
 
-import java.util.Optional;
-
-import static java.util.Optional.empty;
-
-public interface DiffResult extends Iterable<DiffFile> {
-
-  String getOldRevision();
-
-  String getNewRevision();
-
-  default boolean isPartial() {
-    return false;
-  }
-
-  default int getOffset() {
-    return 0;
-  }
-
-  default Optional<Integer> getLimit() {
-    return empty();
-  }
-
-  default IgnoreWhitespaceLevel getIgnoreWhitespace() {
-    return IgnoreWhitespaceLevel.NONE;
-  }
+public enum IgnoreWhitespaceLevel {
+  ALL,
+  NONE;
 }
+

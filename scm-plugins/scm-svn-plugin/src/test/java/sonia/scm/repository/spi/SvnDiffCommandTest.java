@@ -38,10 +38,12 @@ import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.DiffFormat;
+import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
 import java.util.Map;
@@ -62,6 +64,47 @@ class SvnDiffCommandTest {
   void setUpDirectories(@TempDir Path directory) {
     repository = directory.resolve("repository").toFile();
     workingCopy = directory.resolve("working-copy").toFile();
+  }
+
+  @Test
+  void shouldCreateDiffForSimpleFile() throws SVNException, IOException {
+    createRepository();
+    Path newFile = workingCopy.toPath().resolve("a.txt");
+    Files.write(newFile, "Some nice content\n".getBytes());
+    client.getWCClient().doAdd(newFile.toFile(), false, false, false, SVNDepth.INFINITY, false, false);
+    commit("add a.txt");
+
+    Files.write(newFile, "Some more content\n".getBytes());
+    commit("modify a.txt");
+
+    String diff = gitDiff("2");
+
+    assertThat(diff).isEqualTo("""
+diff --git a/a.txt b/a.txt
+--- a/a.txt
++++ b/a.txt
+@@ -1 +1 @@
+-Some nice content
++Some more content
+""");
+  }
+
+  @Test
+  void shouldIgnoreWhitespaceChanges() throws SVNException, IOException {
+    createRepository();
+    Path newFile = workingCopy.toPath().resolve("a.txt");
+    Files.write(newFile, "Some nice content\n".getBytes());
+    client.getWCClient().doAdd(newFile.toFile(), false, false, false, SVNDepth.INFINITY, false, false);
+    commit("add a.txt");
+
+    Files.write(newFile, "Some  nice  content \n".getBytes());
+    commit("modify a.txt");
+
+    DiffCommandRequest request = createSimpleDiffRequest("2");
+    request.setIgnoreWhitespaceLevel(IgnoreWhitespaceLevel.ALL);
+    String diff = executeDiff(request);
+
+    assertThat(diff).isEqualTo("diff --git a/a.txt b/a.txt\n");
   }
 
   @Test
@@ -150,14 +193,23 @@ class SvnDiffCommandTest {
 
   @Nonnull
   private String gitDiff(String revision) throws IOException {
+    DiffCommandRequest request = createSimpleDiffRequest(revision);
+    return executeDiff(request);
+  }
+
+  private String executeDiff(DiffCommandRequest request) throws IOException {
     SvnDiffCommand command = createCommand();
-    DiffCommandRequest request = new DiffCommandRequest();
-    request.setFormat(DiffFormat.GIT);
-    request.setRevision(revision);
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     command.getDiffResult(request).accept(baos);
     return baos.toString();
+  }
+
+  private static DiffCommandRequest createSimpleDiffRequest(String revision) {
+    DiffCommandRequest request = new DiffCommandRequest();
+    request.setFormat(DiffFormat.GIT);
+    request.setRevision(revision);
+    return request;
   }
 
   private SvnDiffCommand createCommand() {

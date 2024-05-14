@@ -28,8 +28,10 @@ import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.util.QuotedString;
 import sonia.scm.repository.api.DiffCommandBuilder;
+import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -49,13 +51,16 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
   @Override
   public DiffCommandBuilder.OutputStreamConsumer getDiffResult(DiffCommandRequest request) throws IOException {
     @SuppressWarnings("squid:S2095") // repository will be closed with the RepositoryService
-      org.eclipse.jgit.lib.Repository repository = open();
+    org.eclipse.jgit.lib.Repository repository = open();
 
     Differ.Diff diff = Differ.diff(repository, request);
 
     return output -> {
       try (DiffFormatter formatter = new DiffFormatter(new DequoteOutputStream(output))) {
         formatter.setRepository(repository);
+        if (request.getIgnoreWhitespaceLevel() == IgnoreWhitespaceLevel.ALL) {
+          formatter.setDiffComparator(RawTextComparator.WS_IGNORE_ALL);
+        }
 
         for (DiffEntry e : diff.getEntries()) {
           if (idOrPathChanged(e)) {

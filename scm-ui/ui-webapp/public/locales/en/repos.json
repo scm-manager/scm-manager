@@ -263,6 +263,8 @@
     "noChangesets": "No changesets found for this branch. The commits could have been removed.",
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Collapse",
+    "ignoreWhitespace": "Ignore whitespaces changes",
+    "activateWhitespace": "Show whitespaces changes",
     "moreDiffsAvailable": "There are more diffs available",
     "loadMore": "Load more"
   },

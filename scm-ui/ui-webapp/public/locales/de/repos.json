@@ -263,6 +263,8 @@
     "noChangesets": "Keine Changesets in diesem Branch gefunden. Die Commits könnten gelöscht worden sein.",
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Auf-/Zuklappen",
+    "ignoreWhitespace": "Whitespace-Änderungen ignorieren",
+    "activateWhitespace": "Whitespace-Änderungen einblenden",
     "moreDiffsAvailable": "Es sind weitere Diffs verfügbar",
     "loadMore": "Weitere laden"
   },

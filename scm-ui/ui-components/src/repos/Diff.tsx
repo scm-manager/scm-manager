@@ -34,17 +34,20 @@ import useScrollToElement from "../useScrollToElement";
 type Props = DiffObjectProps & {
   diff: FileDiff[];
   fileControlFactory?: FileControlFactory;
+  ignoreWhitespace?: string;
 };
 
-const createKey = (file: FileDiff) => {
-  return `${file.oldPath}@${file.oldRevision}/${file.newPath}@${file.newRevision}`;
+const createKey = (file: FileDiff, ignoreWhitespace?: string) => {
+  // we need to include the information about hidden whitespace in the key, because otherwise the diff might not be
+  // rendered correctly, if the user toggles the ignore whitespace button
+  return `${file.oldPath}@${file.oldRevision}/${file.newPath}@${file.newRevision}?${ignoreWhitespace}`;
 };
 
 const getAnchorSelector = (uriHashContent: string) => {
   return "#" + escapeWhitespace(decodeURIComponent(uriHashContent));
 };
 
-const Diff: FC<Props> = ({ diff, ...fileProps }) => {
+const Diff: FC<Props> = ({ diff, ignoreWhitespace, ...fileProps }) => {
   const [t] = useTranslation("repos");
   const [contentRef, setContentRef] = useState<HTMLElement | null>();
   const { hash } = useLocation();
@@ -64,14 +67,14 @@ const Diff: FC<Props> = ({ diff, ...fileProps }) => {
       {diff.length === 0 ? (
         <Notification type="info">{t("diff.noDiffFound")}</Notification>
       ) : (
-        diff.map(file => <DiffFile key={createKey(file)} file={file} {...fileProps} />)
+        diff.map((file) => <DiffFile key={createKey(file, ignoreWhitespace)} file={file} {...fileProps} />)
       )}
     </div>
   );
 };
 
 Diff.defaultProps = {
-  sideBySide: false
+  sideBySide: false,
 };
 
 export default Diff;

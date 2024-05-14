@@ -40,9 +40,16 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
     super(context);
   }
 
-  public DiffResult getDiffResult(DiffCommandRequest diffCommandRequest) throws IOException {
+  public DiffResult getDiffResult(DiffCommandRequest request) throws IOException {
     org.eclipse.jgit.lib.Repository repository = open();
-    return new GitDiffResult(this.repository, repository, Differ.diff(repository, diffCommandRequest), 0, null);
+    return new GitDiffResult(
+      this.repository,
+      repository,
+      Differ.diff(repository, request),
+      request.getIgnoreWhitespaceLevel(),
+      0,
+      null
+    );
   }
 
   @Override
@@ -50,7 +57,14 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
     org.eclipse.jgit.lib.Repository repository = open();
     int offset = request.getOffset() == null ? 0 : request.getOffset();
     try {
-      return new GitDiffResult(this.repository, repository, Differ.diff(repository, request), offset, request.getLimit());
+      return new GitDiffResult(
+        this.repository,
+        repository,
+        Differ.diff(repository, request),
+        request.getIgnoreWhitespaceLevel(),
+        offset,
+        request.getLimit()
+      );
     } catch (AmbiguousObjectException ex) {
       throw new NotUniqueRevisionException(Repository.class, context.getRepository().getId());
     }

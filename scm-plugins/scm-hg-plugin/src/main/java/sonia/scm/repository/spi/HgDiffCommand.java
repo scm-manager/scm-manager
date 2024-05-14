@@ -32,6 +32,7 @@ import jakarta.inject.Inject;
 import org.javahg.Repository;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
+import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 import sonia.scm.repository.spi.javahg.HgDiffInternalCommand;
 import sonia.scm.web.HgUtil;
 
@@ -82,6 +83,9 @@ public class HgDiffCommand extends AbstractCommand implements DiffCommand {
       cmd.git();
     }
     String revision = HgUtil.getRevision(request.getRevision());
+    if (request.getIgnoreWhitespaceLevel() == IgnoreWhitespaceLevel.ALL) {
+      cmd.cmdAppend("-w");
+    }
     if (request.getAncestorChangeset() != null) {
       String ancestor = HgUtil.getRevision(request.getAncestorChangeset());
       cmd.cmdAppend(String.format("-r ancestor(%s,%s):%s", ancestor, revision, revision));

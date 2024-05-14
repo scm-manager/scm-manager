@@ -41,6 +41,7 @@ import sonia.scm.repository.Modifications;
 import sonia.scm.repository.Modified;
 import sonia.scm.repository.Removed;
 import sonia.scm.repository.Renamed;
+import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 
 import java.io.IOException;
 import java.text.MessageFormat;

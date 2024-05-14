@@ -24,7 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-
 import de.otto.edison.hal.Links;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -35,14 +34,16 @@ import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -52,6 +53,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffResult;
 import sonia.scm.repository.api.DiffResultCommandBuilder;
+import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -59,32 +61,33 @@ import sonia.scm.util.CRLFInjectionException;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.quality.Strictness.LENIENT;
 import static sonia.scm.repository.api.DiffFormat.NATIVE;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
-public class IncomingRootResourceTest extends RepositoryTestBase {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = LENIENT)
+class IncomingRootResourceTest extends RepositoryTestBase {
 
   public static final String INCOMING_PATH = "space/repo/incoming/";
   public static final String INCOMING_CHANGESETS_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + INCOMING_PATH;
   public static final String INCOMING_DIFF_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + INCOMING_PATH;
   public static final Repository REPOSITORY = new Repository("repoId", "git", "space", "repo");
 
-  private RestDispatcher dispatcher = new RestDispatcher();
+  private final RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -106,18 +109,15 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
   @Mock
   private DiffResultToDiffResultDtoMapper diffResultToDiffResultDtoMapper;
 
-  private IncomingChangesetCollectionToDtoMapper incomingChangesetCollectionToDtoMapper;
-
   @InjectMocks
   private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
 
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
-
-  @Before
-  public void prepareEnvironment() {
-    incomingChangesetCollectionToDtoMapper = new IncomingChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
+  @BeforeEach
+  void prepareEnvironment() {
+    IncomingChangesetCollectionToDtoMapper incomingChangesetCollectionToDtoMapper = new IncomingChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     incomingRootResource = new IncomingRootResource(serviceFactory, incomingChangesetCollectionToDtoMapper, diffResultToDiffResultDtoMapper);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
@@ -132,13 +132,13 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
     when(subject.isPermitted(any(String.class))).thenReturn(true);
   }
 
-  @After
-  public void cleanupContext() {
+  @AfterEach
+  void cleanupContext() {
     ThreadContext.unbindSubject();
   }
 
   @Test
-  public void shouldGetIncomingChangesets() throws Exception {
+  void shouldGetIncomingChangesets() throws Exception {
     String id = "revision_123";
     Instant creationDate = Instant.now();
     String authorName = "name";
@@ -160,16 +160,16 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
 
-    assertEquals(200, response.getStatus());
+    assertThat(response.getStatus()).isEqualTo(200);
     log.info("Response :{}", response.getContentAsString());
-    assertTrue(response.getContentAsString().contains(String.format("\"id\":\"%s\"", id)));
-    assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", authorName)));
-    assertTrue(response.getContentAsString().contains(String.format("\"mail\":\"%s\"", authorEmail)));
-    assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
+    assertThat(response.getContentAsString()).contains(String.format("\"id\":\"%s\"", id));
+    assertThat(response.getContentAsString()).contains(String.format("\"name\":\"%s\"", authorName));
+    assertThat(response.getContentAsString()).contains(String.format("\"mail\":\"%s\"", authorEmail));
+    assertThat(response.getContentAsString()).contains(String.format("\"description\":\"%s\"", commit));
   }
 
   @Test
-  public void shouldGetSinglePageOfIncomingChangesets() throws Exception {
+  void shouldGetSinglePageOfIncomingChangesets() throws Exception {
     String id = "revision_123";
     Instant creationDate = Instant.now();
     String authorName = "name";
@@ -191,16 +191,17 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
 
-    assertEquals(200, response.getStatus());
-    assertTrue(response.getContentAsString().contains(String.format("\"id\":\"%s\"", id)));
-    assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", authorName)));
-    assertTrue(response.getContentAsString().contains(String.format("\"mail\":\"%s\"", authorEmail)));
-    assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
+    assertThat(response.getStatus()).isEqualTo(200);
+    assertThat(response.getContentAsString()).contains(String.format("\"id\":\"%s\"", id));
+    assertThat(response.getContentAsString()).contains(String.format("\"name\":\"%s\"", authorName));
+    assertThat(response.getContentAsString()).contains(String.format("\"mail\":\"%s\"", authorEmail));
+    assertThat(response.getContentAsString()).contains(String.format("\"description\":\"%s\"", commit));
   }
 
   @Test
-  public void shouldGetDiffs() throws Exception {
-    when(diffCommandBuilder.retrieveContent()).thenReturn(output -> {});
+  void shouldGetDiffs() throws Exception {
+    when(diffCommandBuilder.retrieveContent()).thenReturn(output -> {
+    });
     MockHttpRequest request = MockHttpRequest
       .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff")
       .accept(VndMediaType.DIFF);
@@ -212,7 +213,7 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
       .isEqualTo(200);
     String expectedHeader = "Content-Disposition";
     String expectedValue = "attachment; filename=\"repo-src_changeset_id.diff\"; filename*=utf-8''repo-src_changeset_id.diff";
-    assertThat(response.getOutputHeaders().containsKey(expectedHeader)).isTrue();
+    assertThat(response.getOutputHeaders()).containsKey(expectedHeader);
     assertThat((String) response.getOutputHeaders().get("Content-Disposition").get(0))
       .contains(expectedValue);
     verify(diffCommandBuilder).setRevision("src_changeset_id");
@@ -221,63 +222,85 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldGetParsedDiffs() throws Exception {
-    DiffResult diffResult = mock(DiffResult.class);
-    when(diffResultCommandBuilder.getDiffResult()).thenReturn(diffResult);
-    when(diffResultToDiffResultDtoMapper.mapForIncoming(REPOSITORY, diffResult, "src_changeset_id", "target_changeset_id"))
-    .thenReturn(new DiffResultDto(Links.linkingTo().self("http://self").build()));
-
+  void shouldGetDiffsWithIgnoredWhitespace() throws Exception {
+    when(diffCommandBuilder.retrieveContent()).thenReturn(output -> {
+    });
     MockHttpRequest request = MockHttpRequest
-      .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff/parsed")
-      .accept(VndMediaType.DIFF_PARSED);
+      .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff?ignoreWhitespace=ALL")
+      .accept(VndMediaType.DIFF);
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
-    assertThat(response.getStatus())
-      .isEqualTo(200);
-    assertThat(response.getContentAsString())
-      .contains("\"self\":{\"href\":\"http://self\"}");
-    verify(diffResultCommandBuilder).setRevision("src_changeset_id");
-    verify(diffResultCommandBuilder).setAncestorChangeset("target_changeset_id");
+    verify(diffCommandBuilder).setIgnoreWhitespace(IgnoreWhitespaceLevel.ALL);
+  }
+
+  @Nested
+  class WithParsedDiff {
+    @BeforeEach
+    void prepareResult() throws IOException {
+      DiffResult diffResult = mock(DiffResult.class);
+      when(diffResultCommandBuilder.getDiffResult()).thenReturn(diffResult);
+      when(diffResultToDiffResultDtoMapper.mapForIncoming(REPOSITORY, diffResult, "src_changeset_id", "target_changeset_id"))
+        .thenReturn(new DiffResultDto(Links.linkingTo().self("http://self").build()));
+    }
+
+    @Test
+    void shouldGetParsedDiffs() throws Exception {
+      MockHttpRequest request = MockHttpRequest
+        .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff/parsed")
+        .accept(VndMediaType.DIFF_PARSED);
+      MockHttpResponse response = new MockHttpResponse();
+
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus())
+        .isEqualTo(200);
+      assertThat(response.getContentAsString())
+        .contains("\"self\":{\"href\":\"http://self\"}");
+      verify(diffResultCommandBuilder).setRevision("src_changeset_id");
+      verify(diffResultCommandBuilder).setAncestorChangeset("target_changeset_id");
+    }
+
+    @Test
+    void shouldGetParsedDiffsWithLimit() throws Exception {
+      MockHttpRequest request = MockHttpRequest
+        .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff/parsed?limit=42")
+        .accept(VndMediaType.DIFF_PARSED);
+      MockHttpResponse response = new MockHttpResponse();
+
+      dispatcher.invoke(request, response);
+
+      verify(diffResultCommandBuilder).setLimit(42);
+    }
+
+    @Test
+    void shouldGetParsedDiffsWithOffset() throws Exception {
+      MockHttpRequest request = MockHttpRequest
+        .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff/parsed?offset=42")
+        .accept(VndMediaType.DIFF_PARSED);
+      MockHttpResponse response = new MockHttpResponse();
+
+      dispatcher.invoke(request, response);
+
+      verify(diffResultCommandBuilder).setOffset(42);
+    }
+
+    @Test
+    void shouldGetParsedDiffsWithIgnoredWhitespace() throws Exception {
+      MockHttpRequest request = MockHttpRequest
+        .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff/parsed?ignoreWhitespace=ALL")
+        .accept(VndMediaType.DIFF_PARSED);
+      MockHttpResponse response = new MockHttpResponse();
+
+      dispatcher.invoke(request, response);
+
+      verify(diffResultCommandBuilder).setIgnoreWhitespace(IgnoreWhitespaceLevel.ALL);
+    }
   }
 
   @Test
-  public void shouldGetParsedDiffsWithLimit() throws Exception {
-    DiffResult diffResult = mock(DiffResult.class);
-    when(diffResultCommandBuilder.getDiffResult()).thenReturn(diffResult);
-    when(diffResultToDiffResultDtoMapper.mapForIncoming(REPOSITORY, diffResult, "src_changeset_id", "target_changeset_id"))
-    .thenReturn(new DiffResultDto(Links.linkingTo().self("http://self").build()));
-
-    MockHttpRequest request = MockHttpRequest
-      .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff/parsed?limit=42")
-      .accept(VndMediaType.DIFF_PARSED);
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    verify(diffResultCommandBuilder).setLimit(42);
-  }
-
-  @Test
-  public void shouldGetParsedDiffsWithOffset() throws Exception {
-    DiffResult diffResult = mock(DiffResult.class);
-    when(diffResultCommandBuilder.getDiffResult()).thenReturn(diffResult);
-    when(diffResultToDiffResultDtoMapper.mapForIncoming(REPOSITORY, diffResult, "src_changeset_id", "target_changeset_id"))
-    .thenReturn(new DiffResultDto(Links.linkingTo().self("http://self").build()));
-
-    MockHttpRequest request = MockHttpRequest
-      .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff/parsed?offset=42")
-      .accept(VndMediaType.DIFF_PARSED);
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    verify(diffResultCommandBuilder).setOffset(42);
-  }
-
-  @Test
-  public void shouldGet404OnMissingRepository() throws URISyntaxException {
+  void shouldGet404OnMissingRepository() throws URISyntaxException {
     when(serviceFactory.create(any(NamespaceAndName.class))).thenThrow(new NotFoundException("Text", "x"));
     MockHttpRequest request = MockHttpRequest
       .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff")
@@ -286,11 +309,11 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
 
-    assertEquals(404, response.getStatus());
+    assertThat(response.getStatus()).isEqualTo(404);
   }
 
   @Test
-  public void shouldGet404OnMissingRevision() throws Exception {
+  void shouldGet404OnMissingRevision() throws Exception {
     when(diffCommandBuilder.retrieveContent()).thenThrow(new NotFoundException("Text", "x"));
 
     MockHttpRequest request = MockHttpRequest
@@ -300,11 +323,11 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
 
-    assertEquals(404, response.getStatus());
+    assertThat(response.getStatus()).isEqualTo(404);
   }
 
   @Test
-  public void shouldGet400OnCrlfInjection() throws Exception {
+  void shouldGet400OnCrlfInjection() throws Exception {
     when(diffCommandBuilder.retrieveContent()).thenThrow(new NotFoundException("Text", "x"));
     MockHttpRequest request = MockHttpRequest
       .get(INCOMING_DIFF_URL + "ny%0D%0ASet-cookie:%20Tamper=3079675143472450634/ny%0D%0ASet-cookie:%20Tamper=3079675143472450634/diff")
@@ -313,12 +336,12 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
 
-    assertEquals(400, response.getStatus());
+    assertThat(response.getStatus()).isEqualTo(400);
     assertThat(response.getContentAsString()).contains("parameter contains an illegal character");
   }
 
   @Test
-  public void shouldGet400OnUnknownFormat() throws Exception {
+  void shouldGet400OnUnknownFormat() throws Exception {
     when(diffCommandBuilder.retrieveContent()).thenThrow(new NotFoundException("Test", "test"));
     MockHttpRequest request = MockHttpRequest
       .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff?format=Unknown")
@@ -327,8 +350,6 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
 
-    assertEquals(400, response.getStatus());
+    assertThat(response.getStatus()).isEqualTo(400);
   }
-
-
 }

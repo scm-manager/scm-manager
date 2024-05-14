@@ -34,17 +34,18 @@ import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.internal.wc2.ng.SvnNewDiffGenerator;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNDiffClient;
+import org.tmatesoft.svn.core.wc.SVNDiffOptions;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
+import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 import sonia.scm.util.Util;
 
 
 public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand {
 
- 
   private static final Logger logger =
     LoggerFactory.getLogger(SvnDiffCommand.class);
 
@@ -67,8 +68,11 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand {
         }
         clientManager = SVNClientManager.newInstance();
         SVNDiffClient diffClient = clientManager.getDiffClient();
-        diffClient.setDiffGenerator(new SvnNewDiffGenerator(new SCMSvnDiffGenerator()));
-
+        SCMSvnDiffGenerator generator = new SCMSvnDiffGenerator();
+        diffClient.setDiffGenerator(new SvnNewDiffGenerator(generator));
+        if (request.getIgnoreWhitespaceLevel() == IgnoreWhitespaceLevel.ALL) {
+          generator.setDiffOptions(new SVNDiffOptions(true, true, true));
+        }
         long currentRev = SvnUtil.getRevisionNumber(request.getRevision(), repository);
 
         diffClient.setGitDiffFormat(request.getFormat() == DiffFormat.GIT);

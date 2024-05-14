@@ -35,6 +35,7 @@ type Props = DiffObjectProps & {
   url: string;
   limit?: number;
   refetchOnWindowFocus?: boolean;
+  ignoreWhitespace?: string;
 };
 
 type NotificationProps = {
@@ -54,8 +55,12 @@ const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingN
   );
 };
 
-const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) => {
-  const { error, isLoading, data, fetchNextPage, isFetchingNextPage } = useDiff(url, { limit, refetchOnWindowFocus });
+const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ignoreWhitespace, ...props }) => {
+  const { error, isLoading, data, fetchNextPage, isFetchingNextPage } = useDiff(url, {
+    limit,
+    refetchOnWindowFocus,
+    ignoreWhitespace,
+  });
   const [t] = useTranslation("repos");
 
   if (error) {
@@ -70,7 +75,7 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
   } else {
     return (
       <>
-        <Diff diff={data.files} {...props} />
+        <Diff diff={data.files} ignoreWhitespace={ignoreWhitespace} {...props} />
         {data.partial ? (
           <PartialNotification fetchNextPage={fetchNextPage} isFetchingNextPage={isFetchingNextPage} />
         ) : null}

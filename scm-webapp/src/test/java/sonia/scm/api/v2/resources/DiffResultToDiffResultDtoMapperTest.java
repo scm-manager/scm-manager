@@ -34,6 +34,7 @@ import sonia.scm.repository.api.DiffFile;
 import sonia.scm.repository.api.DiffLine;
 import sonia.scm.repository.api.DiffResult;
 import sonia.scm.repository.api.Hunk;
+import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -90,7 +91,7 @@ class DiffResultToDiffResultDtoMapperTest {
       .isPresent()
       .get()
       .extracting("href")
-      .isEqualTo("/scm/api/v2/repositories/space/X/diff/123/parsed");
+      .isEqualTo("/scm/api/v2/repositories/space/X/diff/123/parsed?ignoreWhitespace=ALL");
   }
 
   @Test
@@ -105,7 +106,7 @@ class DiffResultToDiffResultDtoMapperTest {
       .isPresent()
       .get()
       .extracting("href")
-      .isEqualTo("/scm/api/v2/repositories/space/X/diff/123/parsed?offset=30&limit=10");
+      .isEqualTo("/scm/api/v2/repositories/space/X/diff/123/parsed?ignoreWhitespace=ALL&offset=30&limit=10");
   }
 
   @Test
@@ -118,7 +119,7 @@ class DiffResultToDiffResultDtoMapperTest {
       .isPresent()
       .get()
       .extracting("href")
-      .isEqualTo("/scm/api/v2/repositories/space/X/content/123/B.ts?start={start}&end={end}");
+      .isEqualTo("/scm/api/v2/repositories/space/X/content/123/B.ts?ignoreWhitespace=ALL&start={start}&end={end}");
   }
 
   @Test
@@ -130,7 +131,7 @@ class DiffResultToDiffResultDtoMapperTest {
       .isPresent()
       .get()
       .extracting("href")
-      .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed");
+      .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed?ignoreWhitespace=ALL");
   }
 
   @Test
@@ -144,7 +145,7 @@ class DiffResultToDiffResultDtoMapperTest {
       .isPresent()
       .get()
       .extracting("href")
-      .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed?offset=25");
+      .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed?ignoreWhitespace=ALL&offset=25");
   }
 
   @Test
@@ -158,7 +159,7 @@ class DiffResultToDiffResultDtoMapperTest {
       .isPresent()
       .get()
       .extracting("href")
-      .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed?offset=0&limit=25");
+      .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed?ignoreWhitespace=ALL&offset=0&limit=25");
   }
 
   @Test
@@ -173,7 +174,7 @@ class DiffResultToDiffResultDtoMapperTest {
       .isPresent()
       .get()
       .extracting("href")
-      .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed?offset=30&limit=10");
+      .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed?ignoreWhitespace=ALL&offset=30&limit=10");
   }
 
   private void mockPartialResult(DiffResult result) {
@@ -271,6 +272,7 @@ class DiffResultToDiffResultDtoMapperTest {
 
   private DiffResult result(DiffFile... files) {
     DiffResult result = mock(DiffResult.class);
+    when(result.getIgnoreWhitespace()).thenReturn(IgnoreWhitespaceLevel.ALL);
     when(result.iterator()).thenReturn(Arrays.asList(files).iterator());
     return result;
   }

@@ -44,6 +44,7 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.DiffResult;
+import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.HttpUtil;
@@ -99,13 +100,18 @@ public class DiffRootResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @Pattern(regexp = DIFF_FORMAT_VALUES_REGEX) @DefaultValue("NATIVE") @QueryParam("format") String format) throws IOException {
+  public Response get(@PathParam("namespace") String namespace,
+                      @PathParam("name") String name,
+                      @PathParam("revision") String revision,
+                      @QueryParam("format") @Pattern(regexp = DIFF_FORMAT_VALUES_REGEX) @DefaultValue("NATIVE") String format,
+                      @QueryParam("ignoreWhitespace") @DefaultValue("NONE") IgnoreWhitespaceLevel ignoreWhitespace) throws IOException {
     HttpUtil.checkForCRLFInjection(revision);
     DiffFormat diffFormat = DiffFormat.valueOf(format);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       DiffCommandBuilder.OutputStreamConsumer outputStreamConsumer = repositoryService.getDiffCommand()
         .setRevision(revision)
         .setFormat(diffFormat)
+        .setIgnoreWhitespace(ignoreWhitespace)
         .retrieveContent();
       return Response.ok((StreamingOutput) outputStreamConsumer::accept)
         .header(HEADER_CONTENT_DISPOSITION, HttpUtil.createContentDispositionAttachmentHeader(String.format("%s-%s.diff", name, revision)))
@@ -147,6 +153,7 @@ public class DiffRootResource {
                                  @PathParam("name") String name,
                                  @PathParam("revision") String revision,
                                  @QueryParam("limit") @Min(1) Integer limit,
+                                 @QueryParam("ignoreWhitespace") @DefaultValue("NONE") IgnoreWhitespaceLevel ignoreWhitespace,
                                  @QueryParam("offset") @Min(0) Integer offset) throws IOException {
     HttpUtil.checkForCRLFInjection(revision);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
@@ -154,6 +161,7 @@ public class DiffRootResource {
         .setRevision(revision)
         .setLimit(limit)
         .setOffset(offset)
+        .setIgnoreWhitespace(ignoreWhitespace)
         .getDiffResult();
       return parsedDiffMapper.mapForRevision(repositoryService.getRepository(), diffResult, revision);
     }

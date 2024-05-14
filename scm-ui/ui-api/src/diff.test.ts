@@ -221,11 +221,11 @@ describe("Test diff", () => {
   });
 
   it("should append query parameters to url which has already query params", async () => {
-    fetchMock.getOnce("/api/v2/diff?format=GIT&limit=25", {
+    fetchMock.getOnce("/api/v2/diff?format=GIT&limit=25&ignoreWhitespace=NONE", {
       body: simpleDiff,
       headers: { "Content-Type": "application/vnd.scmm-diffparsed+json;v=2" },
     });
-    const { result, waitFor } = renderHook(() => useDiff("/diff?format=GIT", { limit: 25 }), {
+    const { result, waitFor } = renderHook(() => useDiff("/diff?format=GIT", { limit: 25, ignoreWhitespace: "NONE" }), {
       wrapper: createWrapper(),
     });
     await waitFor(() => !!result.current.data);

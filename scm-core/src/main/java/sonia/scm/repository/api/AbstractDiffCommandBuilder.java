@@ -91,4 +91,9 @@ abstract class AbstractDiffCommandBuilder <T extends AbstractDiffCommandBuilder,
   abstract T self();
 
   abstract R createRequest();
+
+  public T setIgnoreWhitespace(IgnoreWhitespaceLevel ignoreWhitespace) {
+    request.setIgnoreWhitespaceLevel(ignoreWhitespace);
+    return self();
+  }
 }

@@ -29,6 +29,7 @@ import com.google.common.base.Strings;
 import lombok.EqualsAndHashCode;
 import sonia.scm.Validateable;
 import sonia.scm.repository.api.DiffFormat;
+import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 
 /**
  *
@@ -43,6 +44,8 @@ public class DiffCommandRequest extends FileBaseCommandRequest
   private DiffFormat format = DiffFormat.NATIVE;
 
   private String ancestorChangeset;
+
+  private IgnoreWhitespaceLevel ignoreWhitespace;
 
   @Override
   public DiffCommandRequest clone()
@@ -98,6 +101,12 @@ public class DiffCommandRequest extends FileBaseCommandRequest
 
   public String getAncestorChangeset() {
     return ancestorChangeset;
+  }
+
+  public IgnoreWhitespaceLevel getIgnoreWhitespaceLevel() { return ignoreWhitespace; }
+
+  public void setIgnoreWhitespaceLevel(IgnoreWhitespaceLevel ignoreWhitespace) {
+    this.ignoreWhitespace = ignoreWhitespace;
   }
 
 }

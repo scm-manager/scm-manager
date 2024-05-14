@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import org.junit.Test;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
+import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -66,7 +67,7 @@ public class HgDiffCommandTest extends AbstractHgCommandTestBase {
   }
 
   @Test
-  public void shouldNotCloseInternalStream() throws IOException {
+  public void shouldNotCloseInternalStream() {
     HgCommandContext context = spy(cmdContext);
     DiffCommandRequest request = new DiffCommandRequest();
     request.setRevision("3049df33fdbbded08b707bac3eccd0f7b453c58b");
@@ -106,6 +107,25 @@ public class HgDiffCommandTest extends AbstractHgCommandTestBase {
     verify(context).close();
   }
 
+  @Test
+  public void shouldNotIgnoreWhitespaceInDefaultDiff() throws IOException {
+    String content = diff(cmdContext, "2b6f8a90b33f");
+    assertThat(content).contains("""
+@@ -1,2 +1,2 @@
+ a
+-line for blame
++line  for  blame""");
+  }
+
+  @Test
+  public void shouldIgnoreWhitespaceInDiff() throws IOException {
+    DiffCommandRequest request = new DiffCommandRequest();
+    request.setIgnoreWhitespaceLevel(IgnoreWhitespaceLevel.ALL);
+    request.setRevision("2b6f8a90b33f");
+    String content = diff(cmdContext, request);
+    assertThat(content).isEmpty();
+  }
+
   private String diff(HgCommandContext context, String revision) throws IOException {
     DiffCommandRequest request = new DiffCommandRequest();
     request.setRevision(revision);
@@ -124,4 +144,8 @@ public class HgDiffCommandTest extends AbstractHgCommandTestBase {
     return baos.toString(UTF_8);
   }
 
+  @Override
+  protected String getZippedRepositoryResource() {
+    return "sonia/scm/repository/spi/scm-hg-spi-diff-test.zip";
+  }
 }

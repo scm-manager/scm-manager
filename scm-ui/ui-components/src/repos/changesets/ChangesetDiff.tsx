@@ -31,6 +31,7 @@ import { FileControlFactory } from "../DiffTypes";
 type Props = WithTranslation & {
   changeset: Changeset;
   defaultCollapse?: boolean;
+  ignoreWhitespace?: string;
   fileControlFactory?: FileControlFactory;
 };
 
@@ -49,7 +50,7 @@ export const createUrl = (changeset: HalRepresentation) => {
 
 class ChangesetDiff extends React.Component<Props> {
   render() {
-    const { changeset, fileControlFactory, defaultCollapse, t } = this.props;
+    const { changeset, fileControlFactory, defaultCollapse, ignoreWhitespace, t } = this.props;
     if (!isDiffSupported(changeset)) {
       return <Notification type="danger">{t("changeset.diffNotSupported")}</Notification>;
     } else {
@@ -58,6 +59,7 @@ class ChangesetDiff extends React.Component<Props> {
         <LoadingDiff
           url={url}
           defaultCollapse={defaultCollapse}
+          ignoreWhitespace={ignoreWhitespace}
           sideBySide={false}
           fileControlFactory={fileControlFactory}
           stickyHeader={true}

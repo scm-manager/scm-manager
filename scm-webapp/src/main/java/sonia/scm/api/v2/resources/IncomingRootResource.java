@@ -48,6 +48,7 @@ import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.DiffResult;
+import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.HttpUtil;
@@ -192,8 +193,8 @@ public class IncomingRootResource {
                                @PathParam("name") String name,
                                @PathParam("source") String source,
                                @PathParam("target") String target,
+                               @QueryParam("ignoreWhitespace") @DefaultValue("NONE") IgnoreWhitespaceLevel ignoreWhitespace,
                                @Pattern(regexp = DIFF_FORMAT_VALUES_REGEX) @DefaultValue("NATIVE") @QueryParam("format") String format) throws IOException {
-
 
     HttpUtil.checkForCRLFInjection(source);
     HttpUtil.checkForCRLFInjection(target);
@@ -203,6 +204,7 @@ public class IncomingRootResource {
         .setRevision(source)
         .setAncestorChangeset(target)
         .setFormat(diffFormat)
+        .setIgnoreWhitespace(ignoreWhitespace)
         .retrieveContent();
 
       return Response.ok((StreamingOutput) outputStreamConsumer::accept)
@@ -245,6 +247,7 @@ public class IncomingRootResource {
                                      @PathParam("source") String source,
                                      @PathParam("target") String target,
                                      @QueryParam("limit") @Min(1) Integer limit,
+                                     @QueryParam("ignoreWhitespace") @DefaultValue("NONE") IgnoreWhitespaceLevel ignoreWhitespace,
                                      @QueryParam("offset") @Min(0) Integer offset) throws IOException {
     HttpUtil.checkForCRLFInjection(source);
     HttpUtil.checkForCRLFInjection(target);
@@ -253,6 +256,7 @@ public class IncomingRootResource {
         .setRevision(source)
         .setAncestorChangeset(target)
         .setLimit(limit)
+        .setIgnoreWhitespace(ignoreWhitespace)
         .setOffset(offset)
         .getDiffResult();
       return Response.ok(parsedDiffMapper.mapForIncoming(repositoryService.getRepository(), diffResult, source, target)).build();

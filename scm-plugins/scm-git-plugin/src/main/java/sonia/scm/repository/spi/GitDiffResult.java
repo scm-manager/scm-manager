@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.lib.ObjectId;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
@@ -33,6 +34,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFile;
 import sonia.scm.repository.api.DiffResult;
 import sonia.scm.repository.api.Hunk;
+import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -51,14 +53,21 @@ public class GitDiffResult implements DiffResult {
   private final Differ.Diff diff;
   private final List<DiffEntry> diffEntries;
 
+  private final IgnoreWhitespaceLevel ignoreWhitespaceLevel;
   private final int offset;
   private final Integer limit;
 
-  public GitDiffResult(Repository scmRepository, org.eclipse.jgit.lib.Repository repository, Differ.Diff diff, int offset, Integer limit) {
+  public GitDiffResult(Repository scmRepository,
+                       org.eclipse.jgit.lib.Repository repository,
+                       Differ.Diff diff,
+                       IgnoreWhitespaceLevel ignoreWhitespaceLevel,
+                       int offset,
+                       Integer limit) {
     this.scmRepository = scmRepository;
     this.repository = repository;
     this.diff = diff;
     this.offset = offset;
+    this.ignoreWhitespaceLevel = ignoreWhitespaceLevel;
     this.limit = limit;
     this.diffEntries = diff.getEntries();
   }
@@ -163,6 +172,9 @@ public class GitDiffResult implements DiffResult {
 
     private String format(org.eclipse.jgit.lib.Repository repository, DiffEntry entry) {
       try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); DiffFormatter formatter = new DiffFormatter(baos)) {
+        if (ignoreWhitespaceLevel == IgnoreWhitespaceLevel.ALL) {
+          formatter.setDiffComparator(RawTextComparator.WS_IGNORE_ALL);
+        }
         formatter.setRepository(repository);
         formatter.format(entry);
         return baos.toString(StandardCharsets.UTF_8);
@@ -170,6 +182,10 @@ public class GitDiffResult implements DiffResult {
         throw new InternalRepositoryException(scmRepository, "failed to format diff entry", ex);
       }
     }
+  }
 
+  @Override
+  public IgnoreWhitespaceLevel getIgnoreWhitespace() {
+    return ignoreWhitespaceLevel;
   }
 }

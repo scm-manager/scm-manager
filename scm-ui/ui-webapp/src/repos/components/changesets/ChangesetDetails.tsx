@@ -30,7 +30,6 @@ import { Changeset, ParentChangeset, Repository } from "@scm-manager/ui-types";
 import {
   AvatarImage,
   AvatarWrapper,
-  Button,
   ChangesetAuthor,
   ChangesetDescription,
   ChangesetDiff,
@@ -39,12 +38,10 @@ import {
   ChangesetTags,
   DateFromNow,
   FileControlFactory,
-  Icon,
-  Level,
   SignatureIcon,
-  SubSubtitle,
-  Tooltip,
 } from "@scm-manager/ui-components";
+import { Tooltip, SubSubtitle } from "@scm-manager/ui-core";
+import { Button, Icon } from "@scm-manager/ui-buttons";
 import ContributorTable from "./ContributorTable";
 import { Link, Link as ReactLink } from "react-router-dom";
 import CreateTagModal from "./CreateTagModal";
@@ -109,8 +106,8 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
     return (
       <div className="is-flex is-flex-direction-column mb-4">
         <div className="is-flex">
-          <p className="is-ellipsis-overflow is-clickable mb-2" onClick={(e) => setOpen(!open)}>
-            <Icon name="angle-down" alt={t("changeset.contributors.hideList")} /> {t("changeset.contributors.list")}
+          <p className="is-ellipsis-overflow is-clickable mb-2" onClick={() => setOpen(!open)}>
+            <Icon alt={t("changeset.contributors.hideList")}>angle-down</Icon> {t("changeset.contributors.list")}
           </p>
           {signatureIcon}
         </div>
@@ -120,9 +117,9 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
   }
 
   return (
-    <div className="is-flex is-clickable" onClick={(e) => setOpen(!open)}>
+    <div className="is-flex is-clickable" onClick={() => setOpen(!open)}>
       <ContributorColumn className="is-ellipsis-overflow">
-        <Icon name="angle-right" alt={t("changeset.contributors.showList")} /> <ChangesetAuthor changeset={changeset} />
+        <Icon alt={t("changeset.contributors.showList")}>angle-right</Icon> <ChangesetAuthor changeset={changeset} />
       </ContributorColumn>
       {signatureIcon}
       <CountColumn className="is-hidden-mobile is-hidden-tablet-only is-hidden-desktop-only">
@@ -147,15 +144,15 @@ const ContainedInTags: FC<{ changeset: Changeset; repository: Repository }> = ({
     return (
       <div className="is-flex is-flex-direction-column mb-4">
         <div className="is-flex">
-          <p className="is-ellipsis-overflow is-clickable mb-2" onClick={(e) => setOpen(!open)}>
-            <Icon name="angle-down" alt={t("changeset.containedInTags.hideAllTags")} />{" "}
+          <p className="is-ellipsis-overflow is-clickable mb-2" onClick={() => setOpen(!open)}>
+            <Icon alt={t("changeset.containedInTags.hideAllTags")}>angle-down</Icon>{" "}
             {t("changeset.containedInTags.allTags")}
           </p>
         </div>
         <div>
           {" "}
           {tags.map((tag) => (
-            <span className="tag is-info is-normal m-1">
+            <span className="tag is-info is-normal m-1" key={tag.name}>
               <Link
                 to={`/repo/${repository.namespace}/${repository.name}/tag/${tag.name}`}
                 className="has-text-inherit"
@@ -172,7 +169,7 @@ const ContainedInTags: FC<{ changeset: Changeset; repository: Repository }> = ({
   return (
     <div className="is-flex is-clickable" onClick={() => setOpen(!open)}>
       <ContributorColumn className="is-ellipsis-overflow">
-        <Icon name="angle-right" alt={t("changeset.containedInTags.showAllTags")} />{" "}
+        <Icon alt={t("changeset.containedInTags.showAllTags")}>angle-right</Icon>{" "}
         {t("changeset.containedInTags.containedInTag", { count: tags.length })}
       </ContributorColumn>
     </div>
@@ -181,6 +178,7 @@ const ContainedInTags: FC<{ changeset: Changeset; repository: Repository }> = ({
 
 const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [ignoreWhitespace, setIgnoreWhitespace] = useState(false);
   const [isTagCreationModalVisible, setTagCreationModalVisible] = useState(false);
   const [t] = useTranslation("repos");
 
@@ -196,6 +194,10 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
 
   const collapseDiffs = () => {
     setCollapsed(!collapsed);
+  };
+
+  const ignoreWhitespaces = () => {
+    setIgnoreWhitespace(!ignoreWhitespace);
   };
 
   return (
@@ -240,14 +242,11 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
 
           {showCreateButton && (
             <div className="media-right">
-              <Tooltip message={t("changeset.tag.create")} location="top">
-                <Button
-                  color="success"
-                  className="tag"
-                  label={(changeset._embedded?.tags?.length === 0 && t("changeset.tag.create")) || ""}
-                  icon="plus"
-                  action={() => setTagCreationModalVisible(true)}
-                />
+              <Tooltip message={t("changeset.tag.create")}>
+                <Button className="tag is-success has-gap-1" onClick={() => setTagCreationModalVisible(true)}>
+                  <Icon>plus</Icon>
+                  {(changeset._embedded?.tags?.length === 0 && t("changeset.tag.create")) || ""}
+                </Button>
               </Tooltip>
             </div>
           )}
@@ -280,20 +279,23 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
         </p>
       </div>
       <div>
-        <Level
-          className="mb-4"
-          right={
-            <Button
-              action={collapseDiffs}
-              color="default"
-              icon={collapsed ? "eye" : "eye-slash"}
-              label={t("changesets.collapseDiffs")}
-              title={t("changesets.collapseDiffs")}
-              reducedMobile={true}
-            />
-          }
+        <div className="is-flex has-gap-4 mb-4 is-justify-content-flex-end">
+          <Button onClick={ignoreWhitespaces}>
+            <Icon className="mr-1">{ignoreWhitespace ? "laptop" : "laptop-code"}</Icon>
+            {t(ignoreWhitespace ? "changesets.activateWhitespace" : "changesets.ignoreWhitespace")}
+          </Button>
+          <Button onClick={collapseDiffs}>
+            <Icon className="mr-1">{collapsed ? "eye" : "eye-slash"}</Icon>
+            {t("changesets.collapseDiffs")}
+          </Button>
+        </div>
+
+        <ChangesetDiff
+          changeset={changeset}
+          fileControlFactory={fileControlFactory}
+          defaultCollapse={collapsed}
+          ignoreWhitespace={ignoreWhitespace ? "ALL" : "NONE"}
         />
-        <ChangesetDiff changeset={changeset} fileControlFactory={fileControlFactory} defaultCollapse={collapsed} />
       </div>
     </>
   );
