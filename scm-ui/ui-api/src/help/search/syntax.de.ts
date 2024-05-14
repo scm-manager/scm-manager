@@ -25,21 +25,10 @@ export default `## Modifikatoren
 
 Hinweis: Sie können keine Wildcards als erstes Zeichen einer Suche verwenden.
 
-<table>
-  <tr>
-    <th>Definition</th>
-    <th>Beispiel</th>
-  </tr>
-  <tr>
-    <td>? - Einzelzeichen-Wildcard</td>
-    <td>Ultimate?Repo - findet z.B. Ultimate-Repo, Ultimate Repo, Ultimate+Repo</td>
-  </tr>
-  <tr>
-    <td>* - mehrstelliger Platzhalter</td>
-    <td>Ultimat*y - findet z.B. Ultimate Repository, Ultimates-Spezial-Repository, Ultimate</td>
-  </tr>
-</table>
-
+|Definition|Beispiel|
+|----------|--------|
+|? - Einzelzeichen-Wildcard|"Ultimate?Repo" - findet z.B. \`Ultimate-Repo\`, \`Ultimate Repo\`, \`Ultimate+Repo\`|
+|* - mehrstelliger Platzhalter|"Ultimat*y" - findet z.B. \`Ultimate Repository\`, \`Ultimates-Spezial-Repository\`, \`Ultimate\`|
 
 ### Bereiche
 
@@ -47,37 +36,18 @@ Bereichsabfragen ermöglichen den Abgleich von Dokumenten, deren Feldwerte zwisc
 
 Bereiche sind nicht auf numerische Felder beschränkt. 
 
-<table>
-  <tr>
-    <th>Definition</th>
-    <th>Beispiel</th>
-  </tr>
-  <tr>
-    <td>[ … TO … ] - inklusiver Bereich</td>
-    <td>creationDate:[1609459200000 TO 1612137600000] – findet z.B. Repositories, die zwischen dem 01.01.2021 und dem 01.02.2021 angelegt wurden.</td>
-  </tr>
-  <tr>
-    <td>{… TO …} - ausschließender Bereich</td>
-    <td>name:{Aida TO Carmen} – findet Namen zwischen Aida und Carmen, jedoch ohne die beiden Namen einzuschließen.</td>
-  </tr>
-</table>
-
+|Definition|Beispiel|
+|----------|--------|
+|[ … TO … ] - inklusiver Bereich|"creationDate:[1609459200000 TO 1612137600000]" – findet z.B. Repositories, die zwischen dem 01.01.2021 und dem 01.02.2021 angelegt wurden|
+|{… TO …} - ausschließender Bereich|"name:{Aida TO Carmen}" – findet Namen zwischen Aida und Carmen, jedoch ohne die beiden Namen einzuschließen|
 
 ## Boosten
 
 Mit dem Boosting können Sie die Relevanz eines Dokuments steuern, indem Sie seinen Term verstärken.
 
-<table>
-  <tr>
-    <th>Definition</th>
-    <th>Beispiel</th>
-  </tr>
-  <tr>
-    <td>term^Zahl</td>
-    <td>ultimate^2 repository – erhöht die Relevanz von „ultimate"</td>
-  </tr>
-</table>
-
+|Definition|Beispiel|
+|----------|--------|
+|Begriff^Zahl|"ultimate^2 repository" – erhöht die Relevanz von \`ultimate\`|
 
 Standardmäßig ist der Boost-Faktor 1. Obwohl der Boost-Faktor positiv sein muss, kann er kleiner als 1 sein (z. B. 0,2)
 
@@ -88,40 +58,27 @@ Standardmäßig werden Repository-Namen um 1,5 und Namespace-Namen um 1,25 geboo
 Hinweis: Logische Operatoren müssen in Großbuchstaben eingegeben werden (z. B. „AND").
 
 |Operator|Definition|Beispiel|
-|--|--|--|
-|AND|Beide Terme müssen enthalten sein|Ultimate AND Repository – findet z.B. Ultimate Repository, Ultimate Special Repository|
-|OR|Mindestens einer der Terme muss enthalten sein|Ultimate OR Repository – findet z.B.. Ultimate Repository, Ultimate User, Special Repository|
-|NOT|Der nachfolgende Term darf nicht enthalten sein, „!" kann alternativ verwendet werden|Ultimate NOT Repository – findet z.B.. Ultimate user, nicht jedoch z.B. Ultimate Repository|
-|–|Schließt den folgenden Term von der Suche aus|Ultimate Repository -Special – findet z.B. Ultimate Repository, schließt z.B. Ultimate Special Repository aus|
-|+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |Der folgende Term muss enthalten sein|Ultimate +Repository – findet z.B. my Repository, Ultimate Repository|  </tr>
+|--------|----------|--------|
+|AND|Beide Terme müssen enthalten sein|"Ultimate AND Repository" – findet z.B. \`Ultimate Repository\`, \`Ultimate Special Repository\`|
+|OR|Mindestens einer der Terme muss enthalten sein|"Ultimate OR Repository" – findet z.B. \`Ultimate Repository\`, \`Ultimate User\`, \`Special Repository\`|
+|NOT|Der nachfolgende Term darf nicht enthalten sein, „!" kann alternativ verwendet werden|"Ultimate NOT Repository" – findet z.B. \`Ultimate user\`, nicht jedoch z.B. \`Ultimate Repository\`|
+|–|Schließt den folgenden Term von der Suche aus|"Ultimate Repository -Special" – findet z.B. \`Ultimate Repository\`, schließt z.B. \`Ultimate Special Repository\` aus|
+|+|Der folgende Term muss enthalten sein|"Ultimate +Repository" – findet z.B. \`my Repository\`, \`Ultimate Repository\`|
 
 ## Gruppieren
 
 Die Suche unterstützt die Verwendung von Klammern zur Gruppierung von Begriffen, um Teilabfragen zu bilden. Dies kann sehr nützlich sein, wenn Sie die boolesche Logik für eine Abfrage steuern möchten.
 
-<table>
-  <tr>
-    <th>Definition</th>
-    <th>Beispiel</th>
-  </tr>
-  <tr>
-    <td>() – Terme zwischen den Klammern werden gruppiert</td>
-    <td>(Ultimate OR my) AND Repository – findet z.B.. Ultimate Repository, my Repository, schließt z.B. Super Repository. Entweder "Ultimate" oder “My” müssen im Ergebnis existieren, “Repository” muss immer enthalten sein.
- </td>
-  </tr>
-</table>
+|Definition|Beispiel|
+|----------|--------|
+|() – Terme zwischen den Klammern werden gruppiert|"(Ultimate OR my) AND Repository" – findet z.B. \`Ultimate Repository\`, \`my Repository\`, schließt z.B. Super Repository. Entweder "Ultimate" oder "My" müssen im Ergebnis existieren, "Repository" muss immer enthalten sein|
 
+## Phrasen
 
-## Umgang mit Sonderzeichen
+Eine Phrase ist eine Gruppe von Begriffen in einer bestimmten Reihenfolge. Falls man nach einer bestimmten Phrase suchen will, dann kann der \`"\`-Operator genutzt werden.
 
-Die Suche unterstützt Sonderzeichen, die Teil der Abfragesyntax sind. Die aktuellen Sonderzeichen der Liste sind
+|Definition|Beispiel|
+|----------|--------|
+|"" - Begriffe innerhalb der Anführungszeichen werden als Phrase gesucht|"Ultimate Repository" – findet \`Ultimate Repository\` aber nicht \`Repository Ultimate\`, \`Ultimate\` oder \`Repository\`|
 
-&plus; &minus; && || ! ( ) { } [ ] ^ " ~ * ? : &bsol; /
-
-Um diese Zeichen zu nutzen, verwenden Sie „&bsol;" vor dem jeweiligen Zeichen. Um zum Beispiel nach (1+1):2 zu suchen, verwenden Sie diese Abfrage:
-
-&bsol;(1&bsol;+1&bsol;)&bsol;:2
-
-Partiell übersetzt mit www.DeepL.com/Translator (kostenlose Version)
-
-Quelle [https://javadoc.io/static/org.apache.lucene/lucene-queryparser/8.9.0/org/apache/lucene/queryparser/classic/package-summary.html#package.description](https://javadoc.io/static/org.apache.lucene/lucene-queryparser/8.9.0/org/apache/lucene/queryparser/classic/package-summary.html#package.description)`;
+`;

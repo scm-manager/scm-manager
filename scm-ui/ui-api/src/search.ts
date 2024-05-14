@@ -70,7 +70,9 @@ export const useSearchCounts = (types: string[], query: string, options?: Search
     types.map((type) => ({
       queryKey: ["search", type, query, "count"],
       queryFn: () =>
-        apiClient.get(`${findLink(links, type)}?q=${query}&countOnly=true`).then((response) => response.json()),
+        apiClient
+          .get(`${findLink(links, type)}?q=${encodeURIComponent(query)}&countOnly=true`)
+          .then((response) => response.json()),
       enabled: !isLoading,
     }))
   );

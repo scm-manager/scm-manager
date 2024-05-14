@@ -1,0 +1,6 @@
+- type: fixed
+  description: Phrase queries using the quotes are now parsed as such
+- type: changed
+  description: The syntax help documentation now contains the definitions of the two different types of queries and also explanation for the quotes operator.
+- type: added
+  description: The search result now also shows what type of query was provided by the user (simple query or expert query).

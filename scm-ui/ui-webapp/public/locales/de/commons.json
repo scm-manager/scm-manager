@@ -265,6 +265,7 @@
     "title": "Suche",
     "subtitle": "{{type}} Ergebnisse",
     "subtitleWithContext": "{{type}} Ergebnisse für in \"{{context}}\"",
+    "withQueryType": " mit {{queryType}}",
     "types": "Ergebnisse",
     "noHits": "Keine Ergebnisse gefunden. Auf der rechten Seite finden Sie weitere Kategorien, in denen Ergebnisse vorhanden sein könnten",
     "syntaxHelp": "Finden Sie bessere Ergebnisse durch die Nutzung der vollen <0>Such-Syntax</0>",
@@ -282,11 +283,19 @@
       "searchNamespace": "In Namespace suchen",
       "searchEverywhere": "Überall suchen"
     },
+    "queryTypes": {
+      "SIMPLE": "einfacher Suche",
+      "EXPERT": "Expertensuche"
+    },
     "syntax": {
       "title": "Experten-Suche",
       "subtitle": "Erfahren Sie mehr über die Felder der Entitäten, Modifikatoren und Operatoren.",
+      "queryTypes": {
+        "title": "Arten von Suchen",
+        "description": "Es gibt zwei Arten von Suchen. Die erste Art ist die einfache Suche. Eine einfache Suche besteht nur aus Suchbegriffen und beinhaltet keine der unten gelisteten Operatoren (z.B. 'AND'). Jeder Suchbegriff einer einfachen Suche wird implizit am Ende mit dem '*'-Operator erweitert. Dadurch findet man mit dem Suchbegriff 'Repo' auch den Begriff 'Repository'. Die zweite Art von Suche ist die Expertensuche. Sobald eine Suchanfrage einen Operator beinhaltet, dann gilt diese Suchanfrage als Expertensuche. Die Art von Suche ermöglicht es, komplexe Suchabfragen zu erstellen. Allerdings werden Suchbegriffe hier nicht implizit mit einem '*'-Operator erweitert. Dementsprechend muss hier der '*'-Operator bei Bedarf explizit gesetzt werden."
+      },
       "exampleQueriesAndFields": {
-        "title": "Beispielabfragen und Felder",
+        "title": "Beispiele von Abfragen bestimmter Felder",
         "description": "Felder können einzeln abgefragt werden, um Ihre Suche einzugrenzen, z.B. name:ultimate sucht nur nach ultimate im Feld \"name\" der Entitäten. Einige Felder können in allen oder den meisten Entitäten gefunden werden (z.B. Name, creationDate). Andere Felder sind nur bei einzelnen Entitäten vorhanden."
       },
       "fields": {

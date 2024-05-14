@@ -51,8 +51,22 @@ public class QueryCountResult {
    */
   private final long totalHits;
 
+  /**
+   * Type of the created query
+   */
+  private final QueryType queryType;
+
+  /**
+   * @deprecated since 3.2.0 in favor of the new constructor with queryType
+   */
+  @Deprecated(since = "3.2.0")
   public QueryCountResult(Class<?> type, long totalHits) {
+    this(type, totalHits, null);
+  }
+
+  public QueryCountResult(Class<?> type, long totalHits, QueryType queryType) {
     this.type = type;
     this.totalHits = totalHits;
+    this.queryType = queryType;
   }
 }

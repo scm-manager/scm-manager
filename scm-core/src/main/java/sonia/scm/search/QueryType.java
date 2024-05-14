@@ -22,48 +22,8 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation, HalRepresentationWithEmbedded, PagedCollection } from "./hal";
-import { Repository } from "./Repositories";
+package sonia.scm.search;
 
-export type ValueHitField = {
-  highlighted: false;
-  value: unknown;
-};
-
-export type HighlightedHitField = {
-  highlighted: true;
-  fragments: string[];
-  matchesContentStart: boolean;
-  matchesContentEnd: boolean;
-};
-
-export type HitField = ValueHitField | HighlightedHitField;
-
-export type EmbeddedRepository = {
-  repository?: Repository;
-};
-
-export type Hit = HalRepresentationWithEmbedded<EmbeddedRepository> & {
-  score: number;
-  fields: { [name: string]: HitField };
-};
-
-export type HitEmbedded = {
-  hits: Hit[];
-};
-
-export type QueryResult = PagedCollection<HitEmbedded> & {
-  type: string;
-  totalHits: number;
-  queryType: "SIMPLE_WITH_ADDED_WILDCARDS" | "PARSED_EXPERT_QUERY";
-};
-
-export type SearchableField = {
-  name: string;
-  type: string;
-};
-
-export type SearchableType = HalRepresentation & {
-  name: string;
-  fields: SearchableField[];
-};
+public enum QueryType {
+  SIMPLE, EXPERT
+}

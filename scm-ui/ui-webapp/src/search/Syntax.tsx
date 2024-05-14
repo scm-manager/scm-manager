@@ -24,17 +24,8 @@
 import React, { FC, useState } from "react";
 import { useSearchableTypes, useSearchSyntaxContent } from "@scm-manager/ui-api";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  copyToClipboard,
-  ErrorNotification,
-  Icon,
-  InputField,
-  Loading,
-  MarkdownView,
-  Page,
-  Tooltip
-} from "@scm-manager/ui-components";
+import { copyToClipboard, InputField, Loading, MarkdownView, Page } from "@scm-manager/ui-components";
+import { ErrorNotification, Icon, Tooltip, Button } from "@scm-manager/ui-core";
 import { parse } from "date-fns";
 import styled from "styled-components";
 import classNames from "classnames";
@@ -42,6 +33,12 @@ import { SearchableType } from "@scm-manager/ui-types";
 
 const StyledTooltip = styled(Tooltip)`
   height: 40px;
+`;
+
+const HeaderButton = styled.button`
+  color: currentColor;
+  width: 100%;
+  border: none;
 `;
 
 type ExpandableProps = {
@@ -54,15 +51,17 @@ const Expandable: FC<ExpandableProps> = ({ header, children, className }) => {
   const [expanded, setExpanded] = useState(false);
   return (
     <div className={classNames("card search-syntax-accordion", className)}>
-      <header onClick={() => setExpanded(!expanded)} className="card-header is-clickable">
-        <span className="card-header-title">{header}</span>
-        <span className="card-header-icon">
-          {expanded ? (
-            <Icon name="chevron-down" alt={t("search.syntax.expandable.hideMore")} />
-          ) : (
-            <Icon name="chevron-left" alt={t("search.syntax.expandable.showMore")} />
-          )}
-        </span>
+      <header>
+        <HeaderButton onClick={() => setExpanded(!expanded)} className="card-header is-clickable ">
+          <span className="card-header-title">{header}</span>
+          <span className="card-header-icon">
+            {expanded ? (
+              <Icon alt={t("search.syntax.expandable.hideMore")}>{"chevron-down"}</Icon>
+            ) : (
+              <Icon alt={t("search.syntax.expandable.showMore")}>{"chevron-left"}</Icon>
+            )}
+          </span>
+        </HeaderButton>
       </header>
       {expanded ? <div className="card-content">{children}</div> : null}
     </div>
@@ -81,10 +80,11 @@ type ExampleProps = {
 
 const Examples: FC<ExampleProps> = ({ searchableType }) => {
   const [t] = useTranslation(["commons", "plugins"]);
+  // @ts-ignore the generic Example[] seems to not get applied for the return type
   const examples = t<Example[]>(`plugins:search.types.${searchableType.name}.examples`, {
     returnObjects: true,
-    defaultValue: []
-  });
+    defaultValue: [],
+  }) as unknown as Example[];
 
   if (examples.length === 0) {
     return null;
@@ -100,8 +100,8 @@ const Examples: FC<ExampleProps> = ({ searchableType }) => {
           <th>{t("search.syntax.exampleQueries.table.query")}</th>
           <th>{t("search.syntax.exampleQueries.table.explanation")}</th>
         </tr>
-        {examples.map((example, index) => (
-          <tr key={index}>
+        {examples.map((example) => (
+          <tr key={example.description}>
             <td>{example.description}</td>
             <td>{example.query}</td>
             <td>{example.explanation}</td>
@@ -126,7 +126,7 @@ const SearchableTypes: FC = () => {
 
   return (
     <>
-      {data.map(searchableType => (
+      {data.map((searchableType) => (
         <Expandable
           key={searchableType.name}
           className="mb-1"
@@ -139,18 +139,18 @@ const SearchableTypes: FC = () => {
               <th>{t("search.syntax.fields.exampleValue")}</th>
               <th>{t("search.syntax.fields.hints")}</th>
             </tr>
-            {searchableType.fields.map(searchableField => (
-              <tr>
+            {searchableType.fields.map((searchableField) => (
+              <tr key={searchableField.name}>
                 <th>{searchableField.name}</th>
                 <td>{searchableField.type}</td>
                 <td>
                   {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.exampleValue`, {
-                    defaultValue: ""
+                    defaultValue: "",
                   })}
                 </td>
                 <td>
                   {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.hints`, {
-                    defaultValue: ""
+                    defaultValue: "",
                   })}
                 </td>
               </tr>
@@ -189,7 +189,7 @@ const TimestampConverter: FC = () => {
           onChange={setDatetime}
           placeholder={t("search.syntax.utilities.datetime.format")}
         />
-        <Button color="primary" action={convert} className="ml-2">
+        <Button variant="primary" onClick={convert} className="ml-2">
           {t("search.syntax.utilities.datetime.convertButtonLabel")}
         </Button>
       </span>
@@ -228,7 +228,11 @@ const Syntax: FC = () => {
       {data ? (
         <>
           <div className="content">
-            <h4 className="title">{t("search.syntax.exampleQueriesAndFields.title")}</h4>
+            <h3 className="title">{t("search.syntax.queryTypes.title")}</h3>
+            <p>{t("search.syntax.queryTypes.description")}</p>
+          </div>
+          <div className="content">
+            <h3 className="title">{t("search.syntax.exampleQueriesAndFields.title")}</h3>
             <p>{t("search.syntax.exampleQueriesAndFields.description")}</p>
             <SearchableTypes />
           </div>

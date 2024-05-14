@@ -47,6 +47,8 @@ import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
@@ -55,14 +57,12 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 @SuppressWarnings("java:S5976")
 @SubjectAware(value = "trillian", permissions = "abc")
@@ -223,7 +223,7 @@ class LuceneQueryBuilderTest {
 
   private void assertValueField(Hit hit, String fieldName, Object value) {
     assertThat(hit.getFields().get(fieldName))
-      .isInstanceOfSatisfying(Hit.ValueField.class, (field) -> {
+      .isInstanceOfSatisfying(Hit.ValueField.class, field -> {
         assertThat(field.isHighlighted()).isFalse();
         assertThat(field.getValue()).isEqualTo(value);
       });
@@ -418,14 +418,6 @@ class LuceneQueryBuilderTest {
   }
 
   @Test
-  void shouldFailBestGuessQueryWithoutDefaultQueryFields() throws IOException {
-    try (IndexWriter writer = writer()) {
-      writer.addDocument(typesDoc(1, 2L, false, Instant.now()));
-    }
-    assertThrows(NoDefaultQueryFieldsFoundException.class, () -> query(Types.class, "something"));
-  }
-
-  @Test
   void shouldLimitHitsByDefaultSize() throws IOException {
     try (IndexWriter writer = writer()) {
       for (int i = 0; i < 20; i++)
@@ -473,7 +465,7 @@ class LuceneQueryBuilderTest {
     List<Object> values = result.getHits().stream().map(hit -> {
       Hit.ValueField content = (Hit.ValueField) hit.getFields().get(fieldName);
       return content.getValue();
-    }).collect(Collectors.toList());
+    }).toList();
     assertThat(values).containsExactly(expectedValues);
   }
 
@@ -566,11 +558,116 @@ class LuceneQueryBuilderTest {
     assertThat(result.getTotalHits()).isOne();
   }
 
+  @Test
+  void shouldFindNothingBecauseTypesHasNoDefaultFields() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(typesDoc(1, 2, true, Instant.now()));
+    }
+
+    QueryResult result = query(Types.class, "1 OR 2 OR true");
+    assertThat(result.getTotalHits()).isZero();
+  }
+
+  @Test
+  void shouldQueryWithWildcardsForEveryTermBecauseQueryContainsNoOperators() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(personDoc("Holmes"));
+      writer.addDocument(personDoc("Watson"));
+      writer.addDocument(personDoc("Moriarty"));
+    }
+
+    QueryResult result = query(Person.class, "hol wat mor");
+    assertThat(result.getTotalHits()).isEqualTo(3);
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    //Wildcard Modifiers
+    "hol* wat mori,1,Holmes",
+    "hol?es wat mori,1,Holmes",
+    //Boolean Operators
+    "holmes OR wat,1,Holmes",
+    "holmes AND hol,0,",
+    "watson NOT wat,1,Watson",
+    "watson !wat,1,Watson",
+    "watson -wat,1,Watson",
+    "watson +wat,0,",
+    //Ranges
+    "[A TO Z],3,",
+    "{Holmes TO Watson},1,Moriarty",
+    //Boosting
+    "holmes^2,1,Holmes",
+    //Grouping
+    "(hol),0,",
+    //Escaping
+    "\\hol watson,1,Watson",
+    //Field name
+    "lastName:hol,0,",
+    //PhrasesA
+    "\"Hol\",0,"
+  })
+  void shouldQueryWithoutImplicitlyAddedWildCardsBecauseOperatorsAreUsed(String queryString, String expectedResultCount, String expectedValue) throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(personDoc("Holmes"));
+      writer.addDocument(personDoc("Watson"));
+      writer.addDocument(personDoc("Moriarty"));
+    }
+
+    QueryResult result = query(Person.class, queryString);
+    assertThat(result.getTotalHits()).isEqualTo(Integer.parseInt(expectedResultCount));
+
+    if (expectedValue != null) {
+      assertContainsValues(result, "lastName", expectedValue);
+    }
+  }
+
+  @ParameterizedTest
+  @CsvSource({"holmes watson moriarty,SIMPLE_WITH_ADDED_WILDCARDS", "holmes OR watson OR moriarty,PARSED_EXPERT_QUERY"})
+  void shouldReturnQueryResultWithCorrectType(String queryString, String expectedQueryType) throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(personDoc("Holmes"));
+      writer.addDocument(personDoc("Watson"));
+      writer.addDocument(personDoc("Moriarty"));
+    }
+
+    QueryResult result = query(Person.class, queryString);
+    assertThat(result.getQueryType().name()).isEqualTo(expectedQueryType);
+  }
+
+  @ParameterizedTest
+  @CsvSource({"holmes watson moriarty,SIMPLE", "holmes OR watson OR moriarty,EXPERT"})
+  void shouldReturnQueryCountResultWithCorrectType(String queryString, String expectedQueryType) throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(personDoc("Holmes"));
+      writer.addDocument(personDoc("Watson"));
+      writer.addDocument(personDoc("Moriarty"));
+    }
+
+    QueryCountResult result = countQuery(Person.class, queryString);
+    assertThat(result.getQueryType().name()).isEqualTo(expectedQueryType);
+  }
+
+  @Test
+  void shouldQueryExactName() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(personDoc("Sherlock Holmes"));
+      writer.addDocument(personDoc("Holmes Sherlock"));
+    }
+
+    QueryResult result = query(Person.class, "\"Sherlock Holmes\"");
+    assertThat(result.getQueryType()).isEqualTo(QueryType.EXPERT);
+    assertContainsValues(result, "lastName", "Sherlock Holmes");
+  }
+
   private QueryResult query(Class<?> type, String queryString) throws IOException {
     return query(type, queryString, null, null);
   }
 
   private <T> long count(Class<T> type, String queryString) throws IOException {
+    return countQuery(type, queryString).getTotalHits();
+  }
+
+  private <T> QueryCountResult countQuery(Class<T> type, String queryString) throws IOException {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
       SearchableTypeResolver resolver = new SearchableTypeResolver(type);
       LuceneSearchableType searchableType = resolver.resolve(type);
@@ -578,7 +675,7 @@ class LuceneQueryBuilderTest {
       LuceneQueryBuilder<T> builder = new LuceneQueryBuilder<T>(
         opener, "default", searchableType, new AnalyzerFactory().create(searchableType)
       );
-      return builder.count(queryString).getTotalHits();
+      return builder.count(queryString);
     }
   }
 
@@ -676,6 +773,10 @@ class LuceneQueryBuilderTest {
     return document;
   }
 
+  enum Animal {
+    PENGUIN, ALPACA
+  }
+
   @Getter
   @IndexedType
   static class Types {
@@ -719,10 +820,6 @@ class LuceneQueryBuilderTest {
   static class Simple {
     @Indexed(defaultQuery = true)
     private String content;
-  }
-
-  enum Animal {
-    PENGUIN, ALPACA
   }
 
   @Getter

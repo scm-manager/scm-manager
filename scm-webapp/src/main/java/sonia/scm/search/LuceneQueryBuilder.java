@@ -48,10 +48,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
 
   private static final Logger LOG = LoggerFactory.getLogger(LuceneQueryBuilder.class);
+  private static final List<String> OPERATORS = List.of(
+    "*", "?", "OR", "AND", "NOT", "!", "-", "+", "[", "]", "(", ")", "{", "}", "\\", ":", "\"", "^"
+  );
 
   private final IndexManager opener;
   private final LuceneSearchableType searchableType;
@@ -70,7 +74,9 @@ public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
     TotalHitCountCollector totalHitCountCollector = new TotalHitCountCollector();
     return search(
       queryParams, totalHitCountCollector,
-      (searcher, query) -> new QueryCountResult(searchableType.getType(), totalHitCountCollector.getTotalHits())
+      (searcher, query) -> new QueryCountResult(
+        searchableType.getType(), totalHitCountCollector.getTotalHits(), evaluateQueryType(queryParams)
+      )
     );
   }
 
@@ -79,8 +85,12 @@ public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
     TopScoreDocCollector topScoreCollector = createTopScoreCollector(queryParams);
     return search(queryParams, topScoreCollector, (searcher, query) -> {
       QueryResultFactory resultFactory = new QueryResultFactory(analyzer, searcher, searchableType, query);
-      return resultFactory.create(getTopDocs(queryParams, topScoreCollector));
+      return resultFactory.createWithQueryType(getTopDocs(queryParams, topScoreCollector), evaluateQueryType(queryParams));
     });
+  }
+
+  private QueryType evaluateQueryType(QueryParams queryParams) {
+    return containsOperator(queryParams.getQueryString()) ? QueryType.EXPERT : QueryType.SIMPLE;
   }
 
   private <R> R search(QueryParams queryParams, Collector collector, ResultBuilder<R> resultBuilder) {
@@ -115,41 +125,26 @@ public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
 
   private Query createQuery(LuceneSearchableType searchableType, QueryParams queryParams, String queryString) {
     try {
-      if (queryString.contains(":")) {
-        return createExpertQuery(searchableType, queryParams);
-      }
       return createBestGuessQuery(searchableType, queryParams);
     } catch (QueryNodeException | IOException ex) {
       throw new QueryParseException(queryString, "failed to parse query", ex);
     }
   }
 
-  private Query createExpertQuery(LuceneSearchableType searchableType, QueryParams queryParams) throws QueryNodeException {
-    StandardQueryParser parser = new StandardQueryParser(analyzer);
-
-    parser.setPointsConfigMap(searchableType.getPointsConfig());
-    return parser.parse(queryParams.getQueryString(), "");
-  }
-
-  public Query createBestGuessQuery(LuceneSearchableType searchableType, QueryBuilder.QueryParams queryParams) throws QueryNodeException, IOException {
+  private Query createBestGuessQuery(LuceneSearchableType searchableType, QueryBuilder.QueryParams queryParams) throws QueryNodeException, IOException {
     String[] defaultFieldNames = searchableType.getDefaultFieldNames();
     if (defaultFieldNames == null || defaultFieldNames.length == 0) {
-      throw new NoDefaultQueryFieldsFoundException(searchableType.getType());
+      return createExpertQuery(searchableType, queryParams, "");
     }
 
     String queryString = queryParams.getQueryString();
-    boolean hasWildcard = containsWildcard(queryString);
+    boolean hasOperator = containsOperator(queryString);
 
     BooleanQuery.Builder builder = new BooleanQuery.Builder();
     for (String fieldName : defaultFieldNames) {
-      Query query;
-      if (!hasWildcard) {
-        query = createWildcardQuery(fieldName, queryString);
-      } else {
-        StandardQueryParser parser = new StandardQueryParser(analyzer);
-        parser.setPointsConfigMap(searchableType.getPointsConfig());
-        query = parser.parse(queryParams.getQueryString(), fieldName);
-      }
+      Query query = hasOperator ?
+        createExpertQuery(searchableType, queryParams, fieldName) :
+        createWildcardQuery(fieldName, queryString);
 
       Float boost = searchableType.getBoosts().get(fieldName);
       if (boost != null) {
@@ -159,6 +154,12 @@ public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
       }
     }
     return builder.build();
+  }
+
+  private Query createExpertQuery(LuceneSearchableType searchableType, QueryParams queryParams, String defaultField) throws QueryNodeException {
+    StandardQueryParser parser = new StandardQueryParser(analyzer);
+    parser.setPointsConfigMap(searchableType.getPointsConfig());
+    return parser.parse(queryParams.getQueryString(), defaultField);
   }
 
   private Query createWildcardQuery(String fieldName, String queryString) throws IOException {
@@ -177,8 +178,14 @@ public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
     }
   }
 
-  private boolean containsWildcard(String queryString) {
-    return queryString.contains("?") || queryString.contains("*");
+  private boolean containsOperator(String queryString) {
+    for (String operator : OPERATORS) {
+      if (queryString.contains(operator)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   @FunctionalInterface

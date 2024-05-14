@@ -50,6 +50,7 @@ import sonia.scm.search.Hit;
 import sonia.scm.search.QueryBuilder;
 import sonia.scm.search.QueryCountResult;
 import sonia.scm.search.QueryResult;
+import sonia.scm.search.QueryType;
 import sonia.scm.search.SearchEngine;
 import sonia.scm.search.SearchableType;
 import sonia.scm.web.JsonMockHttpResponse;
@@ -61,6 +62,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -104,6 +106,170 @@ class SearchResourceTest {
     );
     dispatcher = new RestDispatcher();
     dispatcher.addSingletonResource(resource);
+  }
+
+  @Test
+  void shouldEnrichQueryResult() throws IOException, URISyntaxException {
+    when(enricherRegistry.allByType(QueryResult.class))
+      .thenReturn(Collections.singleton(new SampleEnricher()));
+
+    mockQueryResult("Hello", result(0L));
+    JsonMockHttpResponse response = search("Hello");
+
+    JsonNode sample = response.getContentAsJson().get("_embedded").get("sample");
+    assertThat(sample.get("value").asText()).isEqualTo("java.lang.String");
+  }
+
+  @Test
+  void shouldEnrichHitResult() throws IOException, URISyntaxException {
+    when(enricherRegistry.allByType(QueryResult.class))
+      .thenReturn(Collections.emptySet());
+    when(enricherRegistry.allByType(Hit.class))
+      .thenReturn(Collections.singleton(new SampleEnricher()));
+
+    mockQueryResult("Hello", result(1L, "Hello"));
+    JsonMockHttpResponse response = search("Hello");
+
+    JsonNode sample = response.getContentAsJson()
+      .get("_embedded").get("hits").get(0)
+      .get("_embedded").get("sample");
+    assertThat(sample.get("value").asText()).isEqualTo("java.lang.String");
+  }
+
+  @Test
+  void shouldEnrichRepository() throws UnsupportedEncodingException, URISyntaxException {
+    when(enricherRegistry.allByType(QueryResult.class))
+      .thenReturn(Collections.emptySet());
+    when(enricherRegistry.allByType(Hit.class))
+      .thenReturn(Collections.singleton(new SampleEnricher()));
+
+    when(enricherRegistry.allByType(RepositoryCoordinates.class))
+      .thenReturn(Collections.singleton(new RepositoryEnricher()));
+
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold("hg");
+    heartOfGold.setId("42");
+    when(repositoryManager.get("42")).thenReturn(heartOfGold);
+
+    Hit hit = new Hit("21", "42", 21f, Collections.emptyMap());
+    QueryResult result = new QueryResult(1L, String.class, Collections.singletonList(hit), null);
+
+    mockQueryResult("hello", result);
+    JsonMockHttpResponse response = search("hello");
+
+    JsonNode sample = response.getContentAsJson()
+      .get("_embedded").get("hits").get(0)
+      .get("_embedded").get("repository")
+      .get("_embedded").get("sample");
+
+    assertThat(sample.get("value").asText()).isEqualTo("42");
+  }
+
+  private void assertLink(JsonNode links, String self, String s) {
+    assertThat(links.get(self).get("href").asText()).isEqualTo(s);
+  }
+
+  private QueryResult result(long totalHits, Object... values) {
+    List<Hit> hits = new ArrayList<>();
+    for (int i = 0; i < values.length; i++) {
+      hits.add(hit(i, values));
+    }
+    return new QueryResult(totalHits, String.class, hits, null);
+  }
+
+  @Nonnull
+  private Hit hit(int i, Object[] values) {
+    Map<String, Hit.Field> fields = fields(values[i]);
+    return new Hit("" + i, null, values.length - i, fields);
+  }
+
+  @Nonnull
+  private Map<String, Hit.Field> fields(Object value) {
+    Map<String, Hit.Field> fields = new HashMap<>();
+    fields.put("value", new Hit.ValueField(value));
+    fields.put("highlighted", new Hit.HighlightedField(new String[]{value.toString()}));
+    return fields;
+  }
+
+  private void mockQueryResult(String query, QueryResult result) {
+    mockQueryResult(0, 10, query, result);
+  }
+
+  private void mockQueryResult(int start, int limit, String query, QueryResult result) {
+    when(
+      searchEngine.forType("string")
+        .search()
+        .start(start)
+        .limit(limit)
+        .execute(query)
+    ).thenReturn(result);
+  }
+
+  private void assertHeader(JsonMockHttpResponse response, String header, String expectedValue) {
+    assertThat(response.getOutputHeaders().getFirst(header))
+      .asString()
+      .isEqualToIgnoringCase(expectedValue);
+  }
+
+  private JsonMockHttpResponse search(String query) throws URISyntaxException, UnsupportedEncodingException {
+    return search(query, null, null);
+  }
+
+  private JsonMockHttpResponse count(String query) throws URISyntaxException, UnsupportedEncodingException {
+    return search(query, null, null, true);
+  }
+
+  private JsonMockHttpResponse search(String query, Integer page, Integer pageSize) throws URISyntaxException, UnsupportedEncodingException {
+    return search(query, page, pageSize, false);
+  }
+
+  private JsonMockHttpResponse search(String query, Integer page, Integer pageSize, boolean countOnly) throws URISyntaxException, UnsupportedEncodingException {
+    String uri = "/v2/search/query/string?q=" + URLEncoder.encode(query, StandardCharsets.UTF_8);
+
+    if (page != null) {
+      uri += "&page=" + page;
+    }
+    if (pageSize != null) {
+      uri += "&pageSize=" + pageSize;
+    }
+    if (countOnly) {
+      uri += "&countOnly=true";
+    }
+
+    MockHttpRequest request = MockHttpRequest.get(uri);
+    JsonMockHttpResponse response = new JsonMockHttpResponse();
+    dispatcher.invoke(request, response);
+    return response;
+  }
+
+  @Getter
+  @Setter
+  public static class SampleEmbedded extends HalRepresentation {
+    private String value;
+  }
+
+  private static class RepositoryEnricher implements HalEnricher {
+
+    @Override
+    public void enrich(HalEnricherContext context, HalAppender appender) {
+      RepositoryCoordinates repositoryCoordinates = context.oneRequireByType(RepositoryCoordinates.class);
+
+      SampleEmbedded embedded = new SampleEmbedded();
+      embedded.setValue(repositoryCoordinates.getId());
+
+      appender.appendEmbedded("sample", embedded);
+    }
+  }
+
+  private static class SampleEnricher implements HalEnricher {
+    @Override
+    public void enrich(HalEnricherContext context, HalAppender appender) {
+      QueryResult result = context.oneRequireByType(QueryResult.class);
+
+      SampleEmbedded embedded = new SampleEmbedded();
+      embedded.setValue(result.getType().getName());
+
+      appender.appendEmbedded("sample", embedded);
+    }
   }
 
   @Nested
@@ -164,62 +330,6 @@ class SearchResourceTest {
       assertThat(contentAsJson.get(0).get("name").asText()).isEqualTo("Type One");
       assertThat(contentAsJson.get(1)).isNull();
     }
-  }
-
-  @Test
-  void shouldEnrichQueryResult() throws IOException, URISyntaxException {
-    when(enricherRegistry.allByType(QueryResult.class))
-      .thenReturn(Collections.singleton(new SampleEnricher()));
-
-    mockQueryResult("Hello", result(0L));
-    JsonMockHttpResponse response = search("Hello");
-
-    JsonNode sample = response.getContentAsJson().get("_embedded").get("sample");
-    assertThat(sample.get("value").asText()).isEqualTo("java.lang.String");
-  }
-
-  @Test
-  void shouldEnrichHitResult() throws IOException, URISyntaxException {
-    when(enricherRegistry.allByType(QueryResult.class))
-      .thenReturn(Collections.emptySet());
-    when(enricherRegistry.allByType(Hit.class))
-      .thenReturn(Collections.singleton(new SampleEnricher()));
-
-    mockQueryResult("Hello", result(1L, "Hello"));
-    JsonMockHttpResponse response = search("Hello");
-
-    JsonNode sample = response.getContentAsJson()
-      .get("_embedded").get("hits").get(0)
-      .get("_embedded").get("sample");
-    assertThat(sample.get("value").asText()).isEqualTo("java.lang.String");
-  }
-
-  @Test
-  void shouldEnrichRepository() throws UnsupportedEncodingException, URISyntaxException {
-    when(enricherRegistry.allByType(QueryResult.class))
-      .thenReturn(Collections.emptySet());
-    when(enricherRegistry.allByType(Hit.class))
-      .thenReturn(Collections.singleton(new SampleEnricher()));
-
-    when(enricherRegistry.allByType(RepositoryCoordinates.class))
-      .thenReturn(Collections.singleton(new RepositoryEnricher()));
-
-    Repository heartOfGold = RepositoryTestData.createHeartOfGold("hg");
-    heartOfGold.setId("42");
-    when(repositoryManager.get("42")).thenReturn(heartOfGold);
-
-    Hit hit = new Hit("21", "42", 21f, Collections.emptyMap());
-    QueryResult result = new QueryResult(1L, String.class, Collections.singletonList(hit));
-
-    mockQueryResult("hello", result);
-    JsonMockHttpResponse response = search("hello");
-
-    JsonNode sample = response.getContentAsJson()
-      .get("_embedded").get("hits").get(0)
-      .get("_embedded").get("repository")
-      .get("_embedded").get("sample");
-
-    assertThat(sample.get("value").asText()).isEqualTo("42");
   }
 
   @Nested
@@ -300,7 +410,7 @@ class SearchResourceTest {
         searchEngine.forType("string")
           .search()
           .count("Hello")
-      ).thenReturn(new QueryCountResult(String.class, 2L));
+      ).thenReturn(new QueryCountResult(String.class, 2L, null));
 
       MockHttpRequest request = MockHttpRequest.get("/v2/search/query/string?q=Hello&countOnly=true");
       JsonMockHttpResponse response = new JsonMockHttpResponse();
@@ -315,13 +425,67 @@ class SearchResourceTest {
     }
 
     @Test
+    void shouldReturnSimpleQueryTypeForSearch() throws URISyntaxException, UnsupportedEncodingException {
+      mockQueryResult(
+        "hello",
+        new QueryResult(0L, String.class, List.of(), QueryType.SIMPLE)
+      );
+
+      JsonMockHttpResponse response = search("hello");
+
+      JsonNode node = response.getContentAsJson();
+      assertThat(node.get("queryType").asText()).isEqualTo(QueryType.SIMPLE.name());
+    }
+
+    @Test
+    void shouldReturnParsedQueryTypeForSearch() throws URISyntaxException, UnsupportedEncodingException {
+      mockQueryResult(
+        "hello AND bye",
+        new QueryResult(0L, String.class, List.of(), QueryType.EXPERT)
+      );
+
+      JsonMockHttpResponse response = search("hello AND bye");
+
+      JsonNode node = response.getContentAsJson();
+      assertThat(node.get("queryType").asText()).isEqualTo(QueryType.EXPERT.name());
+    }
+
+    @Test
+    void shouldReturnSimpleQueryTypeForCount() throws URISyntaxException, UnsupportedEncodingException {
+      when(
+        searchEngine.forType("string")
+          .search()
+          .count("hello")
+      ).thenReturn(new QueryCountResult(String.class, 2L, QueryType.SIMPLE));
+
+      JsonMockHttpResponse response = count("hello");
+
+      JsonNode node = response.getContentAsJson();
+      assertThat(node.get("queryType").asText()).isEqualTo(QueryType.SIMPLE.name());
+    }
+
+    @Test
+    void shouldReturnParsedQueryTypeForCount() throws URISyntaxException, UnsupportedEncodingException {
+      when(
+        searchEngine.forType("string")
+          .search()
+          .count("hello AND bye")
+      ).thenReturn(new QueryCountResult(String.class, 2L, QueryType.EXPERT));
+
+      JsonMockHttpResponse response = count("hello AND bye");
+
+      JsonNode node = response.getContentAsJson();
+      assertThat(node.get("queryType").asText()).isEqualTo(QueryType.EXPERT.name());
+    }
+
+    @Test
     void shouldReturnEmbeddedRepository() throws UnsupportedEncodingException, URISyntaxException {
       Repository heartOfGold = RepositoryTestData.createHeartOfGold("git");
       heartOfGold.setId("42");
       when(repositoryManager.get("42")).thenReturn(heartOfGold);
 
       Hit hit = new Hit("21", "42", 21f, Collections.emptyMap());
-      QueryResult result = new QueryResult(1L, String.class, Collections.singletonList(hit));
+      QueryResult result = new QueryResult(1L, String.class, Collections.singletonList(hit), null);
 
       mockQueryResult("hello", result);
       JsonMockHttpResponse response = search("hello");
@@ -339,12 +503,11 @@ class SearchResourceTest {
   @Nested
   class WithScope {
 
-    @Mock
-    private QueryBuilder<Object> internalQueryBuilder;
-
     private final Repository repository1 = new Repository("1", "git", "space", "hog");
     private final Repository repository2 = new Repository("2", "git", "space", "hitchhiker");
     private final Repository repository3 = new Repository("3", "git", "earth", "42");
+    @Mock
+    private QueryBuilder<Object> internalQueryBuilder;
 
     @BeforeEach
     void mockRepositories() {
@@ -400,101 +563,6 @@ class SearchResourceTest {
       verify(internalQueryBuilder).filter(repository1);
       verify(internalQueryBuilder, never()).filter(repository2);
       verify(internalQueryBuilder, never()).filter(repository3);
-    }
-  }
-
-  private void assertLink(JsonNode links, String self, String s) {
-    assertThat(links.get(self).get("href").asText()).isEqualTo(s);
-  }
-
-  private QueryResult result(long totalHits, Object... values) {
-    List<Hit> hits = new ArrayList<>();
-    for (int i = 0; i < values.length; i++) {
-      hits.add(hit(i, values));
-    }
-    return new QueryResult(totalHits, String.class, hits);
-  }
-
-  @Nonnull
-  private Hit hit(int i, Object[] values) {
-    Map<String, Hit.Field> fields = fields(values[i]);
-    return new Hit("" + i, null, values.length - i, fields);
-  }
-
-  @Nonnull
-  private Map<String, Hit.Field> fields(Object value) {
-    Map<String, Hit.Field> fields = new HashMap<>();
-    fields.put("value", new Hit.ValueField(value));
-    fields.put("highlighted", new Hit.HighlightedField(new String[]{value.toString()}));
-    return fields;
-  }
-
-  private void mockQueryResult(String query, QueryResult result) {
-    mockQueryResult(0, 10, query, result);
-  }
-
-  private void mockQueryResult(int start, int limit, String query, QueryResult result) {
-    when(
-      searchEngine.forType("string")
-        .search()
-        .start(start)
-        .limit(limit)
-        .execute(query)
-    ).thenReturn(result);
-  }
-
-  private void assertHeader(JsonMockHttpResponse response, String header, String expectedValue) {
-    assertThat(response.getOutputHeaders().getFirst(header))
-      .asString()
-      .isEqualToIgnoringCase(expectedValue);
-  }
-
-  private JsonMockHttpResponse search(String query) throws URISyntaxException, UnsupportedEncodingException {
-    return search(query, null, null);
-  }
-
-  private JsonMockHttpResponse search(String query, Integer page, Integer pageSize) throws URISyntaxException, UnsupportedEncodingException {
-    String uri = "/v2/search/query/string?q=" + URLEncoder.encode(query, "UTF-8");
-    if (page != null) {
-      uri += "&page=" + page;
-    }
-    if (pageSize != null) {
-      uri += "&pageSize=" + pageSize;
-    }
-    MockHttpRequest request = MockHttpRequest.get(uri);
-    JsonMockHttpResponse response = new JsonMockHttpResponse();
-    dispatcher.invoke(request, response);
-    return response;
-  }
-
-  @Getter
-  @Setter
-  public static class SampleEmbedded extends HalRepresentation {
-    private String value;
-  }
-
-  private static class RepositoryEnricher implements HalEnricher {
-
-    @Override
-    public void enrich(HalEnricherContext context, HalAppender appender) {
-      RepositoryCoordinates repositoryCoordinates = context.oneRequireByType(RepositoryCoordinates.class);
-
-      SampleEmbedded embedded = new SampleEmbedded();
-      embedded.setValue(repositoryCoordinates.getId());
-
-      appender.appendEmbedded("sample", embedded);
-    }
-  }
-
-  private static class SampleEnricher implements HalEnricher {
-    @Override
-    public void enrich(HalEnricherContext context, HalAppender appender) {
-      QueryResult result = context.oneRequireByType(QueryResult.class);
-
-      SampleEmbedded embedded = new SampleEmbedded();
-      embedded.setValue(result.getType().getName());
-
-      appender.appendEmbedded("sample", embedded);
     }
   }
 }

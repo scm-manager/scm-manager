@@ -25,21 +25,10 @@ export default `### Modifiers
 
 Note: You can not use wildcards as the first character of a search.
 
-<table>
-  <tr>
-    <th>Definition</th>
-    <th>Example</th>
-  </tr>
-  <tr>
-    <td>? - single character Wildcard</td>
-    <td>Ultimate?Repo – finds e.g. Ultimate-Repo, Ultimate Repo, Ultimate+Repo</td>
-  </tr>
-  <tr>
-    <td>* - multiple character Wildcard</td>
-    <td>Ultimat*y - finds e.g. Ultimate Repository, Ultimate-Special-Repository, Ultimately</td>
-  </tr>
-</table>
-
+|Definition|Example|
+|----------|-------|
+|? - single character Wildcard|"Ultimate?Repo" – finds e.g. \`Ultimate-Repo\`, \`Ultimate Repo\`, \`Ultimate+Repo\`|
+|* - multiple character Wildcard|"Ultimat*y" - finds e.g. \`Ultimate Repository\`, \`Ultimate-Special-Repository\`, \`Ultimately\`|
 
 ### Ranges
 
@@ -47,37 +36,18 @@ Range Queries allow one to match documents whose field(s) values are between the
 
 Ranges are not reserved to numerical fields. 
 
-<table>
-  <tr>
-    <th>Definition</th>
-    <th>Example</th>
-  </tr>
-  <tr>
-    <td>[ … TO … ] - inclusive range</td>
-    <td>creationDate:[1609459200000 TO 1612137600000] – finds e.G. repositories created between 2021-01-01 and 2021-02-01 </td>
-  </tr>
-  <tr>
-    <td>{… TO …} - exclusive range</td>
-    <td>name:{Aida TO Carmen} – finds e.G. repositories with names between Aida and Carmen, excluding these to values.</td>
-  </tr>
-</table>
-
+|Definition|Example|
+|----------|-------|
+|[ … TO … ] - inclusive range|"creationDate:[1609459200000 TO 1612137600000]" – finds e.G. repositories created between 2021-01-01 and 2021-02-01|
+|{… TO …} - exclusive range|"name:{Aida TO Carmen}" – finds e.G. repositories with names between Aida and Carmen, excluding these to values|
 
 ### Boosting
 
 Boosting allows you to control the relevance of a document by boosting its term. 
 
-<table>
-  <tr>
-    <th>Definition</th>
-    <th>Example</th>
-  </tr>
-  <tr>
-    <td>term^number</td>
-    <td>ultimate^2 repository – makes the term "ultimate" more relevant. </td>
-  </tr>
-</table>
-
+|Definition|Example|
+|----------|-------|
+|term^number|"ultimate^2 repository" – makes the term \`ultimate\` more relevant|
 
 By default, the boost factor is 1. Although the boost factor must be positive, it can be less than 1 (e.g. 0.2)
 
@@ -87,39 +57,28 @@ By default Repository names are boosted by 1.5, namespace by 1.25.
 
 Note: Logical Operators must be entered in upper case (e.g. "AND").
 
-|Operator      |Definition|Example|
-|------------|--|--|
-|AND|Both terms must be included|\`Ultimate AND Repository\` – finds e.g. Ultimate Repository, Ultimate Special Repository|
-|OR            |At least one of the terms must be included|Ultimate OR Repository – finds e.g. Ultimate Repository, Ultimate User, Special Repository|
-|NOT           |Following term may not be included, "!" may be used alternatively|Ultimate NOT Repository – finds e.g. Ultimate user, excludes e.g. Ultimate Repository|
-|–             |Excludes following term from search|Ultimate Repository -Special – finds e.g. Ultimate Repository, excludes e.g. Ultimate Special Repository|
-|+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |Following term must be included|Ultimate +Repository – finds e.g. my Repository, Ultimate Repository|
+|Operator|Definition|Example|
+|--------|----------|-------|
+|AND|Both terms must be included|"Ultimate AND Repository" – finds e.g. \`Ultimate Repository\`, \`Ultimate Special Repository\`|
+|OR|At least one of the terms must be included|"Ultimate OR Repository" – finds e.g. \`Ultimate Repository\`, \`Ultimate User\`, \`Special Repository\`|
+|NOT|Following term may not be included, "!" may be used alternatively|"Ultimate NOT Repository" – finds e.g. \`Ultimate user\`, excludes e.g. \`Ultimate Repository\`|
+|–|Excludes following term from search|"Ultimate Repository -Special" – finds e.g. \`Ultimate Repository\`, excludes e.g. \`Ultimate Special Repository\`|
+|+|Following term must be included|"Ultimate +Repository" – finds e.g. \`my Repository\`, \`Ultimate Repository\`|
 
 ## Grouping
 
 Search supports using parentheses to group clauses to form sub queries. This can be very useful if you want to control the boolean logic for a query.
 
-<table>
-  <tr>
-    <th>Definition</th>
-    <th>Example</th>
-  </tr>
-  <tr>
-    <td>() – terms inside parentheses are grouped together</td>
-    <td>(Ultimate OR my) AND Repository – finds e.g. Ultimate Repository, my Repository, excludes e.g. Super Repository. Either "Ultimate" or “My” must exist, “Repository” must always exist.
- </td>
-  </tr>
-</table>
+|Definition|Example|
+|----------|-------|
+|() – terms inside parentheses are grouped together|"(Ultimate OR my) AND Repository" – finds e.g. \`Ultimate Repository\`, \`my Repository\`, excludes e.g. \`Super Repository\`. Either "Ultimate" or “My” must exist, “Repository” must always exist|
 
+## Phrases
 
-## Escaping Special Characters
+A phrase is a group of terms in a certain order. If you want to search for certain phrases then you can use the \`"\` operator.
 
-The search supports escaping special characters that are part of the query syntax. The current list special characters are
+|Definition|Example|
+|----------|-------|
+|"" - terms inside the quotes are searched for as a phrase|"Ultimate Repository" – finds \`Ultimate Repository\` but not \`Repository Ultimate\`, \`Ultimate\` or \`Repository\`|
 
-&plus; &minus; && || ! ( ) { } [ ] ^ " ~ * ? : &bsol; /
-
-To escape these characters use the "&bsol;" before the character. For example to search for (1+1):2 use the query:
-
-&bsol;(1&bsol;+1&bsol;)&bsol;:2
-
-Source: [https://javadoc.io/static/org.apache.lucene/lucene-queryparser/8.9.0/org/apache/lucene/queryparser/classic/package-summary.html#package.description](https://javadoc.io/static/org.apache.lucene/lucene-queryparser/8.9.0/org/apache/lucene/queryparser/classic/package-summary.html#package.description)`;
+`;

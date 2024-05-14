@@ -164,7 +164,10 @@ public class SearchResource {
 
       QueryCountResult result = queryBuilder.count(params.getQuery());
 
-      return queryResultMapper.map(params, new QueryResult(result.getTotalHits(), result.getType(), Collections.emptyList()));
+      return queryResultMapper.map(
+        params,
+        new QueryResult(result.getTotalHits(), result.getType(), Collections.emptyList(), result.getQueryType())
+      );
     }
 
     private void filterByContext(SearchParameters params, QueryBuilder<Object> queryBuilder) {

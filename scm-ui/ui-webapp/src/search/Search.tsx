@@ -25,15 +25,14 @@
 import React, { FC, useEffect, useState } from "react";
 import {
   CustomQueryFlexWrappedColumns,
-  Level,
   NavLink,
-  Notification,
   Page,
   PrimaryContentColumn,
   SecondaryNavigation,
   Tag,
   urls,
 } from "@scm-manager/ui-components";
+import { Notification, Level } from "@scm-manager/ui-core";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useIndex, useNamespaceAndNameContext, useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
 import Results from "./Results";
@@ -43,7 +42,7 @@ import SyntaxModal from "./SyntaxModal";
 import type { TFunction } from "i18next";
 import styled from "styled-components";
 import OmniSearch from "../containers/OmniSearch";
-import { Links } from "@scm-manager/ui-types";
+import { Links, QueryResult } from "@scm-manager/ui-types";
 
 const DisabledNavLink = styled.div`
   opacity: 0.4;
@@ -136,13 +135,13 @@ export const orderTypes = (t: TFunction) => (a: string, b: string) => {
 
 type Props = {
   selectedType: string;
-  query: string;
+  queryResult?: QueryResult;
   links: Links;
 };
 
 const SyntaxHelpLink: FC = ({ children }) => <Link to="/help/search-syntax">{children}</Link>;
 
-const SearchSubTitle: FC<Props> = ({ selectedType, query, links }) => {
+const SearchSubTitle: FC<Props> = ({ selectedType, queryResult, links }) => {
   const [t] = useTranslation("commons");
   const context = useNamespaceAndNameContext();
   return (
@@ -150,13 +149,14 @@ const SearchSubTitle: FC<Props> = ({ selectedType, query, links }) => {
       {context.namespace
         ? t("search.subtitleWithContext", {
             type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType),
-            context: `${context.namespace}${context.name ? `/${context.name}` : ""}`,
+            context: `${context.namespace}/${context.name ?? ""}`,
           })
         : t("search.subtitle", {
             type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType),
           })}
+      {queryResult && t("search.withQueryType", { queryType: t(`search.queryTypes.${queryResult.queryType}`) })}
       <br />
-      <Trans i18nKey="search.syntaxHelp" components={[<SyntaxHelpLink />]} />
+      <Trans i18nKey="search.syntaxHelp" components={[<SyntaxHelpLink key="syntaxHelpLink" />]} />
       <OmniSearchWrapper className={"mt-4 mb-2"}>
         <OmniSearch links={links} shouldClear={false} ariaId={"searchPage"} />
       </OmniSearchWrapper>
@@ -216,7 +216,7 @@ const Search: FC = () => {
   return (
     <Page
       title={t("search.title")}
-      subtitle={<SearchSubTitle query={query} selectedType={selectedType} links={index?._links || {}} />}
+      subtitle={<SearchSubTitle queryResult={data} selectedType={selectedType} links={index?._links || {}} />}
       loading={isLoading}
     >
       {showHelp ? <SyntaxModal close={() => setShowHelp(false)} /> : null}
@@ -229,7 +229,7 @@ const Search: FC = () => {
           <SecondaryNavigation label={t("search.types")} collapsible={false}>
             {types.map((type) =>
               type !== selectedType && (counts[type].isLoading || counts[type].data === 0) ? (
-                <li>
+                <li key={type}>
                   <DisabledNavLink className="p-4 is-unselectable">
                     <Level
                       left={t(`plugins:search.types.${type}.navItem`, type)}

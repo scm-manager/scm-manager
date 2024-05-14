@@ -60,7 +60,15 @@ public class QueryResultFactory {
     for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
       hits.add(createHit(scoreDoc));
     }
-    return new QueryResult(topDocs.totalHits.value, searchableType.getType(), hits);
+    return new QueryResult(topDocs.totalHits.value, searchableType.getType(), hits, null);
+  }
+
+  public QueryResult createWithQueryType(TopDocs topDocs, QueryType queryType) throws IOException, InvalidTokenOffsetsException {
+    List<Hit> hits = new ArrayList<>();
+    for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+      hits.add(createHit(scoreDoc));
+    }
+    return new QueryResult(topDocs.totalHits.value, searchableType.getType(), hits, queryType);
   }
 
   private Hit createHit(ScoreDoc scoreDoc) throws IOException, InvalidTokenOffsetsException {

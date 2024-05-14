@@ -49,8 +49,16 @@ public class QueryResult extends QueryCountResult {
    */
   private final List<Hit> hits;
 
+  /**
+   * @deprecated since 3.2.0 in favor of the new constructor with queryType
+   */
+  @Deprecated(since = "3.2.0")
   public QueryResult(long totalHits, Class<?> type, List<Hit> hits) {
-    super(type, totalHits);
+    this(totalHits, type, hits, null);
+  }
+
+  public QueryResult(long totalHits, Class<?> type, List<Hit> hits, QueryType queryType) {
+    super(type, totalHits, queryType);
     this.hits = Collections.unmodifiableList(hits);
   }
 }

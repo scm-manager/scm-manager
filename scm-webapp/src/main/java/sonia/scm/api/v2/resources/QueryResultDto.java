@@ -28,6 +28,7 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.Setter;
+import sonia.scm.search.QueryType;
 
 @Getter
 @Setter
@@ -36,6 +37,7 @@ public class QueryResultDto extends CollectionDto {
 
   private Class<?> type;
   private long totalHits;
+  private QueryType queryType;
 
   QueryResultDto(Links links, Embedded embedded) {
     super(links, embedded);

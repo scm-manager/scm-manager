@@ -28,7 +28,8 @@ import RepositoryHit from "./RepositoryHit";
 import GenericHit from "./GenericHit";
 import UserHit from "./UserHit";
 import GroupHit from "./GroupHit";
-import { HitProps, Notification } from "@scm-manager/ui-components";
+import { HitProps } from "@scm-manager/ui-components";
+import { Notification } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 

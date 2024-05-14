@@ -266,6 +266,7 @@
     "title": "Search",
     "subtitle": "{{type}} results",
     "subtitleWithContext": "{{type}} results in \"{{context}}\"",
+    "withQueryType": " with {{queryType}}",
     "types": "Results",
     "noHits": "No results found. On the right side you will find other categories where results might be available",
     "syntaxHelp": "Find better results by using the full <0>search syntax</0>",
@@ -283,11 +284,19 @@
       "searchNamespace": "Search in namespace",
       "searchEverywhere": "Search everywhere"
     },
+    "queryTypes": {
+      "SIMPLE": "simple query",
+      "EXPERT": "expert query"
+    },
     "syntax": {
       "title": "Expert Search",
       "subtitle": "Learn About the fields of the entities, modifiers and operators.",
+      "queryTypes": {
+        "title": "Types of queries",
+        "description": "There are two types of queries. The first is the simple query. A simple query only contains terms and does not contain any of the operators listed below (for example 'AND'). Every term used in a simple query get implicitly extended with the '*' operator at the end. This means that searching for 'Repo' will also match the term 'Repository'. The second type of query is the expert query. Any query that contains at least one operator is considered as an expert query. This query type allows for complex searches. But terms used in the expert query are not extended with the '*' implicitly. A user has to add them explicitly to a term."
+      },
       "exampleQueriesAndFields": {
-        "title": "Example Queries and Fields",
+        "title": "Examples of field name queries",
         "description": "Fields may be queried individually to narrow down your search, e.g. name:ultimate will query for ultimate only in the field “name” of entities. Some fields may be found in all or most entities (e.g. Name, creationDate). Other fields only exist with single entities."
       },
       "fields": {
