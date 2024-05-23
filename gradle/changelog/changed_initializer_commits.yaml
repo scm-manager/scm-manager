@@ -1,2 +1,0 @@
-- type: changed
-  description: Each repository initializer step is now executed with his own commit

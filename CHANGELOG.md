@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2024-05-23
+### Added
+- Global button to ignore whitespaces and tabs inside of diffs
+- New component "icon button" in ui library
+- The search result now also shows what type of query was provided by the user (simple query or expert query).
+- Button to toggle visibility of whitespaces and tabs inside of diffs
+- New component "LabelTooltip" in ui library
+
+### Fixed
+- Component for mirror tag to display a wider range of colors
+- Phrase queries using the quotes are now parsed as such
+
+### Changed
+- Each repository initializer step is now executed with his own commit
+- The syntax help documentation now contains the definitions of the two different types of queries and also explanation for the quotes operator.
+- The currently opened path is now remembered, when switching back and forth between Source, Commit and File Search view.
+
 ## [3.1.0] - 2024-04-09
 ### Added
 - New `putBinary` function to send http put request with binary payload
@@ -1506,3 +1523,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.0.3]: https://scm-manager.org/download/3.0.3
 [3.0.4]: https://scm-manager.org/download/3.0.4
 [3.1.0]: https://scm-manager.org/download/3.1.0
+[3.2.0]: https://scm-manager.org/download/3.2.0
