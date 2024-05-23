@@ -43,13 +43,18 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static sonia.scm.plugin.Tracing.SPAN_KIND;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PluginInstallerTest {
@@ -81,7 +86,7 @@ class PluginInstallerTest {
       Path arg = ic.getArgument(0);
       return directory.resolve(arg);
     });
-    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor(true);
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor(new PluginCondition("1.0.0", List.of("linux"), "64"));
     lenient().when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
   }
 
@@ -161,7 +166,7 @@ class PluginInstallerTest {
   @Test
   void shouldFailForUnsupportedPlugin() throws IOException {
     mockContent("42");
-    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor(false);
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor(new PluginCondition("1.0.0", List.of("linux"), "42"));
     when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
 
     PluginInstallationContext context = PluginInstallationContext.empty();
@@ -174,7 +179,7 @@ class PluginInstallerTest {
   void shouldFailForNameMismatch() throws IOException {
     mockContent("42");
 
-    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor("scm-svn-plugin", "1.0.0", true);
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor("scm-svn-plugin", "1.0.0", new PluginCondition("1.0.0", List.of("linux"), "64"));
     when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
 
     PluginInstallationContext context = PluginInstallationContext.empty();
@@ -188,7 +193,7 @@ class PluginInstallerTest {
   void shouldFailForVersionMismatch() throws IOException {
     mockContent("42");
 
-    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor("scm-git-plugin", "1.1.0", true);
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor("scm-git-plugin", "1.1.0", new PluginCondition("42.0.0", List.of("linux"), "64"));
     when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
 
     PluginInstallationContext context = PluginInstallationContext.empty();
@@ -219,16 +224,16 @@ class PluginInstallerTest {
     return new AvailablePlugin(descriptor);
   }
 
-  private InstalledPluginDescriptor createPluginDescriptor(boolean supported) {
-    return createPluginDescriptor("scm-git-plugin", "1.0.0", supported);
+  private InstalledPluginDescriptor createPluginDescriptor(PluginCondition condition) {
+    return createPluginDescriptor("scm-git-plugin", "1.0.0", condition);
   }
 
-  private InstalledPluginDescriptor createPluginDescriptor(String name, String version, boolean supported) {
+  private InstalledPluginDescriptor createPluginDescriptor(String name, String version, PluginCondition condition) {
     InstalledPluginDescriptor installedPluginDescriptor = mock(InstalledPluginDescriptor.class, RETURNS_DEEP_STUBS);
     lenient().when(installedPluginDescriptor.getInformation().getId()).thenReturn(name);
     lenient().when(installedPluginDescriptor.getInformation().getName()).thenReturn(name);
     lenient().when(installedPluginDescriptor.getInformation().getVersion()).thenReturn(version);
-    lenient().when(installedPluginDescriptor.getCondition().isSupported()).thenReturn(supported);
+    lenient().when(installedPluginDescriptor.getCondition()).thenReturn(condition);
     return installedPluginDescriptor;
   }
 }

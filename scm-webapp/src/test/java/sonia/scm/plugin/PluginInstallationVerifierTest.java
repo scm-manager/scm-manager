@@ -56,7 +56,7 @@ class PluginInstallationVerifierTest {
   void setUpDescriptor() {
     PluginInformation information = new PluginInformation();
     information.setName(HOG_PLUGIN);
-    information.setVersion("1.0.0");
+    information.setVersion("3.0.0");
     when(descriptor.getInformation()).thenReturn(information);
   }
 
@@ -80,7 +80,7 @@ class PluginInstallationVerifierTest {
   }
 
   private void matchConditions() {
-    when(descriptor.getCondition().isSupported()).thenReturn(true);
+    when(descriptor.getCondition()).thenReturn(new PluginCondition());
   }
 
   @Test

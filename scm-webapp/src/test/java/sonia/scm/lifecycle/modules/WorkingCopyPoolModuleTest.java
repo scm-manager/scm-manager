@@ -62,6 +62,7 @@ class WorkingCopyPoolModuleTest {
 
   @Test
   void shouldBindToDefaultWithoutProperty() {
+    WebappConfigProvider.setConfigBindings(Map.of("", ""));
     WorkingCopyPoolModule module = new WorkingCopyPoolModule(pluginLoader);
     when(binder.bind(WorkingCopyPool.class)).thenReturn(bindingBuilder);
 

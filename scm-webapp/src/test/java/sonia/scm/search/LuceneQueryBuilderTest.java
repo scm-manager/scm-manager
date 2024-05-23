@@ -58,7 +58,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -622,7 +621,7 @@ class LuceneQueryBuilderTest {
   }
 
   @ParameterizedTest
-  @CsvSource({"holmes watson moriarty,SIMPLE_WITH_ADDED_WILDCARDS", "holmes OR watson OR moriarty,PARSED_EXPERT_QUERY"})
+  @CsvSource({"holmes watson moriarty,SIMPLE", "holmes OR watson OR moriarty,EXPERT"})
   void shouldReturnQueryResultWithCorrectType(String queryString, String expectedQueryType) throws IOException {
     try (IndexWriter writer = writer()) {
       writer.addDocument(personDoc("Holmes"));

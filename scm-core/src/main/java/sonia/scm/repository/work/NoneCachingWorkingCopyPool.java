@@ -24,7 +24,7 @@
 
 package sonia.scm.repository.work;
 
-import jakarta.inject.Inject;
+import com.google.inject.Inject;
 import sonia.scm.util.IOUtil;
 
 import java.io.File;

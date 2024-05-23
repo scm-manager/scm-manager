@@ -160,11 +160,12 @@ class DefaultNamespaceManagerTest {
 
     @BeforeEach
     void grantReadPermission() {
-      when(subject.isPermitted("namespace:permissionRead")).thenReturn(true);
+      lenient().when(subject.isPermitted("namespace:permissionRead:life")).thenReturn(true);
     }
 
     @Test
     void shouldCreateNewNamespaceObjectIfNotInStore() {
+      when(subject.isPermitted("namespace:permissionRead:universe")).thenReturn(true);
       Namespace namespace = manager.get("universe").orElse(null);
 
       assertThat(namespace).isEqualTo(universe);
@@ -212,8 +213,8 @@ class DefaultNamespaceManagerTest {
 
     @BeforeEach
     void grantReadPermission() {
-      when(subject.isPermitted("namespace:permissionRead:*")).thenReturn(false);
-      lenient().doThrow(AuthorizationException.class).when(subject).checkPermission("namespace:permissionWrite:*");
+      when(subject.isPermitted("namespace:permissionRead:life")).thenReturn(false);
+      lenient().doThrow(AuthorizationException.class).when(subject).checkPermission("namespace:permissionWrite:life");
     }
 
     @Test
