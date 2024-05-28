@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Global button to ignore whitespaces and tabs inside of diffs
 - New component "icon button" in ui library
-- The search result now also shows what type of query was provided by the user (simple query or expert query).
+- The search result now also shows what type of query was provided by the user (simple query or expert query)
+- Possibility to specify StickyHeader top position of Diff component
 - Button to toggle visibility of whitespaces and tabs inside of diffs
 - New component "LabelTooltip" in ui library
 
@@ -19,8 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Each repository initializer step is now executed with his own commit
-- The syntax help documentation now contains the definitions of the two different types of queries and also explanation for the quotes operator.
-- The currently opened path is now remembered, when switching back and forth between Source, Commit and File Search view.
+- The syntax help documentation now contains the definitions of the two different types of queries and also explanation for the quotes' operator
+- The currently opened path is now remembered, when switching back and forth between Source, Commit and File Search view
 
 ## [3.1.0] - 2024-04-09
 ### Added
@@ -30,20 +31,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - The height of the navigation bar is now considered when scrolling to an element via anchor
-- Blocking event bus with long running tasks (update of legman to v2.0.3)
+- Blocking event bus with long-running tasks (update of legman to v2.0.3)
 
 ### Changed
 - Improved performance of LFS imports for imported repositories and mirrors
-- The headings of rendered markdown documents will now start at h2
+- The headings of rendered Markdown documents will now start at h2
 - The order of items in the repository side menu got changed, code is now always at the top
 
 ## [3.0.4] - 2024-03-07
+### Added
+- Namespace information page
+
 ### Fixed
 - Sort global config and repository config the same way
 - Buttons from plugins in the code view will not be removed after fetching more sources
 - Required plugins can be uninstalled even when dependent plugins are still installed
 - Plugin condition mismatch description to show condition and display specialised error message
 - Internal server error for commits with SSH signatures
+
+### Changed
+- Namespace configuration permissions
 
 ## [3.0.3] - 2024-02-08
 ### Fixed
@@ -59,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.0.0] - 2024-01-29
 ### Added
-- Added e2e tests for branch creation
+- E2e tests for branch creation
 
 ### Fixed
 - Race condition sometimes breaking mouse interaction in global search
@@ -186,7 +193,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.45.1] - 2023-07-18
 ### Added
 - Optional caching for stores and data files
-- Add variables for liveness probe and readiness probe delay in helm chart
+- Variables for liveness probe and readiness probe delay in helm chart
 - New accessible Combobox component
 - Make file search deactivatable via global config
 - Architecture documentation for integration and tech stack
@@ -194,7 +201,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Re-Release of 2.45.0 due to errors during release
 - Internal server error with external groups in permission overview
-- Svn external contains sub directory
+- Svn external contains subdirectory
 - Security findings (security headers and jetty server information)
 - Broken file action menu keyboard interaction
 - Improve general performance
@@ -235,7 +242,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Broken HG write access when anonymous users have read access
 - ConfigurationBinder Navlink does not only match exact routes
 - Duplicate contributors for single changeset
-- Automatically created gpg keys can now be verified by Github
+- Automatically created gpg keys can now be verified by GitHub
 - Allow passing a ref through FileInput to one of its children
 
 ### Changed
@@ -258,7 +265,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Error in frontend without 'default' branch in hg repositories
 - Not found exception with SVN externals
-- Fix sticky diffs page position after collapse
+- Sticky diffs page position after collapse
 - Connect labels with their respective inputs for improved accessibility
 - Branch and tag validation regarding special characters
 - Concurrent modification exception in JAXB stores
@@ -287,8 +294,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Correct z-index equal weighting in diff header
-- Fix drop down arrow z index
-- Fix tab order for primary navigation
+- Drop down arrow z index
+- Tab order for primary navigation
 - Long text in table cells breaking layout
 - Avatar size must not leave boundaries
 
@@ -301,7 +308,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.41.0] - 2023-01-18
 ### Added
-- Add abstract configuration adapter to simply creating new global configurations
+- Abstract configuration adapter to simply creating new global configurations
 - Markdown component to render images from repository correctly
 - Extension point for page size
 - New overlay ui module with tooltip component
@@ -327,7 +334,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Keyboard shortcut for global search ([#2118](https://github.com/scm-manager/scm-manager/pull/2118))
 - Feedback links to footer ([#2125](https://github.com/scm-manager/scm-manager/pull/2125))
 - Keyboard shortcuts documentation ([#2129](https://github.com/scm-manager/scm-manager/pull/2129))
-- Add keyboard navigation to repository overview list ([#2146](https://github.com/scm-manager/scm-manager/pull/2146))
+- Keyboard navigation to repository overview list ([#2146](https://github.com/scm-manager/scm-manager/pull/2146))
 
 ### Fixed
 - Keyboard shortcuts should be inactive when modals are open ([#2145](https://github.com/scm-manager/scm-manager/pull/2145))
@@ -358,15 +365,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implement commit search features for git ([#2111](https://github.com/scm-manager/scm-manager/pull/2111))
 
 ### Fixed
-- Fix docker healthcheck for custom ports, https and forced base url ([#2110](https://github.com/scm-manager/scm-manager/pull/2110))
+- Docker healthcheck for custom ports, https and forced base url ([#2110](https://github.com/scm-manager/scm-manager/pull/2110))
 - Handle missing indexes with own No Op IndexReader ([#2113](https://github.com/scm-manager/scm-manager/pull/2113))
 - Handle missing encoding of square brackets in filenames ([#2117](https://github.com/scm-manager/scm-manager/pull/2117))
 - Show warning message for invalid search requests ([#2114](https://github.com/scm-manager/scm-manager/pull/2114))
 - Encoding in global search ([#2116](https://github.com/scm-manager/scm-manager/pull/2116))
 - Lazy loading in the source view ([#2120](https://github.com/scm-manager/scm-manager/pull/2120))
-- Fix broken compare view due to missing export ([#2105](https://github.com/scm-manager/scm-manager/pull/2105))
+- Broken compare view due to missing export ([#2105](https://github.com/scm-manager/scm-manager/pull/2105))
 - Keep search context for search results pagination ([#2115](https://github.com/scm-manager/scm-manager/pull/2115))
-- Fixed wrong indentation of extraVolumes and extraVolumeMounts ([#2103](https://github.com/scm-manager/scm-manager/pull/2103))
+- Wrong indentation of extraVolumes and extraVolumeMounts ([#2103](https://github.com/scm-manager/scm-manager/pull/2103))
 
 ### Changed
 - Reduce the output from the realm trace log ([#2121](https://github.com/scm-manager/scm-manager/pull/2121))
@@ -385,7 +392,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Make sure, that passwords are always stored encrypted ([#2085](https://github.com/scm-manager/scm-manager/pull/2085))
 - Reduce code smells ([#2089](https://github.com/scm-manager/scm-manager/pull/2089))
-- Fix paging for too large page numbers ([#2097](https://github.com/scm-manager/scm-manager/pull/2097))
+- Paging for too large page numbers ([#2097](https://github.com/scm-manager/scm-manager/pull/2097))
 
 ### Changed
 - Extend global search to enable context-sensitive search queries. ([#2102](https://github.com/scm-manager/scm-manager/pull/2102))
@@ -417,7 +424,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.36.0] - 2022-06-13
 ### Added
-- Add api to overwrite content type resolver ([#2051](https://github.com/scm-manager/scm-manager/pull/2051))
+- Api to overwrite content type resolver ([#2051](https://github.com/scm-manager/scm-manager/pull/2051))
 - New diff view props for controlling hunk/line interaction ([#2047](https://github.com/scm-manager/scm-manager/pull/2047))
 
 ### Fixed
@@ -470,7 +477,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.33.0] - 2022-04-29
 ### Added
-- Add cli support for repositories, users and groups ([#1987](https://github.com/scm-manager/scm-manager/pull/1987), [#1993](https://github.com/scm-manager/scm-manager/pull/1993))
+- Cli support for repositories, users and groups ([#1987](https://github.com/scm-manager/scm-manager/pull/1987), [#1993](https://github.com/scm-manager/scm-manager/pull/1993))
 
 ### Fixed
 - Table in code view breaks at certain screensizes ([#1995](https://github.com/scm-manager/scm-manager/pull/1995))
@@ -511,7 +518,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.32.0] - 2022-03-10
 ### Added
 - Enhanced contributor api ([#1966](https://github.com/scm-manager/scm-manager/pull/1966))
-- Add feedback button and form ([#1967](https://github.com/scm-manager/scm-manager/pull/1967))
+- Feedback button and form ([#1967](https://github.com/scm-manager/scm-manager/pull/1967))
 - Introduce darkmode theme ([#1969](https://github.com/scm-manager/scm-manager/pull/1969))
 
 ### Fixed
@@ -527,20 +534,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.31.1] - 2022-02-21
 ### Fixed
-- Fix ClassNotFoundException on startup ([#1958](https://github.com/scm-manager/scm-manager/issues/1958))
+- ClassNotFoundException on startup ([#1958](https://github.com/scm-manager/scm-manager/issues/1958))
 
 ## [2.31.0] - 2022-02-18
 ### Added
-- Add secondary color gradations to styleguide ([#1944](https://github.com/scm-manager/scm-manager/pull/1944))
+- Secondary color gradations to styleguide ([#1944](https://github.com/scm-manager/scm-manager/pull/1944))
 - Collapses folders in code view which only have a folder as their only child ([#1951](https://github.com/scm-manager/scm-manager/pull/1951))
-- Add myCloudogu data processing link ([#1935](https://github.com/scm-manager/scm-manager/pull/1935))
+- MyCloudogu data processing link ([#1935](https://github.com/scm-manager/scm-manager/pull/1935))
 
 ### Fixed
 - Adjust reload button on plugin actions ([#1946](https://github.com/scm-manager/scm-manager/pull/1946))
 - Improve accessibility ([#1956](https://github.com/scm-manager/scm-manager/pull/1956))
 - Do not fail on 502 during restart actions ([#1941](https://github.com/scm-manager/scm-manager/pull/1941))
 - NPE for searchable types
-- Fix missing css for migration wizard
+- Missing css for migration wizard
 - Markdown toggle covers source copy button ([#1939](https://github.com/scm-manager/scm-manager/pull/1939))
 
 ### Changed
@@ -559,12 +566,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.30.0] - 2022-01-21
 ### Added
 - initial focus, submission on pressing enter and fix trap focus for modals ([#1925](https://github.com/scm-manager/scm-manager/pull/1925))
-- Add compare view to see changes between branches, tags and revisions ([#1920](https://github.com/scm-manager/scm-manager/pull/1920))
+- Compare view to see changes between branches, tags and revisions ([#1920](https://github.com/scm-manager/scm-manager/pull/1920))
 - Security notifications to inform the running instance about known security issues ([#1924](https://github.com/scm-manager/scm-manager/pull/1924))
 
 ### Fixed
 - Set HEAD to correct branch in new git repositories ([#1929](https://github.com/scm-manager/scm-manager/pull/1929))
-- Fix bugs in unit tests which occur on Windows only ([#1927](https://github.com/scm-manager/scm-manager/pull/1927))
+- Bugs in unit tests which occur on Windows only ([#1927](https://github.com/scm-manager/scm-manager/pull/1927))
 - Encrypt myCloudogu refresh token on file system ([#1923](https://github.com/scm-manager/scm-manager/pull/1923))
 - Autocompletion has sorted suggestions ([#1918](https://github.com/scm-manager/scm-manager/pull/1918))
 
@@ -579,7 +586,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.29.0] - 2022-01-07
 ### Added
 - CSS variables for plugins ([#1910](https://github.com/scm-manager/scm-manager/pull/1910))
-- Add copy button for markdown code blocks ([#1902](https://github.com/scm-manager/scm-manager/pull/1902))
+- Copy button for Markdown code blocks ([#1902](https://github.com/scm-manager/scm-manager/pull/1902))
 - Disable repository types via global config ([#1908](https://github.com/scm-manager/scm-manager/pull/1908))
 
 ### Fixed
@@ -588,21 +595,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add ability to render storyshots asynchronously ([#1906](https://github.com/scm-manager/scm-manager/pull/1906))
 
 ### Changed
-- Change mono-font-stack to provide better ux on modern platforms by using later os-fonts. Reduces amount of similar but not equal fonts used.
+- Change mono-font-stack to provide better ux on modern platforms by using later os-fonts. Reduces amount of similar but not equal fonts used
 - Make "not clickable" mode for breadcrumb ([#1907](https://github.com/scm-manager/scm-manager/pull/1907))
 
 ## [2.28.0] - 2021-12-22
 ### Added
 - Fix ScmPathInfoStore injection ([#1889](https://github.com/scm-manager/scm-manager/pull/1889))
 - Show additional branch details information ([#1888](https://github.com/scm-manager/scm-manager/pull/1888) and [#1893](https://github.com/scm-manager/scm-manager/pull/1893))
-- Add move capabilities to modify command ([#1859](https://github.com/scm-manager/scm-manager/pull/1859))
+- Move capabilities to modify command ([#1859](https://github.com/scm-manager/scm-manager/pull/1859))
 - Adds compatibility for OCP and ICP ([#1870](https://github.com/scm-manager/scm-manager/pull/1870))
 - Show additional information on branches overview ([#1876](https://github.com/scm-manager/scm-manager/pull/1876))
 
 ### Fixed
 - High contrast mode flaws ([#1892](https://github.com/scm-manager/scm-manager/pull/1892))
 - Cleanup html errors ([#1869](https://github.com/scm-manager/scm-manager/pull/1869))
-- Fix extension point "main.route"
+- Extension point "main.route"
 - Closing of repository while getting the latest commit asynchronously ([#1903](https://github.com/scm-manager/scm-manager/pull/1903))
 - Search highlighting in jsx ([#1886](https://github.com/scm-manager/scm-manager/pull/1886))
 - Syntax highlighting on non highlighted fields ([#1901](https://github.com/scm-manager/scm-manager/pull/1901))
@@ -642,7 +649,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.27.0] - 2021-11-16
 ### Added
-- Add contact icon to repository overview ([#1855](https://github.com/scm-manager/scm-manager/pull/1855))
+- Contact icon to repository overview ([#1855](https://github.com/scm-manager/scm-manager/pull/1855))
 - Support for multipart form data to AdvancedHttpClient ([#1856](https://github.com/scm-manager/scm-manager/pull/1856))
 - Lock and unlock command for SVN ([#1847](https://github.com/scm-manager/scm-manager/pull/1847))
 
@@ -657,19 +664,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.26.1] - 2021-11-09
 ### Fixed
 - Concurrent modification error in SVN modify command ([#1849](https://github.com/scm-manager/scm-manager/pull/1849))
-- Fix endless loop on logout with slow connections
+- Endless loop on logout with slow connections
 
 ## [2.26.0] - 2021-11-04
 ### Added
 - Viewer for pdf files ([#1843](https://github.com/scm-manager/scm-manager/pull/1843))
-- Add alternative text to controls to allow screen readers to read them aloud ([#1840](https://github.com/scm-manager/scm-manager/pull/1840))
+- Alternative text to controls to allow screen readers to read them aloud ([#1840](https://github.com/scm-manager/scm-manager/pull/1840))
 - File lock implementation for git (lfs) ([#1838](https://github.com/scm-manager/scm-manager/pull/1838))
 - Experimental high contrast mode ([#1845](https://github.com/scm-manager/scm-manager/pull/1845))
 - Read all errors with screen readers ([#1839](https://github.com/scm-manager/scm-manager/pull/1839))
 
 ### Fixed
-- Fix <a> tags without hrefs ([#1841](https://github.com/scm-manager/scm-manager/pull/1841))
-- Fix eslint errors and warnings ([#1841](https://github.com/scm-manager/scm-manager/pull/1841))
+- <a> tags without hrefs ([#1841](https://github.com/scm-manager/scm-manager/pull/1841))
+- Eslint errors and warnings ([#1841](https://github.com/scm-manager/scm-manager/pull/1841))
 - Removed NODE_ENV from yarn serve command to be compatible with windows ([#1844](https://github.com/scm-manager/scm-manager/pull/1844))
 - Initial mirror with no accepted branch ([#1842](https://github.com/scm-manager/scm-manager/pull/1842))
 
@@ -682,7 +689,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refetching of content on switching between source and md view ([#1823](https://github.com/scm-manager/scm-manager/pull/1823))
 - Recursive git browse ([#1833](https://github.com/scm-manager/scm-manager/pull/1833))
 - remove query keys when deleting individual entities ([#1832](https://github.com/scm-manager/scm-manager/pull/1832))
-- Fix link templating for diff links ([#1834](https://github.com/scm-manager/scm-manager/pull/1834))
+- Link templating for diff links ([#1834](https://github.com/scm-manager/scm-manager/pull/1834))
 - Correct import in RepositoryGroupEntry ([#1825](https://github.com/scm-manager/scm-manager/pull/1825))
 
 ### Changed
@@ -695,7 +702,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Method to delete files recursively in modify command ([#1821](https://github.com/scm-manager/scm-manager/pull/1821))
 - Internal api to determine email address for DisplayUser ([#1815](https://github.com/scm-manager/scm-manager/pull/1815))
 - Set author for merge as DisplayUser ([#1815](https://github.com/scm-manager/scm-manager/pull/1815))
-- Add method to delete whole configuration store ([#1814](https://github.com/scm-manager/scm-manager/pull/1814))
+- Method to delete whole configuration store ([#1814](https://github.com/scm-manager/scm-manager/pull/1814))
 - Move DangerZone styling to ui-components (([#1814](https://github.com/scm-manager/scm-manager/pull/1814)))
 - Extension points for source tree ([#1816](https://github.com/scm-manager/scm-manager/pull/1816))
 
@@ -722,7 +729,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Proxy support for pull, push and mirror commands ([#1773](https://github.com/scm-manager/scm-manager/pull/1773))
 - Option for local proxy configuration to mirror command ([#1773](https://github.com/scm-manager/scm-manager/pull/1773))
 - Show repository avatar in quick search ([#1759](https://github.com/scm-manager/scm-manager/issues/1759))
-- Add additional help to quick search and an advanced search documentation page ([#1757](https://github.com/scm-manager/scm-manager/pull/1757)
+- Additional help to quick search and an advanced search documentation page ([#1757](https://github.com/scm-manager/scm-manager/pull/1757)
 - Support for different types of analyzer per field ([#1755](https://github.com/scm-manager/scm-manager/pull/1755))
 
 ### Fixed
@@ -731,8 +738,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Preserve request method on force base url ([#1771](https://github.com/scm-manager/scm-manager/issues/1771) and [#1778](https://github.com/scm-manager/scm-manager/pull/1778))
 - Search queries containing hypens ([#1743](https://github.com/scm-manager/scm-manager/issues/1743) and [#1753](https://github.com/scm-manager/scm-manager/pull/1753))
 - Proxy authentication ([#1773](https://github.com/scm-manager/scm-manager/pull/1773))
-- Fix disabled local proxy configuration being used over global config ([#1780](https://github.com/scm-manager/scm-manager/pull/1780))
-- Fix HalRepresentationWithEmbedded type ([#1793](https://github.com/scm-manager/scm-manager/pull/1793))
+- Disabled local proxy configuration being used over global config ([#1780](https://github.com/scm-manager/scm-manager/pull/1780))
+- HalRepresentationWithEmbedded type ([#1793](https://github.com/scm-manager/scm-manager/pull/1793))
 - Error message for parse error on search result page ([#1768](https://github.com/scm-manager/scm-manager/pull/1768))
 - Remove deletion of empty modalRoot node to allow a different modal to continue to exist ([#1779](https://github.com/scm-manager/scm-manager/pull/1779))
 - Broken login page if login info response could not be parsed ([#1791](https://github.com/scm-manager/scm-manager/issues/1791) and [#1795](https://github.com/scm-manager/scm-manager/pull/1795))
@@ -755,12 +762,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.22.0] - 2021-07-30
 ### Added
-- Add users and groups to default search index ([#1738](https://github.com/scm-manager/scm-manager/pull/1738))
-- Add dedicated search page with more details and different types ([#1738](https://github.com/scm-manager/scm-manager/pull/1738))
+- Users and groups to default search index ([#1738](https://github.com/scm-manager/scm-manager/pull/1738))
+- Dedicated search page with more details and different types ([#1738](https://github.com/scm-manager/scm-manager/pull/1738))
 
 ### Changed
 - Remove repository shortlinks ([#1720](https://github.com/scm-manager/scm-manager/pull/1720))
-- The simple workdir cache has a maximum size, an lru semantic and blocks on parallel requests ([#1735](https://github.com/scm-manager/scm-manager/pull/1735))
+- The simple workdir cache has a maximum size, a lru semantic and blocks on parallel requests ([#1735](https://github.com/scm-manager/scm-manager/pull/1735))
 - Add username/password authentication to push command ([#1734](https://github.com/scm-manager/scm-manager/pull/1734))
 - Decrease log level of DefaultAdministrationContext from info to debug
 - Logo for small header
@@ -769,11 +776,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Make MarkdownView backwards-compatible with edge-cases ([#1737](https://github.com/scm-manager/scm-manager/pull/1737))
 - Handle rejected master branch on initial mirror synchronization correctly ([#1747](https://github.com/scm-manager/scm-manager/pull/1747))
-- Fix file search on branches with "/" ([#1748](https://github.com/scm-manager/scm-manager/pull/1748))
-- Fix overflow of quick search results with long repository names ([#1739](https://github.com/scm-manager/scm-manager/pull/1739))
-- Fix login extension point ([#1741](https://github.com/scm-manager/scm-manager/pull/1741))
-- Fix file detection on hg fileview command ([#1746](https://github.com/scm-manager/scm-manager/pull/1746))
-- Fix svn mirror update if first initialization failed before ([#1745](https://github.com/scm-manager/scm-manager/pull/1745))
+- File search on branches with "/" ([#1748](https://github.com/scm-manager/scm-manager/pull/1748))
+- Overflow of quick search results with long repository names ([#1739](https://github.com/scm-manager/scm-manager/pull/1739))
+- Login extension point ([#1741](https://github.com/scm-manager/scm-manager/pull/1741))
+- File detection on hg fileview command ([#1746](https://github.com/scm-manager/scm-manager/pull/1746))
+- Svn mirror update if first initialization failed before ([#1745](https://github.com/scm-manager/scm-manager/pull/1745))
 
 ## [2.21.0] - 2021-07-21
 ### Added
@@ -823,19 +830,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.19.0] - 2021-06-04
 ### Added
 - Extension Point for repository creators ([#1657](https://github.com/scm-manager/scm-manager/pull/1657))
-- Add trust manager provider ([#1654](https://github.com/scm-manager/scm-manager/pull/1654))
+- Trust manager provider ([#1654](https://github.com/scm-manager/scm-manager/pull/1654))
 - Implement api for extension point typings ([#1638](https://github.com/scm-manager/scm-manager/pull/1638))
-- Add mirror command and extension points ([#1683](https://github.com/scm-manager/scm-manager/pull/1683))
-- Add support for react-hook-form ([#1656](https://github.com/scm-manager/scm-manager/pull/1656))
+- Mirror command and extension points ([#1683](https://github.com/scm-manager/scm-manager/pull/1683))
+- Support for react-hook-form ([#1656](https://github.com/scm-manager/scm-manager/pull/1656))
 - Implement Subversion mirror command ([#1660](https://github.com/scm-manager/scm-manager/pull/1660))
 - Notifications for health checks ([#1664](https://github.com/scm-manager/scm-manager/pull/1664))
 
 ### Fixed
 - Show source code controls even if a file is not present ([#1680](https://github.com/scm-manager/scm-manager/pull/1680))
-- Fix annotate overflow and doubled spacing in code views ([#1678](https://github.com/scm-manager/scm-manager/pull/1678))
+- Annotate overflow and doubled spacing in code views ([#1678](https://github.com/scm-manager/scm-manager/pull/1678))
 - SSE for notifications behind nginx reverse proxy ([#1650](https://github.com/scm-manager/scm-manager/pull/1650))
 - Use correct syntax for config routes ([#1652](https://github.com/scm-manager/scm-manager/pull/1652))
-- Fix administration page error for empty release feed url ([#1667](https://github.com/scm-manager/scm-manager/pull/1667))
+- Administration page error for empty release feed url ([#1667](https://github.com/scm-manager/scm-manager/pull/1667))
 - Remove duplicated notification endpoints in openapi ([#1677](https://github.com/scm-manager/scm-manager/pull/1677))
 
 ### Changed
@@ -845,8 +852,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Patch endpoint for global configuration ([#1629](https://github.com/scm-manager/scm-manager/pull/1629))
 - Show hg binary verification error messages ([#1637](https://github.com/scm-manager/scm-manager/pull/1637))
-- Add global notifications ([#1646](https://github.com/scm-manager/scm-manager/pull/1646))
-- Add extension point for custom link protocol renderers in markdown ([#1639](https://github.com/scm-manager/scm-manager/pull/1639))
+- Global notifications ([#1646](https://github.com/scm-manager/scm-manager/pull/1646))
+- Extension point for custom link protocol renderers in markdown ([#1639](https://github.com/scm-manager/scm-manager/pull/1639))
 
 ### Fixed
 - Show correct default branch for repository if not configured yet ([#1643](https://github.com/scm-manager/scm-manager/pull/1643))
@@ -875,8 +882,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Validation in "Add Entry" components for configuration table ([#1625](https://github.com/scm-manager/scm-manager/pull/1625))
 - Add header to toplevel error boundary ([#1613](https://github.com/scm-manager/scm-manager/pull/1613))
 - Correct positioning and coloring of button groups in modals ([#1612](https://github.com/scm-manager/scm-manager/pull/1612))
-- Fix limit with negativ integer for searchUtil ([#1627](https://github.com/scm-manager/scm-manager/pull/1627))
-- Fix compatibility with old redux api ([#1618](https://github.com/scm-manager/scm-manager/pull/1618))
+- Limit with negative integer for searchUtil ([#1627](https://github.com/scm-manager/scm-manager/pull/1627))
+- Compatibility with old redux api ([#1618](https://github.com/scm-manager/scm-manager/pull/1618))
 - Missing graphviz in docker image ([#1623](https://github.com/scm-manager/scm-manager/pull/1623))
 - Validation for namespaces on rename with UTF-8 characters ([#1611](https://github.com/scm-manager/scm-manager/pull/1611))
 
@@ -894,7 +901,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Adjust path and filename validation to prevent path traversal ([#1604](https://github.com/scm-manager/scm-manager/pull/1604))
 - Wrong subject context for asynchronous subscriber ([#1601](https://github.com/scm-manager/scm-manager/pull/1601))
-- Fix repository creation route from repository namespace overview page ([#1602](https://github.com/scm-manager/scm-manager/pull/1602))
+- Repository creation route from repository namespace overview page ([#1602](https://github.com/scm-manager/scm-manager/pull/1602))
 - external nav links now correctly collapse when used in a menu ([#1596](https://github.com/scm-manager/scm-manager/pull/1596))
 - Response with exception stack trace for invalid urls ([#1605](https://github.com/scm-manager/scm-manager/pull/1605))
 - Do not show repositories on overview for not existing namespace ([#1608](https://github.com/scm-manager/scm-manager/pull/1608))
@@ -918,12 +925,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Create api for markdown ast plugins ([#1578](https://github.com/scm-manager/scm-manager/pull/1578))
 - Partial diff ([#1581](https://github.com/scm-manager/scm-manager/issues/1581))
-- Added filepath search ([#1568](https://github.com/scm-manager/scm-manager/issues/1568))
+- Filepath search ([#1568](https://github.com/scm-manager/scm-manager/issues/1568))
 - API for metrics ([#1576](https://github.com/scm-manager/scm-manager/issues/1576))
-- Add repository-specific non-fast-forward disallowed option ([#1579](https://github.com/scm-manager/scm-manager/issues/1579))
+- Repository-specific non-fast-forward disallowed option ([#1579](https://github.com/scm-manager/scm-manager/issues/1579))
 
 ### Fixed
-- Fix wrapping of title and actions in source view ([#1569](https://github.com/scm-manager/scm-manager/issues/1569))
+- Wrapping of title and actions in source view ([#1569](https://github.com/scm-manager/scm-manager/issues/1569))
 - Split SetupContextListener logic into new Privileged Startup API ([#1573](https://github.com/scm-manager/scm-manager/pull/1573))
 - Mark configuration files in debian package ([#1574](https://github.com/scm-manager/scm-manager/issues/1574))
 
@@ -932,9 +939,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevent breadcrumb overflow and shrink large elements ([#1563](https://github.com/scm-manager/scm-manager/pull/1563))
 - Clarify that FileUpload component does not upload directly ([#1566](https://github.com/scm-manager/scm-manager/pull/1566))
 - Prevent xss from stored markdown ([#1566](https://github.com/scm-manager/scm-manager/pull/1566))
-- Fix endless loading spinner for sources of empty repositories ([#1565](https://github.com/scm-manager/scm-manager/issues/1565))
-- Fix missing permalink button to markdown headings ([#1564](https://github.com/scm-manager/scm-manager/pull/1564))
-- Fix redirect after logout if is set
+- Endless loading spinner for sources of empty repositories ([#1565](https://github.com/scm-manager/scm-manager/issues/1565))
+- Missing permalink button to Markdown headings ([#1564](https://github.com/scm-manager/scm-manager/pull/1564))
+- Redirect after logout if is set
 
 ## [2.14.0] - 2021-03-01
 ### Added
@@ -1061,7 +1068,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The name of the initial git branch can be configured and is set to `main` by default ([#1399](https://github.com/scm-manager/scm-manager/pull/1399))
 
 ### Fixed
-- Internal server error for git sub modules without tree object ([#1397](https://github.com/scm-manager/scm-manager/pull/1397))
+- Internal server error for git submodules without tree object ([#1397](https://github.com/scm-manager/scm-manager/pull/1397))
 - Do not expose subversion commit with id 0 ([#1395](https://github.com/scm-manager/scm-manager/pull/1395))
 - Cloning of Mercurial repositories with api keys ([#1407](https://github.com/scm-manager/scm-manager/pull/1407))
 - Disable cloning repositories via ssh for anonymous users ([#1403](https://github.com/scm-manager/scm-manager/pull/1403))
@@ -1121,7 +1128,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show update info on admin information page ([#1342](https://github.com/scm-manager/scm-manager/pull/1342))
 
 ### Changed
-- Rework modal to use react portal ([#1349](https://github.com/scm-manager/scm-manager/pull/1349))
+- Rework modal to use React portal ([#1349](https://github.com/scm-manager/scm-manager/pull/1349))
 
 ### Fixed
 - Missing synchronization during repository creation ([#1328](https://github.com/scm-manager/scm-manager/pull/1328))
@@ -1172,14 +1179,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add link to source file in diff sections ([#1267](https://github.com/scm-manager/scm-manager/pull/1267))
 - Check versions of plugin dependencies on plugin installation ([#1283](https://github.com/scm-manager/scm-manager/pull/1283))
 - Sign PR merges and commits performed through ui with generated private key ([#1285](https://github.com/scm-manager/scm-manager/pull/1285))
-- Add generic popover component to ui-components ([#1285](https://github.com/scm-manager/scm-manager/pull/1285))
+- Generic popover component to ui-components ([#1285](https://github.com/scm-manager/scm-manager/pull/1285))
 - Show changeset signatures in ui and add public keys ([#1273](https://github.com/scm-manager/scm-manager/pull/1273))
 
 ### Fixed
 - Repository names may not end with ".git" ([#1277](https://github.com/scm-manager/scm-manager/pull/1277))
 - Add preselected value to options in dropdown component if missing ([#1287](https://github.com/scm-manager/scm-manager/pull/1287))
 - Show error message if plugin loading failed ([#1289](https://github.com/scm-manager/scm-manager/pull/1289))
-- Fix timing problem with anchor links for markdown view ([#1290](https://github.com/scm-manager/scm-manager/pull/1290))
+- Timing problem with anchor links for markdown view ([#1290](https://github.com/scm-manager/scm-manager/pull/1290))
 
 ## [2.3.1] - 2020-08-04
 ### Added
@@ -1189,7 +1196,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Help tooltips are now multiline by default ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))
 
 ### Fixed
-- Fixed unnecessary horizontal scrollbar in modal dialogs ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))
+- Unnecessary horizontal scrollbar in modal dialogs ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))
 - Avoid stacktrace logging when protocol url is accessed outside of request scope ([#1276](https://github.com/scm-manager/scm-manager/pull/1276))
 
 ## [2.3.0] - 2020-07-23
@@ -1204,11 +1211,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show line numbers in source code view by default ([#1265](https://github.com/scm-manager/scm-manager/pull/1265))
 
 ### Fixed
-- Fixed file extension detection with new spotter version
-- Fixed wrong cache directory location ([#1236](https://github.com/scm-manager/scm-manager/issues/1236) and [#1242](https://github.com/scm-manager/scm-manager/issues/1242))
-- Fixed error in update step ([#1237](https://github.com/scm-manager/scm-manager/issues/1237) and [#1244](https://github.com/scm-manager/scm-manager/issues/1244))
-- Fix incorrect trimming of whitespaces in helm chart templates
-- Fixed error on empty diff expand response ([#1247](https://github.com/scm-manager/scm-manager/pull/1247))
+- File extension detection with new spotter version
+- Wrong cache directory location ([#1236](https://github.com/scm-manager/scm-manager/issues/1236) and [#1242](https://github.com/scm-manager/scm-manager/issues/1242))
+- Error in update step ([#1237](https://github.com/scm-manager/scm-manager/issues/1237) and [#1244](https://github.com/scm-manager/scm-manager/issues/1244))
+- Incorrect trimming of whitespaces in helm chart templates
+- Error on empty diff expand response ([#1247](https://github.com/scm-manager/scm-manager/pull/1247))
 - Ignore ports on proxy exclusions ([#1256](https://github.com/scm-manager/scm-manager/pull/1256))
 - Invalidate branches cache synchronously on create new branch ([#1261](https://github.com/scm-manager/scm-manager/pull/1261))
 
@@ -1225,13 +1232,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Required plugins will be updated, too, when a plugin is updated ([#1233](https://github.com/scm-manager/scm-manager/pull/1233))
 
 ### Fixed
-- Fixed installation of debian packages on distros without preinstalled `at` ([#1216](https://github.com/scm-manager/scm-manager/issues/1216) and [#1217](https://github.com/scm-manager/scm-manager/pull/1217))
-- Fixed restart with deb or rpm installation ([#1222](https://github.com/scm-manager/scm-manager/issues/1222) and [#1227](https://github.com/scm-manager/scm-manager/pull/1227))
-- Fixed broken migration with empty security.xml ([#1219](https://github.com/scm-manager/scm-manager/issues/1219) and [#1221](https://github.com/scm-manager/scm-manager/pull/1221))
+- Installation of debian packages on distros without preinstalled `at` ([#1216](https://github.com/scm-manager/scm-manager/issues/1216) and [#1217](https://github.com/scm-manager/scm-manager/pull/1217))
+- Restart with deb or rpm installation ([#1222](https://github.com/scm-manager/scm-manager/issues/1222) and [#1227](https://github.com/scm-manager/scm-manager/pull/1227))
+- Broken migration with empty security.xml ([#1219](https://github.com/scm-manager/scm-manager/issues/1219) and [#1221](https://github.com/scm-manager/scm-manager/pull/1221))
 - Added missing architecture to debian installation documentation ([#1230](https://github.com/scm-manager/scm-manager/pull/1230))
 - Mercurial on Python 3 ([#1232](https://github.com/scm-manager/scm-manager/pull/1232))
-- Fixed wrong package information for deb and rpm packages ([#1229](https://github.com/scm-manager/scm-manager/pull/1229))
-- Fixed missing content type on migration wizard ([#1234](https://github.com/scm-manager/scm-manager/pull/1234))
+- Wrong package information for deb and rpm packages ([#1229](https://github.com/scm-manager/scm-manager/pull/1229))
+- Missing content type on migration wizard ([#1234](https://github.com/scm-manager/scm-manager/pull/1234))
 
 ## [2.1.1] - 2020-06-23
 ### Fixed
@@ -1255,9 +1262,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Diffs with CR characters are parsed correctly ([#1185](https://github.com/scm-manager/scm-manager/pull/1185))
 - Close file lists in migration ([#1191](https://github.com/scm-manager/scm-manager/pull/1191))
 - Use command in javahg.py from registrar (Upgrade to newer javahg version)  ([#1192](https://github.com/scm-manager/scm-manager/pull/1192))
-- Fixed wrong e-tag format ([sdorra/web-resource #1](https://github.com/sdorra/web-resources/pull/1))
-- Fixed refetching loop for non existing changesets ([#1203](https://github.com/scm-manager/scm-manager/pull/1203))
-- Fixed active state of sub navigation items, which are using activeWhenMatch ([#1199](https://github.com/scm-manager/scm-manager/pull/1199))
+- Wrong e-tag format ([sdorra/web-resource #1](https://github.com/sdorra/web-resources/pull/1))
+- Refetching loop for non-existing changesets ([#1203](https://github.com/scm-manager/scm-manager/pull/1203))
+- Active state of sub navigation items, which are using activeWhenMatch ([#1199](https://github.com/scm-manager/scm-manager/pull/1199))
 - Handles repositories in custom directories correctly in migration from 1.x ([#1201](https://github.com/scm-manager/scm-manager/pull/1201))
 - Usage of short git commit ids in changeset urls ([#1200](https://github.com/scm-manager/scm-manager/pull/1200))
 - Fixes linebreaks in multiline tooltip ([#1207](https://github.com/scm-manager/scm-manager/pull/1207))
