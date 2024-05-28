@@ -29,11 +29,16 @@ import com.google.common.base.Strings;
 import sonia.scm.EagerSingleton;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.plugin.Extension;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.store.ConfigurationStore;
 
-import javax.inject.Inject;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+
+import javax.inject.Inject;
 
 @Extension
 @EagerSingleton
@@ -41,28 +46,40 @@ public class GitRepositoryConfigInitializer {
 
   private final GitRepositoryHandler repoHandler;
   private final GitRepositoryConfigStoreProvider storeProvider;
+  private final RepositoryServiceFactory serviceFactory;
 
   @Inject
-  public GitRepositoryConfigInitializer(GitRepositoryHandler repoHandler, GitRepositoryConfigStoreProvider storeProvider) {
+  public GitRepositoryConfigInitializer(GitRepositoryHandler repoHandler, GitRepositoryConfigStoreProvider storeProvider, RepositoryServiceFactory serviceFactory) {
     this.repoHandler = repoHandler;
     this.storeProvider = storeProvider;
+    this.serviceFactory = serviceFactory;
   }
 
   @Subscribe
-  public void initConfig(PostReceiveRepositoryHookEvent event) {
-    ConfigurationStore<GitRepositoryConfig> store = storeProvider.get(event.getRepository());
-    GitRepositoryConfig repositoryConfig = store.get();
-    if (repositoryConfig == null || Strings.isNullOrEmpty(repositoryConfig.getDefaultBranch())) {
-      List<String> defaultBranchCandidates = event.getContext().getBranchProvider().getCreatedOrModified();
+  public void initConfig(PostReceiveRepositoryHookEvent event) throws IOException {
+    if (GitRepositoryHandler.TYPE_NAME.equals(event.getRepository().getType())) {
+      ConfigurationStore<GitRepositoryConfig> store = storeProvider.get(event.getRepository());
+      GitRepositoryConfig repositoryConfig = store.get();
+      if (repositoryConfig == null || Strings.isNullOrEmpty(repositoryConfig.getDefaultBranch())) {
+        String defaultBranch;
+        try (RepositoryService service = serviceFactory.create(event.getRepository())) {
+          List<Branch> branches = service.getBranchesCommand().getBranches().getBranches();
+          Optional<Branch> repoDefaultBranch = branches.stream().filter(Branch::isDefaultBranch).findFirst();
+          if (repoDefaultBranch.isPresent()) {
+            defaultBranch = repoDefaultBranch.get().getName();
+          } else {
+            defaultBranch = determineDefaultBranchFromPush(event);
+          }
+        }
 
-      String defaultBranch = determineDefaultBranch(defaultBranchCandidates);
-
-      GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig(defaultBranch);
-      store.set(gitRepositoryConfig);
+        GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig(defaultBranch);
+        store.set(gitRepositoryConfig);
+      }
     }
   }
 
-  private String determineDefaultBranch(List<String> defaultBranchCandidates) {
+  private String determineDefaultBranchFromPush(PostReceiveRepositoryHookEvent event) {
+    List<String> defaultBranchCandidates = event.getContext().getBranchProvider().getCreatedOrModified();
     String globalConfigDefaultBranch = repoHandler.getConfig().getDefaultBranch();
     if (defaultBranchCandidates.contains(globalConfigDefaultBranch)) {
       return globalConfigDefaultBranch;

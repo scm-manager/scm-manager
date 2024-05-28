@@ -28,18 +28,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
+import sonia.scm.repository.api.BranchesCommandBuilder;
 import sonia.scm.repository.api.HookBranchProvider;
 import sonia.scm.repository.api.HookContext;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.store.ConfigurationStore;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -62,116 +68,160 @@ class GitRepositoryConfigInitializerTest {
   @Mock
   private PostReceiveRepositoryHookEvent event;
 
+  @Mock
+  private RepositoryServiceFactory serviceFactory;
+  @Mock
+  private RepositoryService service;
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private BranchesCommandBuilder branchesCommand;
+  @Mock
+  private Branches branches;
+
   @InjectMocks
   private GitRepositoryConfigInitializer initializer;
 
-  @BeforeEach
-  void initMocks() {
-    when(storeProvider.get(REPOSITORY)).thenReturn(configStore);
-    when(event.getRepository()).thenReturn(REPOSITORY);
-  }
-
   @Test
-  void shouldDoNothingIfDefaultBranchAlreadySet() {
-    when(configStore.get()).thenReturn(new GitRepositoryConfig("any"));
+  void shouldSkipNonGitRepositories() throws IOException {
+    REPOSITORY.setType("svn");
 
     initializer.initConfig(event);
 
     verify(event, never()).getContext();
   }
 
+  @BeforeEach
+  void initEvent() {
+    when(event.getRepository()).thenReturn(REPOSITORY);
+  }
+
   @Nested
-  class WithGlobalConfig {
+  class ForGitRepositories {
 
     @BeforeEach
-    void initRepoHandler() {
-      GitConfig gitConfig = new GitConfig();
-      gitConfig.setDefaultBranch("global_default");
-      when(repoHandler.getConfig()).thenReturn(gitConfig);
+    void initMocks() throws IOException {
+      when(storeProvider.get(REPOSITORY)).thenReturn(configStore);
+      REPOSITORY.setType("git");
+      lenient().when(serviceFactory.create(event.getRepository())).thenReturn(service);
+      lenient().when(service.getBranchesCommand()).thenReturn(branchesCommand);
+      lenient().when(branchesCommand.getBranches()).thenReturn(branches);
     }
 
     @Test
-    void shouldSetDefaultBranchIfNoGitConfigYet() {
-      when(configStore.get()).thenReturn(null);
-      initEvent(List.of("main"));
+    void shouldDoNothingIfDefaultBranchAlreadySet() throws IOException {
+      when(configStore.get()).thenReturn(new GitRepositoryConfig("any"));
 
       initializer.initConfig(event);
 
-      verify(event).getContext();
+      verify(event, never()).getContext();
     }
 
-    @Test
-    void shouldDetermineAndApplyDefaultBranch_GlobalDefault() {
-      initEvent(List.of("global_default", "main", "master"));
-      when(configStore.get()).thenReturn(new GitRepositoryConfig(null));
+    @Nested
+    class WithGlobalConfig {
 
-      initializer.initConfig(event);
+      @BeforeEach
+      void initRepoHandler() {
+        GitConfig gitConfig = new GitConfig();
+        gitConfig.setDefaultBranch("global_default");
+        lenient().when(repoHandler.getConfig()).thenReturn(gitConfig);
+      }
 
-      verify(configStore).set(argThat(arg -> {
-        assertThat(arg.getDefaultBranch()).isEqualTo("global_default");
-        return true;
-      }));
+
+      @Test
+      void shouldSetDefaultBranchFromPushIfNoGitConfigYet() throws IOException {
+        when(configStore.get()).thenReturn(null);
+        initEvent(List.of("main"));
+
+        initializer.initConfig(event);
+
+        verify(event).getContext();
+      }
+
+      @Test
+      void shouldDetermineAndApplyDefaultBranch_GlobalDefault() throws IOException {
+        initEvent(List.of("global_default", "main", "master"));
+        when(configStore.get()).thenReturn(new GitRepositoryConfig(null));
+
+        initializer.initConfig(event);
+
+        verify(configStore).set(argThat(arg -> {
+          assertThat(arg.getDefaultBranch()).isEqualTo("global_default");
+          return true;
+        }));
+      }
+
+      @Test
+      void shouldDetermineAndApplyDefaultBranch_Main() throws IOException {
+        initEvent(List.of("master", "main"));
+        when(configStore.get()).thenReturn(new GitRepositoryConfig(null));
+
+        initializer.initConfig(event);
+
+        verify(configStore).set(argThat(arg -> {
+          assertThat(arg.getDefaultBranch()).isEqualTo("main");
+          return true;
+        }));
+      }
+
+      @Test
+      void shouldDetermineAndApplyDefaultBranch_Master() throws IOException {
+        initEvent(List.of("develop", "master"));
+        when(configStore.get()).thenReturn(new GitRepositoryConfig(null));
+
+        initializer.initConfig(event);
+
+        verify(configStore).set(argThat(arg -> {
+          assertThat(arg.getDefaultBranch()).isEqualTo("master");
+          return true;
+        }));
+      }
+
+      @Test
+      void shouldDetermineAndApplyDefaultBranchFromRepository_Staging() throws IOException {
+        when(configStore.get()).thenReturn(null);
+        initEvent(List.of("master", "main"));
+        when(branches.getBranches()).thenReturn(List.of(new Branch("staging", "abc", true)));
+
+        initializer.initConfig(event);
+
+        verify(configStore).set(argThat(arg -> {
+          assertThat(arg.getDefaultBranch()).isEqualTo("staging");
+          return true;
+        }));
+      }
+
+      @Test
+      void shouldDetermineAndApplyDefaultBranch_BestMatch() throws IOException {
+        initEvent(List.of("test/123", "trillian", "dent"));
+        when(configStore.get()).thenReturn(new GitRepositoryConfig(null));
+
+        initializer.initConfig(event);
+
+        verify(configStore).set(argThat(arg -> {
+          assertThat(arg.getDefaultBranch()).isEqualTo("dent");
+          return true;
+        }));
+      }
+
+      @Test
+      void shouldDetermineAndApplyDefaultBranch_AnyFallback() throws IOException {
+        initEvent(List.of("test/123", "x/y/z"));
+        when(configStore.get()).thenReturn(new GitRepositoryConfig(null));
+
+        initializer.initConfig(event);
+
+        verify(configStore).set(argThat(arg -> {
+          assertThat(arg.getDefaultBranch()).isEqualTo("test/123");
+          return true;
+        }));
+      }
     }
 
-    @Test
-    void shouldDetermineAndApplyDefaultBranch_Main() {
-      initEvent(List.of("master", "main"));
-      when(configStore.get()).thenReturn(new GitRepositoryConfig(null));
-
-      initializer.initConfig(event);
-
-      verify(configStore).set(argThat(arg -> {
-        assertThat(arg.getDefaultBranch()).isEqualTo("main");
-        return true;
-      }));
-    }
-
-    @Test
-    void shouldDetermineAndApplyDefaultBranch_Master() {
-      initEvent(List.of("develop", "master"));
-      when(configStore.get()).thenReturn(new GitRepositoryConfig(null));
-
-      initializer.initConfig(event);
-
-      verify(configStore).set(argThat(arg -> {
-        assertThat(arg.getDefaultBranch()).isEqualTo("master");
-        return true;
-      }));
-    }
-
-    @Test
-    void shouldDetermineAndApplyDefaultBranch_BestMatch() {
-      initEvent(List.of("test/123", "trillian", "dent"));
-      when(configStore.get()).thenReturn(new GitRepositoryConfig(null));
-
-      initializer.initConfig(event);
-
-      verify(configStore).set(argThat(arg -> {
-        assertThat(arg.getDefaultBranch()).isEqualTo("dent");
-        return true;
-      }));
-    }
-
-    @Test
-    void shouldDetermineAndApplyDefaultBranch_AnyFallback() {
-      initEvent(List.of("test/123", "x/y/z"));
-      when(configStore.get()).thenReturn(new GitRepositoryConfig(null));
-
-      initializer.initConfig(event);
-
-      verify(configStore).set(argThat(arg -> {
-        assertThat(arg.getDefaultBranch()).isEqualTo("test/123");
-        return true;
-      }));
+    private void initEvent(List<String> branches) {
+      HookContext hookContext = mock(HookContext.class);
+      lenient().when(event.getContext()).thenReturn(hookContext);
+      HookBranchProvider branchProvider = mock(HookBranchProvider.class);
+      lenient().when(hookContext.getBranchProvider()).thenReturn(branchProvider);
+      lenient().when(branchProvider.getCreatedOrModified()).thenReturn(branches);
     }
   }
-
-  private void initEvent(List<String> branches) {
-    HookContext hookContext = mock(HookContext.class);
-    when(event.getContext()).thenReturn(hookContext);
-    HookBranchProvider branchProvider = mock(HookBranchProvider.class);
-    when(hookContext.getBranchProvider()).thenReturn(branchProvider);
-    when(branchProvider.getCreatedOrModified()).thenReturn(branches);
-  }
-
 }
