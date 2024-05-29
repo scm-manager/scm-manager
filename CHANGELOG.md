@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.46.3] - 2024-05-29
+### Fixed
+- Exception in SVN repositories due to incorrect git initialization (Backport from 2.47)
+- Default branch evaluation on git config initialization
+
 ## [2.46.2] - 2024-03-04
 ### Fixed
 - Rendering PDF files in source view
@@ -12,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.46.1] - 2023-09-01
 ### Fixed
 - Loading LFS files for imports and mirrors (from 2.44.3)
-- Handling of submodules in imports and mirrors (from 2.44.3) 
+- Handling of submodules in imports and mirrors (from 2.44.3)
 
 ## [2.46.0] - 2023-08-24
 ### Added
@@ -1369,4 +1374,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.46.0]: https://scm-manager.org/download/2.46.0
 [2.46.1]: https://scm-manager.org/download/2.46.1
 [2.46.2]: https://scm-manager.org/download/2.46.2
-
+[2.46.3]: https://scm-manager.org/download/2.46.3

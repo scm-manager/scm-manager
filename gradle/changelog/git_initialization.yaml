@@ -1,3 +1,0 @@
-- type: fixed
-  description: Exception in SVN repositories due to incorrect git initialization (Backport from 2.47)
-
