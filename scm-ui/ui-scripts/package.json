@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-scripts",
-  "version": "2.46.2",
+  "version": "2.46.3-SNAPSHOT",
   "description": "Build scripts for SCM-Manager",
   "main": "src/index.js",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
