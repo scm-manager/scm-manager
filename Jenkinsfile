@@ -30,9 +30,12 @@ pipeline {
       }
       steps {
         // read version from branch, set it and commit it
+        sh "git tag -d ${releaseVersion} || true"
+        sh "git fetch --tags"
+        sh "git checkout ${env.BRANCH_NAME}"
+        sh "git reset --hard origin/${env.BRANCH_NAME}"
         gradle "setVersion -PnewVersion=${releaseVersion}"
         sh "git add gradle.properties '**.json'"
-        sh "git checkout ${env.BRANCH_NAME}"
         commit "Release version ${releaseVersion}"
 
         // fetch all remotes from origin
