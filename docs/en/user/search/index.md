@@ -1,0 +1,69 @@
+---
+title: Search Syntax
+partiallyActive: true
+---
+The search area includes all the necessary info to make use of the SCM-Managers search option (excluding the plugin functionality)
+
+### Types of queries
+There are two types of queries. The first is the simple query. 
+A simple query only contains terms and does not contain any of the operators listed below (for example 'AND'). 
+Every term used in a simple query get implicitly extended with the \* operator at the end. This means that searching for 'Repo' will also match the term 'Repository'. 
+The second type of query is the expert query. Any query that contains at least one operator is considered as an expert query. This query type allows for complex searches. 
+But terms used in the expert query are not extended with the \* implicitly. A user has to add them explicitly to a term.
+
+
+### Modifiers
+Note: You can not use wildcards as the first character of a search
+
+Definition | Example
+---------|----------
+? - single character Wildcard | "Ultimate?Repo" – finds e.g. `Ultimate-Repo`, `Ultimate Repo`, `Ultimate+Repo`
+\* - multiple character Wildcard | "Ultimat*y" - finds e.g. `Ultimate Repository`, `Ultimate-Special-Repository`, `Ultimately`
+
+
+### Ranges
+Range Queries allow one to match documents whose field(s) values are between the lower and upper bound specified by the Range Query. Range Queries can be inclusive or exclusive of the upper and lower bounds. Sorting is done lexicographically.
+
+Ranges are not reserved to numerical fields.
+
+Definition | Example
+---------|----------
+\[ … TO … ] - inclusive range | "creationDate:\[1609459200000 TO 1612137600000]" – finds e.G. repositories created between 2021-01-01 and 2021-02-01
+{… TO …} - exclusive range - multiple character Wildcard | "name:{Aida TO Carmen}" – finds e.G. repositories with names between Aida and Carmen, excluding these to values
+
+
+### Boosting
+Boosting allows you to control the relevance of a document by boosting its term.
+
+Definition | Example
+---------|----------
+term^number | "ultimate^2 repository" – makes the term `ultimate` more relevant
+
+By default, the boost factor is 1. Although the boost factor must be positive, it can be less than 1 (e.g. 0.2)
+
+By default Repository names are boosted by 1.5, namespace by 1.25.
+
+### Boolean Operators 
+Note: Logical Operators must be entered in upper case (e.g. "AND").
+
+Operator | Definition | Example
+---------|------------|---------
+AND| Both terms must be included | "Ultimate AND Repository" – finds e.g. `Ultimate Repository`, `Ultimate Special Repository`
+OR| At least one of the terms must be included | "Ultimate OR Repository" – finds e.g. `Ultimate Repository`, `Ultimate User`, `Special Repository`
+NOT| Following term may not be included, "!" may be used alternatively | "Ultimate NOT Repository" – finds e.g. `Ultimate user`, excludes e.g. `Ultimate Repository`
+\-| excludes following term from search | "Ultimate Repository -Special" – finds e.g. `Ultimate Repository`, excludes e.g. `Ultimate Special Repository`
+\+| Following term must be included | "Ultimate +Repository" – finds e.g. `my Repository`, `Ultimate Repository`
+
+### Grouping
+Search supports using parentheses to group clauses to form sub queries. This can be very useful if you want to control the boolean logic for a query.
+
+Definition | Example
+-----------|-----------
+() – terms inside parentheses are grouped together | "(Ultimate OR my) AND Repository" – finds e.g. `Ultimate Repository`, `my Repository`, excludes e.g. `Super Repository`. Either "Ultimate" or “My” must exist, “Repository” must always exist
+
+### Phrases
+A phrase is a group of terms in a certain order. If you want to search for certain phrases then you can use the " operator.
+
+Definition | Example
+-----------|-----------
+"" - terms inside the quotes are searched for as a phrase | "Ultimate Repository" – finds `Ultimate Repository` but not `Repository Ultimate`, `Ultimate` or `Repository`
