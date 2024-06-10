@@ -47,7 +47,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 public class BranchDto extends HalRepresentation {
 
   @NotEmpty
-  @Length(min = 1, max = 100)
+  @Length(min = 1, max = 1000)
   @Pattern(regexp = Branch.VALID_BRANCH_NAMES)
   private String name;
   private String revision;

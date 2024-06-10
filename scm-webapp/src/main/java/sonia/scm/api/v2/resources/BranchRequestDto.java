@@ -36,7 +36,7 @@ import static sonia.scm.repository.Branch.VALID_BRANCH_NAMES;
 @Setter
 public class BranchRequestDto {
 
-  @NotEmpty @Length(min = 1, max=100) @Pattern(regexp = VALID_BRANCH_NAMES)
+  @NotEmpty @Length(min = 1, max = 1000) @Pattern(regexp = VALID_BRANCH_NAMES)
   private String name;
   private String parent;
 }

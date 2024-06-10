@@ -39,7 +39,7 @@ interface UpdateGitConfigDto {
   boolean isNonFastForwardDisallowed();
 
   @NotEmpty
-  @Length(min = 1, max = 100)
+  @Length(min = 1, max = 1000)
   @Pattern(regexp = VALID_BRANCH_NAMES)
   String getDefaultBranch();
 }

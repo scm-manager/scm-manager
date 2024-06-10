@@ -1,0 +1,2 @@
+- type: fixed
+  description: Raised the branch name limit to 1000 characters

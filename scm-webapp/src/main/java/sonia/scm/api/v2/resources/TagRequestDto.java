@@ -43,6 +43,6 @@ public class TagRequestDto {
 
   @Pattern(regexp = VALID_BRANCH_NAMES)
   @NotEmpty
-  @Length(min = 1, max = 100)
+  @Length(min = 1, max = 1000)
   private String name;
 }

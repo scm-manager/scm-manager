@@ -49,7 +49,7 @@ public class GitConfigDto extends HalRepresentation implements UpdateGitConfigDt
   private boolean nonFastForwardDisallowed;
 
   @NotEmpty
-  @Length(min = 1, max = 100)
+  @Length(min = 1, max = 1000)
   @Pattern(regexp = VALID_BRANCH_NAMES)
   private String defaultBranch;
 

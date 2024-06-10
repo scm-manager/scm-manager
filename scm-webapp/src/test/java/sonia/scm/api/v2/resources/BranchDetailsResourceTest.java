@@ -114,7 +114,6 @@ class BranchDetailsResourceTest extends RepositoryTestBase {
   @ParameterizedTest
   @ValueSource(strings = {
     "%2Fmaster",
-    "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890X"
   })
   void shouldValidateSingleBranch(String branchName) throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest
@@ -159,7 +158,7 @@ class BranchDetailsResourceTest extends RepositoryTestBase {
   @ParameterizedTest
   @ValueSource(strings = {
     "",
-    "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890X"
+    "%2Fmaster",
   })
   void shouldRejectInvalidBranchInCollection(String branchName) throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest

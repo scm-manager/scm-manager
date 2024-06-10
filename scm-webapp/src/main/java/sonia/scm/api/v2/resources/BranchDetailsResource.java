@@ -110,7 +110,7 @@ public class BranchDetailsResource {
   public Response getBranchDetails(
     @PathParam("namespace") String namespace,
     @PathParam("name") String name,
-    @Length(min = 1, max = 100) @Pattern(regexp = VALID_BRANCH_NAMES) @PathParam("branch") String branchName
+    @Length(min = 1) @Pattern(regexp = VALID_BRANCH_NAMES) @PathParam("branch") String branchName
   ) {
     try (RepositoryService service = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       BranchDetailsCommandResult result = service.getBranchDetailsCommand().execute(branchName);
@@ -163,7 +163,7 @@ public class BranchDetailsResource {
   public Response getBranchDetailsCollection(
     @PathParam("namespace") String namespace,
     @PathParam("name") String name,
-    @QueryParam("branches") List<@Length(min = 1, max = 100) String> branches
+    @QueryParam("branches") List<@Length(min = 1) @Pattern(regexp = VALID_BRANCH_NAMES) String> branches
   ) {
     try (RepositoryService service = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       List<BranchDetailsDto> dtos = getBranchDetailsDtos(service, branches);
