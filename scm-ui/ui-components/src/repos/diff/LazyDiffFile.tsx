@@ -262,10 +262,7 @@ const DiffFile: FC<Props> = ({
     ]
   );
 
-  const body = useMemo(
-    () => (!isCollapsed && canRenderContent ? innerContent : null),
-    [canRenderContent, innerContent, isCollapsed]
-  );
+  const body = useMemo(() => (!isCollapsed ? innerContent : null), [innerContent, isCollapsed]);
 
   const openInFullscreen = useMemo(
     () =>

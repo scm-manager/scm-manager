@@ -1,0 +1,2 @@
+- type: fixed
+  description: Prevent hiding the whole inner content container if an diff is empty.
