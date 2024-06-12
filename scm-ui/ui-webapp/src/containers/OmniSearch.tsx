@@ -39,6 +39,7 @@ type Props = {
   shouldClear: boolean;
   ariaId: string;
   nextFocusRef: RefObject<HTMLElement>;
+  selectedType?: string;
 };
 
 type GuardProps = Props & {
@@ -121,7 +122,7 @@ const useSearchParams = () => {
   };
 };
 
-const OmniSearch: FC<Props> = ({ shouldClear }) => {
+const OmniSearch: FC<Props> = ({ shouldClear, selectedType = "repository" }) => {
   const [t] = useTranslation("commons");
   const { initialQuery } = useSearchParams();
   const [query, setQuery] = useState(shouldClear ? "" : initialQuery);
@@ -173,7 +174,7 @@ const OmniSearch: FC<Props> = ({ shouldClear }) => {
         <HitEntry
           key="search.quickSearch.searchNamespace"
           label={t("search.quickSearch.searchNamespace")}
-          link={`/search/repository/?q=${encodeURIComponent(query)}&namespace=${context.namespace}`}
+          link={`/search/${selectedType}/?q=${encodeURIComponent(query)}&namespace=${context.namespace}`}
         />
       );
     }
@@ -181,7 +182,7 @@ const OmniSearch: FC<Props> = ({ shouldClear }) => {
       <HitEntry
         key="search.quickSearch.searchEverywhere"
         label={t("search.quickSearch.searchEverywhere")}
-        link={`/search/repository/?q=${encodeURIComponent(query)}`}
+        link={`/search/${selectedType}/?q=${encodeURIComponent(query)}`}
       />
     );
     hits?.forEach((hit, idx) => {
@@ -195,7 +196,7 @@ const OmniSearch: FC<Props> = ({ shouldClear }) => {
       );
     });
     return newEntries;
-  }, [context.name, context.namespace, hits, id, query, searchTypes, t]);
+  }, [context.name, context.namespace, hits, id, query, searchTypes, selectedType, t]);
   return (
     <div className={classNames("navbar-item", "field", "mb-0")}>
       {showHelp ? <SyntaxModal close={closeHelp} /> : null}

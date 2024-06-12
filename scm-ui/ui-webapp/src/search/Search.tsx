@@ -158,7 +158,7 @@ const SearchSubTitle: FC<Props> = ({ selectedType, queryResult, links }) => {
       <br />
       <Trans i18nKey="search.syntaxHelp" components={[<SyntaxHelpLink key="syntaxHelpLink" />]} />
       <OmniSearchWrapper className={"mt-4 mb-2"}>
-        <OmniSearch links={links} shouldClear={false} ariaId={"searchPage"} />
+        <OmniSearch links={links} shouldClear={false} ariaId={"searchPage"} selectedType={selectedType} />
       </OmniSearchWrapper>
     </>
   );
