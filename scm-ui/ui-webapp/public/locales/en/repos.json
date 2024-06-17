@@ -559,7 +559,7 @@
     "renamedTo": "renamed to",
     "showContent": "Show diff content",
     "hideContent": "Hide diff content",
-    "whitespace": "Show whitespaces and tabs",
+    "showWhitespace": "Show whitespaces and tabs",
     "hideWhitespace": "Hide whitespaces and tabs"
   },
   "fileUpload": {
