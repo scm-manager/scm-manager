@@ -444,6 +444,10 @@
     "DHU4pfOtA1": {
       "displayName": "Plugin condition not fulfilled: architecture",
       "description": "The current processor architecture does not meet the condition. Further information on the conditions can be found in the server log."
+    },
+    "BaSXkAztI1": {
+      "displayName": "Repository is read-only",
+      "description": "This repository is read-only and cannot be modified."
     }
   },
   "healthChecksFailures": {

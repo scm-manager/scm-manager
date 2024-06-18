@@ -440,6 +440,10 @@
     "DHU4pfOtA1": {
       "displayName": "Plugin-Bedingung nicht erfüllt: Architektur",
       "description": "Die derzeitige Prozessor Architektur erfüllt nicht die Anforderungen. Nähere Informationen zu den Bedingungen finden sich im Log."
+    },
+    "BaSXkAztI1": {
+      "displayName": "Schreibgeschütztes Repository",
+      "description": "Dieses Repository ist schreibgeschützt und kann nicht verändert werden."
     }
   },
   "healthCheckFailures": {
