@@ -91,10 +91,8 @@ task setupBuilder() {
 
 task build(type: Exec) {
   commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder", isSnapshot ? "dev": "prod"]
-  environment "VERSION", dockerTag
-  environment "COMMIT_SHA", revision
-  environment "IMAGE", dockerRepository
-  environment "IS_HOTFIX", isHotfix
+
+  setEnvironmentForDockerBuild({ String name, Object value -> environment(name, value) })
 
   doLast {
     File file = new File(project.buildDir, 'docker.tag')
@@ -105,10 +103,8 @@ task build(type: Exec) {
 
 task pushImages(type: Exec) {
   commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder",  isSnapshot ? "dev": "prod", "--push"]
-  environment "VERSION", dockerTag
-  environment "COMMIT_SHA", revision
-  environment "IMAGE", dockerRepository
-  environment "IS_HOTFIX", isHotfix
+
+  setEnvironmentForDockerBuild({ String name, Object value -> environment(name, value) })
 
   dependsOn 'build'
 }
@@ -144,4 +140,18 @@ license {
 
 task check {
   dependsOn checkLicenses
+}
+
+def setEnvironmentForDockerBuild(environment){
+  environment "VERSION", dockerTag
+  environment "COMMIT_SHA", revision
+  environment "IMAGE", dockerRepository
+
+  if (project.hasProperty("isHotfix")) {
+    environment "IS_HOTFIX", isHotfix
+    println("Setting hotfix to ${isHotfix}")
+  } else {
+    environment "IS_HOTFIX", true
+    println("'isHotfix'-Property not defined. Assuming hotfix release")
+  }
 }
