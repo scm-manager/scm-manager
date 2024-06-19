@@ -29,6 +29,7 @@ Prints date, size and last message of files.
 
 from collections import defaultdict
 from mercurial import scmutil
+from builtins import open, bytes
 
 cmdtable = {}
 
@@ -177,7 +178,7 @@ class SubRepository:
 def collect_sub_repositories(revCtx):
   subrepos = {}
   try:
-    hgsub = revCtx.filectx(b'.hgsub').data().split('\n')
+    hgsub = revCtx.filectx(b'.hgsub').data().split(b'\n')
     for line in hgsub:
       parts = line.split(b'=')
       if len(parts) > 1:
@@ -188,9 +189,9 @@ def collect_sub_repositories(revCtx):
     pass
 
   try:
-    hgsubstate = revCtx.filectx(b'.hgsubstate').data().split('\n')
+    hgsubstate = revCtx.filectx(b'.hgsubstate').data().split(b'\n')
     for line in hgsubstate:
-      parts = line.split(' ')
+      parts = line.split(b' ')
       if len(parts) > 1:
         subrev = parts[0].strip()
         subrepo = subrepos[parts[1].strip()]
