@@ -84896,9 +84896,9 @@ import java.util.concurrent.TimeUnit;
  * 
  * @since 2.0.0
  */
-public final class 
+public final class Jwt
     <mark>
-      JwtAccessTokenBuilder
+      AccessTokenBuilder
     </mark>
      implements 
     <mark>
@@ -84907,17 +84907,17 @@ public final class
      {
 
   /**
-   * the logger for 
+   * the logger for Jwt
     <mark>
-      JwtAccessTokenBuilder
+      AccessTokenBuilder
     </mark>
     
    */
-  private static final Logger LOG = LoggerFactory.getLogger(
+  private static final Logger LOG = LoggerFactory.getLogger(Jwt
     <mark>
-      JwtAccessTokenBuilder.class
+      AccessTokenBuilder
     </mark>
-    );
+    .class);
   
   private final KeyGenerator keyGenerator; 
   private final SecureKeyResolver keyResolver; 

@@ -133,8 +133,6 @@ const stripAndReplace = (value: string, { start: preTag, end: postTag, wrapper: 
     }
   }
 
-  result.sort((a, b) => b.length - a.length);
-
   return {
     strippedValue,
     replacements: result.map<Replacement>((textToReplace) => ({
