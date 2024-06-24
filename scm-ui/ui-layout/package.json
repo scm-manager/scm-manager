@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/ui-layout",
   "private": false,
-  "version": "3.2.2-SNAPSHOT",
+  "version": "3.2.2",
   "main": "index.ts",
   "license": "MIT",
   "devDependencies": {
@@ -10,7 +10,7 @@
     "@scm-manager/tsconfig": "^2.13.0"
   },
   "peerDependencies": {
-    "@scm-manager/ui-core": "3.2.2-SNAPSHOT"
+    "@scm-manager/ui-core": "3.2.2"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
