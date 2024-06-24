@@ -1,0 +1,2 @@
+- type: fixed
+  description: Check for already existing Namespace and Name when renaming a repository

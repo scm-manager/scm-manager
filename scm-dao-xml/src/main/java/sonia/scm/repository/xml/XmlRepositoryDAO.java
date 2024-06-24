@@ -28,6 +28,8 @@ package sonia.scm.repository.xml;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
@@ -67,6 +69,9 @@ public class XmlRepositoryDAO implements RepositoryDAO {
   private final Map<NamespaceAndName, Repository> byNamespaceAndName;
   private final ReadWriteLock byNamespaceLock = new ReentrantReadWriteLock();
 
+  private static final Logger LOG = LoggerFactory.getLogger(XmlRepositoryDAO.class);
+
+
   @Inject
   public XmlRepositoryDAO(PathBasedRepositoryLocationResolver repositoryLocationResolver, FileSystem fileSystem, RepositoryExportingCheck repositoryExportingCheck) {
     this.repositoryLocationResolver = repositoryLocationResolver;
@@ -84,6 +89,10 @@ public class XmlRepositoryDAO implements RepositoryDAO {
       RepositoryLocationResolver.RepositoryLocationResolverInstance<Path> pathRepositoryLocationResolverInstance = repositoryLocationResolver.create(Path.class);
       pathRepositoryLocationResolverInstance.forAllLocations((repositoryId, repositoryPath) -> {
         Repository repository = metadataStore.read(repositoryPath);
+        if (byNamespaceAndName.containsKey(repository.getNamespaceAndName())) {
+          LOG.warn("Duplicate repository found. Adding suffix DUPLICATE to repository {}", repository);
+          repository.setName(repository.getName() + "-" + repositoryId + "-DUPLICATE");
+        }
         byNamespaceAndName.put(repository.getNamespaceAndName(), repository);
         byId.put(repositoryId, repository);
       });

@@ -83,7 +83,7 @@ class XmlRepositoryDAOTest {
   @BeforeEach
   void createDAO(@TempDir Path basePath) {
     when(locationResolver.create(Path.class)).thenReturn(
-      new RepositoryLocationResolver.RepositoryLocationResolverInstance<Path>() {
+      new RepositoryLocationResolver.RepositoryLocationResolverInstance<>() {
         @Override
         public Path getLocation(String repositoryId) {
           return locationResolver.create(repositoryId);
@@ -367,7 +367,7 @@ class XmlRepositoryDAOTest {
 
     private String content(Path storePath) {
       try {
-        return new String(Files.readAllBytes(storePath), Charsets.UTF_8);
+        return Files.readString(storePath, Charsets.UTF_8);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -383,9 +383,7 @@ class XmlRepositoryDAOTest {
     void createMetadataFileForRepository(@TempDir Path basePath) throws IOException {
       repositoryPath = basePath.resolve("existing");
 
-      Files.createDirectories(repositoryPath);
-      URL metadataUrl = Resources.getResource("sonia/scm/store/repositoryDaoMetadata.xml");
-      Files.copy(metadataUrl.openStream(), repositoryPath.resolve("metadata.xml"));
+      prepareRepositoryPath(repositoryPath);
     }
 
     @Test
@@ -418,6 +416,44 @@ class XmlRepositoryDAOTest {
     private void mockExistingPath() {
       triggeredOnForAllLocations = consumer -> consumer.accept("existing", repositoryPath);
     }
+  }
+
+  @Nested
+  class WithDuplicateRepositories {
+    private Path repositoryPath;
+    private Path duplicateRepositoryPath;
+
+    @BeforeEach
+    void createMetadataFileForRepository(@TempDir Path basePath) throws IOException {
+      repositoryPath = basePath.resolve("existing");
+      duplicateRepositoryPath = basePath.resolve("duplicate");
+
+      prepareRepositoryPath(repositoryPath);
+      prepareRepositoryPath(duplicateRepositoryPath);
+    }
+
+    @Test
+    void shouldRenameDuplicateRepositories() {
+      mockExistingPath();
+
+      XmlRepositoryDAO dao = new XmlRepositoryDAO(locationResolver, fileSystem, repositoryExportingCheck);
+
+      assertThat(dao.contains(new NamespaceAndName("space", "existing"))).isTrue();
+      assertThat(dao.contains(new NamespaceAndName("space", "existing-existing2-DUPLICATE"))).isTrue();
+    }
+
+    private void mockExistingPath() {
+      triggeredOnForAllLocations = consumer -> {
+        consumer.accept("existing", repositoryPath);
+        consumer.accept("existing2", duplicateRepositoryPath);
+      };
+    }
+  }
+
+  private void prepareRepositoryPath(Path repositoryPath) throws IOException {
+    Files.createDirectories(repositoryPath);
+    URL metadataUrl = Resources.getResource("sonia/scm/store/repositoryDaoMetadata.xml");
+    Files.copy(metadataUrl.openStream(), repositoryPath.resolve("metadata.xml"));
   }
 
   private Repository createRepository(String id) {
