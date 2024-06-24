@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.2] - 2024-06-24
+### Added
+- Written offer as a text file in all distributions
+- The documentation for the search syntax has been added to the official docs
+
+### Fixed
+- Raised the branch name limit to 1000 characters
+- Sub repositories in the source view for mercurial repositories
+- Search result highlighting were partly off
+
+### Changed
+- Search category stays the same when the search query is modified
+
 ## [3.2.1] - 2024-05-31
 ### Fixed
 - Option for different card variants for RepositoryFlag
@@ -1548,4 +1561,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.0.4]: https://scm-manager.org/download/3.0.4
 [3.1.0]: https://scm-manager.org/download/3.1.0
 [3.2.0]: https://scm-manager.org/download/3.2.0
-[3.3.0]: https://scm-manager.org/download/3.3.0
+[3.2.1]: https://scm-manager.org/download/3.2.1
+[3.2.2]: https://scm-manager.org/download/3.2.2
