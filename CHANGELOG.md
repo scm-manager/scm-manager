@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.46.4] - 2024-06-24
+### Fixed
+- Check for already existing Namespace and Name when renaming a repository
+- Repositories with the same namespace and name will get unique names on startup
+
 ## [2.46.3] - 2024-05-29
 ### Fixed
 - Exception in SVN repositories due to incorrect git initialization (Backport from 2.47)
@@ -1375,3 +1380,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.46.1]: https://scm-manager.org/download/2.46.1
 [2.46.2]: https://scm-manager.org/download/2.46.2
 [2.46.3]: https://scm-manager.org/download/2.46.3
+[2.46.4]: https://scm-manager.org/download/2.46.4
