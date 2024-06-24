@@ -454,6 +454,16 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   }
 
   @Test
+  public void shouldNotRenameRepositoryIfNameOrNamespaceAlreadyInUse() {
+    Repository repository1 = createTestRepository();
+    Repository repository2 = createSecondTestRepository();
+    RepositoryManager repoManager = (RepositoryManager) manager;
+
+    assertThrows(AlreadyExistsException.class, () -> repoManager.rename(repository2, repository1.getNamespace(), repository1.getName()));
+
+  }
+
+  @Test
   public void shouldReturnDistinctNamespaces() {
     createTestRepository();
     createSecondTestRepository();

@@ -31,6 +31,7 @@ import com.google.inject.Singleton;
 import jakarta.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
@@ -182,7 +183,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
       },
       newRepository -> {
         if (repositoryDAO.contains(newRepository.getNamespaceAndName())) {
-          throw alreadyExists(entity(newRepository.getClass(), newRepository.getNamespaceAndName().logString()));
+          throw alreadyExists(entity(newRepository.getNamespaceAndName()));
         }
       }
     );
@@ -291,8 +292,14 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   public Repository rename(Repository repository, String newNamespace, String newName) {
 
+    NamespaceAndName newNamespaceAndName = new NamespaceAndName(newNamespace, newName);
+
     if (hasNamespaceOrNameNotChanged(repository, newNamespace, newName)) {
       throw new NoChangesMadeException(repository);
+    }
+
+    if (this.get(newNamespaceAndName) != null){
+      throw AlreadyExistsException.alreadyExists(entity(NamespaceAndName.class, newNamespaceAndName.logString()));
     }
 
     Repository changedRepository = repository.clone();
