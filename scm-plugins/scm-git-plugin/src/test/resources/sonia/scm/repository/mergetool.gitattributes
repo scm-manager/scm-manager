@@ -1,0 +1,20 @@
+*.ipr text merge=mps
+*.bat text
+*.txt text
+*.iml text
+*.xml text
+*.java text
+*.mpr text merge=mps
+*.css text
+*.html text
+*.dtd text
+*.sh text
+dependencies text merge=mps
+generated text merge=mps
+*.mps text merge=mps
+trace.info text merge=mps
+*.mpl text merge=mps
+*.msd text merge=mps
+*.devkit text merge=mps
+*.mpsr text merge=mps
+*.model text merge=mps

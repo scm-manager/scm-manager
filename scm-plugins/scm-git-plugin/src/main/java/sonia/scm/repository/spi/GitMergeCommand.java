@@ -35,7 +35,6 @@ import org.eclipse.jgit.lib.IndexDiff;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.merge.ResolveMerger;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import sonia.scm.repository.GitRepositoryHandler;
@@ -43,11 +42,15 @@ import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
+import sonia.scm.repository.api.MergePreventReason;
+import sonia.scm.repository.api.MergePreventReasonType;
 import sonia.scm.repository.api.MergeStrategy;
 import sonia.scm.repository.api.MergeStrategyNotSupportedException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static org.eclipse.jgit.merge.MergeStrategy.RECURSIVE;
@@ -57,7 +60,7 @@ import static sonia.scm.NotFoundException.notFound;
 public class GitMergeCommand extends AbstractGitCommand implements MergeCommand {
 
   private final GitWorkingCopyFactory workingCopyFactory;
-
+  private final AttributeAnalyzer attributeAnalyzer;
   private static final Set<MergeStrategy> STRATEGIES = ImmutableSet.of(
     MergeStrategy.MERGE_COMMIT,
     MergeStrategy.FAST_FORWARD_IF_POSSIBLE,
@@ -66,13 +69,14 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   );
 
   @Inject
-  GitMergeCommand(@Assisted GitContext context, GitRepositoryHandler handler) {
-    this(context, handler.getWorkingCopyFactory());
+  GitMergeCommand(@Assisted GitContext context, GitRepositoryHandler handler, AttributeAnalyzer attributeAnalyzer) {
+    this(context, handler.getWorkingCopyFactory(), attributeAnalyzer);
   }
 
-  GitMergeCommand(@Assisted GitContext context, GitWorkingCopyFactory workingCopyFactory) {
+  GitMergeCommand(@Assisted GitContext context, GitWorkingCopyFactory workingCopyFactory, AttributeAnalyzer attributeAnalyzer) {
     super(context);
     this.workingCopyFactory = workingCopyFactory;
+    this.attributeAnalyzer = attributeAnalyzer;
   }
 
   @Override
@@ -86,7 +90,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   }
 
   private MergeCommandResult mergeWithStrategy(MergeCommandRequest request) {
-    switch(request.getMergeStrategy()) {
+    switch (request.getMergeStrategy()) {
       case SQUASH:
         return inClone(clone -> new GitMergeWithSquash(clone, request, context, repository), workingCopyFactory, request.getTargetBranch());
 
@@ -103,19 +107,30 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
         throw new MergeStrategyNotSupportedException(repository, request.getMergeStrategy());
     }
   }
-
+  
   @Override
   public MergeDryRunCommandResult dryRun(MergeCommandRequest request) {
-    try {
-      Repository repository = context.open();
-      ResolveMerger merger = (ResolveMerger) RECURSIVE.newMerger(repository, true);
-      return new MergeDryRunCommandResult(
-        merger.merge(
-          resolveRevisionOrThrowNotFound(repository, request.getBranchToMerge()),
-          resolveRevisionOrThrowNotFound(repository, request.getTargetBranch())));
+    try (Repository repository = context.open()) {
+      List<MergePreventReason> mergePreventReasons = new ArrayList<>(2);
+      if (attributeAnalyzer.hasExternalMergeToolConflicts(request.getBranchToMerge(), request.getTargetBranch())) {
+        mergePreventReasons.add(new MergePreventReason(MergePreventReasonType.EXTERNAL_MERGE_TOOL));
+      }
+
+      if (!isMergeableWithoutFileConflicts(repository, request.getBranchToMerge(), request.getTargetBranch())) {
+        mergePreventReasons.add(new MergePreventReason(MergePreventReasonType.FILE_CONFLICTS));
+      }
+
+      return new MergeDryRunCommandResult(mergePreventReasons.isEmpty(), mergePreventReasons);
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "could not clone repository for merge", e);
     }
+  }
+
+  private boolean isMergeableWithoutFileConflicts(Repository repository, String sourceRevision, String targetRevision) throws IOException {
+    return RECURSIVE.newMerger(repository, true).merge(
+      resolveRevisionOrThrowNotFound(repository,sourceRevision),
+      resolveRevisionOrThrowNotFound(repository, targetRevision)
+    );
   }
 
   @Override

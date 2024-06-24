@@ -40,6 +40,9 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Added;
@@ -47,6 +50,9 @@ import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
+import sonia.scm.repository.api.MergeDryRunCommandResult;
+import sonia.scm.repository.api.MergePreventReason;
+import sonia.scm.repository.api.MergePreventReasonType;
 import sonia.scm.repository.api.MergeStrategy;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
@@ -61,7 +67,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
 public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
@@ -71,6 +79,8 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   public ShiroRule shiro = new ShiroRule();
   @Rule
   public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
+  @Mock
+  private AttributeAnalyzer attributeAnalyzer;
 
   @BeforeClass
   public static void setSigner() {
@@ -84,21 +94,60 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setBranchToMerge("mergeable");
     request.setTargetBranch("master");
 
-    boolean mergeable = command.dryRun(request).isMergeable();
+    MergeDryRunCommandResult result = command.dryRun(request);
 
-    assertThat(mergeable).isTrue();
+    assertThat(result.isMergeable()).isTrue();
+    assertThat(result.getReasons()).isEmpty();
   }
 
   @Test
-  public void shouldDetectNotMergeableBranches() {
+  public void shouldDetectNotMergeableBranches_FileConflict() {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
     request.setBranchToMerge("test-branch");
     request.setTargetBranch("master");
 
-    boolean mergeable = command.dryRun(request).isMergeable();
+    MergeDryRunCommandResult result = command.dryRun(request);
 
-    assertThat(mergeable).isFalse();
+    assertThat(result.isMergeable()).isFalse();
+    assertThat(result.getReasons().size()).isEqualTo(1);
+    assertThat(result.getReasons().stream().toList().get(0).getType()).isEqualTo(MergePreventReasonType.FILE_CONFLICTS);
+  }
+
+  @Test
+  public void shouldDetectNotMergeableBranches_ExternalMergeTool() {
+    String source = "mergeable";
+    String target = "master";
+    when(attributeAnalyzer.hasExternalMergeToolConflicts(source, target)).thenReturn(true);
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setBranchToMerge(source);
+    request.setTargetBranch(target);
+
+    MergeDryRunCommandResult result = command.dryRun(request);
+
+    assertThat(result.isMergeable()).isFalse();
+    assertThat(result.getReasons().size()).isEqualTo(1);
+    assertThat(result.getReasons().stream().toList().get(0).getType()).isEqualTo(MergePreventReasonType.EXTERNAL_MERGE_TOOL);
+  }
+
+  @Test
+  public void shouldDetectNotMergeableBranches_ExternalMergeToolAndFileConflict() {
+    String source = "test-branch";
+    String target = "master";
+    when(attributeAnalyzer.hasExternalMergeToolConflicts(source, target)).thenReturn(true);
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setBranchToMerge(source);
+    request.setTargetBranch(target);
+
+    MergeDryRunCommandResult result = command.dryRun(request);
+
+    assertThat(result.isMergeable()).isFalse();
+    assertThat(result.getReasons().size()).isEqualTo(2);
+    List<MergePreventReason> reasons = result.getReasons().stream().toList();
+    assertThat(reasons.get(0).getType()).isEqualTo(MergePreventReasonType.EXTERNAL_MERGE_TOOL);
+    assertThat(reasons.get(1).getType()).isEqualTo(MergePreventReasonType.FILE_CONFLICTS);
   }
 
   @Test
@@ -192,7 +241,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void shouldNotMergeConflictingBranches() {
+  public void shouldNotMergeConflictingBranches_FileConflict() {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
     request.setBranchToMerge("test-branch");
@@ -419,7 +468,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test(expected = NotFoundException.class)
-  public void shouldHandleNotExistingTargetBranchInDryRun() {
+  public void shouldHandleNotExistingTargetBranchInDryRun() throws IOException {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("not_existing");
@@ -517,7 +566,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitMergeCommand createCommand(Consumer<Git> interceptor) {
-    return new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)), new SimpleMeterRegistry())) {
+    return new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)), new SimpleMeterRegistry()), attributeAnalyzer) {
       @Override
       <R, W extends GitCloneWorker<R>> R inClone(Function<Git, W> workerSupplier, GitWorkingCopyFactory workingCopyFactory, String initialBranch) {
         Function<Git, W> interceptedWorkerSupplier = git -> {

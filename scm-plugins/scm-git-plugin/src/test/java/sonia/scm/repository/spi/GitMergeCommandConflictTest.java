@@ -34,11 +34,14 @@ import sonia.scm.repository.work.WorkdirProvider;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static sonia.scm.repository.spi.MergeConflictResult.ConflictTypes.BOTH_MODIFIED;
 import static sonia.scm.repository.spi.MergeConflictResult.ConflictTypes.DELETED_BY_THEM;
 import static sonia.scm.repository.spi.MergeConflictResult.ConflictTypes.DELETED_BY_US;
 
-public class GitMergeCommand_Conflict_Test extends AbstractGitCommandTestBase {
+public class GitMergeCommandConflictTest extends AbstractGitCommandTestBase {
 
   static final String DIFF_HEADER = "diff --git a/Main.java b/Main.java";
   static final String DIFF_FILE_CONFLICT = "--- a/Main.java\n" +
@@ -93,7 +96,9 @@ public class GitMergeCommand_Conflict_Test extends AbstractGitCommandTestBase {
   }
 
   private MergeConflictResult computeMergeConflictResult(String branchToMerge, String targetBranch) {
-    GitMergeCommand gitMergeCommand = new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)), new SimpleMeterRegistry()));
+    AttributeAnalyzer attributeAnalyzer = mock(AttributeAnalyzer.class);
+    when(attributeAnalyzer.hasExternalMergeToolConflicts(any(), any())).thenReturn(false);
+    GitMergeCommand gitMergeCommand = new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)), new SimpleMeterRegistry()), attributeAnalyzer);
     MergeCommandRequest mergeCommandRequest = new MergeCommandRequest();
     mergeCommandRequest.setBranchToMerge(branchToMerge);
     mergeCommandRequest.setTargetBranch(targetBranch);

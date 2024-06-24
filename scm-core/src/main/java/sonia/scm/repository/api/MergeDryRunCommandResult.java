@@ -21,8 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * This class keeps the result of a merge dry run. Use {@link #isMergeable()} to check whether an automatic merge is
@@ -31,9 +34,25 @@ package sonia.scm.repository.api;
 public class MergeDryRunCommandResult {
 
   private final boolean mergeable;
+  private final Collection<MergePreventReason> reasons;
 
+  /**
+   * Creates a result and sets the reason to FILE_CONFLICTS.
+   *
+   * @deprecated Please use {@link MergeDryRunCommandResult#MergeDryRunCommandResult(boolean, Collection)}
+   * instead and specify a concrete reason.
+   */
+  @Deprecated
   public MergeDryRunCommandResult(boolean mergeable) {
+    this(mergeable, List.of(new MergePreventReason(MergePreventReasonType.FILE_CONFLICTS)));
+  }
+
+  /**
+   * @since 3.3.0
+   */
+  public MergeDryRunCommandResult(boolean mergeable, Collection<MergePreventReason> reasons) {
     this.mergeable = mergeable;
+    this.reasons = reasons;
   }
 
   /**
@@ -42,5 +61,12 @@ public class MergeDryRunCommandResult {
    */
   public boolean isMergeable() {
     return mergeable;
+  }
+
+  /**
+   * This will return the reasons why the merge via the internal merge command is not possible.
+   */
+  public Collection<MergePreventReason> getReasons() {
+    return reasons;
   }
 }
