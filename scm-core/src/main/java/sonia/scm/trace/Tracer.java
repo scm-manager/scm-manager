@@ -25,6 +25,7 @@
 package sonia.scm.trace;
 
 import jakarta.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Set;
 
@@ -48,6 +49,7 @@ import java.util.Set;
  *
  * @since 2.9.0
  */
+@Slf4j
 public final class Tracer {
 
   private final Set<Exporter> exporters;
@@ -70,7 +72,11 @@ public final class Tracer {
    */
   void export(SpanContext span) {
     for (Exporter exporter : exporters) {
-      exporter.export(span);
+      try {
+        exporter.export(span);
+      } catch (Exception e) {
+        log.warn("got error from trace exporter", e);
+      }
     }
   }
 }
