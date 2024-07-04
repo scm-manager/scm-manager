@@ -39,8 +39,9 @@ class GitMergeInformation extends React.Component<Props> {
 
     const gitCheckoutCommand = `git checkout ${target}`;
     const gitUpdateCommand = "git pull";
-    const gitMergeCommand = `git merge ${source}`;
-    const gitResolveCommand = "git add <conflict file>";
+    const gitMergeCommand = `git merge origin/${source}`;
+    const gitResolveCommandA = "git add <conflict file>";
+    const gitResolveCommandB = "git add --all";
     const gitCommitCommand = `git commit -m "Merge ${source} into ${target}"`;
     const gitPushCommand = "git push";
 
@@ -53,8 +54,10 @@ class GitMergeInformation extends React.Component<Props> {
         <PreformattedCodeBlock>{gitUpdateCommand}</PreformattedCodeBlock>
         {t("scm-git-plugin.information.merge.merge")}
         <PreformattedCodeBlock>{gitMergeCommand}</PreformattedCodeBlock>
-        {t("scm-git-plugin.information.merge.resolve")}
-        <PreformattedCodeBlock>{gitResolveCommand}</PreformattedCodeBlock>
+        {t("scm-git-plugin.information.merge.resolve_a")}
+        <PreformattedCodeBlock>{gitResolveCommandA}</PreformattedCodeBlock>
+        {t("scm-git-plugin.information.merge.resolve_b")}
+        <PreformattedCodeBlock>{gitResolveCommandB}</PreformattedCodeBlock>
         {t("scm-git-plugin.information.merge.commit")}
         <PreformattedCodeBlock>{gitCommitCommand}</PreformattedCodeBlock>
         {t("scm-git-plugin.information.merge.push")}

@@ -12,7 +12,8 @@
         "checkout": "1. Sicherstellen, dass der Workspace aufgeräumt ist und der Target Branch ausgecheckt wurde.",
         "update": "2. Update Workspace",
         "merge": "3. Merge Source Branch",
-        "resolve": "4. Merge Konflikte auflösen und korrigierte Dateien dem Index hinzufügen.",
+        "resolve_a": "4a. Merge Konflikte auflösen und korrigierte Dateien einzeln dem Index hinzufügen oder",
+        "resolve_b": "4b. Merge Konflikte auflösen und korrigierte Dateien auf einmal dem Index hinzufügen.",
         "commit": "5. Commit",
         "push": "6. Push des Merge"
       }

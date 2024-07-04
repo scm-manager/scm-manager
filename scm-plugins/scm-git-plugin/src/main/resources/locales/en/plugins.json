@@ -12,7 +12,8 @@
         "checkout": "1. Make sure your workspace is clean and checkout target branch",
         "update": "2. Update workspace",
         "merge": "3. Merge source branch",
-        "resolve": "4. Resolve merge conflicts and add corrected files to index",
+        "resolve_a": "4a. Resolve merge conflicts and add corrected files to index individually or",
+        "resolve_b": "4b. Resolve merge conflicts and add all files at once to index",
         "commit": "5. Commit",
         "push": "6. Push your merge"
       }
