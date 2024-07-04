@@ -4,9 +4,8 @@ Information on the license conditions and - if required by the license - on the
 source code is available free of charge on request.
 However, some licenses require the provision of physical copies of the source
 or object code. If this is the case, you can request a physical copy of the
-source code. If you need assistance in exercising the rights granted by an open
-source license, you can also contact us. A small fee is charged for these
-services to cover the cost of physical distribution.
+source code. A small fee is charged for these services to cover the cost of
+physical distribution.
 
 To receive a copy of the source code you can either submit a written request to
 
