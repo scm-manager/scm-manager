@@ -22,48 +22,19 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation, PagedCollection } from "./hal";
+package sonia.scm.api.v2.resources;
 
-export type DisplayedUser = {
-  id: string;
-  displayName: string;
-  mail?: string;
-};
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.Links;
+import lombok.Getter;
 
-export type UserBase = {
-  displayName: string;
-  name: string;
-  mail?: string;
-  password: string;
-  active: boolean;
-  type?: string;
-  creationDate?: string;
-  lastModified?: string;
-  external: boolean;
-};
+@Getter
+class UserCollectionDto extends CollectionDto {
 
-export type User = HalRepresentation & UserBase;
-export type UserCreation = User;
+  private final boolean externalAuthenticationAvailable;
 
-export type UserCollection = PagedCollection<{
-  users: User[];
-}> & {
-  externalAuthenticationAvailable: boolean;
-};
-
-export type PermissionOverview = HalRepresentation & {
-  relevantGroups: PermissionOverviewGroupEntry[];
-  relevantNamespaces: string[];
-  relevantRepositories: PermissionOverviewRepositoryEntry[];
-};
-
-export type PermissionOverviewGroupEntry = {
-  name: string;
-  permissions: boolean;
-  externalOnly: boolean;
-};
-
-export type PermissionOverviewRepositoryEntry = {
-  namespace: string;
-  name: string;
-};
+  UserCollectionDto(Links links, Embedded embedded, boolean externalAuthenticationAvailable) {
+    super(links, embedded);
+    this.externalAuthenticationAvailable = externalAuthenticationAvailable;
+  }
+}

@@ -26,15 +26,8 @@ import { Redirect, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useUsers } from "@scm-manager/ui-api";
 import { User, UserCollection } from "@scm-manager/ui-types";
-import {
-  CreateButton,
-  LinkPaginator,
-  Notification,
-  OverviewPageActions,
-  Page,
-  PageActions,
-  urls,
-} from "@scm-manager/ui-components";
+import { CreateButton, LinkPaginator, OverviewPageActions, Page, PageActions, urls } from "@scm-manager/ui-components";
+import { Notification } from "@scm-manager/ui-core";
 import { UserTable } from "./../components/table";
 
 type UserPageProps = {

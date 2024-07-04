@@ -50,6 +50,7 @@
   "createUser": {
     "title": "Benutzer erstellen",
     "subtitle": "Erstellen eines neuen Benutzers",
+    "notification": "Ein externes Benutzerverwaltungssystem ist aktiviert. Die hier angelegten Benutzer werden nicht in die externe Benutzerverwaltung übertragen.",
     "form": {
       "submit": "Speichern",
       "submit-success-notification": "Der Benutzer wurde erfolgreich aktualisiert",

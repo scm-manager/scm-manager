@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
@@ -55,12 +55,16 @@ abstract class PagedCollectionToDtoMapper<E extends ModelObject, D extends HalRe
   CollectionDto map(int pageNumber, int pageSize, PageResult<E> pageResult, String selfLink, Optional<String> createLink, Function<E, ? extends HalRepresentation> mapper) {
     NumberedPaging paging = zeroBasedNumberedPaging(pageNumber, pageSize, pageResult.getOverallCount());
     List<HalRepresentation> dtos = pageResult.getEntities().stream().map(mapper).collect(toList());
-    CollectionDto collectionDto = new CollectionDto(
-      createLinks(paging, selfLink, createLink),
-      embedDtos(dtos));
+    Links links = createLinks(paging, selfLink, createLink);
+    Embedded embedded = embedDtos(dtos);
+    CollectionDto collectionDto = createCollectionDto(links, embedded);
     collectionDto.setPage(pageNumber);
     collectionDto.setPageTotal(computePageTotal(pageSize, pageResult));
     return collectionDto;
+  }
+
+  CollectionDto createCollectionDto(Links links, Embedded embedded) {
+    return new CollectionDto(links, embedded);
   }
 
   private int computePageTotal(int pageSize, PageResult<E> pageResult) {

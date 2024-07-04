@@ -40,6 +40,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
@@ -58,14 +59,14 @@ public class UserCollectionToDtoMapperTest {
 
   @InjectMocks
   private SubjectThreadState subjectThreadState;
-  @InjectMocks
-  private UserCollectionToDtoMapper mapper;
-
   private URI expectedBaseUri;
+
+  private UserCollectionToDtoMapper mapper;
 
   @Before
   public void init() throws URISyntaxException {
     initMocks(this);
+    mapper = new UserCollectionToDtoMapper(userToDtoMapper, resourceLinks, Set.of());
     expectedBaseUri = baseUri.resolve(UserRootResource.USERS_PATH_V2 + "/");
     subjectThreadState.bind();
     ThreadContext.bind(subject);

@@ -24,21 +24,21 @@
 import React, { FC, useRef } from "react";
 import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useRequiredIndexLink } from "@scm-manager/ui-api";
 import { Page } from "@scm-manager/ui-components";
 import { Form, useCreateResource } from "@scm-manager/ui-forms";
 import * as userValidator from "../components/userValidation";
-import { User, UserCreation } from "@scm-manager/ui-types";
+import { Link, User, UserCollection, UserCreation } from "@scm-manager/ui-types";
+import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-core";
+import { useUsers } from "@scm-manager/ui-api";
 
 type UserCreationForm = Pick<UserCreation, "password" | "name" | "displayName" | "active" | "external" | "mail"> & {
   passwordConfirmation: string;
 };
 
-const CreateUser: FC = () => {
+const CreateUserForm: FC<{ users: UserCollection }> = ({ users }) => {
   const [t] = useTranslation("users");
-  const indexLink = useRequiredIndexLink("users");
   const { submit, submissionResult: createdUser } = useCreateResource<UserCreationForm, User>(
-    indexLink,
+    (users._links.create as Link).href,
     ["user", "users"],
     (user) => user.name,
     {
@@ -61,6 +61,9 @@ const CreateUser: FC = () => {
 
   return (
     <Page title={t("createUser.title")} subtitle={t("createUser.subtitle")} showContentOnError={true}>
+      {users.externalAuthenticationAvailable && (
+        <Notification type="warning">{t("createUser.notification")}</Notification>
+      )}
       <Form onSubmit={submit} translationPath={["users", "createUser.form"]} defaultValues={defaultValuesRef.current}>
         {({ watch }) => (
           <>
@@ -112,6 +115,19 @@ const CreateUser: FC = () => {
       </Form>
     </Page>
   );
+};
+
+const CreateUser: FC = () => {
+  const { data: users, isLoading, error } = useUsers({ page: 0 });
+
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <ErrorNotification error={error} />;
+  }
+
+  return <CreateUserForm users={users!} />;
 };
 
 export default CreateUser;

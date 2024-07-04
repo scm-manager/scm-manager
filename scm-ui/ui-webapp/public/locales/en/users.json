@@ -50,6 +50,7 @@
   "createUser": {
     "title": "Create User",
     "subtitle": "Create a new user",
+    "notification": "An external user management system is activated. Users created here will not be transferred to the external user management.",
     "form": {
       "submit": "Submit",
       "submit-success-notification": "The user was updated successfully",

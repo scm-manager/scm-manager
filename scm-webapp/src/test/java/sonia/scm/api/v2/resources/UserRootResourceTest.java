@@ -63,6 +63,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import static de.otto.edison.hal.Links.emptyLinks;
@@ -149,7 +150,7 @@ public class UserRootResourceTest {
     doNothing().when(userManager).delete(userCaptor.capture());
     when(userManager.getDefaultType()).thenReturn("xml");
 
-    UserCollectionToDtoMapper userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, resourceLinks);
+    UserCollectionToDtoMapper userCollectionToDtoMapper = new UserCollectionToDtoMapper(userToDtoMapper, resourceLinks, Set.of());
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper,
       userCollectionToDtoMapper, resourceLinks, passwordService);
     UserPermissionResource userPermissionResource = new UserPermissionResource(permissionAssigner, permissionCollectionToDtoMapper);

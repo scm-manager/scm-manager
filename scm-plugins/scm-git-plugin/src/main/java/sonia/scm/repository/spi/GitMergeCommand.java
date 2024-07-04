@@ -37,6 +37,7 @@ import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
@@ -107,7 +108,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
         throw new MergeStrategyNotSupportedException(repository, request.getMergeStrategy());
     }
   }
-  
+
   @Override
   public MergeDryRunCommandResult dryRun(MergeCommandRequest request) {
     try (Repository repository = context.open()) {

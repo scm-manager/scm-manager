@@ -72,6 +72,7 @@ describe("Test user hooks", () => {
     _embedded: {
       users: [yoda],
     },
+    externalAuthenticationAvailable: false,
   };
 
   afterEach(() => {

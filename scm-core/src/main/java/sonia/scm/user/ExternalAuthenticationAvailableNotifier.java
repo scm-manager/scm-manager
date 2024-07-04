@@ -22,48 +22,11 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation, PagedCollection } from "./hal";
+package sonia.scm.user;
 
-export type DisplayedUser = {
-  id: string;
-  displayName: string;
-  mail?: string;
-};
+import sonia.scm.plugin.ExtensionPoint;
 
-export type UserBase = {
-  displayName: string;
-  name: string;
-  mail?: string;
-  password: string;
-  active: boolean;
-  type?: string;
-  creationDate?: string;
-  lastModified?: string;
-  external: boolean;
-};
-
-export type User = HalRepresentation & UserBase;
-export type UserCreation = User;
-
-export type UserCollection = PagedCollection<{
-  users: User[];
-}> & {
-  externalAuthenticationAvailable: boolean;
-};
-
-export type PermissionOverview = HalRepresentation & {
-  relevantGroups: PermissionOverviewGroupEntry[];
-  relevantNamespaces: string[];
-  relevantRepositories: PermissionOverviewRepositoryEntry[];
-};
-
-export type PermissionOverviewGroupEntry = {
-  name: string;
-  permissions: boolean;
-  externalOnly: boolean;
-};
-
-export type PermissionOverviewRepositoryEntry = {
-  namespace: string;
-  name: string;
-};
+@ExtensionPoint
+public interface ExternalAuthenticationAvailableNotifier {
+  boolean isExternalAuthenticationAvailable();
+}
