@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0] - 2024-07-05
+### Added
+- Check for external merge tools during merge
+- Notification when external user management is activated during user creation
+
+### Fixed
+- Prevent hiding the whole inner content container if an diff is empty.
+- Makes the trace exporter resilient against errors in plugins
+
+### Changed
+- Using different icon for commit details button
+
+### Security
+- Privilege escalation in namespaces
+
 ## [3.2.2] - 2024-06-24
 ### Added
 - Written offer as a text file in all distributions
@@ -1563,3 +1578,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.2.0]: https://scm-manager.org/download/3.2.0
 [3.2.1]: https://scm-manager.org/download/3.2.1
 [3.2.2]: https://scm-manager.org/download/3.2.2
+[3.3.0]: https://scm-manager.org/download/3.3.0

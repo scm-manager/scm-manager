@@ -1,2 +1,0 @@
-- type: fixed
-  description: Makes the trace exporter resilient against errors in plugins
