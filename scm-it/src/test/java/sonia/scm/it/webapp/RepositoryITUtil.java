@@ -39,6 +39,7 @@ import java.net.URI;
 import static org.junit.Assert.assertNotNull;
 import static sonia.scm.it.webapp.ConfigUtil.readConfig;
 import static sonia.scm.it.webapp.IntegrationTestUtil.BASE_URL;
+import static sonia.scm.it.webapp.IntegrationTestUtil.createAdminClient;
 import static sonia.scm.it.webapp.IntegrationTestUtil.createResource;
 import static sonia.scm.it.webapp.IntegrationTestUtil.getLink;
 
@@ -56,7 +57,11 @@ public final class RepositoryITUtil
   }
 
   public static RepositoryDto createRepository(ScmClient client, String repositoryJson) {
-    setNamespaceStrategy(client, "UsernameNamespaceStrategy");
+    return createRepository(client, repositoryJson, "UsernameNamespaceStrategy");
+  }
+
+  public static RepositoryDto createRepository(ScmClient client, String repositoryJson, String namespaceStrategy) {
+    setNamespaceStrategy(createAdminClient(), namespaceStrategy);
 
     Response response =
       createResource(client, "repositories")

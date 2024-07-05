@@ -113,46 +113,53 @@ class DefaultNamespaceManagerTest {
     assertThat(namespace).isEmpty();
   }
 
-  @Test
-  void shouldCleanUpPermissionWhenLastRepositoryOfNamespaceWasDeleted() {
-    when(repositoryManager.getAllNamespaces()).thenReturn(asList("universe", "rest"));
+  @Nested
+  class WithAdminContext {
+    @BeforeEach
+    void mockAdminContext() {
+      doAnswer(invocation -> {
+        invocation.getArgument(0, Runnable.class).run();
+        return null;
+      }).when(administrationContext).runAsAdmin(any(PrivilegedAction.class));
+    }
 
-    manager.handleRepositoryEvent(new RepositoryEvent(DELETE, new Repository("1", "git", "life", "earth")));
+    @Test
+    void shouldCleanUpPermissionWhenLastRepositoryOfNamespaceWasDeleted() {
+      when(repositoryManager.getAllNamespaces()).thenReturn(asList("universe", "rest"));
 
-    assertThat(dao.get("life")).isEmpty();
-  }
+      manager.handleRepositoryEvent(new RepositoryEvent(DELETE, new Repository("1", "git", "life", "earth")));
 
-  @Test
-  void shouldCleanUpPermissionWhenLastRepositoryOfNamespaceWasRenamed() {
-    when(repositoryManager.getAllNamespaces()).thenReturn(asList("universe", "rest", "highway"));
+      assertThat(dao.get("life")).isEmpty();
+    }
 
-    manager.handleRepositoryEvent(
-      new RepositoryModificationEvent(
-        MODIFY,
-        new Repository("1", "git", "highway", "earth"),
-        new Repository("1", "git", "life", "earth")));
+    @Test
+    void shouldCleanUpPermissionWhenLastRepositoryOfNamespaceWasRenamed() {
+      when(repositoryManager.getAllNamespaces()).thenReturn(asList("universe", "rest", "highway"));
 
-    assertThat(dao.get("life")).isEmpty();
-  }
+      manager.handleRepositoryEvent(
+        new RepositoryModificationEvent(
+          MODIFY,
+          new Repository("1", "git", "highway", "earth"),
+          new Repository("1", "git", "life", "earth")));
 
-  @Test
-  void shouldCreateOwnerPermissionWhenFirstRepositoryOfNamespaceWasCreated() {
-    when(subject.getPrincipal()).thenReturn("trillian");
-    when(repositoryManager.getAllNamespaces()).thenReturn(asList("rest", "highway", "universe"));
-    when(repositoryManager.getAll(any()))
-      .thenAnswer(invocation -> Stream.of(new Repository("1", "git", "universe", "earth")).filter(invocation.getArgument(0, Predicate.class)).toList());
-    doAnswer(invocation -> {
-      invocation.getArgument(0, Runnable.class).run();
-      return null;
-    }).when(administrationContext).runAsAdmin(any(PrivilegedAction.class));
-    manager.handleRepositoryEvent(
-      new RepositoryModificationEvent(
-        CREATE,
-        new Repository("1", "git", "universe", "earth"),
-        null));
+      assertThat(dao.get("life")).isEmpty();
+    }
 
-    assertThat(dao.get("universe")).isNotEmpty();
-    assertThat(dao.get("universe").get().getPermissions()).extracting("name").contains("trillian");
+    @Test
+    void shouldCreateOwnerPermissionWhenFirstRepositoryOfNamespaceWasCreated() {
+      when(subject.getPrincipal()).thenReturn("trillian");
+      when(repositoryManager.getAllNamespaces()).thenReturn(asList("rest", "highway", "universe"));
+      when(repositoryManager.getAll(any()))
+        .thenAnswer(invocation -> Stream.of(new Repository("1", "git", "universe", "earth")).filter(invocation.getArgument(0, Predicate.class)).toList());
+      manager.handleRepositoryEvent(
+        new RepositoryModificationEvent(
+          CREATE,
+          new Repository("1", "git", "universe", "earth"),
+          null));
+
+      assertThat(dao.get("universe")).isNotEmpty();
+      assertThat(dao.get("universe").get().getPermissions()).extracting("name").contains("trillian");
+    }
   }
 
   @Nested

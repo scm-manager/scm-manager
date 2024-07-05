@@ -1,0 +1,2 @@
+- type: security
+  description: Privilege escalation in namespaces

@@ -28,6 +28,8 @@ import com.github.legman.Subscribe;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.web.security.AdministrationContext;
@@ -35,13 +37,13 @@ import sonia.scm.web.security.AdministrationContext;
 import java.util.Collection;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
 @Singleton
 public class DefaultNamespaceManager implements NamespaceManager {
 
+  private static final Logger log = LoggerFactory.getLogger(DefaultNamespaceManager.class);
   private final RepositoryManager repositoryManager;
   private final NamespaceDao dao;
   private final ScmEventBus eventBus;
@@ -99,23 +101,29 @@ public class DefaultNamespaceManager implements NamespaceManager {
   }
 
   private void cleanUpNamespaceIfEmpty(RepositoryEvent repositoryEvent) {
-    Collection<String> allNamespaces = repositoryManager.getAllNamespaces();
     String oldNamespace = getOldNamespace(repositoryEvent);
-    if (!allNamespaces.contains(oldNamespace)) {
-      dao.delete(oldNamespace);
-    }
+    log.debug("checking whether to delete namespace {} after deletion of repository", oldNamespace);
+    administrationContext.runAsAdmin(() -> {
+      Collection<String> allNamespaces = repositoryManager.getAllNamespaces();
+      if (!allNamespaces.contains(oldNamespace)) {
+        log.debug("deleting configuration for namespace {} after deletion of repository", oldNamespace);
+        dao.delete(oldNamespace);
+      }
+    });
   }
 
   private void initializeIfNeeded(RepositoryEvent repositoryEvent) {
-    Namespace namespace = createNamespaceForName(repositoryEvent.getItem().getNamespace());
-    if (repositoryManager.getAll(r -> r.getNamespace().equals(namespace.getNamespace())).size() == 1) {
-      String creatingUser = SecurityUtils.getSubject().getPrincipal().toString();
-      administrationContext.runAsAdmin(() -> {
-          namespace.setPermissions(singletonList(new RepositoryPermission(creatingUser, "OWNER", false)));
-          modify(namespace);
-        }
-      );
-    }
+    String creatingUser = SecurityUtils.getSubject().getPrincipal().toString();
+    String namespace = repositoryEvent.getItem().getNamespace();
+    log.debug("checking whether to set OWNER permissions for user {} in namespace {} after creation of repository", creatingUser, namespace);
+    administrationContext.runAsAdmin(() -> {
+      Namespace namespaceInstance = createNamespaceForName(namespace);
+      if (repositoryManager.getAll(r -> r.getNamespace().equals(namespaceInstance.getNamespace())).size() == 1) {
+        log.debug("setting OWNER permissions for user {} in namespace {} after creation of repository", creatingUser, namespace);
+        namespaceInstance.addPermission(new RepositoryPermission(creatingUser, "OWNER", false));
+        modify(namespaceInstance);
+      }
+    });
   }
 
   public boolean repositoryRemovedFromNamespace(RepositoryEvent repositoryEvent) {

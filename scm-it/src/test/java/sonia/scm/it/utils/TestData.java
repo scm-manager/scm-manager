@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static sonia.scm.it.utils.RestUtil.createResourceUrl;
 import static sonia.scm.it.utils.RestUtil.given;
 import static sonia.scm.it.utils.RestUtil.givenAnonymous;
@@ -113,9 +114,14 @@ public class TestData {
 
   public static void assignAdminPermissions(String username) {
     LOG.info("assign admin permissions to user {}", username);
+    assignPermissions(username, "*");
+  }
+
+  public static void assignPermissions(String username, String... permissions) {
+    String permissionString = stream(permissions).map(permission -> '"' + permission + '"').collect(Collectors.joining(","));
     given(VndMediaType.PERMISSION_COLLECTION)
       .when()
-      .body("{'permissions': ['*']}".replaceAll("'", "\""))
+      .body("{\"permissions\": [" + permissionString + "]}")
       .put(getPermissionUrl(username))
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
