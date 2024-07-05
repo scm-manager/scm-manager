@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { Changeset, File, Repository } from "@scm-manager/ui-types";
-import { Button, ButtonAddons } from "../../buttons";
+import { ButtonAddons, Button } from "../../buttons";
 import { createChangesetLink, createSourcesLink } from "./changesets";
 import { useTranslation } from "react-i18next";
 
@@ -44,7 +44,7 @@ const ChangesetButtonGroup = React.forwardRef<HTMLButtonElement | HTMLAnchorElem
           className="px-3"
           ref={ref}
           link={changesetLink}
-          icon="exchange-alt"
+          icon="list-ul"
           label={t("changeset.buttons.details")}
           reducedMobile={true}
         />

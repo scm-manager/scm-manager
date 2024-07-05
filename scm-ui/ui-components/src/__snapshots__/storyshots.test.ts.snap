@@ -20425,7 +20425,7 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -20586,7 +20586,7 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -20705,7 +20705,7 @@ exports[`Storyshots Repositories/Changesets Default 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -20845,7 +20845,7 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -20969,7 +20969,7 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -21081,7 +21081,7 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -21210,7 +21210,7 @@ exports[`Storyshots Repositories/Changesets Replacements 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -21341,7 +21341,7 @@ exports[`Storyshots Repositories/Changesets With Committer 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -21481,7 +21481,7 @@ exports[`Storyshots Repositories/Changesets With Committer and Co-Author 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -21613,7 +21613,7 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -21741,7 +21741,7 @@ exports[`Storyshots Repositories/Changesets With contactless signature 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -21869,7 +21869,7 @@ exports[`Storyshots Repositories/Changesets With invalid signature 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -22001,7 +22001,7 @@ exports[`Storyshots Repositories/Changesets With multiple Co-Authors 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -22129,7 +22129,7 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and invalid
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -22257,7 +22257,7 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and not fou
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -22385,7 +22385,7 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and valid s
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -22513,7 +22513,7 @@ exports[`Storyshots Repositories/Changesets With unknown signature 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -22641,7 +22641,7 @@ exports[`Storyshots Repositories/Changesets With unowned signature 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
@@ -22769,7 +22769,7 @@ exports[`Storyshots Repositories/Changesets With valid signature 1`] = `
             >
               <span>
                 <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
                   onKeyPress={[Function]}
                 />
                  
