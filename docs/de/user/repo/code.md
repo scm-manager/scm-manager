@@ -52,9 +52,9 @@ Die Diffs können durch Klicken auf den blauen Balken schrittweise oder vollstä
 Falls sich Commit Links im Format "namespace/name@commitId" in der Changeset Beschreibung befinden, werden die zu relativen SCM-Manager Links erweitert.
 Beispielsweise wird der Text hitchhiker/HeartOfGold@1a2b3c4 zu einem Link zu dem Commit 1a2b3c4 im Repository hitchhiker/HeartOfGold umgewandelt.
 
-Für das Changeset gibt es zwei Buttons:
-- Mit dem ersten Button können die Whitespaces-Änderungen ein- und ausgeblendet werden.
-- Der zweite ermöglicht das Ein- und Ausblenden aller Changesets.
+Für das Changeset gibt es ein Dropdown Menu mit zwei Optionen:
+- Mit der ersten Checkbox können die Whitespaces-Änderungen ein- und ausgeblendet werden.
+- Die zweite Checkbox ermöglicht das Ein- und Ausblenden aller Changesets.
 
 Jeder Changeset Diff hat mehrere Buttons:
 - Der erste Button von Links ermöglicht einen direkten Vergleich der Änderungen.

@@ -264,6 +264,10 @@
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Collapse",
     "ignoreWhitespace": "Ignore whitespaces changes",
+    "checkBoxHeadingWhitespaces": "Whitespace Settings",
+    "checkBoxHeadingOtherSettings": "Other Settings",
+    "checkBoxCollapseOption": "Collapse all Diffs",
+    "checkBoxHideWhitespaceChanges": "Hide Diffs which only contain whitespace changes",
     "activateWhitespace": "Show whitespaces changes",
     "moreDiffsAvailable": "There are more diffs available",
     "loadMore": "Load more"

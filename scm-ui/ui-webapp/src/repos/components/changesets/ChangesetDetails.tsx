@@ -39,6 +39,7 @@ import {
   DateFromNow,
   FileControlFactory,
   SignatureIcon,
+  DiffDropDown
 } from "@scm-manager/ui-components";
 import { Tooltip, SubSubtitle } from "@scm-manager/ui-core";
 import { Button, Icon } from "@scm-manager/ui-buttons";
@@ -280,14 +281,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
       </div>
       <div>
         <div className="is-flex has-gap-4 mb-4 is-justify-content-flex-end">
-          <Button onClick={ignoreWhitespaces}>
-            <Icon className="mr-1">{ignoreWhitespace ? "laptop" : "laptop-code"}</Icon>
-            {t(ignoreWhitespace ? "changesets.activateWhitespace" : "changesets.ignoreWhitespace")}
-          </Button>
-          <Button onClick={collapseDiffs}>
-            <Icon className="mr-1">{collapsed ? "eye" : "eye-slash"}</Icon>
-            {t("changesets.collapseDiffs")}
-          </Button>
+          <DiffDropDown collapseDiffs={collapseDiffs} ignoreWhitespaces={ignoreWhitespaces} renderOnMount={false}/>
         </div>
 
         <ChangesetDiff

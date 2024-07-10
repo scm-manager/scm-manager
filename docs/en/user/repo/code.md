@@ -54,9 +54,9 @@ You can expand the diffs gradually or completely by clicking on the blue bars.
 If commit links formatted like "namespace/name@commitId" are used in the changeset description they will be rendered to internal links.
 For example the text hitchhiker/HeartOfGold@1a2b3c4 will be transformed to a link directing to the commit 1a2b3c4 of the repository hitchhiker/heartOfGold.
 
-There are two buttons for the changeset:
-- The first button show and hide the whitespace changes.
-- The second button can collapse all changesets.
+There is a dropdown menu for the changeset:
+- With the first checkbox you can show and hide the whitespace changes.
+- The second checkbox can collapse all changesets.
 
 Every changeset diff has several buttons:
 - The first button on the left allows a direct comparison of the changes.
