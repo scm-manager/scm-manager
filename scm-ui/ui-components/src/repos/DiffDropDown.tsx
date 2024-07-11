@@ -39,7 +39,7 @@ const DiffDropDown: FC<DiffDropDownProps> = ({ collapseDiffs, ignoreWhitespaces,
       ignoreWhitespaces();
       ignoreWhitespaces();
     }
-  }, [ignoreWhitespaces, renderOnMount]);
+  }, []);
 
   const handleOpen = () => {
     setOpen(!isOpen);
