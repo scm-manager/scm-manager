@@ -68,6 +68,7 @@ type InputFieldProps<T> = {
   label: string;
   createDeleteText?: (value: string) => string;
   helpText?: string;
+  information?: string;
   error?: string;
   testId?: string;
   id?: string;
@@ -92,6 +93,7 @@ const ChipInputField = function ChipInputField<T>(
   {
     label,
     helpText,
+    information,
     readOnly,
     disabled,
     error,
@@ -124,6 +126,7 @@ const ChipInputField = function ChipInputField<T>(
         {label}
         {helpText ? <Help className="ml-1" text={helpText} /> : null}
       </Label>
+      {information ? <p className="mb-2"> {information} </p> : null}
       <div className={classNames("control", { "is-loading": isLoading })}>
         <StyledChipInput
           value={value}
