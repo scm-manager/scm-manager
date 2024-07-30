@@ -62,7 +62,13 @@ public final class CopyOnWrite {
     validateInput(targetFile);
     execute(() -> {
       Path temporaryFile = createTemporaryFile(targetFile);
-      executeCallback(writer, targetFile, temporaryFile);
+      try {
+        executeCallback(writer, targetFile, temporaryFile);
+      } catch (Exception e) {
+        LOG.warn("error writing temporary file");
+        deleteTemporaryFile(temporaryFile);
+        throw e;
+      }
       replaceOriginalFile(targetFile, temporaryFile);
       onSuccess.run();
     }).withLockedFileForWrite(targetFile);
@@ -170,7 +176,7 @@ public final class CopyOnWrite {
       restoreBackup(targetFile, backupFile);
       throw new StoreException("could rename temporary file to target file", e);
     }
-    deleteBackupFile(backupFile);
+    deleteTemporaryFile(backupFile);
   }
 
   @SuppressWarnings("squid:S3725") // performance of Files#exists
@@ -190,7 +196,7 @@ public final class CopyOnWrite {
     }
   }
 
-  private static void deleteBackupFile(Path backupFile) {
+  private static void deleteTemporaryFile(Path backupFile) {
     if (backupFile != null) {
       try {
         Files.delete(backupFile);

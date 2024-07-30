@@ -24,7 +24,6 @@
 
 package sonia.scm.store;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -35,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sonia.scm.store.CopyOnWrite.withTemporaryFile;
 
@@ -50,7 +50,7 @@ class CopyOnWriteTest {
       }
     }, expectedFile);
 
-    Assertions.assertThat(expectedFile).hasContent("great success");
+    assertThat(expectedFile).hasContent("great success");
   }
 
   @Test
@@ -64,7 +64,7 @@ class CopyOnWriteTest {
       }
     }, expectedFile);
 
-    Assertions.assertThat(expectedFile).hasContent("great success");
+    assertThat(expectedFile).hasContent("great success");
   }
 
   @Test
@@ -101,7 +101,22 @@ class CopyOnWriteTest {
         },
         unchangedOriginalFile));
 
-    Assertions.assertThat(unchangedOriginalFile).hasContent("this should be kept");
+    assertThat(unchangedOriginalFile).hasContent("this should be kept");
+  }
+
+  @Test
+  void shouldDeleteTemporaryFileIfFileCouldNotBeWritten(@TempDir Path tempDir) throws IOException {
+    Path unchangedOriginalFile = tempDir.resolve("target.txt");
+
+    assertThrows(
+      StoreException.class,
+      () -> withTemporaryFile(
+        file -> {
+          throw new IOException("test");
+        },
+        unchangedOriginalFile));
+
+    assertThat(tempDir).isEmptyDirectory();
   }
 
   @Test
@@ -131,7 +146,7 @@ class CopyOnWriteTest {
         Files::delete,
         backedUpFile));
 
-    Assertions.assertThat(backedUpFile).hasContent("this should be kept");
+    assertThat(backedUpFile).hasContent("this should be kept");
   }
 
   @Test
@@ -148,6 +163,6 @@ class CopyOnWriteTest {
       }
     }, expectedFile);
 
-    Assertions.assertThat(Files.list(tempDir)).hasSize(1);
+    assertThat(Files.list(tempDir)).hasSize(1);
   }
 }
