@@ -177,6 +177,18 @@ class DiffResultToDiffResultDtoMapperTest {
       .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed?ignoreWhitespace=ALL&offset=30&limit=10");
   }
 
+  @Test
+  void shouldMapStatistics() {
+    DiffResult result = createResult();
+    when(result.getStatistics()).thenReturn(of(new DiffResult.DiffStatistics(1, 2, 3)));
+
+    DiffResultDto.DiffStatisticsDto dto = mapper.mapForIncoming(REPOSITORY, result, "feature/some", "master").getStatistics();
+
+    assertThat(dto.getAdded()).isEqualTo(1);
+    assertThat(dto.getModified()).isEqualTo(2);
+    assertThat(dto.getDeleted()).isEqualTo(3);
+  }
+
   private void mockPartialResult(DiffResult result) {
     when(result.getLimit()).thenReturn(of(10));
     when(result.getOffset()).thenReturn(20);

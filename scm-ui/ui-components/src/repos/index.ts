@@ -54,6 +54,7 @@ export { default as CommitAuthor } from "./CommitAuthor";
 export { default as HealthCheckFailureDetail } from "./HealthCheckFailureDetail";
 export { default as RepositoryFlags } from "./RepositoryFlags";
 export { default as DiffDropDown } from "./DiffDropDown";
+export { default as DiffStatistics } from "./DiffStatistics"
 
 export {
   File,

@@ -29,6 +29,7 @@ export type FileChangeType = "add" | "modify" | "delete" | "copy" | "rename";
 export type Diff = HalRepresentation & {
   files: FileDiff[];
   partial: boolean;
+  statistics?: Statistics;
 };
 
 export type FileDiff = {
@@ -48,6 +49,12 @@ export type FileDiff = {
   isBinary?: boolean;
   _links?: Links;
 };
+
+export type Statistics = {
+  added: number;
+  deleted: number;
+  modified: number;
+}
 
 export type Hunk = {
   changes: Change[];

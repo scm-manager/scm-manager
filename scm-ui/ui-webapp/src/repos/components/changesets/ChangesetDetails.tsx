@@ -39,7 +39,6 @@ import {
   DateFromNow,
   FileControlFactory,
   SignatureIcon,
-  DiffDropDown
 } from "@scm-manager/ui-components";
 import { Tooltip, SubSubtitle } from "@scm-manager/ui-core";
 import { Button, Icon } from "@scm-manager/ui-buttons";
@@ -178,8 +177,6 @@ const ContainedInTags: FC<{ changeset: Changeset; repository: Repository }> = ({
 };
 
 const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory }) => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [ignoreWhitespace, setIgnoreWhitespace] = useState(false);
   const [isTagCreationModalVisible, setTagCreationModalVisible] = useState(false);
   const [t] = useTranslation("repos");
 
@@ -192,14 +189,6 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
     </ReactLink>
   ));
   const showCreateButton = "tag" in changeset._links;
-
-  const collapseDiffs = () => {
-    setCollapsed(!collapsed);
-  };
-
-  const ignoreWhitespaces = () => {
-    setIgnoreWhitespace(!ignoreWhitespace);
-  };
 
   return (
     <>
@@ -280,15 +269,9 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
         </p>
       </div>
       <div>
-        <div className="is-flex has-gap-4 mb-4 is-justify-content-flex-end">
-          <DiffDropDown collapseDiffs={collapseDiffs} ignoreWhitespaces={ignoreWhitespaces} renderOnMount={false}/>
-        </div>
-
         <ChangesetDiff
           changeset={changeset}
           fileControlFactory={fileControlFactory}
-          defaultCollapse={collapsed}
-          ignoreWhitespace={ignoreWhitespace ? "ALL" : "NONE"}
         />
       </div>
     </>

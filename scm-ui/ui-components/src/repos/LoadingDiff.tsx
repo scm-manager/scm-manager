@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NotFoundError, useDiff } from "@scm-manager/ui-api";
 import ErrorNotification from "../ErrorNotification";
@@ -30,12 +30,13 @@ import Notification from "../Notification";
 import Button from "../buttons/Button";
 import Diff from "./Diff";
 import { DiffObjectProps } from "./DiffTypes";
+import DiffStatistics from "./DiffStatistics";
+import { DiffDropDown } from "../index";
 
 type Props = DiffObjectProps & {
   url: string;
   limit?: number;
   refetchOnWindowFocus?: boolean;
-  ignoreWhitespace?: string;
 };
 
 type NotificationProps = {
@@ -45,6 +46,7 @@ type NotificationProps = {
 
 const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingNextPage }) => {
   const [t] = useTranslation("repos");
+
   return (
     <Notification className="mt-5" type="info">
       <div className="columns is-centered">
@@ -55,13 +57,26 @@ const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingN
   );
 };
 
-const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ignoreWhitespace, ...props }) => {
+const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) => {
+  const [ignoreWhitespace, setIgnoreWhitespace] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const evaluateWhiteSpace = () => {
+    return ignoreWhitespace ? "ALL" : "NONE"
+  }
   const { error, isLoading, data, fetchNextPage, isFetchingNextPage } = useDiff(url, {
     limit,
     refetchOnWindowFocus,
-    ignoreWhitespace,
+    ignoreWhitespace: evaluateWhiteSpace(),
   });
   const [t] = useTranslation("repos");
+
+  const ignoreWhitespaces = () => {
+    setIgnoreWhitespace(!ignoreWhitespace);
+  };
+
+  const collapseDiffs = () => {
+    setCollapsed(!collapsed);
+  };
 
   if (error) {
     if (error instanceof NotFoundError) {
@@ -75,7 +90,16 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ignoreWhites
   } else {
     return (
       <>
-        <Diff diff={data.files} ignoreWhitespace={ignoreWhitespace} {...props} />
+        <div className="is-flex has-gap-4 mb-4 mt-4 is-justify-content-space-between">
+          <DiffStatistics data={data.statistics} />
+          <DiffDropDown collapseDiffs={collapseDiffs} ignoreWhitespaces={ignoreWhitespaces} renderOnMount={true} />
+        </div>
+        <Diff
+          defaultCollapse={collapsed}
+          diff={data.files}
+          ignoreWhitespace={evaluateWhiteSpace()}
+          {...props}
+        />
         {data.partial ? (
           <PartialNotification fetchNextPage={fetchNextPage} isFetchingNextPage={isFetchingNextPage} />
         ) : null}

@@ -182,6 +182,14 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldComputeStatistics() throws IOException {
+    DiffResult diffResult = createDiffResult("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
+    assertThat(diffResult.getStatistics()).get().extracting("deleted").isEqualTo(1);
+    assertThat(diffResult.getStatistics()).get().extracting("modified").isEqualTo(1);
+    assertThat(diffResult.getStatistics()).get().extracting("added").isEqualTo(0);
+  }
+
+  @Test
   public void shouldNotIgnoreWhiteSpace() throws IOException {
     GitDiffResultCommand gitDiffResultCommand = new GitDiffResultCommand(createContext());
     DiffResultCommandRequest diffCommandRequest = new DiffResultCommandRequest();

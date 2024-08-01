@@ -43,9 +43,6 @@ import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Link.linkBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
 
-/**
- * TODO conflicts
- */
 class DiffResultToDiffResultDtoMapper {
 
   private final ResourceLinks resourceLinks;
@@ -108,6 +105,16 @@ class DiffResultToDiffResultDtoMapper {
       files.add(mapFile(file, result, repository, revision));
     }
     dto.setFiles(files);
+    Optional<DiffResult.DiffStatistics> statistics = result.getStatistics();
+    if (statistics.isPresent()) {
+      DiffResult.DiffStatistics diffStatistics = statistics.get();
+      DiffResultDto.DiffStatisticsDto diffStatisticsDto = new DiffResultDto.DiffStatisticsDto(
+        diffStatistics.getAdded(),
+        diffStatistics.getDeleted(),
+        diffStatistics.getModified()
+      );
+      dto.setStatistics(diffStatisticsDto);
+    }
     dto.setPartial(result.isPartial());
   }
 

@@ -188,4 +188,26 @@ public class GitDiffResult implements DiffResult {
   public IgnoreWhitespaceLevel getIgnoreWhitespace() {
     return ignoreWhitespaceLevel;
   }
+
+  @Override
+  public Optional<DiffStatistics> getStatistics() {
+    int addCounter = 0;
+    int modifiedCounter = 0;
+    int deletedCounter = 0;
+    for (DiffEntry diffEntry : diffEntries) {
+      switch (diffEntry.getChangeType()) {
+        case ADD:
+          ++addCounter;
+          break;
+        case MODIFY:
+          ++modifiedCounter;
+          break;
+        case DELETE:
+          ++deletedCounter;
+          break;
+      }
+    }
+    DiffStatistics stats = new DiffStatistics(addCounter, modifiedCounter, deletedCounter);
+    return Optional.of(stats);
+  }
 }

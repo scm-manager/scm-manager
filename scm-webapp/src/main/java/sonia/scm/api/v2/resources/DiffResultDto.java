@@ -28,8 +28,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import sonia.scm.repository.api.DiffResult;
 
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,7 @@ public class DiffResultDto extends HalRepresentation {
 
   private List<FileDto> files;
   private boolean partial;
+  private DiffStatisticsDto statistics;
 
   @Data
   @EqualsAndHashCode(callSuper = false)
@@ -67,6 +70,15 @@ public class DiffResultDto extends HalRepresentation {
     private Map<String, String> syntaxModes;
     private List<HunkDto> hunks;
 
+  }
+
+  @Data
+  @EqualsAndHashCode(callSuper = false)
+  @AllArgsConstructor
+  public static class DiffStatisticsDto {
+    private int added;
+    private int deleted;
+    private int modified;
   }
 
   @Data

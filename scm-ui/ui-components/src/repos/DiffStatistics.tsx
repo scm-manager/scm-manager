@@ -22,58 +22,35 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+import React, { FC } from "react";
+import { Trans, useTranslation } from "react-i18next";
+import { Statistics } from "@scm-manager/ui-types";
+import { Tag } from "@scm-manager/ui-components";
+import styled from "styled-components";
 
-import lombok.Value;
+type DiffStatisticsProps = { data: Statistics | undefined };
 
-import java.util.Optional;
+const DiffStatisticsContainer = styled.div`
+  float: left;
+  height: 40px;
+  display: flex;
+  align-items: center;
+`;
 
-import static java.util.Optional.empty;
+const DiffStatistics: FC<DiffStatisticsProps> = ({ data }) => {
+  const [t] = useTranslation("repos");
+  return !data ? (
+    <div></div>
+  ) : (
+    <DiffStatisticsContainer>
+      <Trans
+        t={t}
+        i18nKey="changesets.showModifiedFiles"
+        values={{ newFiles: data.added, modified: data.modified, deleted: data.deleted }}
+        components={{ tag: <Tag size={"normal"} rounded={true} className={"mx-1"} /> }}
+      ></Trans>
+    </DiffStatisticsContainer>
+  );
+};
 
-public interface DiffResult extends Iterable<DiffFile> {
-
-  String getOldRevision();
-
-  String getNewRevision();
-
-  default boolean isPartial() {
-    return false;
-  }
-
-  default int getOffset() {
-    return 0;
-  }
-
-  default Optional<Integer> getLimit() {
-    return empty();
-  }
-
-  default IgnoreWhitespaceLevel getIgnoreWhitespace() {
-    return IgnoreWhitespaceLevel.NONE;
-  }
-
-  /**
-   * This function returns statistics if they are supported.
-   * @since 3.4.0
-   */
-  default Optional<DiffStatistics> getStatistics() {
-    return empty();
-  }
-
-  @Value
-  class DiffStatistics {
-    /**
-     * number of added files in a diff
-     */
-    int added;
-    /**
-     * number of modified files in a diff
-     */
-    int modified;
-    /**
-     * number of deleted files in a diff
-     */
-    int deleted;
-  }
-
-}
+export default DiffStatistics;

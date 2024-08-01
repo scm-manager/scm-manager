@@ -270,7 +270,8 @@
     "checkBoxHideWhitespaceChanges": "Ignoriere Diffs die nur Whitespace Änderungen enthalten",
     "activateWhitespace": "Whitespace-Änderungen einblenden",
     "moreDiffsAvailable": "Es sind weitere Diffs verfügbar",
-    "loadMore": "Weitere laden"
+    "loadMore": "Weitere laden",
+    "showModifiedFiles": "<tag>{{newFiles}}</tag> hinzugefügte, <tag>{{modified}}</tag> geänderte, <tag>{{deleted}}</tag> gelöschte Dateien"
   },
   "changeset": {
     "label": "Changeset",
