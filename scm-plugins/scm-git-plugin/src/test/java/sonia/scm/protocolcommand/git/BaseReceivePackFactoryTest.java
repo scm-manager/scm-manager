@@ -50,6 +50,8 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -88,8 +90,7 @@ public class BaseReceivePackFactoryTest {
     when(handler.getConfig()).thenReturn(gitConfig);
     when(handler.getRepositoryId(repository.getConfig())).thenReturn("heart-of-gold");
 
-    ReceivePack receivePack = new ReceivePack(repository);
-    when(wrappedReceivePackFactory.create(request, repository)).thenReturn(receivePack);
+    when(wrappedReceivePackFactory.create(request, repository)).thenAnswer(invocation -> new ReceivePack(repository));
 
     when(gitRepositoryConfigStoreProvider.getGitRepositoryConfig("heart-of-gold")).thenReturn(gitRepositoryConfig);
 
@@ -130,4 +131,11 @@ public class BaseReceivePackFactoryTest {
     assertFalse(receivePack.isAllowNonFastForwards());
   }
 
+  @Test
+  public void shouldNotReUseGitReceiveHook() throws Exception {
+    ReceivePack receivePack1 = factory.create(request, repository);
+    ReceivePack receivePack2 = factory.create(request, repository);
+
+    assertThat(receivePack1.getPostReceiveHook(), not(sameInstance(receivePack2.getPostReceiveHook())));
+  }
 }

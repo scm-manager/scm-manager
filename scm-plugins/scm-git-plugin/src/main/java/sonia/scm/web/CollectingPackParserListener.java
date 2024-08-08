@@ -55,7 +55,7 @@ public class CollectingPackParserListener implements PackParserListener
 
   private Set<ObjectId> newObjectIds;
 
-  public CollectingPackParserListener(GitReceiveHook hook) {
+  private CollectingPackParserListener(GitReceiveHook hook) {
     this.hook = hook;
   }
 

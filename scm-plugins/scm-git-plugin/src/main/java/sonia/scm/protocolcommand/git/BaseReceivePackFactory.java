@@ -39,17 +39,19 @@ import sonia.scm.web.GitReceiveHook;
 
 public abstract class BaseReceivePackFactory<T> implements ReceivePackFactory<T> {
 
+  private final GitChangesetConverterFactory converterFactory;
   private final GitRepositoryHandler handler;
-  private final GitReceiveHook hook;
+  private final HookEventFacade hookEventFacade;
   private final GitRepositoryConfigStoreProvider storeProvider;
 
   protected BaseReceivePackFactory(GitChangesetConverterFactory converterFactory,
                                    GitRepositoryHandler handler,
                                    HookEventFacade hookEventFacade,
                                    GitRepositoryConfigStoreProvider storeProvider) {
+    this.converterFactory = converterFactory;
     this.handler = handler;
+    this.hookEventFacade = hookEventFacade;
     this.storeProvider = storeProvider;
-    this.hook = new GitReceiveHook(converterFactory, hookEventFacade, handler);
   }
 
   @Override
@@ -57,6 +59,7 @@ public abstract class BaseReceivePackFactory<T> implements ReceivePackFactory<T>
     ReceivePack receivePack = createBasicReceivePack(connection, repository);
     receivePack.setAllowNonFastForwards(isNonFastForwardAllowed(repository));
 
+    GitReceiveHook hook = new GitReceiveHook(converterFactory, hookEventFacade, handler);
     receivePack.setPreReceiveHook(hook);
     receivePack.setPostReceiveHook(hook);
     // apply collecting listener, to be able to check which commits are new

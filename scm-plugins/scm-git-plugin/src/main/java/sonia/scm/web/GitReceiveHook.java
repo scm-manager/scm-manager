@@ -43,7 +43,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-
+/**
+ * This class is <b>not</b> thread safe!
+ */
 public class GitReceiveHook implements PreReceiveHook, PostReceiveHook {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitReceiveHook.class);
@@ -96,6 +98,9 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook {
       GitHookContextProvider context = new GitHookContextProvider(converterFactory, rpack, receiveCommands, repository, repositoryId);
 
       if (type == RepositoryHookType.POST_RECEIVE) {
+        if (postReceiveContext != null) {
+          throw new IllegalStateException("Looks like this hook is re-used. This must not happen.");
+        }
         postReceiveContext = context;
       } else {
         hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
