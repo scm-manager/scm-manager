@@ -1,0 +1,2 @@
+- type: added
+  description: The core version of the SCM-Manager gets logged at the beginning of the application lifecycle

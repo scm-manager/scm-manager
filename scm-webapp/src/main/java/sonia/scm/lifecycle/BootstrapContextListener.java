@@ -83,6 +83,7 @@ public class BootstrapContextListener extends GuiceServletContextListener {
   protected Injector getInjector() {
     ConfigurationResolver configurationResolver = new ConfigurationResolver();
     configureLoggers();
+    LOG.info("start scm-manager version {}", SCMContext.getContext().getVersion());
     Throwable startupError = SCMContext.getContext().getStartupError();
     if (startupError != null) {
       LOG.error("received unrecoverable error during startup", startupError);
