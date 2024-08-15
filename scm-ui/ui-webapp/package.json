@@ -17,7 +17,7 @@
     "@scm-manager/ui-layout": "3.3.1-SNAPSHOT",
     "@scm-manager/ui-buttons": "3.3.1-SNAPSHOT",
     "@radix-ui/react-portal": "^1.0.4",
-    "react-aria": "^3.29.1",
+    "@react-aria/overlays": "^3.23.1",
     "classnames": "^2.2.5",
     "history": "^4.10.1",
     "i18next": "21",

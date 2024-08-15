@@ -26,7 +26,7 @@ import styled from "styled-components";
 import React, { HTMLAttributes, useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { SearchBoxContext } from "./SearchBoxContext";
-import { useOverlayPosition } from "react-aria";
+import { useOverlayPosition } from "@react-aria/overlays";
 import { Portal } from "@radix-ui/react-portal";
 import classNames from "classnames";
 import { mergeRefs } from "./mergeRefs";
