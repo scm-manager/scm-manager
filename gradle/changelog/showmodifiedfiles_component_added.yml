@@ -1,4 +1,0 @@
-- type: added
-  description: Show number of modified, deleted and added files in diffs
-- type: fixed
-  description: Show diffs in compare view

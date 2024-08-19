@@ -1,2 +1,0 @@
-- type: fixed
-  description: Wrong repositories in post-receive hooks under some circumstances
