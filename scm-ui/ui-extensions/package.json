@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-extensions",
-  "version": "3.4.0",
+  "version": "3.4.1-SNAPSHOT",
   "license": "MIT",
   "private": false,
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
@@ -17,7 +17,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@scm-manager/ui-types": "3.4.0",
+    "@scm-manager/ui-types": "3.4.1-SNAPSHOT",
     "react": "^17.0.1"
   },
   "devDependencies": {
