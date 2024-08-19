@@ -1,4 +1,4 @@
-# How to release SCM-Manager v2 core (Script)
+# How to release SCM-Manager core (Script)
 
 The most easy way to release the core is to use the release script. This will guide you
 through all necessary tasks.
@@ -23,7 +23,7 @@ It will
 
 # Manual core release
 
-To release a new version of SCM-Manager v2 "manually", you have to do the following steps
+To release a new version of SCM-Manager "manually", you have to do the following steps
 (replace placeholders `<version>` accordingly, eg. with `2.1.0`):
 
 ## Check out default branch
@@ -144,13 +144,9 @@ How these conflicts should be merged depends on the version that has been releas
 - If the hotfix is the new main, you should take this new version and then manually create a new SNAPSHOT
   based on the new hotfix version number using gradle: `./gradlew setVersionToNextSnapshot`.
 
-# How to release SCM-Manager v2 plugins
+# How to release SCM-Manager plugins
 
-To release a new version of a Plugin for SCM-Manager v2 you have to do the following steps (replace placeholder `<version>` accordingly, eg. with `2.1.0`):
-
-## Attention: Migrate plugin to gradle
-If an SCM-Manager plugin hasn't been migrated to gradle yet, this is highly recommended before release the next version.
-The migration from maven to gradle can easily be done using [this tool](https://github.com/scm-manager/smp-maven-to-gradle).
+To release a new version of a Plugin for SCM-Manager you have to do the following steps (replace placeholder `<version>` accordingly, eg. with `2.1.0`):
 
 ## Check out default branch
 
