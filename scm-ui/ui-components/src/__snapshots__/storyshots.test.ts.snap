@@ -1698,7 +1698,7 @@ exports[`Storyshots Footer Default 1`] = `
           <li>
             <a
               className=""
-              href="https://cloudogu.com/en/scm-manager-enterprise/"
+              href="https://platform.cloudogu.com/en/support/"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -1894,7 +1894,7 @@ exports[`Storyshots Footer Full 1`] = `
           <li>
             <a
               className=""
-              href="https://cloudogu.com/en/scm-manager-enterprise/"
+              href="https://platform.cloudogu.com/en/support/"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -2071,7 +2071,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
           <li>
             <a
               className=""
-              href="https://cloudogu.com/en/scm-manager-enterprise/"
+              href="https://platform.cloudogu.com/en/support/"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -2259,7 +2259,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
           <li>
             <a
               className=""
-              href="https://cloudogu.com/en/scm-manager-enterprise/"
+              href="https://platform.cloudogu.com/en/support/"
               rel="noopener noreferrer"
               target="_blank"
             >

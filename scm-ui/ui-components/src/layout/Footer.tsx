@@ -127,10 +127,7 @@ const Footer: FC<Props> = ({ me, version, links }) => {
           </FooterSection>
           <FooterSection title={<TitleWithIcon title={t("footer.support.title")} icon="life-ring" />}>
             <ExternalNavLink to="https://scm-manager.org/support/" label={t("footer.support.community")} />
-            <ExternalNavLink
-              to="https://cloudogu.com/en/scm-manager-enterprise/"
-              label={t("footer.support.enterprise")}
-            />
+            <ExternalNavLink to="https://platform.cloudogu.com/en/support/" label={t("footer.support.enterprise")} />
             {!(index.data?._embedded?.feedback as Feedback)?.disabled ? (
               <>
                 <ExternalNavLink

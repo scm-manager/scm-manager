@@ -163,4 +163,4 @@ dedicated pages for our [plugins](https://scm-manager.org/plugins/). Do you have
 - **Enterprise Support** - Do you require support with the integration of SCM-Manager into your processes, with the
     customization of the tool or simply a service level agreement (SLA)? **Contact our development partner Cloudogu!
     Their team is looking forward to discussing your individual requirements with you and will be more than happy to
-    give you a quote.** [Request Enterprise Support](https://cloudogu.com/en/scm-manager-enterprise/).
+    give you a quote.** [Request Enterprise Support](https://platform.cloudogu.com/en/support/).
