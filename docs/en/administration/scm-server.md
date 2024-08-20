@@ -8,107 +8,13 @@ SCM-Manager v3 can be configured in several ways. We recommend using `config.yml
 one place. However, if required, each option in this configuration can also be set via environment variables.
 See the relevant topics below for more information.
 
-## Logging
-
-The log level can be configured in the `config.yml`.
-You can change the root log level to change the log level globally for all loggers.
-Also, new specific logger can be added to control logging in a fine-grained style.
-We provide two types of log appender.
-`fileAppender` which writes the logging output to a defined log file and the `consoleAppender` which simply prints
-everything to your (bash/shell) console.
-Depending on which platform your scm-server is running, we already configured the recommended logging settings.
-
-**Example**
-
-```yaml
-log:
-  # General logging level
-  rootLevel: WARN
-  enableFileAppender: true
-  enableConsoleAppender: true
-
-  # Custom specific loggers
-  # The "name" has to be the path of the classes to be logged with this logger
-  logger:
-    sonia.scm: DEBUG
-    com.cloudogu.scm: DEBUG
-```
-
-To override this config with environment variables you could set it like:
-
-`SCM_LOG_ROOT_LEVEL` to one of the log levels, like `DEBUG`
-`SCM_LOG_FILE_APPENDER_ENABLED` to one of the log levels, like `true`
-`SCM_LOG_CONSOLE_APPENDER_ENABLED` to one of the log levels, like `false`
-`SCM_LOG_LOGGER` with a comma-separated list of your loggers, like `sonia.scm:DEBUG,com.cloudogu.scm:TRACE`
-
-Supported log levels are: TRACE, DEBUG, INFO, WARN, ERROR
-
-### Logback
-
-If you want to configure more advanced loggers which are beyond this simple configuration, you may still use
-a logback configuration file.
-You have to enable your logback configuration by setting the file path with the system
-property `logback.configurationFile`, like `-Dlogback.configurationFile=logging.xml`.
-If the logback configuration is enabled, the log configuration of the `config.yml` will be ignored.
-
-**Example**
-
-```xml
-
-<configuration>
-  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>/var/log/scm/scm-manager.log</file>
-
-    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-      <fileNamePattern>/var/log/scm/scm-manager-%i.log</fileNamePattern>
-      <minIndex>1</minIndex>
-      <maxIndex>10</maxIndex>
-    </rollingPolicy>
-
-    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-      <maxFileSize>10MB</maxFileSize>
-    </triggeringPolicy>
-
-    <append>true</append>
-    <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%-10X{transaction_id}] %-5level %logger - %msg%n</pattern>
-    </encoder>
-  </appender>
-
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-
-    <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%-10X{transaction_id}] %-5level %logger - %msg%n</pattern>
-    </encoder>
-
-  </appender>
-
-  <logger name="sonia.scm" level="INFO"/>
-  <logger name="com.cloudogu.scm" level="INFO"/>
-
-  <!-- suppress massive gzip logging -->
-  <logger name="sonia.scm.filter.GZipFilter" level="WARN"/>
-  <logger name="sonia.scm.filter.GZipResponseStream" level="WARN"/>
-
-  <logger name="sonia.scm.util.ServiceUtil" level="WARN"/>
-
-  <!-- event bus -->
-  <logger name="sonia.scm.event.LegmanScmEventBus" level="INFO"/>
-
-
-  <root level="WARN">
-    <appender-ref ref="FILE"/>
-  </root>
-
-</configuration>
-```
 
 ## Webserver Configuration
 
 The listener host and port of your SCM-Server can directly be edited in the top level of your `config.yml`.
 If you want your server without a context path (use `root path`), you can change this option to be `/`.
 
-**Example**
+**config.yml**
 
 ```yaml
 # This is the host adresse, `0.0.0.0` means it listens on every interface
@@ -118,11 +24,13 @@ port: 8080
 contextPath: /
 ```
 
-To override this config with environment variables you could set it like:
+**Environment variables**
 
-`SCM_SERVER_PORT` to your port, like `8081`
-`SCM_SERVER_ADDRESS_BINDING` to the destination ip / hostname, like `0.0.0.0`
-`SCM_SERVER_CONTEXT_PATH` to `/myContextPath`
+| Environment Variable | Corresponding config.yml property | Example                            |
+|----------------------|-----------------------------------|------------------------------------|
+| SCM_ADDRESS_BINDING  | addressBinding                    | export SCM_ADDRESS_BINDING=0.0.0.0 |
+| SCM_PORT             | port                              | export SCM_PORT=8080               |
+| SCM_CONTEXT_PATH     | contextPath                       | export SCM_CONTEXT_PATH=/          |
 
 ## SSL
 
@@ -183,9 +91,9 @@ protect your keystore.
 
 ### Server configuration
 
-Adjust your `config.yml` to apply your prepared keystore with configured certificate.
+Adjust your `config.yml` to apply your prepared keystore with configured certificate or set them via environment variables.
 
-**Example**
+**config.yml**
 
 ```yaml
 https:
@@ -202,6 +110,16 @@ https:
   redirectHttpToHttps: true
 ```
 
+**Environment variables**
+
+| Environment Variable             | Corresponding config.yml property | Example                                               |
+|----------------------------------|-----------------------------------|-------------------------------------------------------|
+| SCM_HTTPS_KEY_STORE_PATH         | https.keyStorePath                | export SCM_HTTPS_KEY_STORE_PATH=/conf/keystore.pkcs12 |
+| SCM_HTTPS_KEY_STORE_PASSWORD     | https.keyStorePassword            | export SCM_HTTPS_KEY_STORE_PASSWORD=secret            |
+| SCM_HTTPS_KEY_STORE_TYPE         | https.keyStoreType                | export SCM_HTTPS_KEY_STORE_TYPE=PKCS12                |
+| SCM_HTTPS_SSL_PORT               | https.sslPort                     | export SCM_HTTPS_PORT=443                             |
+| SCM_HTTPS_REDIRECT_HTTP_TO_HTTPS | https.redirectHttpToHttps         | export SCM_HTTPS_REDIRECT_HTTP_TO_HTTPS=true          |
+
 ## Change directories
 
 The default directories are platform-specific and therefore could be different if you try scm-server on different
@@ -210,24 +128,26 @@ starting `/`, your configured path will be located relative to your base directo
 like `/opt/scm-server`
 on unix-based packages).
 
-For technical reasons the tempDir is located at the top level of your config.yml. All other path-based config options
+For technical reasons the tempDir is located at the top level of your `config.yml`. All other path-based config options
 are located under `webapp`.
 
-**Example**
+**config.yml**
 
 ```yaml
 tempDir: /tmp
 
 webapp:
   homeDir: ./scm-home
-  workDir: 
+  workDir: /etc/scm/work
 ```
 
-To override this config with environment variables you could set it like:
+**Environment variables**
 
-`SCM_TEMP_DIR` to your port, like `/tmp`
-`SCM_WEBAPP_HOMEDIR` to home dir (aka `scm-home`), like `./myHomeDir`
-`SCM_WEBAPP_WORKDIR` to `/scm-work`
+| Environment Variable | Corresponding config.yml property | Example                                 |
+|----------------------|-----------------------------------|-----------------------------------------|
+| SCM_TEMP_DIR         | tempDir                           | export SCM_TEMP_DIR=/tmp                |
+| SCM_WEBAPP_HOMEDIR   | webapp.homeDir                    | export SCM_WEBAPP_HOMEDIR=./scm-home    |
+| SCM_WEBAPP_WORKDIR   | webapp.workDir                    | export SCM_WEBAPP_WORKDIR=/etc/scm/work |
 
 ## Reverse proxy
 
@@ -241,17 +161,27 @@ Many reverse proxies will also cache response streams. This can lead to timeouts
 repositories. To avoid this, you might want to increase the `idleTimeout` to a higher value, depending on the size of
 your repositories (you might want to start with `300000`, that would be five minutes).
 
-**Example**
+**config.yml**
 
 ```yaml
 forwardHeadersEnabled: true
 idleTimeout: 300000
 ```
 
+**Environment variables**
+
+| Environment Variable        | Corresponding config.yml property | Example                                 |
+|-----------------------------|-----------------------------------|-----------------------------------------|
+| SCM_FORWARD_HEADERS_ENABLED | forwardHeadersEnabled             | export SCM_FORWARD_HEADERS_ENABLED=true |
+| SCM_IDLE_TIMEOUT            | idleTimeout                       | export SCM_IDLE_TIMEOUT=300000          |
+
 ## Webapp
 
 The webapp configuration consists of anything that is not webserver or logging related.
 Most of the available options should be set to the recommended values of your default `config.yml` file.
+You can also override these options with environment variables.
+
+**config.yml**
 
 ```yaml
 webapp:
@@ -279,11 +209,17 @@ webapp:
   workingCopyPoolSize: 5
 ```
 
-To override this config with environment variables can set the options following the schema `SCM_WEBAPP_PROPERTYNAME`.
-All hierarchy levels have to be separated by underscores `_`.
+**Environment variables**
 
-Like:
-
-- `SCM_WEBAPP_CACHE_DATAFILE_ENABLED` = `true`
-- `SCM_WEBAPP_MAXASYNCABORTSECONDS` = `45`
-- `SCM_WEBAPP_CENTRALWORKQUEUE_WORKERS` = `42`
+| Environment Variable                | Corresponding config.yml property | Example                                                                                          |
+|-------------------------------------|-----------------------------------|--------------------------------------------------------------------------------------------------|
+| SCM_WEBAPP_WORKDIR                  | webapp.workDir                    | export SCM_WEBAPP_WORKDIR=/tmp/scm-work                                                          |
+| SCM_WEBAPP_HOMEDIR                  | webapp.homeDir                    | export SCM_WEBAPP_HOMEDIR=/var/lib/scm                                                           |
+| SCM_WEBAPP_CACHE_DATAFILE_ENABLED   | webapp.cache.datafile.enabled     | export SCM_WEBAPP_CACHE_DATAFILE_ENABLED=true                                                    |
+| SCM_WEBAPP_CACHE_STORE_ENABLED      | webapp.cache.store.enabled        | export SCM_WEBAPP_CACHE_STORE_ENABLED=true                                                       |
+| SCM_WEBAPP_ENDLESSJWT               | webapp.endlessJwt                 | export SCM_WEBAPP_ENDLESSJWT=false                                                               |
+| SCM_WEBAPP_ASYNCTHREADS             | webapp.asyncThreads               | export SCM_WEBAPP_ASYNCTHREADS=4                                                                 |
+| SCM_WEBAPP_MAXASYNCABORTSECONDS     | webapp.maxAsyncAbortSeconds       | export SCM_WEBAPP_MAXASYNCABORTSECONDS=60                                                        |
+| SCM_WEBAPP_CENTRALWORKQUEUE_WORKERS | webapp.centralWorkQueue.workers   | export SCM_WEBAPP_CENTRALWORKQUEUE_WORKERS=4                                                     |
+| SCM_WEBAPP_WORKINGCOPYPOOLSTRATEGY  | webapp.workingCopyPoolStrategy    | export SCM_WEBAPP_WORKINGCOPYPOOLSTRATEGY=sonia.scm.repository.work.SimpleCachingWorkingCopyPool |
+| SCM_WEBAPP_WORKINGCOPYPOOLSIZE      | webapp.workingCopyPoolSize        | export SCM_WEBAPP_WORKINGCOPYPOOLSIZE=5                                                          |

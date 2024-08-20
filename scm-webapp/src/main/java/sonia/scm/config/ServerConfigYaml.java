@@ -45,7 +45,7 @@ public class ServerConfigYaml {
     private LogConfig() {}
 
     public String getLogDir() {
-      return logDir;
+      return getEnvWithDefault("LOG_DIR", logDir);
     }
 
     public void setLogDir(String logDir) {

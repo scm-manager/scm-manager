@@ -10,11 +10,20 @@ back to the central repository. The larger the repositories, the longer this may
 
 To speed up such changes a lot, SCM-Manager offers a strategy where the local clones will be cached and reused for
 subsequent requests. This strategy caches up to a configurable amount of clones (but at most one per repository).
-To enable this strategy, add the system property `scm.workingCopyPoolStrategy` to the value 
-`sonia.scm.repository.work.SimpleCachingWorkingCopyPool`:
+To enable this strategy you can change the `config.yml` or set the corresponding environment variable.
+The maximum capacity of the cache can also be set via `config.yml` or corresponding environment variable (the default value is 5).
 
-```bash
--Dscm.workingCopyPoolStrategy=sonia.scm.repository.work.SimpleCachingWorkingCopyPool
+**config.yml**
+
+```yaml
+webapp:
+  # ...
+  workingCopyPoolStrategy: sonia.scm.repository.work.SimpleCachingWorkingCopyPool
+  workingCopyPoolSize: 5
+  # ...
 ```
 
-The maximum capacity of the cache can be set using the property `scm.workingCopyPoolSize` (the default is 5).
+```bash
+export SCM_WEBAPP_WORKINGCOPYPOOLSTRATEGY=sonia.scm.repository.work.SimpleCachingWorkingCopyPool
+export SCM_WEBAPP_WORKINGCOPYPOOLSIZE=5
+```
