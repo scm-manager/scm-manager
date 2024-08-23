@@ -83,13 +83,13 @@ if (settings.hasProperty("enablePackaging")) {
 
 buildCache {
   local {
-    enabled = false
+    enabled = true
   }
   remote(HttpBuildCache) {
     enabled = true
     useExpectContinue = true
     url = 'https://build-cache.scm-manager.org/cache/'
-    push = true
+    push = "develop".equals(System.getenv("BRANCH_NAME"))
     credentials {
       username = System.getenv('GRADLE_BUILD_CACHE_USER')
       password = System.getenv('GRADLE_BUILD_CACHE_PASSWORD')

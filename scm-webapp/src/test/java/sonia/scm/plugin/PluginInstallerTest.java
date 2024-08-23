@@ -36,6 +36,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.net.ahc.AdvancedHttpRequest;
 import sonia.scm.net.ahc.AdvancedHttpResponse;
+import sonia.scm.util.SystemUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -86,7 +87,9 @@ class PluginInstallerTest {
       Path arg = ic.getArgument(0);
       return directory.resolve(arg);
     });
-    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor(new PluginCondition("1.0.0", List.of("linux"), "64"));
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor(
+      new PluginCondition("1.0.0", List.of(SystemUtil.getOS()), SystemUtil.getArch())
+    );
     lenient().when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
   }
 
@@ -166,7 +169,9 @@ class PluginInstallerTest {
   @Test
   void shouldFailForUnsupportedPlugin() throws IOException {
     mockContent("42");
-    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor(new PluginCondition("1.0.0", List.of("linux"), "42"));
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor(
+      new PluginCondition("1.0.0", List.of(SystemUtil.getOS()), "42")
+    );
     when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
 
     PluginInstallationContext context = PluginInstallationContext.empty();
@@ -179,7 +184,9 @@ class PluginInstallerTest {
   void shouldFailForNameMismatch() throws IOException {
     mockContent("42");
 
-    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor("scm-svn-plugin", "1.0.0", new PluginCondition("1.0.0", List.of("linux"), "64"));
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor("scm-svn-plugin", "1.0.0",
+      new PluginCondition("1.0.0", List.of(SystemUtil.getOS()), SystemUtil.getArch())
+    );
     when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
 
     PluginInstallationContext context = PluginInstallationContext.empty();
@@ -193,7 +200,9 @@ class PluginInstallerTest {
   void shouldFailForVersionMismatch() throws IOException {
     mockContent("42");
 
-    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor("scm-git-plugin", "1.1.0", new PluginCondition("42.0.0", List.of("linux"), "64"));
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor("scm-git-plugin", "1.1.0",
+      new PluginCondition("42.0.0", List.of(SystemUtil.getOS()), SystemUtil.getArch())
+    );
     when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
 
     PluginInstallationContext context = PluginInstallationContext.empty();

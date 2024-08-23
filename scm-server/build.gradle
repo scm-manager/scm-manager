@@ -46,3 +46,9 @@ dependencies {
 
   testImplementation libraries.guava
 }
+
+test {
+  //Requiered by set environment variable annotation
+  //Explanation: https://junit-pioneer.org/docs/environment-variables/#warnings-for-reflective-access
+  jvmArgs("--add-opens=java.base/java.util=ALL-UNNAMED", "--add-opens=java.base/java.lang=ALL-UNNAMED")
+}

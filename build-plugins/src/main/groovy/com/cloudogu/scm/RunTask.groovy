@@ -28,6 +28,7 @@ package com.cloudogu.scm
 import com.moowork.gradle.node.task.NodeTask
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.TaskAction
@@ -67,7 +68,12 @@ class RunTask extends DefaultTask {
   @TaskAction
   void exec() {
     List<Closure<Void>> actions = new ArrayList<>()
-    actions.add(createBackend())
+
+    // resolve the classpath on a thread which is controlled by gradle
+    Configuration serverClasspath = project.buildscript.configurations.classpath
+    serverClasspath.resolve()
+
+    actions.add(createBackend(serverClasspath))
     if (frontend) {
       actions.add(createFrontend())
     }
@@ -89,7 +95,7 @@ class RunTask extends DefaultTask {
           return
         }
       } catch (IOException ex) {
-        ex.printStackTrace()
+        System.out.println("scm-server not reachable, retrying...")
       }
       Thread.sleep(500)
     }
@@ -110,7 +116,7 @@ class RunTask extends DefaultTask {
     })
   }
 
-  private Closure<Void> createBackend() {
+  private Closure<Void> createBackend(Configuration serverClasspath) {
     Map<String, String> scmProperties = System.getProperties().findAll { e ->
       {
         return e.key.startsWith("scm") || e.key.startsWith("sonia")
@@ -129,7 +135,7 @@ class RunTask extends DefaultTask {
         args(new File(project.buildDir, 'server/config.json').toString())
         environment 'NODE_ENV', 'development'
         environment 'SCM_WEBAPP_HOMEDIR', extension.getHome()
-        classpath project.buildscript.configurations.classpath
+        classpath serverClasspath
         if (configFileDirectory != '') {
           classpath configFileDirectory
         }

@@ -7,7 +7,7 @@ ext {
 
   legmanVersion = '2.0.3'
 
-  mapstructVersion = '1.3.1.Final'
+  mapstructVersion = '1.6.0'
   jaxbVersion = '4.0.1'
   shiroVersion = '1.12.0'
   sspVersion = '1.3.0'
@@ -76,7 +76,7 @@ ext {
     swaggerJaxRs: 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.19',
 
     // dto mapping
-    mapstruct: "org.mapstruct:mapstruct-jdk8:${mapstructVersion}",
+    mapstruct: "org.mapstruct:mapstruct:${mapstructVersion}",
     mapstructProcessor: "org.mapstruct:mapstruct-processor:${mapstructVersion}",
 
     // events
