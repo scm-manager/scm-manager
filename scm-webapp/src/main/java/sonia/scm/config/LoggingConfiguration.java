@@ -36,10 +36,10 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
+
 @SuppressWarnings("java:S3740") // Accept usage of not-parameterized classes
 public class LoggingConfiguration {
-
-  private static final Logger LOG = LoggerFactory.getLogger(LoggingConfiguration.class);
 
   private final ServerConfigYaml.LogConfig config;
   private final LoggerContext loggerContext;
@@ -51,7 +51,7 @@ public class LoggingConfiguration {
 
   public void configureLogging() {
     if (!Strings.isNullOrEmpty(System.getProperty("logback.configurationFile"))) {
-      LOG.info("Found logback configuration file. Ignoring logging configuration from config.yml.");
+      System.out.println("Found logback configuration file. Ignoring logging configuration from config.yml.");
       return;
     }
 
@@ -96,6 +96,11 @@ public class LoggingConfiguration {
     if (Strings.isNullOrEmpty(logDirectory)) {
       logDirectory = new ScmLogFilePropertyDefiner().getPropertyValue();
     }
+
+    if (System.getProperty("basedir") != null) {
+      logDirectory = Path.of(System.getProperty("basedir")).resolve(logDirectory).normalize().toString();
+    }
+    System.out.println("Writing logs to: " + logDirectory);
 
     RollingFileAppender logFileAppender = new RollingFileAppender();
     logFileAppender.setFile(logDirectory + "/scm-manager.log");

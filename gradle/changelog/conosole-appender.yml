@@ -1,0 +1,6 @@
+- type: changed
+  description: Disabled the console appending of log statements for RPM and Windows per default
+- type: changed
+  description: The console appending of the Unix release is only enabled, if the SCM-Manager is run in the foreground
+- type: fixed
+  description: The console and file appender settings from the `config.yml` are now applied

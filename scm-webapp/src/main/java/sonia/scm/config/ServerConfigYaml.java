@@ -24,6 +24,8 @@
 
 package sonia.scm.config;
 
+import lombok.Setter;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,8 +41,10 @@ public class ServerConfigYaml {
     private String logDir = "";
     private String rootLevel = "INFO";
     private Map<String, String> logger = new HashMap<>();
-    private boolean fileAppenderEnabled = true;
-    private boolean consoleAppenderEnabled = true;
+    @Setter
+    private boolean enableFileAppender = true;
+    @Setter
+    private boolean enableConsoleAppender = true;
 
     private LogConfig() {}
 
@@ -83,19 +87,29 @@ public class ServerConfigYaml {
     }
 
     public boolean isFileAppenderEnabled() {
-      return getEnvWithDefault("LOG_FILE_APPENDER_ENABLED", fileAppenderEnabled);
+      return getEnvWithDefault("LOG_FILE_APPENDER_ENABLED", enableFileAppender);
     }
 
+    /**
+     * @deprecated As of 3.4.0, because the member variables names have been changed. Therefore, the new setter methods should be used.
+     * @param fileAppenderEnabled Whether the file appender should be enabled
+     */
+    @Deprecated(since = "3.4.0")
     public void setFileAppenderEnabled(boolean fileAppenderEnabled) {
-      this.fileAppenderEnabled = fileAppenderEnabled;
+      this.enableFileAppender = fileAppenderEnabled;
     }
 
     public boolean isConsoleAppenderEnabled() {
-      return  getEnvWithDefault("LOG_CONSOLE_APPENDER_ENABLED", consoleAppenderEnabled);
+      return  getEnvWithDefault("LOG_CONSOLE_APPENDER_ENABLED", enableConsoleAppender);
     }
 
+    /**
+     * @deprecated As of 3.4.0, because the member variables names have been changed. Therefore, the new setter methods should be used.
+     * @param consoleAppenderEnabled Whether the console appender should be enabled
+     */
+    @Deprecated(since = "3.4.0")
     public void setConsoleAppenderEnabled(boolean consoleAppenderEnabled) {
-      this.consoleAppenderEnabled = consoleAppenderEnabled;
+      this.enableConsoleAppender = consoleAppenderEnabled;
     }
   }
 

@@ -74,6 +74,8 @@ public class BootstrapContextListener extends GuiceServletContextListener {
     classLoaderLifeCycle.initialize();
     super.contextInitialized(sce);
 
+    configureLoggers();
+
     Injector injector = (Injector) context.getAttribute(Injector.class.getName());
     injectionLifeCycle = new InjectionLifeCycle(injector);
     injectionLifeCycle.initialize();
@@ -82,7 +84,6 @@ public class BootstrapContextListener extends GuiceServletContextListener {
   @Override
   protected Injector getInjector() {
     ConfigurationResolver configurationResolver = new ConfigurationResolver();
-    configureLoggers();
     LOG.info("start scm-manager version {}", SCMContext.getContext().getVersion());
     Throwable startupError = SCMContext.getContext().getStartupError();
     if (startupError != null) {

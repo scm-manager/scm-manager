@@ -168,7 +168,7 @@ if $jsvc; then
 
   # TODO JVM Arguments
 
-  $JSVCCMD -cp "$CLASSPATH" $JAVA_OPTS \
+  SCM_LOG_CONSOLE_APPENDER_ENABLED=false $JSVCCMD -cp "$CLASSPATH" $JAVA_OPTS \
     $EXTRA_JVM_ARGUMENTS $USER_ARGUMENT \
     -outfile "$LOGDIR/scm-server.out" \
     -errfile "$LOGDIR/scm-server.err" \
