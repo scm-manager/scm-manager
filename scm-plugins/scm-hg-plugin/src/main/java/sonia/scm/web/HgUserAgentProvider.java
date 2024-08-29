@@ -33,7 +33,7 @@ import java.nio.charset.Charset;
 
 /**
  *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
+ * @author Sebastian Sdorra
  * @since 1.45
  */
 @Extension
