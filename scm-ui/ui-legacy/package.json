@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-legacy",
-  "version": "3.4.1-SNAPSHOT",
+  "version": "3.4.1",
   "private": true,
   "main": "build/index.js",
   "module": "build/index.mjs",
@@ -12,9 +12,9 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "@scm-manager/ui-api": "3.4.1-SNAPSHOT",
-    "@scm-manager/ui-extensions": "3.4.1-SNAPSHOT",
-    "@scm-manager/ui-types": "3.4.1-SNAPSHOT",
+    "@scm-manager/ui-api": "3.4.1",
+    "@scm-manager/ui-extensions": "3.4.1",
+    "@scm-manager/ui-types": "3.4.1",
     "react": "^17.0.1",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0"
