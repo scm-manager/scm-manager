@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.1] - 2024-08-29
+### Fixed
+- The environment variable for defining the log directory is now applied
+- Import of hg repositories without credentials
+- Updated the enterprise support link in the admin section
+- The console and file appender settings from the `config.yml` are now applied
+
+### Changed
+- Disabled the console appending of log statements for RPM and Windows per default
+- The console appending of the Unix release is only enabled, if the SCM-Manager is run in the foreground
+
 ## [3.4.0] - 2024-08-19
 ### Added
 - Show number of modified, deleted and added files in diffs
@@ -1592,3 +1603,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.2.2]: https://scm-manager.org/download/3.2.2
 [3.3.0]: https://scm-manager.org/download/3.3.0
 [3.4.0]: https://scm-manager.org/download/3.4.0
+[3.4.1]: https://scm-manager.org/download/3.4.1
