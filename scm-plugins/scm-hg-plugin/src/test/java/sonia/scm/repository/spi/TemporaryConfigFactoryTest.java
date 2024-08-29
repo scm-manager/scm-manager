@@ -74,6 +74,13 @@ class TemporaryConfigFactoryTest {
   }
 
   @Test
+  @SuppressWarnings("java:S2699") // test should just ensure that no exception is thrown
+  void shouldNotFailIfFileExistsButWithoutProxyOrAuthentication() throws IOException {
+    Files.createFile(hgrc);
+    configFactory.withContext(commandContext).call(() -> null);
+  }
+
+  @Test
   void shouldCreateHgrcWithAuthentication() throws IOException {
     configFactory
       .withContext(commandContext)

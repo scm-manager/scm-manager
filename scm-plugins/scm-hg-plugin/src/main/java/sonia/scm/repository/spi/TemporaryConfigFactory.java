@@ -94,7 +94,13 @@ public class TemporaryConfigFactory {
         if (!exists && file.exists() && !file.delete()) {
           LOG.error("failed to delete temporary hgrc {}", file);
         } else if (exists && file.exists()) {
-          cleanUpHgrc(file);
+          try {
+            if (hgrc != null) {
+              cleanUpHgrc(file);
+            }
+          } catch (Exception e) {
+            LOG.warn("error cleaning up hgrc", e);
+          }
         }
       }
     }
