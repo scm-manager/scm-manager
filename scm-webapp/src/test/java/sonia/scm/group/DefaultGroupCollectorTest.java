@@ -85,7 +85,7 @@ class DefaultGroupCollectorTest {
     mapCacheManager = new MapCacheManager();
     when(configurationStoreFactory.withType(UserGroupCache.class).withName("user-group-cache").build())
       .thenReturn(configurationStore);
-    when(configurationStore.getOptional()).thenAnswer(invocation -> Optional.ofNullable(userGroupCache));
+    lenient().when(configurationStore.getOptional()).thenAnswer(invocation -> Optional.ofNullable(userGroupCache));
     lenient().doAnswer(invocation -> {
       userGroupCache = invocation.getArgument(0, UserGroupCache.class);
       return null;
