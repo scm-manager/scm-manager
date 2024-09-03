@@ -22,6 +22,7 @@ addressBinding: 0.0.0.0
 # This is the exposed port for your application 
 port: 8080
 contextPath: /
+httpHeaderSize: 16384
 ```
 
 **Environment variables**
