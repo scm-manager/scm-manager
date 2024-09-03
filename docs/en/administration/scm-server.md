@@ -31,6 +31,7 @@ contextPath: /
 | SCM_ADDRESS_BINDING  | addressBinding                    | export SCM_ADDRESS_BINDING=0.0.0.0 |
 | SCM_PORT             | port                              | export SCM_PORT=8080               |
 | SCM_CONTEXT_PATH     | contextPath                       | export SCM_CONTEXT_PATH=/          |
+| SCM_HTTP_HEADER_SIZE | httpHeaderSize                    | export SCM_HTTP_HEADER_SIZE=16384  |
 
 ## SSL
 
