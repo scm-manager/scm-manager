@@ -64,7 +64,7 @@ task publish(type: ScmManagerUploadTask) {
 }
 
 license {
-  header rootProject.file("LICENSE.txt")
+  header rootProject.file("LICENSE-HEADER.txt")
   lineEnding = "\n"
 
   tasks {

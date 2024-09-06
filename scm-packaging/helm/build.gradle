@@ -96,7 +96,7 @@ task publish {
 }
 
 license {
-  header rootProject.file("LICENSE.txt")
+  header rootProject.file("LICENSE-HEADER.txt")
   lineEnding = "\n"
 
   exclude '**/Chart.yaml'

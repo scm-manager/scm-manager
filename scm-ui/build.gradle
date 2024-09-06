@@ -880,7 +880,7 @@ task setVersionToNextSnapshot(type: YarnTask) {
 }
 
 license {
-  header rootProject.file("LICENSE.txt")
+  header rootProject.file("LICENSE-HEADER.txt")
   newLine = true
   ignoreNewLine = true
   lineEnding = "\n"

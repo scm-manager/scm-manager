@@ -109,7 +109,7 @@ class JavaModulePlugin implements Plugin<Project> {
     }
 
     project.license {
-      header project.rootProject.file('LICENSE.txt')
+      header project.rootProject.file('LICENSE-HEADER.txt')
       newLine = true
       ignoreNewLine = true
       lineEnding = "\n"

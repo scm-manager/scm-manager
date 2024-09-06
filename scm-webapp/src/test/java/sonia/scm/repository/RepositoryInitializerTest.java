@@ -910,7 +910,7 @@ class RepositoryInitializerTest {
 
     @Override
     public void initialize(InitializerContext context) throws IOException {
-      context.create("LICENSE.txt").from("MIT");
+      context.create("LICENSE.txt").from("AGPL");
     }
   }
 
