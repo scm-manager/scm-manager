@@ -49,7 +49,7 @@ target "base" {
     "org.opencontainers.image.description" = "The easiest way to share and manage your Git, Mercurial and Subversion repositories"
     "org.opencontainers.image.url" = "https://scm-manager.org/"
     "org.opencontainers.image.source" = "https://github.com/scm-manager/docker"
-    "org.opencontainers.image.licenses" = "MIT"
+    "org.opencontainers.image.licenses" = "AGPLv3"
     "org.opencontainers.image.version" = VERSION
     "org.opencontainers.image.revision" = COMMIT_SHA
   }
