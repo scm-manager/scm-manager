@@ -9,7 +9,7 @@
   ],
   "repository": "https://bitbucket.org/sdorra/scm-manager",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
-  "license": "MIT",
+  "license": "AGPLv3",
   "scripts": {
     "typecheck": "tsc",
     "lint": "eslint src"

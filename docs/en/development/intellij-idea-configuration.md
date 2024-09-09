@@ -59,12 +59,12 @@ title: Intellij IDEA Configuration
 
 * Editor / Copyright / Copyright Profiles
   * Add Profile
-  * Name: SCM-MIT
-  * Copyright text: *see LICENSE.txt in the main directory*
-  * Regex: MIT License
+  * Name: SCM-AGPL
+  * Copyright text: see https://www.gnu.org/licenses/
+  * Regex: GNU Affero General Public License
 
 * Editor / Copyright
-  * Default project copyright: SCM-MIT
+  * Default project copyright: SCM-AGPL
 
 * Editor / Copyright / Formatting / XML
   * Use custom formatting options

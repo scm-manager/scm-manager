@@ -4,7 +4,7 @@
   "description": "End to end Tests for SCM-Manager",
   "main": "index.js",
   "author": "Eduard Heimbuch <eduard.heimbuch@cloudogu.com>",
-  "license": "MIT",
+  "license": "AGPLv3",
   "private": false,
   "scripts": {
     "headless": "cypress run",

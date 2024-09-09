@@ -2,7 +2,7 @@
   "name": "@scm-manager/ui-plugins",
   "description": "Defines the versions of SCM-Manager plugin dependencies provided by the core webapp. Exclusively used by the postinstall command of @scm-manager/plugin-scripts.",
   "version": "3.4.2-SNAPSHOT",
-  "license": "MIT",
+  "license": "AGPLv3",
   "dependencies": {
     "react": "17",
     "react-dom": "17",
