@@ -2,7 +2,7 @@
   "name": "@scm-manager/scm-git-plugin",
   "private": true,
   "version": "3.4.2-SNAPSHOT",
-  "license": "MIT",
+  "license": "AGPLv3",
   "main": "./src/main/js/index.ts",
   "scripts": {
     "build": "plugin-scripts build",

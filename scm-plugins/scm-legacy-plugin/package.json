@@ -2,7 +2,7 @@
   "name": "@scm-manager/scm-legacy-plugin",
   "private": true,
   "version": "3.4.2-SNAPSHOT",
-  "license": "MIT",
+  "license": "AGPLv3",
   "main": "./src/main/js/index.tsx",
   "scripts": {
     "build": "plugin-scripts build",
