@@ -17,7 +17,7 @@ repositories.
 - Rich User Interface
 - Simple Plugin API
 - Useful plugins available
-- Licensed under the MIT-License
+- Licensed under the AGPLv3-License
 
 This branch (`develop`) is for the development of SCM-Manager 2.x. If you are interested in the development of version
 1.x, please checkout the branch `support/1.x`.
