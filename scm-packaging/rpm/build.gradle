@@ -63,7 +63,7 @@ task rpm(type: Rpm) {
   summary 'SCM-Manager Server'
   packageDescription 'The easiest way to share and manage your Git, Mercurial and Subversion repositories'
   version expandedVersionWithDot
-  license 'MIT'
+  license 'AGPLv3'
   arch 'NOARCH'
   os LINUX
   packager 'SCM-Team <scm-team@cloudogu.com>'

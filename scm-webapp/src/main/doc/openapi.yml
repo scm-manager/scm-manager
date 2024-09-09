@@ -22,7 +22,7 @@ info:
     url: https://scm-manager.org
     email: scmmanager@googlegroups.com
   license:
-    name: MIT
+    name: AGPLv3
     url: https://github.com/scm-manager/scm-manager/blob/develop/LICENSE.txt
   version: ${version}
 servers:
