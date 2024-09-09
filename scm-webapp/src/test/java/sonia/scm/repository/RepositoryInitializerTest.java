@@ -102,7 +102,7 @@ class RepositoryInitializerTest {
     initializer.initialize(repository, Collections.emptyMap());
 
     verifyFileCreation(readmeContentLoader, "# HeartOfGold");
-    verifyFileCreation(licenseContentLoader, "MIT");
+    verifyFileCreation(licenseContentLoader, "AGPL");
 
     verify(modifyCommand, times(2)).setCommitMessage("initialize repository");
     verify(modifyCommand, times(2)).execute();
@@ -151,7 +151,7 @@ class RepositoryInitializerTest {
     RepositoryInitializer initializer = new RepositoryInitializer(repositoryServiceFactory, repositoryContentInitializers);
     initializer.initialize(repository, Collections.emptyMap());
 
-    assertThat(reference.get()).isEqualTo("MIT");
+    assertThat(reference.get()).isEqualTo("AGPL");
   }
 
   @Test
