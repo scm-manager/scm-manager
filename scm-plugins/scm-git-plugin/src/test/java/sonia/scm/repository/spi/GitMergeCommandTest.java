@@ -110,8 +110,10 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeDryRunCommandResult result = command.dryRun(request);
 
     assertThat(result.isMergeable()).isFalse();
-    assertThat(result.getReasons().size()).isEqualTo(1);
-    assertThat(result.getReasons().stream().toList().get(0).getType()).isEqualTo(MergePreventReasonType.FILE_CONFLICTS);
+    assertThat(result.getReasons()).hasSize(1);
+    MergePreventReason mergePreventReason = result.getReasons().stream().toList().get(0);
+    assertThat(mergePreventReason.getType()).isEqualTo(MergePreventReasonType.FILE_CONFLICTS);
+    assertThat(mergePreventReason.getAffectedPaths()).containsExactly("a.txt");
   }
 
   @Test
@@ -127,7 +129,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeDryRunCommandResult result = command.dryRun(request);
 
     assertThat(result.isMergeable()).isFalse();
-    assertThat(result.getReasons().size()).isEqualTo(1);
+    assertThat(result.getReasons()).hasSize(1);
     assertThat(result.getReasons().stream().toList().get(0).getType()).isEqualTo(MergePreventReasonType.EXTERNAL_MERGE_TOOL);
   }
 
@@ -144,7 +146,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeDryRunCommandResult result = command.dryRun(request);
 
     assertThat(result.isMergeable()).isFalse();
-    assertThat(result.getReasons().size()).isEqualTo(2);
+    assertThat(result.getReasons()).hasSize(2);
     List<MergePreventReason> reasons = result.getReasons().stream().toList();
     assertThat(reasons.get(0).getType()).isEqualTo(MergePreventReasonType.EXTERNAL_MERGE_TOOL);
     assertThat(reasons.get(1).getType()).isEqualTo(MergePreventReasonType.FILE_CONFLICTS);
@@ -379,7 +381,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     GitModificationsCommand modificationsCommand = new GitModificationsCommand(createContext());
     List<Added> changes = modificationsCommand.getModifications("master").getAdded();
-    assertThat(changes.size()).isEqualTo(3);
+    assertThat(changes).hasSize(3);
   }
 
 
@@ -468,7 +470,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test(expected = NotFoundException.class)
-  public void shouldHandleNotExistingTargetBranchInDryRun() throws IOException {
+  public void shouldHandleNotExistingTargetBranchInDryRun() {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("not_existing");

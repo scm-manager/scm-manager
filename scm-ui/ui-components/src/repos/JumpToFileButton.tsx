@@ -37,13 +37,17 @@ const Button = styled(Link)`
 type Props = {
   link: string;
   tooltip: string;
+  icon?: string;
+  color?: string;
 };
 
-const JumpToFileButton: FC<Props> = ({ link, tooltip }) => {
+const JumpToFileButton: FC<Props> = ({ link, tooltip, icon, color }) => {
+  const iconToUse = icon ?? "file-code";
+  const colorToUse = color ?? "inherit";
   return (
     <Tooltip message={tooltip} side="top">
       <Button aria-label={tooltip} className="button is-clickable" to={link}>
-        <Icon name="file-code" color="inherit" alt="" />
+        <Icon name={iconToUse} color={colorToUse} alt="" />
       </Button>
     </Tooltip>
   );

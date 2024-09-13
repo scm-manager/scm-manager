@@ -1,0 +1,4 @@
+- type: added
+  description: The result of the merge dry-run now contains the names of the files that have conflicts
+- type: added
+  description: Method to compute anchors in diff views can be used in plugins

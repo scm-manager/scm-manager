@@ -143,3 +143,5 @@ export { urls };
 export const getPageFromMatch = urls.getPageFromMatch;
 
 export { default as useGeneratedId } from "./useGeneratedId";
+
+  export { getAnchorId as getDiffAnchorId } from "./repos/diff/helpers";

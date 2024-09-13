@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
 import org.eclipse.jgit.api.Git;
@@ -35,9 +34,9 @@ import org.eclipse.jgit.lib.IndexDiff;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.merge.ResolveMerger;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
-import sonia.scm.NotFoundException;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
@@ -52,8 +51,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.eclipse.jgit.merge.MergeStrategy.RECURSIVE;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -62,7 +64,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
   private final GitWorkingCopyFactory workingCopyFactory;
   private final AttributeAnalyzer attributeAnalyzer;
-  private static final Set<MergeStrategy> STRATEGIES = ImmutableSet.of(
+  private static final Set<MergeStrategy> STRATEGIES = Set.of(
     MergeStrategy.MERGE_COMMIT,
     MergeStrategy.FAST_FORWARD_IF_POSSIBLE,
     MergeStrategy.SQUASH,
@@ -117,9 +119,8 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
         mergePreventReasons.add(new MergePreventReason(MergePreventReasonType.EXTERNAL_MERGE_TOOL));
       }
 
-      if (!isMergeableWithoutFileConflicts(repository, request.getBranchToMerge(), request.getTargetBranch())) {
-        mergePreventReasons.add(new MergePreventReason(MergePreventReasonType.FILE_CONFLICTS));
-      }
+      checkMergeableWithoutFileConflicts(repository, request.getBranchToMerge(), request.getTargetBranch())
+        .ifPresent(mergePreventReasons::add);
 
       return new MergeDryRunCommandResult(mergePreventReasons.isEmpty(), mergePreventReasons);
     } catch (IOException e) {
@@ -127,11 +128,16 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     }
   }
 
-  private boolean isMergeableWithoutFileConflicts(Repository repository, String sourceRevision, String targetRevision) throws IOException {
-    return RECURSIVE.newMerger(repository, true).merge(
-      resolveRevisionOrThrowNotFound(repository,sourceRevision),
+  private Optional<MergePreventReason> checkMergeableWithoutFileConflicts(Repository repository, String sourceRevision, String targetRevision) throws IOException {
+    ResolveMerger merger = (ResolveMerger) RECURSIVE.newMerger(repository, true);
+    if (!merger.merge(
+      resolveRevisionOrThrowNotFound(repository, sourceRevision),
       resolveRevisionOrThrowNotFound(repository, targetRevision)
-    );
+    )) {
+      return of(new MergePreventReason(MergePreventReasonType.FILE_CONFLICTS, merger.getUnmergedPaths()));
+    } else {
+      return empty();
+    }
   }
 
   @Override

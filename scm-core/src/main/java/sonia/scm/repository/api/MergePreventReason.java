@@ -26,10 +26,25 @@ package sonia.scm.repository.api;
 
 import lombok.Value;
 
+import java.util.Collection;
+
+import static java.util.Collections.emptyList;
+
 /**
  * @since 3.3.0
  */
 @Value
 public class MergePreventReason {
   MergePreventReasonType type;
+
+  Collection<String> affectedPaths;
+
+  public MergePreventReason(MergePreventReasonType type) {
+    this(type, emptyList());
+  }
+
+  public MergePreventReason(MergePreventReasonType type, Collection<String> affectedPaths) {
+    this.type = type;
+    this.affectedPaths = affectedPaths;
+  }
 }
