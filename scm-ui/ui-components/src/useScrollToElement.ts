@@ -39,7 +39,7 @@ const useScrollToElement = (
           clearInterval(intervalId);
         } else {
           tries++;
-          const element = contentRef.querySelector(CSS.escape(elementSelector));
+          const element = contentRef.querySelector(escapeIdStartingWithNumber(elementSelector));
           if (element) {
             const headerElement = document.querySelector(".navbar-brand");
             const margin = headerElement ? headerElement.getBoundingClientRect().height : 45;
@@ -56,5 +56,13 @@ const useScrollToElement = (
     }
   }, [contentRef, ...dependencies]);
 };
+
+function escapeIdStartingWithNumber(selector: string) {
+  if (selector.startsWith("#")) {
+    return `#${CSS.escape(selector.substring(1))}`;
+  }
+
+  return selector;
+}
 
 export default useScrollToElement;
