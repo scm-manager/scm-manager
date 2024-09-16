@@ -39,13 +39,13 @@ const useScrollToElement = (
           clearInterval(intervalId);
         } else {
           tries++;
-          const element = contentRef.querySelector(elementSelector);
+          const element = contentRef.querySelector(CSS.escape(elementSelector));
           if (element) {
             const headerElement = document.querySelector(".navbar-brand");
             const margin = headerElement ? headerElement.getBoundingClientRect().height : 45;
             clearInterval(intervalId);
             const y = element.getBoundingClientRect().top + window.pageYOffset - margin;
-            window.scrollTo({top: y});
+            window.scrollTo({ top: y });
           }
         }
       }, 200);

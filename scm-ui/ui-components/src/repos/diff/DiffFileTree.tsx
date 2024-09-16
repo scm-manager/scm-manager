@@ -102,7 +102,7 @@ const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile
 
 type FileProps = { path: string; parentPath: string; currentFile: string; setCurrentFile: (path: string) => void };
 
-export const TreeFileContent = styled.li`
+export const TreeFileContent = styled.div`
   cursor: pointer;
 `;
 
