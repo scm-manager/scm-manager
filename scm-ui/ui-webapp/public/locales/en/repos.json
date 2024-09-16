@@ -271,7 +271,8 @@
     "activateWhitespace": "Show whitespaces changes",
     "moreDiffsAvailable": "There are more diffs available",
     "loadMore": "Load more",
-    "showModifiedFiles": "<tag>{{newFiles}}</tag> added, <tag>{{modified}}</tag> modified, <tag>{{deleted}}</tag> deleted"
+    "showModifiedFiles": "<tag>{{newFiles}}</tag> added, <tag>{{modified}}</tag> modified, <tag>{{deleted}}</tag> deleted",
+    "diffTreeTitle": "Diff-List"
   },
   "changeset": {
     "label": "Changeset",

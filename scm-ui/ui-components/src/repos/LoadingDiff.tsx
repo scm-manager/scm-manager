@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NotFoundError, useDiff } from "@scm-manager/ui-api";
 import ErrorNotification from "../ErrorNotification";
@@ -32,6 +32,11 @@ import Diff from "./Diff";
 import { DiffObjectProps } from "./DiffTypes";
 import DiffStatistics from "./DiffStatistics";
 import { DiffDropDown } from "../index";
+import DiffFileTree from "./diff/DiffFileTree";
+import { FileTree } from "@scm-manager/ui-types";
+import { DiffContent, FileTreeContent } from "./diff/styledElements";
+import { useHistory, useLocation } from "react-router-dom";
+import { getFileNameFromHash } from "./diffs";
 
 type Props = DiffObjectProps & {
   url: string;
@@ -60,9 +65,17 @@ const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingN
 const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) => {
   const [ignoreWhitespace, setIgnoreWhitespace] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
+  const history = useHistory();
+
+  const fetchNextPageAndResetAnchor = () => {
+    history.push("#");
+    fetchNextPage();
+  };
+
   const evaluateWhiteSpace = () => {
-    return ignoreWhitespace ? "ALL" : "NONE"
-  }
+    return ignoreWhitespace ? "ALL" : "NONE";
+  };
   const { error, isLoading, data, fetchNextPage, isFetchingNextPage } = useDiff(url, {
     limit,
     refetchOnWindowFocus,
@@ -70,12 +83,36 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
   });
   const [t] = useTranslation("repos");
 
+  const getFirstFile = useCallback((tree: FileTree): string => {
+    if (Object.keys(tree.children).length === 0) {
+      return tree.nodeName;
+    }
+
+    for (const key in tree.children) {
+      let path;
+      if (tree.nodeName !== "") {
+        path = tree.nodeName + "/";
+      } else {
+        path = tree.nodeName;
+      }
+      const result = path + getFirstFile(tree.children[key]);
+      if (result) {
+        return result;
+      }
+    }
+    return "";
+  }, []);
+
   const ignoreWhitespaces = () => {
     setIgnoreWhitespace(!ignoreWhitespace);
   };
 
   const collapseDiffs = () => {
     setCollapsed(!collapsed);
+  };
+
+  const setFilePath = (path: string) => {
+    history.push(`#diff-${encodeURIComponent(path)}`);
   };
 
   if (error) {
@@ -89,21 +126,35 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
     return null;
   } else {
     return (
-      <>
-        <div className="is-flex has-gap-4 mb-4 mt-4 is-justify-content-space-between">
-          <DiffStatistics data={data.statistics} />
-          <DiffDropDown collapseDiffs={collapseDiffs} ignoreWhitespaces={ignoreWhitespaces} renderOnMount={true} />
-        </div>
-        <Diff
-          defaultCollapse={collapsed}
-          diff={data.files}
-          ignoreWhitespace={evaluateWhiteSpace()}
-          {...props}
-        />
-        {data.partial ? (
-          <PartialNotification fetchNextPage={fetchNextPage} isFetchingNextPage={isFetchingNextPage} />
-        ) : null}
-      </>
+      <div className="is-flex has-gap-4 mb-4 mt-4 is-justify-content-space-between">
+        <FileTreeContent className={"is-three-quarters"}>
+          {data?.tree && (
+            <DiffFileTree
+              tree={data.tree}
+              currentFile={decodeURIComponent(getFileNameFromHash(location.hash) ?? "")}
+              setCurrentFile={setFilePath}
+            />
+          )}
+        </FileTreeContent>
+        <DiffContent>
+          <div className="is-flex has-gap-4 mb-4 mt-4 is-justify-content-space-between">
+            <DiffStatistics data={data.statistics} />
+            <DiffDropDown collapseDiffs={collapseDiffs} ignoreWhitespaces={ignoreWhitespaces} renderOnMount={true} />
+          </div>
+          <Diff
+            defaultCollapse={collapsed}
+            diff={data.files}
+            ignoreWhitespace={evaluateWhiteSpace()}
+            fetchNextPage={fetchNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            isDataPartial={data.partial}
+            {...props}
+          />
+          {data.partial ? (
+            <PartialNotification fetchNextPage={fetchNextPageAndResetAnchor} isFetchingNextPage={isFetchingNextPage} />
+          ) : null}
+        </DiffContent>
+      </div>
     );
   }
 };

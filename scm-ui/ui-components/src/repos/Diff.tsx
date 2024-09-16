@@ -21,20 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import DiffFile from "./DiffFile";
 import { DiffObjectProps, FileControlFactory } from "./DiffTypes";
 import { FileDiff } from "@scm-manager/ui-types";
-import { escapeWhitespace } from "./diffs";
+import { getAnchorSelector, getFileNameFromHash } from "./diffs";
 import Notification from "../Notification";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import useScrollToElement from "../useScrollToElement";
+import { getAnchorId } from "./diff/helpers";
 
 type Props = DiffObjectProps & {
   diff: FileDiff[];
   fileControlFactory?: FileControlFactory;
   ignoreWhitespace?: string;
+  fetchNextPage?: () => void;
+  isFetchingNextPage?: boolean;
+  isDataPartial?: boolean;
 };
 
 const createKey = (file: FileDiff, ignoreWhitespace?: string) => {
@@ -43,23 +47,59 @@ const createKey = (file: FileDiff, ignoreWhitespace?: string) => {
   return `${file.oldPath}@${file.oldRevision}/${file.newPath}@${file.newRevision}?${ignoreWhitespace}`;
 };
 
-const getAnchorSelector = (uriHashContent: string) => {
-  return "#" + escapeWhitespace(decodeURIComponent(uriHashContent));
+const getFile = (files: FileDiff[] | undefined, path: string): FileDiff | undefined => {
+  return files?.find((e) => (e.type !== "delete" && e.newPath === path) || (e.type === "delete" && e.oldPath === path));
 };
 
-const Diff: FC<Props> = ({ diff, ignoreWhitespace, ...fileProps }) => {
+const selectFromHash = (hash: string) => {
+  const fileName = getFileNameFromHash(hash);
+  return fileName ? getAnchorSelector(fileName) : undefined;
+};
+
+const jumpToBottom = () => {
+  window.scrollTo(0, document.body.scrollHeight);
+};
+
+const Diff: FC<Props> = ({
+  diff,
+  ignoreWhitespace,
+  fetchNextPage,
+  isFetchingNextPage,
+  isDataPartial,
+  ...fileProps
+}) => {
   const [t] = useTranslation("repos");
   const [contentRef, setContentRef] = useState<HTMLElement | null>();
   const { hash } = useLocation();
+
+  useEffect(() => {
+    if (isFetchingNextPage) {
+      jumpToBottom();
+    }
+  }, [isFetchingNextPage]);
+
   useScrollToElement(
     contentRef,
     () => {
-      const match = hash.match(/^#diff-(.*)$/);
-      if (match) {
-        return getAnchorSelector(match[1]);
+      if (isFetchingNextPage === undefined || isDataPartial === undefined || fetchNextPage === undefined) {
+        return selectFromHash(hash);
+      }
+
+      const encodedFileName = getFileNameFromHash(hash);
+      if (!encodedFileName) {
+        return;
+      }
+
+      const selectedFile = getFile(diff, decodeURIComponent(encodedFileName));
+      if (selectedFile) {
+        return getAnchorSelector(getAnchorId(selectedFile));
+      }
+
+      if (isDataPartial && !isFetchingNextPage) {
+        fetchNextPage();
       }
     },
-    hash
+    [hash]
   );
 
   return (

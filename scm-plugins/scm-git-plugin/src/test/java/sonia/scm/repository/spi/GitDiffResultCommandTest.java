@@ -33,8 +33,10 @@ import sonia.scm.repository.api.IgnoreWhitespaceLevel;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.OPTIONAL;
 import static org.junit.Assert.assertEquals;
 
 public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
@@ -189,6 +191,15 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
     assertThat(diffResult.getStatistics()).get().extracting("added").isEqualTo(0);
   }
 
+  @Test
+  public void shouldCreateFileTree() throws IOException {
+    DiffResult.DiffTreeNode root = DiffResult.DiffTreeNode.createRootNode();
+    root.addChild("a.txt", DiffFile.ChangeType.MODIFY);
+    root.addChild("b.txt", DiffFile.ChangeType.DELETE);
+    DiffResult diffResult = createDiffResult("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
+    assertEquals(Optional.of(root),diffResult.getDiffTree());
+  }
+  
   @Test
   public void shouldNotIgnoreWhiteSpace() throws IOException {
     GitDiffResultCommand gitDiffResultCommand = new GitDiffResultCommand(createContext());

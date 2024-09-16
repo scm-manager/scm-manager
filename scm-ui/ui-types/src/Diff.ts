@@ -30,6 +30,7 @@ export type Diff = HalRepresentation & {
   files: FileDiff[];
   partial: boolean;
   statistics?: Statistics;
+  tree?: FileTree;
 };
 
 export type FileDiff = {
@@ -54,7 +55,13 @@ export type Statistics = {
   added: number;
   deleted: number;
   modified: number;
-}
+};
+
+export type FileTree = {
+  nodeName: string;
+  children: { [key: string]: FileTree };
+  changeType: string;
+};
 
 export type Hunk = {
   changes: Change[];

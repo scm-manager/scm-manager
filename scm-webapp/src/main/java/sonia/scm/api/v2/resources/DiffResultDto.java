@@ -31,10 +31,11 @@ import de.otto.edison.hal.Links;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import sonia.scm.repository.api.DiffResult;
+import sonia.scm.repository.api.DiffFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -47,6 +48,7 @@ public class DiffResultDto extends HalRepresentation {
   private List<FileDto> files;
   private boolean partial;
   private DiffStatisticsDto statistics;
+  private DiffTreeNodeDto tree;
 
   @Data
   @EqualsAndHashCode(callSuper = false)
@@ -79,6 +81,15 @@ public class DiffResultDto extends HalRepresentation {
     private int added;
     private int deleted;
     private int modified;
+  }
+
+  @Data
+  @EqualsAndHashCode(callSuper = false)
+  @AllArgsConstructor
+  public static class DiffTreeNodeDto {
+    private String nodeName;
+    private Map<String, DiffTreeNodeDto> children;
+    private Optional<DiffFile.ChangeType> changeType;
   }
 
   @Data

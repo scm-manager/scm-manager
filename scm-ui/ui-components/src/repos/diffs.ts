@@ -44,3 +44,13 @@ export function createHunkIdentifierFromContext(ctx: BaseContext) {
 export function escapeWhitespace(path: string) {
   return path?.toLowerCase().replace(/\W/g, "-");
 }
+
+export function getAnchorSelector(uriHashContent: string) {
+  return "#" + escapeWhitespace(decodeURIComponent(uriHashContent));
+}
+
+export function getFileNameFromHash(hash: string) {
+  const matcher = new RegExp(/^#diff-(.*)$/, "g");
+  const match = matcher.exec(hash);
+  return match ? match[1] : undefined;
+}

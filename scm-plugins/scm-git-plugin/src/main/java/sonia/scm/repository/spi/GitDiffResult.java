@@ -57,6 +57,8 @@ public class GitDiffResult implements DiffResult {
   private final int offset;
   private final Integer limit;
 
+  private DiffTreeNode tree;
+
   public GitDiffResult(Repository scmRepository,
                        org.eclipse.jgit.lib.Repository repository,
                        Differ.Diff diff,
@@ -209,5 +211,33 @@ public class GitDiffResult implements DiffResult {
     }
     DiffStatistics stats = new DiffStatistics(addCounter, modifiedCounter, deletedCounter);
     return Optional.of(stats);
+  }
+
+  @Override
+  public Optional<DiffTreeNode> getDiffTree() {
+    if (this.tree == null) {
+      tree = DiffTreeNode.createRootNode();
+
+      for (DiffEntry diffEntry : diffEntries) {
+        DiffEntry.Side side = DiffEntry.Side.NEW;
+        if (diffEntry.getChangeType() == DiffEntry.ChangeType.DELETE) {
+          side = DiffEntry.Side.OLD;
+        }
+        DiffEntry.ChangeType type = diffEntry.getChangeType();
+        String path = diffEntry.getPath(side);
+        tree.addChild(path, mapChangeType(type));
+      }
+    }
+    return Optional.of(tree);
+  }
+
+  private DiffFile.ChangeType mapChangeType(DiffEntry.ChangeType changeType) {
+    return switch (changeType) {
+      case ADD -> DiffFile.ChangeType.ADD;
+      case MODIFY -> DiffFile.ChangeType.MODIFY;
+      case DELETE -> DiffFile.ChangeType.DELETE;
+      case COPY -> DiffFile.ChangeType.COPY;
+      case RENAME -> DiffFile.ChangeType.RENAME;
+    };
   }
 }

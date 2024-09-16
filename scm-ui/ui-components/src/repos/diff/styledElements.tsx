@@ -90,3 +90,32 @@ export const PanelHeading = styled.div<{ sticky?: boolean | number }>`
     }
   }}
 `;
+
+export const FileTreeContent = styled.div`
+  min-width: 25%;
+  max-width: 25%;
+`;
+
+export const DiffContent = styled.div`
+  width: 100%;
+`;
+
+export const FileDiffContainer = styled.div`
+  border: 1px solid var(--scm-border-color);
+  border-radius: 1rem;
+  position: sticky;
+  top: 5rem;
+`;
+
+export const FileDiffContentTitle = styled.div`
+  border-bottom: 1px solid var(--scm-border-color);
+  box-shadow: 0 24px 3px -24px var(--scm-border-color);
+`;
+
+export const FileDiffContent = styled.ul`
+  overflow: auto;
+  @supports (-moz-appearance: none) {
+    max-height: calc(100vh - 11rem);
+  }
+  max-height: calc(100svh - 11rem);
+`;

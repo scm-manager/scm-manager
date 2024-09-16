@@ -35,7 +35,9 @@ import sonia.scm.repository.api.DiffResult;
 import sonia.scm.repository.api.Hunk;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
 
@@ -99,6 +101,19 @@ class DiffResultToDiffResultDtoMapper {
     }
   }
 
+  private DiffResultDto.DiffTreeNodeDto mapDiffTreeNodeDto(DiffResult.DiffTreeNode node) {
+    if(node == null){
+      return null;
+    }
+    Map<String, DiffResultDto.DiffTreeNodeDto> list = new LinkedHashMap<>();
+    if(node.getChildren() != null) {
+      for(Map.Entry<String, DiffResult.DiffTreeNode> entry : node.getChildren().entrySet()) {
+        list.put(entry.getKey(), mapDiffTreeNodeDto(entry.getValue()));
+      }
+    }
+    return new DiffResultDto.DiffTreeNodeDto(node.getNodeName(), list, node.getChangeType());
+  }
+
   private void setFiles(DiffResult result, DiffResultDto dto, Repository repository, String revision) {
     List<DiffResultDto.FileDto> files = new ArrayList<>();
     for (DiffFile file : result) {
@@ -106,6 +121,8 @@ class DiffResultToDiffResultDtoMapper {
     }
     dto.setFiles(files);
     Optional<DiffResult.DiffStatistics> statistics = result.getStatistics();
+    Optional<DiffResult.DiffTreeNode> diffTree = result.getDiffTree();
+
     if (statistics.isPresent()) {
       DiffResult.DiffStatistics diffStatistics = statistics.get();
       DiffResultDto.DiffStatisticsDto diffStatisticsDto = new DiffResultDto.DiffStatisticsDto(
@@ -115,6 +132,7 @@ class DiffResultToDiffResultDtoMapper {
       );
       dto.setStatistics(diffStatisticsDto);
     }
+    diffTree.ifPresent(diffTreeNode -> dto.setTree(new DiffResultDto.DiffTreeNodeDto(diffTreeNode.getNodeName(), mapDiffTreeNodeDto(diffTreeNode).getChildren(), diffTreeNode.getChangeType())));
     dto.setPartial(result.isPartial());
   }
 

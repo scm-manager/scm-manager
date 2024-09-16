@@ -26,6 +26,9 @@ package sonia.scm.repository.api;
 
 import lombok.Value;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
@@ -54,9 +57,19 @@ public interface DiffResult extends Iterable<DiffFile> {
 
   /**
    * This function returns statistics if they are supported.
+   *
    * @since 3.4.0
    */
   default Optional<DiffStatistics> getStatistics() {
+    return empty();
+  }
+
+  /**
+   * This function returns all file paths wrapped in a tree
+   *
+   * @since 3.5.0
+   */
+  default Optional<DiffTreeNode> getDiffTree() {
     return empty();
   }
 
@@ -76,4 +89,45 @@ public interface DiffResult extends Iterable<DiffFile> {
     int deleted;
   }
 
+  @Value
+  class DiffTreeNode {
+
+    String nodeName;
+    Map<String, DiffTreeNode> children = new LinkedHashMap<>();
+    Optional<DiffFile.ChangeType> changeType;
+
+    public Map<String, DiffTreeNode> getChildren() {
+      return Collections.unmodifiableMap(children);
+    }
+
+    public static DiffTreeNode createRootNode() {
+      return new DiffTreeNode("", Optional.empty());
+    }
+
+    private DiffTreeNode(String nodeName, Optional<DiffFile.ChangeType> changeType) {
+      this.nodeName = nodeName;
+      this.changeType = changeType;
+    }
+
+    public void addChild(String path, DiffFile.ChangeType changeType) {
+      traverseAndAddChild(path.split("/"), 0, changeType);
+    }
+
+    private void traverseAndAddChild(String[] pathSegments, int index, DiffFile.ChangeType changeType) {
+      if (index == pathSegments.length) {
+        return;
+      }
+
+      String currentPathSegment = pathSegments[index];
+      DiffTreeNode child = children.get(currentPathSegment);
+
+      if (child == null) {
+        boolean isFilename = index == pathSegments.length - 1;
+        child = new DiffTreeNode(currentPathSegment, isFilename ? Optional.of(changeType) : Optional.empty());
+        children.put(currentPathSegment, child);
+      }
+
+      child.traverseAndAddChild(pathSegments, index + 1, changeType);
+    }
+  }
 }

@@ -91,7 +91,7 @@ export { default as copyToClipboard } from "./CopyToClipboard";
 export { createA11yId } from "./createA11yId";
 export { useSecondaryNavigation } from "./useSecondaryNavigation";
 export { default as useScrollToElement } from "./useScrollToElement";
-export { default as DiffDropDown }  from "./repos/DiffDropDown";
+export { default as DiffDropDown } from "./repos/DiffDropDown";
 
 export { default as comparators } from "./comparators";
 
@@ -144,4 +144,7 @@ export const getPageFromMatch = urls.getPageFromMatch;
 
 export { default as useGeneratedId } from "./useGeneratedId";
 
-  export { getAnchorId as getDiffAnchorId } from "./repos/diff/helpers";
+export { default as DiffFileTree } from "./repos/diff/DiffFileTree";
+export { FileTreeContent } from "./repos/diff/styledElements";
+export { getFileNameFromHash } from "./repos/diffs";
+export { getAnchorId as getDiffAnchorId } from "./repos/diff/helpers";
