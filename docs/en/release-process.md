@@ -1,4 +1,8 @@
-# How to release SCM-Manager core (Script)
+---
+title: Release process
+---
+
+## How to release SCM-Manager core (Script)
 
 The most easy way to release the core is to use the release script. This will guide you
 through all necessary tasks.
@@ -21,12 +25,12 @@ It will
 - Create a commit with the changes, and
 - Create and push the release branch.
 
-# Manual core release
+## Manual core release
 
 To release a new version of SCM-Manager "manually", you have to do the following steps
 (replace placeholders `<version>` accordingly, eg. with `2.1.0`):
 
-## Check out default branch
+### Check out default branch
 
 Make sure you have no changes you want to keep!
 
@@ -34,7 +38,7 @@ Make sure you have no changes you want to keep!
 git fetch && git checkout -f origin/develop && git clean -fd && git checkout -B develop
 ```
 
-## Merge support branch
+### Merge support branch
 
 Check whether there is an integration branch for the previous release or bugfixes not merged into the develop branch. Merge them now.
 
@@ -42,7 +46,7 @@ Check whether there is an integration branch for the previous release or bugfixe
 git merge origin/support/<support branch>
 ```
 
-## Update Changelog
+### Update Changelog
 
 The changelog must be updated to reflect the changes for the new release.
 All unreleased changes are stored in the `gradle/changelog` directory.
@@ -63,7 +67,7 @@ git diff CHANGELOG.md
 
 If everything looks fine, we can remove the changelog directory.
 
-## Create release branch, commit changes and push
+### Create release branch, commit changes and push
 
 ```bash
 git rm -rf gradle/changelog \
@@ -73,7 +77,7 @@ git rm -rf gradle/changelog \
 && git push origin release/$VERSION
 ```
 
-## Wait for Jenkins build
+### Wait for Jenkins build
 
 Jenkins will
 
@@ -83,15 +87,15 @@ Jenkins will
 - set the new development version for the develop branch
 - delete the release branch
 
-## Make a party
+### Make a party
 
-# Hotfix Releases of SCM-Manager
+## Hotfix Releases of SCM-Manager
 
 To release a hotfix version of SCM-Manager (or in other words a version, that is not based on the current
 `develop` branch but on an older tag), there is a bit more manual work to do and there is no one-fits-all
  way, so consider each step carefully and don't take this as a copy-paste manual like the normal release.
 
-## Create hotfix branch
+### Create hotfix branch
 
 To trigger the release, create a hotfix branch on the tag you want to create the hotfix for (lets say,
 that's version `2.30.0`) and prepare the release like above:
@@ -115,7 +119,7 @@ git push origin hotfix/2.30.1
 Jenkins will build and release the versions, create the new tag, but **will not** update the `main` or
 `develop` branches. So these updates come next.
 
-## Update Branches
+### Update Branches
 
 Depending on whether you released a hotfix for an older version or the latest release, you have to update
 the `main` branch to the new tag. So in our example, if there is no version `2.31.x` yet, the new version
@@ -144,11 +148,11 @@ How these conflicts should be merged depends on the version that has been releas
 - If the hotfix is the new main, you should take this new version and then manually create a new SNAPSHOT
   based on the new hotfix version number using gradle: `./gradlew setVersionToNextSnapshot`.
 
-# How to release SCM-Manager plugins
+## How to release SCM-Manager plugins
 
 To release a new version of a Plugin for SCM-Manager you have to do the following steps (replace placeholder `<version>` accordingly, eg. with `2.1.0`):
 
-## Check out default branch
+### Check out default branch
 
 Make sure you have no changes you want to keep!
 
@@ -156,7 +160,7 @@ Make sure you have no changes you want to keep!
 git fetch && git checkout -f origin/develop && git clean -fd && git checkout -B develop
 ```
 
-## Merge support branch
+### Merge support branch
 
 Check whether there is an integration branch for the previous release or bugfixes not merged into the develop branch. Merge them now.
 
@@ -164,18 +168,18 @@ Check whether there is an integration branch for the previous release or bugfixe
 git merge origin/support/<support branch>
 ```
 
-## Update SCM parent if necessary
+### Update SCM parent if necessary
 
 If you need to update the parent of the plugin to a new release of SCM-Manager, change it now:
 
 - `build.gradle`: `scmVersion`
 - `package.json`: `dependencies.ui-plugins`
 
-## Plugin dependencies
+### Plugin dependencies
 
 Check if all plugin dependencies are proper versions and not SNAPSHOT!
 
-## Build, commit and push
+### Build, commit and push
 
 This step is only needed, when you had to update the version in the prior step.
 If the core version has not been increased, this step can be skipped.
@@ -189,7 +193,7 @@ If the core version has not been increased, this step can be skipped.
 
 Wait for Jenkins to be green.
 
-## Update Changelog
+### Update Changelog
 
 The changelog must be updated to reflect the changes for the new release.
 All unreleased changes are stored in the `gradle/changelog` directory.
@@ -208,7 +212,7 @@ Now we should manually check if the changelog looks good.
 git diff CHANGELOG.md
 ```
 
-## Create, commit and push release branch
+### Create, commit and push release branch
 
 This step needs the `VERSION` set in the step above.
 
@@ -220,7 +224,7 @@ git rm -rf gradle/changelog \
 && git push origin release/$VERSION
 ```
 
-## Wait for Jenkins build
+### Wait for Jenkins build
 
 Jenkins will
 
@@ -230,13 +234,13 @@ Jenkins will
 - set the new development version for the develop branch
 - delete the release branch
 
-## Attention: Creating new plugins
+### Attention: Creating new plugins
 If you are creating a new plugin which doesn't exist in the SCM-Manager Plugin-Center yet, your plugin will not be shown after the release. 
 First you have to create a `plugin.yml` in the website repository. 
 
 Example: https://github.com/scm-manager/website/blob/master/content/plugins/scm-teamscale-plugin/plugin.yml
 
-## Hotfix Release
+### Hotfix Release
 
 The release of a hotfix version is still a partly manual process that requires some knowledge
 of git and the versioning of SCM-Manager. Here is a helping hand as a guideline of how to release

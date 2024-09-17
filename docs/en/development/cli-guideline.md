@@ -1,4 +1,6 @@
-# CLI Guidelines
+---
+title: CLI Guidelines
+---
 
 ## Resource centered api
 Every new command group starts with the resource name like `repo`.

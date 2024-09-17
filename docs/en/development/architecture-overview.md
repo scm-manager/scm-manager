@@ -1,4 +1,6 @@
-# SCM-Manager architecture overview
+---
+title: Architecture overview
+---
 
 ## Introduction
 This document does not describe the modules of SCM-Manager nor does it explain the technologies that are used.
