@@ -45,7 +45,9 @@ Der Schlüssel Icon zeigt an, ob ein Changeset signiert wurde. Um die Signatur z
 
 ### Changeset Details
 Auf der Detailseite eines Changesets sieht man zusätzlich zu den Metadaten (z. B. Mitwirkende und Parent-Changeset) des Changesets sämtliche Änderungen, die in diesem Changeset enthalten sind. 
-Die Mitwirkenden können zu einer detaillierten Tabelle aufklappt werden und enthalten den Autor, die Co-Autoren, den Committer und den Signierer des Changesets. 
+Die Mitwirkenden können zu einer detaillierten Tabelle aufklappt werden und enthalten den Autor, die Co-Autoren, den Committer und den Signierer des Changesets.
+Auf der linken Seite gibt es einen Dateien-Baum der jede Datei anzeigt die geändert wurde.
+Um zu einer bestimmten Datei zu springen ist ist es möglich im Baum diese Datei auszuwählen.
 Die Diffs werden dabei im bekannten Format je Datei inklusive Syntax-Highlighting angezeigt. 
 Die Diffs können durch Klicken auf den blauen Balken schrittweise oder vollständig erweitert werden.
 

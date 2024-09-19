@@ -48,6 +48,8 @@ The Sources button leads to the sources overview that shows the state from after
 ### Changeset Details
 The details page of a changeset shows the metadata (like contributors and the parent changeset) and all changes that are part of the changeset. 
 The contributors consist of the authors, co-authors, the committer and the signer. 
+On the left there is a files tree that shows every file that has been changed.
+To jump to a specific file it is possible to select this file in the tree.
 The diffs are presented in the well-known format per file with syntax highlighting. 
 You can expand the diffs gradually or completely by clicking on the blue bars.
 
