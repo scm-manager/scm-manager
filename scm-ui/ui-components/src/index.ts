@@ -90,7 +90,7 @@ export * from "./devices";
 export { default as copyToClipboard } from "./CopyToClipboard";
 export { createA11yId } from "./createA11yId";
 export { useSecondaryNavigation } from "./useSecondaryNavigation";
-export { default as useScrollToElement } from "./useScrollToElement";
+export { default as useScrollToElement, useScrollToElementWithCallback } from "./useScrollToElement";
 export { default as DiffDropDown } from "./repos/DiffDropDown";
 
 export { default as comparators } from "./comparators";

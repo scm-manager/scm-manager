@@ -29,7 +29,7 @@ import { getAnchorSelector, getFileNameFromHash } from "./diffs";
 import Notification from "../Notification";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-import useScrollToElement from "../useScrollToElement";
+import { useScrollToElementWithCallback } from "../useScrollToElement";
 import { getAnchorId } from "./diff/helpers";
 
 type Props = DiffObjectProps & {
@@ -39,6 +39,8 @@ type Props = DiffObjectProps & {
   fetchNextPage?: () => void;
   isFetchingNextPage?: boolean;
   isDataPartial?: boolean;
+  prevHash?: string;
+  setPrevHash?: (newHash: string) => void;
 };
 
 const createKey = (file: FileDiff, ignoreWhitespace?: string) => {
@@ -66,6 +68,8 @@ const Diff: FC<Props> = ({
   fetchNextPage,
   isFetchingNextPage,
   isDataPartial,
+  prevHash,
+  setPrevHash,
   ...fileProps
 }) => {
   const [t] = useTranslation("repos");
@@ -78,11 +82,15 @@ const Diff: FC<Props> = ({
     }
   }, [isFetchingNextPage]);
 
-  useScrollToElement(
+  useScrollToElementWithCallback(
     contentRef,
     () => {
       if (isFetchingNextPage === undefined || isDataPartial === undefined || fetchNextPage === undefined) {
         return selectFromHash(hash);
+      }
+
+      if (prevHash === hash) {
+        return;
       }
 
       const encodedFileName = getFileNameFromHash(hash);
@@ -99,7 +107,12 @@ const Diff: FC<Props> = ({
         fetchNextPage();
       }
     },
-    [hash]
+    [hash, isDataPartial, isFetchingNextPage, fetchNextPage, diff, prevHash, setPrevHash],
+    () => {
+      if (setPrevHash) {
+        setPrevHash(hash);
+      }
+    }
   );
 
   return (

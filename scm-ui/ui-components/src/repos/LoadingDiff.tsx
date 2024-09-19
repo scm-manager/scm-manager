@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NotFoundError, useDiff } from "@scm-manager/ui-api";
 import ErrorNotification from "../ErrorNotification";
@@ -33,7 +33,6 @@ import { DiffObjectProps } from "./DiffTypes";
 import DiffStatistics from "./DiffStatistics";
 import { DiffDropDown } from "../index";
 import DiffFileTree from "./diff/DiffFileTree";
-import { FileTree } from "@scm-manager/ui-types";
 import { DiffContent, FileTreeContent } from "./diff/styledElements";
 import { useHistory, useLocation } from "react-router-dom";
 import { getFileNameFromHash } from "./diffs";
@@ -65,13 +64,9 @@ const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingN
 const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) => {
   const [ignoreWhitespace, setIgnoreWhitespace] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [prevHash, setPrevHash] = useState("");
   const location = useLocation();
   const history = useHistory();
-
-  const fetchNextPageAndResetAnchor = () => {
-    history.push("#");
-    fetchNextPage();
-  };
 
   const evaluateWhiteSpace = () => {
     return ignoreWhitespace ? "ALL" : "NONE";
@@ -83,26 +78,6 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
   });
   const [t] = useTranslation("repos");
 
-  const getFirstFile = useCallback((tree: FileTree): string => {
-    if (Object.keys(tree.children).length === 0) {
-      return tree.nodeName;
-    }
-
-    for (const key in tree.children) {
-      let path;
-      if (tree.nodeName !== "") {
-        path = tree.nodeName + "/";
-      } else {
-        path = tree.nodeName;
-      }
-      const result = path + getFirstFile(tree.children[key]);
-      if (result) {
-        return result;
-      }
-    }
-    return "";
-  }, []);
-
   const ignoreWhitespaces = () => {
     setIgnoreWhitespace(!ignoreWhitespace);
   };
@@ -112,6 +87,7 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
   };
 
   const setFilePath = (path: string) => {
+    setPrevHash("");
     history.push(`#diff-${encodeURIComponent(path)}`);
   };
 
@@ -148,10 +124,12 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
             fetchNextPage={fetchNextPage}
             isFetchingNextPage={isFetchingNextPage}
             isDataPartial={data.partial}
+            prevHash={prevHash}
+            setPrevHash={setPrevHash}
             {...props}
           />
           {data.partial ? (
-            <PartialNotification fetchNextPage={fetchNextPageAndResetAnchor} isFetchingNextPage={isFetchingNextPage} />
+            <PartialNotification fetchNextPage={fetchNextPage} isFetchingNextPage={isFetchingNextPage} />
           ) : null}
         </DiffContent>
       </div>

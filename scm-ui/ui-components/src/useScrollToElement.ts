@@ -24,10 +24,12 @@
 
 import { useEffect } from "react";
 
-const useScrollToElement = (
+// In some cases it is necessary to execute some logic, after successfully jumping to an element
+export const useScrollToElementWithCallback = (
   contentRef: HTMLElement | null | undefined,
   elementSelectorResolver: () => string | undefined,
-  ...dependencies: any
+  dependencies: unknown[],
+  callback?: () => void
 ) => {
   useEffect(() => {
     const elementSelector = elementSelectorResolver();
@@ -46,6 +48,10 @@ const useScrollToElement = (
             clearInterval(intervalId);
             const y = element.getBoundingClientRect().top + window.pageYOffset - margin;
             window.scrollTo({ top: y });
+
+            if (callback) {
+              callback();
+            }
           }
         }
       }, 200);
@@ -55,6 +61,14 @@ const useScrollToElement = (
       };
     }
   }, [contentRef, ...dependencies]);
+};
+
+const useScrollToElement = (
+  contentRef: HTMLElement | null | undefined,
+  elementSelectorResolver: () => string | undefined,
+  ...dependencies: any
+) => {
+  useScrollToElementWithCallback(contentRef, elementSelectorResolver, [...dependencies]);
 };
 
 function escapeIdStartingWithNumber(selector: string) {
