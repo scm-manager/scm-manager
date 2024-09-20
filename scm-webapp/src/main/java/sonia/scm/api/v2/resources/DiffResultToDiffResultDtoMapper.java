@@ -128,7 +128,9 @@ class DiffResultToDiffResultDtoMapper {
       DiffResultDto.DiffStatisticsDto diffStatisticsDto = new DiffResultDto.DiffStatisticsDto(
         diffStatistics.getAdded(),
         diffStatistics.getDeleted(),
-        diffStatistics.getModified()
+        diffStatistics.getModified(),
+        diffStatistics.getRenamed(),
+        diffStatistics.getCopied()
       );
       dto.setStatistics(diffStatisticsDto);
     }

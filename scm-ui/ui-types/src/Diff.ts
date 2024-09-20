@@ -55,6 +55,8 @@ export type Statistics = {
   added: number;
   deleted: number;
   modified: number;
+  renamed: number;
+  copied: number;
 };
 
 export type FileTree = {

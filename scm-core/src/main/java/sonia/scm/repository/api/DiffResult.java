@@ -87,6 +87,14 @@ public interface DiffResult extends Iterable<DiffFile> {
      * number of deleted files in a diff
      */
     int deleted;
+    /**
+     * number of renamed files in a diff
+     */
+    int renamed;
+    /**
+     * number of copy files in a diff
+     */
+    int copied;
   }
 
   @Value

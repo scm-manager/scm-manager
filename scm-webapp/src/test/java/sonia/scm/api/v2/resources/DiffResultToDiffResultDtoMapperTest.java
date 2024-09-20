@@ -181,7 +181,7 @@ class DiffResultToDiffResultDtoMapperTest {
   @Test
   void shouldMapStatistics() {
     DiffResult result = createResult();
-    when(result.getStatistics()).thenReturn(of(new DiffResult.DiffStatistics(1, 2, 3)));
+    when(result.getStatistics()).thenReturn(of(new DiffResult.DiffStatistics(1, 2, 3, 4, 5)));
     when(result.getDiffTree()).thenReturn(of(DiffResult.DiffTreeNode.createRootNode()));
 
     DiffResultDto.DiffStatisticsDto dto = mapper.mapForIncoming(REPOSITORY, result, "feature/some", "master").getStatistics();
@@ -189,6 +189,8 @@ class DiffResultToDiffResultDtoMapperTest {
     assertThat(dto.getAdded()).isEqualTo(1);
     assertThat(dto.getModified()).isEqualTo(2);
     assertThat(dto.getDeleted()).isEqualTo(3);
+    assertThat(dto.getRenamed()).isEqualTo(4);
+    assertThat(dto.getCopied()).isEqualTo(5);
   }
 
   @Test
@@ -206,13 +208,13 @@ class DiffResultToDiffResultDtoMapperTest {
 
     DiffResultDto.DiffTreeNodeDto expectedTree = new DiffResultDto.DiffTreeNodeDto("", Map.of(
       "a.txt", new DiffResultDto.DiffTreeNodeDto("a.txt", Map.of(), Optional.of(DiffFile.ChangeType.MODIFY)),
-      "b.txt", new DiffResultDto.DiffTreeNodeDto("b.txt", Map.of(),Optional.of(DiffFile.ChangeType.DELETE)),
+      "b.txt", new DiffResultDto.DiffTreeNodeDto("b.txt", Map.of(), Optional.of(DiffFile.ChangeType.DELETE)),
       "victory", new DiffResultDto.DiffTreeNodeDto("victory", Map.of(
         "road", new DiffResultDto.DiffTreeNodeDto("road", Map.of(
           "c.txt", new DiffResultDto.DiffTreeNodeDto("c.txt", Map.of(), Optional.of(DiffFile.ChangeType.ADD)),
           "d.txt", new DiffResultDto.DiffTreeNodeDto("d.txt", Map.of(), Optional.of(DiffFile.ChangeType.RENAME))
-        ),Optional.empty())
-      ),Optional.empty()),
+        ), Optional.empty())
+      ), Optional.empty()),
       "indigo", new DiffResultDto.DiffTreeNodeDto("indigo", Map.of(
         "plateau", new DiffResultDto.DiffTreeNodeDto("plateau", Map.of(
           "e.txt", new DiffResultDto.DiffTreeNodeDto("e.txt", Map.of(), Optional.of(DiffFile.ChangeType.COPY))

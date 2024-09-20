@@ -189,6 +189,8 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
     assertThat(diffResult.getStatistics()).get().extracting("deleted").isEqualTo(1);
     assertThat(diffResult.getStatistics()).get().extracting("modified").isEqualTo(1);
     assertThat(diffResult.getStatistics()).get().extracting("added").isEqualTo(0);
+    assertThat(diffResult.getStatistics()).get().extracting("renamed").isEqualTo(0);
+    assertThat(diffResult.getStatistics()).get().extracting("copied").isEqualTo(0);
   }
 
   @Test

@@ -81,6 +81,8 @@ public class DiffResultDto extends HalRepresentation {
     private int added;
     private int deleted;
     private int modified;
+    private int renamed;
+    private int copied;
   }
 
   @Data

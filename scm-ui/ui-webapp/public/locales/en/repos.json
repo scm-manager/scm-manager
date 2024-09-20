@@ -272,6 +272,9 @@
     "moreDiffsAvailable": "There are more diffs available",
     "loadMore": "Load more",
     "showModifiedFiles": "<tag>{{newFiles}}</tag> added, <tag>{{modified}}</tag> modified, <tag>{{deleted}}</tag> deleted",
+    "showRenamedFiles": ", <tag>{{renamed}}</tag> renamed",
+    "showCopiedFiles": ", <tag>{{copied}}</tag> copied",
+    "showFiles": "files",
     "diffTreeTitle": "Diff-List"
   },
   "changeset": {

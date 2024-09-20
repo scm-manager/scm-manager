@@ -196,20 +196,18 @@ public class GitDiffResult implements DiffResult {
     int addCounter = 0;
     int modifiedCounter = 0;
     int deletedCounter = 0;
+    int renameCounter = 0;
+    int copyCounter = 0;
     for (DiffEntry diffEntry : diffEntries) {
       switch (diffEntry.getChangeType()) {
-        case ADD:
-          ++addCounter;
-          break;
-        case MODIFY:
-          ++modifiedCounter;
-          break;
-        case DELETE:
-          ++deletedCounter;
-          break;
+        case ADD -> ++addCounter;
+        case MODIFY -> ++modifiedCounter;
+        case DELETE -> ++deletedCounter;
+        case RENAME -> ++renameCounter;
+        case COPY -> ++copyCounter;
       }
     }
-    DiffStatistics stats = new DiffStatistics(addCounter, modifiedCounter, deletedCounter);
+    DiffStatistics stats = new DiffStatistics(addCounter, modifiedCounter, deletedCounter,renameCounter,copyCounter);
     return Optional.of(stats);
   }
 
