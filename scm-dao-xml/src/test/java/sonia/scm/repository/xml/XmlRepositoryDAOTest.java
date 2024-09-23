@@ -360,6 +360,18 @@ class XmlRepositoryDAOTest {
       verify(locationResolver).updateModificationDate();
     }
 
+    @Test
+    void shouldGetAllWithCorrectSorting() {
+      dao.add(createRepository("banana1", "banana", "red"));
+      dao.add(createRepository("banana2", "banana.venezuela", "red"));
+
+      Collection<Repository> repositories = dao.getAll();
+
+      assertThat(repositories)
+        .hasSize(2)
+        .extracting("id").containsExactly("banana1", "banana2");
+    }
+
     private String getXmlFileContent(String id) {
       Path storePath = metadataFile(id);
 
@@ -484,7 +496,11 @@ class XmlRepositoryDAOTest {
     Files.copy(metadataUrl.openStream(), repositoryPath.resolve("metadata.xml"));
   }
 
+  private Repository createRepository(String id, String namespace, String name) {
+    return new Repository(id, "xml", namespace, name);
+  }
+
   private Repository createRepository(String id) {
-    return new Repository(id, "xml", "space", id);
+    return createRepository(id, "space", id);
   }
 }

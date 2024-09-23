@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix sorting error caused by some namespace/name constellations
