@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-core",
-  "version": "3.4.2-SNAPSHOT",
+  "version": "3.4.3-SNAPSHOT",
   "main": "./src/index.ts",
   "license": "AGPL-3.0-only",
   "scripts": {

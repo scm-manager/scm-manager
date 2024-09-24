@@ -42,7 +42,7 @@ public class SecurityHeadersFilter extends HttpFilter {
   @Override
   protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
     if (contextProvider.getStage() != Stage.TESTING) {
-      response.setHeader("X-Frame-Options", "deny");
+      response.setHeader("X-Frame-Options", "sameorigin");
       response.setHeader("X-Content-Type-Options", "nosniff");
       response.setHeader("Content-Security-Policy",
         "form-action 'self'; " +

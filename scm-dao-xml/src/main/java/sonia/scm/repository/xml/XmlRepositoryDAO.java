@@ -170,7 +170,7 @@ public class XmlRepositoryDAO implements RepositoryDAO {
 
   @Override
   public Collection<Repository> getAll() {
-    return withReadLockedMaps(() -> ImmutableList.copyOf(byNamespaceAndName.values().stream().sorted(Comparator.comparing(v -> v.getNamespaceAndName().toString().toLowerCase())).collect(Collectors.toList())));
+    return withReadLockedMaps(() -> ImmutableList.copyOf(byNamespaceAndName.values()));
   }
 
   @Override

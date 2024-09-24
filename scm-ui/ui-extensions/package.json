@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-extensions",
-  "version": "3.4.2-SNAPSHOT",
+  "version": "3.4.3-SNAPSHOT",
   "license": "AGPL-3.0-only",
   "private": false,
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
@@ -17,7 +17,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@scm-manager/ui-types": "3.4.2-SNAPSHOT",
+    "@scm-manager/ui-types": "3.4.3-SNAPSHOT",
     "react": "^17.0.1"
   },
   "devDependencies": {
