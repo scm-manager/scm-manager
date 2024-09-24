@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/ui-extensions",
   "version": "3.4.2-SNAPSHOT",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "private": false,
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "main": "build/index.js",

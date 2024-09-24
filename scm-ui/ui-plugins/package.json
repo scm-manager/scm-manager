@@ -2,7 +2,7 @@
   "name": "@scm-manager/ui-plugins",
   "description": "Defines the versions of SCM-Manager plugin dependencies provided by the core webapp. Exclusively used by the postinstall command of @scm-manager/plugin-scripts.",
   "version": "3.4.2-SNAPSHOT",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "dependencies": {
     "react": "17",
     "react-dom": "17",
@@ -28,7 +28,7 @@
     "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/eslint-config": "^2.17.0",
     "@scm-manager/jest-preset": "^2.13.0",
-    "@scm-manager/plugin-scripts": "^1.2.2",
+    "@scm-manager/plugin-scripts": "^1.6.1",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
     "@scm-manager/ui-tests": "3.4.2-SNAPSHOT",

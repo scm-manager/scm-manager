@@ -135,7 +135,7 @@ diff -r a988f4cfb7ab src/main/resources/META-INF/scm/plugin.xml
 ```json
 {
   "name": "@scm-manager/name-of-plugin",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "main": "src/main/js/index.tsx",
   "scripts": {
     "build": "ui-scripts plugin",

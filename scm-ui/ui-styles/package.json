@@ -3,7 +3,7 @@
   "version": "3.4.2-SNAPSHOT",
   "description": "Styles for SCM-Manager",
   "main": "src/scm.scss",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "private": true,
   "scripts": {
     "serve": "webpack serve"

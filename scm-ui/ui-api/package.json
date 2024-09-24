@@ -10,7 +10,7 @@
   ],
   "repository": "https://github.com/scm-manager/scm-manager",
   "author": "SCM Team <scm-team@cloudogu.com>",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
     "typecheck": "tsc",

@@ -3,7 +3,7 @@
   "version": "3.4.2-SNAPSHOT",
   "description": "UI-Tests helpers",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "private": false,
   "scripts": {
     "typecheck": "tsc"
