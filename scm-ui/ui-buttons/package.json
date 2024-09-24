@@ -1,10 +1,10 @@
 {
   "name": "@scm-manager/ui-buttons",
-  "version": "3.4.2",
+  "version": "3.4.3-SNAPSHOT",
   "private": false,
   "main": "index.ts",
   "peerDependencies": {
-    "@scm-manager/ui-core": "3.4.2"
+    "@scm-manager/ui-core": "3.4.3-SNAPSHOT"
   },
   "devDependencies": {
     "@scm-manager/prettier-config": "^2.11.1",
