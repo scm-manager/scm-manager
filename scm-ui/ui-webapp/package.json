@@ -46,6 +46,7 @@
     "@scm-manager/eslint-config": "^2.17.0",
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/ui-tests": "3.4.3-SNAPSHOT",
+    "@scm-manager/ui-plugins": "3.4.3-SNAPSHOT",
     "@testing-library/react": "^12.1.5",
     "@types/classnames": "^2.2.9",
     "@types/enzyme": "^3.10.3",

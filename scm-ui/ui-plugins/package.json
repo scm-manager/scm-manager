@@ -3,6 +3,12 @@
   "description": "Defines the versions of SCM-Manager plugin dependencies provided by the core webapp. Exclusively used by the postinstall command of @scm-manager/plugin-scripts.",
   "version": "3.4.3-SNAPSHOT",
   "license": "AGPL-3.0-only",
+  "type": "module",
+  "main": "./build/provided-modules.js",
+  "types": "./build/provided-modules.d.ts",
+  "scripts": {
+    "build": "node ./generateStatic.js"
+  },
   "dependencies": {
     "react": "17",
     "react-dom": "17",
@@ -11,12 +17,13 @@
     "react-i18next": "11",
     "styled-components": "^5.3.5",
     "@scm-manager/ui-api": "3.4.3-SNAPSHOT",
-    "@scm-manager/ui-extensions": "3.4.3-SNAPSHOT",
-    "@scm-manager/ui-components": "3.4.3-SNAPSHOT",
-    "@scm-manager/ui-forms": "3.4.3-SNAPSHOT",
     "@scm-manager/ui-buttons": "3.4.3-SNAPSHOT",
-    "@scm-manager/ui-overlays": "3.4.3-SNAPSHOT",
+    "@scm-manager/ui-components": "3.4.3-SNAPSHOT",
+    "@scm-manager/ui-core": "3.4.3-SNAPSHOT",
+    "@scm-manager/ui-extensions": "3.4.3-SNAPSHOT",
+    "@scm-manager/ui-forms": "3.4.3-SNAPSHOT",
     "@scm-manager/ui-layout": "3.4.3-SNAPSHOT",
+    "@scm-manager/ui-overlays": "3.4.3-SNAPSHOT",
     "classnames": "^2.2.6",
     "query-string": "6.14.1",
     "redux": "^4.0.0",
@@ -24,6 +31,7 @@
     "react-hook-form": "^7.5.1",
     "react-query": "^3.25.1"
   },
+  "lazyDependencies": ["redux", "react-redux"],
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/eslint-config": "^2.17.0",
