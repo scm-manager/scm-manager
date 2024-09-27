@@ -17,6 +17,7 @@
 package com.cloudogu.scm
 
 import com.moowork.gradle.node.task.NodeTask
+import com.moowork.gradle.node.NodeExtension
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.artifacts.Configuration
@@ -32,6 +33,9 @@ class RunTask extends DefaultTask {
 
   @Input
   boolean waitForCompletion = true
+
+  @Input
+  NodeExtension nodeExtension
 
   @Nested
   ScmServerExtension extension
@@ -55,6 +59,7 @@ class RunTask extends DefaultTask {
   @Input
   @Option(option = 'configFileDirectory', description = 'Path to config file')
   String configFileDirectory = ''
+
 
   @TaskAction
   void exec() {
@@ -146,10 +151,15 @@ class RunTask extends DefaultTask {
   }
 
   private Closure<Void> createFrontend() {
+    def yarnBinDir = nodeExtension.variant.yarnBinDir.getAbsolutePath()
+    def nodeBinDir = nodeExtension.variant.nodeBinDir.getAbsolutePath()
+    def path = yarnBinDir + File.pathSeparator + nodeBinDir + File.separator + System.getenv().get("PATH");
+
     def frontend = project.tasks.create('boot-frontend', NodeTask) {
       script = new File(project.rootProject.projectDir, 'scripts/turbo-runner.js')
       args = ['run', 'serve', '--filter=@scm-manager/ui-webapp']
       environment = [
+        'PATH': path,
         'NODE_ENV': 'development',
         'ANALYZE_BUNDLES': analyzeBundles
       ]

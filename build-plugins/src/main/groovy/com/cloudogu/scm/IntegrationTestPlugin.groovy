@@ -18,10 +18,13 @@ package com.cloudogu.scm
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import com.moowork.gradle.node.NodeExtension
 
 class IntegrationTestPlugin implements Plugin<Project> {
 
   void apply(Project project) {
+    project.plugins.apply("com.github.node-gradle.node")
+
     def extension = project.extensions.create("scmServer", ScmServerExtension, project)
 
     project.tasks.register('write-server-config', WriteServerConfigTask) {
@@ -32,8 +35,11 @@ class IntegrationTestPlugin implements Plugin<Project> {
       it.extension = extension
     }
 
+    def nodeExt = NodeExtension.get(project)
+
     project.tasks.register("startScmServer", RunTask) {
       it.extension = extension
+      it.nodeExtension = nodeExt
       it.waitForCompletion = false
       it.frontend = false
       it.configFileDirectory = './src/main/resources'
