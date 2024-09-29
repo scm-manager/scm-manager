@@ -28,7 +28,7 @@ RUN jlink \
 # ---
 
 # SCM-Manager runtime
-FROM debian:11.7-slim as runtime
+FROM debian:bullseye-20240926-slim as runtime
 
 ENV SCM_HOME /var/lib/scm
 ENV CACHE_DIR /var/cache/scm/work
