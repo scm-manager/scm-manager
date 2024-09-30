@@ -147,13 +147,18 @@ lifecycleHooks: |
 
 # extraEnv -- Additional environment variables, parsed through tpl function
 extraEnv: |
-#  - name: TZ
-#    value: "{{.Values.timezone}}"
+#  - name: SCM_WEBAPP_INITIALUSER
+#    value: "admin"
+#  - name: SCM_WEBAPP_INITIALPASSWORD
+#    value: "supersecretadminpassword"
 
 # extraEnvFrom -- Additional environment variables mapped from Secret or ConfigMap, parsed through tpl function
 extraEnvFrom: |
 #  - secretRef:
 #      name: "{{.Values.mail.credentials}}"
+
+# for a list of available environment variables have a look at:
+# ${documentationUrl}/en/administration/scm-server/
 
 # extraVolumes -- Add additional volumes, parsed through tpl function
 extraVolumes: |
@@ -172,8 +177,6 @@ extraVolumeMounts: |
 
 # extraArgs -- Add additional arguments on startup
 extraArgs: []
-#  - "-Dscm.initialPassword=admin"
-#  - "-Dscm.initialUser=admin"
 
 # forceRedeploy - Forces a redeployment in the cluster on every change even if the chart has not changed significantly
 forceRedeploy: false

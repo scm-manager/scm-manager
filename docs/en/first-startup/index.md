@@ -31,9 +31,8 @@ The password of the administration user cannot be recovered.
 # Bypass User Creation Form
 
 For automated processes, you might want to bypass the initial user creation. To do so, you can set the initial password
-in a system property `scm.initialPassword`. If this is present, a user `scmadmin` with this password will be created,
-if it does not already exist. To change the name of this user, you can set this with the property `scm.initialUser`
-in addition. 
+in an environment variable `SCM_WEBAPP_INITIALPASSWORD`. If this is present, a user `scmadmin` with this password will be created,
+if it does not already exist. To change the name of this user, you can set this with the environment variable `SCM_WEBAPP_INITIALUSER` in addition.
 
 When set, this also causes the initialization to skip the Plugin Wizard.
 

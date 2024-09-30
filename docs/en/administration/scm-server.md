@@ -8,7 +8,6 @@ SCM-Manager v3 can be configured in several ways. We recommend using `config.yml
 one place. However, if required, each option in this configuration can also be set via environment variables.
 See the relevant topics below for more information.
 
-
 ## Webserver Configuration
 
 The listener host and port of your SCM-Server can directly be edited in the top level of your `config.yml`.
@@ -19,7 +18,7 @@ If you want your server without a context path (use `root path`), you can change
 ```yaml
 # This is the host adresse, `0.0.0.0` means it listens on every interface
 addressBinding: 0.0.0.0
-# This is the exposed port for your application 
+# This is the exposed port for your application
 port: 8080
 contextPath: /
 httpHeaderSize: 16384
@@ -28,7 +27,7 @@ httpHeaderSize: 16384
 **Environment variables**
 
 | Environment Variable | Corresponding config.yml property | Example                            |
-|----------------------|-----------------------------------|------------------------------------|
+| -------------------- | --------------------------------- | ---------------------------------- |
 | SCM_ADDRESS_BINDING  | addressBinding                    | export SCM_ADDRESS_BINDING=0.0.0.0 |
 | SCM_PORT             | port                              | export SCM_PORT=8080               |
 | SCM_CONTEXT_PATH     | contextPath                       | export SCM_CONTEXT_PATH=/          |
@@ -106,7 +105,7 @@ https:
   keyStorePassword: secret
   # The type of your keystore. Use pkcs12 or jks for java keystore.
   keyStoreType: PKCS12
-  # The port of your https connector 
+  # The port of your https connector
   sslPort: 443
   # Automatically redirects incoming http requests to this https connector
   redirectHttpToHttps: true
@@ -115,7 +114,7 @@ https:
 **Environment variables**
 
 | Environment Variable             | Corresponding config.yml property | Example                                               |
-|----------------------------------|-----------------------------------|-------------------------------------------------------|
+| -------------------------------- | --------------------------------- | ----------------------------------------------------- |
 | SCM_HTTPS_KEY_STORE_PATH         | https.keyStorePath                | export SCM_HTTPS_KEY_STORE_PATH=/conf/keystore.pkcs12 |
 | SCM_HTTPS_KEY_STORE_PASSWORD     | https.keyStorePassword            | export SCM_HTTPS_KEY_STORE_PASSWORD=secret            |
 | SCM_HTTPS_KEY_STORE_TYPE         | https.keyStoreType                | export SCM_HTTPS_KEY_STORE_TYPE=PKCS12                |
@@ -146,7 +145,7 @@ webapp:
 **Environment variables**
 
 | Environment Variable | Corresponding config.yml property | Example                                 |
-|----------------------|-----------------------------------|-----------------------------------------|
+| -------------------- | --------------------------------- | --------------------------------------- |
 | SCM_TEMP_DIR         | tempDir                           | export SCM_TEMP_DIR=/tmp                |
 | SCM_WEBAPP_HOMEDIR   | webapp.homeDir                    | export SCM_WEBAPP_HOMEDIR=./scm-home    |
 | SCM_WEBAPP_WORKDIR   | webapp.workDir                    | export SCM_WEBAPP_WORKDIR=/etc/scm/work |
@@ -173,7 +172,7 @@ idleTimeout: 300000
 **Environment variables**
 
 | Environment Variable        | Corresponding config.yml property | Example                                 |
-|-----------------------------|-----------------------------------|-----------------------------------------|
+| --------------------------- | --------------------------------- | --------------------------------------- |
 | SCM_FORWARD_HEADERS_ENABLED | forwardHeadersEnabled             | export SCM_FORWARD_HEADERS_ENABLED=true |
 | SCM_IDLE_TIMEOUT            | idleTimeout                       | export SCM_IDLE_TIMEOUT=300000          |
 
@@ -196,6 +195,12 @@ webapp:
       enabled: true
     store:
       enabled: true
+  # name of initial admin user (this is normally set over the ui on the first start)
+  initialUser: scmadmin
+  # password of initial admin user (this is normally set over the ui on the first start)
+  initialPassword: scmadmin
+  # if true skip the creation of initial admin user completely
+  skipAdminCreation: false
   ## Warning: Enabling this option can lead to security issue.
   endlessJwt: false
   ## Number of async threads
@@ -214,7 +219,7 @@ webapp:
 **Environment variables**
 
 | Environment Variable                | Corresponding config.yml property | Example                                                                                          |
-|-------------------------------------|-----------------------------------|--------------------------------------------------------------------------------------------------|
+| ----------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------ |
 | SCM_WEBAPP_WORKDIR                  | webapp.workDir                    | export SCM_WEBAPP_WORKDIR=/tmp/scm-work                                                          |
 | SCM_WEBAPP_HOMEDIR                  | webapp.homeDir                    | export SCM_WEBAPP_HOMEDIR=/var/lib/scm                                                           |
 | SCM_WEBAPP_CACHE_DATAFILE_ENABLED   | webapp.cache.datafile.enabled     | export SCM_WEBAPP_CACHE_DATAFILE_ENABLED=true                                                    |
@@ -225,3 +230,6 @@ webapp:
 | SCM_WEBAPP_CENTRALWORKQUEUE_WORKERS | webapp.centralWorkQueue.workers   | export SCM_WEBAPP_CENTRALWORKQUEUE_WORKERS=4                                                     |
 | SCM_WEBAPP_WORKINGCOPYPOOLSTRATEGY  | webapp.workingCopyPoolStrategy    | export SCM_WEBAPP_WORKINGCOPYPOOLSTRATEGY=sonia.scm.repository.work.SimpleCachingWorkingCopyPool |
 | SCM_WEBAPP_WORKINGCOPYPOOLSIZE      | webapp.workingCopyPoolSize        | export SCM_WEBAPP_WORKINGCOPYPOOLSIZE=5                                                          |
+| SCM_WEBAPP_INITIALUSER              | webapp.initialUser                | export SCM_WEBAPP_INITIALUSER=scmadmin                                                           |
+| SCM_WEBAPP_INITIALPASSWORD          | webapp.initialPassword            | export SCM_WEBAPP_INITIALPASSWORD=scmadmin                                                       |
+| SCM_WEBAPP_SKIPADMINCREATION        | webapp.skipAdminCreation          | export SCM_WEBAPP_SKIPADMINCREATION=true                                                         |

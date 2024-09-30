@@ -164,6 +164,10 @@ project.ext {
   VersionNumber v = VersionNumber.parse(project.version)
   nextSnapshotVersion = "${v.major}.${v.minor}.${v.micro + 1}-SNAPSHOT"
 
+  // base url for generating links such as
+  // https://scm-manager.org/docs/3.4.x/en/installation/k8s/
+  documentationUrl = "https://scm-manager.org/docs/${v.major}.${v.minor}.x"
+
   isCI = isRunningOnCiServer()
   os = os()
   arch = arch()

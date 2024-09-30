@@ -43,7 +43,8 @@ helm {
         enabled = true
         values = [
           dockerRepository: dockerRepository,
-          dockerTag: dockerTag
+          dockerTag: dockerTag,
+          documentationUrl: documentationUrl
         ]
       }
     }
