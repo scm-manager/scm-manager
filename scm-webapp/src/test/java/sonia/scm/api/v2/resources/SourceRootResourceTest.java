@@ -59,6 +59,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() {
     BrowserResultToFileObjectDtoMapper browserResultToFileObjectDtoMapper = Mappers.getMapper(BrowserResultToFileObjectDtoMapper.class);
     browserResultToFileObjectDtoMapper.setResourceLinks(resourceLinks);
+    browserResultToFileObjectDtoMapper.setSourceLinkProvider(new DefaultSourceLinkProvider(resourceLinks));
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(service.getBrowseCommand()).thenReturn(browseCommandBuilder);
 

@@ -35,7 +35,9 @@ import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.api.v2.resources.BranchLinkProvider;
 import sonia.scm.api.v2.resources.DefaultBranchLinkProvider;
 import sonia.scm.api.v2.resources.DefaultRepositoryLinkProvider;
+import sonia.scm.api.v2.resources.DefaultSourceLinkProvider;
 import sonia.scm.api.v2.resources.RepositoryLinkProvider;
+import sonia.scm.api.v2.resources.SourceLinkProvider;
 import sonia.scm.auditlog.AuditLogConfigurationStoreDecoratorFactory;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
@@ -265,6 +267,7 @@ class ScmServletModule extends ServletModule {
     bind(PushStateDispatcher.class).toProvider(PushStateDispatcherProvider.class);
 
     // bind api link provider
+    bind(SourceLinkProvider.class).to(DefaultSourceLinkProvider.class);
     bind(BranchLinkProvider.class).to(DefaultBranchLinkProvider.class);
     bind(RepositoryLinkProvider.class).to(DefaultRepositoryLinkProvider.class);
 

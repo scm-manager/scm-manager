@@ -37,10 +37,17 @@ abstract class BaseFileObjectDtoMapper extends HalAppenderMapper implements Inst
 
   @Inject
   private ResourceLinks resourceLinks;
+  @Inject
+  private SourceLinkProvider sourceLinkProvider;
 
   @VisibleForTesting
   void setResourceLinks(ResourceLinks resourceLinks) {
     this.resourceLinks = resourceLinks;
+  }
+
+  @VisibleForTesting
+  void setSourceLinkProvider(SourceLinkProvider sourceLinkProvider) {
+    this.sourceLinkProvider = sourceLinkProvider;
   }
 
   abstract SubRepositoryDto mapSubrepository(SubRepository subRepository);
@@ -49,15 +56,16 @@ abstract class BaseFileObjectDtoMapper extends HalAppenderMapper implements Inst
   FileObjectDto createDto(@Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult, @Context Integer offset, FileObject fileObject) {
     String path = removeFirstSlash(fileObject.getPath());
     Links.Builder links = Links.linkingTo();
+    String selfLink = sourceLinkProvider.getSourceWithPath(namespaceAndName, browserResult.getRevision(), path);
     if (fileObject.isDirectory()) {
-      links.self(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path));
+      links.self(selfLink);
     } else {
       links.self(resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path));
       links.single(link("history", resourceLinks.fileHistory().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path)));
       links.single(link("annotate", resourceLinks.annotate().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path)));
     }
     if (fileObject.isTruncated()) {
-      links.single(link("proceed", resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path) + "?offset=" + (offset + BrowseCommandRequest.DEFAULT_REQUEST_LIMIT)));
+      links.single(link("proceed", selfLink + "?offset=" + (offset + BrowseCommandRequest.DEFAULT_REQUEST_LIMIT)));
     }
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();

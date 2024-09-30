@@ -52,6 +52,7 @@ public class BrowserResultToFileObjectDtoMapperTest {
     initMocks(this);
     mapper = Mappers.getMapper(BrowserResultToFileObjectDtoMapper.class);
     mapper.setResourceLinks(resourceLinks);
+    mapper.setSourceLinkProvider(new DefaultSourceLinkProvider(resourceLinks));
 
     subjectThreadState.bind();
     ThreadContext.bind(subject);
