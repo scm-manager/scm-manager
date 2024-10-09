@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0] - 2024-10-09
+### Added
+- The result of the merge dry-run now contains the names of the files that have conflicts
+- Method to compute anchors in diff views can be used in plugins
+- A file tree is now visible while inspecting a changeset
+- In diffs, Copied and renamed files are now on display if they are available
+- It is now possible to access the source path from plugins
+
+### Changed
+- Changeover to AGPL-3.0-only license
+
 ## [3.4.2] - 2024-09-24
 ### Fixed
 - Fix sorting error caused by some namespace/name constellations
@@ -1610,3 +1621,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.4.0]: https://scm-manager.org/download/3.4.0
 [3.4.1]: https://scm-manager.org/download/3.4.1
 [3.4.2]: https://scm-manager.org/download/3.4.2
+[3.5.0]: https://scm-manager.org/download/3.5.0
