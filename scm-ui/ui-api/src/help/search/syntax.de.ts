@@ -14,7 +14,15 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-export default `## Modifikatoren
+export default `## Aufteilug von Wörtern
+
+Der SCM-Manager ist für Code entwickelt und in Code verwendet man oft "CamelCase" Wörter. Um die Suche nach diesen Wörtern
+zu erleichtern, werden sie für die Suche in separate Wörter aufgeteilt. Das bedeutet, dass die Suche nach \`SomeManager\`
+auch den Begriff \`SomeRepositoryManager\` findet. Wenn Sie dies vermeiden möchten, können Sie Ihre Wörter einfach nur
+in Kleinbuchstaben eingeben. Im obigen Beispiel findet die Suche nach \`somemanager\` nur den Begriff \`SomeManager\`,
+aber nicht \`SomeRepositoryManager\`.
+
+## Modifikatoren
 
 Hinweis: Sie können keine Wildcards als erstes Zeichen einer Suche verwenden.
 
@@ -69,6 +77,8 @@ Die Suche unterstützt die Verwendung von Klammern zur Gruppierung von Begriffen
 ## Phrasen
 
 Eine Phrase ist eine Gruppe von Begriffen in einer bestimmten Reihenfolge. Falls man nach einer bestimmten Phrase suchen will, dann kann der \`"\`-Operator genutzt werden.
+
+Bitte beachten Sie, dass Wörter getrennt werden, wenn sie "CamelCase" verwenden (wie im Abschnitt "Aufteilug von Wörtern" erwähnt), auch wenn sie mit \`"\` umschlossen sind.
 
 |Definition|Beispiel|
 |----------|--------|

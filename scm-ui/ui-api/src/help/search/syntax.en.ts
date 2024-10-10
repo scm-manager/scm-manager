@@ -14,7 +14,14 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-export default `### Modifiers
+export default `### Word Split
+
+SCM-Manager is built for code, and in code one often uses "CamelCase" words. To make it easier to search for these words,
+we split them into separate words for the search. This means that searching for \`SomeManager\` will also match the term
+\`SomeRepositoryManager\`. If you want to avoid this, you can simply type your words in small letters only. In the example
+above, searching for \`somemanager\` will only match the term \`SomeManager\` but not \`SomeRepositoryManager\`.
+
+### Modifiers
 
 Note: You can not use wildcards as the first character of a search.
 
@@ -69,6 +76,8 @@ Search supports using parentheses to group clauses to form sub queries. This can
 ## Phrases
 
 A phrase is a group of terms in a certain order. If you want to search for certain phrases then you can use the \`"\` operator.
+
+Please keep in mind, that words are split when they use "CamelCase" (like mentioned in the chapter "Word Split") even when they are enclosed with \`"\`.
 
 |Definition|Example|
 |----------|-------|

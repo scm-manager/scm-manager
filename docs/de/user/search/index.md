@@ -15,6 +15,14 @@ Jeder Suchbegriff einer einfachen Suche wird implizit am Ende mit dem \*-Operato
 Die zweite Art von Suche ist die Expertensuche. Sobald eine Suchanfrage einen Operator beinhaltet, dann gilt diese Suchanfrage als Expertensuche. 
 Die Art von Suche ermöglicht es, komplexe Suchabfragen zu erstellen. Allerdings werden Suchbegriffe hier nicht implizit mit einem \*-Operator erweitert. Dementsprechend muss hier der \*-Operator bei Bedarf explizit gesetzt werden.
 
+## Aufteilug von Wörtern
+
+Der SCM-Manager ist für Code entwickelt und in Code verwendet man oft "CamelCase" Wörter. Um die Suche nach diesen Wörtern
+zu erleichtern, werden sie für die Suche in separate Wörter aufgeteilt. Das bedeutet, dass die Suche nach `SomeManager`
+auch den Begriff `SomeRepositoryManager` findet. Wenn Sie dies vermeiden möchten, können Sie Ihre Wörter einfach nur
+in Kleinbuchstaben eingeben. Im obigen Beispiel findet die Suche nach `somemanager` nur den Begriff `SomeManager`,
+aber nicht `SomeRepositoryManager`.
+
 ### Modifikatoren
 
 Hinweis: Sie können keine Wildcards als erstes Zeichen einer Suche verwenden.
@@ -70,6 +78,8 @@ Definition | Beispiel
 ### Phrasen
 
 Eine Phrase ist eine Gruppe von Begriffen in einer bestimmten Reihenfolge. Wenn Sie nach bestimmten Phrasen suchen möchten, können Sie das " Zeichen verwenden.
+
+Bitte beachten Sie, dass Wörter getrennt werden, wenn sie "CamelCase" verwenden (wie im Abschnitt "Aufteilug von Wörtern" erwähnt), auch wenn sie mit `"` umschlossen sind.
 
 Definition | Beispiel
 -----------|-----------

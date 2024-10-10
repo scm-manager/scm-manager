@@ -11,6 +11,12 @@ Every term used in a simple query get implicitly extended with the \* operator a
 The second type of query is the expert query. Any query that contains at least one operator is considered as an expert query. This query type allows for complex searches. 
 But terms used in the expert query are not extended with the \* implicitly. A user has to add them explicitly to a term.
 
+### Word Split
+
+SCM-Manager is built for code, and in code one often uses "CamelCase" words. To make it easier to search for these words,
+we split them into separate words. This means that searching for `SomeManager` will also match the term
+`SomeRepositoryManager`. If you want to avoid this, you can simply type your words in small letters only. In the example
+above, searching for `somemanager` will only match the term `SomeManager` but not `SomeRepositoryManager`.
 
 ### Modifiers
 Note: You can not use wildcards as the first character of a search
@@ -63,6 +69,8 @@ Definition | Example
 
 ### Phrases
 A phrase is a group of terms in a certain order. If you want to search for certain phrases then you can use the " operator.
+
+Please keep in mind, that words are split when they use "CamelCase" (like mentioned in the chapter "Word Split") even when they are enclosed with `"`.
 
 Definition | Example
 -----------|-----------
