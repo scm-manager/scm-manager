@@ -16,6 +16,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import jakarta.inject.Inject;
@@ -27,10 +28,13 @@ import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.Tag;
+import sonia.scm.repository.TagGuard;
+import sonia.scm.repository.TagGuardDeletionRequest;
 import sonia.scm.web.EdisonHalAppender;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.Set;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
@@ -41,6 +45,8 @@ public abstract class TagToTagDtoMapper extends HalAppenderMapper {
 
   @Inject
   private ResourceLinks resourceLinks;
+  @Inject
+  private Set<TagGuard> tagGuardSet;
 
   @Mapping(target = "date", source = "date", qualifiedByName = "mapDate")
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
@@ -54,7 +60,7 @@ public abstract class TagToTagDtoMapper extends HalAppenderMapper {
       .single(link("sources", resourceLinks.source().self(repository.getNamespace(), repository.getName(), tag.getRevision())))
       .single(link("changeset", resourceLinks.changeset().self(repository.getNamespace(), repository.getName(), tag.getRevision())));
 
-    if (tag.getDeletable() && RepositoryPermissions.push(repository).isPermitted()) {
+    if (tag.getDeletable() && RepositoryPermissions.push(repository).isPermitted() && tagGuardSet.stream().allMatch(guard -> guard.canDelete(new TagGuardDeletionRequest(repository, tag)))) {
       linksBuilder
         .single(link("delete", resourceLinks.tag().delete(repository.getNamespace(), repository.getName(), tag.getName())));
     }
@@ -68,5 +74,15 @@ public abstract class TagToTagDtoMapper extends HalAppenderMapper {
   @Named("mapDate")
   Instant map(Optional<Long> value) {
     return value.map(Instant::ofEpochMilli).orElse(null);
+  }
+
+  @VisibleForTesting
+  void setResourceLinks(ResourceLinks resourceLinks) {
+    this.resourceLinks = resourceLinks;
+  }
+
+  @VisibleForTesting
+  void setTagGuardSet(Set<TagGuard> tagGuardSet) {
+    this.tagGuardSet = tagGuardSet;
   }
 }

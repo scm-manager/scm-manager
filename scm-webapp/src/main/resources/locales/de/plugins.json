@@ -507,6 +507,10 @@
     "E4TrutUSv1": {
       "summary": "Speicherung des Repositories fehlgeschlagen",
       "description": "Beim Speichern des Repositories ist ein Fehler aufgetreten. Weitere Hinweise finden sich im Server Log."
+    },
+    "99UQi5FKd1": {
+      "displayName": "Tags sind geschützt",
+      "description": "Einige Tags sind geschützt und können nicht gelöscht werden. Der Schutz ist global konfiguriert."
     }
   },
   "namespaceStrategies": {

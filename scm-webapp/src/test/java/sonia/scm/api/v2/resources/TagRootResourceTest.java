@@ -49,6 +49,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 
+import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -95,6 +96,7 @@ public class TagRootResourceTest extends RepositoryTestBase {
 
   @Before
   public void prepareEnvironment() {
+    tagToTagDtoMapper.setTagGuardSet(emptySet());
     tagCollectionToDtoMapper = new TagCollectionToDtoMapper(resourceLinks, tagToTagDtoMapper);
     tagRootResource = new TagRootResource(serviceFactory, tagCollectionToDtoMapper, tagToTagDtoMapper, resourceLinks);
     dispatcher.addSingletonResource(getRepositoryRootResource());

@@ -22,20 +22,19 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.Signature;
 import sonia.scm.repository.SignatureStatus;
 import sonia.scm.repository.Tag;
+import sonia.scm.repository.TagGuard;
 
 import java.net.URI;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -45,8 +44,8 @@ class TagToTagDtoMapperTest {
 
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("https://hitchhiker.com"));
+  private final HashSet<TagGuard> tagGuardSet = new HashSet<>();
 
-  @InjectMocks
   private TagToTagDtoMapperImpl mapper;
 
   @Mock
@@ -55,6 +54,13 @@ class TagToTagDtoMapperTest {
   @BeforeEach
   void setupSubject() {
     ThreadContext.bind(subject);
+  }
+
+  @BeforeEach
+  void initMapper() {
+    mapper = new TagToTagDtoMapperImpl();
+    mapper.setResourceLinks(resourceLinks);
+    mapper.setTagGuardSet(tagGuardSet);
   }
 
   @AfterEach
@@ -99,12 +105,34 @@ class TagToTagDtoMapperTest {
   }
 
   @Test
-  void shouldAddDeleteLink() {
+  void shouldAddDeleteLinkWithoutGuard() {
     Repository repository = RepositoryTestData.createHeartOfGold();
     when(subject.isPermitted("repository:push:" + repository.getId())).thenReturn(true);
     final Tag tag = new Tag("1.0.0", "42");
     TagDto dto = mapper.map(tag, repository);
     assertThat(dto.getLinks().getLinkBy("delete")).isNotEmpty();
+  }
+
+  @Test
+  void shouldAddDeleteLinkIfGuardsAreOkay() {
+    tagGuardSet.add(deletionRequest -> true);
+    tagGuardSet.add(deletionRequest -> true);
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    when(subject.isPermitted("repository:push:" + repository.getId())).thenReturn(true);
+    final Tag tag = new Tag("1.0.0", "42");
+    TagDto dto = mapper.map(tag, repository);
+    assertThat(dto.getLinks().getLinkBy("delete")).isNotEmpty();
+  }
+
+  @Test
+  void shouldNotAddDeleteLinkIfGuardInterferes() {
+    tagGuardSet.add(deletionRequest -> true);
+    tagGuardSet.add(deletionRequest -> false);
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    when(subject.isPermitted("repository:push:" + repository.getId())).thenReturn(true);
+    final Tag tag = new Tag("1.0.0", "42");
+    TagDto dto = mapper.map(tag, repository);
+    assertThat(dto.getLinks().getLinkBy("delete")).isEmpty();
   }
 
   @Test

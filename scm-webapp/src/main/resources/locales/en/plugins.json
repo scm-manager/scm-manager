@@ -448,6 +448,10 @@
     "BaSXkAztI1": {
       "displayName": "Repository is read-only",
       "description": "This repository is read-only and cannot be modified."
+    },
+    "99UQi5FKd1": {
+      "displayName": "Tags are protected",
+      "description": "Some tags are protected and cannot be removed. The protection is configured globally."
     }
   },
   "healthChecksFailures": {
