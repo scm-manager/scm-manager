@@ -17,7 +17,7 @@
     "@scm-manager/eslint-config": "^2.17.0",
     "@scm-manager/jest-preset": "^2.14.1",
     "@scm-manager/plugin-scripts": "^1.6.1",
-    "@scm-manager/prettier-config": "^2.11.1",
+    "@scm-manager/prettier-config": "^2.12.0",
     "@types/react": "^17.0.1"
   },
   "babel": {

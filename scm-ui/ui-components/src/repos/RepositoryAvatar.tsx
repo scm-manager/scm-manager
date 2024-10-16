@@ -17,7 +17,7 @@
 import React, { FC } from "react";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Repository } from "@scm-manager/ui-types";
-import { Image } from "@scm-manager/ui-components";
+import Image from "../Image";
 import styled from "styled-components";
 
 const Avatar = styled.div`
@@ -35,7 +35,7 @@ const renderExtensionPoint = (repository: Repository, size: Props["size"]) => {
       name="repos.repository-avatar.primary"
       props={{
         repository,
-        size: size || 64
+        size: size || 64,
       }}
     >
       <ExtensionPoint<extensionPoints.RepositoryAvatar>

@@ -16,7 +16,7 @@
 
 import React, { FC, useContext } from "react";
 import classNames from "classnames";
-import { useSecondaryNavigation } from "@scm-manager/ui-components";
+import { useSecondaryNavigation } from "../useSecondaryNavigation";
 import ExternalLink from "./ExternalLink";
 import { SecondaryNavigationContext } from "./SecondaryNavigationContext";
 

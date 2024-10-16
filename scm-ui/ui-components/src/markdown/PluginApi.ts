@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Node, Parent } from "unist";
+import type { Node, Parent } from "unist";
 
 export type Visitor = (node: Node, index: number, parent?: Parent) => void;
 

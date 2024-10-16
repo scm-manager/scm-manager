@@ -1,0 +1,1 @@
+ignores: ["redux", "react-redux", "@scm-manager/plugin-scripts", "@scm-manager/ui-tests", "@scm-manager/ui-types", "@types/i18next", "@types/jest", "@types/react-redux", "jest"]

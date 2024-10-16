@@ -16,7 +16,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Icon } from "@scm-manager/ui-components";
+import Icon from "../Icon";
 import Tooltip from "../Tooltip";
 
 type Props = {

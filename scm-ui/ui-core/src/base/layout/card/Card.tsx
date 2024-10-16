@@ -16,12 +16,13 @@
 
 import React, { ComponentType, HTMLAttributes, ReactHTML, Ref } from "react";
 import classNames from "classnames";
-import CSS from "csstype";
 import styled from "styled-components";
 
 const RowsContainer = styled.div`
   margin-left: -0.25rem;
 `;
+
+type Gap = "inherit" | "initial" | "normal" | "-moz-initial" | "revert" | "unset" | string | number;
 
 type Props = HTMLAttributes<HTMLElement> & {
   action?: React.ReactElement;
@@ -35,7 +36,7 @@ type Props = HTMLAttributes<HTMLElement> & {
    * @default "0.5rem"
    * @since 2.46.0
    */
-  rowGap?: CSS.Properties<string | number>["gap"];
+  rowGap?: Gap;
 };
 
 /**

@@ -17,7 +17,7 @@
 import React, { FC } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { Statistics } from "@scm-manager/ui-types";
-import { Tag } from "@scm-manager/ui-components";
+import Tag from "../Tag";
 import styled from "styled-components";
 
 type DiffStatisticsProps = { data: Statistics | undefined };

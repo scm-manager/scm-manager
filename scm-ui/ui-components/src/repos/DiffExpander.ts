@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient } from "@scm-manager/ui-api";
 import { Change, FileDiff, Hunk, Link } from "@scm-manager/ui-types";
 
 class DiffExpander {

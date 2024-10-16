@@ -17051,6 +17051,7 @@ Array [
     type="button"
   />,
   <div
+    hidden={true}
     style={
       Object {
         "borderWidth": "0",
@@ -17198,6 +17199,7 @@ Array [
     type="button"
   />,
   <div
+    hidden={true}
     style={
       Object {
         "borderWidth": "0",
@@ -17328,6 +17330,7 @@ Array [
     type="button"
   />,
   <div
+    hidden={true}
     style={
       Object {
         "borderWidth": "0",
@@ -17445,6 +17448,7 @@ Array [
     type="button"
   />,
   <div
+    hidden={true}
     style={
       Object {
         "borderWidth": "0",
@@ -17635,6 +17639,7 @@ Array [
     type="button"
   />,
   <div
+    hidden={true}
     style={
       Object {
         "borderWidth": "0",
@@ -17759,6 +17764,7 @@ Array [
     type="button"
   />,
   <div
+    hidden={true}
     style={
       Object {
         "borderWidth": "0",
@@ -18006,6 +18012,7 @@ Array [
     type="button"
   />,
   <div
+    hidden={true}
     style={
       Object {
         "borderWidth": "0",
@@ -18150,6 +18157,7 @@ Array [
     type="button"
   />,
   <div
+    hidden={true}
     style={
       Object {
         "borderWidth": "0",
@@ -18308,6 +18316,7 @@ Array [
     type="button"
   />,
   <div
+    hidden={true}
     style={
       Object {
         "borderWidth": "0",
@@ -18597,6 +18606,7 @@ Array [
     type="button"
   />,
   <div
+    hidden={true}
     style={
       Object {
         "borderWidth": "0",
@@ -18825,6 +18835,7 @@ Array [
     type="button"
   />,
   <div
+    hidden={true}
     style={
       Object {
         "borderWidth": "0",
@@ -19083,6 +19094,7 @@ Array [
     type="button"
   />,
   <div
+    hidden={true}
     style={
       Object {
         "borderWidth": "0",
@@ -76671,6 +76683,7 @@ exports[`Storyshots Repositories/RepositoryEntry Archived 1`] = `
             onKeyDown={[Function]}
           />
           <div
+            hidden={true}
             style={
               Object {
                 "borderWidth": "0",
@@ -76799,6 +76812,7 @@ exports[`Storyshots Repositories/RepositoryEntry Avatar EP 1`] = `
             onKeyDown={[Function]}
           />
           <div
+            hidden={true}
             style={
               Object {
                 "borderWidth": "0",
@@ -76918,6 +76932,7 @@ exports[`Storyshots Repositories/RepositoryEntry Before Title EP 1`] = `
             onKeyDown={[Function]}
           />
           <div
+            hidden={true}
             style={
               Object {
                 "borderWidth": "0",
@@ -77034,6 +77049,7 @@ exports[`Storyshots Repositories/RepositoryEntry Default 1`] = `
             onKeyDown={[Function]}
           />
           <div
+            hidden={true}
             style={
               Object {
                 "borderWidth": "0",
@@ -77150,6 +77166,7 @@ exports[`Storyshots Repositories/RepositoryEntry Exporting 1`] = `
             onKeyDown={[Function]}
           />
           <div
+            hidden={true}
             style={
               Object {
                 "borderWidth": "0",
@@ -77278,6 +77295,7 @@ exports[`Storyshots Repositories/RepositoryEntry HealthCheck Failure 1`] = `
             onKeyDown={[Function]}
           />
           <div
+            hidden={true}
             style={
               Object {
                 "borderWidth": "0",
@@ -77407,6 +77425,7 @@ exports[`Storyshots Repositories/RepositoryEntry MultiRepositoryTags 1`] = `
             onKeyDown={[Function]}
           />
           <div
+            hidden={true}
             style={
               Object {
                 "borderWidth": "0",
@@ -77547,6 +77566,7 @@ exports[`Storyshots Repositories/RepositoryEntry RepositoryFlag EP 1`] = `
             onKeyDown={[Function]}
           />
           <div
+            hidden={true}
             style={
               Object {
                 "borderWidth": "0",
@@ -77676,6 +77696,7 @@ exports[`Storyshots Repositories/RepositoryEntry With long texts 1`] = `
             onKeyDown={[Function]}
           />
           <div
+            hidden={true}
             style={
               Object {
                 "borderWidth": "0",

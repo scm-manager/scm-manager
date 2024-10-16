@@ -17,7 +17,7 @@
 import React, { FC, useEffect } from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
-import { useSecondaryNavigation } from "@scm-manager/ui-components";
+import { useSecondaryNavigation } from "../useSecondaryNavigation";
 import { RoutingProps } from "./RoutingProps";
 import useActiveMatch from "./useActiveMatch";
 import { createAttributesForTesting } from "../devBuild";

@@ -16,7 +16,7 @@
 
 import React, { FC } from "react";
 import { Repository } from "@scm-manager/ui-types";
-import { DateFromNow } from "@scm-manager/ui-components";
+import DateFromNow from "../DateFromNow";
 import RepositoryAvatar from "./RepositoryAvatar";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import RepositoryFlags from "./RepositoryFlags";

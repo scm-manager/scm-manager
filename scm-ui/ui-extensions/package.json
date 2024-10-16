@@ -14,22 +14,24 @@
     "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
     "typecheck": "tsc",
     "lint": "eslint src",
-    "test": "jest"
+    "test": "jest",
+    "depcheck": "depcheck"
   },
-  "dependencies": {
-    "@scm-manager/ui-types": "3.5.1-SNAPSHOT",
-    "react": "^17.0.1"
-  },
-  "devDependencies": {
+  "peerDependencies": {
     "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/eslint-config": "^2.17.0",
     "@scm-manager/jest-preset": "^2.14.1",
-    "@scm-manager/prettier-config": "^2.10.1",
+    "@scm-manager/prettier-config": "^2.12.0",
     "@scm-manager/tsconfig": "^2.13.0",
-    "@types/enzyme": "^3.10.3",
-    "@types/jest": "^26.0.24",
+    "@types/enzyme": "^3.10.18",
     "@types/react": "^17.0.1",
-    "tsup": "^5.12.6"
+    "tsup": "^5.12.6",
+    "enzyme": "^3.11.0",
+    "react": "^17.0.1"
+  },
+  "devDependencies": {
+    "@scm-manager/ui-types": "3.5.1-SNAPSHOT",
+    "@scm-manager/ui-tests": "3.5.1-SNAPSHOT"
   },
   "babel": {
     "presets": [

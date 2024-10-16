@@ -15,7 +15,7 @@
  */
 
 import { AstPlugin } from "./PluginApi";
-import { Literal, Node, Parent } from "unist";
+import type { Literal, Node, Parent } from "unist";
 
 /**
  * Some existing remark plugins (e.g. changesetShortLinkParser or the plugin for issue tracker links) create
@@ -46,7 +46,11 @@ import { Literal, Node, Parent } from "unist";
 export const createTransformer = (): AstPlugin => {
   return ({ visit }) => {
     visit("text", (node: Node, index: number, parent?: Parent) => {
-      if ((node as Literal).value === undefined && Array.isArray((node as Parent).children) && (node as Parent).children.length > 0) {
+      if (
+        (node as Literal).value === undefined &&
+        Array.isArray((node as Parent).children) &&
+        (node as Parent).children.length > 0
+      ) {
         const children = (node as Parent).children;
         const preChildren = parent?.children.slice(0, index) || [];
         const postChildren = parent?.children.slice(index + 1) || [];

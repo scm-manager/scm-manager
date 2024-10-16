@@ -12,11 +12,13 @@
   "license": "AGPL-3.0-only",
   "scripts": {
     "typecheck": "tsc",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "depcheck": "depcheck"
   },
-  "devDependencies": {
+  "peerDependencies": {
     "@scm-manager/eslint-config": "^2.17.0",
-    "@scm-manager/tsconfig": "^2.13.0"
+    "@scm-manager/tsconfig": "^2.13.0",
+    "@scm-manager/prettier-config": "^2.12.0"
   },
   "babel": {
     "presets": [

@@ -24,7 +24,7 @@ const createNodeMock = (element: any) => {
   if (element.type === "tr") {
     return {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      querySelector: () => {}
+      querySelector: () => {},
     };
   }
 };
@@ -32,7 +32,7 @@ const createNodeMock = (element: any) => {
 async function wait(delay: number) {
   return act(
     () =>
-      new Promise(resolve => {
+      new Promise((resolve) => {
         setTimeout(resolve, delay);
       })
   );
@@ -59,11 +59,12 @@ async function runAsyncTest(story: StoryContext) {
 
 const syncTest = snapshotWithOptions({
   // @ts-ignore types seems not to match
-  createNodeMock
+  createNodeMock,
 });
 
 initStoryshots({
   asyncJest: true,
+  framework: "react",
   configPath: path.resolve(__dirname, "..", ".storybook"),
   test: ({ story, context, done, ...rest }) => {
     if (story.parameters?.storyshots?.async) {
@@ -74,5 +75,5 @@ initStoryshots({
         done();
       }
     }
-  }
+  },
 });

@@ -15,7 +15,10 @@
  */
 
 import React, { FC, useEffect, useRef, useState } from "react";
-import { apiClient, Button, InputField, Modal } from "@scm-manager/ui-components";
+import { apiClient } from "@scm-manager/ui-api";
+import Button from "../buttons/Button";
+import InputField from "../forms/InputField";
+import Modal from "../modals/Modal";
 import { useTranslation } from "react-i18next";
 import { Tag } from "@scm-manager/ui-types";
 import { isBranchValid } from "../validation";
@@ -42,8 +45,8 @@ const CreateTagModal: FC<Props> = ({ onClose, tagCreationLink, existingTagsLink,
   useEffect(() => {
     apiClient
       .get(existingTagsLink)
-      .then(response => response.json())
-      .then(json => setTagNames(json._embedded.tags.map((tag: Tag) => tag.name)));
+      .then((response) => response.json())
+      .then((json) => setTagNames(json._embedded.tags.map((tag: Tag) => tag.name)));
   }, [existingTagsLink]);
 
   const createTag = () => {
@@ -51,7 +54,7 @@ const CreateTagModal: FC<Props> = ({ onClose, tagCreationLink, existingTagsLink,
     apiClient
       .post(tagCreationLink, {
         revision,
-        name: newTagName
+        name: newTagName,
       })
       .then(onCreated)
       .catch(onError)
@@ -77,7 +80,7 @@ const CreateTagModal: FC<Props> = ({ onClose, tagCreationLink, existingTagsLink,
           <InputField
             name="name"
             label={t("tags.create.form.field.name.label")}
-            onChange={e => setNewTagName(e.target.value)}
+            onChange={(e) => setNewTagName(e.target.value)}
             value={newTagName}
             validationError={!!validationError}
             errorMessage={t(validationError)}

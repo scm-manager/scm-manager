@@ -17,7 +17,7 @@
 import { nameRegex } from "../validation";
 import { TFunction } from "i18next";
 import { AstPlugin } from "./PluginApi";
-import { Literal, Node, Parent } from "unist";
+import type { Literal, Node, Parent } from "unist";
 
 const namePartRegex = nameRegex.source.substring(1, nameRegex.source.length - 1).replace(/\[\^([^\]s]+)\]/, "[^$1\\s]");
 

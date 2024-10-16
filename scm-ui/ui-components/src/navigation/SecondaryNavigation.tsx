@@ -18,7 +18,7 @@ import React, { FC } from "react";
 import styled from "styled-components";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
-import { useSecondaryNavigation } from "@scm-manager/ui-components";
+import { useSecondaryNavigation } from "../useSecondaryNavigation";
 import { SecondaryNavigationContext } from "./SecondaryNavigationContext";
 
 type Props = {
