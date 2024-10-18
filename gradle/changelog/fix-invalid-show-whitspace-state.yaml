@@ -1,0 +1,2 @@
+- type: changed
+  description: API to whether hide or show whitespaces inside a diff

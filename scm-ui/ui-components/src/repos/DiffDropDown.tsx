@@ -17,26 +17,54 @@
 import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Checkbox } from "@scm-manager/ui-core";
+
+export type HideWhiteSpaceMode = "ALL" | "NONE";
+
 type DiffDropDownProps = {
   collapseDiffs: () => void;
-  ignoreWhitespaces: () => void;
+  /**
+   * @deprecated Use isIgnoreWhitespaces/setIgnoreWhitespaces instead.
+   */
+  ignoreWhitespaces?: () => void;
   renderOnMount: boolean;
+  ignoreWhitespacesMode?: HideWhiteSpaceMode;
+  setIgnoreWhitespacesMode?: (hideWhiteSpaceMode: HideWhiteSpaceMode) => void;
 };
-const DiffDropDown: FC<DiffDropDownProps> = ({ collapseDiffs, ignoreWhitespaces, renderOnMount }) => {
+const DiffDropDown: FC<DiffDropDownProps> = ({
+  collapseDiffs,
+  ignoreWhitespaces,
+  renderOnMount,
+  ignoreWhitespacesMode,
+  setIgnoreWhitespacesMode,
+}) => {
   const [t] = useTranslation("repos");
+
   const [isOpen, setOpen] = useState(false);
 
   // This is a hack and it needs to be here until we fix the re rendering problem upon changing the whitespaces in the diffs
   useEffect(() => {
     if (renderOnMount) {
-      ignoreWhitespaces();
-      ignoreWhitespaces();
+      if (setIgnoreWhitespacesMode && ignoreWhitespacesMode) {
+        setIgnoreWhitespacesMode(ignoreWhitespacesMode);
+      } else if (ignoreWhitespaces) {
+        ignoreWhitespaces();
+        ignoreWhitespaces();
+      } else {
+        throw new Error("Neither setIgnoreWhitesspaces nor ignoreWhitespaces set for DiffDropDown!");
+      }
     }
   }, []);
 
   const handleOpen = () => {
     setOpen(!isOpen);
   };
+
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    if (setIgnoreWhitespacesMode) {
+      setIgnoreWhitespacesMode(event.target.checked ? "ALL" : "NONE");
+    }
+  };
+
   return (
     <div className={"dropdown" + (isOpen ? " is-active" : "")}>
       <div className="dropdown-trigger">
@@ -52,7 +80,15 @@ const DiffDropDown: FC<DiffDropDownProps> = ({ collapseDiffs, ignoreWhitespaces,
             <span className="has-text-weight-semibold">{t("changesets.checkBoxHeadingWhitespaces")}</span>
           </div>
           <div className="dropdown-item">
-            <Checkbox onChange={ignoreWhitespaces} label={t("changesets.checkBoxHideWhitespaceChanges")}></Checkbox>
+            {setIgnoreWhitespacesMode && ignoreWhitespacesMode ? (
+              <Checkbox
+                checked={ignoreWhitespacesMode === "ALL"}
+                onChange={handleChange}
+                label={t("changesets.checkBoxHideWhitespaceChanges")}
+              ></Checkbox>
+            ) : (
+              <Checkbox onChange={ignoreWhitespaces} label={t("changesets.checkBoxHideWhitespaceChanges")}></Checkbox>
+            )}
           </div>
           <hr className="dropdown-divider" />
           <div className="dropdown-item">

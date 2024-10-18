@@ -29,6 +29,7 @@ import DiffFileTree from "./diff/DiffFileTree";
 import { DiffContent, FileTreeContent } from "./diff/styledElements";
 import { useHistory, useLocation } from "react-router-dom";
 import { getFileNameFromHash } from "./diffs";
+import { HideWhiteSpaceMode } from "./DiffDropDown";
 
 type Props = DiffObjectProps & {
   url: string;
@@ -55,25 +56,19 @@ const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingN
 };
 
 const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) => {
-  const [ignoreWhitespace, setIgnoreWhitespace] = useState(false);
+  const [ignoreWhitespace, setIgnoreWhitespace] = useState<HideWhiteSpaceMode>("NONE");
   const [collapsed, setCollapsed] = useState(false);
   const [prevHash, setPrevHash] = useState("");
   const location = useLocation();
   const history = useHistory();
 
-  const evaluateWhiteSpace = () => {
-    return ignoreWhitespace ? "ALL" : "NONE";
-  };
   const { error, isLoading, data, fetchNextPage, isFetchingNextPage } = useDiff(url, {
     limit,
     refetchOnWindowFocus,
-    ignoreWhitespace: evaluateWhiteSpace(),
+    ignoreWhitespace: ignoreWhitespace,
   });
-  const [t] = useTranslation("repos");
 
-  const ignoreWhitespaces = () => {
-    setIgnoreWhitespace(!ignoreWhitespace);
-  };
+  const [t] = useTranslation("repos");
 
   const collapseDiffs = () => {
     setCollapsed(!collapsed);
@@ -108,12 +103,19 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
         <DiffContent>
           <div className="is-flex has-gap-4 mb-4 mt-4 is-justify-content-space-between">
             <DiffStatistics data={data.statistics} />
-            <DiffDropDown collapseDiffs={collapseDiffs} ignoreWhitespaces={ignoreWhitespaces} renderOnMount={true} />
+            <DiffDropDown
+              collapseDiffs={collapseDiffs}
+              renderOnMount={true}
+              ignoreWhitespacesMode={ignoreWhitespace}
+              setIgnoreWhitespacesMode={(hideWhiteSpaceMode: HideWhiteSpaceMode) => {
+                setIgnoreWhitespace(hideWhiteSpaceMode);
+              }}
+            />
           </div>
           <Diff
             defaultCollapse={collapsed}
             diff={data.files}
-            ignoreWhitespace={evaluateWhiteSpace()}
+            ignoreWhitespace={ignoreWhitespace}
             fetchNextPage={fetchNextPage}
             isFetchingNextPage={isFetchingNextPage}
             isDataPartial={data.partial}
