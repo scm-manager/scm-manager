@@ -9,20 +9,22 @@
     "serve": "webpack serve",
     "depcheck": "depcheck"
   },
+  "devDependencies": {
+    "@scm-manager/eslint-config": "^2.17.0",
+    "@scm-manager/prettier-config": "^2.12.0",
+    "css-loader": "^6.5.0",
+    "html-webpack-plugin": "^5.5.0",
+    "sass-loader": "^12.3.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.72.0"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
     "bulma": "https://github.com/scm-manager/bulma#3ae8dbdd13196d472ab5fbec543d0c649c149e5a",
     "bulma-popover": "^1.0.0"
   },
   "peerDependencies": {
-    "@scm-manager/eslint-config": "^2.17.0",
-    "@scm-manager/prettier-config": "^2.12.0",
-    "react-diff-view": "^2.4.10",
-    "css-loader": "^6.5.0",
-    "html-webpack-plugin": "^5.5.0",
-    "sass-loader": "^12.3.0",
-    "style-loader": "^3.3.1",
-    "webpack": "^5.72.0"
+    "react-diff-view": "^2.4.10"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {

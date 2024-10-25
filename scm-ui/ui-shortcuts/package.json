@@ -8,12 +8,14 @@
     "depcheck": "depcheck"
   },
   "peerDependencies": {
-    "@scm-manager/eslint-config": "^2.17.0",
-    "@scm-manager/prettier-config": "^2.12.0",
-    "@scm-manager/tsconfig": "^2.13.0",
     "react": "^17.0.1",
     "mousetrap": "1.6.5",
     "react-i18next": "11"
+  },
+  "devDependencies": {
+    "@scm-manager/eslint-config": "^2.17.0",
+    "@scm-manager/prettier-config": "^2.12.0",
+    "@scm-manager/tsconfig": "^2.13.0"
   },
   "dependencies": {
     "@scm-manager/ui-core": "3.5.1-SNAPSHOT"

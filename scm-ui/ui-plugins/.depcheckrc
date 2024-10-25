@@ -1,1 +1,21 @@
-ignores: ["redux", "react-redux", "@scm-manager/plugin-scripts", "@scm-manager/ui-tests", "@scm-manager/ui-types", "@types/i18next", "@types/jest", "@types/react-redux", "jest"]
+ignores: [
+  "redux",
+  "react-redux",
+  "@scm-manager/plugin-scripts",
+  "@scm-manager/ui-tests",
+  "@scm-manager/ui-types",
+  "@types/i18next",
+  "@types/jest",
+  "@types/react-redux",
+  "jest",
+  "@scm-manager/babel-preset",
+  "@scm-manager/eslint-config",
+  "@scm-manager/prettier-config",
+  "@scm-manager/jest-preset",
+  "@scm-manager/tsconfig",
+  "@types/enzyme",
+  "@types/react",
+  "@types/react-router-dom",
+  "@types/styled-components",
+  "@types/classnames"
+]

@@ -20,16 +20,16 @@
   },
   "devDependencies": {
     "@scm-manager/ui-types": "3.5.1-SNAPSHOT",
-    "@types/react-redux": "5.0.7"
-  },
-  "peerDependencies": {
+    "@types/react-redux": "5.0.7",
     "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/eslint-config": "^2.17.0",
     "@scm-manager/jest-preset": "^2.14.1",
     "@scm-manager/prettier-config": "^2.12.0",
     "@types/react": "^17.0.1",
-    "react": "^17.0.1",
     "tsup": "^5.12.6"
+  },
+  "peerDependencies": {
+    "react": "^17.0.1"
   },
   "babel": {
     "presets": [
