@@ -17,8 +17,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Checkbox } from "@scm-manager/ui-core";
-
-export type HideWhiteSpaceMode = "ALL" | "NONE";
+import { WhitespaceMode } from "./LoadingDiff";
 
 type DiffDropDownProps = {
   collapseDiffs: () => void;
@@ -27,8 +26,8 @@ type DiffDropDownProps = {
    */
   ignoreWhitespaces?: () => void;
   renderOnMount: boolean;
-  ignoreWhitespacesMode?: HideWhiteSpaceMode;
-  setIgnoreWhitespacesMode?: (hideWhiteSpaceMode: HideWhiteSpaceMode) => void;
+  ignoreWhitespacesMode?: WhitespaceMode;
+  setIgnoreWhitespacesMode?: (hideWhiteSpaceMode: WhitespaceMode) => void;
 };
 const DiffDropDown: FC<DiffDropDownProps> = ({
   collapseDiffs,

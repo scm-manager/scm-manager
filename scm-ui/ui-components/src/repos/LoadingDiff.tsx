@@ -29,7 +29,8 @@ import DiffFileTree from "./diff/DiffFileTree";
 import { DiffContent, FileTreeContent } from "./diff/styledElements";
 import { useHistory, useLocation } from "react-router-dom";
 import { getFileNameFromHash } from "./diffs";
-import { HideWhiteSpaceMode } from "./DiffDropDown";
+
+export type WhitespaceMode = "ALL" | "NONE";
 
 type Props = DiffObjectProps & {
   url: string;
@@ -56,7 +57,7 @@ const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingN
 };
 
 const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) => {
-  const [ignoreWhitespace, setIgnoreWhitespace] = useState<HideWhiteSpaceMode>("NONE");
+  const [ignoreWhitespace, setIgnoreWhitespace] = useState<WhitespaceMode>("NONE");
   const [collapsed, setCollapsed] = useState(false);
   const [prevHash, setPrevHash] = useState("");
   const location = useLocation();
@@ -107,7 +108,7 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
               collapseDiffs={collapseDiffs}
               renderOnMount={true}
               ignoreWhitespacesMode={ignoreWhitespace}
-              setIgnoreWhitespacesMode={(hideWhiteSpaceMode: HideWhiteSpaceMode) => {
+              setIgnoreWhitespacesMode={(hideWhiteSpaceMode: WhitespaceMode) => {
                 setIgnoreWhitespace(hideWhiteSpaceMode);
               }}
             />

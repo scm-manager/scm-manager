@@ -22,7 +22,7 @@ import {
   AnnotationFactoryContext,
   DiffEventHandler,
   DiffEventContext,
-  DiffObjectProps
+  DiffObjectProps,
 } from "./DiffTypes";
 
 import { FileDiff as File, FileChangeType, Hunk, Change, ChangeType } from "@scm-manager/ui-types";
@@ -36,7 +36,7 @@ export { default as Diff } from "./Diff";
 export { default as DiffFile } from "./DiffFile";
 export { default as DiffButton } from "./DiffButton";
 export { FileControlFactory } from "./DiffTypes";
-export { default as LoadingDiff } from "./LoadingDiff";
+export { default as LoadingDiff, WhitespaceMode } from "./LoadingDiff";
 export { DefaultCollapsed, DefaultCollapsedFunction } from "./defaultCollapsed";
 export { default as RepositoryAvatar } from "./RepositoryAvatar";
 export { default as RepositoryEntry } from "./RepositoryEntry";
@@ -46,7 +46,7 @@ export { default as CommitAuthor } from "./CommitAuthor";
 export { default as HealthCheckFailureDetail } from "./HealthCheckFailureDetail";
 export { default as RepositoryFlags } from "./RepositoryFlags";
 export { default as DiffDropDown } from "./DiffDropDown";
-export { default as DiffStatistics } from "./DiffStatistics"
+export { default as DiffStatistics } from "./DiffStatistics";
 
 export {
   File,
@@ -59,5 +59,5 @@ export {
   AnnotationFactoryContext,
   DiffEventHandler,
   DiffEventContext,
-  DiffObjectProps
+  DiffObjectProps,
 };
