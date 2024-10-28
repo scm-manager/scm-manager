@@ -17,7 +17,6 @@
 import React from "react";
 import EditRepoNavLink from "./EditRepoNavLink";
 import { mount, shallow } from "@scm-manager/ui-tests";
-import { LocalStorageProvider } from "@scm-manager/ui-api";
 
 describe("GeneralNavLink", () => {
   it("should render nothing, if the modify link is missing", () => {
@@ -44,11 +43,7 @@ describe("GeneralNavLink", () => {
       },
     };
 
-    const navLink = mount(
-      <LocalStorageProvider>
-        <EditRepoNavLink repository={repository} editUrl="" />
-      </LocalStorageProvider>
-    );
+    const navLink = mount(<EditRepoNavLink repository={repository} editUrl="" />);
     expect(navLink.text()).toBe("repositoryRoot.menu.generalNavLink");
   });
 });

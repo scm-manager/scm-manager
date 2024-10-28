@@ -77755,16 +77755,9 @@ exports[`Storyshots Secondary Navigation Active when match 1`] = `
       <div>
         <p
           aria-label="secondaryNavigation.hideContent"
-          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 joMQbq menu-label is-clickable"
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 joMQbq menu-label"
           onClick={[Function]}
         >
-          <i
-            className="SecondaryNavigation__Icon-sc-8p1rgi-1 hDCYCs is-medium"
-          >
-            <i
-              className="fas fa-caret-down"
-            />
-          </i>
           Hitchhiker
         </p>
         <ul

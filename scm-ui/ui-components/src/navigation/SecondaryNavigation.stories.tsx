@@ -16,7 +16,6 @@
 
 import { storiesOf } from "@storybook/react";
 import React, { ReactElement } from "react";
-import { LocalStorageProvider } from "@scm-manager/ui-api";
 import SecondaryNavigation from "./SecondaryNavigation";
 import SecondaryNavigationItem from "./SecondaryNavigationItem";
 import styled from "styled-components";
@@ -45,7 +44,6 @@ const withRoute = (route: string) => {
 };
 
 storiesOf("Secondary Navigation", module)
-  .addDecorator((story) => <LocalStorageProvider>{story()}</LocalStorageProvider>)
   .addDecorator((story) => (
     <Columns className="columns">
       <div className="column is-3">{story()}</div>

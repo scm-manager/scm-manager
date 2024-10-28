@@ -17,7 +17,6 @@
 import React from "react";
 import { mount, shallow } from "@scm-manager/ui-tests";
 import "@scm-manager/ui-tests";
-import { LocalStorageProvider } from "@scm-manager/ui-api";
 import PermissionsNavLink from "./PermissionsNavLink";
 
 describe("PermissionsNavLink", () => {
@@ -39,11 +38,7 @@ describe("PermissionsNavLink", () => {
       },
     };
 
-    const navLink = mount(
-      <LocalStorageProvider>
-        <PermissionsNavLink repository={repository} permissionUrl="" />
-      </LocalStorageProvider>
-    );
+    const navLink = mount(<PermissionsNavLink repository={repository} permissionUrl="" />);
     expect(navLink.text()).toBe("repositoryRoot.menu.permissionsNavLink");
   });
 });
