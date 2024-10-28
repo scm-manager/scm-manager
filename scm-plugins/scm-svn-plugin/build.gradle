@@ -63,6 +63,17 @@ task testJar(type: Jar) {
 	from sourceSets.test.output
 }
 
+task insertSVNKitVersionFile() {
+  def file = new File(project.buildDir, "resources/main/sonia/scm/version/scm-svn-plugin")
+  file.parentFile.mkdirs()
+  file.createNewFile()
+  file.text = "scm-svn-plugin/${project.version} svnkit/${svnkitVersion}"
+}
+
+tasks.named("build") {
+  it.finalizedBy(insertSVNKitVersionFile)
+}
+
 configurations {
   tests {
     canBeConsumed = true

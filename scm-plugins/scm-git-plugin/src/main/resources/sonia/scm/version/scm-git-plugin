@@ -1,1 +1,0 @@
-scm-git-plugin/${project.version} org.eclipse.jgit/${jgit.version}

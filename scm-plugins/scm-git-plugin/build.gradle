@@ -56,6 +56,17 @@ task testJar(type: Jar) {
 	from sourceSets.test.output
 }
 
+task insertJGitVersionFile() {
+  def file = new File(project.buildDir, "resources/main/sonia/scm/version/scm-git-plugin")
+  file.parentFile.mkdirs()
+  file.createNewFile()
+  file.text = "scm-git-plugin/${project.version} org.eclipse.jgit/${jgitVersion}"
+}
+
+tasks.named("build") {
+  it.finalizedBy(insertJGitVersionFile)
+}
+
 configurations {
   tests {
     canBeConsumed = true
