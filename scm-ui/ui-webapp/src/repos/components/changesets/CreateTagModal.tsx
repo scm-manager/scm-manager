@@ -29,10 +29,12 @@ type Props = {
 
 const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
   const { isLoading, error, data: tags } = useTags(repository);
-  const { isLoading: isLoadingCreate, error: errorCreate, create, tag: createdTag } = useCreateTag(
-    repository,
-    changeset
-  );
+  const {
+    isLoading: isLoadingCreate,
+    error: errorCreate,
+    create,
+    tag: createdTag,
+  } = useCreateTag(repository, changeset);
   const [t] = useTranslation("repos");
   const [newTagName, setNewTagName] = useState("");
   const initialFocusRef = useRef<HTMLInputElement>(null);
@@ -43,12 +45,12 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
     }
   }, [createdTag, onClose]);
 
-  const tagNames = tags?._embedded?.tags.map(tag => tag.name);
+  const tagNames = tags?._embedded?.tags.map((tag) => tag.name);
 
   let validationError = "";
 
   if (tagNames !== undefined && newTagName !== "") {
-    if (tagNames.includes(newTagName)) {
+    if (!isLoadingCreate && tagNames.includes(newTagName)) {
       validationError = "tags.create.form.field.name.error.exists";
     } else if (!validation.isBranchValid(newTagName)) {
       validationError = "tags.create.form.field.name.error.format";
@@ -68,7 +70,7 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
         <InputField
           name="name"
           label={t("tags.create.form.field.name.label")}
-          onChange={event => setNewTagName(event.target.value)}
+          onChange={(event) => setNewTagName(event.target.value)}
           value={newTagName}
           validationError={!!validationError}
           errorMessage={t(validationError)}

@@ -1,0 +1,2 @@
+- type: fixed
+  description: Short display of "tag already exists" error message when creating a new tag
