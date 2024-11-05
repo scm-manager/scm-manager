@@ -40,7 +40,7 @@ public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectD
 
   FileObjectDto map(BrowserResult browserResult, NamespaceAndName namespaceAndName, int offset) {
     FileObjectDto fileObjectDto = fileObjectToDto(browserResult.getFile(), namespaceAndName, browserResult, offset);
-    fileObjectDto.setRevision(browserResult.getRevision());
+    fileObjectDto.setRevision(browserResult.getRequestedRevision());
 
     return fileObjectDto;
   }
@@ -59,7 +59,7 @@ public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectD
       applyEnrichers(appender, browserResult, namespaceAndName);
     }
     // we call enrichers, which are responsible for all file object top level browse result and its children
-    applyEnrichers(appender, fileObject, namespaceAndName, browserResult, browserResult.getRevision());
+    applyEnrichers(appender, fileObject, namespaceAndName, browserResult, browserResult.getRequestedRevision());
   }
 
   Optional<Instant> mapOptionalInstant(OptionalLong optionalLong) {

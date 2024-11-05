@@ -45,7 +45,7 @@ import static sonia.scm.NotFoundException.notFound;
 public class SvnBrowseCommand extends AbstractSvnCommand
   implements BrowseCommand {
 
- 
+
   private static final Logger logger =
     LoggerFactory.getLogger(SvnBrowseCommand.class);
 
@@ -56,10 +56,10 @@ public class SvnBrowseCommand extends AbstractSvnCommand
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public BrowserResult getBrowserResult(BrowseCommandRequest request) {
     String path = Strings.nullToEmpty(request.getPath());
     long revisionNumber = SvnUtil.getRevisionNumber(request.getRevision(), repository);
+    boolean headRequest = revisionNumber < 0;
 
     if (logger.isDebugEnabled()) {
       logger.debug("browser repository {} in path \"{}\" at revision {}", repository, path, revisionNumber);
@@ -84,20 +84,19 @@ public class SvnBrowseCommand extends AbstractSvnCommand
         traverse(svnRepository, revisionNumber, request, root, createBasePath(path));
       }
 
-
-      result = new BrowserResult(String.valueOf(revisionNumber), root);
+      result = new BrowserResult(String.valueOf(revisionNumber), headRequest ? "head" : String.valueOf(revisionNumber), root, headRequest);
     } catch (SVNException ex) {
       if (FS_NO_SUCH_REVISION.equals(ex.getErrorMessage().getErrorCode())) {
         throw notFound(entity("Revision", Long.toString(revisionNumber)).in(this.repository));
       }
-      logger.error("could not open repository: " + repository.getNamespaceAndName(), ex);
+      logger.error("could not open repository: " + repository, ex);
     }
 
     return result;
   }
 
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   private void traverse(SVNRepository svnRepository, long revisionNumber, BrowseCommandRequest request,
                         FileObject parent, String basePath)
     throws SVNException {

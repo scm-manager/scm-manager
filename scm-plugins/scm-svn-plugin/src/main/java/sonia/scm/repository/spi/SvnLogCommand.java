@@ -53,11 +53,16 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand {
     }
 
     try {
-      long revisioNumber = parseRevision(revision, repository);
-      Preconditions.checkArgument(revisioNumber > 0, "revision must be greater than zero: %d", revisioNumber);
+      long revisionNumber;
+      if ("head".equals(revision)) {
+        revisionNumber = -1;
+      } else {
+        revisionNumber = parseRevision(revision, repository);
+        Preconditions.checkArgument(revisionNumber > 0, "revision must be greater than zero: %d", revisionNumber);
+      }
       SVNRepository repo = open();
-      Collection<SVNLogEntry> entries = repo.log(null, null, revisioNumber,
-        revisioNumber, true, true);
+      Collection<SVNLogEntry> entries = repo.log(null, null, revisionNumber,
+        revisionNumber, true, true);
 
       if (Util.isNotEmpty(entries)) {
         changeset = SvnUtil.createChangeset(entries.iterator().next());
@@ -70,7 +75,6 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public ChangesetPagingResult getChangesets(LogCommandRequest request) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("fetch changesets for {}", request);

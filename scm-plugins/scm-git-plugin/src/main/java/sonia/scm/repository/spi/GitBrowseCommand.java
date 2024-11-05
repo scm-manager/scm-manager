@@ -23,6 +23,8 @@ import com.google.common.collect.Maps;
 import com.google.inject.assistedinject.Assisted;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.attributes.Attributes;
 import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lib.Constants;
@@ -72,10 +74,10 @@ import static sonia.scm.repository.spi.SyncAsyncExecutor.ExecutionType.ASYNCHRON
 public class GitBrowseCommand extends AbstractGitCommand
   implements BrowseCommand {
 
-  
+
   public static final String PATH_MODULES = ".gitmodules";
 
- 
+
   private static final Logger logger = LoggerFactory.getLogger(GitBrowseCommand.class);
 
   private final Map<ObjectId, Map<String, SubRepository>> subrepositoryCache = Maps.newHashMap();
@@ -119,11 +121,26 @@ public class GitBrowseCommand extends AbstractGitCommand
     revId = computeRevIdToBrowse();
 
     if (revId != null) {
-      browserResult = new BrowserResult(revId.getName(), request.getRevision(), getEntry());
-      return browserResult;
+      try {
+        boolean isBranch = Strings.isNullOrEmpty(request.getRevision()) || new Git(repo)
+          .branchList()
+          .call()
+          .stream()
+          .map(GitUtil::getBranch)
+          .anyMatch(branch -> branch.equals(request.getRevision()));
+        browserResult =
+          new BrowserResult(
+            revId.getName(),
+            request.getRevision() == null ? Constants.HEAD : request.getRevision(),
+            getEntry(),
+            isBranch);
+        return browserResult;
+      } catch (GitAPIException e) {
+        throw new IOException(e);
+      }
     } else {
       logger.warn("could not find head of repository {}, empty?", repository);
-      return new BrowserResult(Constants.HEAD, request.getRevision(), createEmptyRoot());
+      return new BrowserResult(Constants.HEAD, createEmptyRoot(), true);
     }
   }
 
@@ -406,7 +423,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       // The increment is required to not close the repository if the getLatestCommit runs before the RepositoryService
       // is closed.
       repo.incrementOpen();
-      try (RevWalk walk = new RevWalk(repo)) {
+      try (repo; RevWalk walk = new RevWalk(repo)) {
         walk.setTreeFilter(AndTreeFilter.create(TreeFilter.ANY_DIFF, PathFilter.create(path)));
 
         RevCommit commit = walk.parseCommit(revId);
@@ -416,8 +433,6 @@ public class GitBrowseCommand extends AbstractGitCommand
       } catch (IOException ex) {
         logger.error("could not parse commit for file", ex);
         return empty();
-      } finally {
-        repo.close();
       }
     }
 

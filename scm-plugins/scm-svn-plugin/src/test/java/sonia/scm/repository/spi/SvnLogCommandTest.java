@@ -25,11 +25,14 @@ import sonia.scm.repository.Modifications;
 
 import java.util.stream.StreamSupport;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 
-public class SvnLogCommandTest extends AbstractSvnCommandTestBase
-{
+public class SvnLogCommandTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void testGetAll() {
@@ -179,9 +182,13 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals("1", c2.getId());
   }
 
+  @Test
+  public void shouldGetCorrectHeadRevision() {
+    Changeset changeset = createCommand().getChangeset("head", new LogCommandRequest());
+    assertEquals("5", changeset.getId());
+  }
 
-  private SvnLogCommand createCommand()
-  {
+  private SvnLogCommand createCommand() {
     return new SvnLogCommand(createContext());
   }
 }

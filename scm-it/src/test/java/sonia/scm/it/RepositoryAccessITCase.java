@@ -77,12 +77,11 @@ public class RepositoryAccessITCase {
   public void init() {
     TestData.createDefault();
     folder = tempFolder.getRoot();
-    String namespace = ADMIN_USERNAME;
     String repo = TestData.getDefaultRepoName(repositoryType);
     repositoryResponse =
       ScmRequests.start()
         .requestIndexResource(ADMIN_USERNAME, ADMIN_PASSWORD)
-        .requestRepository(namespace, repo)
+        .requestRepository(ADMIN_USERNAME, repo)
         .assertStatusCode(HttpStatus.SC_OK);
   }
 
@@ -256,6 +255,7 @@ public class RepositoryAccessITCase {
   }
 
   @Test
+  @SuppressWarnings("rawtypes")
   public void shouldFindChangesets() throws IOException {
     RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
 
@@ -302,7 +302,6 @@ public class RepositoryAccessITCase {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void shouldFindAddedModifications() throws IOException {
     RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
     String fileName = "a.txt";
@@ -324,7 +323,6 @@ public class RepositoryAccessITCase {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void shouldFindRemovedModifications() throws IOException {
     RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
     String fileName = "a.txt";
@@ -348,7 +346,6 @@ public class RepositoryAccessITCase {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void shouldFindUpdateModifications() throws IOException {
     RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
     String fileName = "a.txt";
@@ -372,16 +369,15 @@ public class RepositoryAccessITCase {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void shouldFindMultipleModifications() throws IOException {
     RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
     RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "b.txt", "b");
     RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "c.txt", "c");
     RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "d.txt", "d");
-    Map<String, String> addedFiles = new HashMap<String, String>() {{
+    Map<String, String> addedFiles = new HashMap<>() {{
       put("a.txt", "bla bla");
     }};
-    Map<String, String> modifiedFiles = new HashMap<String, String>() {{
+    Map<String, String> modifiedFiles = new HashMap<>() {{
       put("b.txt", "new content");
     }};
     ArrayList<String> removedFiles = Lists.newArrayList("c.txt", "d.txt");
@@ -406,19 +402,16 @@ public class RepositoryAccessITCase {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void svnShouldCreateOneModificationPerFolder() throws IOException {
     Assume.assumeThat(repositoryType, equalTo("svn"));
     RepositoryClient repositoryClient = RepositoryUtil.createRepositoryClient(repositoryType, folder);
     RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "bbb/bb/b.txt", "b");
     RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "ccc/cc/c.txt", "c");
     RepositoryUtil.createAndCommitFile(repositoryClient, ADMIN_USERNAME, "ddd/dd/d.txt", "d");
-    Map<String, String> addedFiles = new HashMap<String, String>()
-    {{
+    Map<String, String> addedFiles = new HashMap<>() {{
       put("aaa/aa/a.txt", "bla bla");
     }};
-    Map<String, String> modifiedFiles = new HashMap<String, String>()
-    {{
+    Map<String, String> modifiedFiles = new HashMap<>() {{
       put("bbb/bb/b.txt", "new content");
     }};
     ArrayList<String> removedFiles = Lists.newArrayList("ccc/cc/c.txt", "ddd/dd/d.txt");

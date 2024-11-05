@@ -27,7 +27,6 @@ import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
-import sonia.scm.repository.SubRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +37,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 
@@ -82,11 +80,6 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase {
     assertEquals("c", c.getPath());
   }
 
-  /**
-   * Method description
-   *
-   * @throws IOException
-   */
   @Test
   public void testBrowseSubDirectory() {
     BrowseCommandRequest request = new BrowseCommandRequest();
@@ -286,6 +279,16 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase {
     assertTrue(containsSubRepository);
   }
 
+  @Test
+  public void shouldGetHeadRevision() {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setRevision("head");
+    BrowserResult browserResult = createCommand().getBrowserResult(request);
+
+    assertThat(browserResult.getRequestedRevision()).isEqualTo("head");
+    assertThat(browserResult.getRevision()).isEqualTo("5");
+  }
+
   private SvnContext setProp(String propName, String propValue) throws SVNException, IOException {
     SvnContext context = createContext();
     SVNClientManager client = SVNClientManager.newInstance();
@@ -300,12 +303,9 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase {
     return context;
   }
 
-
   private SvnBrowseCommand createCommand() {
     return new SvnBrowseCommand(createContext());
   }
-
-
 
   private FileObject getFileObject(Collection<FileObject> foList, String name) {
     return foList.stream()
@@ -313,5 +313,4 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase {
       .findFirst()
       .orElseThrow(() -> new AssertionError("file " + name + " not found"));
   }
-
 }

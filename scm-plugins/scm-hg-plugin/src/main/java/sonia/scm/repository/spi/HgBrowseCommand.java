@@ -19,7 +19,9 @@ package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
+import org.javahg.Branch;
 import org.javahg.Changeset;
+import org.javahg.commands.BranchesCommand;
 import org.javahg.commands.LogCommand;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
@@ -82,7 +84,13 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
 
     FileObject file = cmd.execute()
       .orElseThrow(() -> notFound(entity("File", request.getPath()).in("Revision", revision).in(getRepository())));
-    return new BrowserResult(c == null? "tip": c.getNode(), revision, file);
+    boolean requestedRevisionIsBranch = BranchesCommand
+      .on(getContext().open())
+      .execute()
+      .stream()
+      .map(Branch::getName)
+      .anyMatch(b -> b.equals(request.getRevision()));
+    return new BrowserResult(c == null ? "tip" : c.getNode(), revision, file, requestedRevisionIsBranch);
   }
 
   public interface Factory {

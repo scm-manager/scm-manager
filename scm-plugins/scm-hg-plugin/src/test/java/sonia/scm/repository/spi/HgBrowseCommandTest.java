@@ -66,6 +66,16 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   }
 
   @Test
+  public void testBrowseWithRevision() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setRevision("2baab8e80280ef05a9aa76c49c76feca2872afb7");
+
+    BrowserResult result = new HgBrowseCommand(cmdContext).getBrowserResult(request);
+
+    assertFalse(result.isModifiable());
+  }
+
+  @Test
   public void testBrowseShouldResolveBranchForRevision() throws IOException {
     String defaultBranchRevision = new LogCommand(cmdContext.open()).rev("default").single().getNode();
 
@@ -74,6 +84,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     BrowserResult result = new HgBrowseCommand(cmdContext).getBrowserResult(browseCommandRequest);
 
+    assertTrue(result.isModifiable());
     assertThat(result.getRevision()).isEqualTo(defaultBranchRevision);
   }
 

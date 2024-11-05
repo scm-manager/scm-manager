@@ -77,13 +77,15 @@ public final class SvnUtil
 
 
   public static long parseRevision(String v, Repository repository) {
-    long result = -1l;
-
     if (!Strings.isNullOrEmpty(v))
     {
+      if ("head".equals(v))
+      {
+        return -1;
+      }
       try
       {
-        result = Long.parseLong(v);
+        return Long.parseLong(v);
       }
       catch (NumberFormatException ex)
       {
@@ -91,7 +93,7 @@ public final class SvnUtil
       }
     }
 
-    return result;
+    return -1;
   }
 
   public static Modifications createModifications(String startRevision, String endRevision, Collection<SVNLogEntry> entries) {
@@ -261,22 +263,23 @@ public final class SvnUtil
   }
 
   public static long getRevisionNumber(String revision, Repository repository) {
-    // REVIEW Bei SVN wird ohne Revision die -1 genommen, was zu einem Fehler führt
-    long revisionNumber = -1;
-
     if (Util.isNotEmpty(revision))
     {
+      if ("head".equals(revision))
+      {
+        return -1;
+      }
       try
       {
-        revisionNumber = Long.parseLong(revision);
+        return Long.parseLong(revision);
       }
       catch (NumberFormatException ex)
       {
         throw notFound(entity("Revision", revision).in(repository));
       }
+    } else {
+      return -1;
     }
-
-    return revisionNumber;
   }
 
 

@@ -108,7 +108,7 @@ public class SvnModifyCommand implements ModifyCommand {
       if (svnCommitInfo.toString().equals("EMPTY COMMIT")) {
         throw new NoChangesMadeException(repository);
       }
-      return String.valueOf(svnCommitInfo.getNewRevision());
+      return "head";
     } catch (SVNException e) {
       throw withPattern(SVN_ERROR_PATTERN).forMessage(repository, e.getErrorMessage().getRootErrorMessage().getFullMessage());
     }

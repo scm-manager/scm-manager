@@ -54,9 +54,25 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     BrowseCommandRequest request = new BrowseCommandRequest();
     request.setPath("a.txt");
     BrowserResult result = createCommand().getBrowserResult(request);
+    assertTrue(result.isModifiable());
+    assertEquals("HEAD", result.getRequestedRevision());
     FileObject fileObject = result.getFile();
     assertEquals("a.txt", fileObject.getName());
     assertFalse(fileObject.isTruncated());
+  }
+
+  @Test
+  public void testDifferentBranch() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setRevision("test-branch");
+
+    BrowserResult result = createCommand().getBrowserResult(request);
+
+    assertTrue(result.isModifiable());
+    Collection<FileObject> foList = result.getFile().getChildren();
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt");
   }
 
   @Test
