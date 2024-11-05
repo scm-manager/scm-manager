@@ -248,17 +248,18 @@ a bugfix version of the latest release (for example a 2.x.1 after 2.x.0 has been
 Mind that this process is only necessary, when there are commits on `develop` that shall **not** be
 released, yet.
 
-1. Checkout the tag of the release you want to create a bugfix release for (`git checkout 2.x.0`)
-2. Create a hotfix branch for the new version (`git checkout -b hotfix/2.x.1`)
+1. Checkout the tag of the release you want to create a bugfix release for (`git checkout <version to fix>`)
+2. Create a hotfix branch for the new version (`git checkout -b hotfix/<new version>`)
 3. Apply the changes upon this branch
-4. Create the changelog either manually or by running `./gradlew :updateChangelog --release=2.x.1`
-5. Double check this all
-6. Push the hotfix branch
-7. Jenkins will build and release this hotfix with the given version
-8. When Jenkins has finished, fetch the changes (and the new tag)
-9. Merge this new Tag into `master` (or fast-forward `master` if possible) and push `master`
-10. If the hotfix is based upon the latest release, set the version to the next snapshot (`./gradlew setVersionToNextSnapshot`) and commit these changes
-11. Merge this commit into `develop`
+4. Create the changelog either manually or by running `./gradlew :updateChangelog`
+5. Delete the changelog yaml files and add the `CHANGELOG.md` (`git rm -rf gradle/changelog && git add CHANGELOG.md`)
+6. Double check this all
+7. Commit the changes and push the hotfix branch
+8. Jenkins will build and release this hotfix with the given version
+9. When Jenkins has finished, fetch the changes (and the new tag)
+10. Merge this new Tag into `main` (or fast-forward `main` if possible) and push `main`
+    (`git checkout main && git pull && git merge hotfix/<new version> && git push`)
+11. Merge this commit into `develop` and resolve the conflicts
+12. If the hotfix is based upon the latest release, set the version to the next snapshot (`./gradlew setVersionToNextSnapshot && ./gradlew fix`) and commit these changes
 
 If the hotfix has been created for an older release, this process might be somewhat more complicated.
-
