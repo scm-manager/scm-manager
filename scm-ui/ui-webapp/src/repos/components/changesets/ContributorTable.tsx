@@ -15,44 +15,13 @@
  */
 
 import React, { FC } from "react";
-import { Changeset, Person } from "@scm-manager/ui-types";
-import styled from "styled-components";
+import { Changeset } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
-import { extensionPoints, useBinder } from "@scm-manager/ui-extensions";
-import { CommaSeparatedList, ContributorAvatar } from "@scm-manager/ui-components";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { CommaSeparatedList, Contributor, ContributorRow } from "@scm-manager/ui-components";
 
 type Props = {
   changeset: Changeset;
-};
-
-const SizedTd = styled.td`
-  width: 10rem;
-`;
-
-const Contributor: FC<{ person: Person }> = ({ person }) => {
-  const [t] = useTranslation("repos");
-  const binder = useBinder();
-  const avatarFactory = binder.getExtension<extensionPoints.AvatarFactory>("avatar.factory");
-  let prefix = null;
-  if (avatarFactory) {
-    const avatar = avatarFactory(person);
-    if (avatar) {
-      prefix = (
-        <>
-          <ContributorAvatar src={avatar} alt={person.name} />{" "}
-        </>
-      );
-    }
-  }
-  if (person.mail) {
-    return (
-      <a href={"mailto:" + person.mail} title={t("changeset.contributors.mailto") + " " + person.mail}>
-        {prefix}
-        {person.name}
-      </a>
-    );
-  }
-  return <>{person.name}</>;
 };
 
 const getUnique = (items: string[]) =>
@@ -72,11 +41,11 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
     if (!changeset.contributors) {
       return [];
     }
-    return getUnique(changeset.contributors.map(contributor => contributor.type));
+    return getUnique(changeset.contributors.map((contributor) => contributor.type));
   };
 
   const getPersonsByContributorType = (type: string) => {
-    return changeset.contributors?.filter(contributor => contributor.type === type).map(t => t.person);
+    return changeset.contributors?.filter((contributor) => contributor.type === type).map((t) => t.person);
   };
 
   const getContributorsByType = () => {
@@ -84,31 +53,27 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
 
     const personsByContributorType = [];
     for (const type of availableContributorTypes) {
-      personsByContributorType.push({ type, persons: getPersonsByContributorType(type) });
+      personsByContributorType.push({ type, contributors: getPersonsByContributorType(type) });
     }
     return personsByContributorType;
   };
 
   return (
     <table>
-      <tr>
-        <SizedTd>{t("changeset.contributor.type.author")}:</SizedTd>
-        <td>
-          <Contributor person={changeset.author} />
-        </td>
-      </tr>
-      {getContributorsByType().map(contributor => (
-        <tr key={contributor.type}>
-          <SizedTd>{t("changeset.contributor.type." + contributor.type)}:</SizedTd>
-          <td className="is-ellipsis-overflow m-0">
-            <CommaSeparatedList>
-              {contributor.persons?.map(person => (
-                <Contributor key={person.name} person={person} />
-              ))}
-            </CommaSeparatedList>
-          </td>
-        </tr>
+      <ContributorRow label={t("changeset.contributor.type.author")}>
+        <Contributor person={changeset.author} />
+      </ContributorRow>
+
+      {getContributorsByType().map((contribution) => (
+        <ContributorRow key={contribution.type} label={t("changeset.contributor.type." + contribution.type)}>
+          <CommaSeparatedList>
+            {contribution.contributors?.map((contributor) => (
+              <Contributor key={contributor.name} person={contributor} />
+            ))}
+          </CommaSeparatedList>
+        </ContributorRow>
       ))}
+      <ExtensionPoint name="changesets.contributor.table.row" props={{ changeset }} renderAll={true} />
     </table>
   );
 };

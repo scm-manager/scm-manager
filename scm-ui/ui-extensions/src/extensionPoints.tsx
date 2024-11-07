@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentProps, ComponentType, FC, ReactNode } from "react";
+import React, { ComponentProps, ComponentType, ReactNode } from "react";
 import {
   Branch,
   BranchDetails,
@@ -302,6 +302,11 @@ export type ChangesetRight = RenderableExtensionPointDefinition<
 
 export type ChangesetsAuthorSuffix = RenderableExtensionPointDefinition<
   "changesets.author.suffix",
+  { changeset: Changeset }
+>;
+
+export type ChangesetsContributorTableRow = RenderableExtensionPointDefinition<
+  "changesets.contributor.table.row",
   { changeset: Changeset }
 >;
 

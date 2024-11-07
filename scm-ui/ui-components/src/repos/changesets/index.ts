@@ -31,3 +31,5 @@ export { default as ChangesetTagsCollapsed } from "./ChangesetTagsCollapsed";
 export { default as ContributorAvatar } from "./ContributorAvatar";
 export { default as SignatureIcon } from "./SignatureIcon";
 export { default as SingleChangeset } from "./SingleChangeset";
+export { default as Contributor } from "./Contributor";
+export { default as ContributorRow } from "./ContributorRow";
