@@ -357,7 +357,7 @@ a.has-text-secondary-most:focus {
 }
 
 a {
-  &:focus,
+  &:focus-visible,
   &.is-focused {
     outline: $focus-outline-color 2px solid;
     outline-offset: 1px;
@@ -365,7 +365,7 @@ a {
 }
 
 button, .button {
-  &:focus,
+  &:focus-visible,
   &.is-focused {
     outline: $focus-outline-color $focus-outline-style;
     outline-offset: $focus-outline-offset;
@@ -860,6 +860,10 @@ form .field:not(.is-grouped) {
     &.is-active {
       color: $link;
       background-color: $scheme-main;
+    }
+
+    &:focus-visible {
+      outline-offset: -4px;
     }
   }
 
