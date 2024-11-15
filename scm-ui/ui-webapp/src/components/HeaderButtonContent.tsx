@@ -28,7 +28,7 @@ export const headerButtonContentClassName =
 
 const HeaderButtonContent: FC<Props> = ({ burgerMode, icon, label }) => (
   <>
-    <Icon title={label} name={icon} color="inherit" className={burgerMode ? "is-size-5" : "is-size-4"} />
+    <Icon name={icon} color="inherit" className={burgerMode ? "is-size-5" : "is-size-4"} />
     <span>{" " + label}</span>
   </>
 );
