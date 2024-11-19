@@ -86,7 +86,7 @@ const RadioButton = React.forwardRef<HTMLButtonElement, Props>(
     const labelKey = `${context?.prefix}.radio.${value}`;
 
     return (
-      <label className={classNames("radio is-flex is-align-items-center", labelClassName)} htmlFor={inputId}>
+      <div className={classNames("radio is-flex is-align-items-center", labelClassName)}>
         <StyledRadioButton
           form={context?.formId}
           id={inputId}
@@ -98,9 +98,9 @@ const RadioButton = React.forwardRef<HTMLButtonElement, Props>(
         >
           <StyledIndicator className={indicatorClassName} />
         </StyledRadioButton>
-        {label ?? context?.t(labelKey) ?? value}
+        <label htmlFor={inputId}>{label ?? context?.t(labelKey) ?? value}</label>
         {helpText ? <Help className="ml-3" text={helpText} /> : null}
-      </label>
+      </div>
     );
   }
 );

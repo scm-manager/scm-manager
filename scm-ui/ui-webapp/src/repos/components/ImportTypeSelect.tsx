@@ -16,9 +16,8 @@
 
 import React, { FC } from "react";
 import { Link, RepositoryType } from "@scm-manager/ui-types";
-import { LabelWithHelpIcon, Radio } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import styled from "styled-components";
+import { RadioGroup, RadioGroupField } from "@scm-manager/ui-core";
 
 type Props = {
   repositoryType: RepositoryType;
@@ -27,39 +26,21 @@ type Props = {
   disabled?: boolean;
 };
 
-const RadioGroup = styled.div`
-  label {
-    margin-right: 2rem;
-  }
-`;
-
 const ImportTypeSelect: FC<Props> = ({ repositoryType, importType, setImportType, disabled }) => {
   const [t] = useTranslation("repos");
 
-  const changeImportType = (checked: boolean, name?: string) => {
-    if (name && checked) {
-      setImportType(name);
-    }
-  };
-
   return (
-    <>
-      <LabelWithHelpIcon label={t("import.importTypes.label")} key="import.importTypes.label" />
-      <RadioGroup>
-        {(repositoryType._links.import as Link[]).map((type, index) => (
-          <Radio
-            name={type.name}
-            checked={importType === type.name}
-            value={type.name}
-            label={t(`import.importTypes.${type.name}.label`)}
-            helpText={t(`import.importTypes.${type.name}.helpText`)}
-            onChange={changeImportType}
-            key={index}
-            disabled={disabled}
-          />
-        ))}
-      </RadioGroup>
-    </>
+    <RadioGroupField label={t("import.importTypes.label")} onValueChange={setImportType} disabled={disabled}>
+      {(repositoryType._links.import as Link[]).map((type) => (
+        <RadioGroup.Option
+          checked={importType === type.name}
+          value={type.name || ""}
+          label={t(`import.importTypes.${type.name}.label`)}
+          helpText={t(`import.importTypes.${type.name}.helpText`)}
+          key={type.name}
+        />
+      ))}
+    </RadioGroupField>
   );
 };
 
