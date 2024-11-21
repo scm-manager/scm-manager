@@ -21,4 +21,9 @@ export type Option<T> = {
    * Takes precedence over the label in alternative selection modes (i.e. popups in combo-boxes).
    */
   displayValue?: string;
+
+  /**
+   * If this flag is true, then the option value, does not actually exist in any data source. For example in the backend.
+   */
+  isArbitraryValue?: boolean;
 };

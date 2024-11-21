@@ -53,6 +53,7 @@ function useAutocompleteOptions(
               value: options.allowArbitraryValues(query),
               label: query,
               displayValue: t("form.combobox.arbitraryDisplayValue", { query }),
+              isArbitraryValue: true,
             });
           }
           return result;
