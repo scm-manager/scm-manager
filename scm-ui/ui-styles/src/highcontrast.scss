@@ -219,6 +219,14 @@ footer.footer {
   }
 }
 
+a:not(.navbar a, .menu-list a, .button, .breadcrumb a, .tabs li a, .media .media-right a.level-item) {
+  text-decoration: underline;
+}
+
+td button:not(.is-default) {
+  text-decoration: underline;
+}
+
 .card {
   border: 1px solid $border;
   box-shadow: none;
