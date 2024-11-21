@@ -14,6 +14,6 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-export const variants = ["danger"] as const;
+export const variants = ["danger", "warning"] as const;
 export type Variant = typeof variants[number];
 export const createVariantClass = (variant?: Variant) => (variant ? `is-${variant}` : undefined);

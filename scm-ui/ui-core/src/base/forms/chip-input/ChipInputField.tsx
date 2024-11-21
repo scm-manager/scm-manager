@@ -22,12 +22,13 @@ import Help from "../base/help/Help";
 import FieldMessage from "../base/field-message/FieldMessage";
 import styled from "styled-components";
 import classNames from "classnames";
-import { createVariantClass } from "../variants";
+import { createVariantClass, Variant } from "../variants";
 import ChipInput, { NewChipInput } from "../headless-chip-input/ChipInput";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useTranslation } from "react-i18next";
 import { withForwardRef } from "../helpers";
 import { Option } from "@scm-manager/ui-types";
+import { waitForRestartAfter } from "@scm-manager/ui-api";
 
 const StyledChipInput: typeof ChipInput = styled(ChipInput)`
   min-height: 40px;
@@ -62,6 +63,7 @@ type InputFieldProps<T> = {
   helpText?: string;
   information?: string;
   error?: string;
+  warning?: string;
   testId?: string;
   id?: string;
   children?: ReactElement;
@@ -77,6 +79,16 @@ type InputFieldProps<T> = {
   ref?: Ref<HTMLInputElement>;
 };
 
+const determineVariant = (error: string | undefined, warning: string | undefined): Variant | undefined => {
+  if (error) {
+    return "danger";
+  }
+
+  if (warning) {
+    return "warning";
+  }
+};
+
 /**
  * @beta
  * @since 2.44.0
@@ -89,6 +101,7 @@ const ChipInputField = function ChipInputField<T>(
     readOnly,
     disabled,
     error,
+    warning,
     createDeleteText,
     onChange,
     placeholder,
@@ -111,7 +124,7 @@ const ChipInputField = function ChipInputField<T>(
   const inputId = useAriaId(id ?? testId);
   const labelId = useAriaId();
   const inputDescriptionId = useAriaId();
-  const variant = error ? "danger" : undefined;
+  const variant = determineVariant(error, warning);
   return (
     <Field className={className} aria-owns={inputId}>
       <Label id={labelId}>
@@ -157,7 +170,7 @@ const ChipInputField = function ChipInputField<T>(
       <VisuallyHidden aria-hidden id={inputDescriptionId}>
         {t("input.description")}
       </VisuallyHidden>
-      {error ? <FieldMessage variant={variant}>{error}</FieldMessage> : null}
+      {error || warning ? <FieldMessage variant={variant}>{error ? error : warning}</FieldMessage> : null}
     </Field>
   );
 };
