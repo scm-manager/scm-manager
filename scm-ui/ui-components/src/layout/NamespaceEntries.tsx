@@ -32,7 +32,12 @@ const DefaultGroupHeader: FC<{ group: RepositoryGroup }> = ({ group }) => {
   return (
     <>
       <Link to={`/repos/${group.name}/`} className="has-text-inherit">
-        <h3 className="has-text-weight-bold">{group.name}</h3>
+        <h3 className="has-text-weight-bold">
+          <span className="is-sr-only" lang="en">
+            {t("repositoryOverview.namespace")}
+          </span>
+          {group.name}
+        </h3>
       </Link>{" "}
       <Link to={`/namespace/${group.name}/info`} aria-label={t("repositoryOverview.settings.tooltip")}>
         <Icon color="inherit" name="cog" title={t("repositoryOverview.settings.tooltip")} className="is-size-6 ml-2" />

@@ -15,6 +15,7 @@
     }
   },
   "repositoryOverview": {
+    "namespace": "Namespace",
     "settings": {
       "tooltip": "Einstellungen für den Namespace"
     }
