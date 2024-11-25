@@ -77753,18 +77753,21 @@ exports[`Storyshots Secondary Navigation Active when match 1`] = `
       className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 ioXCUt menu"
     >
       <div>
-        <p
+        <button
           aria-label="secondaryNavigation.hideContent"
-          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 joMQbq menu-label"
+          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label is-clickable"
+          collapsed={false}
           onClick={[Function]}
+          type="button"
         >
           Hitchhiker
-        </p>
+        </button>
         <ul
           className="menu-list"
         >
           <li>
             <a
+              aria-label="Puzzle 42"
               className=""
               href="/42"
               onClick={[Function]}
@@ -77778,6 +77781,8 @@ exports[`Storyshots Secondary Navigation Active when match 1`] = `
           </li>
           <li>
             <a
+              aria-current="page"
+              aria-label="Heart Of Gold"
               className="is-active"
               href="/heart-of-gold"
               onClick={[Function]}
@@ -77807,25 +77812,28 @@ exports[`Storyshots Secondary Navigation Default 1`] = `
       className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 ioXCUt menu"
     >
       <div>
-        <p
+        <button
           aria-label="secondaryNavigation.hideContent"
-          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 joMQbq menu-label is-clickable"
+          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label is-clickable"
+          collapsed={false}
           onClick={[Function]}
+          type="button"
         >
           <i
-            className="SecondaryNavigation__Icon-sc-8p1rgi-1 hDCYCs is-medium"
+            className="SecondaryNavigation__Icon-sc-8p1rgi-1 gqxbcY is-medium"
           >
             <i
               className="fas fa-caret-down"
             />
           </i>
           Hitchhiker
-        </p>
+        </button>
         <ul
           className="menu-list"
         >
           <li>
             <a
+              aria-label="Puzzle 42"
               className=""
               href="/42"
               onClick={[Function]}
@@ -77839,6 +77847,7 @@ exports[`Storyshots Secondary Navigation Default 1`] = `
           </li>
           <li>
             <a
+              aria-label="Heart Of Gold"
               className=""
               href="/heart-of-gold"
               onClick={[Function]}
@@ -77868,25 +77877,28 @@ exports[`Storyshots Secondary Navigation Extension Point 1`] = `
       className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 ioXCUt menu"
     >
       <div>
-        <p
+        <button
           aria-label="secondaryNavigation.hideContent"
-          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 joMQbq menu-label is-clickable"
+          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label is-clickable"
+          collapsed={false}
           onClick={[Function]}
+          type="button"
         >
           <i
-            className="SecondaryNavigation__Icon-sc-8p1rgi-1 hDCYCs is-medium"
+            className="SecondaryNavigation__Icon-sc-8p1rgi-1 gqxbcY is-medium"
           >
             <i
               className="fas fa-caret-down"
             />
           </i>
           Hitchhiker
-        </p>
+        </button>
         <ul
           className="menu-list"
         >
           <li>
             <a
+              aria-label="Puzzle 42"
               className=""
               href="/42"
               onClick={[Function]}
@@ -77900,6 +77912,7 @@ exports[`Storyshots Secondary Navigation Extension Point 1`] = `
           </li>
           <li>
             <a
+              aria-current="page"
               className="is-active"
               href="/hitchhiker/starships"
               onClick={[Function]}
@@ -77915,6 +77928,7 @@ exports[`Storyshots Secondary Navigation Extension Point 1`] = `
             >
               <li>
                 <a
+                  aria-label="Heart Of Gold"
                   className=""
                   href="/hitchhiker/starships/heart-of-gold"
                   onClick={[Function]}
@@ -77928,6 +77942,8 @@ exports[`Storyshots Secondary Navigation Extension Point 1`] = `
               </li>
               <li>
                 <a
+                  aria-current="page"
+                  aria-label="Starship Titanic"
                   className="is-active"
                   href="/hitchhiker/starships/titanic"
                   onClick={[Function]}
@@ -77955,25 +77971,28 @@ exports[`Storyshots Secondary Navigation Sub Navigation 1`] = `
       className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 ioXCUt menu"
     >
       <div>
-        <p
+        <button
           aria-label="secondaryNavigation.hideContent"
-          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 joMQbq menu-label is-clickable"
+          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label is-clickable"
+          collapsed={false}
           onClick={[Function]}
+          type="button"
         >
           <i
-            className="SecondaryNavigation__Icon-sc-8p1rgi-1 hDCYCs is-medium"
+            className="SecondaryNavigation__Icon-sc-8p1rgi-1 gqxbcY is-medium"
           >
             <i
               className="fas fa-caret-down"
             />
           </i>
           Hitchhiker
-        </p>
+        </button>
         <ul
           className="menu-list"
         >
           <li>
             <a
+              aria-label="Puzzle 42"
               className=""
               href="/42"
               onClick={[Function]}

@@ -20,6 +20,7 @@ import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { useSecondaryNavigation } from "../useSecondaryNavigation";
 import { SecondaryNavigationContext } from "./SecondaryNavigationContext";
+import { Button } from "@scm-manager/ui-buttons";
 
 type Props = {
   label: string;
@@ -49,10 +50,19 @@ const Icon = styled.i<CollapsedProps>`
   height: 1.5rem;
   font-size: 24px;
   margin-top: -0.75rem;
+  color: #e2e2e2;
 `;
 
-const MenuLabel = styled.p<CollapsedProps>`
+const MenuButton = styled(Button)<CollapsedProps>`
   justify-content: ${(props: CollapsedProps) => (props.collapsed ? "center" : "inherit")};
+  width: 100%;
+  color: #e2e2e2;
+  &:hover {
+    color: #e2e2e2;
+  }
+  &:focus {
+    color: #e2e2e2;
+  }
 `;
 
 const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true }) => {
@@ -65,8 +75,8 @@ const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true })
   return (
     <SectionContainer className="menu" collapsed={collapsed ?? false}>
       <div>
-        <MenuLabel
-          className={classNames("menu-label", { "is-clickable": isCollapsible })}
+        <MenuButton
+          className={classNames("menu-label", { "is-clickable": true })}
           collapsed={collapsed}
           onClick={toggleCollapse}
           aria-label={menuAriaLabel}
@@ -77,7 +87,7 @@ const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true })
             </Icon>
           ) : null}
           {collapsed ? "" : label}
-        </MenuLabel>
+        </MenuButton>
         <ul className="menu-list">
           <SecondaryNavigationContext.Provider value={true}>{children}</SecondaryNavigationContext.Provider>
         </ul>

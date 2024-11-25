@@ -66,6 +66,8 @@ const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, title, t
         className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "")}
         to={to}
         {...createAttributesForTesting(testId)}
+        aria-label={title}
+        {...(active ? { "aria-current": "page" } : {})}
       >
         {children ? (
           children
