@@ -85,7 +85,7 @@ export default class Page extends React.Component<Props> {
             <PageActionContainer
               className={classNames(
                 "column",
-                "is-three-fifths",
+                "is-three-quarters",
                 "is-mobile-action-spacing",
                 "is-flex-tablet",
                 "is-justify-content-flex-end",

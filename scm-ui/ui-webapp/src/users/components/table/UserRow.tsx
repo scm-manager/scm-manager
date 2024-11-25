@@ -26,10 +26,16 @@ type Props = {
   user: User;
 };
 
-const UserRowLink = React.forwardRef<HTMLAnchorElement, { to: string; children: string }>(({ children, to }, ref) => (
-  <Link ref={ref} to={to} {...createAttributesForTesting(children)}>
-    {children}
-  </Link>
+const UserRowLink = React.forwardRef<HTMLAnchorElement, { to?: string; children: string }>(({ children, to }, ref) => (
+  <>
+    {to ? (
+      <Link ref={ref} to={to} {...createAttributesForTesting(children)}>
+        {children}
+      </Link>
+    ) : (
+      <div {...createAttributesForTesting(children)}>{children}</div>
+    )}
+  </>
 ));
 const UserRow: FC<Props> = ({ user }) => {
   const ref = useKeyboardIteratorTarget();
@@ -49,10 +55,10 @@ const UserRow: FC<Props> = ({ user }) => {
           {user.name}
         </UserRowLink>
       </td>
-      <td className={classNames("is-hidden-mobile", "is-word-break")}>
-        <UserRowLink to={to}>{user.displayName}</UserRowLink>
+      <td className={classNames("is-word-break")}>
+        <UserRowLink>{user.displayName}</UserRowLink>
       </td>
-      <td className={classNames("is-hidden-mobile", "is-word-break")}>
+      <td className={classNames("is-word-break")}>
         {user.mail ? <a href={`mailto:${user.mail}`}>{user.mail}</a> : null}
       </td>
     </tr>

@@ -47,7 +47,7 @@ const OverviewPageActions: FC<Props> = ({
   label,
   testId,
   searchPlaceholder,
-  groupAriaLabelledby
+  groupAriaLabelledby,
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -55,11 +55,11 @@ const OverviewPageActions: FC<Props> = ({
   const link = createAbsoluteLink(inputLink);
 
   const groupSelector = groups && (
-    <div className="column is-flex">
+    <div className="column is-flex is-align-items-center">
       <Select
         ariaLabelledby={groupAriaLabelledby}
         className="is-fullwidth"
-        options={groups.map(g => ({ value: g, label: g }))}
+        options={groups.map((g) => ({ value: g, label: g }))}
         value={currentGroup}
         onChange={groupSelected}
       />
@@ -69,7 +69,7 @@ const OverviewPageActions: FC<Props> = ({
   const renderCreateButton = () => {
     if (showCreateButton) {
       return (
-        <div className={classNames("input-button", "control", "column")}>
+        <div className={classNames("input-button", "control", "column", "is-flex", "is-align-items-center")}>
           <Button label={label} link={createLink || `${link}create/`} color="primary" />
         </div>
       );
@@ -85,9 +85,9 @@ const OverviewPageActions: FC<Props> = ({
   };
 
   return (
-    <div className="columns is-tablet">
+    <div className="columns is-desktop">
       {groupSelector}
-      <div className="column">
+      <div className="column is-flex is-align-items-center">
         <FilterInput
           placeholder={searchPlaceholder}
           value={urls.getQueryStringFromLocation(location)}

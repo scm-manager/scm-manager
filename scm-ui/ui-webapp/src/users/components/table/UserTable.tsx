@@ -33,8 +33,8 @@ const UserTable: FC<Props> = ({ users }) => {
         <thead>
           <tr>
             <th>{t("user.name")}</th>
-            <th className="is-hidden-mobile">{t("user.displayName")}</th>
-            <th className="is-hidden-mobile">{t("user.mail")}</th>
+            <th>{t("user.displayName")}</th>
+            <th>{t("user.mail")}</th>
           </tr>
         </thead>
         <tbody>

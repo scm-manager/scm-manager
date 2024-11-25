@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { createAttributesForTesting } from "../devBuild";
 import classNames from "classnames";
+import { createA11yId } from "../createA11yId";
 
 type Props = {
   filter: (p: string) => void;
@@ -41,6 +42,7 @@ const FilterInput: FC<Props> = ({ filter, value, testId, placeholder, autoFocus,
   const [stateValue, setStateValue] = useState(value || "");
   const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout>>();
   const [t] = useTranslation("commons");
+  const labeldId = createA11yId("input");
 
   // TODO check dependencies
   useEffect(() => {
@@ -63,17 +65,19 @@ const FilterInput: FC<Props> = ({ filter, value, testId, placeholder, autoFocus,
   };
 
   return (
-    <form className={classNames("input-field", className)} onSubmit={handleSubmit}>
+    <form className={classNames("input-field is-flex is-align-items-center", className)} onSubmit={handleSubmit}>
+      <label className="mr-2 label" id={labeldId}>
+        {placeholder || t("filterEntries")}
+      </label>
       <div className="control has-icons-left">
         <FixedHeightInput
           className="input"
           type="search"
-          placeholder={placeholder || t("filterEntries")}
           value={stateValue}
           onChange={(event) => setStateValue(event.target.value)}
           autoFocus={autoFocus || false}
           aria-describedby={id}
-          aria-label={t("filterEntries")}
+          aria-labelledby={labeldId}
           {...createAttributesForTesting(testId)}
         />
         <span className="icon is-small is-left">
