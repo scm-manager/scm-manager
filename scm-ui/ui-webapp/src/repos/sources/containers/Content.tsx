@@ -27,6 +27,7 @@ import HistoryView from "./HistoryView";
 import AnnotateView from "./AnnotateView";
 import ContentActionMenu from "../components/content/overflowMenu/ContentActionMenu";
 import { useContentType } from "@scm-manager/ui-api";
+import { useAriaId } from "@scm-manager/ui-core";
 
 type Props = {
   file: File;
@@ -48,8 +49,10 @@ const BorderBottom = styled.div`
   border-bottom: 1px solid var(--scm-border-color);
 `;
 
-const FullWidthTitleHeader = styled.div`
+const FullWidthTitleHeader = styled.button`
   max-width: 100%;
+  border: none;
+  background-color: transparent;
 `;
 
 const BorderLessDiv = styled.div`
@@ -66,6 +69,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
   const [selected, setSelected] = useState<SourceViewSelection>("source");
   const [errorFromExtension, setErrorFromExtension] = useState<Error>();
   const { data: contentType } = useContentType((file._links.self as Link).href);
+  const fileDetailsId = useAriaId();
 
   const wrapContent = (content: ReactNode) => {
     return (
@@ -128,8 +132,10 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
       <HeaderWrapper>
         <div className={classNames("level", "is-flex-wrap-wrap")}>
           <FullWidthTitleHeader
-            className={classNames("level-left", "is-flex", "is-clickable", "is-word-break", "mr-2")}
+            className={classNames("is-word-break", "mr-2", "button", "p-0", "is-size-5", "has-text-weight-light")}
             onClick={toggleCollapse}
+            aria-controls={fileDetailsId}
+            aria-expanded={!collapsed}
           >
             {icon}
             {file.name}
@@ -171,7 +177,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
     if (!collapsed) {
       return (
         <>
-          <div className="panel-block has-background-secondary-less">
+          <div className="panel-block has-background-secondary-less" id={fileDetailsId}>
             <table className="table has-background-secondary-less">
               <tbody>
                 <tr>
