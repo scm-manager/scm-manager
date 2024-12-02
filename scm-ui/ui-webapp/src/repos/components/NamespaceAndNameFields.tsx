@@ -96,6 +96,7 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
         errorMessage={t("validation.name-invalid")}
         helpText={t("help.nameHelpText")}
         disabled={disabled}
+        required={true}
       />
     </>
   );

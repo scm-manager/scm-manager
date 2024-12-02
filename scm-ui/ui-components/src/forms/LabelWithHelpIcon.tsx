@@ -16,12 +16,14 @@
 
 import React from "react";
 import Help from "../Help";
+import { RequiredMarker } from "@scm-manager/ui-core";
 
 type Props = {
   label?: string;
   helpText?: string;
   id?: string;
   helpId?: string;
+  required?: boolean;
 };
 
 /**
@@ -36,13 +38,15 @@ class LabelWithHelpIcon extends React.Component<Props> {
   }
 
   render() {
-    const { label, id } = this.props;
+    const { label, id, required } = this.props;
 
     if (label) {
       const help = this.renderHelp();
       return (
         <label className="label">
-          <span id={id}>{label}</span> {help}
+          <span id={id}>{label}</span>
+          {required ? <RequiredMarker /> : null}
+          {help}
         </label>
       );
     }

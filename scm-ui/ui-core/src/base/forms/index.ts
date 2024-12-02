@@ -46,6 +46,7 @@ export { default as Textarea } from "./input/Textarea";
 export { default as Select } from "./select/Select";
 export * from "./resourceHooks";
 export { default as Label } from "./base/label/Label";
+export { default as RequiredMarker } from "./misc/RequiredMarker";
 
 const RadioGroupExport = {
   Option: RadioButton,

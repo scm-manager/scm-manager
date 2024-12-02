@@ -39,6 +39,7 @@ type BaseProps = {
   testId?: string;
   defaultValue?: string | number;
   readOnly?: boolean;
+  required?: boolean;
 };
 
 export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>> = ({
@@ -58,6 +59,7 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
   autofocus,
   defaultValue,
   readOnly,
+  required,
   ...props
 }) => {
   const field = useAutofocus<HTMLInputElement>(autofocus, props.innerRef);
@@ -101,7 +103,7 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
   const helpId = createA11yId("input");
   return (
     <fieldset className={classNames("field", className)} disabled={readOnly}>
-      <LabelWithHelpIcon label={label} helpText={helpText} id={id} helpId={helpId} />
+      <LabelWithHelpIcon label={label} helpText={helpText} id={id} helpId={helpId} required={required} />
       <div className="control">
         <input
           aria-labelledby={id}
@@ -117,6 +119,7 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
           onKeyPress={handleKeyPress}
           onBlur={handleBlur}
           defaultValue={defaultValue}
+          aria-required={required}
           {...createAttributesForTesting(testId)}
         />
       </div>

@@ -31,12 +31,17 @@ const ImportFullRepositoryForm: FC<Props> = ({ setFile, setValid, password, setP
   return (
     <div className="columns">
       <div className="column is-half is-vcentered">
-        <LabelWithHelpIcon label={t("import.fullImport.title")} helpText={t("import.fullImport.helpText")} />
+        <LabelWithHelpIcon
+          label={t("import.fullImport.title")}
+          helpText={t("import.fullImport.helpText")}
+          required={true}
+        />
         <FileUpload
           handleFile={(file: File) => {
             setFile(file);
             setValid(!!file);
           }}
+          required={true}
         />
       </div>
       <div className="column is-half is-vcentered">

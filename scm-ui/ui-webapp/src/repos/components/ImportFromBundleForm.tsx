@@ -35,7 +35,7 @@ const ImportFromBundleForm: FC<Props> = ({
   setCompressed,
   password,
   setPassword,
-  disabled
+  disabled,
 }) => {
   const [t] = useTranslation("repos");
 
@@ -43,12 +43,13 @@ const ImportFromBundleForm: FC<Props> = ({
     <>
       <div className="columns">
         <div className="column is-half is-vcentered">
-          <LabelWithHelpIcon label={t("import.bundle.title")} helpText={t("import.bundle.helpText")} />
+          <LabelWithHelpIcon label={t("import.bundle.title")} helpText={t("import.bundle.helpText")} required={true} />
           <FileUpload
-            handleFile={file => {
+            handleFile={(file) => {
               setFile(file);
               setValid(!!file);
             }}
+            required={true}
           />
         </div>
         <div className="column is-half is-vcentered">
@@ -66,7 +67,7 @@ const ImportFromBundleForm: FC<Props> = ({
         <div className="column is-half is-vcentered">
           <InputField
             value={password}
-            onChange={value => setPassword(value)}
+            onChange={(value) => setPassword(value)}
             type="password"
             label={t("import.bundle.password.title")}
             helpText={t("import.bundle.password.helpText")}

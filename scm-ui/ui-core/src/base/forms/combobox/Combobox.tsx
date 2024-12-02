@@ -40,7 +40,7 @@ const OptionsWrapper = styled(HeadlessCombobox.Options).attrs({
   background-color: var(--scm-secondary-background);
   max-width: 35ch;
   width: 35ch;
-  
+
   &:empty {
     border: 0;
     clip: rect(0 0 0 0);
@@ -86,6 +86,7 @@ type BaseProps<T> = {
   "aria-describedby"?: string;
   "aria-labelledby"?: string;
   "aria-label"?: string;
+  "aria-required"?: boolean;
   testId?: string;
   ref?: Ref<HTMLInputElement>;
   form?: string;
@@ -149,13 +150,14 @@ function ComboboxComponent<T>(props: ComboboxProps<T>, ref: ForwardedRef<HTMLInp
         aria-describedby={props["aria-describedby"]}
         aria-labelledby={props["aria-labelledby"]}
         aria-label={props["aria-label"]}
+        aria-required={props["aria-required"]}
         id={props.id}
         placeholder={props.placeholder}
         onBlur={props.onBlur}
         autoComplete="off"
         onKeyDown={(e) => {
           props.onKeyDown && props.onKeyDown(e);
-          }}
+        }}
         {...createAttributesForTesting(props.testId)}
       />
       <OptionsWrapper className="is-absolute">{options}</OptionsWrapper>

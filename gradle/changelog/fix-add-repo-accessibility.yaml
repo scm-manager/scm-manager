@@ -1,0 +1,6 @@
+- type: fixed
+  description: Screen reader reads the label of NamespaceInput correctly
+- type: added
+  description: Required symbol for corresponding inputs of create repository form
+- type: added
+  description: Screen reader reads whether a create repository form input is required

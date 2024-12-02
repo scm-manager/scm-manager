@@ -14,12 +14,10 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-export * from "./buttons";
-export * from "./forms";
-export * from "./helpers";
-export * from "./misc";
-export * from "./layout";
-export * from "./notifications";
-export * from "./overlays";
-export * from "./shortcuts";
-export * from "./text";
+import React from "react";
+
+const RequiredMarker = () => {
+  return <span aria-hidden={true}>*</span>;
+};
+
+export default RequiredMarker;

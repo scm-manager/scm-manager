@@ -2321,7 +2321,6 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Default 1`] = `
         >
           Key
         </span>
-         
       </label>
       <div
         className="control"
@@ -2348,7 +2347,6 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Default 1`] = `
         >
           Value
         </span>
-         
       </label>
       <div
         className="control"
@@ -2402,7 +2400,6 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Disabled 1`] = `
         >
           Key
         </span>
-         
       </label>
       <div
         className="control"
@@ -2430,7 +2427,6 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Disabled 1`] = `
         >
           Value
         </span>
-         
       </label>
       <div
         className="control"
@@ -2965,7 +2961,6 @@ exports[`Storyshots Forms/FileInput Default 1`] = `
         >
           Upload File
         </span>
-         
         <div
           className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
           onClick={[Function]}
@@ -3059,7 +3054,6 @@ exports[`Storyshots Forms/InputField AutoFocus 1`] = `
       >
         Field with AutoFocus
       </span>
-       
     </label>
     <div
       className="control"
@@ -3146,7 +3140,6 @@ exports[`Storyshots Forms/InputField Default Value 1`] = `
       >
         Field with Default Value
       </span>
-       
     </label>
     <div
       className="control"
@@ -3215,7 +3208,6 @@ exports[`Storyshots Forms/InputField React Hook Form 1`] = `
         >
           Readonly
         </span>
-         
       </label>
       <div
         className="control"
@@ -3243,7 +3235,6 @@ exports[`Storyshots Forms/InputField React Hook Form 1`] = `
         >
           Disabled
         </span>
-         
       </label>
       <div
         className="control"
@@ -3272,7 +3263,6 @@ exports[`Storyshots Forms/InputField React Hook Form 1`] = `
         >
           First Name
         </span>
-         
       </label>
       <div
         className="control"
@@ -3299,7 +3289,6 @@ exports[`Storyshots Forms/InputField React Hook Form 1`] = `
         >
           Last Name
         </span>
-         
       </label>
       <div
         className="control"
@@ -3855,7 +3844,6 @@ exports[`Storyshots Forms/Select ReactHookForm 1`] = `
       >
         Remember Me
       </span>
-       
     </label>
     <div
       className="control select"
@@ -3890,7 +3878,6 @@ exports[`Storyshots Forms/Select ReactHookForm 1`] = `
       >
         Scramble Password
       </span>
-       
     </label>
     <div
       className="control select"
@@ -3925,7 +3912,6 @@ exports[`Storyshots Forms/Select ReactHookForm 1`] = `
       >
         Disabled wont be submitted
       </span>
-       
     </label>
     <div
       className="control select"
@@ -3963,7 +3949,6 @@ exports[`Storyshots Forms/Select ReactHookForm 1`] = `
       >
         Readonly will be submitted
       </span>
-       
     </label>
     <div
       className="control select"
@@ -4020,7 +4005,6 @@ Array [
       >
         Ref Radio Button
       </span>
-       
     </label>
     <div
       className="control select"
@@ -4071,7 +4055,6 @@ exports[`Storyshots Forms/Textarea AutoFocus 1`] = `
     >
       Field with AutoFocus
     </span>
-     
   </label>
   <div
     className="control"
@@ -4152,7 +4135,6 @@ exports[`Storyshots Forms/Textarea Default Value 1`] = `
     >
       Field with Default Value
     </span>
-     
   </label>
   <div
     className="control"
@@ -4297,7 +4279,6 @@ exports[`Storyshots Forms/Textarea ReactHookForm 1`] = `
       >
         Message
       </span>
-       
     </label>
     <div
       className="control"
@@ -4324,7 +4305,6 @@ exports[`Storyshots Forms/Textarea ReactHookForm 1`] = `
       >
         Footer
       </span>
-       
     </label>
     <div
       className="control"
@@ -4352,7 +4332,6 @@ exports[`Storyshots Forms/Textarea ReactHookForm 1`] = `
       >
         Readonly
       </span>
-       
     </label>
     <div
       className="control"
@@ -4380,7 +4359,6 @@ exports[`Storyshots Forms/Textarea ReactHookForm 1`] = `
       >
         Disabled
       </span>
-       
     </label>
     <div
       className="control"
@@ -17941,7 +17919,6 @@ Array [
               >
                 Text
               </span>
-               
             </label>
             <div
               className="control"
@@ -18505,7 +18482,6 @@ Array [
                 >
                   Input
                 </span>
-                 
                 <div
                   className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
                   onClick={[Function]}
@@ -18548,7 +18524,6 @@ Array [
                 >
                   Textarea
                 </span>
-                 
                 <div
                   className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
                   onClick={[Function]}

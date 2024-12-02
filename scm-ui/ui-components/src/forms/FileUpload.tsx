@@ -21,12 +21,13 @@ type Props = {
   handleFile: (file: File, event?: ChangeEvent<HTMLInputElement>) => void;
   filenamePlaceholder?: string;
   disabled?: boolean;
+  required?: boolean;
 };
 
 /**
  * @deprecated
  */
-const FileUpload: FC<Props> = ({ handleFile, filenamePlaceholder = "", disabled = false }) => {
+const FileUpload: FC<Props> = ({ handleFile, filenamePlaceholder = "", disabled = false, required }) => {
   const [t] = useTranslation("commons");
   const [file, setFile] = useState<File | null>(null);
 
@@ -45,6 +46,7 @@ const FileUpload: FC<Props> = ({ handleFile, filenamePlaceholder = "", disabled 
             // @ts-ignore the uploaded file doesn't match our types
             handleFile(uploadedFile, event);
           }}
+          aria-required={required}
         />
         <span className="file-cta">
           <span className="file-icon">

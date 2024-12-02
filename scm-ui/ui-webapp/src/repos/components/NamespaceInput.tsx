@@ -61,6 +61,7 @@ const NamespaceInput: FC<Props> = ({
     return (
       // @ts-ignore
       <ComboboxField
+        aria-label={props.label}
         label={props.label}
         helpText={props.helpText}
         value={repositorySelectValue}
@@ -68,6 +69,8 @@ const NamespaceInput: FC<Props> = ({
         onQueryChange={setQuery}
         options={data}
         isLoading={isLoading}
+        required={true}
+        aria-required={true}
         nullable
       />
     );
