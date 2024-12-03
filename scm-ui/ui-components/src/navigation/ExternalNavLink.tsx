@@ -41,7 +41,7 @@ const ExternalNavLink: FC<Props> = ({ to, icon, label }) => {
 
   return (
     <li title={collapsed ? label : undefined}>
-      <ExternalLink to={to} className={collapsed ? "has-text-centered" : ""}>
+      <ExternalLink to={to} className={collapsed ? "has-text-centered" : ""} aria-label={collapsed ? label : undefined}>
         {showIcon}
         {isSecondaryNavigation && collapsed ? null : label}
       </ExternalLink>

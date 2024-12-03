@@ -14,15 +14,15 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, HTMLAttributes } from "react";
 
 type Props = {
   to: string;
   className?: string;
-};
+} & HTMLAttributes<HTMLAnchorElement>;
 
-const ExternalLink: FC<Props> = ({ to, children, className }) => (
-  <a href={to} target="_blank" rel="noopener noreferrer" className={className}>
+const ExternalLink: FC<Props> = ({ to, children, className, ...props }) => (
+  <a href={to} target="_blank" rel="noopener noreferrer" className={className} {...props}>
     {children}
   </a>
 );

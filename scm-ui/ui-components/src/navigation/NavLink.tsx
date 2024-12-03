@@ -20,7 +20,7 @@ import { Link } from "react-router-dom";
 import { useSecondaryNavigation } from "../useSecondaryNavigation";
 import { RoutingProps } from "./RoutingProps";
 import useActiveMatch from "./useActiveMatch";
-import { createAttributesForTesting } from "../devBuild";
+import { createAttributesForTesting } from "@scm-manager/ui-core";
 import { SecondaryNavigationContext } from "./SecondaryNavigationContext";
 import { SubNavigationContext } from "./SubNavigationContext";
 
@@ -66,7 +66,7 @@ const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, title, t
         className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "")}
         to={to}
         {...createAttributesForTesting(testId)}
-        aria-label={title}
+        aria-label={collapsed ? title : undefined}
         {...(active ? { "aria-current": "page" } : {})}
       >
         {children ? (

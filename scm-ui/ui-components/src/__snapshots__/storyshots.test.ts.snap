@@ -77742,7 +77742,6 @@ exports[`Storyshots Secondary Navigation Active when match 1`] = `
         >
           <li>
             <a
-              aria-label="Puzzle 42"
               className=""
               href="/42"
               onClick={[Function]}
@@ -77757,7 +77756,6 @@ exports[`Storyshots Secondary Navigation Active when match 1`] = `
           <li>
             <a
               aria-current="page"
-              aria-label="Heart Of Gold"
               className="is-active"
               href="/heart-of-gold"
               onClick={[Function]}
@@ -77808,7 +77806,6 @@ exports[`Storyshots Secondary Navigation Default 1`] = `
         >
           <li>
             <a
-              aria-label="Puzzle 42"
               className=""
               href="/42"
               onClick={[Function]}
@@ -77822,7 +77819,6 @@ exports[`Storyshots Secondary Navigation Default 1`] = `
           </li>
           <li>
             <a
-              aria-label="Heart Of Gold"
               className=""
               href="/heart-of-gold"
               onClick={[Function]}
@@ -77873,7 +77869,6 @@ exports[`Storyshots Secondary Navigation Extension Point 1`] = `
         >
           <li>
             <a
-              aria-label="Puzzle 42"
               className=""
               href="/42"
               onClick={[Function]}
@@ -77903,7 +77898,6 @@ exports[`Storyshots Secondary Navigation Extension Point 1`] = `
             >
               <li>
                 <a
-                  aria-label="Heart Of Gold"
                   className=""
                   href="/hitchhiker/starships/heart-of-gold"
                   onClick={[Function]}
@@ -77918,7 +77912,6 @@ exports[`Storyshots Secondary Navigation Extension Point 1`] = `
               <li>
                 <a
                   aria-current="page"
-                  aria-label="Starship Titanic"
                   className="is-active"
                   href="/hitchhiker/starships/titanic"
                   onClick={[Function]}
@@ -77967,7 +77960,6 @@ exports[`Storyshots Secondary Navigation Sub Navigation 1`] = `
         >
           <li>
             <a
-              aria-label="Puzzle 42"
               className=""
               href="/42"
               onClick={[Function]}

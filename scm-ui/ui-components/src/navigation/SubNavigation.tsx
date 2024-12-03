@@ -74,7 +74,7 @@ const SubNavigation: FC<Props> = ({
           className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "")}
           to={to}
           {...createAttributesForTesting(testId)}
-          aria-label={title}
+          aria-label={collapsed ? title : undefined}
           {...(active ? { "aria-current": "page" } : {})}
         >
           <i className={classNames(defaultIcon, "fa-fw")} /> {collapsed ? "" : label}
