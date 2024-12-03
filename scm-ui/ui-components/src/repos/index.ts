@@ -47,6 +47,8 @@ export { default as HealthCheckFailureDetail } from "./HealthCheckFailureDetail"
 export { default as RepositoryFlags } from "./RepositoryFlags";
 export { default as DiffDropDown } from "./DiffDropDown";
 export { default as DiffStatistics } from "./DiffStatistics";
+export { default as LayoutRadioButtons } from "./LayoutRadioButtons";
+export { LayoutMode, useLayoutState } from "./diffLayout";
 
 export {
   File,

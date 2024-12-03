@@ -18,23 +18,15 @@ import React, { FC } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { Statistics } from "@scm-manager/ui-types";
 import Tag from "../Tag";
-import styled from "styled-components";
 
 type DiffStatisticsProps = { data: Statistics | undefined };
-
-const DiffStatisticsContainer = styled.div`
-  float: left;
-  height: 40px;
-  display: flex;
-  align-items: center;
-`;
 
 const DiffStatistics: FC<DiffStatisticsProps> = ({ data }) => {
   const [t] = useTranslation("repos");
   return !data ? (
     <div></div>
   ) : (
-    <DiffStatisticsContainer>
+    <div className="is-flex is-align-items-center">
       <Trans
         t={t}
         i18nKey="changesets.showModifiedFiles"
@@ -58,7 +50,7 @@ const DiffStatistics: FC<DiffStatisticsProps> = ({ data }) => {
         ></Trans>
       )}
       <span className="ml-1">{t("changesets.showFiles")}</span>
-    </DiffStatisticsContainer>
+    </div>
   );
 };
 

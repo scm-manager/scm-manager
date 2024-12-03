@@ -60,6 +60,11 @@ There is a dropdown menu for the changeset:
 - With the first checkbox you can show and hide the whitespace changes.
 - The second checkbox can collapse all changesets.
 
+There are three radio buttons to change the layout in the changeset:
+- With the first button, only the diffs are displayed.
+- The second button shows the diffs and the file tree.
+- With the last button, only the file tree is displayed.
+
 Every changeset diff has several buttons:
 - The first button on the left allows a direct comparison of the changes.
 - With the magnifying glass you can view the changes across the width of the window.

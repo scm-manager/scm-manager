@@ -16,7 +16,7 @@
 
 import { FileTree } from "@scm-manager/ui-types";
 import React, { FC } from "react";
-import { FileDiffContainer, FileDiffContent, FileDiffContentTitle } from "./styledElements";
+import { FileDiffContainer, FileDiffContent } from "./styledElements";
 import { Icon } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -28,11 +28,8 @@ const StyledIcon = styled(Icon)`
 `;
 
 const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile }) => {
-  const [t] = useTranslation("repos");
-
   return (
     <FileDiffContainer className={"mt-4 py-3 pr-2"}>
-      <FileDiffContentTitle className={"ml-4 pb-4 title is-6"}>{t("changesets.diffTreeTitle")}</FileDiffContentTitle>
       <FileDiffContent>
         {Object.keys(tree.children).map((key) => (
           <TreeNode

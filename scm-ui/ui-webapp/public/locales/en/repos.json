@@ -275,7 +275,13 @@
     "showRenamedFiles": ", <tag>{{renamed}}</tag> renamed",
     "showCopiedFiles": ", <tag>{{copied}}</tag> copied",
     "showFiles": "files",
-    "diffTreeTitle": "Diff-List"
+    "diffTree": {
+      "title": "Diff-Tree",
+      "layout": "Change layout:",
+      "show": "Show both",
+      "full": "Hide diffs",
+      "hide": "Hide tree"
+    }
   },
   "changeset": {
     "label": "Changeset",

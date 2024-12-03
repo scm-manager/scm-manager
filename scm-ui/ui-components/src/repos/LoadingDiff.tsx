@@ -26,9 +26,12 @@ import { DiffObjectProps } from "./DiffTypes";
 import DiffStatistics from "./DiffStatistics";
 import { DiffDropDown } from "../index";
 import DiffFileTree from "./diff/DiffFileTree";
-import { DiffContent, FileTreeContent } from "./diff/styledElements";
+import { DiffContent, Divider, FileTreeContent } from "./diff/styledElements";
 import { useHistory, useLocation } from "react-router-dom";
 import { getFileNameFromHash } from "./diffs";
+import LayoutRadioButtons from "./LayoutRadioButtons";
+import { useAriaId } from "@scm-manager/ui-core";
+import { useLayoutState } from "./diffLayout";
 
 export type WhitespaceMode = "ALL" | "NONE";
 
@@ -58,8 +61,10 @@ const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingN
 
 const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) => {
   const [ignoreWhitespace, setIgnoreWhitespace] = useState<WhitespaceMode>("NONE");
+  const [layout, setLayout] = useLayoutState();
   const [collapsed, setCollapsed] = useState(false);
   const [prevHash, setPrevHash] = useState("");
+  const diffContentId = useAriaId();
   const location = useLocation();
   const history = useHistory();
 
@@ -70,13 +75,13 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
   });
 
   const [t] = useTranslation("repos");
-
   const collapseDiffs = () => {
     setCollapsed(!collapsed);
   };
 
   const setFilePath = (path: string) => {
     setPrevHash("");
+    setLayout("Both");
     history.push(`#diff-${encodeURIComponent(path)}`);
   };
 
@@ -91,44 +96,57 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
     return null;
   } else {
     return (
-      <div className="is-flex has-gap-4 mb-4 mt-4 is-justify-content-space-between">
-        <FileTreeContent className={"is-three-quarters"}>
-          {data?.tree && (
-            <DiffFileTree
-              tree={data.tree}
-              currentFile={decodeURIComponent(getFileNameFromHash(location.hash) ?? "")}
-              setCurrentFile={setFilePath}
-            />
-          )}
-        </FileTreeContent>
-        <DiffContent>
-          <div className="is-flex has-gap-4 mb-4 mt-4 is-justify-content-space-between">
-            <DiffStatistics data={data.statistics} />
-            <DiffDropDown
-              collapseDiffs={collapseDiffs}
-              renderOnMount={true}
-              ignoreWhitespacesMode={ignoreWhitespace}
-              setIgnoreWhitespacesMode={(hideWhiteSpaceMode: WhitespaceMode) => {
-                setIgnoreWhitespace(hideWhiteSpaceMode);
-              }}
-            />
-          </div>
-          <Diff
-            defaultCollapse={collapsed}
-            diff={data.files}
-            ignoreWhitespace={ignoreWhitespace}
-            fetchNextPage={fetchNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-            isDataPartial={data.partial}
-            prevHash={prevHash}
-            setPrevHash={setPrevHash}
-            {...props}
+      <>
+        <Divider />
+        <div className="is-flex is-justify-content-space-between">
+          <DiffStatistics data={data.statistics} />
+          <DiffDropDown
+            collapseDiffs={collapseDiffs}
+            renderOnMount={true}
+            ignoreWhitespacesMode={ignoreWhitespace}
+            setIgnoreWhitespacesMode={(hideWhiteSpaceMode: WhitespaceMode) => {
+              setIgnoreWhitespace(hideWhiteSpaceMode);
+            }}
           />
-          {data.partial ? (
-            <PartialNotification fetchNextPage={fetchNextPage} isFetchingNextPage={isFetchingNextPage} />
-          ) : null}
-        </DiffContent>
-      </div>
+        </div>
+        <LayoutRadioButtons layout={layout} setLayout={setLayout} />
+        <div className="is-flex mb-4 mt-1 columns is-multiline">
+          <div
+            className={
+              (layout === "Both" ? "column pl-3 is-one-quarter" : "column pl-3 is-full") +
+              (layout !== "Diff" ? "" : " is-hidden")
+            }
+          >
+            <FileTreeContent className={"p-3"} isBorder={layout !== "Diff"}>
+              <h3 className={"title is-6 pt-4"}>{t("changesets.diffTree.title")}</h3>
+              <Divider />
+              {data?.tree && (
+                <DiffFileTree
+                  tree={data.tree}
+                  currentFile={decodeURIComponent(getFileNameFromHash(location.hash) ?? "")}
+                  setCurrentFile={setFilePath}
+                />
+              )}
+            </FileTreeContent>
+          </div>
+          <DiffContent id={diffContentId} className={layout !== "Tree" ? "column" : "is-hidden"}>
+            <Diff
+              defaultCollapse={collapsed}
+              diff={data.files}
+              ignoreWhitespace={ignoreWhitespace}
+              fetchNextPage={fetchNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              isDataPartial={data.partial}
+              prevHash={prevHash}
+              setPrevHash={setPrevHash}
+              {...props}
+            />
+            {data.partial ? (
+              <PartialNotification fetchNextPage={fetchNextPage} isFetchingNextPage={isFetchingNextPage} />
+            ) : null}
+          </DiffContent>
+        </div>
+      </>
     );
   }
 };

@@ -275,7 +275,13 @@
     "showRenamedFiles": ", <tag>{{renamed}}</tag> umbenannte",
     "showCopiedFiles": ", <tag>{{copied}}</tag> kopierte",
     "showFiles": "Dateien",
-    "diffTreeTitle": "Diff-Liste"
+    "diffTree": {
+      "title": "Dateibaum",
+      "layout": "Layout anpassen:",
+      "show": "Beides anzeigen",
+      "full": "Diffs verbergen",
+      "hide": "Dateibaum verbergen"
+    }
   },
   "changeset": {
     "label": "Changeset",

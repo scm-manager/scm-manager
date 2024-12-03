@@ -58,6 +58,11 @@ Für das Changeset gibt es ein Dropdown Menu mit zwei Optionen:
 - Mit der ersten Checkbox können die Whitespaces-Änderungen ein- und ausgeblendet werden.
 - Die zweite Checkbox ermöglicht das Ein- und Ausblenden aller Changesets.
 
+Für die Changeset gibt es drei Radio-Buttons um das Layout zu ändern:
+- Mit dem ersten Button werden nur die Diffs angezeigt.
+- Mit dem zweiten Button werden die Diffs und der Dateibaum angezeigt.
+- Mit dem letzten Button wird nur der Dateibaum angezeigt.
+
 Jeder Changeset Diff hat mehrere Buttons:
 - Der erste Button von Links ermöglicht einen direkten Vergleich der Änderungen.
 - Mit der Lupe können die Änderungen über die gesamte Breite des Fensters betrachtet werden.
