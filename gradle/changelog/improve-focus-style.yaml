@@ -1,4 +1,0 @@
-- type: changed
-  description: Improved contrast for focus indicator in dark and high contrast mode
-- type: changed
-  description: Not showing the focus indicator, when using a pointer device

@@ -1,4 +1,0 @@
-- type: changed
-  description: The code view for Subversion repositories now uses the alias 'head' by default for the latest revision
-- type: added
-  description: A 'is modifiable' flag for the browse command result.

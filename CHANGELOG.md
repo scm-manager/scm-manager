@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.0] - 2024-12-05
+### Added
+- Extension point for contributor row in contributor table
+- Access to links in secondary navigation
+- Programmatic label to the namespace links
+- Required symbol for corresponding inputs of create repository form
+- Screen reader reads whether a create repository form input is required
+- Display of warnings for a chip input field
+- Extension point to protect tags against deletion
+- Option to change layout for changeset view
+- A 'is modifiable' flag for the browse command result
+
+### Fixed
+- Improved accessibility for file details
+- Accessibility for import modes in import dialog
+- SCM handler information in scm-git-plugin and scm-svn-plugin (accessed by scm-support-plugin)
+- Screen reader reads the label of NamespaceInput correctly
+- Enhanced alt-text describing logo of SCM-Manager in nav bar
+- Trigger and menu for mobile mode uses correct aria attributes
+- Logout button exposes one description to assistive technologies
+- Links are more distinguishable from normal text
+- Missing arial-label in second navigation for bluespice, smeagol and documentation plugin
+- Short display of "tag already exists" error message when creating a new tag
+- First access to local storage returning the default value instead of the actual value
+
+### Changed
+- API to whether hide or show whitespaces inside a diff
+- Improved contrast for focus indicator in dark and high contrast mode
+- Not showing the focus indicator, when using a pointer device
+- Placeholder is now a label and breakpoint is different
+- The code view for Subversion repositories now uses the alias 'head' by default for the latest revision
+
 ## [3.5.0] - 2024-10-09
 ### Added
 - The result of the merge dry-run now contains the names of the files that have conflicts
@@ -1622,3 +1654,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.4.1]: https://scm-manager.org/download/3.4.1
 [3.4.2]: https://scm-manager.org/download/3.4.2
 [3.5.0]: https://scm-manager.org/download/3.5.0
+[3.6.0]: https://scm-manager.org/download/3.6.0

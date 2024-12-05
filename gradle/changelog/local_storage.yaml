@@ -1,2 +1,0 @@
-- type: fixed
-  description: First access to local storage returning the default value instead of the actual value

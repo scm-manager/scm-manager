@@ -1,6 +1,0 @@
-- type: fixed
-  description: Enhanced alt-text describing logo of SCM-Manager in nav bar
-- type: fixed
-  description: Trigger and menu for mobile mode use correct aria attributes
-- type: fixed
-  description: Logout-button exposes one description to assistive technologies

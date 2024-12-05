@@ -1,2 +1,0 @@
-- type: fixed
-  description: SCM handler information in scm-git-plugin and scm-svn-plugin (accessed by scm-support-plugin)
