@@ -375,6 +375,15 @@ button, .button {
   }
 }
 
+// detail/summary
+summary {
+  &:focus-visible,
+  &.is-focused {
+    outline: $focus-outline-color $focus-outline-style;
+    outline-offset: $focus-outline-offset;
+  }
+}
+
 // buttons
 .button {
   padding-left: 1.5em;

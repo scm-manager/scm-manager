@@ -25,7 +25,7 @@ const ContributorRow: FC<{ label: string }> = ({ label, children }) => {
   return (
     <tr key={label}>
       <SizedTd>{label}:</SizedTd>
-      <td className="is-ellipsis-overflow m-0">{children}</td>
+      <td className="is-word-break m-0">{children}</td>
     </tr>
   );
 };
