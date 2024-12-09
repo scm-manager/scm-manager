@@ -1,0 +1,2 @@
+- type: fixed
+  description: Whitespace dropdown is now correctly displayed after pr create

@@ -65,7 +65,7 @@ const DiffDropDown: FC<DiffDropDownProps> = ({
   };
 
   return (
-    <div className={"dropdown" + (isOpen ? " is-active" : "")}>
+    <div className={"dropdown is-right " + (isOpen ? " is-active" : "")}>
       <div className="dropdown-trigger">
         <button onClick={handleOpen} className="button" aria-haspopup="true" aria-controls="dropdown-menu2">
           <span className="icon is-small">
