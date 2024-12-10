@@ -34,6 +34,7 @@
     "skipLfsHelpText": "Check this if (potentially available) LFS files shall not be loaded into SCM-Manager during the import. This option is relevant only for git repositories."
   },
   "repositoryRoot": {
+    "settingsTitle": "General Settings",
     "errorTitle": "Error",
     "errorSubtitle": "Unknown repository error",
     "menu": {
@@ -56,6 +57,9 @@
   },
   "overview": {
     "title": "Repositories",
+    "titleWithPage": "Repositories page {{page}} of {{total}}",
+    "titleWithNamespace": "Repositories in {{namespace}}",
+    "titleWithNamespaceAndPage": "Repositories page {{page}} of {{total}} in {{namespace}}",
     "subtitle": "Overview of available repositories",
     "noRepositories": "No repositories found.",
     "invalidNamespace": "No repositories found. It's likely that the selected namespace does not exist.",
@@ -172,7 +176,8 @@
         "cancel": "No",
         "submit": "Yes"
       }
-    }
+    },
+    "branchWithNamespaceName": "Branch {{branch}} in {{namespace}}/{{name}}"
   },
   "compare": {
     "title": "Compare Changes",
@@ -183,6 +188,16 @@
       "target": "Target",
       "with": "Compare changes with...",
       "filter": "Filter selection...",
+      "typeTitle": {
+        "b": "Branch",
+        "t": "Tag",
+        "r": "Revision"
+      },
+      "type": {
+        "b": "branch",
+        "t": "tag",
+        "r": "revision"
+      },
       "emptyResult": "No results matching the filter were found.",
       "tabs": {
         "b": "Branches",
@@ -197,7 +212,8 @@
     "tabs": {
       "diff": "Diff",
       "commits": "Commits"
-    }
+    },
+    "compareSourceAndTargetWithNamespaceName": "Compare {{sourceType}} {{source}} with {{targetType}} {{target}} in {{namespace}}/{{name}}"
   },
   "tags": {
     "overview": {
@@ -249,7 +265,8 @@
         "cancel": "No",
         "submit": "Yes"
       }
-    }
+    },
+    "tagWithNamespaceName": "Tag {{tag}} in {{namespace}}/{{name}}"
   },
   "code": {
     "sources": "Sources",
@@ -258,6 +275,11 @@
     "noBranches": "No sources found for this repository."
   },
   "changesets": {
+    "commitsWithNamespaceName": "Commits in {{namespace}}/{{name}}",
+    "commitsWithPageAndNamespaceName": "Commits page {{page}} of {{total}} in {{namespace}}/{{name}}",
+    "commitsWithPageRevisionAndNamespaceName": "Commits page {{page}} of {{total}} on {{revision}} in {{namespace}}/{{name}}",
+    "commitsWithRevisionAndNamespaceName": "Commits on {{revision}} in {{namespace}}/{{name}}",
+    "idWithNamespaceName": "{{id}} in {{namespace}}/{{name}}",
     "errorTitle": "Error",
     "errorSubtitle": "Could not fetch changesets",
     "noChangesets": "No changesets found for this branch. The commits could have been removed.",
@@ -420,7 +442,9 @@
       "notBound": "No extension bound."
     },
     "loadMore": "Load",
-    "moreFilesAvailable": "These are just the first {{count}} files. There are more files available."
+    "moreFilesAvailable": "These are just the first {{count}} files. There are more files available.",
+    "pathWithRevisionAndNamespaceName": "{{path}} on {{revision}} in {{namespace}}/{{name}}",
+    "sourcesWithRevisionAndNamespaceName": "Sources on {{revision}} in {{namespace}}/{{name}}"
   },
   "permission": {
     "title": "Permissions",
@@ -523,6 +547,17 @@
       "cancel": "No"
     }
   },
+  "archive": {
+    "tooltip": "Read only. The archive cannot be changed."
+  },
+  "exporting": {
+    "tooltip": "Read only. The repository is currently being exported."
+  },
+  "healthCheckFailure": {
+    "tooltip": "This repository has health check failures. Click to get details.",
+    "title": "Health Check Failures",
+    "close": "Close"
+  },
   "runHealthCheck": {
     "button": "Run Health Checks",
     "subtitle": "Health Checks",
@@ -534,17 +569,6 @@
     "subtitle": "Recreate Search Indices",
     "description": "Deletes all existing search indices for this repository and recreates them from scratch. This may take a while.",
     "started": "Reindexing has been started successfully. This is an asynchronous operation and may take a while."
-  },
-  "archive": {
-    "tooltip": "Read only. The archive cannot be changed."
-  },
-  "exporting": {
-    "tooltip": "Read only. The repository is currently being exported."
-  },
-  "healthCheckFailure": {
-    "tooltip": "This repository has health check failures. Click to get details.",
-    "title": "Health Check Failures",
-    "close": "Close"
   },
   "diff": {
     "changes": {
@@ -594,7 +618,8 @@
     "notifications": {
       "queryToShort": "Type at least two characters to start the search",
       "emptyResult": "Nothing found for query <0>{{query}}</0>"
-    }
+    },
+    "searchWithRevisionAndNamespaceName": "Search on {{revision}} in {{namespace}}/{{name}}"
   },
   "shortcuts": {
     "info": "Switch to repository info",

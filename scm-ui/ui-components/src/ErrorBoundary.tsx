@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { MissingLinkError, urls, useIndexLink } from "@scm-manager/ui-api";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 import ErrorNotification from "./ErrorNotification";
 import ErrorPage from "./ErrorPage";
 import { Subtitle, Title } from "./layout";
@@ -53,6 +54,7 @@ const RedirectIconContainer = styled.div`
 
 const RedirectPage = () => {
   const [t] = useTranslation("commons");
+  useDocumentTitle(t("errorNotification.prefix"));
   // we use an icon instead of loading spinner,
   // because a redirect is synchron and a spinner does not spin on a synchron action
   return (
@@ -106,7 +108,7 @@ const ErrorDisplay: FC<ErrorDisplayProps> = ({ error, errorInfo, fallback: Fallb
 
   const fallbackProps = {
     error,
-    errorInfo
+    errorInfo,
   };
 
   return <FallbackComponent {...fallbackProps} />;
@@ -128,7 +130,7 @@ class ErrorBoundary extends React.Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({
       error,
-      errorInfo
+      errorInfo,
     });
   }
 

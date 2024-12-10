@@ -17,8 +17,9 @@
 import React, { FC } from "react";
 import { Redirect, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useGroups } from "@scm-manager/ui-api";
 import { Group, GroupCollection } from "@scm-manager/ui-types";
+import { useGroups } from "@scm-manager/ui-api";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 import {
   CreateButton,
   LinkPaginator,
@@ -59,6 +60,7 @@ const Groups: FC = () => {
   const page = urls.getPageFromMatch({ params });
   const { isLoading, error, data } = useGroups({ search, page: page - 1 });
   const [t] = useTranslation("groups");
+  useDocumentTitle(t("groups.title"));
   const groups = data?._embedded?.groups;
   const canCreateGroups = !!data?._links.create;
   if (data && data.pageTotal < page && page > 1) {

@@ -15,18 +15,22 @@
  */
 
 import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
-import { useUpdateGroup, useUserSuggestions } from "@scm-manager/ui-api";
+import { useUpdateGroup } from "@scm-manager/ui-api";
 import { ErrorNotification } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
+import UpdateNotification from "../../components/UpdateNotification";
 import GroupForm from "../components/GroupForm";
 import DeleteGroup from "./DeleteGroup";
-import UpdateNotification from "../../components/UpdateNotification";
 
 type Props = {
   group: Group;
 };
 
 const EditGroup: FC<Props> = ({ group }) => {
+  const [t] = useTranslation("groups");
+  useDocumentTitle(t("singleGroup.settingsTitle"), group.name);
   const { error, isLoading, update, isUpdated } = useUpdateGroup();
 
   return (

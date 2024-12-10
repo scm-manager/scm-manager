@@ -67,6 +67,7 @@
     "loading": "Lade Daten ..."
   },
   "logout": {
+    "title": "Abmeldung",
     "error": {
       "title": "Abmeldung fehlgeschlagen",
       "subtitle": "Während der Abmeldung ist ein Fehler aufgetreten."
@@ -135,6 +136,7 @@
     "previous": "Zurück"
   },
   "profile": {
+    "subtitle": "Information",
     "navigationLabel": "Profil",
     "informationNavLink": "Information",
     "changePasswordNavLink": "Passwort ändern",
@@ -263,6 +265,7 @@
     "ariaLabel": "Globale Suche",
     "placeholder": "Suche...",
     "title": "Suche",
+    "titleWithPage": "Suche Seite {{page}} von {{total}}",
     "subtitle": "{{type}} Ergebnisse",
     "subtitleWithContext": "{{type}} Ergebnisse für in \"{{context}}\"",
     "withQueryType": " mit {{queryType}}",

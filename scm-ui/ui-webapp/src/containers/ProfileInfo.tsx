@@ -22,8 +22,9 @@ import {
   AvatarWrapper,
   createAttributesForTesting,
   InfoTable,
-  MailLink
+  MailLink,
 } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 type Props = {
   me: Me;
@@ -31,6 +32,7 @@ type Props = {
 
 const ProfileInfo: FC<Props> = ({ me }) => {
   const [t] = useTranslation("commons");
+  useDocumentTitle(t("profile.subtitle"), me.displayName);
   const renderGroups = () => {
     let groups = null;
     if (me.groups.length > 0) {
@@ -39,7 +41,7 @@ const ProfileInfo: FC<Props> = ({ me }) => {
           <th>{t("profile.groups")}</th>
           <td className="p-0">
             <ul>
-              {me.groups.map(group => {
+              {me.groups.map((group) => {
                 return <li>{group}</li>;
               })}
             </ul>

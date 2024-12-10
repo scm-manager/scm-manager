@@ -18,6 +18,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Notification, Page } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 type LocationState = {
   code: string;
@@ -26,6 +27,7 @@ type LocationState = {
 const ExternalError = () => {
   const { code } = useParams<LocationState>();
   const [t] = useTranslation(["commons", "plugins"]);
+  useDocumentTitle(`${t("app.error.title")}: ${t(`plugins:errors.${code}.displayName`)}`);
 
   return (
     <Page title={t("app.error.title")} subtitle={t(`plugins:errors.${code}.displayName`)}>

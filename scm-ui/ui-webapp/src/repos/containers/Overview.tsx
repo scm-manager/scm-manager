@@ -29,6 +29,7 @@ import {
   PageActions,
   urls,
 } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 import RepositoryList from "../components/list";
 import { useNamespaceAndNameContext, useNamespaces, useRepositories } from "@scm-manager/ui-api";
 import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
@@ -170,6 +171,20 @@ const Overview: FC = () => {
   const { isLoading, error, namespace, namespaces, repositories, search, page } = useOverviewData();
   const history = useHistory();
   const [t] = useTranslation("repos");
+  const getDocumentTitle = () => {
+    if (repositories?.pageTotal && repositories.pageTotal > 1 && page) {
+      if (namespace) {
+        return t("overview.titleWithNamespaceAndPage", { page, total: repositories.pageTotal, namespace });
+      } else {
+        return t("overview.titleWithPage", { page, total: repositories.pageTotal });
+      }
+    } else if (namespace) {
+      return t("overview.titleWithNamespace", { namespace });
+    } else {
+      return t("overview.title");
+    }
+  };
+  useDocumentTitle(getDocumentTitle());
   const binder = useBinder();
   const context = useNamespaceAndNameContext();
   useEffect(() => {

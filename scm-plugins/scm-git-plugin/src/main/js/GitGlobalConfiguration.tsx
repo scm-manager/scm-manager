@@ -15,11 +15,12 @@
  */
 
 import React, { FC, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { Title, ConfigurationForm, InputField, Checkbox, validation } from "@scm-manager/ui-components";
-import { useConfigLink } from "@scm-manager/ui-api";
-import { HalRepresentation } from "@scm-manager/ui-types";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useConfigLink } from "@scm-manager/ui-api";
+import { ConfigurationForm, InputField, Checkbox, validation } from "@scm-manager/ui-components";
+import { Title, useDocumentTitle } from "@scm-manager/ui-core";
+import { HalRepresentation } from "@scm-manager/ui-types";
 
 type Props = {
   link: string;
@@ -37,6 +38,7 @@ type Configuration = HalRepresentation & {
 
 const GitGlobalConfiguration: FC<Props> = ({ link }) => {
   const [t] = useTranslation("plugins");
+  useDocumentTitle(t("scm-git-plugin.config.title"));
 
   const { initialConfiguration, isReadOnly, update, ...formProps } = useConfigLink<Configuration>(link);
   const { formState, handleSubmit, register, reset } = useForm<Configuration>({ mode: "onChange" });
@@ -45,7 +47,7 @@ const GitGlobalConfiguration: FC<Props> = ({ link }) => {
     if (initialConfiguration) {
       reset(initialConfiguration);
     }
-  }, [initialConfiguration]);
+  }, [initialConfiguration, reset]);
 
   const isValidDefaultBranch = (value: string) => {
     return validation.isBranchValid(value);
@@ -58,7 +60,7 @@ const GitGlobalConfiguration: FC<Props> = ({ link }) => {
       onSubmit={handleSubmit(update)}
       {...formProps}
     >
-      <Title title={t("scm-git-plugin.config.title")} />
+      <Title>{t("scm-git-plugin.config.title")}</Title>
       <InputField
         label={t("scm-git-plugin.config.gcExpression")}
         helpText={t("scm-git-plugin.config.gcExpressionHelpText")}

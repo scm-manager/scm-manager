@@ -14,20 +14,19 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ReactNode } from "react";
+import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import Loading from "./../Loading";
 import ErrorNotification from "./../ErrorNotification";
+import ErrorBoundary from "../ErrorBoundary";
 import Title from "./Title";
 import Subtitle from "./Subtitle";
 import PageActions from "./PageActions";
-import ErrorBoundary from "../ErrorBoundary";
 
 type Props = {
   title?: ReactNode;
-  // Use the documentTitle to set the document title (browser title) whenever you want to set one
-  // and use something different than a string for the title property.
+  // [DEPRECATED] Use useDocumentTitle hook inside the component instead.
   documentTitle?: string;
   afterTitle?: ReactNode;
   subtitle?: ReactNode;
@@ -44,43 +43,19 @@ const PageActionContainer = styled.div`
   }
 `;
 
-export default class Page extends React.Component<Props> {
-  componentDidUpdate() {
-    const textualTitle = this.getTextualTitle();
-    if (textualTitle && textualTitle !== document.title) {
-      document.title = textualTitle;
-    }
-  }
-
-  render() {
-    const { error } = this.props;
-    return (
-      <section className="section">
-        <div className="container">
-          {this.renderPageHeader()}
-          <ErrorBoundary>
-            <ErrorNotification error={error} />
-            {this.renderContent()}
-          </ErrorBoundary>
-        </div>
-      </section>
-    );
-  }
-
-  isPageAction(node: any) {
+const Page: FC<Props> = ({ title, afterTitle, subtitle, loading, error, showContentOnError, children }) => {
+  const isPageAction = (node: any) => {
     return (
       node.displayName === PageActions.displayName || (node.type && node.type.displayName === PageActions.displayName)
     );
-  }
+  };
 
-  renderPageHeader() {
-    const { error, afterTitle, title, subtitle, children } = this.props;
-
+  const renderPageHeader = () => {
     let pageActions = null;
     let pageActionsExists = false;
-    React.Children.forEach(children, child => {
+    React.Children.forEach(children, (child) => {
       if (child && !error) {
-        if (this.isPageAction(child)) {
+        if (isPageAction(child)) {
           pageActions = (
             <PageActionContainer
               className={classNames(
@@ -99,6 +74,7 @@ export default class Page extends React.Component<Props> {
         }
       }
     });
+
     const underline = pageActionsExists ? <hr className="header-with-actions" /> : null;
 
     if (title || subtitle) {
@@ -107,9 +83,7 @@ export default class Page extends React.Component<Props> {
           <div className="columns">
             <div className="column">
               <div className="is-flex is-flex-wrap-wrap is-align-items-center">
-                <Title className="mb-0 mr-2" title={this.getTextualTitle()}>
-                  {this.getTitleComponent()}
-                </Title>
+                <Title className="mb-0 mr-2">{title}</Title>
                 {afterTitle}
               </div>
               {subtitle ? <Subtitle>{subtitle}</Subtitle> : null}
@@ -121,11 +95,9 @@ export default class Page extends React.Component<Props> {
       );
     }
     return null;
-  }
+  };
 
-  renderContent() {
-    const { loading, children, showContentOnError, error } = this.props;
-
+  const renderContent = () => {
     if (error && !showContentOnError) {
       return null;
     }
@@ -134,33 +106,27 @@ export default class Page extends React.Component<Props> {
     }
 
     const content: ReactNode[] = [];
-    React.Children.forEach(children, child => {
+    React.Children.forEach(children, (child) => {
       if (child) {
-        if (!this.isPageAction(child)) {
+        if (!isPageAction(child)) {
           content.push(child);
         }
       }
     });
     return content;
-  }
-
-  getTextualTitle: () => string | undefined = () => {
-    const { title, documentTitle } = this.props;
-    if (documentTitle) {
-      return documentTitle;
-    } else if (typeof title === "string") {
-      return title;
-    } else {
-      return undefined;
-    }
   };
 
-  getTitleComponent = () => {
-    const { title } = this.props;
-    if (title && typeof title !== "string") {
-      return title;
-    } else {
-      return undefined;
-    }
-  };
-}
+  return (
+    <section className="section">
+      <div className="container">
+        {renderPageHeader()}
+        <ErrorBoundary>
+          <ErrorNotification error={error} />
+          {renderContent()}
+        </ErrorBoundary>
+      </div>
+    </section>
+  );
+};
+
+export default Page;

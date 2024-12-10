@@ -17,11 +17,12 @@
 import React, { FC } from "react";
 import RepositoryRoleForm from "./RepositoryRoleForm";
 import { useTranslation } from "react-i18next";
-import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, Subtitle, Title } from "@scm-manager/ui-components";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import DeleteRepositoryRole from "./DeleteRepositoryRole";
 import { useUpdateRepositoryRole } from "@scm-manager/ui-api";
 import { Redirect } from "react-router-dom";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 type Props = {
   role: RepositoryRole;
@@ -29,6 +30,7 @@ type Props = {
 
 const EditRepositoryRole: FC<Props> = ({ role }) => {
   const [t] = useTranslation("admin");
+  useDocumentTitle(t("repositoryRole.editSubtitle"));
   const { isUpdated, update, error, isLoading: loading } = useUpdateRepositoryRole();
 
   if (isUpdated) {
@@ -43,6 +45,7 @@ const EditRepositoryRole: FC<Props> = ({ role }) => {
 
   return (
     <>
+      <Title title={t("repositoryRole.detailsTitle")} />
       <Subtitle subtitle={t("repositoryRole.editSubtitle")} />
       <RepositoryRoleForm role={role} submitForm={update} />
       <DeleteRepositoryRole role={role} />

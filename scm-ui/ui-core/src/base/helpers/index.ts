@@ -15,4 +15,5 @@
  */
 
 export { default as useAriaId } from "./useAriaId";
+export { default as useDocumentTitle, useDocumentTitleForRepository } from "./useDocumentTitle";
 export { createAttributesForTesting, isDevBuild } from "./devbuild";

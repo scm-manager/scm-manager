@@ -20,7 +20,7 @@ import { useHistory, useLocation, useParams } from "react-router-dom";
 import { RepositoryRevisionContextProvider, urls, useSources } from "@scm-manager/ui-api";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import { Breadcrumb } from "@scm-manager/ui-components";
-import { Notification, ErrorNotification, Loading } from "@scm-manager/ui-core";
+import { Notification, ErrorNotification, Loading, useDocumentTitle } from "@scm-manager/ui-core";
 import FileTree from "../components/FileTree";
 import Content from "./Content";
 import CodeActionBar from "../../codeSection/components/CodeActionBar";
@@ -57,6 +57,30 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   const history = useHistory();
   const location = useLocation();
   const [t] = useTranslation("repos");
+  const getDocumentTitle = () => {
+    if (revision) {
+      const getRevision = () => {
+        return branches?.some((branch) => branch.name === revision) ? revision : revision.slice(0, 7);
+      };
+      if (path) {
+        return t("sources.pathWithRevisionAndNamespaceName", {
+          path: path,
+          revision: getRevision(),
+          namespace: repository.namespace,
+          name: repository.name,
+        });
+      } else {
+        return t("sources.sourcesWithRevisionAndNamespaceName", {
+          revision: getRevision(),
+          namespace: repository.namespace,
+          name: repository.name,
+        });
+      }
+    } else {
+      return repository.namespace + "/" + repository.name;
+    }
+  };
+  useDocumentTitle(getDocumentTitle());
   const [contentRef, setContentRef] = useState<HTMLElement | null>();
 
   useScrollToElement(contentRef, () => location.hash, location.hash);
@@ -72,7 +96,6 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
       );
     }
   }, [branches, selectedBranch, history, baseUrl, location.hash]);
-
   const {
     isLoading,
     error,

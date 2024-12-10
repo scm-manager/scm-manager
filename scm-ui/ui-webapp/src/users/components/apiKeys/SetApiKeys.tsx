@@ -22,6 +22,7 @@ import AddApiKey from "./AddApiKey";
 import { useTranslation } from "react-i18next";
 import { useApiKeys, useDeleteApiKey } from "@scm-manager/ui-api";
 import { Link as RouterLink } from "react-router-dom";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 type Props = {
   user: User | Me;
@@ -29,6 +30,7 @@ type Props = {
 
 const SetApiKeys: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
+  useDocumentTitle(t("singleUser.menu.setApiKeyNavLink"), user.displayName);
   const { isLoading, data: apiKeys, error: fetchError } = useApiKeys(user);
   const { error: deletionError, remove } = useDeleteApiKey(user);
   const error = deletionError || fetchError;

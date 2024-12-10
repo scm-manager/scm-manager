@@ -14,49 +14,54 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { RepositoryRole } from "@scm-manager/ui-types";
-import { Button, Level } from "@scm-manager/ui-components";
+import { Level, LinkButton, Title, useDocumentTitle } from "@scm-manager/ui-core";
 import PermissionRoleDetailsTable from "./PermissionRoleDetailsTable";
 
-type Props = WithTranslation & {
+type Props = {
   role: RepositoryRole;
   url: string;
 };
 
-class PermissionRoleDetails extends React.Component<Props> {
-  renderEditButton() {
-    const { t, url } = this.props;
-    if (!!this.props.role._links.update) {
+const PermissionRoleDetails: FC<Props> = ({ role, url }) => {
+  const [t] = useTranslation("admin");
+  useDocumentTitle(t("repositoryRole.detailsTitle"));
+
+  const renderEditButton = () => {
+    if (!!role._links.update) {
       return (
         <>
           <hr />
-          <Level right={<Button label={t("repositoryRole.editButton")} link={`${url}/edit`} color="primary" />} />
+          <Level
+            right={
+              <LinkButton to={`${url}/edit`} variant="primary" color="primary">
+                {t("repositoryRole.editButton")}
+              </LinkButton>
+            }
+          />
         </>
       );
     }
     return null;
-  }
+  };
 
-  render() {
-    const { role } = this.props;
+  return (
+    <>
+      <Title>{t("repositoryRole.detailsTitle")}</Title>
+      <PermissionRoleDetailsTable role={role} />
+      {renderEditButton()}
+      <ExtensionPoint<extensionPoints.RepositoryRoleDetailsInformation>
+        name="repositoryRole.role-details.information"
+        renderAll={true}
+        props={{
+          role,
+        }}
+      />
+    </>
+  );
+};
 
-    return (
-      <>
-        <PermissionRoleDetailsTable role={role} />
-        {this.renderEditButton()}
-        <ExtensionPoint<extensionPoints.RepositoryRoleDetailsInformation>
-          name="repositoryRole.role-details.information"
-          renderAll={true}
-          props={{
-            role
-          }}
-        />
-      </>
-    );
-  }
-}
-
-export default withTranslation("admin")(PermissionRoleDetails);
+export default PermissionRoleDetails;

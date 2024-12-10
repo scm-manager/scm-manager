@@ -18,11 +18,13 @@ import React, { FC } from "react";
 import { Redirect, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useCreateGroup, urls } from "@scm-manager/ui-api";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 import { Page } from "@scm-manager/ui-components";
 import GroupForm from "../components/GroupForm";
 
 const CreateGroup: FC = () => {
   const [t] = useTranslation("groups");
+  useDocumentTitle(t("addGroup.title"));
   const { isLoading, create, error, group } = useCreateGroup();
   const location = useLocation();
 

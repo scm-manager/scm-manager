@@ -20,9 +20,11 @@ import { ErrorNotification, Loading, Subtitle, Title } from "@scm-manager/ui-com
 import RepositoryRoleForm from "./RepositoryRoleForm";
 import { useCreateRepositoryRole } from "@scm-manager/ui-api";
 import { Redirect } from "react-router-dom";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 const CreateRepositoryRole: FC = () => {
   const [t] = useTranslation("admin");
+  useDocumentTitle(t("repositoryRole.createSubtitle"));
   const { error, isLoading: loading, create, repositoryRole: created } = useCreateRepositoryRole();
 
   if (created) {

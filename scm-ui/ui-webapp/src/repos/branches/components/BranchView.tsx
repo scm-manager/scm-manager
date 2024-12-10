@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
+import React, { FC } from "react";
 import BranchDetail from "./BranchDetail";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Branch, Repository } from "@scm-manager/ui-types";
@@ -25,27 +25,24 @@ type Props = {
   branch: Branch;
 };
 
-class BranchView extends React.Component<Props> {
-  render() {
-    const { repository, branch } = this.props;
-    return (
-      <>
-        <BranchDetail repository={repository} branch={branch} />
-        <hr />
-        <div className="content">
-          <ExtensionPoint<extensionPoints.ReposBranchDetailsInformation>
-            name="repos.branch-details.information"
-            renderAll={true}
-            props={{
-              repository,
-              branch
-            }}
-          />
-        </div>
-        <BranchDangerZone repository={repository} branch={branch} />
-      </>
-    );
-  }
-}
+const BranchView: FC<Props> = ({ repository, branch }) => {
+  return (
+    <>
+      <BranchDetail repository={repository} branch={branch} />
+      <hr />
+      <div className="content">
+        <ExtensionPoint<extensionPoints.ReposBranchDetailsInformation>
+          name="repos.branch-details.information"
+          renderAll={true}
+          props={{
+            repository,
+            branch,
+          }}
+        />
+      </div>
+      <BranchDangerZone repository={repository} branch={branch} />
+    </>
+  );
+};
 
 export default BranchView;

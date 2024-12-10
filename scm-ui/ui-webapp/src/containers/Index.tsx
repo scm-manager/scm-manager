@@ -16,7 +16,8 @@
 
 import React, { FC, useState } from "react";
 import App from "./App";
-import { ErrorBoundary, Header, Loading } from "@scm-manager/ui-components";
+import { ErrorBoundary, Header } from "@scm-manager/ui-components";
+import { Loading } from "@scm-manager/ui-core";
 import PluginLoader from "./PluginLoader";
 import ScrollToTop from "./ScrollToTop";
 import IndexErrorPage from "./IndexErrorPage";

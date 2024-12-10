@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import { useUsers } from "@scm-manager/ui-api";
 import { User, UserCollection } from "@scm-manager/ui-types";
 import { CreateButton, LinkPaginator, OverviewPageActions, Page, PageActions, urls } from "@scm-manager/ui-components";
-import { Notification } from "@scm-manager/ui-core";
+import { Notification, useDocumentTitle } from "@scm-manager/ui-core";
 import { UserTable } from "./../components/table";
 
 type UserPageProps = {
@@ -52,6 +52,7 @@ const Users: FC = () => {
   const page = urls.getPageFromMatch({ params });
   const { isLoading, error, data } = useUsers({ page: page - 1, search });
   const [t] = useTranslation("users");
+  useDocumentTitle(t("users.title"));
   const users = data?._embedded?.users;
   const canAddUsers = !!data?._links.create;
 

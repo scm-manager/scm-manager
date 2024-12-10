@@ -14,13 +14,13 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Namespace } from "@scm-manager/ui-types";
 import React, { FC } from "react";
-import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-core";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useRepositories } from "@scm-manager/ui-api";
 import { DateFromNow } from "@scm-manager/ui-components";
-import { Link } from "react-router-dom";
+import { ErrorNotification, Loading, Subtitle, useDocumentTitle } from "@scm-manager/ui-core";
+import { Namespace } from "@scm-manager/ui-types";
 
 type Props = {
   namespace: Namespace;
@@ -28,6 +28,7 @@ type Props = {
 
 const NamespaceInformation: FC<Props> = ({ namespace }) => {
   const [t] = useTranslation("namespaces");
+  useDocumentTitle(t("namespaceRoot.infoPage.subtitle"), namespace.namespace);
   const { data: repositories, error, isLoading } = useRepositories({ namespace: namespace, pageSize: 9999, page: 0 });
 
   if (error) {

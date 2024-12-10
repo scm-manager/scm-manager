@@ -44,12 +44,11 @@ const SingleRepositoryRole: FC = () => {
 
   const extensionProps = {
     role,
-    url: escapedUrl
+    url: escapedUrl,
   };
 
   return (
     <>
-      <Title title={t("repositoryRole.title")} />
       <Route path={`${escapedUrl}/info`}>
         <PermissionRoleDetail role={role} url={url} />
       </Route>

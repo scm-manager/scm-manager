@@ -16,18 +16,19 @@
 
 import React, { FC } from "react";
 import { useRouteMatch } from "react-router-dom";
-import RepositoryForm from "../components/form";
-import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Subtitle, urls } from "@scm-manager/ui-components";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import RepositoryDangerZone from "./RepositoryDangerZone";
 import { useTranslation } from "react-i18next";
-import ExportRepository from "./ExportRepository";
+import { Repository } from "@scm-manager/ui-types";
 import { useUpdateRepository } from "@scm-manager/ui-api";
+import { ErrorNotification, Subtitle, urls } from "@scm-manager/ui-components";
+import { useDocumentTitleForRepository } from "@scm-manager/ui-core";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import UpdateNotification from "../../components/UpdateNotification";
+import RepositoryForm from "../components/form";
+import Reindex from "../components/Reindex";
+import RepositoryDangerZone from "./RepositoryDangerZone";
+import ExportRepository from "./ExportRepository";
 import HealthCheckWarning from "./HealthCheckWarning";
 import RunHealthCheck from "./RunHealthCheck";
-import UpdateNotification from "../../components/UpdateNotification";
-import Reindex from "../components/Reindex";
 
 type Props = {
   repository: Repository;
@@ -37,11 +38,12 @@ const EditRepo: FC<Props> = ({ repository }) => {
   const match = useRouteMatch();
   const { isLoading, error, update, isUpdated } = useUpdateRepository();
   const [t] = useTranslation("repos");
+  useDocumentTitleForRepository(repository, t("repositoryRoot.settingsTitle"));
 
   const url = urls.matchedUrlFromMatch(match);
   const extensionProps = {
     repository,
-    url
+    url,
   };
 
   return (

@@ -27,6 +27,7 @@ import {
   Notification,
   urls,
 } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 export const usePage = () => {
   const match = useRouteMatch();
@@ -39,12 +40,54 @@ type Props = {
   url: string;
 };
 
-const Changesets: FC<Props> = ({ repository, branch, url }) => {
+const Changesets: FC<Props> = ({ repository, branch, ...props }) => {
   const page = usePage();
 
   const { isLoading, error, data } = useChangesets(repository, { branch, page: page - 1 });
+  const [t] = useTranslation("repos");
+  const getDocumentTitle = () => {
+    if (data?.pageTotal && data.pageTotal > 1 && page) {
+      if (branch) {
+        return t("changesets.commitsWithPageRevisionAndNamespaceName", {
+          page,
+          total: data.pageTotal,
+          revision: branch.name,
+          namespace: repository.namespace,
+          name: repository.name,
+        });
+      } else {
+        return t("changesets.commitsWithPageAndNamespaceName", {
+          page,
+          total: data.pageTotal,
+          namespace: repository.namespace,
+          name: repository.name,
+        });
+      }
+    } else if (branch) {
+      return t("changesets.commitsWithRevisionAndNamespaceName", {
+        revision: branch.name,
+        namespace: repository.namespace,
+        name: repository.name,
+      });
+    } else {
+      return t("changesets.commitsWithNamespaceName", {
+        namespace: repository.namespace,
+        name: repository.name,
+      });
+    }
+  };
+  useDocumentTitle(getDocumentTitle());
 
-  return <ChangesetsPanel repository={repository} error={error} isLoading={isLoading} data={data} url={url} />;
+  return (
+    <ChangesetsPanel
+      isLoading={isLoading}
+      error={error}
+      data={data}
+      repository={repository}
+      branch={branch}
+      {...props}
+    />
+  );
 };
 
 type ChangesetsPanelProps = Props & {
@@ -53,7 +96,7 @@ type ChangesetsPanelProps = Props & {
   data?: ChangesetCollection;
 };
 
-export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({ repository, error, isLoading, data, url }) => {
+export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({ repository, error, isLoading, data, url, branch }) => {
   const page = usePage();
   const [t] = useTranslation("repos");
   const changesets = data?._embedded?.changesets;

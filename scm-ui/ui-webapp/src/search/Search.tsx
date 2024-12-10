@@ -24,7 +24,7 @@ import {
   Tag,
   urls,
 } from "@scm-manager/ui-components";
-import { Notification, Level } from "@scm-manager/ui-core";
+import { Notification, Level, useDocumentTitle } from "@scm-manager/ui-core";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useIndex, useNamespaceAndNameContext, useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
 import Results from "./Results";
@@ -163,9 +163,22 @@ const InvalidSearch: FC = () => {
 
 const Search: FC = () => {
   const { data: index } = useIndex();
-  const [t] = useTranslation(["commons", "plugins"]);
-  const [showHelp, setShowHelp] = useState(false);
   const { query, selectedType, page, namespace, name } = usePageParams();
+  const searchOptions = {
+    type: selectedType,
+    page: page - 1,
+    pageSize: 25,
+    namespaceContext: namespace,
+    repositoryNameContext: name,
+  };
+  const { data, isLoading, error } = useSearch(query, searchOptions);
+  const [t] = useTranslation(["commons", "plugins"]);
+  useDocumentTitle(
+    data?.pageTotal && data.pageTotal > 1 && page
+      ? t("search.titleWithPage", { page, total: data.pageTotal })
+      : t("search.title")
+  );
+  const [showHelp, setShowHelp] = useState(false);
   const context = useNamespaceAndNameContext();
   useEffect(() => {
     context.setNamespace(namespace || "");
@@ -176,14 +189,6 @@ const Search: FC = () => {
       context.setName("");
     };
   }, [namespace, name, context]);
-  const searchOptions = {
-    type: selectedType,
-    page: page - 1,
-    pageSize: 25,
-    namespaceContext: namespace,
-    repositoryNameContext: name,
-  };
-  const { data, isLoading, error } = useSearch(query, searchOptions);
   const types = useSearchTypes(searchOptions);
   types.sort(orderTypes(t));
 

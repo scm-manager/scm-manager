@@ -16,6 +16,7 @@
     "createButton": "Gruppe erstellen"
   },
   "singleGroup": {
+    "settingsTitle": "Generelle Einstellungen",
     "errorTitle": "Fehler",
     "errorSubtitle": "Unbekannter Gruppen Fehler",
     "menu": {

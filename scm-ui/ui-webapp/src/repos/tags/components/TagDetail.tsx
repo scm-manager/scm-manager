@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Repository, Tag } from "@scm-manager/ui-types";
 import { Subtitle, DateFromNow, SignatureIcon } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 import TagButtonGroup from "./TagButtonGroup";
 import CompareLink from "../../compare/CompareLink";
 
@@ -29,6 +30,13 @@ type Props = {
 
 const TagDetail: FC<Props> = ({ repository, tag }) => {
   const [t] = useTranslation("repos");
+  useDocumentTitle(
+    t("tag.tagWithNamespaceName", {
+      tag: tag.name,
+      namespace: repository.namespace,
+      name: repository.name,
+    })
+  );
 
   const encodedTag = encodeURIComponent(tag.name);
 

@@ -20,6 +20,8 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
+import { Me } from "@scm-manager/ui-types";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 const LS_KEY = "scm.theme";
 
@@ -36,6 +38,10 @@ export const useThemeState = () => {
   return { theme, setTheme, isLoading };
 };
 
+type Props = {
+  me: Me;
+};
+
 type ThemeForm = {
   theme: string;
 };
@@ -47,21 +53,22 @@ const RadioColumn = styled.div`
   width: 2rem;
 `;
 
-const Theme: FC = () => {
+const Theme: FC<Props> = ({ me }) => {
   const { theme, setTheme, isLoading } = useThemeState();
   const {
     register,
     setValue,
     handleSubmit,
     formState: { isDirty },
-    watch
+    watch,
   } = useForm<ThemeForm>({
     mode: "onChange",
     defaultValues: {
-      theme
-    }
+      theme,
+    },
   });
   const [t] = useTranslation("commons");
+  useDocumentTitle(t("profile.theme.subtitle"), me.displayName);
 
   const onSubmit = (values: ThemeForm) => {
     setTheme(values.theme);
@@ -71,7 +78,7 @@ const Theme: FC = () => {
     <>
       <Subtitle>{t("profile.theme.subtitle")}</Subtitle>
       <form className="is-flex is-flex-direction-column" onSubmit={handleSubmit(onSubmit)}>
-        {themes.map(theme => {
+        {themes.map((theme) => {
           const a11yId = createA11yId("theme");
           return (
             <div

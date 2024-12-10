@@ -14,9 +14,11 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
-import ErrorNotification from "./ErrorNotification";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { BackendError, ForbiddenError } from "@scm-manager/ui-api";
+import { useDocumentTitle } from "@scm-manager/ui-core";
+import ErrorNotification from "./ErrorNotification";
 
 type Props = {
   error: Error;
@@ -24,28 +26,26 @@ type Props = {
   subtitle: string;
 };
 
-class ErrorPage extends React.Component<Props> {
-  render() {
-    const { title, error } = this.props;
+const ErrorPage: FC<Props> = ({ error, title, subtitle }) => {
+  const [t] = useTranslation("commons");
+  useDocumentTitle(t("errorNotification.prefix"));
 
-    return (
-      <section className="section">
-        <div className="box column is-4 is-offset-4 container">
-          <h1 className="title">{title}</h1>
-          {this.renderSubtitle()}
-          <ErrorNotification error={error} />
-        </div>
-      </section>
-    );
-  }
-
-  renderSubtitle = () => {
-    const { error, subtitle } = this.props;
+  const renderSubtitle = () => {
     if (error instanceof BackendError || error instanceof ForbiddenError) {
       return null;
     }
     return <p className="subtitle">{subtitle}</p>;
   };
-}
+
+  return (
+    <section className="section">
+      <div className="box column is-4 is-offset-4 container">
+        <h1 className="title">{title}</h1>
+        {renderSubtitle()}
+        <ErrorNotification error={error} />
+      </div>
+    </section>
+  );
+};
 
 export default ErrorPage;

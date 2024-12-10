@@ -15,6 +15,7 @@
  */
 
 import React, { FC, FormEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ErrorNotification,
   InputField,
@@ -22,9 +23,9 @@ import {
   Notification,
   PasswordConfirmation,
   SubmitButton,
-  Subtitle
+  Subtitle,
 } from "@scm-manager/ui-components";
-import { useTranslation } from "react-i18next";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 import { Me } from "@scm-manager/ui-types";
 import { useChangeUserPassword } from "@scm-manager/ui-api";
 
@@ -34,6 +35,7 @@ type Props = {
 
 const ChangeUserPassword: FC<Props> = ({ me }) => {
   const [t] = useTranslation("commons");
+  useDocumentTitle(t("password.subtitle"), me.displayName);
   const { isLoading, error, passwordChanged, changePassword, reset } = useChangeUserPassword(me);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");

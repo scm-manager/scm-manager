@@ -257,6 +257,11 @@ export type RepositoryOverviewListOptionsExtensionPoint = ExtensionPointDefiniti
   () => { pageSize?: number; showArchived?: boolean }
 >;
 
+export type DocumentTitleExtensionPoint = ExtensionPointDefinition<
+  "document.title",
+  { documentTitle: string | ((originalTitle: string) => string) }
+>;
+
 // From docs
 
 export type AdminNavigation = RenderableExtensionPointDefinition<"admin.navigation", { links: Links; url: string }>;

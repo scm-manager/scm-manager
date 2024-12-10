@@ -20,6 +20,7 @@ import { Link } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, Title } from "@scm-manager/ui-components";
 import ConfigForm from "../components/form/ConfigForm";
 import { useConfig, useIndexLinks, useNamespaceStrategies, useUpdateConfig } from "@scm-manager/ui-api";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 const GlobalConfig: FC = () => {
   const indexLinks = useIndexLinks();
@@ -31,6 +32,7 @@ const GlobalConfig: FC = () => {
     isLoading: isLoadingNamespaceStrategies,
   } = useNamespaceStrategies();
   const [t] = useTranslation("config");
+  useDocumentTitle(t("config.title"));
   const error = configLoadingError || namespaceStrategiesLoadingError || updateError || undefined;
   const isLoading = isLoadingNamespaceStrategies || isLoadingConfig;
   const canUpdateConfig = !!(config && (config._links.update as Link).href);

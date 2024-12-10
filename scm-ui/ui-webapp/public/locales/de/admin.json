@@ -114,12 +114,14 @@
   "repositoryRole": {
     "navLink": "Berechtigungsrollen",
     "title": "Berechtigungsrollen",
+    "titleWithPage": "Berechtigungsrollen Seite {{page}} von {{total}}",
     "errorTitle": "Fehler",
     "errorSubtitle": "Unbekannter Berechtigungsrollen Fehler",
+    "detailsTitle": "Berechtigungsrolle",
     "createSubtitle": "Berechtigungsrolle erstellen",
     "editSubtitle": "Berechtigungsrolle bearbeiten",
     "overview": {
-      "title": "Übersicht aller verfügbaren Berechtigungsrollen",
+      "subtitle": "Übersicht aller verfügbaren Berechtigungsrollen",
       "noPermissionRoles": "Keine Berechtigungsrollen gefunden.",
       "createButton": "Berechtigungsrolle erstellen"
     },

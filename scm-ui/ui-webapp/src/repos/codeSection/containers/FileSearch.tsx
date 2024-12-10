@@ -22,6 +22,7 @@ import styled from "styled-components";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import { urls, usePaths } from "@scm-manager/ui-api";
 import { createA11yId, ErrorNotification, FilterInput, Help, Icon, Loading } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 import CodeActionBar from "../components/CodeActionBar";
 import FileSearchResults from "../components/FileSearchResults";
 import { filepathSearch } from "../utils/filepathSearch";
@@ -60,7 +61,14 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
   const query = urls.getQueryStringFromLocation(location) || "";
   const prevSourcePath = urls.getPrevSourcePathFromLocation(location) || "";
   const [t] = useTranslation("repos");
-  const [firstSelectedBranch, setBranchChanged] = useState<string | undefined>(selectedBranch);
+  useDocumentTitle(
+    t("fileSearch.searchWithRevisionAndNamespaceName", {
+      revision: decodeURIComponent(revision),
+      namespace: repository.namespace,
+      name: repository.name,
+    })
+  );
+  const [firstSelectedBranch] = useState<string | undefined>(selectedBranch);
 
   useEffect(() => {
     if (query.length > 1 && data) {

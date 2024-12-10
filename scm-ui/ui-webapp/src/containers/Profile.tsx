@@ -75,10 +75,10 @@ const Profile: FC = () => {
             <ProfileInfo me={me} />
           </Route>
           <Route path={`${url}/settings/theme`} exact>
-            <Theme />
+            <Theme me={me} />
           </Route>
           <Route path={`${url}/settings/accessibility`} exact>
-            <Accessibility />
+            <Accessibility me={me} />
           </Route>
           {mayChangePassword && (
             <Route path={`${url}/settings/password`}>

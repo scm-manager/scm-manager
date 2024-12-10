@@ -16,16 +16,16 @@
 
 import React, { FC } from "react";
 import { Route, Switch } from "react-router-dom";
-import CreateRepository from "./CreateRepository";
-import ImportRepository from "./ImportRepository";
-import { useBinder } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
-import { Notification, Page, urls } from "@scm-manager/ui-components";
-import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
 import { useIndex, useNamespaceStrategies, useRepositoryTypes } from "@scm-manager/ui-api";
+import { Page, urls } from "@scm-manager/ui-components";
+import { Notification, useDocumentTitle } from "@scm-manager/ui-core";
+import { extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import NamespaceAndNameFields from "../components/NamespaceAndNameFields";
 import RepositoryInformationForm from "../components/RepositoryInformationForm";
-import { extensionPoints } from "@scm-manager/ui-extensions/";
+import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
+import CreateRepository from "./CreateRepository";
+import ImportRepository from "./ImportRepository";
 
 type CreatorRouteProps = {
   creator: extensionPoints.RepositoryCreatorExtension;
@@ -41,13 +41,14 @@ const useCreateRepositoryData = () => {
     pageLoadingError: errorNS || errorRT || errorIdx || undefined,
     namespaceStrategies,
     repositoryTypes,
-    index
+    index,
   };
 };
 
 const CreatorRoute: FC<CreatorRouteProps> = ({ creator, creators }) => {
   const { isPageLoading, pageLoadingError, namespaceStrategies, repositoryTypes, index } = useCreateRepositoryData();
   const [t] = useTranslation(["repos", "plugins"]);
+  useDocumentTitle(creator.subtitle);
 
   const Component = creator.component;
 
@@ -88,15 +89,15 @@ const CreateRepositoryRoot: FC = () => {
       path: "",
       icon: "plus",
       label: t("repositoryForm.createButton"),
-      component: CreateRepository
+      component: CreateRepository,
     },
     {
       subtitle: t("import.subtitle"),
       path: "import",
       icon: "file-upload",
       label: t("repositoryForm.importButton"),
-      component: ImportRepository
-    }
+      component: ImportRepository,
+    },
   ];
 
   const extCreators = binder.getExtensions<extensionPoints.RepositoryCreator>("repos.creator");
@@ -106,7 +107,7 @@ const CreateRepositoryRoot: FC = () => {
 
   return (
     <Switch>
-      {creators.map(creator => (
+      {creators.map((creator) => (
         <Route key={creator.path} exact path={urls.concat("/repos/create", creator.path)}>
           <CreatorRoute creator={creator} creators={creators} />
         </Route>

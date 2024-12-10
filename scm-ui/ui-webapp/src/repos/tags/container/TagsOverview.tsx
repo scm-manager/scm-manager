@@ -17,6 +17,7 @@
 import React, { FC, useMemo, useState } from "react";
 import { Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, Notification, Subtitle } from "@scm-manager/ui-components";
+import { useDocumentTitleForRepository } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import orderTags, { SORT_OPTIONS, SortOption } from "../orderTags";
 import TagTable from "../components/TagTable";
@@ -31,6 +32,7 @@ type Props = {
 const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
   const { isLoading, error, data } = useTags(repository);
   const [t] = useTranslation("repos");
+  useDocumentTitleForRepository(repository, t("tags.overview.title"));
   const [sort, setSort] = useState<SortOption | undefined>();
   const tags = useMemo(() => orderTags(data?._embedded?.tags || [], sort), [data, sort]);
 

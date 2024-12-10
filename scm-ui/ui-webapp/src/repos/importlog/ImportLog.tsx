@@ -15,10 +15,11 @@
  */
 
 import React, { FC } from "react";
-import { useImportLog } from "@scm-manager/ui-api";
 import { useParams } from "react-router-dom";
-import { Page } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
+import { useImportLog } from "@scm-manager/ui-api";
+import { Page } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 type Params = {
   logId: string;
@@ -28,6 +29,7 @@ const ImportLog: FC = () => {
   const { logId } = useParams<Params>();
   const { isLoading, data, error } = useImportLog(logId);
   const [t] = useTranslation("commons");
+  useDocumentTitle(t("importLog.title"));
 
   return (
     <Page title={t("importLog.title")} loading={isLoading} error={error}>

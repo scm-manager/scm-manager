@@ -16,11 +16,12 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
+import { useAvailablePermissions, usePermissions } from "@scm-manager/ui-api";
 import { ErrorPage, Loading, Subtitle } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 import { Namespace, Repository } from "@scm-manager/ui-types";
 import CreatePermissionForm from "./CreatePermissionForm";
 import PermissionsTable from "../components/PermissionsTable";
-import { useAvailablePermissions, usePermissions } from "@scm-manager/ui-api";
 
 type Props = {
   namespaceOrRepository: Namespace | Repository;
@@ -37,13 +38,17 @@ const usePermissionData = (namespaceOrRepository: Namespace | Repository) => {
     isLoading: permissions.isLoading || availablePermissions.isLoading,
     error: permissions.error || availablePermissions.error,
     permissions: permissions.data,
-    availablePermissions: availablePermissions.data
+    availablePermissions: availablePermissions.data,
   };
 };
 
 const Permissions: FC<Props> = ({ namespaceOrRepository }) => {
   const { isLoading, error, permissions, availablePermissions } = usePermissionData(namespaceOrRepository);
   const [t] = useTranslation("repos");
+  useDocumentTitle(
+    t("repositoryRoot.menu.permissionsNavLink"),
+    namespaceOrRepository.namespace + (isRepository(namespaceOrRepository) ? "/" + namespaceOrRepository.name : "")
+  );
 
   if (error) {
     return <ErrorPage title={t("permission.error-title")} subtitle={t("permission.error-subtitle")} error={error} />;

@@ -15,13 +15,13 @@
  */
 
 import React, { FC, useState } from "react";
-import { useSearchableTypes, useSearchSyntaxContent } from "@scm-manager/ui-api";
 import { useTranslation } from "react-i18next";
-import { copyToClipboard, InputField, Loading, MarkdownView, Page } from "@scm-manager/ui-components";
-import { ErrorNotification, Icon, Tooltip, Button } from "@scm-manager/ui-core";
+import classNames from "classnames";
 import { parse } from "date-fns";
 import styled from "styled-components";
-import classNames from "classnames";
+import { useSearchableTypes, useSearchSyntaxContent } from "@scm-manager/ui-api";
+import { copyToClipboard, InputField, MarkdownView, Page } from "@scm-manager/ui-components";
+import { ErrorNotification, Icon, Loading, Tooltip, Button, useDocumentTitle } from "@scm-manager/ui-core";
 import { SearchableType } from "@scm-manager/ui-types";
 
 const StyledTooltip = styled(Tooltip)`
@@ -41,7 +41,9 @@ type ExpandableProps = {
 
 const Expandable: FC<ExpandableProps> = ({ header, children, className }) => {
   const [t] = useTranslation("commons");
+  useDocumentTitle(t("search.syntax.title"));
   const [expanded, setExpanded] = useState(false);
+
   return (
     <div className={classNames("card search-syntax-accordion", className)}>
       <header>
@@ -88,18 +90,20 @@ const Examples: FC<ExampleProps> = ({ searchableType }) => {
       <h5 className="title mt-5">{t("search.syntax.exampleQueries.title")}</h5>
       <div className="mb-2">{t("search.syntax.exampleQueries.description")}</div>
       <table>
-        <tr>
-          <th>{t("search.syntax.exampleQueries.table.description")}</th>
-          <th>{t("search.syntax.exampleQueries.table.query")}</th>
-          <th>{t("search.syntax.exampleQueries.table.explanation")}</th>
-        </tr>
-        {examples.map((example) => (
-          <tr key={example.description}>
-            <td>{example.description}</td>
-            <td>{example.query}</td>
-            <td>{example.explanation}</td>
+        <tbody>
+          <tr>
+            <th>{t("search.syntax.exampleQueries.table.description")}</th>
+            <th>{t("search.syntax.exampleQueries.table.query")}</th>
+            <th>{t("search.syntax.exampleQueries.table.explanation")}</th>
           </tr>
-        ))}
+          {examples.map((example) => (
+            <tr key={example.description}>
+              <td>{example.description}</td>
+              <td>{example.query}</td>
+              <td>{example.explanation}</td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </>
   );
@@ -126,28 +130,30 @@ const SearchableTypes: FC = () => {
           header={t(`plugins:search.types.${searchableType.name}.title`, searchableType.name)}
         >
           <table>
-            <tr>
-              <th>{t("search.syntax.fields.name")}</th>
-              <th>{t("search.syntax.fields.type")}</th>
-              <th>{t("search.syntax.fields.exampleValue")}</th>
-              <th>{t("search.syntax.fields.hints")}</th>
-            </tr>
-            {searchableType.fields.map((searchableField) => (
-              <tr key={searchableField.name}>
-                <th>{searchableField.name}</th>
-                <td>{searchableField.type}</td>
-                <td>
-                  {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.exampleValue`, {
-                    defaultValue: "",
-                  })}
-                </td>
-                <td>
-                  {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.hints`, {
-                    defaultValue: "",
-                  })}
-                </td>
+            <tbody>
+              <tr>
+                <th>{t("search.syntax.fields.name")}</th>
+                <th>{t("search.syntax.fields.type")}</th>
+                <th>{t("search.syntax.fields.exampleValue")}</th>
+                <th>{t("search.syntax.fields.hints")}</th>
               </tr>
-            ))}
+              {searchableType.fields.map((searchableField) => (
+                <tr key={searchableField.name}>
+                  <th>{searchableField.name}</th>
+                  <td>{searchableField.type}</td>
+                  <td>
+                    {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.exampleValue`, {
+                      defaultValue: "",
+                    })}
+                  </td>
+                  <td>
+                    {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.hints`, {
+                      defaultValue: "",
+                    })}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
           <Examples searchableType={searchableType} />
         </Expandable>

@@ -14,34 +14,36 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import RepositoryDetailTable from "./RepositoryDetailTable";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { useDocumentTitleForRepository } from "@scm-manager/ui-core";
+import RepositoryDetailTable from "./RepositoryDetailTable";
 
 type Props = {
   repository: Repository;
 };
 
-class RepositoryDetails extends React.Component<Props> {
-  render() {
-    const { repository } = this.props;
-    return (
-      <div>
-        <RepositoryDetailTable repository={repository} />
-        <hr />
-        <div className="content">
-          <ExtensionPoint<extensionPoints.RepositoryDetailsInformation>
-            name="repos.repository-details.information"
-            renderAll={true}
-            props={{
-              repository
-            }}
-          />
-        </div>
+const RepositoryDetails: FC<Props> = ({ repository }) => {
+  const [t] = useTranslation("repos");
+  useDocumentTitleForRepository(repository, t("repositoryRoot.menu.informationNavLink"));
+
+  return (
+    <div>
+      <RepositoryDetailTable repository={repository} />
+      <hr />
+      <div className="content">
+        <ExtensionPoint<extensionPoints.RepositoryDetailsInformation>
+          name="repos.repository-details.information"
+          renderAll={true}
+          props={{
+            repository,
+          }}
+        />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default RepositoryDetails;

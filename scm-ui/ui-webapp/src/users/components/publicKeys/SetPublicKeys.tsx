@@ -21,6 +21,7 @@ import AddPublicKey from "./AddPublicKey";
 import PublicKeyTable from "./PublicKeyTable";
 import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
 import { useDeletePublicKey, usePublicKeys } from "@scm-manager/ui-api";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 type Props = {
   user: User | Me;
@@ -28,6 +29,7 @@ type Props = {
 
 const SetPublicKeys: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
+  useDocumentTitle(t("singleUser.menu.setPublicKeyNavLink"), user.displayName);
   const { error: fetchingError, isLoading, data: publicKeys } = usePublicKeys(user);
   const { error: deletionError, remove } = useDeletePublicKey(user);
   const error = fetchingError || deletionError;

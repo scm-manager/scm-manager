@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Repository } from "@scm-manager/ui-types";
 import { devices, Icon } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 import CompareSelector from "./CompareSelector";
 import { CompareBranchesParams } from "./CompareView";
 
@@ -59,12 +60,22 @@ const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
   const history = useHistory();
   const [source, setSource] = useState<CompareProps>({
     type: params?.sourceType,
-    name: decodeURIComponent(params?.sourceName)
+    name: decodeURIComponent(params?.sourceName),
   });
   const [target, setTarget] = useState<CompareProps>({
     type: params?.targetType,
-    name: decodeURIComponent(params?.targetName)
+    name: decodeURIComponent(params?.targetName),
   });
+  useDocumentTitle(
+    t("compare.compareSourceAndTargetWithNamespaceName", {
+      sourceType: t(`compare.selector.type.${source.type}`),
+      source: source.name,
+      targetType: t(`compare.selector.type.${target.type}`),
+      target: target.name,
+      namespace: repository.namespace,
+      name: repository.name,
+    })
+  );
 
   useEffect(() => {
     const tabUriComponent = location.pathname.split("/")[9];

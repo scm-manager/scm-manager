@@ -36,6 +36,7 @@ import CloudoguPlatformBanner from "../components/CloudoguPlatformBanner";
 import PluginCenterAuthInfo from "../components/PluginCenterAuthInfo";
 import styled from "styled-components";
 import { Button } from "@scm-manager/ui-buttons";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 export enum PluginAction {
   INSTALL = "install",
@@ -70,6 +71,7 @@ const StickyHeader = styled.div`
 
 const PluginsOverview: FC<Props> = ({ installed }) => {
   const [t] = useTranslation("admin");
+  useDocumentTitle(installed ? t("plugins.installedSubtitle") : t("plugins.availableSubtitle"));
   const {
     data: availablePlugins,
     isLoading: isLoadingAvailablePlugins,

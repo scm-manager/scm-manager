@@ -14,25 +14,26 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Title, Configuration } from "@scm-manager/ui-components";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Configuration } from "@scm-manager/ui-components";
+import { Title, useDocumentTitle } from "@scm-manager/ui-core";
 import SvnConfigurationForm from "./SvnConfigurationForm";
 
-type Props = WithTranslation & {
+type Props = {
   link: string;
 };
 
-class SvnGlobalConfiguration extends React.Component<Props> {
-  render() {
-    const { link, t } = this.props;
-    return (
-      <div>
-        <Title title={t("scm-svn-plugin.config.title")} />
-        <Configuration link={link} render={(props: any) => <SvnConfigurationForm {...props} />} />
-      </div>
-    );
-  }
-}
+const SvnGlobalConfiguration: FC<Props> = ({ link }) => {
+  const [t] = useTranslation("plugins");
+  useDocumentTitle(t("scm-svn-plugin.config.title"));
 
-export default withTranslation("plugins")(SvnGlobalConfiguration);
+  return (
+    <div>
+      <Title>{t("scm-svn-plugin.config.title")}</Title>
+      <Configuration link={link} render={(props: any) => <SvnConfigurationForm {...props} />} />
+    </div>
+  );
+};
+
+export default SvnGlobalConfiguration;

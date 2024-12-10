@@ -16,22 +16,28 @@
 
 import { User } from "@scm-manager/ui-types";
 import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import SetPermissions from "./SetPermissions";
 import { useSetUserPermissions, useUserPermissions } from "@scm-manager/ui-api";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 type Props = {
   user: User;
 };
 
 const SetUserPermissions: FC<Props> = ({ user }) => {
-  const { data: selectedPermissions, isLoading: loadingPermissions, error: permissionsLoadError } = useUserPermissions(
-    user
-  );
+  const [t] = useTranslation("users");
+  useDocumentTitle(t("singleUser.menu.setPermissionsNavLink"), user.displayName);
+  const {
+    data: selectedPermissions,
+    isLoading: loadingPermissions,
+    error: permissionsLoadError,
+  } = useUserPermissions(user);
   const {
     isLoading: isUpdatingPermissions,
     isUpdated: permissionsUpdated,
     setPermissions,
-    error: permissionsUpdateError
+    error: permissionsUpdateError,
   } = useSetUserPermissions(user, selectedPermissions);
   return (
     <SetPermissions

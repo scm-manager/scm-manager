@@ -15,13 +15,14 @@
  */
 
 import React, { FC } from "react";
-import DeleteUser from "./DeleteUser";
-import { User } from "@scm-manager/ui-types";
-import UserConverter from "../components/UserConverter";
-import { Form, useUpdateResource } from "@scm-manager/ui-forms";
-import * as userValidator from "../components/userValidation";
-import { Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
+import { User } from "@scm-manager/ui-types";
+import { Subtitle } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
+import { Form, useUpdateResource } from "@scm-manager/ui-forms";
+import UserConverter from "../components/UserConverter";
+import * as userValidator from "../components/userValidation";
+import DeleteUser from "./DeleteUser";
 
 type Props = {
   user: User;
@@ -29,6 +30,7 @@ type Props = {
 
 const EditUser: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
+  useDocumentTitle(t("singleUser.settingsTitle"), user.displayName);
   const { submit } = useUpdateResource<User>(user, (user) => user.name, {
     contentType: "application/vnd.scmm-user+json;v=2",
     collectionName: ["user", "users"],

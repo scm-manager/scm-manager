@@ -14,24 +14,30 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Group } from "@scm-manager/ui-types";
 import React, { FC } from "react";
-import SetPermissions from "./SetPermissions";
+import { useTranslation } from "react-i18next";
+import { Group } from "@scm-manager/ui-types";
 import { useGroupPermissions, useSetGroupPermissions } from "@scm-manager/ui-api";
+import { useDocumentTitle } from "@scm-manager/ui-core";
+import SetPermissions from "./SetPermissions";
 
 type Props = {
   group: Group;
 };
 
 const SetGroupPermissions: FC<Props> = ({ group }) => {
-  const { data: selectedPermissions, isLoading: loadingPermissions, error: permissionsLoadError } = useGroupPermissions(
-    group
-  );
+  const [t] = useTranslation("groups");
+  useDocumentTitle(t("singleGroup.menu.setPermissionsNavLink"), group.name);
+  const {
+    data: selectedPermissions,
+    isLoading: loadingPermissions,
+    error: permissionsLoadError,
+  } = useGroupPermissions(group);
   const {
     isLoading: isUpdatingPermissions,
     isUpdated: permissionsUpdated,
     setPermissions,
-    error: permissionsUpdateError
+    error: permissionsUpdateError,
   } = useSetGroupPermissions(group, selectedPermissions);
   return (
     <SetPermissions

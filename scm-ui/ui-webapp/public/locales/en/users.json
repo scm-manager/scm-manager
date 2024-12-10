@@ -31,6 +31,7 @@
     "createButton": "Create User"
   },
   "singleUser": {
+    "settingsTitle": "General Settings",
     "errorTitle": "Error",
     "errorSubtitle": "Unknown user error",
     "menu": {

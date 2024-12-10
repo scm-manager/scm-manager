@@ -14,25 +14,26 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Title, Configuration } from "@scm-manager/ui-components";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Configuration } from "@scm-manager/ui-components";
+import { Title, useDocumentTitle } from "@scm-manager/ui-core";
 import HgConfigurationForm from "./HgConfigurationForm";
 
-type Props = WithTranslation & {
+type Props = {
   link: string;
 };
 
-class HgGlobalConfiguration extends React.Component<Props> {
-  render() {
-    const { link, t } = this.props;
-    return (
-      <div>
-        <Title title={t("scm-hg-plugin.config.title")} />
-        <Configuration link={link} render={(props: any) => <HgConfigurationForm {...props} />} />
-      </div>
-    );
-  }
-}
+const HgGlobalConfiguration: FC<Props> = ({ link }) => {
+  const [t] = useTranslation("plugins");
+  useDocumentTitle(t("scm-hg-plugin.config.title"));
 
-export default withTranslation("plugins")(HgGlobalConfiguration);
+  return (
+    <div>
+      <Title>{t("scm-hg-plugin.config.title")}</Title>
+      <Configuration link={link} render={(props: any) => <HgConfigurationForm {...props} />} />
+    </div>
+  );
+};
+
+export default HgGlobalConfiguration;

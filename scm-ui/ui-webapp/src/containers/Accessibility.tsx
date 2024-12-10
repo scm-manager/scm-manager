@@ -15,13 +15,20 @@
  */
 
 import React, { FC } from "react";
-import { ButtonGroup, Checkbox, SubmitButton, Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
+import { Me } from "@scm-manager/ui-types";
+import { useDocumentTitle } from "@scm-manager/ui-core";
+import { ButtonGroup, Checkbox, SubmitButton, Subtitle } from "@scm-manager/ui-components";
 import { AccessibilityConfig, useAccessibilityConfig } from "../accessibilityConfig";
 
-const Accessibility: FC = () => {
+type Props = {
+  me: Me;
+};
+
+const Accessibility: FC<Props> = ({ me }) => {
   const [t] = useTranslation("commons");
+  useDocumentTitle(t("profile.accessibility.subtitle"), me.displayName);
   const { value: accessibilityConfig, setValue: setAccessibilityConfig, isLoading } = useAccessibilityConfig();
   const {
     register,

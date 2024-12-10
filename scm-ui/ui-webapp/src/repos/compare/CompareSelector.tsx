@@ -85,17 +85,6 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
     };
   });
 
-  const getActionTypeName = (type: CompareTypes) => {
-    switch (type) {
-      case "b":
-        return "Branch";
-      case "t":
-        return "Tag";
-      case "r":
-        return "Revision";
-    }
-  };
-
   return (
     <ResponsiveWrapper className="field mb-0 is-flex is-flex-direction-column is-fullwidth">
       <label className="label">{label}</label>
@@ -107,7 +96,7 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
               onClick={() => setShowDropdown(!showDropdown)}
             >
               <span className="is-ellipsis-overflow">
-                <strong>{getActionTypeName(selection.type)}:</strong> {selection.name}
+                <strong>{t(`compare.selector.typeTitle.${selection.type}`)}:</strong> {selection.name}
               </span>
               <span className="icon is-small">
                 <Icon>angle-down</Icon>

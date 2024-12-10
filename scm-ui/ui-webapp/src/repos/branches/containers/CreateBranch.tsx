@@ -19,10 +19,11 @@ import { Redirect, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import queryString from "query-string";
 import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
-import BranchForm from "../components/BranchForm";
 import { useBranches, useCreateBranch } from "@scm-manager/ui-api";
+import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
+import { useDocumentTitleForRepository } from "@scm-manager/ui-core";
 import { encodePart } from "../../sources/components/content/FileLink";
+import BranchForm from "../components/BranchForm";
 
 type Props = {
   repository: Repository;
@@ -33,6 +34,7 @@ const CreateBranch: FC<Props> = ({ repository }) => {
   const { isLoading: isLoadingList, error: errorList, data: branches } = useBranches(repository);
   const location = useLocation();
   const [t] = useTranslation("repos");
+  useDocumentTitleForRepository(repository, t("branches.create.title"));
 
   const transmittedName = (url: string): string | undefined => {
     const paramsName = queryString.parse(url).name;
@@ -48,7 +50,9 @@ const CreateBranch: FC<Props> = ({ repository }) => {
   if (createdBranch) {
     return (
       <Redirect
-        to={`/repo/${repository.namespace}/${repository.name}/branch/${encodeURIComponent(encodePart(createdBranch.name))}/info`}
+        to={`/repo/${repository.namespace}/${repository.name}/branch/${encodeURIComponent(
+          encodePart(createdBranch.name)
+        )}/info`}
       />
     );
   }

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 
 type Props = {
@@ -28,17 +28,7 @@ type Props = {
  * @deprecated Please import the identical module from "@scm-manager/ui-core"
  */
 
-const Title: FC<Props> = ({ title, preventRefreshingPageTitle, customPageTitle, className, children }) => {
-  useEffect(() => {
-    if (!preventRefreshingPageTitle) {
-      if (customPageTitle) {
-        document.title = customPageTitle;
-      } else if (title) {
-        document.title = title;
-      }
-    }
-  }, [title, preventRefreshingPageTitle, customPageTitle]);
-
+const Title: FC<Props> = ({ title, className, children }) => {
   if (children) {
     return <h1 className={classNames("title", className)}>{children}</h1>;
   } else if (title) {

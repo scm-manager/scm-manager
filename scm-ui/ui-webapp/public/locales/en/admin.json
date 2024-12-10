@@ -114,12 +114,14 @@
   "repositoryRole": {
     "navLink": "Permission Roles",
     "title": "Permission Roles",
+    "titleWithPage": "Permission Roles page {{page}} of {{total}}",
     "errorTitle": "Error",
     "errorSubtitle": "Unknown Permission Role Error",
+    "detailsTitle": "Permission Role",
     "createSubtitle": "Create Permission Role",
     "editSubtitle": "Edit Permission Role",
     "overview": {
-      "title": "Overview of all Permission Roles",
+      "subtitle": "Overview of all Permission Roles",
       "noPermissionRoles": "No Permission Roles found.",
       "createButton": "Create Permission Role"
     },

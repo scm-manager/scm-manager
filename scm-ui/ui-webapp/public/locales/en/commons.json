@@ -68,6 +68,7 @@
     "error": "Error"
   },
   "logout": {
+    "title": "Logout",
     "error": {
       "title": "Logout Failed",
       "subtitle": "Something went wrong during logout"
@@ -136,6 +137,7 @@
     "previous": "Previous"
   },
   "profile": {
+    "subtitle": "Information",
     "navigationLabel": "Profile",
     "informationNavLink": "Information",
     "changePasswordNavLink": "Change Password",
@@ -264,6 +266,7 @@
     "ariaLabel": "Global search",
     "placeholder": "Search...",
     "title": "Search",
+    "titleWithPage": "Search page {{page}} of {{total}}",
     "subtitle": "{{type}} results",
     "subtitleWithContext": "{{type}} results in \"{{context}}\"",
     "withQueryType": " with {{queryType}}",

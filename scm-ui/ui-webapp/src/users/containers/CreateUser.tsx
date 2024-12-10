@@ -21,7 +21,7 @@ import { Page } from "@scm-manager/ui-components";
 import { Form, useCreateResource } from "@scm-manager/ui-forms";
 import * as userValidator from "../components/userValidation";
 import { Link, User, UserCollection, UserCreation } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-core";
+import { ErrorNotification, Loading, Notification, useDocumentTitle } from "@scm-manager/ui-core";
 import { useUsers } from "@scm-manager/ui-api";
 
 type UserCreationForm = Pick<UserCreation, "password" | "name" | "displayName" | "active" | "external" | "mail"> & {
@@ -30,6 +30,7 @@ type UserCreationForm = Pick<UserCreation, "password" | "name" | "displayName" |
 
 const CreateUserForm: FC<{ users: UserCollection }> = ({ users }) => {
   const [t] = useTranslation("users");
+  useDocumentTitle(t("createUser.title"));
   const { submit, submissionResult: createdUser } = useCreateResource<UserCreationForm, User>(
     (users._links.create as Link).href,
     ["user", "users"],

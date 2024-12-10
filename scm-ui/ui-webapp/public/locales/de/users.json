@@ -31,6 +31,7 @@
     "createButton": "Benutzer erstellen"
   },
   "singleUser": {
+    "settingsTitle": "Generelle Einstellungen",
     "errorTitle": "Fehler",
     "errorSubtitle": "Unbekannter Benutzer Fehler",
     "menu": {

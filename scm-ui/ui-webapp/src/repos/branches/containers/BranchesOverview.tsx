@@ -15,8 +15,10 @@
  */
 
 import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { useDocumentTitleForRepository } from "@scm-manager/ui-core";
 import { useBranches } from "@scm-manager/ui-api";
 import BranchTableWrapper from "./BranchTableWrapper";
 
@@ -27,6 +29,8 @@ type Props = {
 
 const BranchesOverview: FC<Props> = ({ repository, baseUrl }) => {
   const { isLoading, error, data } = useBranches(repository);
+  const [t] = useTranslation("repos");
+  useDocumentTitleForRepository(repository, t("branches.overview.title"));
 
   if (error) {
     return <ErrorNotification error={error} />;

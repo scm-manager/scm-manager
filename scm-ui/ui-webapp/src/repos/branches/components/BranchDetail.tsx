@@ -18,7 +18,8 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import {SmallLoadingSpinner, Subtitle, useGeneratedId} from "@scm-manager/ui-components";
+import { SmallLoadingSpinner, Subtitle, useGeneratedId } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 import BranchButtonGroup from "./BranchButtonGroup";
 import DefaultBranchTag from "./DefaultBranchTag";
 import AheadBehindTag from "./AheadBehindTag";
@@ -33,6 +34,13 @@ type Props = {
 
 const BranchDetail: FC<Props> = ({ repository, branch }) => {
   const [t] = useTranslation("repos");
+  useDocumentTitle(
+    t("branch.branchWithNamespaceName", {
+      branch: branch.name,
+      namespace: repository.namespace,
+      name: repository.name,
+    })
+  );
   const { data, isLoading } = useBranchDetails(repository, branch);
   const labelId = useGeneratedId();
   let aheadBehind;
@@ -70,7 +78,10 @@ const BranchDetail: FC<Props> = ({ repository, branch }) => {
           <BranchButtonGroup repository={repository} branch={branch} />
         </div>
       </div>
-      <span id={labelId} className="is-size-7 has-text-secondary">{t("branch.aheadBehind.label")}</span>{aheadBehind}
+      <span id={labelId} className="is-size-7 has-text-secondary">
+        {t("branch.aheadBehind.label")}
+      </span>
+      {aheadBehind}
     </>
   );
 };

@@ -15,7 +15,7 @@
  */
 
 import React, { FC, useState } from "react";
-import { useTranslation, WithTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
 import {
   Checkbox,
@@ -23,18 +23,20 @@ import {
   DateFromNow,
   Help,
   InfoTable,
-  MailLink
+  MailLink,
 } from "@scm-manager/ui-components";
 import { Icon } from "@scm-manager/ui-components";
 import PermissionOverview from "../PermissionOverview";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
-type Props = WithTranslation & {
+type Props = {
   user: User;
 };
 
 const Details: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
+  useDocumentTitle(t("singleUser.menu.informationNavLink"), user.displayName);
   const [collapsed, setCollapsed] = useState(true);
   const toggleCollapse = () => setCollapsed(!collapsed);
 
@@ -96,7 +98,11 @@ const Details: FC<Props> = ({ user }) => {
               <DateFromNow date={user.lastModified} />
             </td>
           </tr>
-          <ExtensionPoint<extensionPoints.UserInformationTableBottom> name="user.information.table.bottom" props={{user}} renderAll={true} />
+          <ExtensionPoint<extensionPoints.UserInformationTableBottom>
+            name="user.information.table.bottom"
+            props={{ user }}
+            renderAll={true}
+          />
         </tbody>
       </InfoTable>
       {permissionOverview}

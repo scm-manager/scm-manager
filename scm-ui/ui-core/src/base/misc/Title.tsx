@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { HTMLAttributes, useEffect } from "react";
+import React, { HTMLAttributes } from "react";
 import classNames from "classnames";
 
 type Props = {
@@ -24,16 +24,6 @@ type Props = {
 };
 const Title = React.forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement> & Props>(
   ({ title, customPageTitle, preventRefreshingPageTitle, children, className, ...props }, ref) => {
-    useEffect(() => {
-      if (!preventRefreshingPageTitle) {
-        if (customPageTitle) {
-          document.title = customPageTitle;
-        } else if (title) {
-          document.title = title;
-        }
-      }
-    }, [title, preventRefreshingPageTitle, customPageTitle]);
-
     if (children || title) {
       return (
         <h1 className={classNames("title", className)} {...props} ref={ref}>

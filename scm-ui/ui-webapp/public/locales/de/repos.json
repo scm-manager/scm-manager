@@ -34,6 +34,7 @@
     "skipLfsHelpText": "Ist diese Option aktiviert, werden beim Import keine (potentiell vorhandenen) LFS-Dateien in den SCM-Manager geladen. Diese Option ist nur für Git Repositories relevant."
   },
   "repositoryRoot": {
+    "settingsTitle": "Generelle Einstellungen",
     "errorTitle": "Fehler",
     "errorSubtitle": "Unbekannter Repository Fehler",
     "menu": {
@@ -56,6 +57,9 @@
   },
   "overview": {
     "title": "Repositories",
+    "titleWithPage": "Repositories Seite {{page}} von {{total}}",
+    "titleWithNamespace": "Repositories in {{namespace}}",
+    "titleWithNamespaceAndPage": "Repositories Seite {{page}} von {{total}} in {{namespace}}",
     "subtitle": "Übersicht aller verfügbaren Repositories",
     "noRepositories": "Keine Repositories gefunden.",
     "invalidNamespace": "Keine Repositories gefunden. Möglicherweise existiert der ausgewählte Namespace nicht.",
@@ -172,7 +176,8 @@
         "cancel": "Nein",
         "submit": "Ja"
       }
-    }
+    },
+    "branchWithNamespaceName": "Branch {{branch}} in {{namespace}}/{{name}}"
   },
   "compare": {
     "title": "Vergleiche Änderungen",
@@ -183,6 +188,16 @@
       "target": "Target",
       "with": "Vergleiche Änderungen mit...",
       "filter": "Auswahl filtern...",
+      "typeTitle": {
+        "b": "Branch",
+        "t": "Tag",
+        "r": "Revision"
+      },
+      "type": {
+        "b": "Branch",
+        "t": "Tag",
+        "r": "Revision"
+      },
       "emptyResult": "Es wurden keine dem Filter entsprechenden Ergebnisse gefunden.",
       "tabs": {
         "b": "Branches",
@@ -197,7 +212,8 @@
     "tabs": {
       "diff": "Diff",
       "commits": "Commits"
-    }
+    },
+    "compareSourceAndTargetWithNamespaceName": "Vergleiche {{sourceType}} {{source}} mit {{targetType}} {{target}} in {{namespace}}/{{name}}"
   },
   "tags": {
     "overview": {
@@ -249,7 +265,8 @@
         "cancel": "Nein",
         "submit": "Ja"
       }
-    }
+    },
+    "tagWithNamespaceName": "Tag {{tag}} in {{namespace}}/{{name}}"
   },
   "code": {
     "sources": "Sources",
@@ -258,6 +275,11 @@
     "noBranches": "Keine Sources für das Repository gefunden."
   },
   "changesets": {
+    "commitsWithNamespaceName": "Commits in {{namespace}}/{{name}}",
+    "commitsWithPageAndNamespaceName": "Commits Seite {{page}} von {{total}} in {{namespace}}/{{name}}",
+    "commitsWithPageRevisionAndNamespaceName": "Commits Seite {{page}} von {{total}} auf {{revision}} in {{namespace}}/{{name}}",
+    "commitsWithRevisionAndNamespaceName": "Commits auf {{revision}} in {{namespace}}/{{name}}",
+    "idWithNamespaceName": "{{id}} in {{namespace}}/{{name}}",
     "errorTitle": "Fehler",
     "errorSubtitle": "Changesets konnten nicht abgerufen werden",
     "noChangesets": "Keine Changesets in diesem Branch gefunden. Die Commits könnten gelöscht worden sein.",
@@ -420,7 +442,9 @@
       "notBound": "Keine Erweiterung angebunden."
     },
     "loadMore": "Laden",
-    "moreFilesAvailable": "Es werden nur die ersten {{count}} Dateien angezeigt. Es sind weitere Dateien vorhanden."
+    "moreFilesAvailable": "Es werden nur die ersten {{count}} Dateien angezeigt. Es sind weitere Dateien vorhanden.",
+    "pathWithRevisionAndNamespaceName": "{{path}} von {{revision}} in {{namespace}}/{{name}}",
+    "sourcesWithRevisionAndNamespaceName": "Sources von {{revision}} in {{namespace}}/{{name}}"
   },
   "permission": {
     "title": "Berechtigungen",
@@ -547,6 +571,13 @@
     "started": "Die Reindizierung wurde erfolgreich gestartet. Dies ist eine asynchrone Operation und kann einige Zeit in Anspruch nehmen."
   },
   "diff": {
+    "changes": {
+      "add": "added",
+      "delete": "deleted",
+      "modify": "modified",
+      "rename": "renamed",
+      "copy": "copied"
+    },
     "jumpToSource": "Zur Quelldatei springen",
     "jumpToTarget": "Zur vorherigen Version der Datei springen",
     "sideBySide": "Zur zweispaltigen Ansicht wechseln",
@@ -587,7 +618,8 @@
     "notifications": {
       "queryToShort": "Tippe mindestens 2 Zeichen ein, um die Suche zu starten",
       "emptyResult": "Es wurden keine Ergebnisse für <0>{{query}}</0> gefunden"
-    }
+    },
+    "searchWithRevisionAndNamespaceName": "Suche auf {{revision}} in {{namespace}}/{{name}}"
   },
   "shortcuts": {
     "info": "Wechsel zur Repository-Info",

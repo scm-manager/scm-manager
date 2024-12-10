@@ -30,6 +30,7 @@ import {
 } from "@scm-manager/ui-components";
 import PermissionRoleTable from "../components/PermissionRoleTable";
 import { useRepositoryRoles } from "@scm-manager/ui-api";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 type RepositoryRolesPageProps = {
   data?: RepositoryRoleCollection;
@@ -62,6 +63,11 @@ const RepositoryRoles: FC<Props> = ({ baseUrl }) => {
   const page = urls.getPageFromMatch({ params });
   const { isLoading: loading, error, data } = useRepositoryRoles({ page: page - 1 });
   const [t] = useTranslation("admin");
+  useDocumentTitle(
+    data?.pageTotal && data.pageTotal > 1 && page
+      ? t("repositoryRole.titleWithPage", { page, total: data.pageTotal })
+      : t("repositoryRole.title")
+  );
   const canAddRoles = !!data?._links.create;
 
   if (error) {
@@ -79,7 +85,7 @@ const RepositoryRoles: FC<Props> = ({ baseUrl }) => {
   return (
     <>
       <Title title={t("repositoryRole.title")} />
-      <Subtitle subtitle={t("repositoryRole.overview.title")} />
+      <Subtitle subtitle={t("repositoryRole.overview.subtitle")} />
       <RepositoryRolesPage data={data} page={page} baseUrl={baseUrl} />
       {canAddRoles ? (
         <CreateButton label={t("repositoryRole.overview.createButton")} link={`${baseUrl}/create`} />

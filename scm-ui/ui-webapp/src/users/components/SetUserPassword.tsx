@@ -23,9 +23,10 @@ import {
   Notification,
   PasswordConfirmation,
   SubmitButton,
-  Subtitle
+  Subtitle,
 } from "@scm-manager/ui-components";
 import { useSetUserPassword } from "@scm-manager/ui-api";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 type Props = {
   user: User;
@@ -33,6 +34,7 @@ type Props = {
 
 const SetUserPassword: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
+  useDocumentTitle(t("singleUser.menu.setPasswordNavLink"), user.displayName);
   const { passwordOverwritten, setPassword, error, isLoading, reset } = useSetUserPassword(user);
   const [newPassword, setNewPassword] = useState("");
   const [passwordValid, setPasswordValid] = useState(false);

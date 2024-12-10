@@ -15,15 +15,17 @@
  */
 
 import React, { FC, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-
-import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import { Redirect } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useLogout } from "@scm-manager/ui-api";
+import { ErrorPage, Loading } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 const Logout: FC = () => {
   const { error, logout } = useLogout();
   const [t] = useTranslation("commons");
+  useDocumentTitle(t("logout.title"));
+
   useEffect(() => {
     if (logout) {
       logout();

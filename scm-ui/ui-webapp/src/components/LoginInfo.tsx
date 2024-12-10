@@ -15,13 +15,14 @@
  */
 
 import React, { FC } from "react";
-import InfoBox from "./InfoBox";
-import LoginForm from "./LoginForm";
-import { Image, Loading } from "@scm-manager/ui-components";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useLoginInfo } from "@scm-manager/ui-api";
-import { useTranslation } from "react-i18next";
+import { Image, Loading } from "@scm-manager/ui-components";
+import { useDocumentTitle } from "@scm-manager/ui-core";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import InfoBox from "./InfoBox";
+import LoginForm from "./LoginForm";
 
 const TopMarginBox = styled.div`
   margin-top: 5rem;
@@ -57,6 +58,7 @@ type Props = {
 const LoginInfo: FC<Props> = (props) => {
   const { isLoading: isLoadingLoginInfo, data: info } = useLoginInfo();
   const [t] = useTranslation("commons");
+  useDocumentTitle(t("login.title"));
 
   if (isLoadingLoginInfo) {
     return <Loading />;
