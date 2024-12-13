@@ -19,6 +19,7 @@ package sonia.scm.search;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Getter;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -468,6 +469,7 @@ class LuceneQueryBuilderTest {
 
     QueryResult result = query(InetOrgPerson.class, "Arthur");
     ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new Jdk8Module());
 
     JsonNode root = mapper.valueToTree(result);
     assertThat(root.get("totalHits").asInt()).isOne();
@@ -496,6 +498,7 @@ class LuceneQueryBuilderTest {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     mapper.registerModule(new JavaTimeModule());
+    mapper.registerModule(new Jdk8Module());
 
     JsonNode root = mapper.valueToTree(result);
     JsonNode fields = root.get("hits").get(0).get("fields");

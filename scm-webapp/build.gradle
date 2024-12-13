@@ -34,7 +34,7 @@ configurations {
         dependencies.add(project.getDependencies().create("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"))
         dependencies.add(project.getDependencies().create("jakarta.servlet:jakarta.servlet-api:6.0.0"))
         dependencies.add(project.getDependencies().create("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.19"))
-        dependencies.add(project.getDependencies().create("com.fasterxml.jackson.core:jackson-core:2.15.2"))
+        dependencies.add(project.getDependencies().create("com.fasterxml.jackson.core:jackson-core:2.18.2"))
       }
     })
   }
