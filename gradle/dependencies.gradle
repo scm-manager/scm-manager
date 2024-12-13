@@ -14,7 +14,7 @@ ext {
   jjwtVersion = '0.11.5'
   bouncycastleVersion = '2.73.6'
   jettyVersion = '11.0.16'
-  luceneVersion = '8.9.0'
+  luceneVersion = '8.11.4'
 
   junitJupiterVersion = '5.10.3'
   hamcrestVersion = '3.0'
