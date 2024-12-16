@@ -17,9 +17,9 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { devices, ErrorNotification, Image, Loading, Subtitle, Title } from "@scm-manager/ui-components";
+import { devices } from "@scm-manager/ui-components";
 import { useUpdateInfo, useVersion } from "@scm-manager/ui-api";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { ErrorNotification, Image, Loading, Subtitle, Title, useDocumentTitle } from "@scm-manager/ui-core";
 
 const BoxShadowBox = styled.div`
   box-shadow: 0 2px 3px rgba(40, 177, 232, 0.1), 0 0 0 2px rgba(40, 177, 232, 0.2);
@@ -59,7 +59,7 @@ const AdminDetails: FC = () => {
       <BoxShadowBox className="box">
         <MobileWrapped className="media">
           <ImageWrapper className="media-left image is-96x96">
-            <Image src="/images/blib.jpg" alt={t("admin.info.logo")} />
+            <Image src="/images/blib.jpg" alt="" />
           </ImageWrapper>
           <div className="media-content">
             <div className="content">
@@ -82,14 +82,14 @@ const AdminDetails: FC = () => {
 
   return (
     <>
-      <Title title={t("admin.info.title")} />
-      <Subtitle className="mb-1" subtitle={t("admin.info.currentAppVersion")} />
+      <Title>{t("admin.info.title")}</Title>
+      <Subtitle className="mb-1">{t("admin.info.currentAppVersion")}</Subtitle>
       <div className="mb-5">{version}</div>
       {updateInfo ? renderUpdateInfo() : null}
       <BoxShadowBox className="box">
         <MobileWrapped className="media">
           <ImageWrapper className="media-left">
-            <Image src="/images/iconCommunitySupport.png" alt={t("admin.info.communityIconAlt")} />
+            <Image src="/images/iconCommunitySupport.png" alt="" />
           </ImageWrapper>
           <div className="media-content">
             <div className="content">
@@ -110,7 +110,7 @@ const AdminDetails: FC = () => {
       <BoxShadowBox className="box">
         <MobileWrapped className="media">
           <ImageWrapper className="media-left">
-            <Image src="/images/iconEnterpriseSupport.png" alt={t("admin.info.enterpriseIconAlt")} />
+            <Image src="/images/iconEnterpriseSupport.png" alt="" />
           </ImageWrapper>
           <div className="media-content">
             <div className="content">
