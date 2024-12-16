@@ -206,10 +206,13 @@ const RepositoryRoot = () => {
 
   const titleComponent = (
     <>
-      <RouteLink to={`/repos/${repository.namespace}/`} className="has-text-inherit">
+      <RouteLink to={`/repos/${repository.namespace}/`} className="has-text-inherit mr-1">
         {repository.namespace}
       </RouteLink>
-      /{repository.name}
+      /
+      <RouteLink to={`/repo/${repository.namespace}/${repository.name}`} className="has-text-inherit ml-1">
+        {repository.name}
+      </RouteLink>
     </>
   );
 
