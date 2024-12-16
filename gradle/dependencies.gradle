@@ -70,7 +70,7 @@ ext {
     jacksonDataFormatYaml: "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}",
 
     // hypermedia
-    edison: 'de.otto.edison:edison-hal:2.1.0',
+    edison: 'de.otto.edison:edison-hal:2.1.1',
 
     // openapi
     swaggerJaxRs: 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.19',
