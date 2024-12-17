@@ -45,7 +45,7 @@ const Tag: FC<Props> = ({
   title,
   onClick,
   onRemove,
-  children
+  children,
 }) => {
   const [t] = useTranslation("commons");
 
@@ -53,7 +53,7 @@ const Tag: FC<Props> = ({
   if (icon) {
     showIcon = (
       <>
-        <i className={classNames("fas", `fa-${icon}`)} />
+        <i className={classNames("fas", `fa-${icon}`)} aria-hidden="true" />
         &nbsp;
       </>
     );
@@ -65,26 +65,44 @@ const Tag: FC<Props> = ({
 
   return (
     <>
-      <span
-        className={classNames(
-          "tag",
-          `is-${color}`,
-          `is-${size}`,
-          className,
-          {
-            "is-outlined": outlined,
-            "is-rounded": rounded,
-            "is-clickable": onClick
-          },
-          size === "small" && smallClassNames
-        )}
-        title={title}
-        onClick={onClick}
-      >
-        {showIcon}
-        {label}
-        {children}
-      </span>
+      {onClick === undefined ? (
+        <span
+          className={classNames(
+            "tag",
+            `is-${color}`,
+            `is-${size}`,
+            className,
+            {
+              "is-outlined": outlined,
+              "is-rounded": rounded,
+            },
+            size === "small" && smallClassNames
+          )}
+        >
+          {showIcon}
+          {label}
+          {children}
+        </span>
+      ) : (
+        <button
+          className={classNames(
+            "tag",
+            `is-${color}`,
+            `is-${size}`,
+            className,
+            {
+              "is-outlined": outlined,
+              "is-rounded": rounded,
+            },
+            size === "small" && smallClassNames
+          )}
+          onClick={onClick}
+        >
+          {showIcon}
+          {label}
+          {children}
+        </button>
+      )}
       {showDelete}
     </>
   );

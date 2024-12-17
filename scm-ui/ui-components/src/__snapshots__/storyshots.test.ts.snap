@@ -77735,6 +77735,13 @@ exports[`Storyshots Secondary Navigation Active when match 1`] = `
           onClick={[Function]}
           type="button"
         >
+          <i
+            className="SecondaryNavigation__Icon-sc-8p1rgi-1 gqxbcY is-medium"
+          >
+            <i
+              className="fas fa-caret-down"
+            />
+          </i>
           Hitchhiker
         </button>
         <ul
@@ -84523,12 +84530,12 @@ exports[`Storyshots Tag Clickable 1`] = `
 <div
   className="Tagstories__Wrapper-sc-wsn8kx-0 TvLrx"
 >
-  <span
-    className="tag is-light is-normal is-clickable"
+  <button
+    className="tag is-light is-normal"
     onClick={[Function]}
   >
     Click here
-  </span>
+  </button>
 </div>
 `;
 
@@ -84744,6 +84751,7 @@ exports[`Storyshots Tag With Icon 1`] = `
     className="tag is-light is-normal"
   >
     <i
+      aria-hidden="true"
       className="fas fa-bolt"
     />
      
@@ -84758,7 +84766,6 @@ exports[`Storyshots Tag With title 1`] = `
 >
   <span
     className="tag is-light is-normal"
-    title="good job"
   >
     hover me
   </span>
