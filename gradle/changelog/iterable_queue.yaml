@@ -1,0 +1,2 @@
+- type: removed
+  description: Unused class `IterableQueue`
