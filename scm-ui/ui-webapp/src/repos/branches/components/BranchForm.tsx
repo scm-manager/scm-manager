@@ -28,6 +28,8 @@ type Props = {
   disabled?: boolean;
 };
 
+const autoFocus = (el) => el?.focus();
+
 const BranchForm: FC<Props> = ({ submitForm, branches, disabled, transmittedName, loading }) => {
   const [t] = useTranslation("repos");
   const [name, setName] = useState(transmittedName || "");
@@ -45,15 +47,15 @@ const BranchForm: FC<Props> = ({ submitForm, branches, disabled, transmittedName
     if (isValid()) {
       submitForm({
         name,
-        parent: source
+        parent: source,
       });
     }
   };
 
   orderBranches(branches);
-  const options = branches.map(branch => ({
+  const options = branches.map((branch) => ({
     label: branch.name,
-    value: branch.name
+    value: branch.name,
   }));
 
   return (
@@ -65,9 +67,10 @@ const BranchForm: FC<Props> = ({ submitForm, branches, disabled, transmittedName
               name="source"
               label={t("branches.create.source")}
               options={options}
-              onChange={setSource}
+              onChange={(e) => setSource(e.target.value)}
               loading={loading}
               disabled={disabled}
+              ref={autoFocus}
             />
             <InputField
               name="name"

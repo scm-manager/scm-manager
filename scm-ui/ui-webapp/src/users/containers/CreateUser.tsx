@@ -68,6 +68,7 @@ const CreateUserForm: FC<{ users: UserCollection }> = ({ users }) => {
                   validate: userValidator.isNameValid,
                 }}
                 testId="input-username"
+                autoFocus
               />
               <Form.Input
                 name="displayName"

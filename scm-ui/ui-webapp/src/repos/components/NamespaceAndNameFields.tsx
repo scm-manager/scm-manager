@@ -97,6 +97,7 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
         helpText={t("help.nameHelpText")}
         disabled={disabled}
         required={true}
+        autofocus={namespaceStrategy !== CUSTOM_NAMESPACE_STRATEGY}
       />
     </>
   );

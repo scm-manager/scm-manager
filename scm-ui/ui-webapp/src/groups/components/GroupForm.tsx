@@ -118,6 +118,7 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, transmittedName = ""
         value={groupState.name}
         validationError={nameValidationError}
         helpText={t("groupForm.help.nameHelpText")}
+        autofocus
       />
     );
   } else if (group.external) {

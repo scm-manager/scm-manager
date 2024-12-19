@@ -1,0 +1,2 @@
+- type: changed
+  description: Set focus to first input element in repository, user, group, branch and repository role creation forms

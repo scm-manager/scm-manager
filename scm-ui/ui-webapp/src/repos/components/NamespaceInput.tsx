@@ -72,6 +72,7 @@ const NamespaceInput: FC<Props> = ({
         required={true}
         aria-required={true}
         nullable
+        ref={(el) => el?.focus()}
       />
     );
   }
