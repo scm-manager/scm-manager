@@ -70,7 +70,7 @@ public class DefaultBranchDeleteProtection {
     try {
       return service.getBranchesCommand().setDisableCache(true).getBranches();
     } catch (IOException e) {
-      LOG.warn("Could not read branches in repository {} to check for default branch", service.getRepository());
+      LOG.warn("Could not read branches in repository {} to check for default branch", service.getRepository(), e);
       return new Branches();
     }
   }
