@@ -124,29 +124,49 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
           file
         </StyledIcon>
       )}
-      <div className={"ml-1"}>{changeType}</div>
+      <div className={"ml-1"}>{path}</div>
       {changeType === "ADD" && (
-        <StyledStatus style={{ minWidth: "1.5rem" }} key={"add"} alt={t("diff.showContent")}>
+        <StyledStatus
+          className="has-text-success"
+          style={{ minWidth: "1.5rem" }}
+          key={"add"}
+          alt={t("diff.showContent")}
+        >
           plus
         </StyledStatus>
       )}
       {changeType === "MODIFY" && (
-        <StyledStatus style={{ minWidth: "1.5rem" }} key={"modify"} alt={t("diff.showContent")}>
+        <StyledStatus
+          className="has-text-info"
+          style={{ minWidth: "1.5rem" }}
+          key={"modify"}
+          alt={t("diff.showContent")}
+        >
           slash
         </StyledStatus>
       )}
       {changeType === "DELETE" && (
-        <StyledStatus style={{ minWidth: "1.5rem" }} key={"delete"} alt={t("diff.showContent")}>
+        <StyledStatus
+          className="has-text-danger"
+          style={{ minWidth: "1.5rem" }}
+          key={"delete"}
+          alt={t("diff.showContent")}
+        >
           minus
         </StyledStatus>
       )}
       {changeType === "RENAME" && (
-        <StyledStatus style={{ minWidth: "1.5rem" }} key={"rename"} alt={t("diff.showContent")}>
+        <StyledStatus
+          className="has-text-info"
+          style={{ minWidth: "1.5rem" }}
+          key={"rename"}
+          alt={t("diff.showContent")}
+        >
           slash
         </StyledStatus>
       )}
       {changeType === "COPY" && (
-        <StyledStatus style={{ minWidth: "1.5rem" }} key={"copy"} alt={t("diff.showContent")}>
+        <StyledStatus className="has-text-info" style={{ minWidth: "1.5rem" }} key={"copy"} alt={t("diff.showContent")}>
           plus
         </StyledStatus>
       )}
