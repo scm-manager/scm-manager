@@ -93,6 +93,65 @@ const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile
   );
 };
 
+type FileChangeTypeIconProps = {
+  changeType: string;
+};
+
+const FileChangeTypeIcon: FC<FileChangeTypeIconProps> = ({ changeType }) => {
+  const [t] = useTranslation("repos");
+  if (changeType === "ADD") {
+    return (
+      <StyledStatus className="has-text-success" style={{ minWidth: "1.5rem" }} key={"add"} alt={t("diff.changes.add")}>
+        plus
+      </StyledStatus>
+    );
+  }
+  if (changeType === "MODIFY") {
+    return (
+      <StyledStatus
+        className="has-text-info"
+        style={{ minWidth: "1.5rem" }}
+        key={"modify"}
+        alt={t("diff.changes.modify")}
+      >
+        slash
+      </StyledStatus>
+    );
+  }
+  if (changeType === "DELETE") {
+    return (
+      <StyledStatus
+        className="has-text-danger"
+        style={{ minWidth: "1.5rem" }}
+        key={"delete"}
+        alt={t("diff.changes.delete")}
+      >
+        minus
+      </StyledStatus>
+    );
+  }
+  if (changeType === "RENAME") {
+    return (
+      <StyledStatus
+        className="has-text-info"
+        style={{ minWidth: "1.5rem" }}
+        key={"rename"}
+        alt={t("diff.changes.rename")}
+      >
+        slash
+      </StyledStatus>
+    );
+  }
+  if (changeType === "COPY") {
+    return (
+      <StyledStatus className="has-text-info" style={{ minWidth: "1.5rem" }} key={"copy"} alt={t("diff.changes.copy")}>
+        plus
+      </StyledStatus>
+    );
+  }
+  return null;
+};
+
 type FileProps = {
   changeType: string;
   path: string;
@@ -125,51 +184,7 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
         </StyledIcon>
       )}
       <div className={"ml-1"}>{path}</div>
-      {changeType === "ADD" && (
-        <StyledStatus
-          className="has-text-success"
-          style={{ minWidth: "1.5rem" }}
-          key={"add"}
-          alt={t("diff.showContent")}
-        >
-          plus
-        </StyledStatus>
-      )}
-      {changeType === "MODIFY" && (
-        <StyledStatus
-          className="has-text-info"
-          style={{ minWidth: "1.5rem" }}
-          key={"modify"}
-          alt={t("diff.showContent")}
-        >
-          slash
-        </StyledStatus>
-      )}
-      {changeType === "DELETE" && (
-        <StyledStatus
-          className="has-text-danger"
-          style={{ minWidth: "1.5rem" }}
-          key={"delete"}
-          alt={t("diff.showContent")}
-        >
-          minus
-        </StyledStatus>
-      )}
-      {changeType === "RENAME" && (
-        <StyledStatus
-          className="has-text-info"
-          style={{ minWidth: "1.5rem" }}
-          key={"rename"}
-          alt={t("diff.showContent")}
-        >
-          slash
-        </StyledStatus>
-      )}
-      {changeType === "COPY" && (
-        <StyledStatus className="has-text-info" style={{ minWidth: "1.5rem" }} key={"copy"} alt={t("diff.showContent")}>
-          plus
-        </StyledStatus>
-      )}
+      <FileChangeTypeIcon changeType={changeType.toLowerCase()} />
     </TreeFileContent>
   );
 };
