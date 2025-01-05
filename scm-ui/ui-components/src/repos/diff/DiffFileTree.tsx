@@ -26,6 +26,9 @@ type Props = { tree: FileTree; currentFile: string; setCurrentFile: (path: strin
 const StyledIcon = styled(Icon)`
   min-width: 1.5rem;
 `;
+const StyledStatus = styled(StyledIcon)`
+  margin-left: auto;
+`;
 
 const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile }) => {
   return (
@@ -79,6 +82,7 @@ const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile
         </ul>
       ) : (
         <TreeFile
+          changeType={node.changeType}
           path={node.nodeName}
           parentPath={parentPath}
           currentFile={currentFile}
@@ -89,13 +93,19 @@ const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile
   );
 };
 
-type FileProps = { path: string; parentPath: string; currentFile: string; setCurrentFile: (path: string) => void };
+type FileProps = {
+  changeType: string;
+  path: string;
+  parentPath: string;
+  currentFile: string;
+  setCurrentFile: (path: string) => void;
+};
 
 export const TreeFileContent = styled.div`
   cursor: pointer;
 `;
 
-const TreeFile: FC<FileProps> = ({ path, parentPath, currentFile, setCurrentFile }) => {
+const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, setCurrentFile }) => {
   const [t] = useTranslation("repos");
   const completePath = addPath(parentPath, path);
 
@@ -114,7 +124,32 @@ const TreeFile: FC<FileProps> = ({ path, parentPath, currentFile, setCurrentFile
           file
         </StyledIcon>
       )}
-      <div className={"ml-1"}>{path}</div>
+      <div className={"ml-1"}>{changeType}</div>
+      {changeType === "ADD" && (
+        <StyledStatus style={{ minWidth: "1.5rem" }} key={"add"} alt={t("diff.showContent")}>
+          plus
+        </StyledStatus>
+      )}
+      {changeType === "MODIFY" && (
+        <StyledStatus style={{ minWidth: "1.5rem" }} key={"modify"} alt={t("diff.showContent")}>
+          slash
+        </StyledStatus>
+      )}
+      {changeType === "DELETE" && (
+        <StyledStatus style={{ minWidth: "1.5rem" }} key={"delete"} alt={t("diff.showContent")}>
+          minus
+        </StyledStatus>
+      )}
+      {changeType === "RENAME" && (
+        <StyledStatus style={{ minWidth: "1.5rem" }} key={"rename"} alt={t("diff.showContent")}>
+          slash
+        </StyledStatus>
+      )}
+      {changeType === "COPY" && (
+        <StyledStatus style={{ minWidth: "1.5rem" }} key={"copy"} alt={t("diff.showContent")}>
+          plus
+        </StyledStatus>
+      )}
     </TreeFileContent>
   );
 };
