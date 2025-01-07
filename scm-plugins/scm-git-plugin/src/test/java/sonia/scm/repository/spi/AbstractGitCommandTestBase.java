@@ -41,7 +41,9 @@ public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
   {
     if (context == null)
     {
-      context = new GitContext(repositoryDirectory, repository, new GitRepositoryConfigStoreProvider(InMemoryConfigurationStoreFactory.create()), new GitConfig());
+      GitConfig config = new GitConfig();
+      config.setDefaultBranch("master");
+      context = new GitContext(repositoryDirectory, repository, new GitRepositoryConfigStoreProvider(InMemoryConfigurationStoreFactory.create()), config);
     }
 
     return context;

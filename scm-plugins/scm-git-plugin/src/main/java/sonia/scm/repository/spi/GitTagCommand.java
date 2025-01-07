@@ -230,12 +230,7 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
         .map(tag -> new ReceiveCommand(fromString(tag.getRevision()), zeroId(), REFS_TAGS_PREFIX + tag.getName()))
         .forEach(receiveCommands::add);
       return x -> {
-        Repository gitRepo;
-        try {
-          gitRepo = context.open();
-        } catch (IOException e) {
-          throw new InternalRepositoryException(repository, "failed to open repository for post receive hook after internal change", e);
-        }
+        Repository gitRepo = context.open();
         GitHookChangesetCollector collector =
           GitHookChangesetCollector.collectChangesets(
             converterFactory,

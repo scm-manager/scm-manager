@@ -31,7 +31,6 @@ import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.util.IOUtil;
 
 import java.io.IOException;
@@ -40,10 +39,9 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
 
-public class GitLogCommand extends AbstractGitCommand implements LogCommand
-{
+public class GitLogCommand extends AbstractGitCommand implements LogCommand {
 
- 
+
   private static final Logger logger =
     LoggerFactory.getLogger(GitLogCommand.class);
   public static final String REVISION = "Revision";
@@ -51,20 +49,16 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
 
   @Inject
-  GitLogCommand(@Assisted GitContext context, GitChangesetConverterFactory converterFactory)
-  {
+  GitLogCommand(@Assisted GitContext context, GitChangesetConverterFactory converterFactory) {
     super(context);
     this.converterFactory = converterFactory;
   }
 
 
-
   @Override
   @SuppressWarnings("java:S2093")
-  public Changeset getChangeset(String revision, LogCommandRequest request)
-  {
-    if (logger.isDebugEnabled())
-    {
+  public Changeset getChangeset(String revision, LogCommandRequest request) {
+    if (logger.isDebugEnabled()) {
       logger.debug("fetch changeset {}", revision);
     }
 
@@ -73,18 +67,15 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     GitChangesetConverter converter = null;
     RevWalk revWalk = null;
 
-    try
-    {
+    try {
       gr = open();
 
-      if (!gr.getAllRefs().isEmpty())
-      {
+      if (!gr.getAllRefs().isEmpty()) {
         revWalk = new RevWalk(gr);
         ObjectId id = GitUtil.getRevisionId(gr, revision);
         RevCommit commit = revWalk.parseCommit(id);
 
-        if (commit != null)
-        {
+        if (commit != null) {
           converter = converterFactory.create(gr, revWalk);
 
           if (isBranchRequested(request)) {
@@ -98,23 +89,15 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
           } else {
             changeset = converter.createChangeset(commit);
           }
-        }
-        else if (logger.isWarnEnabled())
-        {
+        } else if (logger.isWarnEnabled()) {
           logger.warn("could not find revision {}", revision);
         }
       }
-    }
-    catch (IOException ex)
-    {
+    } catch (IOException ex) {
       logger.error("could not open repository: " + repository.getNamespaceAndName(), ex);
-    }
-    catch (NullPointerException e)
-    {
+    } catch (NullPointerException e) {
       throw notFound(entity(REVISION, revision).in(this.repository));
-    }
-    finally
-    {
+    } finally {
       IOUtil.close(converter);
       GitUtil.release(revWalk);
     }
@@ -138,14 +121,10 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
   @Override
   @SuppressWarnings("java:S2093")
   public ChangesetPagingResult getChangesets(LogCommandRequest request) {
-    try {
-      if (Strings.isNullOrEmpty(request.getBranch())) {
-        request.setBranch(context.getConfig().getDefaultBranch());
-      }
-      return new GitLogComputer(this.repository.getId(), open(), converterFactory).compute(request);
-    } catch (IOException e) {
-      throw new InternalRepositoryException(repository, "could not create change log", e);
+    if (Strings.isNullOrEmpty(request.getBranch())) {
+      request.setBranch(context.getConfig().getDefaultBranch());
     }
+    return new GitLogComputer(this.repository.getId(), open(), converterFactory).compute(request);
   }
 
   public interface Factory {

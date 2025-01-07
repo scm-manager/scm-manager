@@ -60,7 +60,7 @@ public class GitPostReceiveRepositoryHookEventFactoryTest extends AbstractGitCom
     when(hookContext.getBranchProvider().getCreatedOrModified()).thenReturn(branches);
     when(hookContext.getTagProvider().getCreatedTags()).thenReturn(tags);
 
-    RepositoryHookEvent event = eventFactory.createEvent(
+    RepositoryHookEvent event = eventFactory.createPostReceiveEvent(
       createContext(),
       branches,
       tags,

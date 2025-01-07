@@ -16,38 +16,41 @@
 
 package sonia.scm.repository.spi;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.MergeCommand;
-import org.eclipse.jgit.api.MergeResult;
+import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.lib.ObjectId;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.MergeCommandResult;
 
-import java.io.IOException;
-import java.util.Collections;
+@Slf4j
+class GitFastForwardIfPossible {
 
-class GitFastForwardIfPossible extends GitMergeStrategy {
+  private final MergeCommandRequest request;
+  private final MergeHelper mergeHelper;
+  private final GitMergeCommit fallbackMerge;
+  private final CommitHelper commitHelper;
+  private final Repository repository;
 
-  private GitMergeStrategy fallbackMerge;
-
-  GitFastForwardIfPossible(Git clone, MergeCommandRequest request, GitContext context, Repository repository) {
-    super(clone, request, context, repository);
-    fallbackMerge = new GitMergeCommit(clone, request, context, repository);
+  GitFastForwardIfPossible(MergeCommandRequest request, GitContext context, RepositoryManager repositoryManager, GitRepositoryHookEventFactory eventFactory) {
+    this.request = request;
+    this.mergeHelper = new MergeHelper(context, request, repositoryManager, eventFactory);
+    this.fallbackMerge = new GitMergeCommit(request, context, repositoryManager, eventFactory);
+    this.commitHelper = new CommitHelper(context, repositoryManager, eventFactory);
+    this.repository = context.getRepository();
   }
 
-  @Override
-  MergeCommandResult run() throws IOException {
-    MergeResult fastForwardResult = mergeWithFastForwardOnlyMode();
-    if (fastForwardResult.getMergeStatus().isSuccessful()) {
-      push();
-      return createSuccessResult(fastForwardResult.getNewHead().name());
+  MergeCommandResult run() {
+    log.trace("try to fast forward branch {} onto {} in repository {}", request.getBranchToMerge(), request.getTargetBranch(), repository);
+    ObjectId sourceRevision = mergeHelper.getRevisionToMerge();
+    ObjectId targetRevision = mergeHelper.getTargetRevision();
+
+    if (mergeHelper.isMergedInto(targetRevision, sourceRevision)) {
+      log.trace("fast forward branch {} onto {}", request.getBranchToMerge(), request.getTargetBranch());
+      commitHelper.updateBranch(request.getTargetBranch(), sourceRevision, targetRevision);
+      return MergeCommandResult.success(targetRevision.name(), mergeHelper.getRevisionToMerge().name(), sourceRevision.name());
     } else {
+      log.trace("fast forward is not possible, fallback to merge");
       return fallbackMerge.run();
     }
-  }
-
-  private MergeResult mergeWithFastForwardOnlyMode() throws IOException {
-    MergeCommand mergeCommand = getClone().merge();
-    mergeCommand.setFastForward(MergeCommand.FastForwardMode.FF_ONLY);
-    return doMergeInClone(mergeCommand);
   }
 }

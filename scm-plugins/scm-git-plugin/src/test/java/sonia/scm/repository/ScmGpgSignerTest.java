@@ -18,12 +18,9 @@ package sonia.scm.repository;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.CanceledException;
-import org.eclipse.jgit.internal.storage.dfs.DfsRepositoryDescription;
-import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
-import org.eclipse.jgit.lib.CommitBuilder;
-import org.eclipse.jgit.lib.GpgSigner;
+import org.eclipse.jgit.lib.GpgConfig;
 import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.Signers;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,7 +76,7 @@ class ScmGpgSignerTest {
 
     when(gpg.getPrivateKey()).thenReturn(privateKey);
 
-    GpgSigner.setDefault(signer);
+    Signers.set(GpgConfig.GpgFormat.OPENPGP, signer);
 
     Path repositoryPath = workdir.resolve("repository");
     Git git = Git.init().setDirectory(repositoryPath.toFile()).call();
@@ -103,6 +100,6 @@ class ScmGpgSignerTest {
 
   @Test
   void canLocateSigningKey() throws CanceledException {
-    assertThat(signer.canLocateSigningKey("foo", personIdent, credentialsProvider)).isTrue();
+    assertThat(signer.canLocateSigningKey(null, null, personIdent, "foo", credentialsProvider)).isTrue();
   }
 }

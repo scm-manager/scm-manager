@@ -16,11 +16,11 @@
 
 package sonia.scm.repository;
 
-import org.eclipse.jgit.api.errors.CanceledException;
-import org.eclipse.jgit.lib.CommitBuilder;
+import org.eclipse.jgit.lib.GpgConfig;
 import org.eclipse.jgit.lib.GpgSignature;
-import org.eclipse.jgit.lib.GpgSigner;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.Signer;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import sonia.scm.security.GPG;
 import sonia.scm.security.PrivateKey;
@@ -38,20 +38,19 @@ public final class GitTestHelper {
     return new GitChangesetConverterFactory(new NoopGPG());
   }
 
-  public static class SimpleGpgSigner extends GpgSigner {
+  public static class SimpleGpgSigner implements Signer {
 
     public static byte[] getSignature() {
       return "SIGNATURE".getBytes();
     }
 
     @Override
-    public void sign(CommitBuilder commitBuilder, String s, PersonIdent personIdent, CredentialsProvider
-      credentialsProvider) throws CanceledException {
-      commitBuilder.setGpgSignature(new GpgSignature(SimpleGpgSigner.getSignature()));
+    public GpgSignature sign(Repository repository, GpgConfig gpgConfig, byte[] bytes, PersonIdent personIdent, String s, CredentialsProvider credentialsProvider) {
+      return new GpgSignature(SimpleGpgSigner.getSignature());
     }
 
     @Override
-    public boolean canLocateSigningKey(String s, PersonIdent personIdent, CredentialsProvider credentialsProvider) throws CanceledException {
+    public boolean canLocateSigningKey(Repository repository, GpgConfig gpgConfig, PersonIdent personIdent, String s, CredentialsProvider credentialsProvider) {
       return true;
     }
 

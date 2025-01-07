@@ -34,7 +34,7 @@ public class GitLazyChangesetResolverTest extends AbstractGitCommandTestBase {
   @Test
   public void shouldResolveChangesets() throws IOException {
     GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(repository, Git.wrap(createContext().open()));
-    Iterable<RevCommit> commits = changesetResolver.call();
+    Iterable<RevCommit> commits = changesetResolver.get();
 
     RevCommit firstCommit = commits.iterator().next();
     assertThat(firstCommit.getId().toString()).isEqualTo("commit a8495c0335a13e6e432df90b3727fa91943189a7 1602078219 -----sp");
@@ -46,7 +46,7 @@ public class GitLazyChangesetResolverTest extends AbstractGitCommandTestBase {
   public void shouldResolveAllChangesets() throws IOException, GitAPIException {
     Git git = Git.wrap(createContext().open());
     GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(repository, git);
-    Iterable<RevCommit> allCommits = changesetResolver.call();
+    Iterable<RevCommit> allCommits = changesetResolver.get();
     int allCommitsCounter = Iterables.size(allCommits);
     int singleBranchCommitsCounter = Iterables.size(git.log().call());
 
@@ -57,7 +57,7 @@ public class GitLazyChangesetResolverTest extends AbstractGitCommandTestBase {
   public void shouldThrowImportFailedException() {
     Git git = mock(Git.class);
     doThrow(ImportFailedException.class).when(git).log();
-    new GitLazyChangesetResolver(repository, git).call();
+    new GitLazyChangesetResolver(repository, git).get();
   }
 }
 

@@ -17,6 +17,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
+import org.eclipse.jgit.revwalk.RevCommit;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookBranchProvider;
@@ -27,17 +28,19 @@ import sonia.scm.repository.api.HookTagProvider;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 class GitImportHookContextProvider extends HookContextProvider {
   private final GitChangesetConverter converter;
   private final List<Tag> newTags;
-  private final GitLazyChangesetResolver changesetResolver;
+  private final Supplier<Iterable<RevCommit>> changesetResolver;
   private final List<String> newBranches;
 
   GitImportHookContextProvider(GitChangesetConverter converter,
                                List<String> newBranches,
                                List<Tag> newTags,
-                               GitLazyChangesetResolver changesetResolver) {
+                               Supplier<Iterable<RevCommit>> changesetResolver) {
     this.converter = converter;
     this.newTags = newTags;
     this.changesetResolver = changesetResolver;
@@ -81,7 +84,7 @@ class GitImportHookContextProvider extends HookContextProvider {
 
   @Override
   public HookChangesetProvider getChangesetProvider() {
-      GitConvertingChangesetIterable changesets = new GitConvertingChangesetIterable(changesetResolver.call(), converter);
+      GitConvertingChangesetIterable changesets = new GitConvertingChangesetIterable(changesetResolver.get(), converter);
       return r -> new HookChangesetResponse(changesets);
   }
 }

@@ -239,9 +239,7 @@ public final class GitUtil {
                                 String branchName)
     throws IOException {
     Ref ref = null;
-    if (!branchName.startsWith(REF_HEAD)) {
-      branchName = PREFIX_HEADS.concat(branchName);
-    }
+    branchName = getRevString(branchName);
 
     checkBranchName(repo, branchName);
 
@@ -256,6 +254,13 @@ public final class GitUtil {
     }
 
     return ref;
+  }
+
+  public static String getRevString(String branchName) {
+    if (!branchName.startsWith(REF_HEAD)) {
+      return PREFIX_HEADS.concat(branchName);
+    }
+    return branchName;
   }
 
   /**

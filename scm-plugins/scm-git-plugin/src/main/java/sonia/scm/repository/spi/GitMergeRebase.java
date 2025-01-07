@@ -16,73 +16,108 @@
 
 package sonia.scm.repository.spi;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.MergeCommand;
-import org.eclipse.jgit.api.RebaseResult;
-import org.eclipse.jgit.api.errors.GitAPIException;
+import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.api.errors.CanceledException;
+import org.eclipse.jgit.api.errors.UnsupportedSigningFormatException;
 import org.eclipse.jgit.lib.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.merge.ResolveMerger;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevSort;
+import org.eclipse.jgit.revwalk.RevWalk;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
+import sonia.scm.repository.Person;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.MergeCommandResult;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Optional;
+import java.util.Iterator;
+import java.util.List;
 
-public class GitMergeRebase extends GitMergeStrategy {
+import static java.util.Optional.ofNullable;
+import static org.eclipse.jgit.merge.MergeStrategy.RESOLVE;
 
-  private static final Logger logger = LoggerFactory.getLogger(GitMergeRebase.class);
+@Slf4j
+class GitMergeRebase {
 
   private final MergeCommandRequest request;
+  private final GitContext context;
+  private final MergeHelper mergeHelper;
+  private final CommitHelper commitHelper;
+  private final GitFastForwardIfPossible fastForwardMerge;
 
-  GitMergeRebase(Git clone, MergeCommandRequest request, GitContext context, Repository repository) {
-    super(clone, request, context, repository);
+  GitMergeRebase(MergeCommandRequest request, GitContext context, RepositoryManager repositoryManager, GitRepositoryHookEventFactory eventFactory) {
     this.request = request;
+    this.context = context;
+    this.mergeHelper = new MergeHelper(context, request, repositoryManager, eventFactory);
+    this.commitHelper = new CommitHelper(context, repositoryManager, eventFactory);
+    this.fastForwardMerge = new GitFastForwardIfPossible(request, context, repositoryManager, eventFactory);
   }
 
-  @Override
-  MergeCommandResult run() throws IOException {
-    RebaseResult result;
-    String branchToMerge = request.getBranchToMerge();
-    String targetBranch = request.getTargetBranch();
-    try {
-      checkOutBranch(branchToMerge);
-      result =
-        getClone()
-          .rebase()
-          .setUpstream(targetBranch)
-          .call();
-    } catch (GitAPIException e) {
-      throw new InternalRepositoryException(getContext().getRepository(), "could not rebase branch " + branchToMerge + " onto " + targetBranch, e);
+  MergeCommandResult run() {
+    log.debug("rebase branch {} onto {}", request.getBranchToMerge(), request.getTargetBranch());
+
+    ObjectId sourceRevision = mergeHelper.getRevisionToMerge();
+    ObjectId targetRevision = mergeHelper.getTargetRevision();
+    if (mergeHelper.isMergedInto(targetRevision, sourceRevision)) {
+      log.trace("fast forward is possible; using fast forward merge");
+      return fastForwardMerge.run();
     }
 
-    if (result.getStatus().isSuccessful()) {
-      return fastForwardTargetBranch(branchToMerge, targetBranch, result);
-    } else {
-      logger.info("could not rebase branch {} into {} with rebase status '{}' due to ...", branchToMerge, targetBranch, result.getStatus());
-      logger.info("... conflicts: {}", result.getConflicts());
-      logger.info("... failing paths: {}", result.getFailingPaths());
-      logger.info("... message: {}", result);
-      return MergeCommandResult.failure(branchToMerge, targetBranch, Optional.ofNullable(result.getConflicts()).orElse(Collections.singletonList("UNKNOWN")));
+    try {
+      List<RevCommit> commits = computeCommits();
+      Collections.reverse(commits);
+
+      for (RevCommit commit : commits) {
+        log.trace("rebase {} onto {}", commit, targetRevision);
+        ResolveMerger merger = (ResolveMerger) RESOLVE.newMerger(context.open(), true); // The recursive merger is always a RecursiveMerge
+        merger.setBase(commit.getParent(0));
+        boolean mergeSucceeded = merger.merge(commit, targetRevision);
+        if (!mergeSucceeded) {
+          log.trace("could not merge {} into {}", commit, targetRevision);
+          return MergeCommandResult.failure(request.getBranchToMerge(), request.getTargetBranch(), ofNullable(merger.getUnmergedPaths()).orElse(Collections.singletonList("UNKNOWN")));
+        }
+        ObjectId newTreeId = merger.getResultTreeId();
+        log.trace("create commit for new tree {}", newTreeId);
+
+        PersonIdent originalAuthor = commit.getAuthorIdent();
+        targetRevision = commitHelper.createCommit(
+          newTreeId,
+          new Person(originalAuthor.getName(), originalAuthor.getEmailAddress()),
+          request.getAuthor(),
+          commit.getFullMessage(),
+          request.isSign(),
+          targetRevision
+        );
+        log.trace("created {}", targetRevision);
+      }
+      log.trace("update branch {} to new revision {}", request.getTargetBranch(), targetRevision);
+      commitHelper.updateBranch(request.getTargetBranch(), targetRevision, mergeHelper.getTargetRevision());
+      return MergeCommandResult.success(targetRevision.name(), mergeHelper.getRevisionToMerge().name(), targetRevision.name());
+    } catch (IOException | CanceledException | UnsupportedSigningFormatException e) {
+      throw new InternalRepositoryException(context.getRepository(), "could not rebase branch " + request.getBranchToMerge() + " onto " + request.getTargetBranch(), e);
     }
   }
 
-  private MergeCommandResult fastForwardTargetBranch(String branchToMerge, String targetBranch, RebaseResult result) throws IOException {
-    try {
-      getClone().checkout().setName(targetBranch).call();
-      ObjectId sourceRevision = resolveRevision(branchToMerge);
-      getClone()
-        .merge()
-        .setFastForward(MergeCommand.FastForwardMode.FF_ONLY)
-        .include(branchToMerge, sourceRevision)
-        .call();
-      push();
-      return createSuccessResult(sourceRevision.name());
-    } catch (GitAPIException e) {
-      return MergeCommandResult.failure(branchToMerge, targetBranch, result.getConflicts());
-    }
+  private List<RevCommit> computeCommits() throws IOException {
+    List<RevCommit> cherryPickList = new ArrayList<>();
+    try (RevWalk revWalk = new RevWalk(context.open())) {
+      revWalk.sort(RevSort.TOPO_KEEP_BRANCH_TOGETHER, true);
+      revWalk.sort(RevSort.COMMIT_TIME_DESC, true);
+      revWalk.markUninteresting(revWalk.lookupCommit(mergeHelper.getTargetRevision()));
+      revWalk.markStart(revWalk.lookupCommit(mergeHelper.getRevisionToMerge()));
 
+      for (RevCommit commit : revWalk) {
+        if (commit.getParentCount() <= 1) {
+          log.trace("add {} to cherry pick list", commit);
+          cherryPickList.add(commit);
+        } else {
+          log.trace("skip {} because it has more than one parent", commit);
+        }
+      }
+    }
+    return cherryPickList;
   }
 }

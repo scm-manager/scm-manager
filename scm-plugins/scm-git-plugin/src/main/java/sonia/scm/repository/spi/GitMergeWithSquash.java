@@ -16,36 +16,21 @@
 
 package sonia.scm.repository.spi;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.MergeCommand;
-import org.eclipse.jgit.api.MergeResult;
-import org.eclipse.jgit.revwalk.RevCommit;
-import sonia.scm.NoChangesMadeException;
-import sonia.scm.repository.Repository;
+import org.eclipse.jgit.lib.ObjectId;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.MergeCommandResult;
 
-import java.io.IOException;
+class GitMergeWithSquash {
 
-import static sonia.scm.repository.spi.GitRevisionExtractor.extractRevisionFromRevCommit;
+  private final MergeCommandRequest request;
+  private final MergeHelper mergeHelper;
 
-class GitMergeWithSquash extends GitMergeStrategy {
-
-  GitMergeWithSquash(Git clone, MergeCommandRequest request, GitContext context, Repository repository) {
-    super(clone, request, context, repository);
+  GitMergeWithSquash(MergeCommandRequest request, GitContext context, RepositoryManager repositoryManager, GitRepositoryHookEventFactory eventFactory) {
+    this.request = request;
+    this.mergeHelper = new MergeHelper(context, request, repositoryManager, eventFactory);
   }
 
-  @Override
-  MergeCommandResult run() throws IOException {
-    MergeCommand mergeCommand = getClone().merge();
-    mergeCommand.setSquash(true);
-    MergeResult result = doMergeInClone(mergeCommand);
-
-    if (result.getMergeStatus().isSuccessful()) {
-      RevCommit revCommit = doCommit().orElseThrow(() -> new NoChangesMadeException(getRepository()));
-      push();
-      return createSuccessResult(extractRevisionFromRevCommit(revCommit));
-    } else {
-      return analyseFailure(result);
-    }
+  MergeCommandResult run() {
+    return mergeHelper.doRecursiveMerge(request, (sourceRevision, targetRevision) -> new ObjectId[]{targetRevision});
   }
 }

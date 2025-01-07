@@ -90,7 +90,7 @@ public class GitMergeCommandConflictTest extends AbstractGitCommandTestBase {
   private MergeConflictResult computeMergeConflictResult(String branchToMerge, String targetBranch) {
     AttributeAnalyzer attributeAnalyzer = mock(AttributeAnalyzer.class);
     when(attributeAnalyzer.hasExternalMergeToolConflicts(any(), any())).thenReturn(false);
-    GitMergeCommand gitMergeCommand = new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)), new SimpleMeterRegistry()), attributeAnalyzer);
+    GitMergeCommand gitMergeCommand = new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)), new SimpleMeterRegistry()), attributeAnalyzer, null, null);
     MergeCommandRequest mergeCommandRequest = new MergeCommandRequest();
     mergeCommandRequest.setBranchToMerge(branchToMerge);
     mergeCommandRequest.setTargetBranch(targetBranch);
