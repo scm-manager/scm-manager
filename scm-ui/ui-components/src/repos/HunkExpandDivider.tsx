@@ -21,6 +21,9 @@ import styled from "styled-components";
 
 const HunkDivider = styled.div`
   background: #98d8f3;
+  @media screen and (max-width: 768px) {
+    padding-left: 0px !important;
+  } ;
 `;
 
 const HunkExpandDivider: FC = ({ children }) => {

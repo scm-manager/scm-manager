@@ -16,7 +16,7 @@
 
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import classNames from "classnames";
+import { Icon } from "@scm-manager/ui-core";
 
 type Props = {
   icon: string;
@@ -37,9 +37,13 @@ const HunkExpandLink: FC<Props> = ({ icon, text, onClick }) => {
   };
 
   return (
-    <span className="is-clickable" onClick={onClickWithLoadingMarker}>
-      <i className={classNames("fa", icon)} /> {loading ? t("diff.expanding") : text}
-    </span>
+    <button
+      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
+      onClick={onClickWithLoadingMarker}
+    >
+      <Icon>{icon}</Icon>
+      {loading ? t("diff.expanding") : text}
+    </button>
   );
 };
 

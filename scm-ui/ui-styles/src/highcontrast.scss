@@ -294,6 +294,13 @@ td button:not(.is-default) {
   color: $scheme-main;
 }
 
+.hunk-expander{
+  &:hover, :focus-visible {
+    color: #98d8f3;
+    background-color: #050514
+  }
+}
+
 /* transport meaning with more than color */
 td:nth-child(2).diff-gutter-delete:before {
   content: "-";
