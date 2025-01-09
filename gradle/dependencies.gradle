@@ -9,7 +9,7 @@ ext {
 
   mapstructVersion = '1.6.3'
   jaxbVersion = '4.0.2'
-  shiroVersion = '1.12.0'
+  shiroVersion = '1.13.0'
   sspVersion = '1.3.0'
   jjwtVersion = '0.11.5'
   bouncycastleVersion = '2.73.6'
