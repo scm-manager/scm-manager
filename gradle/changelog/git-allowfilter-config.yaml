@@ -1,0 +1,2 @@
+- type: added
+  description: Uploadpack.allowFilter = true set for all new and existing Git repositories

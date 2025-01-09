@@ -30,13 +30,13 @@ import sonia.scm.plugin.Extension;
  */
 @Extension
 @EagerSingleton
-public class GitRepositoryModifyListener {
+public class GitRepositoryConfigChangeListener {
 
   private final GitHeadModifier headModifier;
   private final GitRepositoryConfigStoreProvider storeProvider;
 
   @Inject
-  public GitRepositoryModifyListener(GitHeadModifier headModifier, GitRepositoryConfigStoreProvider storeProvider) {
+  public GitRepositoryConfigChangeListener(GitHeadModifier headModifier, GitRepositoryConfigStoreProvider storeProvider) {
     this.headModifier = headModifier;
     this.storeProvider = storeProvider;
   }

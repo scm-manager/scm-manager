@@ -25,10 +25,11 @@ public class GitConfigHelper {
   private static final String CONFIG_SECTION_SCMM = "scmm";
   private static final String CONFIG_KEY_REPOSITORY_ID = "repositoryid";
 
-  public void createScmmConfig(Repository repository, org.eclipse.jgit.lib.Repository gitRepository) throws IOException {
-    StoredConfig config = gitRepository.getConfig();
-    config.setString(CONFIG_SECTION_SCMM, null, CONFIG_KEY_REPOSITORY_ID, repository.getId());
-    config.save();
+  public void createScmmConfig(Repository scmmRepository, org.eclipse.jgit.lib.Repository gitRepository) throws IOException {
+    StoredConfig gitConfig = gitRepository.getConfig();
+    gitConfig.setString(CONFIG_SECTION_SCMM, null, CONFIG_KEY_REPOSITORY_ID, scmmRepository.getId());
+    gitConfig.setBoolean("uploadpack", null, "allowFilter", true);
+    gitConfig.save();
   }
 
   public String getRepositoryId(StoredConfig gitConfig) {

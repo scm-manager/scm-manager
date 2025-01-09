@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+    Copyright (c) 2020 - present Cloudogu GmbH
+
+    This program is free software: you can redistribute it and/or modify it under
+    the terms of the GNU Affero General Public License as published by the Free
+    Software Foundation, version 3.
+
+    This program is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+    details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program. If not, see https://www.gnu.org/licenses/.
+-->
+
+<repositories>
+    <properties/>
+    <id>3ZUZMNJn3E</id>
+    <namespace>test</namespace>
+    <name>exampleGitRepoWithoutFilterUpdate</name>
+    <type>git</type>
+    <description></description>
+    <contact></contact>
+    <creationDate>1736402353654</creationDate>
+    <lastModified>1736402353753</lastModified>
+    <permission>
+        <groupPermission>false</groupPermission>
+        <name>scmadmin</name>
+        <role>OWNER</role>
+    </permission>
+    <archived>false</archived>
+</repositories>
