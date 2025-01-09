@@ -28,7 +28,7 @@ type Props = {
   disabled?: boolean;
 };
 
-const autoFocus = (el) => el?.focus();
+const autoFocus = (el: HTMLSelectElement) => el?.focus();
 
 const BranchForm: FC<Props> = ({ submitForm, branches, disabled, transmittedName, loading }) => {
   const [t] = useTranslation("repos");
