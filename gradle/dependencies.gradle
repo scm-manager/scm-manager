@@ -96,7 +96,7 @@ ext {
     // utils
     guava: 'com.google.guava:guava:33.3.1-jre',
     commonsLang: 'commons-lang:commons-lang:2.6',
-    commonsCompress: 'org.apache.commons:commons-compress:1.23.0',
+    commonsCompress: 'org.apache.commons:commons-compress:1.27.1',
     commonsIo: 'commons-io:commons-io:2.13.0',
     commonsLang3: 'org.apache.commons:commons-lang3:3.13.0',
 
