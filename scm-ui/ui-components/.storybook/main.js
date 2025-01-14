@@ -39,8 +39,14 @@ module.exports = {
   },
   typescript: { reactDocgen: false },
   stories: ["../src/**/*.stories.tsx"],
+  addons: [
+    "storybook-addon-i18next",
+    "storybook-addon-themes",
+    "@storybook/addon-links",
+    "@storybook/addon-essentials",
+    "@storybook/addon-interactions",
+  ],
   framework: "@storybook/react",
-  addons: ["storybook-addon-i18next", "storybook-addon-themes", "@storybook/addon-links", "@storybook/addon-essentials", "@storybook/addon-interactions"],
   webpackFinal: async (config) => {
     // add our themes to webpack entry points
     config.entry = {

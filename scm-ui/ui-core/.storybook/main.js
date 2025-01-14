@@ -22,7 +22,6 @@ const ReactDOM = require("react-dom");
 
 const root = path.resolve("..");
 
-
 const themedir = path.join(root, "ui-styles", "src");
 
 ReactDOM.createPortal = (node) => node;
@@ -46,7 +45,7 @@ module.exports = {
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     "@storybook/addon-a11y",
-    "storybook-addon-pseudo-states"
+    "storybook-addon-pseudo-states",
   ],
   framework: "@storybook/react",
   webpackFinal: async (config) => {
@@ -74,6 +73,9 @@ module.exports = {
     // So we use a custom plugin which uses a hook of html-webpack-plugin
     // to filter our themes from the output.
     config.plugins.push(new RemoveThemesPlugin());
+
+    // force node version of "decode-named-character-reference" instead of browser version which does not work in web worker
+    config.resolve.alias["decode-named-character-reference"] = require.resolve("decode-named-character-reference");
 
     // force cjs instead of esm
     // https://github.com/tannerlinsley/react-query/issues/3513
