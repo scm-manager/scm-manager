@@ -105,6 +105,10 @@ public class XmlRepositoryDAO implements RepositoryDAO {
       pathRepositoryLocationResolverInstance.forAllLocations((repositoryId, repositoryPath) -> {
         try {
           Repository repository = metadataStore.read(repositoryPath);
+          if (byNamespaceAndName.containsKey(repository.getNamespaceAndName())) {
+            log.warn("Duplicate repository found. Adding suffix DUPLICATE to repository {}", repository);
+            repository.setName(repository.getName() + "-" + repositoryId + "-DUPLICATE");
+          }
           byNamespaceAndName.put(repository.getNamespaceAndName(), repository);
           byId.put(repositoryId, repository);
         } catch (InternalRepositoryException e) {

@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.46.5] - 2025-01-17
+### Fixed
+- Removed the API token error log message that was being printed when the API token was invalid.
+
+## [2.46.4] - 2024-06-24
+### Fixed
+- Check for already existing Namespace and Name when renaming a repository
+- Repositories with the same namespace and name will get unique names on startup
+
+## [2.46.3] - 2024-05-29
+### Fixed
+- Exception in SVN repositories due to incorrect git initialization (Backport from 2.47)
+- Default branch evaluation on git config initialization
+
+## [2.46.2] - 2024-03-04
+### Fixed
+- Rendering PDF files in source view
+
 ## [2.48.3] - 2023-12-08
 ### Fixed
 - Removed function `toSpliced` due to missing browser support
@@ -1438,6 +1456,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.45.1]: https://scm-manager.org/download/2.45.1
 [2.46.0]: https://scm-manager.org/download/2.46.0
 [2.46.1]: https://scm-manager.org/download/2.46.1
+[2.46.2]: https://scm-manager.org/download/2.46.2
+[2.46.3]: https://scm-manager.org/download/2.46.3
+[2.46.4]: https://scm-manager.org/download/2.46.4
+[2.46.5]: https://scm-manager.org/download/2.46.5
 [2.47.0]: https://scm-manager.org/download/2.47.0
 [2.48.0]: https://scm-manager.org/download/2.48.0
 [2.48.1]: https://scm-manager.org/download/2.48.1
