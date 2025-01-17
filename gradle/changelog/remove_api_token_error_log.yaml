@@ -1,0 +1,2 @@
+- type: fixed
+  description: Removed the API token error log message that was being printed when the API token was invalid.
