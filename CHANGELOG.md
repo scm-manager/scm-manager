@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.0] - 2025-01-23
+### Added
+- Performance improvements for git modifications
+- New button variant called "info"
+- Link to repo page in repo header
+- Extension point below the title of a repository
+- 'uploadpack.allowFilter = true' set for all new and existing Git repositories
+
+### Fixed
+- Remove superfluous alt text for decorative images
+- Accessible details for contributors and tags in changesets
+- Whitespace dropdown is now correctly displayed after pr create
+
+### Changed
+- Clickable tags are based on the HTML button.
+- Upgrade JGit to 7.1.0.202411261347-r
+- Set focus to first input element in repository, user, group, branch and repository role creation forms
+- Replace title behavior with `useDocumentTitle` hook for setting descriptive document titles
+
+### Removed
+- Unused class `IterableQueue`
+
 ## [3.6.1] - 2025-01-17
 ### Fixed
 - Removed the API token error log message that was being printed when the API token was invalid (fix from 2.46.5)
@@ -1671,3 +1693,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.5.0]: https://scm-manager.org/download/3.5.0
 [3.6.0]: https://scm-manager.org/download/3.6.0
 [3.6.1]: https://scm-manager.org/download/3.6.1
+[3.7.0]: https://scm-manager.org/download/3.7.0
