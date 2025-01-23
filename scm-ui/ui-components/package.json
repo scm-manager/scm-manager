@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-components",
-  "version": "3.7.0",
+  "version": "3.7.1-SNAPSHOT",
   "description": "UI Components for SCM-Manager and its plugins",
   "main": "src/index.ts",
   "files": [
@@ -32,8 +32,8 @@
     "react-query": "^3.39.2"
   },
   "devDependencies": {
-    "@scm-manager/ui-tests": "3.7.0",
-    "@scm-manager/ui-types": "3.7.0",
+    "@scm-manager/ui-tests": "3.7.1-SNAPSHOT",
+    "@scm-manager/ui-types": "3.7.1-SNAPSHOT",
     "@types/fetch-mock": "^7.3.1",
     "@types/react-select": "^2.0.19",
     "@types/unist": "^2.0.3",
@@ -67,17 +67,17 @@
     "@scm-manager/jest-preset": "^2.14.1",
     "@scm-manager/prettier-config": "^2.12.0",
     "@scm-manager/tsconfig": "^2.13.0",
-    "@scm-manager/ui-syntaxhighlighting": "3.7.0",
-    "@scm-manager/ui-shortcuts": "3.7.0",
-    "@scm-manager/ui-text": "3.7.0"
+    "@scm-manager/ui-syntaxhighlighting": "3.7.1-SNAPSHOT",
+    "@scm-manager/ui-shortcuts": "3.7.1-SNAPSHOT",
+    "@scm-manager/ui-text": "3.7.1-SNAPSHOT"
   },
   "dependencies": {
-    "@scm-manager/ui-core": "3.7.0",
-    "@scm-manager/ui-overlays": "3.7.0",
-    "@scm-manager/ui-layout": "3.7.0",
-    "@scm-manager/ui-buttons": "3.7.0",
-    "@scm-manager/ui-api": "3.7.0",
-    "@scm-manager/ui-extensions": "3.7.0",
+    "@scm-manager/ui-core": "3.7.1-SNAPSHOT",
+    "@scm-manager/ui-overlays": "3.7.1-SNAPSHOT",
+    "@scm-manager/ui-layout": "3.7.1-SNAPSHOT",
+    "@scm-manager/ui-buttons": "3.7.1-SNAPSHOT",
+    "@scm-manager/ui-api": "3.7.1-SNAPSHOT",
+    "@scm-manager/ui-extensions": "3.7.1-SNAPSHOT",
     "deepmerge": "^4.2.2",
     "hast-util-sanitize": "^3.0.2",
     "react-diff-view": "^2.4.10",
