@@ -1,0 +1,2 @@
+- type: fixed
+  description: Internal server error when creating tags in combination with some plugins

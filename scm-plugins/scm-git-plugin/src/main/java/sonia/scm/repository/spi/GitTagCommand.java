@@ -41,6 +41,7 @@ import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.Tag;
+import sonia.scm.repository.api.HookBranchProvider;
 import sonia.scm.repository.api.HookChangesetProvider;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
@@ -216,6 +217,21 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
         @Override
         public List<Tag> getDeletedTags() {
           return deletedTags;
+        }
+      };
+    }
+
+    @Override
+    public HookBranchProvider getBranchProvider() {
+      return new HookBranchProvider() {
+        @Override
+        public List<String> getCreatedOrModified() {
+          return List.of();
+        }
+
+        @Override
+        public List<String> getDeletedOrClosed() {
+          return List.of();
         }
       };
     }
