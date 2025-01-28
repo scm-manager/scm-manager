@@ -26,6 +26,9 @@ type Props = { tree: FileTree; currentFile: string; setCurrentFile: (path: strin
 const StyledIcon = styled(Icon)`
   min-width: 1.5rem;
 `;
+const StyledStatus = styled(StyledIcon)`
+  margin-left: auto;
+`;
 
 const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile }) => {
   return (
@@ -79,6 +82,7 @@ const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile
         </ul>
       ) : (
         <TreeFile
+          changeType={node.changeType}
           path={node.nodeName}
           parentPath={parentPath}
           currentFile={currentFile}
@@ -89,13 +93,78 @@ const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile
   );
 };
 
-type FileProps = { path: string; parentPath: string; currentFile: string; setCurrentFile: (path: string) => void };
+type FileChangeTypeIconProps = {
+  changeType: string;
+};
+
+const FileChangeTypeIcon: FC<FileChangeTypeIconProps> = ({ changeType }) => {
+  const [t] = useTranslation("repos");
+  if (changeType === "ADD") {
+    return (
+      <StyledStatus className="has-text-success" style={{ minWidth: "1.5rem" }} key={"add"} alt={t("diff.changes.add")}>
+        plus
+      </StyledStatus>
+    );
+  }
+  if (changeType === "MODIFY") {
+    return (
+      <StyledStatus
+        className="has-text-info"
+        style={{ minWidth: "1.5rem" }}
+        key={"modify"}
+        alt={t("diff.changes.modify")}
+      >
+        slash
+      </StyledStatus>
+    );
+  }
+  if (changeType === "DELETE") {
+    return (
+      <StyledStatus
+        className="has-text-danger"
+        style={{ minWidth: "1.5rem" }}
+        key={"delete"}
+        alt={t("diff.changes.delete")}
+      >
+        minus
+      </StyledStatus>
+    );
+  }
+  if (changeType === "RENAME") {
+    return (
+      <StyledStatus
+        className="has-text-info"
+        style={{ minWidth: "1.5rem" }}
+        key={"rename"}
+        alt={t("diff.changes.rename")}
+      >
+        slash
+      </StyledStatus>
+    );
+  }
+  if (changeType === "COPY") {
+    return (
+      <StyledStatus className="has-text-info" style={{ minWidth: "1.5rem" }} key={"copy"} alt={t("diff.changes.copy")}>
+        plus
+      </StyledStatus>
+    );
+  }
+  return null;
+};
+
+type FileProps = {
+  changeType: string;
+  path: string;
+  parentPath: string;
+  currentFile: string;
+  setCurrentFile: (path: string) => void;
+};
 
 export const TreeFileContent = styled.div`
   cursor: pointer;
 `;
 
-const TreeFile: FC<FileProps> = ({ path, parentPath, currentFile, setCurrentFile }) => {
+const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, setCurrentFile }) => {
   const [t] = useTranslation("repos");
   const completePath = addPath(parentPath, path);
 
@@ -115,6 +184,7 @@ const TreeFile: FC<FileProps> = ({ path, parentPath, currentFile, setCurrentFile
         </StyledIcon>
       )}
       <div className={"ml-1"}>{path}</div>
+      <FileChangeTypeIcon changeType={changeType.toLowerCase()} />
     </TreeFileContent>
   );
 };
