@@ -59,7 +59,7 @@ public class HgRepositoryFactory {
     HgConfig config = configResolver.resolve(repository);
     File directory = config.getDirectory();
 
-    RepositoryConfiguration repoConfiguration = RepositoryConfiguration.DEFAULT;
+    RepositoryConfiguration repoConfiguration = new RepositoryConfiguration();
     repoConfiguration.setHgrcPath(null);
     repoConfiguration.getEnvironment().putAll(environment);
     repoConfiguration.addExtension(HgFileviewExtension.class);
