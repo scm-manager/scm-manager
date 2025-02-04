@@ -78158,11 +78158,18 @@ exports[`Storyshots Secondary Navigation Active when match 1`] = `
       <div>
         <button
           aria-label="secondaryNavigation.hideContent"
-          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label is-clickable"
+          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label"
           collapsed={false}
           onClick={[Function]}
           type="button"
         >
+          <i
+            className="SecondaryNavigation__Icon-sc-8p1rgi-1 gqxbcY is-medium"
+          >
+            <i
+              className="fas fa-caret-down"
+            />
+          </i>
           Hitchhiker
         </button>
         <ul
@@ -78215,7 +78222,7 @@ exports[`Storyshots Secondary Navigation Default 1`] = `
       <div>
         <button
           aria-label="secondaryNavigation.hideContent"
-          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label is-clickable"
+          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label"
           collapsed={false}
           onClick={[Function]}
           type="button"
@@ -78278,7 +78285,7 @@ exports[`Storyshots Secondary Navigation Extension Point 1`] = `
       <div>
         <button
           aria-label="secondaryNavigation.hideContent"
-          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label is-clickable"
+          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label"
           collapsed={false}
           onClick={[Function]}
           type="button"
@@ -78369,7 +78376,7 @@ exports[`Storyshots Secondary Navigation Sub Navigation 1`] = `
       <div>
         <button
           aria-label="secondaryNavigation.hideContent"
-          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label is-clickable"
+          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label"
           collapsed={false}
           onClick={[Function]}
           type="button"

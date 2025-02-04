@@ -18,7 +18,7 @@ import React, { FC } from "react";
 import { Route, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { ErrorPage, Loading, Title, urls } from "@scm-manager/ui-components";
+import { ErrorPage, Loading, urls } from "@scm-manager/ui-components";
 import PermissionRoleDetail from "../components/PermissionRoleDetails";
 import EditRepositoryRole from "./EditRepositoryRole";
 import { useRepositoryRole } from "@scm-manager/ui-api";

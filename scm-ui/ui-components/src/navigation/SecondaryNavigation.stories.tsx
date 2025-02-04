@@ -16,12 +16,13 @@
 
 import { storiesOf } from "@storybook/react";
 import React, { ReactElement } from "react";
+import { MemoryRouter } from "react-router-dom";
+import styled from "styled-components";
+import { Binder, ExtensionPoint, BinderContext } from "@scm-manager/ui-extensions";
+import { SecondaryNavigationProvider } from "./SecondaryNavigationContext";
 import SecondaryNavigation from "./SecondaryNavigation";
 import SecondaryNavigationItem from "./SecondaryNavigationItem";
-import styled from "styled-components";
 import SubNavigation from "./SubNavigation";
-import { Binder, ExtensionPoint, BinderContext } from "@scm-manager/ui-extensions";
-import { MemoryRouter } from "react-router-dom";
 
 const Columns = styled.div`
   margin: 2rem;
@@ -46,7 +47,9 @@ const withRoute = (route: string) => {
 storiesOf("Secondary Navigation", module)
   .addDecorator((story) => (
     <Columns className="columns">
-      <div className="column is-3">{story()}</div>
+      <div className="column is-3">
+        <SecondaryNavigationProvider>{story()}</SecondaryNavigationProvider>
+      </div>
     </Columns>
   ))
   .add("Default", () =>

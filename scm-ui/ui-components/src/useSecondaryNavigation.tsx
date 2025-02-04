@@ -15,17 +15,14 @@
  */
 
 import { useLocalStorage } from "@scm-manager/ui-api";
-import { useCallback, useMemo } from "react";
+import { useCallback, useContext } from "react";
+import { SecondaryNavigationContext } from "./navigation/SecondaryNavigationContext";
 
 export const useSecondaryNavigation = (isNavigationCollapsible = true) => {
-  const [isCollapsed, setCollapsed] = useLocalStorage<boolean>("secondaryNavigation.collapsed", false);
-  const [isRouteCollapsible, setRouteCollapsible] = useLocalStorage<boolean>("secondaryNavigation.collapsible", true);
+  const { collapsible, setCollapsible } = useContext(SecondaryNavigationContext);
+  const [isCollapsed, setCollapsed] = useLocalStorage("secondaryNavigation.collapsed", false);
 
-  const collapsible = useMemo(
-    () => isRouteCollapsible && isNavigationCollapsible,
-    [isNavigationCollapsible, isRouteCollapsible]
-  );
-  const collapsed = useMemo(() => collapsible && isCollapsed, [collapsible, isCollapsed]);
+  const collapsed = collapsible && isCollapsed;
 
   const toggleCollapse = useCallback(() => {
     if (collapsible) {
@@ -33,13 +30,10 @@ export const useSecondaryNavigation = (isNavigationCollapsible = true) => {
     }
   }, [collapsible, setCollapsed]);
 
-  return useMemo(
-    () => ({
-      collapsed,
-      collapsible,
-      setCollapsible: setRouteCollapsible,
-      toggleCollapse,
-    }),
-    [collapsed, collapsible, setRouteCollapsible, toggleCollapse]
-  );
+  return {
+    collapsed,
+    collapsible,
+    setCollapsible,
+    toggleCollapse,
+  };
 };

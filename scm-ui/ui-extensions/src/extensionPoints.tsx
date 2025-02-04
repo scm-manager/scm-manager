@@ -686,7 +686,7 @@ export type RepositoryInformationTableBottom = RenderableExtensionPointDefinitio
 
 export type RepositoryBanner = RenderableExtensionPointDefinition<
   "repository.banner",
-  { repository: Repository, url: string }
+  { repository: Repository; url: string }
 >;
 
 export type UserInformationTableBottom = RenderableExtensionPointDefinition<

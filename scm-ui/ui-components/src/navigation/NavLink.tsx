@@ -17,12 +17,11 @@
 import React, { FC, useContext, useEffect } from "react";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
+import { createAttributesForTesting } from "@scm-manager/ui-core";
 import { useSecondaryNavigation } from "../useSecondaryNavigation";
 import { RoutingProps } from "./RoutingProps";
-import useActiveMatch from "./useActiveMatch";
-import { createAttributesForTesting } from "@scm-manager/ui-core";
-import { SecondaryNavigationContext } from "./SecondaryNavigationContext";
 import { SubNavigationContext } from "./SubNavigationContext";
+import useActiveMatch from "./useActiveMatch";
 
 type Props = RoutingProps & {
   label: string;
@@ -51,14 +50,13 @@ const NavLinkContent: FC<NavLinkContentProp> = ({ label, icon, collapsed }) => (
 const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, title, testId, children, ...contentProps }) => {
   const active = useActiveMatch({ to, activeWhenMatch, activeOnlyWhenExact });
   const { collapsed, setCollapsible } = useSecondaryNavigation();
-  const isSecondaryNavigation = useContext(SecondaryNavigationContext);
   const isSubNavigation = useContext(SubNavigationContext);
 
   useEffect(() => {
-    if (isSecondaryNavigation && active) {
+    if (active) {
       setCollapsible(!isSubNavigation);
     }
-  }, [active, isSecondaryNavigation, isSubNavigation, setCollapsible]);
+  }, [active, isSubNavigation, setCollapsible]);
 
   return (
     <li title={collapsed ? title : undefined}>
@@ -69,11 +67,7 @@ const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, title, t
         aria-label={collapsed ? title : undefined}
         {...(active ? { "aria-current": "page" } : {})}
       >
-        {children ? (
-          children
-        ) : (
-          <NavLinkContent {...contentProps} collapsed={(isSecondaryNavigation && collapsed) ?? false} />
-        )}
+        {children || <NavLinkContent {...contentProps} collapsed={collapsed} />}
       </Link>
     </li>
   );

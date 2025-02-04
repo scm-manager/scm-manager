@@ -14,11 +14,10 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useContext } from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 import { useSecondaryNavigation } from "../useSecondaryNavigation";
 import ExternalLink from "./ExternalLink";
-import { SecondaryNavigationContext } from "./SecondaryNavigationContext";
 
 type Props = {
   to: string;
@@ -28,7 +27,6 @@ type Props = {
 
 const ExternalNavLink: FC<Props> = ({ to, icon, label }) => {
   const { collapsed } = useSecondaryNavigation();
-  const isSecondaryNavigation = useContext(SecondaryNavigationContext);
 
   let showIcon;
   if (icon) {
@@ -43,7 +41,7 @@ const ExternalNavLink: FC<Props> = ({ to, icon, label }) => {
     <li title={collapsed ? label : undefined}>
       <ExternalLink to={to} className={collapsed ? "has-text-centered" : ""} aria-label={collapsed ? label : undefined}>
         {showIcon}
-        {isSecondaryNavigation && collapsed ? null : label}
+        {collapsed ? null : label}
       </ExternalLink>
     </li>
   );
