@@ -35,12 +35,6 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
   }
 
   @media screen and (max-width: ${devices.mobile.width}px) {
-    ${(props) =>
-      props.mobilePosition === "right" &&
-      css`
-        right: -1.5rem;
-        left: auto;
-      `};
     position: fixed;
     top: auto;
   }
@@ -80,8 +74,11 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
       props.mobilePosition === "right" &&
       css`
         @media screen and (max-width: ${devices.mobile.width}px) {
-          left: auto;
-          right: 1.75rem;
+          left: 21.75rem;
+        }
+
+        @media screen and (min-width: ${devices.mobile.width + 1}px) and (max-width: ${devices.tablet.width - 1}px) {
+          left: 19.65rem;
         }
       `};
   }
