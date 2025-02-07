@@ -29,6 +29,7 @@ import sonia.scm.repository.api.PushFailedException;
 import sonia.scm.repository.api.PushResponse;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 
@@ -59,11 +60,15 @@ public class HgPushCommand extends AbstractHgPushOrPullCommand implements PushCo
     List<Changeset> result;
 
     try {
-      result = builder.call(() -> {
+      result = builder.call((Path configFile) -> {
         org.javahg.commands.PushCommand hgPush = org.javahg.commands.PushCommand.on(open());
 
         if (request.isForce()) {
           hgPush.force();
+        }
+
+        if(configFile != null) {
+          hgPush.cmdAppend("--config-file", configFile.toFile().getAbsolutePath());
         }
 
         return hgPush.execute(url);
