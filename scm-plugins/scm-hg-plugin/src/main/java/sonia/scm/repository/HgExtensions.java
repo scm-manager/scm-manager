@@ -28,7 +28,8 @@ public enum HgExtensions {
   HOOK("scmhooks.py"),
   CGISERVE("cgiserve.py"),
   VERSION("scmversion.py"),
-  FILEVIEW("fileview.py");
+  FILEVIEW("fileview.py"),
+  CONFIGFILE("configfile.py");
 
   private static final String BASE_DIRECTORY = "lib".concat(File.separator).concat("python");
   private static final String BASE_RESOURCE = "/sonia/scm/python/";
