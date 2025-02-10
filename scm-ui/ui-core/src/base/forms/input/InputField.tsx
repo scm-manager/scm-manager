@@ -26,6 +26,7 @@ import { useAriaId } from "../../helpers";
 type InputFieldProps = {
   label: string;
   helpText?: string;
+  descriptionText?: string;
   error?: string;
 } & React.ComponentProps<typeof Input>;
 
@@ -33,8 +34,9 @@ type InputFieldProps = {
  * @see https://bulma.io/documentation/form/input/
  */
 const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ label, helpText, error, className, id, ...props }, ref) => {
+  ({ name, label, helpText, descriptionText, error, className, id, ...props }, ref) => {
     const inputId = useAriaId(id ?? props.testId);
+    const descriptionId = descriptionText ? `input-description-${name}` : undefined;
     const variant = error ? "danger" : undefined;
     return (
       <Field className={className}>
@@ -42,8 +44,13 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           {label}
           {helpText ? <Help className="ml-1" text={helpText} /> : null}
         </Label>
+        {descriptionText ? (
+          <p className="mb-2" id={descriptionId}>
+            {descriptionText}
+          </p>
+        ) : null}
         <Control>
-          <Input variant={variant} ref={ref} id={inputId} {...props}></Input>
+          <Input variant={variant} ref={ref} id={inputId} aria-describedby={descriptionId} {...props}></Input>
         </Control>
         {error ? <FieldMessage variant={variant}>{error}</FieldMessage> : null}
       </Field>

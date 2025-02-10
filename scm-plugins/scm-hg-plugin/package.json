@@ -10,7 +10,8 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@scm-manager/ui-plugins": "3.7.2-SNAPSHOT"
+    "@scm-manager/ui-plugins": "3.7.2-SNAPSHOT",
+    "react-query": "^3.25.1"
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.13.1",

@@ -152,7 +152,7 @@ public class HgConfigResource {
     HgGlobalConfig config = dtoToConfigMapper.map(configDto);
     ConfigurationPermissions.write(config).check();
 
-    if (config.getHgBinary() != null) {
+    if (!config.isDisabled() && config.getHgBinary() != null) {
       HgVerifier.HgVerifyStatus verifyStatus = new HgVerifier().verify(config.getHgBinary());
       doThrow()
         .violation(verifyStatus.getDescription())

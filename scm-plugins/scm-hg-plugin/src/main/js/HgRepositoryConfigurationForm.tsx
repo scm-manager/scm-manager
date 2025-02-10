@@ -62,8 +62,7 @@ const HgRepositoryConfigurationForm: FC<Props> = ({ repository }) => {
       {updated ? <Notification type="info">{t("scm-hg-plugin.config.success")}</Notification> : null}
       <InputField
         name="encoding"
-        label={t("scm-hg-plugin.config.encoding")}
-        helpText={t("scm-hg-plugin.config.encodingHelpText")}
+        label={t("scm-hg-plugin.config.encoding.label")}
         value={configuration.encoding || ""}
         onChange={encodingChanged}
         disabled={readOnly}

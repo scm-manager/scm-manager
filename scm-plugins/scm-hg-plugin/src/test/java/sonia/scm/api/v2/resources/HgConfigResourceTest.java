@@ -162,6 +162,13 @@ public class HgConfigResourceTest {
   }
 
   @Test
+  @SubjectAware(username = "writeOnly")
+  public void shouldUpdateInvalidBinaryIfConfigIsDisabled() throws URISyntaxException {
+    MockHttpResponse response = put("{\"disabled\": true, \"hgBinary\":\"3.2.1\"}");
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+  }
+
+  @Test
   @SubjectAware(username = "readOnly")
   public void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpResponse response = put();

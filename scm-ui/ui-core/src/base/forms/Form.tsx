@@ -17,7 +17,7 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { DeepPartial, SubmitHandler, useForm, UseFormReturn } from "react-hook-form";
 import { ErrorNotification } from "../notifications";
-import { Level } from  "../misc";
+import { Level } from "../misc";
 import { ScmFormContextProvider } from "./ScmFormContext";
 import { useTranslation } from "react-i18next";
 import { Button } from "../buttons";
@@ -135,10 +135,10 @@ function Form<FormType extends Record<string, unknown>, DefaultValues extends Fo
 
   // See https://react-hook-form.com/api/useform/reset/
   useEffect(() => {
-    if (isSubmitSuccessful) {
+    if (isSubmitSuccessful && !error) {
       setShowSuccessNotification(true);
     }
-  }, [isSubmitSuccessful]);
+  }, [isSubmitSuccessful, error]);
 
   useEffect(() => reset(defaultValues as never), [defaultValues, reset]);
 

@@ -35,6 +35,7 @@ function ControlledInputField<T extends Record<string, unknown>>({
   name,
   label,
   helpText,
+  descriptionText,
   rules,
   testId,
   defaultValue,
@@ -48,6 +49,8 @@ function ControlledInputField<T extends Record<string, unknown>>({
   const prefixedNameWithoutIndices = prefixWithoutIndices(nameWithPrefix);
   const labelTranslation = label || t(`${prefixedNameWithoutIndices}.label`) || "";
   const helpTextTranslation = helpText || t(`${prefixedNameWithoutIndices}.helpText`);
+  const descriptionTextTranslation = descriptionText || t(`${prefixedNameWithoutIndices}.descriptionText`);
+
   return (
     <Controller
       control={control}
@@ -64,6 +67,7 @@ function ControlledInputField<T extends Record<string, unknown>>({
           form={formId}
           label={labelTranslation}
           helpText={helpTextTranslation}
+          descriptionText={descriptionTextTranslation}
           error={
             fieldState.error
               ? fieldState.error.message || t(`${prefixedNameWithoutIndices}.error.${fieldState.error.type}`)

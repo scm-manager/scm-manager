@@ -6,8 +6,9 @@
     "config": {
       "link": "Subversion",
       "title": "Subversion Configuration",
-      "compatibility": "Version Compatibility",
-      "compatibilityHelpText": "Specifies with which Subversion version repositories are compatible.",
+      "compatibility": {
+        "label": "Version compatibility for each Subversion repository"
+      },
       "compatibility-values": {
         "none": "No compatibility",
         "pre14": "Pre 1.4 Compatible",
@@ -16,11 +17,12 @@
         "pre17": "Pre 1.7 Compatible",
         "with17": "With 1.7 Compatible"
       },
-      "enabledGZip": "Enable GZip Compression",
-      "enabledGZipHelpText": "Enable GZip compression for SVN responses.",
-      "disabled": "Disabled",
-      "disabledHelpText": "Enable or disable the SVN plugin. Only allowed if no Subversion repositories exist.",
-      "required": "This configuration value is required"
+      "enabledGZip": {
+        "label": "Enable GZip Compression for Subversion responses"
+      },
+      "disabled": {
+        "label": "Disable the SVN plugin. Only allowed if no Subversion repositories exist."
+      }
     }
   },
   "permissions": {

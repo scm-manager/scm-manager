@@ -33,6 +33,7 @@ const StyledLabel = styled.label`
 type InputFieldProps = {
   label: string;
   helpText?: string;
+  descriptionText?: string;
   testId?: string;
   labelClassName?: string;
 } & Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
@@ -45,6 +46,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, InputFieldProps>(
     {
       readOnly,
       label,
+      descriptionText,
       className,
       labelClassName,
       value,
@@ -57,54 +59,63 @@ const Checkbox = React.forwardRef<HTMLInputElement, InputFieldProps>(
       ...props
     },
     ref
-  ) => (
-    <StyledLabel
-      className={classNames("checkbox is-align-items-center", labelClassName)}
-      // @ts-ignore bulma uses the disabled attribute on labels, although it is not part of the html spec
-      disabled={readOnly || props.disabled}
-    >
-      {readOnly ? (
-        <>
-          <input
-            type="hidden"
-            name={name}
-            value={value}
-            defaultValue={defaultValue}
-            checked={checked}
-            defaultChecked={defaultChecked}
-            readOnly
-          />
-          <StyledInput
-            type="checkbox"
-            className={classNames("m-3", className)}
-            ref={ref}
-            value={value}
-            defaultValue={defaultValue}
-            checked={checked}
-            defaultChecked={defaultChecked}
-            {...props}
-            {...createAttributesForTesting(testId)}
-            disabled
-          />
-        </>
-      ) : (
-        <StyledInput
-          type="checkbox"
-          className={classNames("m-3", className)}
-          ref={ref}
-          name={name}
-          value={value}
-          defaultValue={defaultValue}
-          checked={checked}
-          defaultChecked={defaultChecked}
-          {...props}
-          {...createAttributesForTesting(testId)}
-        />
-      )}
+  ) => {
+    const descriptionId = descriptionText ? `checkbox-description-${name}` : undefined;
+    return (
+      <>
+        {descriptionText ? <p id={descriptionId}>{descriptionText}</p> : null}
+        <StyledLabel
+          className={classNames("checkbox is-align-items-center", labelClassName)}
+          // @ts-ignore bulma uses the disabled attribute on labels, although it is not part of the html spec
+          disabled={readOnly || props.disabled}
+        >
+          {readOnly ? (
+            <>
+              <input
+                type="hidden"
+                name={name}
+                value={value}
+                defaultValue={defaultValue}
+                checked={checked}
+                defaultChecked={defaultChecked}
+                aria-describedby={descriptionId}
+                readOnly
+              />
+              <StyledInput
+                type="checkbox"
+                className={classNames("m-3", className)}
+                ref={ref}
+                value={value}
+                defaultValue={defaultValue}
+                checked={checked}
+                defaultChecked={defaultChecked}
+                aria-describedby={descriptionId}
+                {...props}
+                {...createAttributesForTesting(testId)}
+                disabled
+              />
+            </>
+          ) : (
+            <StyledInput
+              type="checkbox"
+              className={classNames("m-3", className)}
+              ref={ref}
+              name={name}
+              value={value}
+              defaultValue={defaultValue}
+              checked={checked}
+              defaultChecked={defaultChecked}
+              aria-describedby={descriptionId}
+              {...props}
+              {...createAttributesForTesting(testId)}
+            />
+          )}
 
-      {label}
-      {helpText ? <Help className="ml-1" text={helpText} /> : null}
-    </StyledLabel>
-  )
+          {label}
+          {helpText ? <Help className="ml-1" text={helpText} /> : null}
+        </StyledLabel>
+      </>
+    );
+  }
 );
 export default Checkbox;
