@@ -24,12 +24,6 @@ import { Icon } from "@scm-manager/ui-core";
 import { Alert } from "@scm-manager/ui-types";
 import HeaderDropDown from "../components/HeaderDropDown";
 
-const AlertDropdown = styled.div`
-  @media screen and (max-width: 768px) {
-    width: 100vw;
-  }
-`;
-
 const AlertContainer = styled.ul`
   > *:not(:last-child) {
     border-bottom: solid 2px var(--scm-border-color);
@@ -42,17 +36,25 @@ type EntryProps = {
 };
 
 const AlertsEntry: FC<EntryProps> = ({ alert }) => {
+  const content = (
+    <section>
+      <h2 className="has-text-weight-bold">
+        {alert.title} ({alert.component} {alert.affectedVersions})
+      </h2>
+      <p>{alert.description}</p>
+      <DateFromNow date={alert.issuedAt} className="is-size-7" />
+    </section>
+  );
+
   return (
     <li className={classNames("is-danger has-text-secondary-more px-4 py-3")}>
-      <a href={alert.link} target="_blank" rel="noreferrer">
-        <section>
-          <h2 className="has-text-weight-bold">
-            {alert.title} ({alert.component} {alert.affectedVersions})
-          </h2>
-          <p>{alert.description}</p>
-          <DateFromNow date={alert.issuedAt} className="is-size-7" />
-        </section>
-      </a>
+      {alert.link ? (
+        <a className="is-block" href={alert.link} target="_blank" rel="noreferrer">
+          {content}
+        </a>
+      ) : (
+        <>{content}</>
+      )}
     </li>
   );
 };
@@ -62,13 +64,13 @@ type Props = {
 };
 
 const AlertsList: FC<Props> = ({ data }) => (
-  <AlertDropdown className="dropdown-content p-0 is-full-mobile">
+  <div className="dropdown-content p-0">
     <AlertContainer className="card-table mb-0 is-flex is-flex-direction-column has-text-left">
       {data.map((a, i) => (
         <AlertsEntry key={i} alert={a} />
       ))}
     </AlertContainer>
-  </AlertDropdown>
+  </div>
 );
 
 const ShieldNotificationIcon: FC = () => {

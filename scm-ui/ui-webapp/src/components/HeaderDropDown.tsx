@@ -27,6 +27,8 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
   min-width: 20rem;
 
   @media screen and (min-width: ${devices.desktop.width}px) {
+    right: 0;
+    left: auto;
     min-width: 30rem;
   }
 
@@ -37,15 +39,7 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
   @media screen and (max-width: ${devices.mobile.width}px) {
     position: fixed;
     top: auto;
-  }
-
-  @media screen and (max-width: ${devices.desktop.width - 1}px) {
-    margin-right: 1rem;
-  }
-
-  @media screen and (min-width: ${devices.desktop.width}px) {
-    right: 0;
-    left: auto;
+    width: 100%;
   }
 
   &:before {
@@ -63,6 +57,7 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
     }
 
     @media screen and (min-width: ${devices.mobile.width + 1}px) and (max-width: ${devices.desktop.width - 1}px) {
+      margin-right: 1rem;
       left: 1.3rem;
     }
 
