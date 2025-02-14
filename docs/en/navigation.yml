@@ -31,16 +31,21 @@
   entries:
   - /development/intellij-idea-configuration/
   - /development/build-from-source/
+  - /development/architecture-overview/
   - /development/ui-common-pitfall/
   - /development/permission-concept/
-  - /development/error-handling/
-  - /development/i18n/
-  - /development/definition-of-done/
-  - /development/ui-dod/
   - /development/decision-table/
-  - /development/building-forms/
+  - /development/error-handling/
+  - /development/styleguide/
   - /development/testing-guide/
   - /development/integration-tests/
+  - /development/ui-extensions/
+  - /development/i18n/
+  - /development/building-forms/
+  - /development/javadoc/
+  - /development/cli-guideline/
+  - /development/definition-of-done/
+  - /development/ui-dod/
 
 - section: Plugin Development
   entries:

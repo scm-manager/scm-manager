@@ -60,15 +60,15 @@ gradlew.bat taskname
 This following tables describes some high level tasks,
 which should cover most of the daily work.
 
-| Name | Description |
-| ---- | ----------- |
-| run | Starts an SCM-Manager with enabled livereload for the ui |
-| build | Executes all checks, tests and builds the smp inclusive javadoc and source jar |
-| distribution | Builds all distribution packages of scm-packaging |
-| check | Executes all registered checks and tests |
-| test | Run all unit tests |
-| integrationTest | Run all integration tests of scm-it |
-| clean | Deletes the build directory |
+| Name | Description                                                                                                        |
+| ---- |--------------------------------------------------------------------------------------------------------------------|
+| run | Starts an SCM-Manager with enabled livereload for the ui                                                           |
+| build | Executes all checks, tests and builds the smp inclusive [javadoc](https://scm-manager.org/javadoc/) and source jar |
+| distribution | Builds all distribution packages of scm-packaging                                                                  |
+| check | Executes all registered checks and tests                                                                           |
+| test | Run all unit tests                                                                                                 |
+| integrationTest | Run all integration tests of scm-it                                                                                |
+| clean | Deletes the build directory                                                                                        |
 
 The next table defines a few more tasks which are more relevant for CI servers.
 

@@ -1,5 +1,5 @@
 ---
-title: Style Guide
+title: Styleguide
 ---
 
 Starting with version 2 of SCM-Manager we have decided to change the code style and conform to more common rules. Furthermore we abandon the rule, that everything needs to have a javadoc description. Nonetheless we have decided against a "big bang" adaption of the new rule, because this would have lead to enourmous problems for merges from 1.x to 2.x.
@@ -107,4 +107,4 @@ more skill. If you feel overwhelmed by them, do not let them deter you. We love 
 
 ## JavaScript
 
-Take a look at our styleguide using `yarn serve` in [ui-styles](scm-ui/ui-styles) directory.
+Take a look at our styleguide using `yarn serve` in `/scm-ui/ui-styles` directory.
