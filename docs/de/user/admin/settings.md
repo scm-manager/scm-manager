@@ -24,8 +24,15 @@ Auf der Login-Seite des SCM-Managers werden hilfreiche Plugins und Features vorg
 Um Angriffe auf den SCM-Manager mit Cross Site Scripting (XSS / XSRF) zu erschweren. Dieses Feature ist noch experimentell.
 
 #### Plugin-Settings 
-Der SCM-Manager kann ein Plugin-Center anbinden, um schnell und bequem Plugins verwalten zu können. Um ein anderes SCM-Plugin-Center als das vorkonfigurierte zu verwenden, reicht es aus diese URL zu ändern. Läuft der SCM-Manager im Cloudogu EcoSystem kann die Plugin Center URL über einen Eintrag im etcd gesetzt werden.
+Der SCM-Manager kann ein Plugin-Center anbinden, um schnell und bequem Plugins verwalten zu können. Um ein anderes SCM-Plugin-Center als das vorkonfigurierte zu verwenden, reicht es aus diese URL zu ändern. Läuft der SCM-Manager im Cloudogu EcoSystem, kann die Plugin-Center URL über einen Eintrag im etcd gesetzt werden.
 Wenn das vorkonfigurierte Plugin-Center verwendet wird, kann der SCM-Manager mit der cloudogu platform verbunden werden. 
+
+Nach der initialen Einrichtung sind folgende Werte standardgemäß hinterlegt:
+```markdown
+Plugin Center URL: https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}&jre={jre}
+Plugin Center Authentication URL: https://plugin-center-api.scm-manager.org/api/v1/auth/oidc
+```
+
 ![Einstellungen, Plugin-Center nicht mit der cloudogu platform verbunden](assets/administration-settings-not-connected.png)
 So können über das Plugin-Center besondere cloudogu platform-Plugins bezogen werden. Details sind in der Dokumentation des Plugin-Centers aufgeführt. 
 Eine bestehende Verbindung zwischen dem SCM-Manager und der cloudogu platform kann hier aufgehoben werden.
