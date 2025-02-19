@@ -39,7 +39,7 @@
     "@types/unist": "^2.0.3",
     "gitdiff-parser": "^0.2.2",
     "i18next-fetch-backend": "4",
-    "webpack": "^5.72.0",
+    "webpack": "^5.76.0",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-interactions": "^6.5.10",
