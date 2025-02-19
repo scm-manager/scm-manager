@@ -38,7 +38,7 @@
     "react-query": "^3.39.2",
     "string_score": "^0.1.22",
     "styled-components": "^5.3.5",
-    "ua-parser-js": "^1.0.2",
+    "ua-parser-js": "^1.0.33",
     "decode-named-character-reference": "^1.0.1",
     "enzyme": "^3.11.0",
     "date-fns": "^2.4.1"
