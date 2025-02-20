@@ -543,6 +543,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     assertThat(mergeCommit.getParent(0).name()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
     assertThat(mergeCommit.getName()).isEqualTo(mergeCommandResult.getNewHeadRevision());
     assertThat(mergeCommit.getName()).doesNotStartWith("91b99de908fcd04772798a31c308a64aea1a5523");
+    assertThat(mergeCommit.getAuthorIdent().getWhenAsInstant()).isEqualTo("2018-11-07T10:20:52Z"); // the timestamp of the original commit
   }
 
   @Test

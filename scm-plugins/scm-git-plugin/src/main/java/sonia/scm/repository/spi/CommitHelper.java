@@ -66,12 +66,21 @@ class CommitHelper {
                         String message,
                         boolean sign,
                         ObjectId... parentCommitIds) throws IOException, CanceledException, UnsupportedSigningFormatException {
+    return createCommit(treeId, createPersonIdent(author), committer, message, sign, parentCommitIds);
+  }
+
+  ObjectId createCommit(ObjectId treeId,
+                        PersonIdent author,
+                        Person committer,
+                        String message,
+                        boolean sign,
+                        ObjectId... parentCommitIds) throws IOException, CanceledException, UnsupportedSigningFormatException {
     log.trace("create commit for tree {} and parent ids {} in repository {}", treeId, parentCommitIds, context.getRepository());
     try (ObjectInserter inserter = repository.newObjectInserter()) {
       CommitBuilder commitBuilder = new CommitBuilder();
       commitBuilder.setTreeId(treeId);
       commitBuilder.setParentIds(parentCommitIds);
-      commitBuilder.setAuthor(createPersonIdent(author));
+      commitBuilder.setAuthor(author);
       commitBuilder.setCommitter(createPersonIdent(committer));
       commitBuilder.setMessage(message);
       if (sign) {

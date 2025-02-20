@@ -1,0 +1,2 @@
+- type: fixed
+  description: Keep original timestamp on rebase
