@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@scm-manager/ui-text": "3.7.2-SNAPSHOT",
-    "nanoid": "^3.3.2",
+    "nanoid": "^3.3.8",
     "refractor": "^4.5.0"
   },
   "peerDependencies": {
