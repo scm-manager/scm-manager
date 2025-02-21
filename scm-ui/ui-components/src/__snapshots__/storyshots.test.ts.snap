@@ -85187,6 +85187,7 @@ exports[`Storyshots Tag With title 1`] = `
 >
   <span
     className="tag is-light is-normal"
+    title="good job"
   >
     hover me
   </span>
