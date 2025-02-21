@@ -81,9 +81,9 @@ pipeline {
       steps {
         // To rerun integration tests with each build, add '-PrerunIntegrationTests' to the gradle command
         gradle 'integrationTest'
-        junit allowEmptyResults: true, testResults: 'scm-it/build/test-results/javaIntegrationTests/*.xml,scm-ui/build/reports/e2e/*.xml'
-        archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/videos/*.mp4'
-        archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/screenshots/**/*.png'
+        junit allowEmptyResults: true, testResults: 'scm-it/build/test-results/javaIntegrationTests/*.xml,scm-ui/build/reports/e2e/*.xml,scm-ui/build/target/cypress/reports/*.xml'
+        archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/build/target/cypress/videos/*.mp4'
+        archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/build/target/cypress/screenshots/**/*.png'
       }
     }
 
