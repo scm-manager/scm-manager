@@ -21,7 +21,7 @@ import { createAttributesForTesting } from "../devBuild";
 import useAutofocus from "./useAutofocus";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
 import { createA11yId } from "../createA11yId";
-import FieldMessage from "@scm-manager/ui-core/src/base/forms/base/field-message/FieldMessage";
+import { FieldMessage } from "@scm-manager/ui-core";
 
 type BaseProps = {
   label?: string;
