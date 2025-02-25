@@ -26,6 +26,7 @@ import PluginSettings from "./PluginSettings";
 import FunctionSettings from "./FunctionSettings";
 import InvalidateCaches from "./InvalidateCaches";
 import InvalidateSearchIndex from "./InvalidateSearchIndex";
+import JwtSettings from "./JwtSettings";
 
 type Props = {
   submitForm: (p: Config) => void;
@@ -60,6 +61,7 @@ const ConfigForm: FC<Props> = ({
     dateFormat: "",
     anonymousAccessEnabled: false,
     anonymousMode: "OFF",
+    enabledFileSearch: true,
     baseUrl: "",
     forceBaseUrl: false,
     loginAttemptLimit: 0,
@@ -77,6 +79,8 @@ const ConfigForm: FC<Props> = ({
     mailDomainName: "",
     emergencyContacts: [],
     enabledApiKeys: true,
+    jwtExpirationInH: 1,
+    enabledJwtEndless: false,
     _links: {},
   });
   const [showNotification, setShowNotification] = useState(false);
@@ -181,6 +185,13 @@ const ConfigForm: FC<Props> = ({
         pluginUrl={innerConfig.pluginUrl}
         pluginAuthUrl={innerConfig.pluginAuthUrl}
         onChange={(isValid, changedValue, name) => onChange(isValid, changedValue, name)}
+        hasUpdatePermission={configUpdatePermission}
+      />
+      <hr />
+      <JwtSettings
+        enabledJwtEndless={innerConfig.enabledJwtEndless || false}
+        jwtExpirationInH={innerConfig.jwtExpirationInH || 1}
+        onChange={onChange}
         hasUpdatePermission={configUpdatePermission}
       />
       <hr />

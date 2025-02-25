@@ -19,6 +19,7 @@ package sonia.scm.security;
 import com.google.common.collect.Sets;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -30,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.config.ScmConfiguration;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -48,7 +50,6 @@ import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 
 /**
  * Unit test for {@link JwtAccessTokenBuilder}.
- *
  */
 @ExtendWith(MockitoExtension.class)
 class JwtAccessTokenBuilderTest {
@@ -61,6 +62,8 @@ class JwtAccessTokenBuilderTest {
 
   @Mock
   private JwtConfig jwtConfig;
+
+  private ScmConfiguration scmConfiguration;
 
   private Set<AccessTokenEnricher> enrichers;
 
@@ -85,10 +88,12 @@ class JwtAccessTokenBuilderTest {
 
   @BeforeEach
   void setUpDependencies() {
+    this.scmConfiguration = new ScmConfiguration();
+    this.scmConfiguration.setJwtExpirationInH(10);
     lenient().when(keyGenerator.createKey()).thenReturn("42");
     lenient().when(secureKeyResolver.getSecureKey(anyString())).thenReturn(createSecureKey());
     enrichers = Sets.newHashSet();
-    factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers, jwtConfig);
+    factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers, jwtConfig, scmConfiguration);
   }
 
   @Nested
@@ -99,7 +104,7 @@ class JwtAccessTokenBuilderTest {
      */
     @BeforeEach
     void setUpObjectUnderTest() {
-      factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers, jwtConfig);
+      factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers, jwtConfig, scmConfiguration);
     }
 
     /**
@@ -149,7 +154,7 @@ class JwtAccessTokenBuilderTest {
 
     @BeforeEach
     void setUpObjectUnderTest() {
-      factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, jwtConfig, enrichers, clock);
+      factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, jwtConfig, enrichers, clock, scmConfiguration);
     }
 
     @Test
@@ -189,11 +194,9 @@ class JwtAccessTokenBuilderTest {
   @Nested
   class FromApiKeyRealm {
 
-    private Scope scope;
-
     @BeforeEach
     void mockApiKeyRealm() {
-      scope = Scope.valueOf("dummy:scope:*");
+      Scope scope = Scope.valueOf("dummy:scope:*");
       lenient().when(principalCollection.getRealmNames()).thenReturn(singleton("ApiTokenRealm"));
       lenient().when(principalCollection.oneByType(Scope.class)).thenReturn(scope);
     }
@@ -276,6 +279,7 @@ class JwtAccessTokenBuilderTest {
       assertThat(token.getSubject()).isEqualTo("Red");
       assertThat(token.getIssuer()).isNotEmpty();
       assertThat(token.getIssuer()).contains("https://scm-manager.org");
+      assertThat(scmConfiguration.isJwtEndless()).isEqualTo(true);
     }
 
     @Test
@@ -291,6 +295,24 @@ class JwtAccessTokenBuilderTest {
       assertThat(token.getSubject()).isEqualTo("Red");
       assertThat(token.getIssuer()).isNotEmpty();
       assertThat(token.getIssuer()).contains("https://scm-manager.org");
+      assertThat(scmConfiguration.isJwtEndless()).isEqualTo(false);
+    }
+  }
+
+  @Nested
+  class WithJwtSetTimeFeature {
+
+    @Test
+    void testBuildWithDefaultJwtTime() {
+      JwtAccessToken token = factory.create().subject("Red").issuer("https://scm-manager.org").build();
+
+      assertThat(token.getId()).isNotEmpty();
+      assertThat(token.getIssuedAt()).isNotNull();
+      assertThat(token.getExpiration()).isNotNull();
+      assertThat(token.getSubject()).isEqualTo("Red");
+      assertThat(token.getIssuer()).isNotEmpty();
+      assertThat(token.getIssuer()).contains("https://scm-manager.org");
+      assertThat(token.getExpiration()).isEqualTo(DateUtils.addHours(token.getIssuedAt(), 10));
     }
   }
 }

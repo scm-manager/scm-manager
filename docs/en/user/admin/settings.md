@@ -37,6 +37,12 @@ Plugin Center Authentication URL: https://plugin-center-api.scm-manager.org/api/
 An existing connection between a SCM-Manager and the cloudogu platform may be severed here.
 ![Plugin center settings, button sever connection to the cloudogu platform](assets/administration-settings-connected.png)
 
+#### JWT settings
+Users receive a JWT as an authentication token, after a successful login.
+Administrators can configure the amount of hours until a JWT expires.
+If the amount of hours get reduced, each created JWT will be invalidated.
+This setting will be ignored, if the endless JWT option is set to true in the server `config.yml`.
+
 #### Anonymous Access
 In SCM-Manager 2 the access for anonymous access is realized by using an "_anonymous" user. When the feature is activated, a new user with the name "_anonymous" is created. This user can be authorized just like any other user. This user is used for access to SCM-Manager without login credentials.
 If the anonymous mode is protocol only you may access the SCM-Manager via the REST API and VCS protocols. With fully enabled anonymous access you can also use the webclient without credentials.

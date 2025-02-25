@@ -281,7 +281,9 @@ public class TestData {
         "  \"loginInfoUrl\": \"https://login-info.scm-manager.org/api/v1/login-info\",\n" +
         "  \"releaseFeedUrl\": \"https://scm-manager.org/download/rss.xml\",\n" +
         "  \"mailDomainName\": \"scm-manager.local\", \n" +
-        "  \"enabledApiKeys\": \"true\"\n" +
+        "  \"enabledApiKeys\": \"true\",\n" +
+        "  \"jwtExpirationInH\": 1,\n" +
+        "  \"enabledJwtEndless\": false\n" +
         "}")
       .put(createResourceUrl("config"))
       .then()

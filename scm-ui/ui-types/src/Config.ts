@@ -47,4 +47,6 @@ export type Config = HalRepresentation & {
   emergencyContacts: string[];
   enabledApiKeys: boolean;
   enabledFileSearch: boolean;
+  jwtExpirationInH?: number;
+  enabledJwtEndless?: boolean;
 };

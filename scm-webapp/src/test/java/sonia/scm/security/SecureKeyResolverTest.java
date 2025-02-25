@@ -32,7 +32,6 @@ import java.util.Arrays;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.not;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -40,16 +39,22 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class SecureKeyResolverTest
-{
+public class SecureKeyResolverTest {
 
-   @Test
-  public void testGetSecureKey()
-  {
+  private SecureKeyResolver resolver;
+  @Mock
+  private ConfigurationEntryStore<SecureKey> store;
+  @Mock
+  private JwtSettingsStore jwtSettingsStore;
+  private final JwtSettings settings = new JwtSettings(false, 100);
+
+  @Test
+  public void testGetSecureKey() {
     SecureKey key = resolver.getSecureKey("test");
 
     assertNotNull(key);
@@ -59,6 +64,12 @@ public class SecureKeyResolverTest
     SecureKey sameKey = resolver.getSecureKey("test");
 
     assertSame(key, sameKey);
+  }
+
+  @Test
+  public void clearSecureKey() {
+    resolver.deleteStore();
+    verify(store).clear();
   }
 
   @Test
@@ -78,37 +89,32 @@ public class SecureKeyResolverTest
     assertThat(sameRegeneratedKey.getCreationDate()).isEqualTo(regeneratedKey.getCreationDate());
   }
 
-   @Test
-  public void testResolveSigningKeyBytes()
-  {
+  @Test
+  public void testResolveSigningKeyBytes() {
     SecureKey key = resolver.getSecureKey("test");
 
     when(store.get("test")).thenReturn(key);
     when(jwtSettingsStore.get()).thenReturn(settings);
 
     byte[] bytes = resolver.resolveSigningKeyBytes(null,
-                     Jwts.claims().setSubject("test"));
+      Jwts.claims().setSubject("test"));
 
     assertArrayEquals(key.getBytes(), bytes);
   }
 
-   @Test
-  public void testResolveSigningKeyBytesWithoutKey()
-  {
+  @Test
+  public void testResolveSigningKeyBytesWithoutKey() {
     byte[] bytes = resolver.resolveSigningKeyBytes(null, Jwts.claims().setSubject("test"));
     assertThat(bytes[0]).isEqualTo((byte) 42);
   }
 
-   @Test(expected = IllegalArgumentException.class)
-  public void testResolveSigningKeyBytesWithoutSubject()
-  {
+  @Test(expected = IllegalArgumentException.class)
+  public void testResolveSigningKeyBytesWithoutSubject() {
     resolver.resolveSigningKeyBytes(null, Jwts.claims());
   }
 
-
-   @Before
-  public void setUp()
-  {
+  @Before
+  public void setUp() {
     ConfigurationEntryStoreFactory factory = mock(ConfigurationEntryStoreFactory.class);
 
     when(factory.withType(any())).thenCallRealMethod();
@@ -121,16 +127,4 @@ public class SecureKeyResolverTest
     doAnswer(invocation -> ((byte[]) invocation.getArguments()[0])[0] = 42).when(random).nextBytes(any());
     resolver = new SecureKeyResolver(factory, jwtSettingsStore, random);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  private SecureKeyResolver resolver;
-
-  @Mock
-  private ConfigurationEntryStore<SecureKey> store;
-
-  @Mock
-  private JwtSettingsStore jwtSettingsStore;
-
-  private JwtSettings settings = new JwtSettings(false, 100);
 }

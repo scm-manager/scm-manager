@@ -57,6 +57,8 @@ public class ConfigDto extends HalRepresentation implements UpdateConfigDto {
   private String alertsUrl;
   private String releaseFeedUrl;
   private String mailDomainName;
+  private int jwtExpirationInH;
+  private boolean enabledJwtEndless;
   private Set<String> emergencyContacts;
 
   @Override

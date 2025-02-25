@@ -98,6 +98,8 @@ class ScmConfigurationToConfigDtoMapperTest {
     assertThat(dto.getReleaseFeedUrl()).isEqualTo("https://www.scm-manager.org/download/rss.xml");
     assertThat(dto.getMailDomainName()).isEqualTo("scm-manager.local");
     assertThat(dto.getEmergencyContacts()).contains(expectedUsers);
+    assertThat(dto.getJwtExpirationInH()).isEqualTo(10);
+    assertThat(dto.isEnabledJwtEndless()).isFalse();
     assertLinks(dto);
   }
 
@@ -161,6 +163,8 @@ class ScmConfigurationToConfigDtoMapperTest {
     config.setAlertsUrl("https://alerts.scm-manager.org/api/v1/alerts");
     config.setReleaseFeedUrl("https://www.scm-manager.org/download/rss.xml");
     config.setEmergencyContacts(Sets.newSet(expectedUsers));
+    config.setJwtExpirationInH(10);
+    config.setEnabledJwtExpiration(false);
     return config;
   }
 

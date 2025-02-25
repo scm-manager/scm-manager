@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
-    "@scm-manager/integration-test-runner": "^3.4.3",
+    "@scm-manager/integration-test-runner": "^3.5.0",
     "fluent-ffmpeg": "^2.1.2"
   },
   "devDependencies": {

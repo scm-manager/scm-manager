@@ -230,6 +230,22 @@ public class ScmConfiguration implements Configuration {
   private String mailDomainName = DEFAULT_MAIL_DOMAIN_NAME;
 
   /**
+   * Time in hours for jwt expiration.
+   *
+   * @since 3.8.0
+   */
+  @XmlElement(name = "jwt-expiration-time")
+  private int jwtExpirationInH = 1;
+
+  /**
+   * Enables endless jwt.
+   *
+   * @since 3.8.0
+   */
+  @XmlElement(name = "jwt-expiration-endless")
+  private boolean enabledJwtEndless = false;
+
+  /**
    * List of users that will be notified of administrative incidents.
    *
    * @since 2.19.0
@@ -278,6 +294,8 @@ public class ScmConfiguration implements Configuration {
     this.emergencyContacts = other.emergencyContacts;
     this.enabledUserConverter = other.enabledUserConverter;
     this.enabledApiKeys = other.enabledApiKeys;
+    this.jwtExpirationInH = other.jwtExpirationInH;
+    this.enabledJwtEndless = other.enabledJwtEndless;
   }
 
   /**
@@ -446,6 +464,26 @@ public class ScmConfiguration implements Configuration {
    */
   public AnonymousMode getAnonymousMode() {
     return anonymousMode;
+  }
+
+  /**
+   * Returns Jwt expiration in {@code n} .
+   *
+   * @return Jwt expiration in {@code number}
+   * @since 3.8.0
+   */
+  public int getJwtExpirationInH() {
+    return jwtExpirationInH;
+  }
+
+  /**
+   * Returns {@code true} if the cookie xsrf protection is enabled.
+   *
+   * @return {@code true} if the cookie xsrf protection is enabled
+   * @since 3.8.0
+   */
+  public boolean isJwtEndless() {
+    return enabledJwtEndless;
   }
 
   /**
@@ -726,6 +764,26 @@ public class ScmConfiguration implements Configuration {
    */
   public void setEnabledFileSearch(boolean enabledFileSearch) {
     this.enabledFileSearch = enabledFileSearch;
+  }
+
+  /**
+   * Set {@code n} to configure jwt expiration time in hours
+   *
+   * @param jwtExpirationInH {@code n} to configure jwt expiration time in hours
+   * @since 3.8.0
+   */
+  public void setJwtExpirationInH(int jwtExpirationInH) {
+    this.jwtExpirationInH = jwtExpirationInH;
+  }
+
+  /**
+   * Set {@code true} to enable endless jwt.
+   *
+   * @param enabledJwtEndless {@code true} to enable endless jwt.
+   * @since 2.45.0
+   */
+  public void setEnabledJwtExpiration(boolean enabledJwtEndless) {
+    this.enabledJwtEndless = enabledJwtEndless;
   }
 
   public void setNamespaceStrategy(String namespaceStrategy) {

@@ -63,6 +63,8 @@ class ConfigDtoToScmConfigurationMapperTest {
     assertThat(config.getLoginInfoUrl()).isEqualTo("https://scm-manager.org/login-info");
     assertThat(config.getMailDomainName()).isEqualTo("hitchhiker.mail");
     assertThat(config.getEmergencyContacts()).contains(expectedUsers);
+    assertThat(config.getJwtExpirationInH()).isEqualTo(10);
+    assertThat(config.isJwtEndless()).isFalse();
   }
 
   @Test
@@ -105,6 +107,8 @@ class ConfigDtoToScmConfigurationMapperTest {
     configDto.setMailDomainName("hitchhiker.mail");
     configDto.setEmergencyContacts(Sets.newSet(expectedUsers));
     configDto.setEnabledUserConverter(false);
+    configDto.setJwtExpirationInH(10);
+    configDto.setEnabledJwtEndless(false);
 
     return configDto;
   }

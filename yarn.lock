@@ -3059,10 +3059,10 @@
     eslint-plugin-react-hooks "^2.1.2"
     jest "^26.6.3"
 
-"@scm-manager/integration-test-runner@^3.4.3":
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/@scm-manager/integration-test-runner/-/integration-test-runner-3.4.3.tgz#6a2e44f5c360fb1c40c3701cf9e8ddadd5031666"
-  integrity sha512-tA3B5iDAsNWQgXUiMhnrz7sX5dc0674R5Xb+Fch5kSysxMjwn5gMeDUIXA6j5S6OXsp8jlIj/y70m5foplO2WQ==
+"@scm-manager/integration-test-runner@^3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/integration-test-runner/-/integration-test-runner-3.5.0.tgz#fdc9b1392d764a3db4aefff041c47a7c4f5bedce"
+  integrity sha512-/Aj8FldRdv3boOQJyFlT6AJb4vtxeiuXj7EF578QpT2DqbD/fyUC3qeZnfo78wS7KvSzJKhxrJrLIoeFpg+4iw==
   dependencies:
     "@ffmpeg-installer/ffmpeg" "^1.0.20"
     "@octokit/rest" "^18.0.9"

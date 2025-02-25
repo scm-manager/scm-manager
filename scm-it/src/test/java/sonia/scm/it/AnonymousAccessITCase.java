@@ -241,6 +241,8 @@ class AnonymousAccessITCase {
       .addNull("proxyUser")
       .add("realmDescription", "SONIA :: SCM Manager")
       .add("skipFailedAuthenticators", false)
+      .add("jwtExpirationInH", 1)
+      .add("enabledJwtEndless", false)
       .build().toString();
   }
 }

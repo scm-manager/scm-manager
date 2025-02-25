@@ -14,28 +14,22 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-package sonia.scm.security;
+package sonia.scm.config;
 
 import jakarta.inject.Inject;
-import sonia.scm.EagerSingleton;
-import sonia.scm.config.ConfigValue;
+import sonia.scm.security.SecureKeyResolver;
 
-@EagerSingleton
-public class JwtConfig {
 
-  private final boolean endlessJwt;
+public class SecureKeyService {
+
+  private final SecureKeyResolver secureKeyResolver;
 
   @Inject
-  public JwtConfig(
-    @ConfigValue(
-      key = "endlessJwt",
-      defaultValue = "false",
-      description = "The lifespan of the issued JWT tokens should be endless. Logged-in users are no longer automatically logged out. Any other expiration time will be overridden")
-    boolean endlessJwt) {
-    this.endlessJwt = endlessJwt;
+  public SecureKeyService(SecureKeyResolver secureKeyResolver) {
+    this.secureKeyResolver = secureKeyResolver;
   }
 
-  public boolean isEndlessJwtEnabled() {
-    return this.endlessJwt;
+  public void clearAllTokens() {
+   secureKeyResolver.deleteStore();
   }
 }

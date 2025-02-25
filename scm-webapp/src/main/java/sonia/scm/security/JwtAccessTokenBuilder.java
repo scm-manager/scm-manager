@@ -29,6 +29,7 @@ import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.ScmConfiguration;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -57,10 +58,11 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   private final SecureKeyResolver keyResolver;
   private final JwtConfig jwtConfig;
   private final Clock clock;
+  private final ScmConfiguration scmConfiguration;
 
   private String subject;
   private String issuer;
-  private long expiresIn = 1;
+  private long expiresIn;
   private TimeUnit expiresInUnit = TimeUnit.HOURS;
   private long refreshableFor = DEFAULT_REFRESHABLE;
   private TimeUnit refreshableForUnit = DEFAULT_REFRESHABLE_UNIT;
@@ -70,11 +72,13 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
   private final Map<String,Object> custom = Maps.newHashMap();
 
-  JwtAccessTokenBuilder(KeyGenerator keyGenerator, SecureKeyResolver keyResolver, JwtConfig jwtConfig, Clock clock)  {
+  JwtAccessTokenBuilder(KeyGenerator keyGenerator, SecureKeyResolver keyResolver, JwtConfig jwtConfig, Clock clock, ScmConfiguration scmConfiguration)  {
     this.keyGenerator = keyGenerator;
     this.keyResolver = keyResolver;
     this.jwtConfig = jwtConfig;
     this.clock = clock;
+    this.scmConfiguration = scmConfiguration;
+    this.expiresIn = scmConfiguration.getJwtExpirationInH();
   }
 
   @Override
@@ -179,6 +183,8 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
     if(!jwtConfig.isEndlessJwtEnabled()) {
       claims.setExpiration(new Date(now.toEpochMilli() + expiration));
+    } else {
+      scmConfiguration.setEnabledJwtExpiration(true);
     }
 
     if (refreshableFor > 0) {
@@ -196,8 +202,7 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     if ( issuer != null ) {
       claims.setIssuer(issuer);
     }
-
-
+    
     // sign token and create compact version
     String compact = Jwts.builder()
         .setClaims(claims)
