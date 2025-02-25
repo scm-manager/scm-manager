@@ -67,6 +67,51 @@ pipeline {
       }
     }
 
+    stage('Check') {
+      steps {
+        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+          gradle 'check'
+        }
+        junit allowEmptyResults: true, testResults: '**/build/test-results/test/TEST-*.xml,**/build/test-results/tests/test/TEST-*.xml,**/build/jest-reports/TEST-*.xml'
+      }
+    }
+
+    // in parallel with check?
+    stage('Integration Tests') {
+      steps {
+        // To rerun integration tests with each build, add '-PrerunIntegrationTests' to the gradle command
+        gradle 'integrationTest'
+        junit allowEmptyResults: true, testResults: 'scm-it/build/test-results/javaIntegrationTests/*.xml,scm-ui/build/reports/e2e/*.xml'
+        archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/videos/*.mp4'
+        archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/screenshots/**/*.png'
+      }
+    }
+
+     stage('SonarQube') {
+      steps {
+        sh 'git config --replace-all "remote.origin.fetch" "+refs/heads/*:refs/remotes/origin/*"'
+        sh 'git fetch origin develop'
+        script {
+          withSonarQubeEnv('sonarcloud.io-scm') {
+            String parameters = ' -Dsonar.organization=scm-manager -Dsonar.analysis.scmm-repo=scm-manager/scm-manager'
+            if (env.CHANGE_ID) {
+              parameters += ' -Dsonar.pullrequest.provider=GitHub'
+              parameters += ' -Dsonar.pullrequest.github.repository=scm-manager/scm-manager'
+              parameters += " -Dsonar.pullrequest.key=${env.CHANGE_ID}"
+              parameters += " -Dsonar.pullrequest.branch=${env.CHANGE_BRANCH}"
+              parameters += " -Dsonar.pullrequest.base=${env.CHANGE_TARGET}"
+            } else {
+              parameters += " -Dsonar.branch.name=${env.BRANCH_NAME}"
+              if (env.BRANCH_NAME != "develop") {
+                parameters += " -Dsonar.branch.target=develop"
+              }
+            }
+            gradle "sonarqube ${parameters}"
+          }
+        }
+      }
+    }
+
     stage('Deployment') {
       when {
         anyOf {
@@ -253,6 +298,7 @@ void withPublishEnvironment(Closure<Void> closure) {
   withCredentials([
     usernamePassword(credentialsId: 'packages-scm-manager-org', usernameVariable: 'ORG_GRADLE_PROJECT_packagesScmManagerUsername', passwordVariable: 'ORG_GRADLE_PROJECT_packagesScmManagerPassword'),
     string(credentialsId: 'SCM-Manager_ApiKey', variable: 'ORG_GRADLE_PROJECT_ecosystemApiToken'),
+    string(credentialsId: 'npm-token-scm-manager', variable: 'ORG_GRADLE_PROJECT_npmToken'),
     file(credentialsId: 'gpg_packages-scm-manager-org', variable: 'GPG_KEY_RING'),
     usernamePassword(credentialsId: 'gpg_packages-scm-manager-org-credentials', usernameVariable: 'GPG_KEY_ID', passwordVariable: 'GPG_KEY_PASSWORD')
   ]) {
