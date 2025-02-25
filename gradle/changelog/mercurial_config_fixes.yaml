@@ -1,0 +1,2 @@
+- type: fixed
+  description: JavaHg's handling of configuration files by ensuring system and user-level configs are read for all commands, prevent unintended config modifications by giving each command its own configuration copy, simplify how temporary config options (like credentials) are injected ([#2247](https://github.com/scm-manager/scm-manager/pull/2247))
