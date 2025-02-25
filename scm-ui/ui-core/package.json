@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-core",
-  "version": "3.7.2-SNAPSHOT",
+  "version": "3.7.3",
   "main": "./src/index.ts",
   "license": "AGPL-3.0-only",
   "scripts": {
@@ -20,7 +20,7 @@
     "styled-components": "5"
   },
   "dependencies": {
-    "@scm-manager/ui-api": "3.7.2-SNAPSHOT",
+    "@scm-manager/ui-api": "3.7.3",
     "@radix-ui/react-radio-group": "^1.1.3",
     "@radix-ui/react-slot": "^1.0.1",
     "@radix-ui/react-visually-hidden": "^1.0.3",
@@ -37,7 +37,7 @@
     "@scm-manager/eslint-config": "^2.17.0",
     "@scm-manager/tsconfig": "^2.12.0",
     "@scm-manager/babel-preset": "^2.13.1",
-    "@scm-manager/ui-types": "3.7.2-SNAPSHOT",
+    "@scm-manager/ui-types": "3.7.3",
     "@types/mousetrap": "1.6.5",
     "@testing-library/react-hooks": "8.0.1",
     "@testing-library/react": "12.1.5",

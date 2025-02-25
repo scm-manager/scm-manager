@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-api",
-  "version": "3.7.2-SNAPSHOT",
+  "version": "3.7.3",
   "description": "React hook api for the SCM-Manager backend",
   "main": "build/index.js",
   "module": "build/index.mjs",
@@ -26,7 +26,7 @@
     "react-i18next": "11"
   },
   "devDependencies": {
-    "@scm-manager/ui-types": "3.7.2-SNAPSHOT",
+    "@scm-manager/ui-types": "3.7.3",
     "tsup": "^5.12.6",
     "@types/react-test-renderer": "^17.0.1",
     "@scm-manager/babel-preset": "^2.13.1",
