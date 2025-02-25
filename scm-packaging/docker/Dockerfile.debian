@@ -39,17 +39,13 @@ COPY --from=jre-build /javaruntime "${JAVA_HOME}"
 COPY build/docker/etc /etc
 COPY build/docker/opt /opt
 
-RUN set -x \
- && apt-get update \
- # libfreetype6 libfontconfig1 graphviz
- && apt-get install -y --no-install-recommends libfreetype6 libfontconfig1 graphviz mercurial bash ca-certificates \
- # use gid 0 for openshift compatibility
- && useradd -d "${SCM_HOME}" -u 1000 -g 0 -m -s /bin/bash scm \
- && mkdir -p ${SCM_HOME} ${CACHE_DIR} \
- && chmod +x /opt/scm-server/bin/scm-server \
- # set permissions to group 0 for openshift compatibility
- && chown 1000:0 ${SCM_HOME} ${CACHE_DIR} \
- && chmod -R g=u ${SCM_HOME} ${CACHE_DIR}
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends libfreetype6 libfontconfig1 graphviz mercurial bash ca-certificates
+RUN useradd -d "${SCM_HOME}" -u 1000 -g 0 -m -s /bin/bash scm
+RUN mkdir -p ${SCM_HOME} ${CACHE_DIR}
+RUN chmod +x /opt/scm-server/bin/scm-server
+RUN chown 1000:0 ${SCM_HOME} ${CACHE_DIR}
+RUN chmod -R g=u ${SCM_HOME} ${CACHE_DIR}
 
 USER 1000
 
