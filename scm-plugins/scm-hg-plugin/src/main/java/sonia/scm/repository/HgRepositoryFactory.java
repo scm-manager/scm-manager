@@ -23,6 +23,7 @@ import org.javahg.ext.purge.PurgeExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.hooks.HookEnvironment;
+import sonia.scm.repository.spi.javahg.HgConfigFileExtension;
 import sonia.scm.repository.spi.javahg.HgFileviewExtension;
 
 import java.io.File;
@@ -59,10 +60,12 @@ public class HgRepositoryFactory {
     HgConfig config = configResolver.resolve(repository);
     File directory = config.getDirectory();
 
-    RepositoryConfiguration repoConfiguration = RepositoryConfiguration.DEFAULT;
+    RepositoryConfiguration repoConfiguration = new RepositoryConfiguration();
+    repoConfiguration.setHgrcPath(null);
     repoConfiguration.getEnvironment().putAll(environment);
     repoConfiguration.addExtension(HgFileviewExtension.class);
     repoConfiguration.addExtension(PurgeExtension.class);
+    repoConfiguration.addExtension(HgConfigFileExtension.class);
 
     boolean pending = hookEnvironment.isPending();
     repoConfiguration.setEnablePendingChangesets(pending);

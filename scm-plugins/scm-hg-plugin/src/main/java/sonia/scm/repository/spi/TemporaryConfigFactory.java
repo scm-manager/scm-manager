@@ -22,7 +22,6 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.io.INIConfiguration;
-import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.net.GlobalProxyConfiguration;
@@ -32,6 +31,9 @@ import sonia.scm.util.Util;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 
 public class TemporaryConfigFactory {
 
@@ -59,9 +61,6 @@ public class TemporaryConfigFactory {
     private String username;
     private String password;
 
-    private INIConfiguration hgrc;
-    private INISection previousProxyConfiguration;
-
     private Builder(HgCommandContext context) {
       this.context = context;
     }
@@ -75,40 +74,29 @@ public class TemporaryConfigFactory {
 
     @SuppressWarnings("java:S4042") // we know that we delete a file
     public <T> T call(HgCallable<T> callable) throws IOException {
-      File file = new File(context.getDirectory(), HgRepositoryHandler.PATH_HGRC);
-      boolean exists = file.exists();
+      Path hgrc = null;
+
       if (isModificationRequired()) {
-        setupHgrc(file);
+        hgrc = Files.createTempFile(null, ".rc");
       }
+
       try {
-        return callable.call();
+        if (hgrc != null) {
+          setupHgrc(hgrc.toFile());
+        }
+
+        return callable.call(hgrc);
       } finally {
-        if (!exists && file.exists() && !file.delete()) {
-          LOG.error("failed to delete temporary hgrc {}", file);
-        } else if (exists && file.exists()) {
-          try {
-            if (hgrc != null) {
-              cleanUpHgrc(file);
-            }
-          } catch (Exception e) {
-            LOG.warn("error cleaning up hgrc", e);
+        if (hgrc != null) {
+          if(!hgrc.toFile().delete()) {
+            LOG.warn("error cleaning up hgrc {}", hgrc.toFile().getAbsoluteFile());
           }
         }
       }
     }
 
-    private void write(File file) throws IOException {
-      INIConfigurationWriter writer = new INIConfigurationWriter();
-      writer.write(hgrc, file);
-    }
-
     private void setupHgrc(File file) throws IOException {
-      if (file.exists()) {
-        INIConfigurationReader reader = new INIConfigurationReader();
-        hgrc = reader.read(file);
-      } else {
-        hgrc = new INIConfiguration();
-      }
+      INIConfiguration hgrc = new INIConfiguration();
 
       if (isAuthenticationEnabled()) {
         applyAuthentication(hgrc);
@@ -118,12 +106,11 @@ public class TemporaryConfigFactory {
         applyProxyConfiguration(hgrc);
       }
 
-      write(file);
+      INIConfigurationWriter writer = new INIConfigurationWriter();
+      writer.write(hgrc, file);
     }
 
     private void applyProxyConfiguration(INIConfiguration hgrc) {
-      previousProxyConfiguration = hgrc.getSection(SECTION_PROXY);
-      hgrc.removeSection(SECTION_PROXY);
       INISection proxy = new INISection(SECTION_PROXY);
       proxy.setParameter("host", globalProxyConfiguration.getHost() + ":" + globalProxyConfiguration.getPort());
 
@@ -165,34 +152,11 @@ public class TemporaryConfigFactory {
         && !Strings.isNullOrEmpty(username)
         && !Strings.isNullOrEmpty(password);
     }
-
-    private void cleanUpHgrc(File file) throws IOException {
-      INISection auth = hgrc.getSection(SECTION_AUTH);
-      if (isAuthenticationEnabled() && auth != null) {
-        for (String key : auth.getParameterKeys()) {
-          if (key.startsWith(AUTH_PREFIX)) {
-            auth.removeParameter(key);
-          }
-        }
-      }
-
-      if (globalProxyConfiguration.isEnabled()) {
-        hgrc.removeSection(SECTION_PROXY);
-        if (previousProxyConfiguration != null) {
-          hgrc.addSection(previousProxyConfiguration);
-        }
-      }
-
-      if (isModificationRequired()) {
-        write(file);
-      }
-    }
-
   }
 
   @FunctionalInterface
   public interface HgCallable<T> {
-    T call() throws IOException;
+    T call(Path configFile) throws IOException;
   }
 
 }
