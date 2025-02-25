@@ -78,6 +78,7 @@ const Tag: FC<Props> = ({
             },
             size === "small" && smallClassNames
           )}
+          title={title}
         >
           {showIcon}
           {label}

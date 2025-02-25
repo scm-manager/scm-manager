@@ -85,7 +85,7 @@ class GitMergeRebase {
         PersonIdent originalAuthor = commit.getAuthorIdent();
         targetRevision = commitHelper.createCommit(
           newTreeId,
-          new Person(originalAuthor.getName(), originalAuthor.getEmailAddress()),
+          originalAuthor,
           request.getAuthor(),
           commit.getFullMessage(),
           request.isSign(),
