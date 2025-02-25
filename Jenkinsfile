@@ -298,7 +298,6 @@ void withPublishEnvironment(Closure<Void> closure) {
   withCredentials([
     usernamePassword(credentialsId: 'packages-scm-manager-org', usernameVariable: 'ORG_GRADLE_PROJECT_packagesScmManagerUsername', passwordVariable: 'ORG_GRADLE_PROJECT_packagesScmManagerPassword'),
     string(credentialsId: 'SCM-Manager_ApiKey', variable: 'ORG_GRADLE_PROJECT_ecosystemApiToken'),
-    string(credentialsId: 'npm-token-scm-manager', variable: 'ORG_GRADLE_PROJECT_npmToken'),
     file(credentialsId: 'gpg_packages-scm-manager-org', variable: 'GPG_KEY_RING'),
     usernamePassword(credentialsId: 'gpg_packages-scm-manager-org-credentials', usernameVariable: 'GPG_KEY_ID', passwordVariable: 'GPG_KEY_PASSWORD')
   ]) {
