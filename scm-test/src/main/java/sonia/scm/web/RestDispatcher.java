@@ -36,6 +36,7 @@ import sonia.scm.AlreadyExistsException;
 import sonia.scm.BadRequestException;
 import sonia.scm.BranchAlreadyExistsException;
 import sonia.scm.ConcurrentModificationException;
+import sonia.scm.ConflictException;
 import sonia.scm.NotFoundException;
 import sonia.scm.ScmConstraintViolationException;
 
@@ -83,6 +84,7 @@ public class RestDispatcher {
       registerException(AlreadyExistsException.class, Status.CONFLICT);
       registerException(BranchAlreadyExistsException.class, Status.CONFLICT);
       registerException(ConcurrentModificationException.class, Status.CONFLICT);
+      registerException(ConflictException.class, Status.CONFLICT);
       registerException(UnauthorizedException.class, Status.FORBIDDEN);
       registerException(AuthorizationException.class, Status.FORBIDDEN);
       registerException(AuthenticationException.class, Status.UNAUTHORIZED);

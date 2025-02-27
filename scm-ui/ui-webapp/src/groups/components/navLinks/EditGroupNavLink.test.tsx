@@ -15,28 +15,30 @@
  */
 
 import React from "react";
-import { shallow } from "enzyme";
 import "@scm-manager/ui-tests";
 import EditGroupNavLink from "./EditGroupNavLink";
+import { mount } from "@scm-manager/ui-tests";
 
-it("should render nothing, if the edit link is missing", () => {
-  const group = {
-    _links: {}
-  };
+describe("EditGroupNavLink tests", () => {
+  it("should render nothing, if the edit link is missing", () => {
+    const group = {
+      _links: {},
+    };
 
-  const navLink = shallow(<EditGroupNavLink group={group} editUrl="/group/edit" />);
-  expect(navLink.text()).toBe("");
-});
+    const navLink = mount(<EditGroupNavLink group={group} editUrl="/group/edit" />);
+    expect(navLink.text()).toBe("");
+  });
 
-it("should render the navLink", () => {
-  const group = {
-    _links: {
-      update: {
-        href: "/groups"
-      }
-    }
-  };
+  it("should render the navLink", () => {
+    const group = {
+      _links: {
+        update: {
+          href: "/groups",
+        },
+      },
+    };
 
-  const navLink = shallow(<EditGroupNavLink group={group} editUrl="/group/edit" />);
-  expect(navLink.text()).not.toBe("");
+    const navLink = mount(<EditGroupNavLink group={group} editUrl="/group/edit" />);
+    expect(navLink.text()).not.toBe("");
+  });
 });

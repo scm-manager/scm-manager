@@ -82,5 +82,10 @@ public enum Command
   /**
    * @since 2.39.0
    */
-  CHANGESETS
+  CHANGESETS,
+
+  /**
+   * @since 3.8
+   */
+  REVERT
 }

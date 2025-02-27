@@ -22,6 +22,7 @@ import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.UnsupportedSigningFormatException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.merge.RecursiveMerger;
 import org.eclipse.jgit.merge.ResolveMerger;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -80,6 +81,15 @@ class MergeHelper {
     this.message = request.getMessage();
   }
 
+  static Collection<String> getFailingPaths(ResolveMerger merger) {
+    return merger.getMergeResults()
+      .entrySet()
+      .stream()
+      .filter(entry -> entry.getValue().containsConflicts())
+      .map(Map.Entry::getKey)
+      .toList();
+  }
+
   ObjectId getTargetRevision() {
     return targetRevision;
   }
@@ -105,15 +115,6 @@ class MergeHelper {
     } else {
       return MessageFormat.format(MERGE_COMMIT_MESSAGE_TEMPLATE, branchToMerge, targetBranch);
     }
-  }
-
-  Collection<String> getFailingPaths(ResolveMerger merger) {
-    return merger.getMergeResults()
-      .entrySet()
-      .stream()
-      .filter(entry -> entry.getValue().containsConflicts())
-      .map(Map.Entry::getKey)
-      .toList();
   }
 
   boolean isMergedInto(ObjectId baseRevision, ObjectId revisionToCheck) {

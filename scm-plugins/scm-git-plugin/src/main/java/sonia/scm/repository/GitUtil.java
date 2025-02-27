@@ -71,10 +71,10 @@ import static java.util.Optional.ofNullable;
 
 public final class GitUtil {
 
-  private static final GitUserAgentProvider GIT_USER_AGENT_PROVIDER = new GitUserAgentProvider();
   public static final String REF_HEAD = "HEAD";
   public static final String REF_HEAD_PREFIX = "refs/heads/";
   public static final String REF_MAIN = "main";
+  private static final GitUserAgentProvider GIT_USER_AGENT_PROVIDER = new GitUserAgentProvider();
   private static final String DIRECTORY_DOTGIT = ".git";
   private static final String DIRECTORY_OBJETCS = "objects";
   private static final String DIRECTORY_REFS = "refs";
@@ -84,14 +84,12 @@ public final class GitUtil {
   private static final String REMOTE_REF = "refs/remote/scm/%s/%s";
   private static final int TIMEOUT = 5;
 
- 
   private static final Logger logger = LoggerFactory.getLogger(GitUtil.class);
   private static final String REF_SPEC = "refs/heads/*:refs/heads/*";
-
+  private static final String GPG_HEADER = "-----BEGIN PGP SIGNATURE-----";
 
   private GitUtil() {
   }
-
 
   public static void close(org.eclipse.jgit.lib.Repository repo) {
     if (repo != null) {
@@ -181,7 +179,6 @@ public final class GitUtil {
     }
   }
 
-
   public static String getBranch(Ref ref) {
     String branch = null;
 
@@ -233,7 +230,6 @@ public final class GitUtil {
       return GitUtil.getBranchId(gitRepository, requestedBranch);
     }
   }
-
 
   public static Ref getBranchId(org.eclipse.jgit.lib.Repository repo,
                                 String branchName)
@@ -291,22 +287,43 @@ public final class GitUtil {
   /**
    * Returns the commit for the given ref.
    * If the given ref is for a tag, the commit that this tag belongs to is returned instead.
+   *
+   * @param repository jgit repository
+   * @param revWalk    rev walk
+   * @param ref        commit/tag ref
+   * @return {@link RevCommit}
+   * @throws IOException exception
    */
   public static RevCommit getCommit(org.eclipse.jgit.lib.Repository repository,
                                     RevWalk revWalk, Ref ref)
     throws IOException {
-    RevCommit commit = null;
     ObjectId id = ref.getPeeledObjectId();
 
     if (id == null) {
       id = ref.getObjectId();
     }
 
+    return getCommit(repository, revWalk, id);
+  }
+
+  /**
+   * Returns the commit for the given object id. The id is expected to be a commit and not a tag.
+   *
+   * @param repository jgit repository
+   * @param revWalk    rev walk
+   * @param id         commit id
+   * @return {@link RevCommit}
+   * @throws IOException exception
+   * @since 3.8.0
+   */
+  public static RevCommit getCommit(org.eclipse.jgit.lib.Repository repository,
+                                    RevWalk revWalk, ObjectId id) throws IOException {
+    RevCommit commit = null;
+
     if (id != null) {
       if (revWalk == null) {
         revWalk = new RevWalk(repository);
       }
-
       commit = revWalk.parseCommit(id);
     }
 
@@ -330,7 +347,6 @@ public final class GitUtil {
     return tag;
   }
 
-
   public static long getCommitTime(RevCommit commit) {
     long date = commit.getCommitTime();
 
@@ -338,7 +354,6 @@ public final class GitUtil {
 
     return date;
   }
-
 
   public static String getId(AnyObjectId objectId) {
     String id = Util.EMPTY_STRING;
@@ -349,7 +364,6 @@ public final class GitUtil {
 
     return id;
   }
-
 
   public static Ref getRefForCommit(org.eclipse.jgit.lib.Repository repository,
                                     ObjectId id)
@@ -415,7 +429,6 @@ public final class GitUtil {
       .findFirst();
   }
 
-
   public static ObjectId getRevisionId(org.eclipse.jgit.lib.Repository repo,
                                        String revision)
     throws IOException {
@@ -429,7 +442,6 @@ public final class GitUtil {
 
     return revId;
   }
-
 
   public static String getScmRemoteRefName(Repository repository,
                                            Ref localBranch) {
@@ -463,7 +475,6 @@ public final class GitUtil {
     return tagName;
   }
 
-
   public static String getTagName(Ref ref) {
     String name = ref.getName();
 
@@ -473,8 +484,6 @@ public final class GitUtil {
 
     return name;
   }
-
-  private static final String GPG_HEADER = "-----BEGIN PGP SIGNATURE-----";
 
   public static Optional<Signature> getTagSignature(RevObject revObject, GPG gpg, RevWalk revWalk) throws IOException {
     if (revObject instanceof RevTag) {

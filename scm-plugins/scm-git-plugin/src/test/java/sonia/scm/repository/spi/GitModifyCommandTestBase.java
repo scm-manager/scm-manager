@@ -67,7 +67,7 @@ class GitModifyCommandTestBase extends AbstractGitCommandTestBase {
     RepositoryHookEvent postReceiveEvent = mockEvent(POST_RECEIVE);
     when(eventFactory.createPostReceiveEvent(any(), any(), any(), any())).thenReturn(postReceiveEvent);
     return new GitModifyCommand(
-      createContext(),
+      createContext("master"),
       lfsBlobStoreFactory,
       repositoryManager,
       eventFactory

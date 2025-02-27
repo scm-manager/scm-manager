@@ -16,8 +16,8 @@
 
 package sonia.scm.api.v2.resources;
 
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
@@ -30,6 +30,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -43,6 +44,9 @@ import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.repository.api.RevertCommandBuilder;
+import sonia.scm.repository.api.RevertCommandResult;
+import sonia.scm.web.JsonMockHttpRequest;
 import sonia.scm.web.JsonMockHttpResponse;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
@@ -55,12 +59,13 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mock.Strictness.LENIENT;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -84,12 +89,15 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
   @Mock(strictness = LENIENT)
   private LogCommandBuilder logCommandBuilder;
 
-  @Mock
-  private TagCollectionToDtoMapper tagCollectionToDtoMapper;
+  @Mock(strictness = LENIENT, answer = Answers.RETURNS_DEEP_STUBS)
+  private ChangesetToParentDtoMapper changesetToParentDtoMapper;
 
   @InjectMocks
   private ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper;
 
+  @SuppressWarnings("unused")
+  @Mock
+  private TagCollectionToDtoMapper tagCollectionToDtoMapper;
 
   @InjectMocks
   private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
@@ -100,7 +108,7 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
   @BeforeEach
   void prepareEnvironment() {
     changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
-    changesetRootResource = new ChangesetRootResource(serviceFactory, changesetCollectionToDtoMapper, changesetToChangesetDtoMapper);
+    changesetRootResource = new ChangesetRootResource(serviceFactory, changesetCollectionToDtoMapper, changesetToChangesetDtoMapper, resourceLinks);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
@@ -136,12 +144,12 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
       .accept(VndMediaType.CHANGESET_COLLECTION);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
-    assertEquals(200, response.getStatus());
+    assertThat(response.getStatus()).isEqualTo(200);
     log.info("Response :{}", response.getContentAsString());
-    assertTrue(response.getContentAsString().contains(String.format("\"id\":\"%s\"", id)));
-    assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", authorName)));
-    assertTrue(response.getContentAsString().contains(String.format("\"mail\":\"%s\"", authorEmail)));
-    assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
+    assertThat(response.getContentAsString()).contains(String.format("\"id\":\"%s\"", id));
+    assertThat(response.getContentAsString()).contains(String.format("\"name\":\"%s\"", authorName));
+    assertThat(response.getContentAsString()).contains(String.format("\"mail\":\"%s\"", authorEmail));
+    assertThat(response.getContentAsString()).contains(String.format("\"description\":\"%s\"", commit));
   }
 
   @Test
@@ -164,12 +172,12 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
       .accept(VndMediaType.CHANGESET_COLLECTION);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
-    assertEquals(200, response.getStatus());
+    assertThat(response.getStatus()).isEqualTo(200);
     log.info("Response :{}", response.getContentAsString());
-    assertTrue(response.getContentAsString().contains(String.format("\"id\":\"%s\"", id)));
-    assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", authorName)));
-    assertTrue(response.getContentAsString().contains(String.format("\"mail\":\"%s\"", authorEmail)));
-    assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
+    assertThat(response.getContentAsString()).contains(String.format("\"id\":\"%s\"", id));
+    assertThat(response.getContentAsString()).contains(String.format("\"name\":\"%s\"", authorName));
+    assertThat(response.getContentAsString()).contains(String.format("\"mail\":\"%s\"", authorEmail));
+    assertThat(response.getContentAsString()).contains(String.format("\"description\":\"%s\"", commit));
   }
 
   @Nested
@@ -180,14 +188,13 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
     private final String authorName = "name";
     private final String authorEmail = "em@i.l";
     private final String commit = "my branch commit";
+    private final Changeset changeset = new Changeset(id, Date.from(creationDate).getTime(), new Person(authorName, authorEmail), commit);
 
     private final JsonMockHttpResponse response = new JsonMockHttpResponse();
 
     @BeforeEach
-    void prepareExistingChangeset() throws URISyntaxException, IOException {
-      when(logCommandBuilder.getChangeset(id)).thenReturn(
-        new Changeset(id, Date.from(creationDate).getTime(), new Person(authorName, authorEmail), commit)
-      );
+    void prepareExistingChangeset() throws IOException {
+      when(logCommandBuilder.getChangeset(id)).thenReturn(changeset);
     }
 
     private void executeRequest() throws URISyntaxException {
@@ -229,6 +236,14 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
       assertThat(response.getContentAsJson().get("_links").get("containedInTags").get("href").asText())
         .isEqualTo("/v2/repositories/space/repo/tags/contains/revision_123");
     }
+
+    @Test
+    void shouldNotReturnRevertLinkWithoutParent() throws URISyntaxException {
+      when(repositoryService.isSupported(Command.REVERT)).thenReturn(true);
+      executeRequest();
+
+      assertThat(response.getContentAsJson().get("_links").get("revert")).isNullOrEmpty();
+    }
   }
 
   @Test
@@ -240,7 +255,104 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
 
-    assertEquals(404, response.getStatus());
+    assertThat(response.getStatus()).isEqualTo(404);
   }
 
+  @Nested
+  class Revert {
+
+    @Mock(answer = Answers.RETURNS_SELF)
+    private RevertCommandBuilder revertCommandBuilder;
+
+    @BeforeEach
+    void prepareRevertCommand() {
+      when(repositoryService.getRevertCommand()).thenReturn(revertCommandBuilder);
+    }
+
+    @Test
+    void shouldCallRevertCommand() throws URISyntaxException {
+      when(repositoryService.getRevertCommand().execute()).thenReturn(RevertCommandResult.success("42"));
+      JsonMockHttpRequest request = JsonMockHttpRequest
+        .post(CHANGESET_URL + "23/revert")
+        .contentType(VndMediaType.REVERT)
+        .json("{'branch':'main','message':'revert message'}");
+
+      JsonMockHttpResponse response = new JsonMockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      verify(revertCommandBuilder).setRevision("23");
+      verify(revertCommandBuilder).setMessage("revert message");
+      verify(revertCommandBuilder).setBranch("main");
+      verify(revertCommandBuilder).execute();
+      assertThat(response.getStatus()).isEqualTo(201);
+      assertThat(response.getContentAsJson().get("revision").asText()).isEqualTo("42");
+      assertThat(response.getOutputHeaders().getFirst("Location")).hasToString("/v2/repositories/space/repo/changesets/42");
+    }
+
+    @Test
+    void shouldCallRevertCommandForDefaultMessage() throws URISyntaxException {
+      when(repositoryService.getRevertCommand().execute()).thenReturn(RevertCommandResult.success("42"));
+      JsonMockHttpRequest request = JsonMockHttpRequest
+        .post(CHANGESET_URL + "23/revert")
+        .contentType(VndMediaType.REVERT)
+        .json("{'branch':'main'}");
+
+      MockHttpResponse response = new MockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      verify(revertCommandBuilder).setRevision("23");
+      verify(revertCommandBuilder, never()).setMessage(anyString());
+      verify(revertCommandBuilder).setBranch("main");
+      verify(revertCommandBuilder).execute();
+    }
+
+    @Test
+    void shouldCallRevertCommandForDefaultBranch() throws URISyntaxException {
+      when(repositoryService.getRevertCommand().execute()).thenReturn(RevertCommandResult.success("42"));
+      JsonMockHttpRequest request = JsonMockHttpRequest
+        .post(CHANGESET_URL + "23/revert")
+        .contentType(VndMediaType.REVERT)
+        .json("{'message':'revert message'}");
+
+      MockHttpResponse response = new MockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      verify(revertCommandBuilder).setRevision("23");
+      verify(revertCommandBuilder).setMessage("revert message");
+      verify(revertCommandBuilder, never()).setBranch(anyString());
+      verify(revertCommandBuilder).execute();
+    }
+
+    @Test
+    void shouldFailWithoutPushPermission() throws URISyntaxException {
+      doThrow(new UnauthorizedException("push"))
+        .when(subject).checkPermission("repository:push:repoId");
+      JsonMockHttpRequest request = JsonMockHttpRequest
+        .post(CHANGESET_URL + "23/revert")
+        .contentType(VndMediaType.REVERT)
+        .json("{'branch':'main','message':'revert message'}");
+
+      MockHttpResponse response = new MockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      verify(revertCommandBuilder, never()).execute();
+      assertThat(response.getStatus()).isEqualTo(403);
+    }
+
+    @Test
+    void shouldFailWithConflicts() throws URISyntaxException {
+      when(repositoryService.getRevertCommand().execute())
+        .thenReturn(RevertCommandResult.failure(List.of("file/with/conflict")));
+
+      JsonMockHttpRequest request = JsonMockHttpRequest
+        .post(CHANGESET_URL + "23/revert")
+        .contentType(VndMediaType.REVERT)
+        .json("{}");
+
+      MockHttpResponse response = new MockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(409);
+    }
+  }
 }

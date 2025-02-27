@@ -35,9 +35,9 @@ public class GitBranchesCommandTest extends AbstractGitCommandTestBase {
 
     List<Branch> branches = branchesCommand.getBranches();
 
-    assertThat(findBranch(branches, "master")).isEqualTo(
+    assertThat(findBranch(branches, "main")).isEqualTo(
       defaultBranch(
-        "master",
+        "main",
         "fcd0ef1831e4002ac43ea539f4094334c79ea9ec",
         1339428655000L,
         new Person("Zaphod Beeblebrox", "zaphod.beeblebrox@hitchhiker.com")

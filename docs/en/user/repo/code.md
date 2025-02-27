@@ -85,6 +85,24 @@ Only a name has to be provided that meets the same formatting conditions as bran
 
 ![Repository-Code-Changeset-Create-Tag](assets/repository-code-changeset-create-tag.png)
 
+#### Reverts
+Changesets within Git repositories provide a "Revert" button at the upper right-hand corner (beneath "Create Tag").
+
+**Note:** The revert button is only displayed on commits with exactly one parent element.
+Commits with multiple predecessors (e.g. merge commits) and initial commits without parent cannot be reverted.
+
+![Repository-Code-Changeset-Revert](assets/repository-code-changeset-revert.png)
+
+After pressing the button and before reverting a changeset, you need to first select the branch where it is applied upon.
+This selection is already filled out if you reached the changeset by the changeset overview of a specific branch.
+
+Furthermore, you may type a commit message for the revert. 
+It is filled out with a default message; however, it is recommended to choose a reasonable custom message in order to keep the changeset history comprehensible.
+
+By pressing "Revert", you're going to be forwarded to the newly created commit including the revert if no error occurs.
+
+![Repository-Code-Changeset-Revert-Modal](assets/repository-code-changeset-revert-modal.png)
+
 ### File Details
 After clicking on a file in the sources, the details of the file are shown. Depending on the format of the file, there are different views:
 

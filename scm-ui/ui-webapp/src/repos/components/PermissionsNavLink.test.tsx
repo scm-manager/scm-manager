@@ -15,9 +15,13 @@
  */
 
 import React from "react";
-import { mount, shallow } from "@scm-manager/ui-tests";
+import { mount } from "@scm-manager/ui-tests";
 import "@scm-manager/ui-tests";
 import PermissionsNavLink from "./PermissionsNavLink";
+
+afterEach(() => {
+  jest.resetAllMocks();
+});
 
 describe("PermissionsNavLink", () => {
   it("should render nothing, if the modify link is missing", () => {
@@ -25,7 +29,7 @@ describe("PermissionsNavLink", () => {
       _links: {},
     };
 
-    const navLink = shallow(<PermissionsNavLink repository={repository} permissionUrl="" />);
+    const navLink = mount(<PermissionsNavLink repository={repository} permissionUrl="" />);
     expect(navLink.text()).toBe("");
   });
 

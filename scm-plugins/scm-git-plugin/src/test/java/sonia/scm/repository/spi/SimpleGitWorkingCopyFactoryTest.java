@@ -162,10 +162,10 @@ public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase 
     File workdir = createExistingClone(factory);
 
     GitContext context = createContext();
-    context.getGlobalConfig().setDefaultBranch("master");
+    context.getGlobalConfig().setDefaultBranch("main");
     factory.reclaim(context, workdir, null);
 
-    assertBranchCheckedOutAndClean(workdir, "master");
+    assertBranchCheckedOutAndClean(workdir, "main");
   }
 
   @Test

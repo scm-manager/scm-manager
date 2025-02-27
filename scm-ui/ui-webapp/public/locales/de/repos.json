@@ -347,6 +347,18 @@
     "tag": {
       "create": "Tag erstellen"
     },
+    "revert": {
+      "button": "Revert",
+      "modal": {
+        "title": "Changeset zurücksetzen",
+        "description": "Sie wenden einen Revert an von Commit {{commit}} auf",
+        "branch": "Branch",
+        "commitMessage": "Commit-Nachricht",
+        "commitMessagePlaceholder": "Revert \"{{description}}\"\n\nThis reverts commit {{id}}.",
+        "submit": "Revert",
+        "cancel": "Abbrechen"
+      }
+    },
     "containedInTags": {
       "containedInTag_one": "Enthalten in {{count}} Tag",
       "containedInTag_other": "Enthalten in {{count}} Tags",

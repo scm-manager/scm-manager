@@ -15,21 +15,24 @@
  */
 
 import React from "react";
-import { Changeset, File, Repository } from "@scm-manager/ui-types";
-import { ButtonAddons, Button } from "../../buttons";
-import { createChangesetLink, createSourcesLink } from "./changesets";
+import { Branch, Changeset, File, Repository } from "@scm-manager/ui-types";
+import { Button, ButtonAddons } from "../../buttons";
+import { createChangesetLink, createChangesetLinkByBranch, createSourcesLink } from "./changesets";
 import { useTranslation } from "react-i18next";
 
 type Props = {
   repository: Repository;
   changeset: Changeset;
   file?: File;
+  branch?: Branch;
 };
 
 const ChangesetButtonGroup = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Props>(
-  ({ repository, changeset, file }, ref) => {
+  ({ repository, changeset, file, branch }, ref) => {
     const [t] = useTranslation("repos");
-    const changesetLink = createChangesetLink(repository, changeset);
+    const changesetLink = branch
+      ? createChangesetLinkByBranch(repository, changeset, branch)
+      : createChangesetLink(repository, changeset);
     const sourcesLink = createSourcesLink(repository, changeset, file);
     return (
       <ButtonAddons className="m-0">

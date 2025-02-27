@@ -18,7 +18,7 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { Changeset, File, Repository } from "@scm-manager/ui-types";
+import { Branch, Changeset, File, Repository } from "@scm-manager/ui-types";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 import SingleChangeset from "./SingleChangeset";
 import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
@@ -27,11 +27,13 @@ type Props = {
   repository: Repository;
   changeset: Changeset;
   file?: File;
+  branch?: Branch;
 };
 
 const Wrapper = styled.div`
   // & references parent rule
   // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+
   & + & {
     margin-top: 1rem;
     padding-top: 1rem;
@@ -39,7 +41,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const ChangesetRow: FC<Props> = ({ repository, changeset, file }) => {
+const ChangesetRow: FC<Props> = ({ repository, changeset, file, branch }) => {
   const ref = useKeyboardIteratorTarget();
   return (
     <Wrapper>
@@ -48,7 +50,7 @@ const ChangesetRow: FC<Props> = ({ repository, changeset, file }) => {
           <SingleChangeset repository={repository} changeset={changeset} />
         </div>
         <div className={classNames("column", "is-flex", "is-justify-content-flex-end", "is-align-items-center")}>
-          <ChangesetButtonGroup ref={ref} repository={repository} changeset={changeset} file={file} />
+          <ChangesetButtonGroup ref={ref} repository={repository} changeset={changeset} file={file} branch={branch} />
           <ExtensionPoint<extensionPoints.ChangesetRight>
             name="changeset.right"
             props={{

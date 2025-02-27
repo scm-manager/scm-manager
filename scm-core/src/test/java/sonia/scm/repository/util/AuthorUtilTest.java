@@ -26,6 +26,7 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Person;
+import sonia.scm.user.DisplayUser;
 import sonia.scm.user.EMail;
 import sonia.scm.user.User;
 
@@ -54,9 +55,9 @@ class AuthorUtilTest {
   @Test
   void shouldCreateMailAddressFromEmail() {
     User trillian = new User("trillian");
-    when(subject.getPrincipals().oneByType(User.class)).thenReturn(trillian);
-    when(eMail.getMailOrFallback(trillian)).thenReturn("tricia@hitchhicker.com");
 
+    when(subject.getPrincipals().oneByType(User.class)).thenReturn(trillian);
+    when(eMail.getMailOrFallback(DisplayUser.from(trillian))).thenReturn("tricia@hitchhicker.com");
     Command command = new Command(null);
     AuthorUtil.setAuthorIfNotAvailable(command, eMail);
 

@@ -347,6 +347,18 @@
     "tag": {
       "create": "Create Tag"
     },
+    "revert": {
+      "button": "Revert",
+      "modal": {
+        "title": "Revert Changeset",
+        "description": "You are going to apply a revert for commit {{commit}} on",
+        "branch": "Branch",
+        "commitMessage": "Commit Message",
+        "commitMessagePlaceholder": "Revert \"{{description}}\"\n\nThis reverts commit {{id}}.",
+        "submit": "Revert",
+        "cancel": "Cancel"
+      }
+    },
     "containedInTags": {
       "containedInTag_one": "Contained in {{count}} tag",
       "containedInTag_other": "Contained in {{count}} tags",

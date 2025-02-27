@@ -14,7 +14,9 @@
     "enzyme": "^3.11.0",
     "enzyme-context": "^1.1.2",
     "enzyme-context-react-router-4": "^2.0.0",
-    "raf": "^3.4.1"
+    "i18next": "21",
+    "raf": "^3.4.1",
+    "react-i18next": "11"
   },
   "peerDependencies": {
     "@scm-manager/tsconfig": "^2.13.0",

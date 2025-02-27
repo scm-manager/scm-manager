@@ -49,7 +49,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.MIRROR,
     Command.FILE_LOCK,
     Command.BRANCH_DETAILS,
-    Command.CHANGESETS
+    Command.CHANGESETS,
+    Command.REVERT
   );
 
   protected static final Set<Feature> FEATURES = EnumSet.of(
@@ -182,6 +183,11 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
   @Override
   public ChangesetsCommand getChangesetsCommand() {
     return injector.getInstance(GitChangesetsCommand.Factory.class).create(context);
+  }
+
+  @Override
+  public RevertCommand getRevertCommand() {
+    return injector.getInstance(GitRevertCommand.Factory.class).create(context);
   }
 
   @Override

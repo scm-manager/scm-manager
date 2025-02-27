@@ -16,8 +16,10 @@
 
 package sonia.scm.user;
 
+import lombok.EqualsAndHashCode;
 import sonia.scm.ReducedModelObject;
 
+@EqualsAndHashCode
 public class DisplayUser implements ReducedModelObject {
 
   private final String id;
