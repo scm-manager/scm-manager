@@ -81,7 +81,13 @@ const RevertModal: FC<Props> = ({ repository, changeset, onClose }) => {
           </p>
           <Label className="is-flex is-align-items-baseline">
             <span className="mr-2">{t("changeset.revert.modal.branch")}</span>
-            <Select options={mappedBranches} ref={ref} onChange={handleSelectChange} defaultValue={selectedBranch} />
+            <Select
+              className="is-fullwidth"
+              options={mappedBranches}
+              ref={ref}
+              onChange={handleSelectChange}
+              defaultValue={selectedBranch}
+            />
           </Label>
         </div>
         <br />
