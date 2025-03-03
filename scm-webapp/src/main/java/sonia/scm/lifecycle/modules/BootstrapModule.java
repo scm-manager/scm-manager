@@ -62,8 +62,10 @@ import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.store.JAXBDataStoreFactory;
 import sonia.scm.store.JAXBPropertyFileAccess;
 import sonia.scm.update.BlobDirectoryAccess;
+import sonia.scm.update.DefaultRepositoryPermissionUpdater;
 import sonia.scm.update.NamespaceUpdateIterator;
 import sonia.scm.update.PropertyFileAccess;
+import sonia.scm.update.RepositoryPermissionUpdater;
 import sonia.scm.update.RepositoryUpdateIterator;
 import sonia.scm.update.StoreUpdateStepUtilFactory;
 import sonia.scm.update.UpdateStepRepositoryMetadataAccess;
@@ -121,6 +123,7 @@ public class BootstrapModule extends AbstractModule {
     bind(RepositoryUpdateIterator.class, FileRepositoryUpdateIterator.class);
     bind(NamespaceUpdateIterator.class, FileNamespaceUpdateIterator.class);
     bind(StoreUpdateStepUtilFactory.class, FileStoreUpdateStepUtilFactory.class);
+    bind(RepositoryPermissionUpdater.class, DefaultRepositoryPermissionUpdater.class);
     bind(new TypeLiteral<UpdateStepRepositoryMetadataAccess<Path>>() {}).to(new TypeLiteral<MetadataStore>() {});
 
     // bind metrics
