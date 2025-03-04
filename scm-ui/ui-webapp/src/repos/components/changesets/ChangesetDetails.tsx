@@ -200,7 +200,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
           <div className="media-content pr-2 pt-2 ">
             <Contributors changeset={changeset} repository={repository} />
             <ContainedInTags changeset={changeset} repository={repository} />
-            <div className="is-flex is-flex-wrap-wrap is-ellipsis-overflow">
+            <div className="is-flex is-flex-wrap-wrap">
               <p>
                 <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
               </p>
@@ -212,7 +212,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
               ) : null}
               {showRevertButton && (
                 <Button
-                  className="tag ml-auto mr-2 mt-2"
+                  className="tag ml-auto"
                   variant="tertiary"
                   onClick={() => setRevertModalVisible(true)}
                 >
