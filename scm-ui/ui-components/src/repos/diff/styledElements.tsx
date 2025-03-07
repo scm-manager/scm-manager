@@ -96,17 +96,28 @@ export const DiffContent = styled.div`
   width: 100%;
 `;
 
-export const FileDiffContainer = styled.div`
+export const StickyFileDiffContainer = styled.div`
+  top: 3rem;
   position: sticky;
+  height: 100%;
+`;
+
+export const FileDiffContainer = styled.div`
   top: 5rem;
 `;
 
-export const FileDiffContent = styled.ul`
+export const FileDiffContent = styled.ul<{ gap?: number }>`
   overflow: auto;
-  @supports (-moz-appearance: none) {
-    max-height: calc(100vh - 11rem);
+  ${(props) => {
+    if (props.gap) {
+      return `
+     @supports (-moz-appearance: none) {
+    max-height: calc(100vh - ${props.gap}rem);
   }
-  max-height: calc(100svh - 11rem);
+  max-height: calc(100svh - ${props.gap}rem);
+  `;
+    }
+  }};
 `;
 
 export const Divider = styled.div`

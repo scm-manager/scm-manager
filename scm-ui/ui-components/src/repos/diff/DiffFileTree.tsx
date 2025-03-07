@@ -21,16 +21,16 @@ import { Icon } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
-type Props = { tree: FileTree; currentFile: string; setCurrentFile: (path: string) => void };
+type Props = { tree: FileTree; currentFile: string; setCurrentFile: (path: string) => void; gap?: number };
 
 const StyledIcon = styled(Icon)`
   min-width: 1.5rem;
 `;
 
-const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile }) => {
+const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile, gap = 15 }) => {
   return (
     <FileDiffContainer className={"mt-4 py-3 pr-2"}>
-      <FileDiffContent>
+      <FileDiffContent gap={gap}>
         {Object.keys(tree.children).map((key) => (
           <TreeNode
             key={key}

@@ -26,7 +26,7 @@ import { DiffObjectProps } from "./DiffTypes";
 import DiffStatistics from "./DiffStatistics";
 import { DiffDropDown } from "../index";
 import DiffFileTree from "./diff/DiffFileTree";
-import { DiffContent, Divider, FileTreeContent } from "./diff/styledElements";
+import { DiffContent, Divider, FileTreeContent, StickyFileDiffContainer } from "./diff/styledElements";
 import { useHistory, useLocation } from "react-router-dom";
 import { getFileNameFromHash } from "./diffs";
 import LayoutRadioButtons from "./LayoutRadioButtons";
@@ -111,7 +111,7 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
         </div>
         <LayoutRadioButtons layout={layout} setLayout={setLayout} />
         <div className="is-flex mb-4 mt-1 columns is-multiline">
-          <div
+          <StickyFileDiffContainer
             className={
               (layout === "Both" ? "column pl-3 is-one-quarter" : "column pl-3 is-full") +
               (layout !== "Diff" ? "" : " is-hidden")
@@ -125,10 +125,11 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
                   tree={data.tree}
                   currentFile={decodeURIComponent(getFileNameFromHash(location.hash) ?? "")}
                   setCurrentFile={setFilePath}
+                  gap={12}
                 />
               )}
             </FileTreeContent>
-          </div>
+          </StickyFileDiffContainer>
           <DiffContent id={diffContentId} className={layout !== "Tree" ? "column" : "is-hidden"}>
             <Diff
               defaultCollapse={collapsed}
