@@ -173,6 +173,10 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     // add scope to custom claims
     Scopes.toClaims(customClaims, scope);
 
+    if (expiresIn < 1) {
+      expiresIn = 1;
+    }
+
     Instant now = clock.instant();
     long expiration = expiresInUnit.toMillis(expiresIn);
 
