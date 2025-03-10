@@ -197,7 +197,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
               <AvatarImage person={changeset.author} />
             </p>
           </AvatarWrapper>
-          <div className="media-content pr-2 pt-2 ">
+          <div className="media-content">
             <Contributors changeset={changeset} repository={repository} />
             <ContainedInTags changeset={changeset} repository={repository} />
             <div className="is-flex is-flex-wrap-wrap">
