@@ -1523,9 +1523,23 @@ exports[`Storyshots Duration Duration 1`] = `
 >
   <p>
     <time
+      dateTime="1ms"
+    >
+      duration.ms
+    </time>
+  </p>
+  <p>
+    <time
       dateTime="500ms"
     >
       duration.ms
+    </time>
+  </p>
+  <p>
+    <time
+      dateTime="1s"
+    >
+      duration.s
     </time>
   </p>
   <p>
@@ -1537,9 +1551,23 @@ exports[`Storyshots Duration Duration 1`] = `
   </p>
   <p>
     <time
+      dateTime="1m"
+    >
+      duration.m
+    </time>
+  </p>
+  <p>
+    <time
       dateTime="42m"
     >
       duration.m
+    </time>
+  </p>
+  <p>
+    <time
+      dateTime="1h"
+    >
+      duration.h
     </time>
   </p>
   <p>
@@ -1551,9 +1579,23 @@ exports[`Storyshots Duration Duration 1`] = `
   </p>
   <p>
     <time
+      dateTime="1d"
+    >
+      duration.d
+    </time>
+  </p>
+  <p>
+    <time
       dateTime="5d"
     >
       duration.d
+    </time>
+  </p>
+  <p>
+    <time
+      dateTime="1w"
+    >
+      duration.w
     </time>
   </p>
   <p>

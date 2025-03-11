@@ -233,7 +233,7 @@
   "notifications": {
     "toastTitle": "Notification",
     "xMore": "+{{ count }} Notification",
-    "xMore_plural": "+{{ count }} Notifications",
+    "xMore_other": "+{{ count }} Notifications",
     "loading": "Loading ...",
     "bellTitle": "Notifications",
     "empty": "No notifications",
@@ -250,17 +250,17 @@
   },
   "duration": {
     "ms": "{{count}} millisecond",
-    "ms_plural": "{{count}} milliseconds",
+    "ms_other": "{{count}} milliseconds",
     "s": "{{count}} second",
-    "s_plural": "{{count}} seconds",
+    "s_other": "{{count}} seconds",
     "m": "{{count}} minute",
-    "m_plural": "{{count}} minutes",
+    "m_other": "{{count}} minutes",
     "h": "{{count}} hour",
-    "h_plural": "{{count}} hours",
+    "h_other": "{{count}} hours",
     "d": "{{count}} day",
-    "d_plural": "{{count}} days",
+    "d_other": "{{count}} days",
     "w": "{{count}} week",
-    "w_plural": "{{count}} weeks"
+    "w_other": "{{count}} weeks"
   },
   "search": {
     "ariaLabel": "Global search",
@@ -282,7 +282,7 @@
       "hints": "Hints for your Search",
       "screenReaderHintNoResult": "No repositories found. Other result types may be available, hit enter to navigate to complete search result.",
       "screenReaderHint": "Found one repository. Hit enter to see search results of all types or use arrow keys to navigate to repository quick results and hit enter to select one of them.",
-      "screenReaderHint_plural": "Found at least {{ count }} repositories. Hit enter to see search results of all types or use arrow keys to navigate to repository quick results and hit enter to select one of them.",
+      "screenReaderHint_other": "Found at least {{ count }} repositories. Hit enter to see search results of all types or use arrow keys to navigate to repository quick results and hit enter to select one of them.",
       "searchRepo": "Search in repository",
       "searchNamespace": "Search in namespace",
       "searchEverywhere": "Search everywhere"

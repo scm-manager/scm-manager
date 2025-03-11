@@ -38,7 +38,7 @@
     "showPending": "Show Changes",
     "executePending": "Waiting for restart",
     "outdatedPlugins": "Update {{count}} Plugin",
-    "outdatedPlugins_plural": "Update {{count}} Plugins",
+    "outdatedPlugins_other": "Update {{count}} Plugins",
     "updateAll": "Update All Plugins",
     "cancelPending": "Discard Changes",
     "noPlugins": "No plugins found.",

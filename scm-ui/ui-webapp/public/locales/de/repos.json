@@ -325,7 +325,7 @@
     },
     "parents": {
       "label": "Parent",
-      "label_plural": "Parents"
+      "label_other": "Parents"
     },
     "contributors": {
       "mailto": "Mail senden an",
@@ -337,7 +337,7 @@
       "coAuthoredBy": "Co-Autoren",
       "more": "{{count}} mehr",
       "count": "{{count}} Mitwirkender",
-      "count_plural": "{{count}} Mitwirkende"
+      "count_other": "{{count}} Mitwirkende"
     },
     "buttons": {
       "details": "Details",

@@ -329,7 +329,7 @@
     },
     "parents": {
       "label": "Parent",
-      "label_plural": "Parents"
+      "label_other": "Parents"
     },
     "contributors": {
       "mailto": "Send mail to",
@@ -341,7 +341,7 @@
       "coAuthoredBy": "co authored by",
       "more": "{{count}} more",
       "count": "{{count}} Contributor",
-      "count_plural": "{{count}} Contributors"
+      "count_other": "{{count}} Contributors"
     },
     "tag": {
       "create": "Create Tag"
