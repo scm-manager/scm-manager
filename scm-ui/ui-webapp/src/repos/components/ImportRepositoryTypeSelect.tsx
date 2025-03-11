@@ -17,7 +17,7 @@
 import React, { FC } from "react";
 import { RepositoryType } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
-import { Select } from "@scm-manager/ui-components";
+import { Label, Loading, Select } from "@scm-manager/ui-core";
 
 type Props = {
   repositoryTypes: RepositoryType[];
@@ -30,32 +30,36 @@ const ImportRepositoryTypeSelect: FC<Props> = ({ repositoryTypes, repositoryType
   const [t] = useTranslation("repos");
 
   const createSelectOptions = () => {
-    const options = repositoryTypes
-      .filter(repoType => !!repoType._links.import)
-      .map(repositoryType => {
+    return repositoryTypes
+      .filter((repoType) => !!repoType._links.import)
+      .map((repositoryType) => {
         return {
           label: repositoryType.displayName,
-          value: repositoryType.name
+          value: repositoryType.name,
         };
       });
-    options.unshift({ label: "", value: "" });
-    return options;
   };
 
-  const onChangeType = (type: string) => {
-    const repositoryType = repositoryTypes.filter(t => t.name === type)[0];
+  const onChangeType = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const type = event.target.value;
+    const repositoryType = repositoryTypes.filter((t) => t.name === type)[0];
     setRepositoryType(repositoryType);
   };
 
+  if (!repositoryType) {
+    return <Loading />;
+  }
+
   return (
-    <Select
-      label={t("repository.type")}
-      onChange={onChangeType}
-      value={repositoryType ? repositoryType.name : ""}
-      options={createSelectOptions()}
-      helpText={t("help.typeHelpText")}
-      disabled={disabled}
-    />
+    <Label className="is-flex is-align-items-baseline">
+      <span className="mr-2">{t("repository.type")}</span>
+      <Select
+        onChange={onChangeType}
+        options={createSelectOptions()}
+        disabled={disabled}
+        defaultValue={repositoryType.name}
+      />
+    </Label>
   );
 };
 

@@ -45,11 +45,13 @@ const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => 
 const ImportRepository: extensionPoints.RepositoryCreatorExtension["component"] = ({
   repositoryTypes,
   nameForm,
-  informationForm
+  informationForm,
 }) => {
   const [importPending, setImportPending] = useState(false);
   const [importedRepository, setImportedRepository] = useState<Repository>();
-  const [repositoryType, setRepositoryType] = useState<RepositoryType | undefined>();
+  const [repositoryType, setRepositoryType] = useState<RepositoryType | undefined>(
+    repositoryTypes?._embedded?.repositoryTypes?.[0]
+  );
   const [importType, setImportType] = useState("");
   const [t] = useTranslation("repos");
 

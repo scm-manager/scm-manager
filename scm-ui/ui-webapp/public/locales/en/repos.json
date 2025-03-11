@@ -2,7 +2,7 @@
   "repository": {
     "namespace": "Namespace",
     "name": "Name",
-    "type": "Type",
+    "type": "Type of repository",
     "contact": "Contact",
     "description": "Description",
     "creationDate": "Creation Date",
@@ -24,7 +24,6 @@
   "help": {
     "namespaceHelpText": "The namespace of the repository. This name will be part of the repository url.",
     "nameHelpText": "The name of the repository. This name will be part of the repository url.",
-    "typeHelpText": "The type of the repository (e.g. Mercurial, Git or Subversion).",
     "contactHelpText": "Email address of the person who is responsible for this repository.",
     "descriptionHelpText": "A short description of the repository.",
     "initializeRepository": "Creates an initial branch and commits a basic README.md.",
