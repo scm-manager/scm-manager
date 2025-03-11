@@ -364,7 +364,8 @@ a {
   }
 }
 
-button, .button {
+button,
+.button {
   &:focus-visible,
   &.is-focused {
     outline: $focus-outline-color $focus-outline-style;
@@ -385,6 +386,20 @@ summary {
 }
 
 // buttons
+@mixin button-variant($name, $variant, $variant-invert: $scheme-main) {
+  &.is-#{$name} {
+    &:hover,
+    &.is-hovered {
+      background-color: scale-color($variant, $lightness: -10%);
+    }
+    &:active,
+    &.is-active {
+      color: $variant-invert;
+      background-color: scale-color($variant, $lightness: -20%);
+    }
+  }
+}
+
 .button {
   padding-left: 1.5em;
   padding-right: 1.5em;
@@ -392,75 +407,37 @@ summary {
   min-width: 2.5rem;
   font-weight: $weight-semibold;
 
-  &.is-primary,
-  &.is-info,
-  &.is-link,
-  &.is-success,
-  &.is-warning,
-  &.is-danger {
-    &.is-outlined {
-      background-color: inherit;
+  @include button-variant("primary", $primary, $primary-invert);
+  @include button-variant("info", $info, $info-invert);
+  @include button-variant("link", $link, $link-invert);
+  @include button-variant("success", $success, $success-invert);
+  @include button-variant("warning", $warning, $warning-invert);
+  @include button-variant("danger", $danger, $danger-invert);
+
+  &.is-inverted.is-primary {
+    &:hover,
+    &.is-hovered {
+      background-color: transparent;
+      border-color: $primary;
     }
-  }
-
-  &.is-primary:hover,
-  &.is-primary.is-hovered {
-    background-color: scale-color($primary, $lightness: -10%);
-  }
-
-  &.is-primary:active,
-  &.is-primary.is-active {
-    background-color: scale-color($primary, $lightness: -20%);
-  }
-
-  &.is-info:hover,
-  &.is-info.is-hovered {
-    background-color: scale-color($info, $lightness: -10%);
-  }
-
-  &.is-info:active,
-  &.is-info.is-active {
-    background-color: scale-color($info, $lightness: -20%);
-  }
-
-  &.is-link:hover,
-  &.is-link.is-hovered {
-    background-color: scale-color($link, $lightness: -10%);
-  }
-
-  &.is-link:active,
-  &.is-link.is-active {
-    background-color: scale-color($link, $lightness: -20%);
-  }
-
-  &.is-success:hover,
-  &.is-success.is-hovered {
-    background-color: scale-color($success, $lightness: -10%);
-  }
-
-  &.is-success:active,
-  &.is-success.is-active {
-    background-color: scale-color($success, $lightness: -20%);
-  }
-
-  &.is-warning:hover,
-  &.is-warning.is-hovered {
-    background-color: scale-color($warning, $lightness: -10%);
-  }
-
-  &.is-warning:active,
-  &.is-warning.is-active {
-    background-color: scale-color($warning, $lightness: -20%);
-  }
-
-  &.is-danger:hover,
-  &.is-danger.is-hovered {
-    background-color: scale-color($danger, $lightness: -10%);
-  }
-
-  &.is-danger:active,
-  &.is-danger.is-active {
-    background-color: scale-color($danger, $lightness: -20%);
+    &:focus,
+    &.is-focused {
+      border-color: $primary;
+    }
+    &:active,
+    &.is-active {
+      color: $primary-invert;
+      background-color: $primary;
+    }
+    &[disabled] {
+      color: $primary;
+      background-color: transparent;
+      border-color: transparent;
+    }
+    &.is-loading::after {
+      border-color: transparent transparent $primary $primary !important;
+    }
+    background-color: transparent;
   }
 
   &.is-reduced-mobile,
@@ -806,7 +783,7 @@ form .field:not(.is-grouped) {
 }
 
 .has-scm-background {
-  background-image: url(images/scmManagerHero.jpg) !important;
+  background-image: url("images/scmManagerHero.jpg") !important;
   background-size: cover;
   background-position: top center;
   background-color: #002e4b;
@@ -815,7 +792,7 @@ form .field:not(.is-grouped) {
 // hero
 .hero.is-dark {
   background-color: #002e4b;
-  background-image: url(images/scmManagerHero.jpg);
+  background-image: url("images/scmManagerHero.jpg");
   background-size: cover;
   background-position: top center;
 
@@ -1086,7 +1063,7 @@ form .field:not(.is-grouped) {
 
 .space_char::before {
   font-size: 0.75rem;
-  content: '·';
+  content: "·";
   color: var(--diff-whitespace-color);
   background: transparent;
   position: absolute;
@@ -1094,7 +1071,7 @@ form .field:not(.is-grouped) {
 
 .tabulator_char::before {
   font-size: 0.75rem;
-  content: '↦';
+  content: "↦";
   color: var(--diff-whitespace-color);
   background: transparent;
   position: absolute;

@@ -59,7 +59,7 @@ $box-background-color: $grey-darker;
 $table-row-hover-background-color: $grey-darker;
 
 /* Focus for Buttons */
-$focus-outline-color: #C777EE;
+$focus-outline-color: #c777ee;
 
 /* Components */
 $menu-label-color: $scheme-main;
@@ -125,94 +125,32 @@ $tooltip-color: $scheme-main;
   --diff-whitespace-color: #fffce0;
 }
 
-.button {
-  &.is-primary:hover,
-  &.is-primary.is-hovered {
-    background-color: scale-color($primary, $lightness: -5%);
-  }
-
-  &.is-primary:active,
-  &.is-primary.is-active {
-    background-color: scale-color($primary, $lightness: -10%);
-  }
-
-  &.is-primary[disabled] {
-    background-color: scale-color($primary, $lightness: -50%);
-  }
-
-  &.is-info:hover,
-  &.is-info.is-hovered {
-    background-color: scale-color($info, $lightness: -5%);
-  }
-
-  &.is-info:active,
-  &.is-info.is-active {
-    background-color: scale-color($info, $lightness: -10%);
-  }
-
-  &.is-info[disabled] {
-    background-color: scale-color($info, $lightness: -50%);
-  }
-
-  &.is-link:hover,
-  &.is-link.is-hovered {
-    background-color: scale-color($link, $lightness: -5%);
-  }
-
-  &.is-link:active,
-  &.is-link.is-active {
-    background-color: scale-color($link, $lightness: -10%);
-  }
-
-  &.is-link[disabled] {
-    background-color: scale-color($link, $lightness: -50%);
-  }
-
-  &.is-success:hover,
-  &.is-success.is-hovered {
-    background-color: scale-color($success, $lightness: -5%);
-  }
-
-  &.is-success:active,
-  &.is-success.is-active {
-    background-color: scale-color($success, $lightness: -10%);
-  }
-
-  &.is-success[disabled] {
-    background-color: scale-color($success, $lightness: -50%);
-  }
-
-  &.is-warning:hover,
-  &.is-warning.is-hovered {
-    background-color: scale-color($warning, $lightness: -5%);
-  }
-
-  &.is-warning:active,
-  &.is-warning.is-active {
-    background-color: scale-color($warning, $lightness: -10%);
-  }
-
-  &.is-warning[disabled] {
-    background-color: scale-color($warning, $lightness: -50%);
-    color: #e1d4c2;
-  }
-
-  &.is-danger:hover,
-  &.is-danger.is-hovered {
-    background-color: scale-color($danger, $lightness: -5%);
-  }
-
-  &.is-danger:active,
-  &.is-danger.is-active {
-    background-color: scale-color($danger, $lightness: -10%);
-  }
-
-  &.is-danger[disabled] {
-    background-color: scale-color($danger, $lightness: -50%);
+@mixin button-variant($name, $variant, $variant-invert: $scheme-main) {
+  &.is-#{$name} {
+    &:hover,
+    &.is-hovered {
+      background-color: scale-color($variant, $lightness: -5%);
+    }
+    &:active,
+    &.is-active {
+      color: $variant-invert;
+      background-color: scale-color($variant, $lightness: -10%);
+    }
+    &:disabled {
+      background-color: scale-color($variant, $lightness: -50%);
+    }
   }
 }
 
-//footer is overwritten in _main.scss
+.button {
+  @include button-variant("primary", $primary, $primary-invert);
+  @include button-variant("info", $info, $info-invert);
+  @include button-variant("link", $link, $link-invert);
+  @include button-variant("success", $success, $success-invert);
+  @include button-variant("warning", $warning, $warning-invert);
+  @include button-variant("danger", $danger, $danger-invert);
+}
+
 footer.footer {
   a {
     color: scale-color($link, $lightness: 25%);
@@ -235,7 +173,6 @@ td button:not(.is-default) {
 //card
 .modal-card {
   border: 1px solid $border;
-
   & .modal-close,
   & .delete {
     background-color: $white-ter;
@@ -248,11 +185,9 @@ td button:not(.is-default) {
     a {
       color: $white-bis;
     }
-
     &:hover {
       td {
         background-color: $grey-darker;
-
         &.is-darker {
           background-color: $grey-darker;
         }
@@ -294,10 +229,11 @@ td button:not(.is-default) {
   color: $scheme-main;
 }
 
-.hunk-expander{
-  &:hover, :focus-visible {
+.hunk-expander {
+  &:hover,
+  :focus-visible {
     color: #98d8f3;
-    background-color: #050514
+    background-color: #050514;
   }
 }
 
