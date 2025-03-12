@@ -53,25 +53,20 @@ If however you have to install plugins manually (for example because you cannot 
 
 # Huge number of repositories
 
-If you have more than 100 Repositories to migrate, you may have to adapt some configuration and increase the limit of jetty form keys. You can do this by setting the `maxFormKeys` and `maxFormContentSize` of the webapp in `conf/server-config.xml`. You have to add the keys to the `WebAppContext` with the id `"scm-webapp"` e.g.:
+If you have more than 100 Repositories to migrate, you may have to adapt some configuration and increase the limit of jetty form keys. You can do this by setting the `maxFormKeys` and `maxFormContentSize` in your `conf/config.yml` file. You have to add the keys at top level of the yaml file:
 
 ```
-<New id="scm-webapp" class="org.eclipse.jetty.webapp.WebAppContext">
-  <Set name="contextPath">/scm</Set>
-  <Set name="war">
-  <SystemProperty name="basedir" default="."/>/var/webapp/scm-webapp.war</Set>
-  <!-- disable directory listings -->
-  <Call name="setInitParameter">
-    <Arg>org.eclipse.jetty.servlet.Default.dirAllowed</Arg>
-    <Arg>false</Arg>
-  </Call>
-  <Set name="tempDirectory">
-    <SystemProperty name="basedir" default="."/>/work/scm
-  </Set>
-  <!-- Set max form keys -->
-  <Set name="maxFormContentSize">1000000</Set>
-  <Set name="maxFormKeys">5000</Set>
-</New>
+# base server config
+##  Address to listen 0.0.0.0 means on every interface
+addressBinding: 0.0.0.0
+port: 8080
+contextPath: /scm
+
+## Additions for the huge number of repositories:
+maxFormContentSize: 1000000
+maxFormKeys: 5000
+
+...
 ```
 
 The value for `maxFormKeys` should be the count of your repositories * 3 + 10. The `maxFormContentSize` depends on the length of your repository namespace and name, but you should be safe with repository count * 100.

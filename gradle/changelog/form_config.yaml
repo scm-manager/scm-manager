@@ -1,0 +1,2 @@
+- type: fixed
+  description: Possibility to configure 'maxFormKeys' and 'maxFormContentSize' in Jetty
