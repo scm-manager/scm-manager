@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-text",
-  "version": "3.7.4-SNAPSHOT",
+  "version": "3.7.5-SNAPSHOT",
   "private": true,
   "main": "index.ts",
   "scripts": {
@@ -10,7 +10,7 @@
     "react": "^17.0.1"
   },
   "dependencies": {
-    "@scm-manager/ui-core": "3.7.4-SNAPSHOT"
+    "@scm-manager/ui-core": "3.7.5-SNAPSHOT"
   },
   "devDependencies": {
     "@scm-manager/eslint-config": "^2.17.0",

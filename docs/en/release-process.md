@@ -109,7 +109,7 @@ Then apply your fixes (eg. by cherry picking the relevant commits) and update th
 have single changelog yaml files, you could use the `updateChangelog` like above). Add the `CHANGELOG.md`,
 remove the yamls, and push the hotfix branch:
 
-```
+```bash
 git rm -rf gradle/changelog
 git add CHANGELOG.md
 git commit -m "Adjust changelog for release 2.30.1"
@@ -125,7 +125,7 @@ Depending on whether you released a hotfix for an older version or the latest re
 the `main` branch to the new tag. So in our example, if there is no version `2.31.x` yet, the new version
 `2.30.1` is the latest version and we have to update `main`:
 
-```
+```bash
 git checkout main
 git merge 2.30.1
 git push origin main
@@ -136,7 +136,7 @@ that there are no changes that all changes are part of the current `develop` sta
 to merge conflicts, because the version on `develop` has been set to a new `SNAPSHOT`, while the version
 of the hotfix has been updated to the new release version. So you have to merge all these conflicts manually.
 
-```
+```bash
 git checkout develop
 git merge main
 ```
