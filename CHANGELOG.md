@@ -1708,5 +1708,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.6.1]: https://scm-manager.org/download/3.6.1
 [3.7.0]: https://scm-manager.org/download/3.7.0
 [3.7.1]: https://scm-manager.org/download/3.7.1
-[3.7.3]: https://scm-manager.org/download/3.7.2
+[3.7.3]: https://scm-manager.org/download/3.7.3
 [3.7.4]: https://scm-manager.org/download/3.7.4
