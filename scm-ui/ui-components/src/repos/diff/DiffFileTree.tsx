@@ -101,7 +101,12 @@ const FileChangeTypeIcon: FC<FileChangeTypeIconProps> = ({ changeType }) => {
   const [t] = useTranslation("repos");
   if (changeType === "ADD") {
     return (
-      <StyledStatus className="has-text-success" style={{ minWidth: "1.5rem" }} key={"add"} alt={t("diff.changes.add")}>
+      <StyledStatus
+        className="has-text-success"
+        style={{ minWidth: "1rem", fontSize: "0.7rem", verticalAlign: "top" }}
+        key={"add"}
+        alt={t("diff.changes.add")}
+      >
         plus
       </StyledStatus>
     );
@@ -110,11 +115,11 @@ const FileChangeTypeIcon: FC<FileChangeTypeIconProps> = ({ changeType }) => {
     return (
       <StyledStatus
         className="has-text-info"
-        style={{ minWidth: "1.5rem" }}
+        style={{ minWidth: "1.5rem", fontSize: "0.4rem", verticalAlign: "top" }}
         key={"modify"}
         alt={t("diff.changes.modify")}
       >
-        slash
+        circle
       </StyledStatus>
     );
   }
@@ -122,7 +127,7 @@ const FileChangeTypeIcon: FC<FileChangeTypeIconProps> = ({ changeType }) => {
     return (
       <StyledStatus
         className="has-text-danger"
-        style={{ minWidth: "1.5rem" }}
+        style={{ minWidth: "1.5rem", fontSize: "0.7rem", verticalAlign: "top" }}
         key={"delete"}
         alt={t("diff.changes.delete")}
       >
@@ -134,22 +139,44 @@ const FileChangeTypeIcon: FC<FileChangeTypeIconProps> = ({ changeType }) => {
     return (
       <StyledStatus
         className="has-text-info"
-        style={{ minWidth: "1.5rem" }}
+        style={{ minWidth: "1.5rem", fontSize: "0.4rem", verticalAlign: "top" }}
         key={"rename"}
         alt={t("diff.changes.rename")}
       >
-        slash
+        circle
       </StyledStatus>
     );
   }
   if (changeType === "COPY") {
     return (
-      <StyledStatus className="has-text-info" style={{ minWidth: "1.5rem" }} key={"copy"} alt={t("diff.changes.copy")}>
+      <StyledStatus
+        className="has-text-info"
+        style={{ minWidth: "1.5rem", fontSize: "0.7rem", verticalAlign: "top" }}
+        key={"copy"}
+        alt={t("diff.changes.copy")}
+      >
         plus
       </StyledStatus>
     );
   }
   return null;
+};
+
+const getChangeTypeClassName = (changetype: string) => {
+  switch (changetype) {
+    case "ADD":
+      return "has-text-success";
+    case "MODIFY":
+      return "has-text-info";
+    case "DELETE":
+      return "has-text-danger";
+    case "RENAME":
+      return "has-text-info";
+    case "COPY":
+      return "has-text-info";
+    default:
+      return "";
+  }
 };
 
 type FileProps = {
@@ -175,16 +202,36 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
   return (
     <TreeFileContent className={"is-flex py-1 pl-3"} onClick={() => setCurrentFile(completePath)}>
       {isCurrentFile() ? (
-        <StyledIcon style={{ minWidth: "1.5rem" }} key={completePath + "file"} alt={t("diff.showContent")}>
-          file
-        </StyledIcon>
+        <span className="fa-stack" style={{ minWidth: "1.5rem", maxWidth: "1.5rem" }}>
+          <StyledIcon
+            className="fa-stack-2x fa-xs"
+            style={{ minWidth: "1.5rem", fontSize: "1.5rem" }}
+            key={completePath + "file"}
+            alt={t("diff.showContent")}
+          >
+            file
+          </StyledIcon>
+          <span className="fa-stack-1x fa-xs" style={{ minWidth: "1.5rem", maxWidth: "1.5rem" }}>
+            <FileChangeTypeIcon changeType={changeType.toUpperCase()} />
+          </span>
+        </span>
       ) : (
-        <StyledIcon style={{ minWidth: "1.5rem" }} key={completePath + "file"} type="far" alt={t("diff.showContent")}>
-          file
-        </StyledIcon>
+        <span className="fa-stack" style={{ minWidth: "1.5rem", maxWidth: "1.5rem" }}>
+          <StyledIcon
+            className={"fa-stack-2x fa-xs " + getChangeTypeClassName(changeType)}
+            style={{ minWidth: "1.5rem", fontSize: "1.5rem" }}
+            key={completePath + "file"}
+            type="far"
+            alt={t("diff.showContent")}
+          >
+            file
+          </StyledIcon>
+          <span className="fa-stack-1x fa-xs" style={{ minWidth: "1.5rem", maxWidth: "1.5rem" }}>
+            <FileChangeTypeIcon changeType={changeType.toUpperCase()} />
+          </span>
+        </span>
       )}
       <div className={"ml-1"}>{path}</div>
-      <FileChangeTypeIcon changeType={changeType.toLowerCase()} />
     </TreeFileContent>
   );
 };
