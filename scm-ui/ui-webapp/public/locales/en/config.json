@@ -28,7 +28,7 @@
   "jwtSettings": {
     "subtitle": "JWT Settings",
     "label": "Expiration time",
-    "help": "Set the JWT expiration time in hours. If you want to set the time to endless consider the 'endlessJWT' option inside the 'config.yml'.",
+    "help": "Set the JWT expiration time in hours. If you want to set the time to endless consider the 'endlessJwt' option inside the 'config.yml'.",
     "hoursWarning": "It is not recommended to set the expiration time over 24 hours.",
     "endlessWarning": "The expiration time is set to endless."
   },
