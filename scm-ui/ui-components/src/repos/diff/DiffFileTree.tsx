@@ -133,10 +133,6 @@ type FileProps = {
   setCurrentFile: (path: string) => void;
 };
 
-export const TreeFileContent = styled.div`
-  cursor: pointer;
-`;
-
 const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, setCurrentFile }) => {
   const [t] = useTranslation("repos");
   const completePath = addPath(parentPath, path);
@@ -146,7 +142,7 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
   };
 
   return (
-    <TreeFileContent className="is-flex py-1 pl-3" onClick={() => setCurrentFile(completePath)}>
+    <div className="is-flex py-1 pl-3 has-cursor-pointer" onClick={() => setCurrentFile(completePath)}>
       {isCurrentFile() ? (
         <StackedSpan className="fa-stack">
           <StyledIcon
@@ -185,6 +181,6 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
         </StackedSpan>
       )}
       <div className="ml-1">{path}</div>
-    </TreeFileContent>
+    </div>
   );
 };
