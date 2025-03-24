@@ -15,52 +15,11 @@
  */
 
 import React, { FC } from "react";
-import { Icon, Notification, urls } from "@scm-manager/ui-components";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { Trans, useTranslation } from "react-i18next";
-
+import { FileSearchHit } from "./FileSearchHit";
+import { KeyboardIterator } from "@scm-manager/ui-core";
 type Props = {
   paths: string[];
-  query: string;
   contentBaseUrl: string;
-};
-
-const IconColumn = styled.td`
-  width: 16px;
-`;
-
-const LeftOverflowTd = styled.td`
-  overflow: hidden;
-  max-width: 1px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  direction: rtl;
-  text-align: left !important;
-`;
-
-type PathResultRowProps = {
-  contentBaseUrl: string;
-  path: string;
-};
-
-const PathResultRow: FC<PathResultRowProps> = ({ contentBaseUrl, path }) => {
-  const [t] = useTranslation("repos");
-  const link = urls.concat(contentBaseUrl, path);
-  return (
-    <tr>
-      <IconColumn>
-        <Link to={link}>
-          <Icon title={t("fileSearch.file")} name="file" color="inherit" />
-        </Link>
-      </IconColumn>
-      <LeftOverflowTd>
-        <Link title={path} to={link} data-testid="file_search_single_result">
-          {path}
-        </Link>
-      </LeftOverflowTd>
-    </tr>
-  );
 };
 
 type ResultTableProps = {
@@ -68,36 +27,22 @@ type ResultTableProps = {
   paths: string[];
 };
 
-const ResultTable: FC<ResultTableProps> = ({ contentBaseUrl, paths }) => (
-  <table className="table table-hover table-sm is-fullwidth">
-    <tbody>
-      {paths.map(path => (
-        <PathResultRow contentBaseUrl={contentBaseUrl} path={path} />
-      ))}
-    </tbody>
-  </table>
-);
+const ResultTable: FC<ResultTableProps> = ({ contentBaseUrl, paths }) => {
+  return (
+    <table className="table table-hover table-sm is-fullwidth">
+      <KeyboardIterator>
+        <tbody>
+          {paths.map((path) => (
+            <FileSearchHit contentBaseUrl={contentBaseUrl} path={path} key={path} />
+          ))}
+        </tbody>
+      </KeyboardIterator>
+    </table>
+  );
+};
 
-const FileSearchResults: FC<Props> = ({ query, contentBaseUrl, paths = [] }) => {
-  const [t] = useTranslation("repos");
-  let body;
-  if (query.length <= 1) {
-    body = (
-      <Notification className="m-4" type="info">
-        {t("fileSearch.notifications.queryToShort")}
-      </Notification>
-    );
-  } else if (paths.length === 0) {
-    const queryCmp = <strong>{query}</strong>;
-    body = (
-      <Notification className="m-4" type="info">
-        <Trans i18nKey="repos:fileSearch.notifications.emptyResult" values={{ query }} components={[queryCmp]} />
-      </Notification>
-    );
-  } else {
-    body = <ResultTable contentBaseUrl={contentBaseUrl} paths={paths} />;
-  }
-  return <div className="panel-block">{body}</div>;
+const FileSearchResults: FC<Props> = ({ contentBaseUrl, paths = [] }) => {
+  return <ResultTable contentBaseUrl={contentBaseUrl} paths={paths} />;
 };
 
 export default FileSearchResults;

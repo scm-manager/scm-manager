@@ -29,6 +29,7 @@ type Props<T extends Record<string, unknown>> = Omit<
   rules?: ComponentProps<typeof Controller>["rules"];
   name: Path<T>;
   label?: string;
+  icon?: string;
 };
 
 function ControlledInputField<T extends Record<string, unknown>>({
@@ -41,6 +42,7 @@ function ControlledInputField<T extends Record<string, unknown>>({
   defaultValue,
   readOnly,
   className,
+  icon,
   ...props
 }: Props<T>) {
   const { control, t, readOnly: formReadonly, formId } = useScmFormContext();
@@ -66,6 +68,7 @@ function ControlledInputField<T extends Record<string, unknown>>({
           {...field}
           form={formId}
           label={labelTranslation}
+          icon={icon}
           helpText={helpTextTranslation}
           descriptionText={descriptionTextTranslation}
           error={

@@ -624,17 +624,19 @@
     "home": "Go back to source root",
     "input": {
       "placeholder": "Search filepath",
-      "help": "Type 2 or more letters to search for a filepath in the repository"
+      "help": "Type at least two letters to start the search."
     },
+    "results_one": "{{count}} result found:",
+    "results_other": "{{count}} results found:",
     "notifications": {
-      "queryToShort": "Type at least two characters to start the search",
-      "emptyResult": "Nothing found for query <0>{{query}}</0>"
+      "emptyResult": "Nothing found for: <0>{{query}}</0>."
     },
     "searchWithRevisionAndNamespaceName": "Search on {{revision}} in {{namespace}}/{{name}}"
   },
   "shortcuts": {
     "info": "Switch to repository info",
     "branches": "Switch to branches",
+    "fileSearch": "Switch to file search",
     "tags": "Switch to tags",
     "code": "Switch to code",
     "settings": "Switch to settings"

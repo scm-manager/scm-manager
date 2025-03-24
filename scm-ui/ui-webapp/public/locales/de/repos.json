@@ -24,7 +24,7 @@
   "help": {
     "namespaceHelpText": "Der Namespace des Repository. Dieser wird Teil der URL des Repository sein.",
     "nameHelpText": "Der Name des Repository. Dieser wird Teil der URL des Repository sein.",
-    "contactHelpText": "E-Mail Adresse der Person, die für das Repository verantwortlich ist.",
+    "contactHelpText": "E-Mail-Adresse der Person, die für das Repository verantwortlich ist.",
     "descriptionHelpText": "Eine kurze Beschreibung des Repository.",
     "initializeRepository": "Erstellt einen ersten Branch und committet eine README.md.",
     "importUrlHelpText": "Importiert das gesamte Repository inkl. aller Branches und Tags über die Remote URL.",
@@ -311,7 +311,7 @@
     "shortSummary": "Committet <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
-    "keyOwner": "Schlüssel Besitzer",
+    "keyOwner": "Schlüsselbesitzer",
     "signatureStatus": "Status",
     "keyId": "Schlüssel-ID",
     "keyContacts": "Kontakte",
@@ -527,8 +527,8 @@
     "modal": {
       "title": "Repository umbenennen",
       "label": {
-        "repoName": "Repository Name",
-        "repoNamespace": "Repository Namespace"
+        "repoName": "Repository-Name",
+        "repoNamespace": "Repository-Namespace"
       },
       "button": {
         "rename": "Umbenennen",
@@ -618,23 +618,25 @@
   },
   "fileSearch": {
     "button": {
-      "title": "Dateipfad Suche"
+      "title": "Dateipfadsuche"
     },
     "file": "Datei",
     "home": "Zurück zu Sources",
     "input": {
-      "placeholder": "Dateipfad Suche",
-      "help": "Tippe 2 oder mehr Zeichen ein, um die Suche zu starten"
+      "placeholder": "Dateipfadsuche",
+      "help": "Tippen Sie mindestens zwei Zeichen ein, um die Suche zu starten."
     },
+    "results_one": "{{count}} Ergebnis gefunden:",
+    "results_other": "{{count}} Ergebnisse gefunden:",
     "notifications": {
-      "queryToShort": "Tippe mindestens 2 Zeichen ein, um die Suche zu starten",
-      "emptyResult": "Es wurden keine Ergebnisse für <0>{{query}}</0> gefunden"
+      "emptyResult": "Keine Ergebnisse gefunden für: <0>{{query}}</0>."
     },
     "searchWithRevisionAndNamespaceName": "Suche auf {{revision}} in {{namespace}}/{{name}}"
   },
   "shortcuts": {
     "info": "Wechsel zur Repository-Info",
     "branches": "Wechsel zu den Branches",
+    "fileSearch": "Wechsel zur Dateisuche",
     "tags": "Wechsel zu den Tags",
     "code": "Wechsel zum Code",
     "settings": "Wechsel zu den Einstellungen"

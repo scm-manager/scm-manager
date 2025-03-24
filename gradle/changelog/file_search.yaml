@@ -1,0 +1,4 @@
+- type: added
+  description: Keyboard shortcut (g+f) within code view for file search
+- type: changed
+  description: File search page design; in particular with regard to accessibility

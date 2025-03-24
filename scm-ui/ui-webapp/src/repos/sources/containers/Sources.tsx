@@ -19,8 +19,8 @@ import { useTranslation } from "react-i18next";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { RepositoryRevisionContextProvider, urls, useSources } from "@scm-manager/ui-api";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { Breadcrumb } from "@scm-manager/ui-components";
-import { Notification, ErrorNotification, Loading, useDocumentTitle } from "@scm-manager/ui-core";
+import { Breadcrumb, useScrollToElement, useShortcut } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, Notification, useDocumentTitle } from "@scm-manager/ui-core";
 import FileTree from "../components/FileTree";
 import Content from "./Content";
 import CodeActionBar from "../../codeSection/components/CodeActionBar";
@@ -30,7 +30,7 @@ import { isEmptyDirectory, isRootFile } from "../utils/files";
 import CompareLink from "../../compare/CompareLink";
 import { encodePart } from "../components/content/FileLink";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { useScrollToElement } from "@scm-manager/ui-components";
+import { getFileSearchLink } from "../../codeSection/utils/fileSearchLink";
 
 type Props = {
   repository: Repository;
@@ -110,6 +110,19 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
     enabled: !branches || !!selectedBranch,
   });
 
+  useShortcut(
+    "g f",
+    () => {
+      if (file) {
+        history.push(getFileSearchLink(repository, file.revision, baseUrl, file));
+      }
+    },
+    {
+      description: t("shortcuts.fileSearch"),
+      active: !!(repository._links.paths && file),
+    }
+  );
+
   if (error) {
     return <ErrorNotification error={error} />;
   }
@@ -155,7 +168,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
     const permalink = file?.revision ? replaceBranchWithRevision(location.pathname, file.revision) : null;
 
     const buttons = [];
-    if (repository._links.paths) {
+    if (repository._links.paths && file) {
       buttons.push(
         <FileSearchButton
           baseUrl={baseUrl}

@@ -10,14 +10,14 @@ verfügbaren Tastenkürzel mittels der `?`-Taste aufrufen.
 
 ### Globale Tastenkürzel
 
-| Key Combination | Description                         |
-|-----------------|-------------------------------------|
-| ?               | Öffne die Tastaturkürzelübersicht   |
-| /               | Fokussiere die globale Schnellsuche |
-| alt r           | Navigiere zur Repositoryübersicht   |
-| alt u           | Navigiere zur Benutzerübersicht     |
-| alt g           | Navigiere zur Gruppenübersicht      |
-| alt a           | Navigiere zur Administration        |
+| Tastenkürzel | Beschreibung                        |
+|--------------|-------------------------------------|
+| ?            | Öffne die Tastaturkürzelübersicht   |
+| /            | Fokussiere die globale Schnellsuche |
+| alt r        | Navigiere zur Repositoryübersicht   |
+| alt u        | Navigiere zur Benutzerübersicht     |
+| alt g        | Navigiere zur Gruppenübersicht      |
+| alt a        | Navigiere zur Administration        |
 
 ### Navigation von Listen
 
@@ -25,20 +25,25 @@ Einige Seiten mit Listen erlauben die Navigation per Tastatur.
 Wenn die Seite dieses unterstützt, tauchen die Tastaturkürzel in der Übersicht im SCM-Manager
 auf (`?`).
 
-| Key Combination | Description                                       |
-|-----------------|---------------------------------------------------|
-| j               | Bewege den Fokus auf den nächsten Listeneintrag   |
-| k               | Bewege den Fokus auf den vorherigen Listeneintrag |
+| Tastenkürzel | Beschreibung                                      |
+|--------------|---------------------------------------------------|
+| j            | Bewege den Fokus auf den nächsten Listeneintrag   |
+| k            | Bewege den Fokus auf den vorherigen Listeneintrag |
 
 ### Repositoryspezifische Tastenkürzel
 
-| Key Combination | Description                  |
-|-----------------|------------------------------|
-| g i             | Wechsel zur Repository-Info  |
-| g b             | Wechsel zu den Branches      |
-| g t             | Wechsel zu den Tags          |
-| g c             | Wechsel zum Code             |
-| g s             | Wechsel zu den Einstellungen |
+| Tastenkürzel | Beschreibung                 |
+|--------------|------------------------------|
+| g i          | Wechsel zur Repository-Info  |
+| g b          | Wechsel zu den Branches      |
+| g t          | Wechsel zu den Tags          |
+| g c          | Wechsel zum Code             |
+| g s          | Wechsel zu den Einstellungen |
+
+### Codespezifische Tastenkürzel
+| Tastenkürzel | Beschreibung           |
+|--------------|------------------------|
+| g f          | Wechsel zur Dateisuche |
 
 ### Tastenkürzel aus Plugin
 

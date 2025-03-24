@@ -39,6 +39,12 @@ If the page supports this feature, the shortcuts show up in the shortcut overvie
 | g c             | Switch to code            |
 | g s             | Switch to settings        |
 
+### Code-specific Shortcuts
+
+| Key Combination | Description               |
+|-----------------|---------------------------|
+| g f             | Switch to file search     |
+
 ### Plugin Shortcuts
 
 Plugins can introduce new shortcuts.
