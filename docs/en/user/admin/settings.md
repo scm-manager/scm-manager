@@ -44,7 +44,7 @@ If the amount of hours get reduced, each created JWT will be invalidated.
 This setting will be ignored, if the endless JWT option is set to true in the server `config.yml`.
 
 #### Anonymous Access
-In SCM-Manager 2 the access for anonymous access is realized by using an "_anonymous" user. When the feature is activated, a new user with the name "_anonymous" is created. This user can be authorized just like any other user. This user is used for access to SCM-Manager without login credentials.
+In SCM-Manager the access for anonymous access is realized by using an "_anonymous" user. When the feature is activated, a new user with the name "_anonymous" is created. This user can be authorized just like any other user. This user is used for access to SCM-Manager without login credentials.
 If the anonymous mode is protocol only you may access the SCM-Manager via the REST API and VCS protocols. With fully enabled anonymous access you can also use the webclient without credentials.
 
 Example: If anonymous access is enabled and the "_anonymous" user has full access on a certain Git repository, everybody can access this repository via command line and the classic Git commands without any login credentials. Access via SSH is not supported at this time.

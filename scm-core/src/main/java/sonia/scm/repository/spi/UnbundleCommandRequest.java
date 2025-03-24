@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 /**
  * Request object for the unbundle command.
  *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
+ * @author Sebastian Sdorra
  * @since 1.43
  */
 public final class UnbundleCommandRequest {

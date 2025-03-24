@@ -44,7 +44,7 @@ class JavaModulePlugin implements Plugin<Project> {
     }
 
     project.tasks.withType(Javadoc) {
-      failOnError false
+      failOnError true
     }
 
     project.sonarqube {

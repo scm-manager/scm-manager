@@ -18,28 +18,19 @@ package sonia.scm.store;
 
 /**
  * The DataStoreFactory can be used to create new or get existing {@link DataStore}s.
- * <br>
  * You can either create a global {@link DataStore} or a {@link DataStore} for a specific repository.
- * To create a global {@link DataStore} call:
- * <code><pre>
- *     dataStoreFactory
- *       .withType(PersistedType.class)
- *       .withName("name")
- *       .build();
- * </pre></code>
- * To create a {@link DataStore} for a specific repository call:
- * <code><pre>
- *     dataStoreFactory
- *       .withType(PersistedType.class)
- *       .withName("name")
- *       .forRepository(repository)
- *       .build();
- * </pre></code>
+ * <br/>
+ * <br/>
+ * Call this to create a global {@link DataStore}:
+ * <br/>
+ * <code>dataStoreFactory.withType(PersistedType.class).withName("name").build();</code>
+ * <br/>
+ * <br/>
+ * To create a {@link DataStore} for a specific repository:
+ * <br/>
+ * <code>dataStoreFactory.withType(PersistedType.class).withName("name").forRepository(repository).build();</code>
  *
  * @since 1.23
- *
- * @apiviz.landmark
- * @apiviz.uses sonia.scm.store.DataStore
  */
 public interface DataStoreFactory {
 

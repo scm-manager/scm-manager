@@ -50,7 +50,6 @@ import java.io.IOException;
  * }
  * </code></pre>
  *
- * @apiviz.landmark
  * @since 1.46
  */
 public abstract class AdvancedHttpClient {

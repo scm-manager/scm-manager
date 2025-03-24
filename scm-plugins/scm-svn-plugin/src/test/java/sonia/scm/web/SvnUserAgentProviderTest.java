@@ -26,7 +26,7 @@ import java.util.Locale;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author Sebastian Sdorra
  */
 public class SvnUserAgentProviderTest
 {

@@ -23,10 +23,9 @@
  * <p>The data type provided by {@link sonia.scm.migration.UpdateStepTarget#getAffectedDataType()} can be an arbitrary
  * string, but it is considered a best practice to use a qualified name, for example
  * <ul>
- * <li><code>com.example.myPlugin.configuration</code></li> for data in plugins, or
- * <li><code>com.cloudogu.scm.repository</code></li> for core data structures.
+ * <li><code>com.example.myPlugin.configuration</code> for data in plugins, or</li>
+ * <li><code>com.cloudogu.scm.repository</code> for core data structures.</li>
  * </ul>
- * </p>
  * <p>The version provided by {@link sonia.scm.migration.UpdateStepTarget#getTargetVersion()} is unrelated to other
  * versions and therefore can be chosen freely, so that a data type can be updated without in various ways independent
  * of other data types or the official version of the plugin or the core.
@@ -69,17 +68,16 @@
  * </li>
  * <li>Finally, these sorted steps are executed one after another calling
  * {@link sonia.scm.migration.UpdateStep#doUpdate()} of each global step and
- * {@link sonia.scm.migration.RepositoryUpdateStep#doUpdate(sonia.scm.migration.RepositoryUpdateContext)}</li> for each
+ * {@link sonia.scm.migration.RepositoryUpdateStep#doUpdate(sonia.scm.migration.RepositoryUpdateContext)} for each
  * repository for repository specific update steps, updating the version for the data type accordingly (if there are
- * both, global and repository specific update steps for a data type and target version, the global step is called
- * first), then
+ * both global and repository specific update steps for a data type and target version, the global step is called
+ * first).
  * </li>
  * <li>If all works well, SCM-Manager then creates the runtime guice context by loading all further modules.</li>
  * <li>If any of the update steps fails, the whole process is interrupted and SCM-Manager will not start up and will
  * not record the version number of this update step.
  * </li>
  * </ul>
- * </p>
  * <p>Mind that an implementation of this class has to be annotated with {@link sonia.scm.plugin.Extension}, so that the
  * step will be found. </p>
  */

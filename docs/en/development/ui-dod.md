@@ -2,7 +2,7 @@
 title: DOD for UI development
 ---
 
-Use this as a kind of a checklist whenever you develop something in the UI of SCM-Manager 2.x., regardless whether you are developing core features or plugins.
+Use this as a kind of checklist whenever you develop something in the UI of SCM-Manager, regardless whether you are developing core features or plugins.
 
 |   | Don't forget to |
 |---|-----------------|

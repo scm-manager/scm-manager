@@ -4,7 +4,7 @@ subtitle: SCM-Manager Documentation
 ---
 This documentation describes the administration and usage of SCM-Manager. It is available in different languages and versions, which can be selected in the menu on the right.
 
-SCM-Manager 2 is an extremely lightweight source code management tool that can be individually extended through a variety of plugins.
+SCM-Manager is an extremely lightweight source code management tool that can be individually extended through a variety of plugins.
 This documentation is divided into five categories:
 
 - The section "Getting started" introduces the installation and configuration of SCM-Manager and answers frequently asked questions.

@@ -39,7 +39,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * The unbundle command can restore an empty repository from a bundle. The
  * bundle can be created with the {@link BundleCommandBuilder}.
  *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
+ * @author Sebastian Sdorra
  * @since 1.43
  */
 public final class UnbundleCommandBuilder

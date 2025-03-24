@@ -9,7 +9,7 @@ title: Building SCM-Manager from Source
 - Maven 3 or higher ([download](https://maven.apache.org/))
 - Git ([download](https://git-scm.com/))
 
-### Build SCM-Manager 2.x from Source
+### Build SCM-Manager from Source
 
 ```bash
 git clone https://github.com/scm-manager/scm-manager.git

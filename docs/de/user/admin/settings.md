@@ -45,7 +45,7 @@ Falls die Lebensdauer verringert wird, wird jeder bisher ausgestellter JWT ungü
 Sollte in der `config.yml` des Servers die Option "endless JWT" aktiviert sein, dann wird diese Einstellung ignoriert.
 
 #### Anonyme Zugriff
-Der SCM-Manager 2 hat das Konzept für anonyme Zugriffe über einen "_anonymous"-Benutzer realisiert. Beim Aktivieren des anonymen Zugriffs wird ein neuer Benutzer erstellt mit dem Namen  "_anonymous". Dieser Nutzer kann wie ein gewöhnlicher Benutzer für unterschiedliche Aktionen berechtigt werden. Bei einem Zugriff auf den SCM-Manager ohne Zugangsdaten wird dieser anonyme Benutzer verwendet.
+Der SCM-Manager hat das Konzept für anonyme Zugriffe über einen "_anonymous"-Benutzer realisiert. Beim Aktivieren des anonymen Zugriffs wird ein neuer Benutzer erstellt mit dem Namen  "_anonymous". Dieser Nutzer kann wie ein gewöhnlicher Benutzer für unterschiedliche Aktionen berechtigt werden. Bei einem Zugriff auf den SCM-Manager ohne Zugangsdaten wird dieser anonyme Benutzer verwendet.
 Ist der anonyme Zugriff nur für Protokoll aktiviert, können die REST API und die VCS Protokolle anonym genutzt werden. Wurde der anonyme Zugriff vollständig aktiviert, ist auch ein Zugriff über den Webclient anonym möglich.
 
 Beispiel: Falls der anonyme Zugriff aktiviert ist und der "_anonymous"-Benutzer volle Zugriffsrechte auf ein bestimmtes Git-Repository hat, kann jeder über eine Kommandozeile mit den klassischen Git-Befehlen ohne Zugangsdaten auf dieses Repository zugreifen. Zugriffe über SSH werden aktuell nicht unterstützt.

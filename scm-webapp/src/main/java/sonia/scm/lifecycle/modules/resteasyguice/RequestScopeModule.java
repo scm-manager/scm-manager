@@ -33,7 +33,7 @@ import org.jboss.resteasy.core.ResteasyContext;
 
 /**
  * Binds the {@link RequestScoped} to the current HTTP request and
- * makes all the classes available via the {@link javax.ws.rs.core.Context} annotation injectable.
+ * makes all the classes available via the {@link jakarta.ws.rs.core.Context} annotation injectable.
  */
 public class RequestScopeModule extends AbstractModule
 {

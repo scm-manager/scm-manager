@@ -50,7 +50,7 @@ import java.util.function.Supplier;
  * for ( FileObject fo : result ){
  *   System.out.println( fo.getPath() );
  * }
- * </pre></code>
+ * </code></pre>
  *
  * @since 1.17
  */

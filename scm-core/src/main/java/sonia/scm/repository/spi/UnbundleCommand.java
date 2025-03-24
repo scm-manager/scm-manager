@@ -24,7 +24,7 @@ import java.io.IOException;
 /**
  * Service provider implementation for the unbundle command.
  *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
+ * @author Sebastian Sdorra
  * @since 1.43
  */
 public interface UnbundleCommand
