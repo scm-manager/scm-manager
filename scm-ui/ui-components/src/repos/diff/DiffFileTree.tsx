@@ -28,7 +28,13 @@ const StackedSpan = styled.span`
   font-size: 0.5em;
 `;
 
-const StyledIcon = styled(Icon)`
+const StyledIcon = styled(Icon)<{ isSmaller?: boolean }>`
+  ${({ isSmaller }) =>
+    isSmaller &&
+    `
+      font-size: 0.5em;
+      margin-top: 0.05rem;
+  `}
   min-width: 1.5rem;
 `;
 
@@ -147,6 +153,7 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
         <StackedSpan className="fa-stack">
           <StyledIcon
             className={classNames("fa-stack-2x", `has-text-${getColor(changeType)}`)}
+            isSmaller={getIcon(changeType) === "circle"}
             key={completePath + "file"}
             type="fas"
             alt={t("diff.showContent")}
@@ -165,6 +172,7 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
         <StackedSpan className="fa-stack">
           <StyledIcon
             className={classNames("fa-stack-2x", `has-text-${getColor(changeType)}`)}
+            isSmaller={getIcon(changeType) === "circle"}
             key={completePath + "file"}
             type="far"
             alt={t("diff.showContent")}
