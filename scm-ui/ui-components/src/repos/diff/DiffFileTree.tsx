@@ -16,6 +16,7 @@
 
 import { FileTree } from "@scm-manager/ui-types";
 import React, { FC } from "react";
+import classNames from "classnames";
 import { FileDiffContainer, FileDiffContent } from "./styledElements";
 import { Icon } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
@@ -82,7 +83,7 @@ const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile
         </ul>
       ) : (
         <TreeFile
-          changeType={node.changeType}
+          changeType={node.changeType.toLowerCase() as ChangeType}
           path={node.nodeName}
           parentPath={parentPath}
           currentFile={currentFile}
@@ -162,20 +163,30 @@ const FileChangeTypeIcon: FC<FileChangeTypeIconProps> = ({ changeType }) => {
   return null;
 };
 
-const getChangeTypeClassName = (changetype: string) => {
-  switch (changetype) {
-    case "ADD":
-      return "has-text-success";
-    case "MODIFY":
-      return "has-text-info";
-    case "DELETE":
-      return "has-text-danger";
-    case "RENAME":
-      return "has-text-info";
-    case "COPY":
-      return "has-text-info";
-    default:
-      return "";
+type ChangeType = "add" | "modify" | "delete" | "rename" | "copy";
+
+const getColor = (changeType: ChangeType) => {
+  switch (changeType) {
+    case "add":
+      return "success";
+    case "modify":
+    case "rename":
+    case "copy":
+      return "info";
+    case "delete":
+      return "danger";
+  }
+};
+const getIcon = (changeType: ChangeType) => {
+  switch (changeType) {
+    case "add":
+    case "copy":
+      return "plus";
+    case "modify":
+    case "rename":
+      return "circle";
+    case "delete":
+      return "minus";
   }
 };
 
@@ -216,19 +227,22 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
           </span>
         </span>
       ) : (
-        <span className="fa-stack" style={{ minWidth: "1.5rem", maxWidth: "1.5rem" }}>
+        <span className="fa-stack" style={{width: "2.5em", height: "3em", fontSize: "0.5em"}}>
           <StyledIcon
-            className={"fa-stack-2x fa-xs " + getChangeTypeClassName(changeType)}
-            style={{ minWidth: "1.5rem", fontSize: "1.5rem" }}
+            className={classNames("fa-stack-2x", `has-text-${getColor(changeType)}`)}
             key={completePath + "file"}
             type="far"
             alt={t("diff.showContent")}
           >
             file
           </StyledIcon>
-          <span className="fa-stack-1x fa-xs" style={{ minWidth: "1.5rem", maxWidth: "1.5rem" }}>
-            <FileChangeTypeIcon changeType={changeType.toUpperCase()} />
-          </span>
+          <StyledIcon
+            className={classNames("fa-stack-1x", `has-text-${getColor(changeType)}`)}
+            key={changeType}
+            alt={t(`diff.changes.${changeType}`)}
+          >
+            {getIcon(changeType)}
+          </StyledIcon>
         </span>
       )}
       <div className={"ml-1"}>{path}</div>
