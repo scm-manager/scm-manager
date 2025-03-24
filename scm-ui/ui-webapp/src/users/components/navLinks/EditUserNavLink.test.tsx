@@ -15,16 +15,16 @@
  */
 
 import React from "react";
-import { shallow } from "@scm-manager/ui-tests";
+import { mount, shallow } from "@scm-manager/ui-tests";
 import "@scm-manager/ui-tests";
 import EditUserNavLink from "./EditUserNavLink";
 
 it("should render nothing, if the edit link is missing", () => {
   const user = {
-    _links: {}
+    _links: {},
   };
 
-  const navLink = shallow(<EditUserNavLink user={user} editUrl="/user/edit" />);
+  const navLink = mount(<EditUserNavLink user={user} editUrl="/user/edit" />);
   expect(navLink.text()).toBe("");
 });
 
@@ -32,9 +32,9 @@ it("should render the navLink", () => {
   const user = {
     _links: {
       update: {
-        href: "/users"
-      }
-    }
+        href: "/users",
+      },
+    },
   };
 
   const navLink = shallow(<EditUserNavLink user={user} editUrl="/user/edit" />);

@@ -233,8 +233,6 @@ class PathBasedRepositoryLocationResolverTest {
       assertThat(newPath).exists();
       assertThat(oldPath).exists();
       assertThat(resolverWithExistingData.create(Path.class).getLocation("existingId_1")).isEqualTo(oldPath);
-      verify(maintenanceCallback).downForMaintenance(new DownForMaintenanceContext("existingId_1"));
-      verify(maintenanceCallback).upAfterMaintenance(new UpAfterMaintenanceContext("existingId_1", oldPath));
     }
   }
 

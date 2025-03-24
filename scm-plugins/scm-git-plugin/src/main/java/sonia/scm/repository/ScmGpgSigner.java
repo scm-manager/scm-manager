@@ -18,16 +18,18 @@ package sonia.scm.repository;
 
 import jakarta.inject.Inject;
 import org.eclipse.jgit.api.errors.CanceledException;
-import org.eclipse.jgit.lib.CommitBuilder;
+import org.eclipse.jgit.api.errors.UnsupportedSigningFormatException;
+import org.eclipse.jgit.lib.GpgConfig;
 import org.eclipse.jgit.lib.GpgSignature;
-import org.eclipse.jgit.lib.GpgSigner;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.Signer;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import sonia.scm.security.GPG;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 
-public class ScmGpgSigner extends GpgSigner {
+public class ScmGpgSigner implements Signer {
 
   private final GPG gpg;
 
@@ -37,17 +39,13 @@ public class ScmGpgSigner extends GpgSigner {
   }
 
   @Override
-  public void sign(CommitBuilder commitBuilder, String keyId, PersonIdent personIdent, CredentialsProvider credentialsProvider) throws CanceledException {
-    try {
-      final byte[] signature = this.gpg.getPrivateKey().sign(commitBuilder.build());
-      commitBuilder.setGpgSignature(new GpgSignature(signature));
-    } catch (UnsupportedEncodingException e) {
-      throw new IllegalStateException(e);
-    }
+  public GpgSignature sign(Repository repository, GpgConfig gpgConfig, byte[] bytes, PersonIdent personIdent, String s, CredentialsProvider credentialsProvider) throws CanceledException, IOException, UnsupportedSigningFormatException {
+    final byte[] signature = this.gpg.getPrivateKey().sign(bytes);
+    return new GpgSignature(signature);
   }
 
   @Override
-  public boolean canLocateSigningKey(String keyId, PersonIdent personIdent, CredentialsProvider credentialsProvider) throws CanceledException {
+  public boolean canLocateSigningKey(Repository repository, GpgConfig gpgConfig, PersonIdent personIdent, String s, CredentialsProvider credentialsProvider) throws CanceledException {
     return true;
   }
 }

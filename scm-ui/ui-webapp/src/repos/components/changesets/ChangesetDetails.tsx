@@ -33,12 +33,13 @@ import {
   FileControlFactory,
   SignatureIcon,
 } from "@scm-manager/ui-components";
-import { Tooltip, SubSubtitle } from "@scm-manager/ui-core";
+import { SubSubtitle } from "@scm-manager/ui-core";
 import { Button, Icon } from "@scm-manager/ui-buttons";
 import ContributorTable from "./ContributorTable";
 import { Link, Link as ReactLink } from "react-router-dom";
 import CreateTagModal from "./CreateTagModal";
 import { useContainedInTags } from "@scm-manager/ui-api";
+import RevertModal from "./RevertModal";
 
 type Props = {
   changeset: Changeset;
@@ -72,36 +73,56 @@ const SeparatedParents = styled.div`
   }
 `;
 
-const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
+const Contributors: FC<{ changeset: Changeset; repository: Repository }> = ({ changeset, repository }) => {
   const [t] = useTranslation("repos");
   const [open, setOpen] = useState(false);
+  const [tagCreationModalVisible, setTagCreationModalVisible] = useState(false);
   const signatureIcon =
     changeset?.signatures && changeset.signatures.length > 0 ? (
       <SignatureIcon className="mx-2" signatures={changeset.signatures} />
     ) : (
       <>&nbsp;</>
     );
+  const showCreateTagButton = "tag" in changeset._links;
   return (
-    <details className="mb-2" onClick={() => setOpen(!open)}>
-      <summary className="is-flex is-flex-direction-row is-clickable" aria-label={t("changeset.contributors.list")}>
-        {open ? (
-          <>
-            <Icon alt={t("changeset.contributors.hideList")}>angle-down</Icon>
-            <span>{t("changeset.contributors.list")}</span> {signatureIcon}
-          </>
-        ) : (
-          <>
-            <Icon alt={t("changeset.contributors.showList")}>angle-right</Icon>{" "}
-            <span>
-              <ChangesetAuthor changeset={changeset} />
-            </span>
-            <span>{signatureIcon}</span>{" "}
-            <span>{t("changeset.contributors.count", { count: countContributors(changeset) })}</span>
-          </>
+    <div className="is-flex is-flex-wrap-wrap">
+      <details className="mb-2" onClick={() => setOpen(!open)}>
+        <summary className="is-flex is-flex-direction-row is-clickable" aria-label={t("changeset.contributors.list")}>
+          {open ? (
+            <>
+              <Icon alt={t("changeset.contributors.hideList")}>angle-down</Icon>
+              <span>{t("changeset.contributors.list")}</span> {signatureIcon}
+            </>
+          ) : (
+            <>
+              <Icon alt={t("changeset.contributors.showList")}>angle-right</Icon>{" "}
+              <span>
+                <ChangesetAuthor changeset={changeset} />
+              </span>
+              <span>{signatureIcon}</span>{" "}
+              <span>{t("changeset.contributors.count", { count: countContributors(changeset) })}</span>
+            </>
+          )}
+        </summary>
+        <ContributorTable changeset={changeset} />
+      </details>
+      <div className="is-flex has-gap-2 ml-auto">
+        <ChangesetTags changeset={changeset} />
+        {showCreateTagButton && (
+          <Button className="tag is-success has-gap-1" onClick={() => setTagCreationModalVisible(true)}>
+            <Icon>plus</Icon>
+            {(changeset._embedded?.tags?.length === 0 && t("changeset.tag.create")) || ""}
+          </Button>
         )}
-      </summary>
-      <ContributorTable changeset={changeset} />
-    </details>
+      </div>
+      {tagCreationModalVisible && (
+        <CreateTagModal
+          repository={repository}
+          changeset={changeset}
+          onClose={() => setTagCreationModalVisible(false)}
+        />
+      )}
+    </div>
   );
 };
 
@@ -142,7 +163,7 @@ const ContainedInTags: FC<{ changeset: Changeset; repository: Repository }> = ({
 };
 
 const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory }) => {
-  const [isTagCreationModalVisible, setTagCreationModalVisible] = useState(false);
+  const [revertModalVisible, setRevertModalVisible] = useState(false);
   const [t] = useTranslation("repos");
 
   const description = changesets.parseDescription(changeset.description);
@@ -153,7 +174,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
       {parent.id.substring(0, 7)}
     </ReactLink>
   ));
-  const showCreateButton = "tag" in changeset._links;
+  const showRevertButton = "revert" in changeset._links;
 
   return (
     <>
@@ -177,9 +198,9 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
             </p>
           </AvatarWrapper>
           <div className="media-content">
-            <Contributors changeset={changeset} />
+            <Contributors changeset={changeset} repository={repository} />
             <ContainedInTags changeset={changeset} repository={repository} />
-            <div className="is-flex is-ellipsis-overflow">
+            <div className="is-flex is-flex-wrap-wrap">
               <p>
                 <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
               </p>
@@ -189,28 +210,19 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
                   {parents}
                 </SeparatedParents>
               ) : null}
-            </div>
-          </div>
-          <div className="media-right">
-            <ChangesetTags changeset={changeset} />
-          </div>
-
-          {showCreateButton && (
-            <div className="media-right">
-              <Tooltip message={t("changeset.tag.create")}>
-                <Button className="tag is-success has-gap-1" onClick={() => setTagCreationModalVisible(true)}>
-                  <Icon>plus</Icon>
-                  {(changeset._embedded?.tags?.length === 0 && t("changeset.tag.create")) || ""}
+              {showRevertButton && (
+                <Button
+                  className="tag ml-auto"
+                  variant="tertiary"
+                  onClick={() => setRevertModalVisible(true)}
+                >
+                  {t("changeset.revert.button")}
                 </Button>
-              </Tooltip>
+              )}
             </div>
-          )}
-          {isTagCreationModalVisible && (
-            <CreateTagModal
-              repository={repository}
-              changeset={changeset}
-              onClose={() => setTagCreationModalVisible(false)}
-            />
+          </div>
+          {revertModalVisible && (
+            <RevertModal repository={repository} changeset={changeset} onClose={() => setRevertModalVisible(false)} />
           )}
         </article>
         <p>

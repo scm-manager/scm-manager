@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Changeset, File, Repository } from "@scm-manager/ui-types";
+import { Branch, Changeset, File, Repository } from "@scm-manager/ui-types";
 
 export type Description = {
   title: string;
@@ -23,6 +23,16 @@ export type Description = {
 
 export function createChangesetLink(repository: Repository, changeset: Changeset) {
   return `/repo/${repository.namespace}/${repository.name}/code/changeset/${changeset.id}`;
+}
+
+export function createChangesetLinkByBranch(repository: Repository, changeset: Changeset, branch: Branch) {
+  if (!branch.name) {
+    return `/repo/${repository.namespace}/${repository.name}/code/changeset/${changeset.id}`;
+  } else {
+    return `/repo/${repository.namespace}/${repository.name}/code/changeset/${changeset.id}?branch=${encodeURIComponent(
+      branch.name
+    )}`;
+  }
 }
 
 export function createSourcesLink(repository: Repository, changeset: Changeset, file?: File) {
@@ -50,6 +60,6 @@ export function parseDescription(description?: string): Description {
 
   return {
     title,
-    message
+    message,
   };
 }

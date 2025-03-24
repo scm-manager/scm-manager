@@ -2,7 +2,7 @@
   "repository": {
     "namespace": "Espacio de nombres",
     "name": "Nombre",
-    "type": "Tipo",
+    "type": "Tipo del repositorio",
     "contact": "Contacto",
     "description": "Descripción",
     "creationDate": "Fecha de creación",
@@ -19,7 +19,6 @@
   "help": {
     "namespaceHelpText": "El espacio de nombres del repositorio. Este nombre formará parte de la URL del repositorio.",
     "nameHelpText": "El nombre del repositorio. Este nombre formará parte de la URL del repositorio.",
-    "typeHelpText": "El tipo del repositorio (Mercurial, Git or Subversion).",
     "contactHelpText": "Dirección del correo electrónico de la persona responsable del repositorio.",
     "descriptionHelpText": "Breve descripción del repositorio.",
     "initializeRepository": "Creates an initial branch and commits a basic README.md."

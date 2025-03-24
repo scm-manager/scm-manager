@@ -21,6 +21,7 @@ import { createAttributesForTesting } from "../devBuild";
 import useAutofocus from "./useAutofocus";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
 import { createA11yId } from "../createA11yId";
+import { FieldMessage } from "@scm-manager/ui-core";
 
 type BaseProps = {
   label?: string;
@@ -40,6 +41,7 @@ type BaseProps = {
   defaultValue?: string | number;
   readOnly?: boolean;
   required?: boolean;
+  warning?: string;
 };
 
 export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>> = ({
@@ -60,6 +62,7 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
   defaultValue,
   readOnly,
   required,
+  warning,
   ...props
 }) => {
   const field = useAutofocus<HTMLInputElement>(autofocus, props.innerRef);
@@ -123,6 +126,7 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
           {...createAttributesForTesting(testId)}
         />
       </div>
+      {warning ? <FieldMessage variant="warning">{warning}</FieldMessage> : null}
       {helper}
     </fieldset>
   );

@@ -17,9 +17,9 @@
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
 import { withI18next } from "storybook-addon-i18next";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import withApiProvider from "./withApiProvider";
-import { withThemes } from 'storybook-addon-themes/react';
+import { withThemes } from "storybook-addon-themes/react";
 
 let i18n = i18next;
 
@@ -27,7 +27,7 @@ let i18n = i18next;
 // and not for storyshots
 if (!process.env.JEST_WORKER_ID) {
   const Backend = require("i18next-fetch-backend");
-  i18n = i18n.use(Backend.default);
+  i18n = i18n.use(Backend);
 }
 
 i18n.use(initReactI18next).init({
@@ -58,18 +58,18 @@ export const decorators = [
     },
   }),
   withApiProvider,
-  withThemes
+  withThemes,
 ];
 
-const Decorator = ({children, themeName}) => {
+const Decorator = ({ children, themeName }) => {
   useEffect(() => {
     const link = document.querySelector("#ui-theme");
     if (link && link["data-theme"] !== themeName) {
-      link.href = `ui-theme-${themeName}.css`;
+      link.href = `/ui-theme-${themeName}.css`;
       link["data-theme"] = themeName;
     }
   }, [themeName]);
-  return <>{children}</>
+  return <>{children}</>;
 };
 
 export const parameters = {
@@ -83,5 +83,5 @@ export const parameters = {
       { name: "highcontrast", color: "#050514" },
       { name: "dark", color: "#121212" },
     ],
-  }
+  },
 };

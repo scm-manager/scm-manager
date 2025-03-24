@@ -29,6 +29,7 @@ export const ButtonVariants = {
   SECONDARY: "secondary",
   TERTIARY: "tertiary",
   SIGNAL: "signal",
+  INFO: "info",
 } as const;
 
 export const ButtonVariantList = Object.values(ButtonVariants);
@@ -41,6 +42,7 @@ const createButtonClasses = (variant?: ButtonVariant, isLoading?: boolean) =>
     "is-primary is-outlined": variant === "secondary",
     "is-primary is-inverted": variant === "tertiary",
     "is-warning": variant === "signal",
+    "is-info is-outlined": variant === "info",
     "is-loading": isLoading,
   });
 

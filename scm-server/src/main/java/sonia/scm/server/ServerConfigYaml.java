@@ -16,6 +16,8 @@
 
 package sonia.scm.server;
 
+import org.eclipse.jetty.server.handler.ContextHandler;
+
 public class ServerConfigYaml {
 
   private static final String SCM_SERVER_PREFIX = "SCM_";
@@ -30,6 +32,8 @@ public class ServerConfigYaml {
   // Resolves the client ip instead of the reverse proxy ip if the X-Forwarded-For header is present
   private boolean forwardHeadersEnabled = false;
   private int idleTimeout = 0;
+  private int maxFormContentSize = ContextHandler.DEFAULT_MAX_FORM_CONTENT_SIZE;
+  private int maxFormKeys = ContextHandler.DEFAULT_MAX_FORM_KEYS;
 
   // ### SSL-related config
   // Only configure SSL if the key store path is set
@@ -148,6 +152,22 @@ public class ServerConfigYaml {
 
   public void setIdleTimeout(int idleTimeout) {
     this.idleTimeout = idleTimeout;
+  }
+
+  public int getMaxFormContentSize() {
+    return getEnvWithDefault("MAX_FORM_CONTENT_SIZE", maxFormContentSize);
+  }
+
+  public void setMaxFormContentSize(int maxFormContentSize) {
+    this.maxFormContentSize = maxFormContentSize;
+  }
+
+  public int getMaxFormKeys() {
+    return getEnvWithDefault("MAX_FORM_KEYS", maxFormKeys);
+  }
+
+  public void setMaxFormKeys(int maxFormKeys) {
+    this.maxFormKeys = maxFormKeys;
   }
 
   static int getEnvWithDefault(String envKey, int configValue) {

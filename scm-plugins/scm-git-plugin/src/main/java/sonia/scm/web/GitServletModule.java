@@ -57,6 +57,7 @@ import sonia.scm.repository.spi.GitModifyCommand;
 import sonia.scm.repository.spi.GitOutgoingCommand;
 import sonia.scm.repository.spi.GitPullCommand;
 import sonia.scm.repository.spi.GitPushCommand;
+import sonia.scm.repository.spi.GitRevertCommand;
 import sonia.scm.repository.spi.GitTagCommand;
 import sonia.scm.repository.spi.GitTagsCommand;
 import sonia.scm.repository.spi.GitUnbundleCommand;
@@ -70,6 +71,7 @@ import sonia.scm.repository.spi.OutgoingCommand;
 import sonia.scm.repository.spi.PostReceiveRepositoryHookEventFactory;
 import sonia.scm.repository.spi.PullCommand;
 import sonia.scm.repository.spi.PushCommand;
+import sonia.scm.repository.spi.RevertCommand;
 import sonia.scm.repository.spi.SimpleGitWorkingCopyFactory;
 import sonia.scm.repository.spi.TagCommand;
 import sonia.scm.repository.spi.TagsCommand;
@@ -119,7 +121,6 @@ public class GitServletModule extends ServletModule {
     install(new FactoryModuleBuilder().implement(FileLockCommand.class, GitFileLockCommand.class).build(GitFileLockCommand.Factory.class));
     install(new FactoryModuleBuilder().implement(BranchDetailsCommand.class, GitBranchDetailsCommand.class).build(GitBranchDetailsCommand.Factory.class));
     install(new FactoryModuleBuilder().implement(ChangesetsCommand.class, GitChangesetsCommand.class).build(GitChangesetsCommand.Factory.class));
-
-
+    install(new FactoryModuleBuilder().implement(RevertCommand.class, GitRevertCommand.class).build(GitRevertCommand.Factory.class));
   }
 }

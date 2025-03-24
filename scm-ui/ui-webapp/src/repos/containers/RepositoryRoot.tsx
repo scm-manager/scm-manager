@@ -278,6 +278,11 @@ const RepositoryRoot = () => {
         }
       >
         {modal}
+        <ExtensionPoint<extensionPoints.RepositoryBanner>
+          name="repository.banner"
+          props={{ repository, url: history.location.pathname }}
+          renderAll={true}
+        />
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
             <Switch>

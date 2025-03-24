@@ -53,6 +53,8 @@ describe("Test config hooks", () => {
     alertsUrl: "",
     releaseFeedUrl: "",
     skipFailedAuthenticators: false,
+    jwtExpirationInH: 1,
+    enabledJwtEndless: false,
     _links: {
       update: {
         href: "/config",

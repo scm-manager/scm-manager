@@ -19,15 +19,8 @@ import { Redirect, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useChangesets } from "@scm-manager/ui-api";
 import { Branch, ChangesetCollection, Repository } from "@scm-manager/ui-types";
-import {
-  ChangesetList,
-  ErrorNotification,
-  LinkPaginator,
-  Loading,
-  Notification,
-  urls,
-} from "@scm-manager/ui-components";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { ChangesetList, LinkPaginator, urls } from "@scm-manager/ui-components";
+import { ErrorNotification, Notification, Loading, useDocumentTitle } from "@scm-manager/ui-core";
 
 export const usePage = () => {
   const match = useRouteMatch();
@@ -120,7 +113,7 @@ export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({ repository, error, i
   return (
     <div className="panel">
       <div className="panel-block">
-        <ChangesetList repository={repository} changesets={changesets} />
+        <ChangesetList repository={repository} changesets={changesets} branch={branch} />
       </div>
       <div className="panel-footer">
         <LinkPaginator collection={data} page={page} />

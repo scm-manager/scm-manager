@@ -16,12 +16,12 @@
 
 package sonia.scm.repository.spi;
 
-import com.github.sdorra.shiro.SubjectAware;
-import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.RefUpdate;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
@@ -29,12 +29,12 @@ import org.junit.Test;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
+import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.RepositoryHookType;
-import sonia.scm.user.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,13 +45,13 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.awaitility.Awaitility.await;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.description;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
 public class GitModifyCommandTest extends GitModifyCommandTestBase {
-
-  private static final String REALM = "AdminRealm";
 
   @Override
   protected String getZippedRepositoryResource() {
@@ -263,6 +263,38 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     }
   }
 
+  @Test
+  public void shouldDeleteDirectoryButNotFileWithSamePrefix() throws IOException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = prepareModifyCommandRequest();
+    request.setBranch("similar-paths");
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("c", true));
+
+    command.execute(request);
+
+    boolean foundCTxt = false;
+
+    Repository repository = createContext().open();
+    ObjectId lastCommit = repository.resolve("refs/heads/similar-paths");
+    try (RevWalk walk = new RevWalk(repository)) {
+      RevCommit commit = walk.parseCommit(lastCommit);
+      ObjectId treeId = commit.getTree().getId();
+      TreeWalk treeWalk = new TreeWalk(repository);
+      treeWalk.setRecursive(true);
+      treeWalk.addTree(treeId);
+      while (treeWalk.next()) {
+        if (treeWalk.getPathString().startsWith("c/")) {
+          fail("directory should be deleted");
+        }
+        if (treeWalk.getPathString().equals("c.txt")) {
+          foundCTxt = true;
+        }
+      }
+    }
+    assertThat(foundCTxt).isTrue();
+  }
+
   @Test(expected = NotFoundException.class)
   public void shouldThrowNotFoundExceptionWhenFileToDeleteDoesNotExist() {
     GitModifyCommand command = createCommand();
@@ -346,10 +378,10 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
     command.execute(request);
 
-    verify(transportProtocolRule.repositoryManager, description("pre receive hook event expected"))
+    verify(repositoryManager, description("pre receive hook event expected"))
       .fireHookEvent(argThat(argument -> argument.getType() == RepositoryHookType.PRE_RECEIVE));
     await().pollInterval(50, MILLISECONDS).atMost(1, SECONDS).untilAsserted(() ->
-      verify(transportProtocolRule.repositoryManager, description("post receive hook event expected"))
+      verify(repositoryManager, description("post receive hook event expected"))
         .fireHookEvent(argThat(argument -> argument.getType() == RepositoryHookType.POST_RECEIVE))
     );
   }
@@ -511,12 +543,33 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     assertInTree(assertions);
   }
 
-  @Test(expected = AlreadyExistsException.class)
+  @Test(expected = NoChangesMadeException.class)
   public void shouldFailMoveAndKeepFilesWhenSourceAndTargetAreTheSame() {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("c", "c", false));
+
+    command.execute(request);
+  }
+
+  @Test(expected = ConcurrentModificationException.class)
+  public void shouldFailOnConcurrent() throws IOException, GitAPIException {
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    GitModifyCommand command = createCommand();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
+    request.setBranch("master");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile, false));
+
+    // create concurrent modification after the pre commit hook was fired
+    doAnswer(invocation -> {
+      RefUpdate refUpdate = createCommand()
+        .open()
+        .updateRef("refs/heads/master");
+      refUpdate.setNewObjectId(ObjectId.fromString("a7d622087b6847725670ae84fa37bdf451123008"));
+      refUpdate.update();
+      return null;
+    }).when(repositoryManager).fireHookEvent(any());
 
     command.execute(request);
   }
@@ -527,12 +580,4 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
     return request;
   }
-
-  private ModifyCommandRequest prepareModifyCommandRequestWithoutAuthorEmail() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setAuthor(new Person("Dirk Gently", ""));
-    request.setCommitMessage("Make some change");
-    return request;
-  }
-
 }

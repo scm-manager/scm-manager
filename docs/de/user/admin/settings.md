@@ -24,12 +24,25 @@ Auf der Login-Seite des SCM-Managers werden hilfreiche Plugins und Features vorg
 Um Angriffe auf den SCM-Manager mit Cross Site Scripting (XSS / XSRF) zu erschweren. Dieses Feature ist noch experimentell.
 
 #### Plugin-Settings 
-Der SCM-Manager kann ein Plugin-Center anbinden, um schnell und bequem Plugins verwalten zu können. Um ein anderes SCM-Plugin-Center als das vorkonfigurierte zu verwenden, reicht es aus diese URL zu ändern. Läuft der SCM-Manager im Cloudogu EcoSystem kann die Plugin Center URL über einen Eintrag im etcd gesetzt werden.
+Der SCM-Manager kann ein Plugin-Center anbinden, um schnell und bequem Plugins verwalten zu können. Um ein anderes SCM-Plugin-Center als das vorkonfigurierte zu verwenden, reicht es aus diese URL zu ändern. Läuft der SCM-Manager im Cloudogu EcoSystem, kann die Plugin-Center URL über einen Eintrag im etcd gesetzt werden.
 Wenn das vorkonfigurierte Plugin-Center verwendet wird, kann der SCM-Manager mit der cloudogu platform verbunden werden. 
+
+Nach der initialen Einrichtung sind folgende Werte standardgemäß hinterlegt:
+```markdown
+Plugin Center URL: https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}&jre={jre}
+Plugin Center Authentication URL: https://plugin-center-api.scm-manager.org/api/v1/auth/oidc
+```
+
 ![Einstellungen, Plugin-Center nicht mit der cloudogu platform verbunden](assets/administration-settings-not-connected.png)
 So können über das Plugin-Center besondere cloudogu platform-Plugins bezogen werden. Details sind in der Dokumentation des Plugin-Centers aufgeführt. 
 Eine bestehende Verbindung zwischen dem SCM-Manager und der cloudogu platform kann hier aufgehoben werden.
 ![Einstellungen, Plugin-Center mit der cloudogu platform verbunden, Button zum Lösen der Verbindung](assets/administration-settings-connected.png)
+
+### JWT Einstellungen
+Benutzer erhalten einen JWT als Authentifizierungstoken nach einem erfolgreichen login.
+Administratoren können die Lebensdauer dieser JWTs konfigurieren.
+Falls die Lebensdauer verringert wird, wird jeder bisher ausgestellter JWT ungültig.
+Sollte in der `config.yml` des Servers die Option "endless JWT" aktiviert sein, dann wird diese Einstellung ignoriert.
 
 #### Anonyme Zugriff
 Der SCM-Manager 2 hat das Konzept für anonyme Zugriffe über einen "_anonymous"-Benutzer realisiert. Beim Aktivieren des anonymen Zugriffs wird ein neuer Benutzer erstellt mit dem Namen  "_anonymous". Dieser Nutzer kann wie ein gewöhnlicher Benutzer für unterschiedliche Aktionen berechtigt werden. Bei einem Zugriff auf den SCM-Manager ohne Zugangsdaten wird dieser anonyme Benutzer verwendet.

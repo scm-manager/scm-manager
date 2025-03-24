@@ -75,19 +75,6 @@ $popover-border-color: $grey-lightest;
   --diff-whitespace-color: #363636;
 }
 
-.button {
-  &.is-primary,
-  &.is-info,
-  &.is-link,
-  &.is-success,
-  &.is-warning,
-  &.is-danger {
-    &.is-outlined {
-      background-color: $white;
-    }
-  }
-}
-
 footer.footer {
   a {
     color: darken($info, 15%);

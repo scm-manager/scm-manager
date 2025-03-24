@@ -11,17 +11,22 @@
     "config": {
       "link": "Mercurial",
       "title": "Mercurial Konfiguration",
-      "hgBinary": "HG Binary",
-      "hgBinaryHelpText": "Pfad des Mercurial Binary",
-      "encoding": "Encoding",
-      "encodingHelpText": "Repository Encoding",
-      "showRevisionInId": "Revision anzeigen",
-      "showRevisionInIdHelpText": "Die Revision als Teil der Node ID anzeigen",
-      "enableHttpPostArgs": "HttpPostArgs Protocol aktivieren",
-      "enableHttpPostArgsHelpText": "Aktiviert das experimentelle HttpPostArgs Protokoll von Mercurial. Das HttpPostArgs Protokoll verwendet den Post Request Body anstatt des HTTP Headers um Meta Informationen zu versenden. Dieses Vorgehen reduziert die Header Größe der Mercurial Requests. HttpPostArgs wird seit Mercurial 3.8 unterstützt.",
-      "disabled": "Deaktiviert",
-      "disabledHelpText": "Aktiviert oder deaktiviert das Mercurial Plugin. Nur erlaubt, wenn keine Mercurial Repositories existieren.",
-      "required": "Dieser Konfigurationswert wird benötigt",
+      "disabled":  {
+        "label": "Deaktiviert das Mercurial Plugin. Nur erlaubt, wenn keine Mercurial Repositories existieren."
+      },
+      "hgBinary": {
+        "label": "Pfad des Mercurial Binary"
+      },
+      "encoding": {
+        "label": "Repository Encoding"
+      },
+      "showRevisionInId": {
+        "label": "Die Revision als Teil der Node ID anzeigen"
+      },
+      "enableHttpPostArgs": {
+        "label": "HttpPostArgs Protocol aktivieren",
+        "descriptionText": "Aktiviert das experimentelle HttpPostArgs Protokoll von Mercurial. Das HttpPostArgs Protokoll verwendet den Post Request Body anstatt des HTTP Headers um Meta Informationen zu versenden. Dieses Vorgehen reduziert die Header Größe der Mercurial Requests. HttpPostArgs wird seit Mercurial 3.8 unterstützt."
+      },
       "submit": "Speichern",
       "success": "Einstellungen wurden erfolgreich geändert",
       "autoConfigure": "Mercurial automatisch konfigurieren"

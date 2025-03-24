@@ -22,10 +22,9 @@ import styled from "styled-components";
 import { urls } from "@scm-manager/ui-api";
 import { Branch, File, Repository } from "@scm-manager/ui-types";
 import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import Icon from "./Icon";
-import Tooltip from "./Tooltip";
 import copyToClipboard from "./CopyToClipboard";
 import { devices } from "./devices";
+import { Icon, Tooltip } from "@scm-manager/ui-core";
 
 type Props = {
   repository: Repository;
@@ -110,7 +109,7 @@ const BreadcrumbNode: FC<{ clickable: boolean; text: string; url: string; curren
   clickable,
   text,
   url,
-  current
+  current,
 }) => {
   if (clickable) {
     return (
@@ -137,7 +136,7 @@ const Breadcrumb: FC<Props> = ({
   sources,
   permalink,
   preButtons,
-  clickable = true
+  clickable = true,
 }) => {
   const location = useLocation();
   const history = useHistory();
@@ -212,24 +211,44 @@ const Breadcrumb: FC<Props> = ({
         aria-label="breadcrumbs"
       >
         {prefixButtons}
-        <ul>
+        <ul aria-label={t("breadcrumb.currentPath")}>
           <li>
             {clickable ? (
               <Link to={homeUrl} aria-label={t("breadcrumb.home")}>
-                <HomeIcon title={t("breadcrumb.home")} name="home" color="inherit" />
+                <HomeIcon type="has-text-inherit fas">home</HomeIcon>
               </Link>
             ) : (
-              <Icon name="home" color="inherit" className="mr-3" />
+              <Icon className="mr-3">home</Icon>
             )}
           </li>
           {pathSection()}
         </ul>
-        <PermaLinkWrapper tabIndex={0} onKeyDown={e => e.key === "Enter" && copySource()}>
+        <PermaLinkWrapper className="icon">
           {copying ? (
-            <Icon name="spinner fa-spin" alt={t("breadcrumb.loading")} />
+            <Icon
+              className="icon focus-zone has-cursor-pointer"
+              type="has-text-inherit fas"
+              tabIndex={0}
+              aria-hidden="false"
+              aria-label={t("breadcrumb.loading")}
+              alt={t("breadcrumb.loading")}
+            >
+              spinner fa-spin
+            </Icon>
           ) : (
             <Tooltip message={t("breadcrumb.copyPermalink")}>
-              <Icon name="link" color="inherit" onClick={() => copySource()} alt={t("breadcrumb.copyPermalink")} />
+              <Icon
+                className="focus-zone has-cursor-pointer"
+                type="has-text-inherit fas"
+                tabIndex={0}
+                aria-hidden="false"
+                aria-label={t("breadcrumb.copyPermalink")}
+                alt={t("breadcrumb.copyPermalink")}
+                onClick={() => copySource()}
+                onKeyDown={(e) => e.key === "Enter" && copySource()}
+              >
+                link
+              </Icon>
             </Tooltip>
           )}
         </PermaLinkWrapper>
@@ -243,7 +262,7 @@ const Breadcrumb: FC<Props> = ({
     branch: branch ? branch : defaultBranch,
     path,
     sources,
-    repository
+    repository,
   };
 
   const renderExtensionPoints = () => {

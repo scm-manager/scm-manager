@@ -78,7 +78,7 @@ class AbstractGitCommand {
     this.context = context;
   }
 
-  Repository open() throws IOException {
+  Repository open() {
     return context.open();
   }
 

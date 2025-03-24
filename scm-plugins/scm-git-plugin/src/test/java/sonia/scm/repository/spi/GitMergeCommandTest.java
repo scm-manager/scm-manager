@@ -23,24 +23,28 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.GpgSigner;
+import org.eclipse.jgit.lib.GpgConfig;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.Signers;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Added;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
 import sonia.scm.repository.api.MergePreventReason;
@@ -50,15 +54,17 @@ import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.user.User;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -69,14 +75,16 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
-  @Rule
-  public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
   @Mock
   private AttributeAnalyzer attributeAnalyzer;
+  @Mock
+  private RepositoryManager repositoryManager;
+  @Mock
+  private GitRepositoryHookEventFactory eventFactory;
 
   @BeforeClass
   public static void setSigner() {
-    GpgSigner.setDefault(new GitTestHelper.SimpleGpgSigner());
+    Signers.set(GpgConfig.GpgFormat.OPENPGP, new GitTestHelper.SimpleGpgSigner());
   }
 
   @Test
@@ -248,27 +256,26 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     assertThat(mergeCommandResult.getFilesWithConflict()).containsExactly("a.txt");
   }
 
-  @Test
-  public void shouldHandleUnexpectedMergeResults() {
-    GitMergeCommand command = createCommand(git -> {
-      try {
-        FileWriter fw = new FileWriter(new File(git.getRepository().getWorkTree(), "b.txt"), true);
-        BufferedWriter bw = new BufferedWriter(fw);
-        bw.write("change");
-        bw.newLine();
-        bw.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    });
+  @Test(expected = ConcurrentModificationException.class)
+  public void shouldHandleConcurrentBranchModification() {
+    GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
-    request.setBranchToMerge("mergeable");
     request.setTargetBranch("master");
+    request.setBranchToMerge("mergeable");
     request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
-    request.setMessageTemplate("simple");
 
-    Assertions.assertThrows(UnexpectedMergeResultException.class, () -> command.merge(request));
+    // create concurrent modification after the pre commit hook was fired
+    doAnswer(invocation -> {
+      RefUpdate refUpdate = createCommand()
+        .open()
+        .updateRef("refs/heads/master");
+      refUpdate.setNewObjectId(ObjectId.fromString("2f95f02d9c568594d31e78464bd11a96c62e3f91"));
+      refUpdate.update();
+      return null;
+    }).when(repositoryManager).fireHookEvent(any());
+
+    command.merge(request);
   }
 
   @Test
@@ -344,6 +351,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
     RevCommit mergeCommit = commits.iterator().next();
+    assertThat(mergeCommit.getParentCount()).isEqualTo(1);
     PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
     String message = mergeCommit.getFullMessage();
     assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
@@ -370,6 +378,8 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     String message = mergeCommit.getFullMessage();
     assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
     assertThat(message).isEqualTo("squash three commits");
+    assertThat(mergeCommit.getParentCount()).isEqualTo(1);
+    assertThat(mergeCommit.getParent(0).name()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
 
     GitModificationsCommand modificationsCommand = new GitModificationsCommand(createContext());
     List<Added> changes = modificationsCommand.getModifications("master").getAdded();
@@ -533,6 +543,33 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     assertThat(mergeCommit.getParent(0).name()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
     assertThat(mergeCommit.getName()).isEqualTo(mergeCommandResult.getNewHeadRevision());
     assertThat(mergeCommit.getName()).doesNotStartWith("91b99de908fcd04772798a31c308a64aea1a5523");
+    assertThat(mergeCommit.getAuthorIdent().getWhenAsInstant()).isEqualTo("2018-11-07T10:20:52Z"); // the timestamp of the original commit
+  }
+
+  @Test
+  public void shouldRebaseMultipleCommits() throws IOException, GitAPIException {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setTargetBranch("master");
+    request.setBranchToMerge("squash");
+    request.setMergeStrategy(MergeStrategy.REBASE);
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.merge(request);
+
+    Repository repository = createContext().open();
+    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(6).call();
+
+    assertThat(commits)
+      .extracting("shortMessage")
+      .containsExactly(
+        "third",
+        "second commit",
+        "first commit",
+        "added new line for blame",
+        "added file f",
+        "added file d and e in folder c"
+      );
   }
 
   @Test
@@ -547,11 +584,31 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandResult mergeCommandResult = command.merge(request);
 
     assertThat(mergeCommandResult.isSuccess()).isFalse();
+    assertThat(mergeCommandResult.getFilesWithConflict()).containsExactly("a.txt");
     Repository repository = createContext().open();
     Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
     RevCommit headCommit = commits.iterator().next();
     assertThat(headCommit.getName()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
+  }
 
+  @Test
+  public void shouldFireEvents() {
+    RepositoryHookEvent preReceive = mock(RepositoryHookEvent.class);
+    RepositoryHookEvent postReceive = mock(RepositoryHookEvent.class);
+    when(eventFactory.createPreReceiveEvent(any(), eq(List.of("master")), any(), any())).thenReturn(preReceive);
+    when(eventFactory.createPostReceiveEvent(any(), eq(List.of("master")), any(), any())).thenReturn(postReceive);
+
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setTargetBranch("master");
+    request.setBranchToMerge("mergeable");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.merge(request);
+
+    verify(repositoryManager).fireHookEvent(preReceive);
+    verify(repositoryManager).fireHookEvent(postReceive);
   }
 
   private GitMergeCommand createCommand() {
@@ -560,7 +617,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitMergeCommand createCommand(Consumer<Git> interceptor) {
-    return new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)), new SimpleMeterRegistry()), attributeAnalyzer) {
+    return new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)), new SimpleMeterRegistry()), attributeAnalyzer, repositoryManager, eventFactory) {
       @Override
       <R, W extends GitCloneWorker<R>> R inClone(Function<Git, W> workerSupplier, GitWorkingCopyFactory workingCopyFactory, String initialBranch) {
         Function<Git, W> interceptedWorkerSupplier = git -> {

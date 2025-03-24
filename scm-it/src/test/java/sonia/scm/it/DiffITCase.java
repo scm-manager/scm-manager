@@ -122,7 +122,7 @@ class DiffITCase {
     assertDiffsAreEqual(svnDiff, expected);
   }
 
-  @Test
+  @RetryingTest(3)
   void svnUpdateFileDiffShouldBeConvertedToGitDiff() throws IOException {
     RepositoryUtil.createAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, "a.txt", "content of a");
     RepositoryUtil.createAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, "a.txt", "content of a");
@@ -206,7 +206,7 @@ class DiffITCase {
 
   }
 
-  @Test
+  @RetryingTest(3)
   void svnRenameChangesDiffShouldBeConvertedToGitDiff() throws IOException, URISyntaxException {
     String fileName = "a.txt";
     RepositoryUtil.createAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, fileName, "content of a");

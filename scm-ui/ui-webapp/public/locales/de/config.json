@@ -25,6 +25,13 @@
       "notConfiguredHint": "Authentifizierungs URL ist nicht gesetzt"
     }
   },
+  "jwtSettings": {
+    "subtitle": "JWT Einstellungen",
+    "label": "Ablaufzeit",
+    "help": "Legen Sie die Ablaufzeit des JWT in Stunden fest. Wenn Sie die Zeit auf 'endlos' setzen möchten, verwenden Sie die Option 'endlessJwt' in der 'config.yml'.",
+    "hoursWarning": "Es wird nicht empfohlen, die Ablaufzeit auf mehr als 24 Stunden einzustellen",
+    "endlessWarning": "Die Ablaufzeit ist auf endlos eingestellt. Siehe 'config.yml'."
+  },
   "proxySettings": {
     "subtitle": "Proxy Einstellungen",
     "enable": "Proxy aktivieren",

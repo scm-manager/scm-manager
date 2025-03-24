@@ -34,8 +34,7 @@ class JavaModulePlugin implements Plugin<Project> {
       toolchain {
         languageVersion = JavaLanguageVersion.of(17)
       }
-      //TODO Fix javadoc errors which breaks the build
-//      withJavadocJar()
+      withJavadocJar()
       withSourcesJar()
     }
 

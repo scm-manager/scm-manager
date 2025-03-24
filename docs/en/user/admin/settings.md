@@ -26,9 +26,22 @@ Activate this option to make attacks using cross site scripting (XSS / XSRF) on 
 #### Plugin-Settings
 A plugin center can be used to conveniently manage plugins. If you want to use a plugin center that is not the default one, you only have to change this URL. If SCM-Manager is operated as part of a Cloudogu EcoSystem, the plugin center URL can be changed in the etcd.
 If the default plugin center is used, the SCM-Manager may be connected to the cloudogu platform to receive special cloudogu platform-Plugins. Details can be found in the plugin-center documentation.
+
+After the initial setup, the following values are set by default:
+```markdown
+Plugin Center URL: https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}&jre={jre}
+Plugin Center Authentication URL: https://plugin-center-api.scm-manager.org/api/v1/auth/oidc
+```
+
 ![Plugin center settings, not connected to the cloudogu platform](assets/administration-setings-not-connected.png)
 An existing connection between a SCM-Manager and the cloudogu platform may be severed here.
 ![Plugin center settings, button sever connection to the cloudogu platform](assets/administration-settings-connected.png)
+
+#### JWT settings
+Users receive a JWT as an authentication token, after a successful login.
+Administrators can configure the amount of hours until a JWT expires.
+If the amount of hours get reduced, each created JWT will be invalidated.
+This setting will be ignored, if the endless JWT option is set to true in the server `config.yml`.
 
 #### Anonymous Access
 In SCM-Manager 2 the access for anonymous access is realized by using an "_anonymous" user. When the feature is activated, a new user with the name "_anonymous" is created. This user can be authorized just like any other user. This user is used for access to SCM-Manager without login credentials.

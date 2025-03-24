@@ -29,13 +29,17 @@ import org.bouncycastle.openpgp.PGPSignatureGenerator;
 import org.bouncycastle.openpgp.operator.jcajce.JcaPGPContentSignerBuilder;
 import org.bouncycastle.openpgp.operator.jcajce.JcaPGPKeyPair;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.UnsupportedSigningFormatException;
 import org.eclipse.jgit.internal.JGitText;
-import org.eclipse.jgit.lib.CommitBuilder;
+import org.eclipse.jgit.lib.GpgConfig;
 import org.eclipse.jgit.lib.GpgSignature;
-import org.eclipse.jgit.lib.GpgSigner;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.Signer;
+import org.eclipse.jgit.lib.Signers;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.junit.jupiter.api.AfterAll;
@@ -134,21 +138,21 @@ class GitChangesetConverterTest {
     private PublicKey publicKey;
 
     private PGPKeyPair keyPair;
-    private GpgSigner defaultSigner;
+    private Signer defaultSigner;
 
     @BeforeEach
     void setUpTestingSignerAndCaptureDefault() throws Exception {
-      defaultSigner = GpgSigner.getDefault();
+      defaultSigner = Signers.get(GpgConfig.GpgFormat.OPENPGP);
       // we use the same keypair for all tests to speed things up a little bit
       if (keyPair == null) {
         keyPair = createKeyPair();
-        GpgSigner.setDefault(new TestingGpgSigner(keyPair));
+        Signers.set(GpgConfig.GpgFormat.OPENPGP, new TestingGpgSigner(keyPair));
       }
     }
 
     @AfterEach
     void restoreDefaultSigner() {
-      GpgSigner.setDefault(defaultSigner);
+      Signers.set(GpgConfig.GpgFormat.OPENPGP, defaultSigner);
     }
 
     @Test
@@ -242,7 +246,7 @@ class GitChangesetConverterTest {
     return new JcaPGPKeyPair(PGPPublicKey.RSA_GENERAL, pair, new Date());
   }
 
-  private static class TestingGpgSigner extends GpgSigner {
+  private static class TestingGpgSigner implements Signer {
 
     private final PGPKeyPair keyPair;
 
@@ -251,13 +255,7 @@ class GitChangesetConverterTest {
     }
 
     @Override
-    public boolean canLocateSigningKey(String gpgSigningKey, PersonIdent committer, CredentialsProvider credentialsProvider) {
-      return true;
-    }
-
-    @Override
-    public void sign(CommitBuilder commit, String gpgSigningKey,
-                     PersonIdent committer, CredentialsProvider credentialsProvider) {
+    public GpgSignature sign(Repository repository, GpgConfig gpgConfig, byte[] bytes, PersonIdent personIdent, String s, CredentialsProvider credentialsProvider) throws CanceledException, IOException, UnsupportedSigningFormatException {
       try {
         if (keyPair == null) {
           throw new JGitInternalException(JGitText.get().unableToSignCommitNoSecretKey);
@@ -274,15 +272,18 @@ class GitChangesetConverterTest {
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         try (BCPGOutputStream out = new BCPGOutputStream(new ArmoredOutputStream(buffer))) {
-          signatureGenerator.update(commit.build());
           signatureGenerator.generate().encode(out);
         }
-        commit.setGpgSignature(new GpgSignature(buffer.toByteArray()));
+        return new GpgSignature(buffer.toByteArray());
       } catch (PGPException | IOException e) {
         throw new JGitInternalException(e.getMessage(), e);
       }
     }
 
+    @Override
+    public boolean canLocateSigningKey(Repository repository, GpgConfig gpgConfig, PersonIdent personIdent, String s, CredentialsProvider credentialsProvider) throws CanceledException {
+      return true;
+    }
   }
 
   // register bouncy castle provider on load

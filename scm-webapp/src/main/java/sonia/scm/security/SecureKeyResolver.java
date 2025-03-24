@@ -131,4 +131,7 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
     return new SecureKey(bytes, System.currentTimeMillis());
   }
 
+  public void deleteStore() {
+    store.clear();
+  }
 }

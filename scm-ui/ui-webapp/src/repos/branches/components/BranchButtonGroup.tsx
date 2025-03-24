@@ -17,8 +17,9 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { Button, ButtonAddons } from "@scm-manager/ui-components";
+import { ButtonAddons } from "@scm-manager/ui-components";
 import { encodePart } from "../../sources/components/content/FileLink";
+import { Icon, LinkButton } from "@scm-manager/ui-core";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -36,8 +37,14 @@ class BranchButtonGroup extends React.Component<Props> {
 
     return (
       <ButtonAddons>
-        <Button link={changesetLink} icon="exchange-alt" label={t("branch.commits")} reducedMobile={true} />
-        <Button link={sourcesLink} icon="code" label={t("branch.sources")} reducedMobile={true} />
+        <LinkButton to={changesetLink}>
+          <Icon>exchange-alt</Icon>
+          <span>{t("branch.commits")}</span>
+        </LinkButton>
+        <LinkButton to={sourcesLink}>
+          <Icon>code</Icon>
+          <span>{t("branch.sources")}</span>
+        </LinkButton>
       </ButtonAddons>
     );
   }

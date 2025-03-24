@@ -17,22 +17,21 @@
 package sonia.scm.repository.update;
 
 import jakarta.inject.Inject;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import sonia.scm.migration.UpdateException;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.GitConfigHelper;
-import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.update.UpdateStepRepositoryMetadataAccess;
 import sonia.scm.version.Version;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static sonia.scm.repository.update.GitUpdateStepHelper.build;
+import static sonia.scm.repository.update.GitUpdateStepHelper.determineEffectiveGitFolder;
+import static sonia.scm.repository.update.GitUpdateStepHelper.isGitDirectory;
 import static sonia.scm.version.Version.parse;
 
 @Extension
@@ -62,30 +61,6 @@ public class GitV2UpdateStep implements UpdateStep {
         }
       }
     );
-  }
-
-  public Path determineEffectiveGitFolder(Path path) {
-    Path bareGitFolder = path.resolve("data");
-    Path nonBareGitFolder = bareGitFolder.resolve(".git");
-    final Path effectiveGitPath;
-    if (Files.exists(nonBareGitFolder)) {
-      effectiveGitPath = nonBareGitFolder;
-    } else {
-      effectiveGitPath = bareGitFolder;
-    }
-    return effectiveGitPath;
-  }
-
-  private org.eclipse.jgit.lib.Repository build(File directory) throws IOException {
-    return new FileRepositoryBuilder()
-      .setGitDir(directory)
-      .readEnvironment()
-      .findGitDir()
-      .build();
-  }
-
-  private boolean isGitDirectory(Repository repository) {
-    return GitRepositoryHandler.TYPE_NAME.equals(repository.getType());
   }
 
   @Override

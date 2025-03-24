@@ -49,7 +49,7 @@ public class GitUnbundleCommandTest extends AbstractGitCommandTestBase {
   @Test
   public void shouldUnbundleRepositoryFiles() throws IOException {
     RepositoryHookEvent event = new RepositoryHookEvent(null, repository, RepositoryHookType.POST_RECEIVE);
-    when(eventFactory.createEvent(eq(createContext()), any(), any(), any())).thenReturn(event);
+    when(eventFactory.createPostReceiveEvent(eq(createContext()), any(), any(), any())).thenReturn(event);
 
     AtomicReference<RepositoryHookEvent> receivedEvent = new AtomicReference<>();
 

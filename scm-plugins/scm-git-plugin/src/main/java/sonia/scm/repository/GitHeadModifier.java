@@ -48,11 +48,10 @@ public class GitHeadModifier {
    * repositories head points already to the given branch.
    *
    * @param repository repository to modify
-   * @param newHead branch which should be the new head of the repository
-   *
+   * @param newHead    branch which should be the new head of the repository
    * @return {@code true} if the head has changed
    */
-  public boolean ensure(Repository repository, String newHead)  {
+  public boolean ensure(Repository repository, String newHead) {
     try (org.eclipse.jgit.lib.Repository gitRepository = open(repository)) {
       String currentHead = resolve(gitRepository);
       if (!Objects.equals(currentHead, newHead)) {
@@ -65,8 +64,8 @@ public class GitHeadModifier {
   }
 
   private String resolve(org.eclipse.jgit.lib.Repository gitRepository) throws IOException {
-    Ref ref = gitRepository.getRefDatabase().getRef(Constants.HEAD);
-    if ( ref.isSymbolic() ) {
+    Ref ref = gitRepository.getRefDatabase().findRef(Constants.HEAD);
+    if (ref.isSymbolic()) {
       ref = ref.getTarget();
     }
     return GitUtil.getBranch(ref);

@@ -2,7 +2,7 @@
   "repository": {
     "namespace": "Namespace",
     "name": "Name",
-    "type": "Type",
+    "type": "Type of repository",
     "contact": "Contact",
     "description": "Description",
     "creationDate": "Creation Date",
@@ -24,7 +24,6 @@
   "help": {
     "namespaceHelpText": "The namespace of the repository. This name will be part of the repository url.",
     "nameHelpText": "The name of the repository. This name will be part of the repository url.",
-    "typeHelpText": "The type of the repository (e.g. Mercurial, Git or Subversion).",
     "contactHelpText": "Email address of the person who is responsible for this repository.",
     "descriptionHelpText": "A short description of the repository.",
     "initializeRepository": "Creates an initial branch and commits a basic README.md.",
@@ -330,7 +329,7 @@
     },
     "parents": {
       "label": "Parent",
-      "label_plural": "Parents"
+      "label_other": "Parents"
     },
     "contributors": {
       "mailto": "Send mail to",
@@ -342,10 +341,22 @@
       "coAuthoredBy": "co authored by",
       "more": "{{count}} more",
       "count": "{{count}} Contributor",
-      "count_plural": "{{count}} Contributors"
+      "count_other": "{{count}} Contributors"
     },
     "tag": {
       "create": "Create Tag"
+    },
+    "revert": {
+      "button": "Revert",
+      "modal": {
+        "title": "Revert Changeset",
+        "description": "You are going to apply a revert for commit {{commit}} on",
+        "branch": "Branch",
+        "commitMessage": "Commit Message",
+        "commitMessagePlaceholder": "Revert \"{{description}}\"\n\nThis reverts commit {{id}}.",
+        "submit": "Revert",
+        "cancel": "Cancel"
+      }
     },
     "containedInTags": {
       "containedInTag_one": "Contained in {{count}} tag",
@@ -613,17 +624,19 @@
     "home": "Go back to source root",
     "input": {
       "placeholder": "Search filepath",
-      "help": "Type 2 or more letters to search for a filepath in the repository"
+      "help": "Type at least two letters to start the search."
     },
+    "results_one": "{{count}} result found:",
+    "results_other": "{{count}} results found:",
     "notifications": {
-      "queryToShort": "Type at least two characters to start the search",
-      "emptyResult": "Nothing found for query <0>{{query}}</0>"
+      "emptyResult": "Nothing found for: <0>{{query}}</0>."
     },
     "searchWithRevisionAndNamespaceName": "Search on {{revision}} in {{namespace}}/{{name}}"
   },
   "shortcuts": {
     "info": "Switch to repository info",
     "branches": "Switch to branches",
+    "fileSearch": "Switch to file search",
     "tags": "Switch to tags",
     "code": "Switch to code",
     "settings": "Switch to settings"

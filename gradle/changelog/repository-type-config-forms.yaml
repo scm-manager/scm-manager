@@ -1,0 +1,10 @@
+- type: added
+  description: Support of description text for input fields and checkboxes
+- type: added
+  description: aria-describedby for input fields and checkboxes
+- type: changed
+  description: Disabling git repositories is now the first setting within the configuration form
+- type: changed
+  description: Disabling hg repositories is now the first setting within the configuration form
+- type: changed
+  description: Disabling svn repositories is now the first setting within the configuration form

@@ -35,6 +35,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Response;
 import sonia.scm.admin.ScmConfigurationStore;
+import sonia.scm.config.SecureKeyService;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
@@ -57,18 +58,21 @@ public class ConfigResource {
 
   private final NamespaceStrategyValidator namespaceStrategyValidator;
   private final JsonMerger jsonMerger;
+  private final SecureKeyService secureKeyService;
 
 
   @Inject
   public ConfigResource(ScmConfigurationStore store, ConfigDtoToScmConfigurationMapper dtoToConfigMapper,
                         ScmConfigurationToConfigDtoMapper configToDtoMapper,
                         NamespaceStrategyValidator namespaceStrategyValidator,
-                        JsonMerger jsonMerger) {
+                        JsonMerger jsonMerger,
+                        SecureKeyService secureKeyService) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.configToDtoMapper = configToDtoMapper;
     this.store = store;
     this.namespaceStrategyValidator = namespaceStrategyValidator;
     this.jsonMerger = jsonMerger;
+    this.secureKeyService = secureKeyService;
   }
 
   /**
@@ -201,6 +205,9 @@ public class ConfigResource {
   private void updateConfig(ConfigDto updatedConfigDto) {
     // ensure the namespace strategy is valid
     namespaceStrategyValidator.check(updatedConfigDto.getNamespaceStrategy());
+    if (store.get().getJwtExpirationInH() > updatedConfigDto.getJwtExpirationInH()) {
+      secureKeyService.clearAllTokens();
+    }
     store.store(dtoToConfigMapper.map(updatedConfigDto));
   }
 }

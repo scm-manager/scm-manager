@@ -452,6 +452,10 @@
     "99UQi5FKd1": {
       "displayName": "Tags are protected",
       "description": "Some tags are protected and cannot be removed. The protection is configured globally."
+    },
+    "7XUd94Iwo1": {
+      "displayName": "Merge conflicts",
+      "description": "There are merge conflicts that cannot be resolved automatically."
     }
   },
   "healthChecksFailures": {

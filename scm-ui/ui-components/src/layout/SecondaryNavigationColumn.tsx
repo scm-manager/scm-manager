@@ -17,6 +17,7 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 import { useSecondaryNavigation } from "../useSecondaryNavigation";
+import { SecondaryNavigationProvider } from "../navigation/SecondaryNavigationContext";
 
 const SecondaryColumn = styled.div<{ collapsed: boolean }>`
   flex: 0 0 auto;
@@ -28,13 +29,21 @@ const SecondaryColumn = styled.div<{ collapsed: boolean }>`
   }
 `;
 
-const SecondaryNavigationColumn: FC = ({ children }) => {
+const SecondaryNavigationColumnIntern: FC = ({ children }) => {
   const { collapsed } = useSecondaryNavigation();
 
   return (
     <SecondaryColumn className="column" collapsed={collapsed}>
       {children}
     </SecondaryColumn>
+  );
+};
+
+const SecondaryNavigationColumn: FC = ({ children }) => {
+  return (
+    <SecondaryNavigationProvider>
+      <SecondaryNavigationColumnIntern>{children}</SecondaryNavigationColumnIntern>
+    </SecondaryNavigationProvider>
   );
 };
 

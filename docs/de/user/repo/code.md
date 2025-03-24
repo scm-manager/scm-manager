@@ -84,6 +84,24 @@ Es muss lediglich ein gewünschter Name angegeben werden, welcher die gleichen F
 
 ![Repository-Code-Changeset-Create-Tag](assets/repository-code-changeset-create-tag.png)
 
+#### Reverts
+In Changesets innerhalb von Git-Repositories steht in der oberen rechten Ecke (unter "Tag erstellen") ein Knopf zum Reverten des Commits.
+
+**Hinweis:** Der Revert-Knopf wird nur dann angezeigt, wenn der Commit genau einen Vorgänger hat.
+Commits mit mehr als einem Vorgänger (z.B. Merge-Commits) und initiale Commits ohne Vorgänger können nicht zurückgesetzt werden.
+
+![Repository-Code-Changeset-Revert](assets/repository-code-changeset-revert.png)
+
+Für einen Revert ist nach Drücken des Knopfs ein Branch auszuwählen, auf welchem der Revert angewendet wird.
+Gelangt man aus der Commit-Übersicht eines Branches in den Commit, ist die Auswahl automatisch vorgenommen.
+
+Ebenso kann eine Commit-Nachricht für den Revert angegeben werden. 
+Sie ist automatisch ausgefüllt; es empfiehlt sich jedoch aus Gründen der Übersichtlichkeit, in dieser den Revert zu begründen.
+
+Mit Drücken von "Revert" wird man auf den neu erstellten Revert-Commit automatisch weitergeleitet, sofern kein Fehler auftritt.
+
+![Repository-Code-Changeset-Revert-Modal](assets/repository-code-changeset-revert-modal.png)
+
 ### Datei Details
 Nach einem Klick auf eine Datei in den Sources landet man in der Detailansicht der Datei. Dabei sind je nach Dateiformat unterschiedliche Ansichten zu sehen: 
 

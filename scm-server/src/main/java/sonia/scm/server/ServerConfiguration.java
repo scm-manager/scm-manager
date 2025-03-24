@@ -152,6 +152,10 @@ public final class ServerConfiguration {
       );
     System.out.printf("Set webapp temp directory to %s%n", webappTempDir);
     webApp.setTempDirectory(webappTempDir);
+    webApp.setMaxFormContentSize(configYaml.getMaxFormContentSize());
+    System.out.println("Set webapp max form content size to " + configYaml.getMaxFormContentSize());
+    webApp.setMaxFormKeys(configYaml.getMaxFormKeys());
+    System.out.println("Set webapp max form keys to " + configYaml.getMaxFormKeys());
     return webApp;
   }
 
@@ -205,8 +209,7 @@ public final class ServerConfiguration {
     }
 
     for (Connector connector : server.getConnectors()) {
-      if (connector instanceof ServerConnector) {
-        ServerConnector serverConnector = (ServerConnector) connector;
+      if (connector instanceof ServerConnector serverConnector) {
         String scheme = "http";
         String protocol = serverConnector.getDefaultProtocol();
         if ("SSL".equalsIgnoreCase(protocol) || "TLS".equalsIgnoreCase(protocol)) {

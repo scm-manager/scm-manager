@@ -511,6 +511,10 @@
     "99UQi5FKd1": {
       "displayName": "Tags sind geschützt",
       "description": "Einige Tags sind geschützt und können nicht gelöscht werden. Der Schutz ist global konfiguriert."
+    },
+    "7XUd94Iwo1": {
+      "displayName": "Mergekonflikte",
+      "description": "Es gibt Mergekonflikte, die nicht automatisch aufgelöst werden können."
     }
   },
   "namespaceStrategies": {

@@ -14,13 +14,11 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { useConfigLink } from "@scm-manager/ui-api";
-import { ConfigurationForm, InputField, Checkbox, validation } from "@scm-manager/ui-components";
-import { Title, useDocumentTitle } from "@scm-manager/ui-core";
+import { ConfigurationForm, Form, Title, useDocumentTitle } from "@scm-manager/ui-core";
 import { HalRepresentation } from "@scm-manager/ui-types";
+import { validation } from "@scm-manager/ui-components";
 
 type Props = {
   link: string;
@@ -40,62 +38,41 @@ const GitGlobalConfiguration: FC<Props> = ({ link }) => {
   const [t] = useTranslation("plugins");
   useDocumentTitle(t("scm-git-plugin.config.title"));
 
-  const { initialConfiguration, isReadOnly, update, ...formProps } = useConfigLink<Configuration>(link);
-  const { formState, handleSubmit, register, reset } = useForm<Configuration>({ mode: "onChange" });
-
-  useEffect(() => {
-    if (initialConfiguration) {
-      reset(initialConfiguration);
-    }
-  }, [initialConfiguration, reset]);
-
-  const isValidDefaultBranch = (value: string) => {
-    return validation.isBranchValid(value);
+  const validateLfsWriteAuthorization = (value: string) => {
+    const authorizationTime = parseInt(value);
+    return Number.isInteger(authorizationTime) && authorizationTime > 0;
   };
 
   return (
-    <ConfigurationForm
-      isValid={formState.isValid}
-      isReadOnly={isReadOnly}
-      onSubmit={handleSubmit(update)}
-      {...formProps}
-    >
-      <Title>{t("scm-git-plugin.config.title")}</Title>
-      <InputField
-        label={t("scm-git-plugin.config.gcExpression")}
-        helpText={t("scm-git-plugin.config.gcExpressionHelpText")}
-        disabled={isReadOnly}
-        {...register("gcExpression")}
-      />
-      <Checkbox
-        label={t("scm-git-plugin.config.nonFastForwardDisallowed")}
-        helpText={t("scm-git-plugin.config.nonFastForwardDisallowedHelpText")}
-        disabled={isReadOnly}
-        {...register("nonFastForwardDisallowed")}
-      />
-      <InputField
-        label={t("scm-git-plugin.config.defaultBranch")}
-        helpText={t("scm-git-plugin.config.defaultBranchHelpText")}
-        disabled={isReadOnly}
-        validationError={!!formState.errors.defaultBranch}
-        errorMessage={t("scm-git-plugin.config.defaultBranchValidationError")}
-        {...register("defaultBranch", { validate: isValidDefaultBranch })}
-      />
-      <InputField
-        type="number"
-        label={t("scm-git-plugin.config.lfsWriteAuthorizationExpirationInMinutes")}
-        helpText={t("scm-git-plugin.config.lfsWriteAuthorizationExpirationInMinutesHelpText")}
-        disabled={isReadOnly}
-        validationError={!!formState.errors.lfsWriteAuthorizationExpirationInMinutes}
-        errorMessage={t("scm-git-plugin.config.lfsWriteAuthorizationExpirationInMinutesValidationError")}
-        {...register("lfsWriteAuthorizationExpirationInMinutes", { min: 1, required: true })}
-      />
-      <Checkbox
-        label={t("scm-git-plugin.config.disabled")}
-        helpText={t("scm-git-plugin.config.disabledHelpText")}
-        disabled={isReadOnly || !initialConfiguration?.allowDisable}
-        {...register("disabled")}
-      />
+    <ConfigurationForm<Configuration> link={link} translationPath={["plugins", "scm-git-plugin.config"]}>
+      {({ watch }) => (
+        <>
+          <Title>{t("scm-git-plugin.config.title")}</Title>
+          <Form.Row>
+            <Form.Checkbox name="disabled" readOnly={!watch("allowDisable")} />
+          </Form.Row>
+          {!watch("disabled") ? (
+            <>
+              <Form.Row>
+                <Form.Input name="gcExpression" />
+              </Form.Row>
+              <Form.Row>
+                <Form.Checkbox name="nonFastForwardDisallowed" />
+              </Form.Row>
+              <Form.Row>
+                <Form.Input name="defaultBranch" rules={{ required: true, validate: validation.isBranchValid }} />
+              </Form.Row>
+              <Form.Row>
+                <Form.Input
+                  name="lfsWriteAuthorizationExpirationInMinutes"
+                  type="number"
+                  rules={{ required: true, validate: validateLfsWriteAuthorization }}
+                />
+              </Form.Row>
+            </>
+          ) : null}
+        </>
+      )}
     </ConfigurationForm>
   );
 };

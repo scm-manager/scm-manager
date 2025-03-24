@@ -30,7 +30,7 @@ const Notification = React.forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElem
     const color = type !== "inherit" ? "is-" + type : "";
 
     return (
-      <div className={classNames("notification", color, className)} role={role} ref={ref}>
+      <div className={classNames("notification", color, className)} role={role} ref={ref} {...props}>
         {onClose ? <button className="delete" onClick={onClose} /> : null}
         {children}
       </div>

@@ -130,6 +130,9 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
         }
 
         private void modifyLocation(String repositoryId, Path newPath, Modifier modifier) throws RepositoryStorageException {
+          if (newPath.toFile().exists() && !newPath.toFile().canWrite()) {
+            throw new RepositoryStorageException("cannot create repository at new path " + newPath + "; path is not writable");
+          }
           maintenanceCallbacks.fire().downForMaintenance(new DownForMaintenanceContext(repositoryId));
           Path oldPath = pathById.get(repositoryId);
           pathById.remove(repositoryId);

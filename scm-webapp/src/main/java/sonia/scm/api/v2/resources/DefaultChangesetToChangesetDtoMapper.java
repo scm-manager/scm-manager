@@ -16,7 +16,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.google.common.base.Strings;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import jakarta.inject.Inject;
@@ -127,6 +126,12 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
       }
       if (repositoryService.isSupported(Command.DIFF_RESULT)) {
         linksBuilder.single(link("diffParsed", resourceLinks.diff().parsed(namespace, name, source.getId())));
+      }
+      if (
+        repositoryService.isSupported(Command.REVERT) &&
+        RepositoryPermissions.push(repository).isPermitted() &&
+        source.getParents().size() == 1) {
+        linksBuilder.single(link("revert", resourceLinks.changeset().revert(namespace, name, source.getId())));
       }
     }
     embeddedBuilder.with("parents", getListOfObjects(source.getParents(), parent -> changesetToParentDtoMapper.map(new Changeset(parent, 0L, null), repository)));

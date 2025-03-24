@@ -5,6 +5,53 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.4] - 2025-03-12
+### Fixed
+- Possibility to configure 'maxFormKeys' and 'maxFormContentSize' in Jetty
+
+## [3.7.3] - 2025-02-24
+### Fixed
+- Keep original timestamp on rebase
+- Title in tags (for example for "done" tags in review plugin)
+
+## [3.7.1] - 2025-01-28
+### Fixed
+- Internal server error when creating tags in combination with some plugins
+
+## [3.7.0] - 2025-01-23
+### Added
+- Performance improvements for git modifications
+- New button variant called "info"
+- Link to repo page in repo header
+- Extension point below the title of a repository
+- 'uploadpack.allowFilter = true' set for all new and existing Git repositories
+
+### Fixed
+- Remove superfluous alt text for decorative images
+- Accessible details for contributors and tags in changesets
+- Whitespace dropdown is now correctly displayed after pr create
+
+### Changed
+- Clickable tags are based on the HTML button.
+- Upgrade JGit to 7.1.0.202411261347-r
+- Set focus to first input element in repository, user, group, branch and repository role creation forms
+- Replace title behavior with `useDocumentTitle` hook for setting descriptive document titles
+
+### Removed
+- Unused class `IterableQueue`
+
+## [3.6.1] - 2025-01-17
+### Fixed
+- Removed the API token error log message that was being printed when the API token was invalid (fix from 2.46.5)
+
+## [2.48.4] - 2025-01-17
+### Fixed
+- Fixes from version 2.46.2, 2.46.3, 2.46.4, and 2.46.5
+
+## [2.46.5] - 2025-01-17
+### Fixed
+- Removed the API token error log message that was being printed when the API token was invalid
+
 ## [3.6.0] - 2024-12-05
 ### Added
 - Extension point for contributor row in contributor table
@@ -1636,10 +1683,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.46.2]: https://scm-manager.org/download/2.46.2
 [2.46.3]: https://scm-manager.org/download/2.46.3
 [2.46.4]: https://scm-manager.org/download/2.46.4
+[2.46.5]: https://scm-manager.org/download/2.46.5
 [2.47.0]: https://scm-manager.org/download/2.47.0
 [2.48.0]: https://scm-manager.org/download/2.48.0
 [2.48.1]: https://scm-manager.org/download/2.48.1
 [2.48.2]: https://scm-manager.org/download/2.48.2
+[2.48.3]: https://scm-manager.org/download/2.48.3
+[2.48.4]: https://scm-manager.org/download/2.48.4
 [3.0.0]: https://scm-manager.org/download/3.0.0
 [3.0.1]: https://scm-manager.org/download/3.0.1
 [3.0.2]: https://scm-manager.org/download/3.0.2
@@ -1655,3 +1705,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.4.2]: https://scm-manager.org/download/3.4.2
 [3.5.0]: https://scm-manager.org/download/3.5.0
 [3.6.0]: https://scm-manager.org/download/3.6.0
+[3.6.1]: https://scm-manager.org/download/3.6.1
+[3.7.0]: https://scm-manager.org/download/3.7.0
+[3.7.1]: https://scm-manager.org/download/3.7.1
+[3.7.3]: https://scm-manager.org/download/3.7.3
+[3.7.4]: https://scm-manager.org/download/3.7.4

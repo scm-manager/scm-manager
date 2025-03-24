@@ -23,6 +23,7 @@ import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 
@@ -62,13 +63,17 @@ public class GitContext implements Closeable, RepositoryProvider
   }
 
 
-  public org.eclipse.jgit.lib.Repository open() throws IOException
+  public org.eclipse.jgit.lib.Repository open()
   {
     if (gitRepository == null)
     {
       logger.trace("open git repository {}", directory);
 
-      gitRepository = GitUtil.open(directory);
+      try {
+        gitRepository = GitUtil.open(directory);
+      } catch (IOException e) {
+        throw new InternalRepositoryException(repository, "could not open git repository", e);
+      }
     }
 
     return gitRepository;

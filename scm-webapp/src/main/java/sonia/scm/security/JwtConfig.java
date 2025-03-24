@@ -30,7 +30,7 @@ public class JwtConfig {
     @ConfigValue(
       key = "endlessJwt",
       defaultValue = "false",
-      description = "The lifespan of the issued JWT tokens should be endless. Logged-in users are no longer automatically logged out.")
+      description = "The lifespan of the issued JWT tokens should be endless. Logged-in users are no longer automatically logged out. Any other expiration time will be overridden")
     boolean endlessJwt) {
     this.endlessJwt = endlessJwt;
   }

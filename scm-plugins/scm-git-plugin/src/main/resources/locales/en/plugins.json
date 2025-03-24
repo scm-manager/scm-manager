@@ -21,18 +21,24 @@
     "config": {
       "link": "Git",
       "title": "Git Configuration",
-      "gcExpression": "GC Cron Expression",
-      "gcExpressionHelpText": "Use Quartz Cron Expressions (SECOND MINUTE HOUR DAYOFMONTH MONTH DAYOFWEEK) to run git gc in intervals.",
-      "nonFastForwardDisallowed": "Disallow Non Fast-Forward",
-      "nonFastForwardDisallowedHelpText": "Reject git pushes which are non fast-forward such as --force.",
-      "defaultBranch": "Default Branch",
-      "defaultBranchHelpText": "This name will be used for the initialization of new git repositories. It has no effect otherwise (especially this cannot change the initial branch name for empty repositories).",
-      "defaultBranchValidationError": "This is not a valid branch name",
-      "lfsWriteAuthorizationExpirationInMinutes": "LFS authorization expiration",
-      "lfsWriteAuthorizationExpirationInMinutesHelpText": "Expiration time of the authorization token generated for LFS put requests in minutes. If SCM-Manager is run behind a reverse proxy that buffers http requests (eg. Nginx), this should set up to the time, an LFS upload may take at maximum.",
-      "lfsWriteAuthorizationExpirationInMinutesValidationError": "Has to be at least 1 minute",
-      "disabled": "Disabled",
-      "disabledHelpText": "Enable or disable the Git plugin. Only allowed if no Git Repositories exist.",
+      "gcExpression": {
+        "label": "GC Cron Expression",
+        "descriptionText": "Use Quartz Cron Expressions (SECOND MINUTE HOUR DAYOFMONTH MONTH DAYOFWEEK) to run git gc in intervals."
+      },
+      "nonFastForwardDisallowed": {
+        "label": "Disallow Non Fast-Forward",
+        "descriptionText": "Reject git pushes which are non fast-forward such as --force."
+      },
+      "defaultBranch": {
+        "label": "Default branch for newly initialized repositories"
+      },
+      "lfsWriteAuthorizationExpirationInMinutes": {
+        "label": "LFS authorization expiration",
+        "descriptionText": "Expiration time of the authorization token generated for LFS put requests in minutes. If SCM-Manager is run behind a reverse proxy that buffers http requests (eg. Nginx), this should set up to the time, an LFS upload may take at maximum."
+      },
+      "disabled": {
+        "label": "Disable the Git plugin. Only allowed if no Git Repositories exist."
+      },
       "submit": "Submit"
     },
     "repoConfig": {

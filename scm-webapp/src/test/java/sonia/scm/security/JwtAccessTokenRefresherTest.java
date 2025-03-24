@@ -25,6 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.user.User;
 
 import java.sql.Date;
@@ -53,6 +54,8 @@ class JwtAccessTokenRefresherTest {
   private SecureKeyResolver keyResolver;
   @Mock
   private JwtConfig jwtConfig;
+
+  private ScmConfiguration scmConfiguration;
   @Mock
   private JwtAccessTokenRefreshStrategy refreshStrategy;
   @Mock
@@ -71,9 +74,16 @@ class JwtAccessTokenRefresherTest {
 
     Clock creationClock = mock(Clock.class);
     when(creationClock.instant()).thenReturn(TOKEN_CREATION);
-    tokenBuilder = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, jwtConfig, Collections.emptySet(), creationClock).create();
+    tokenBuilder = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, jwtConfig, Collections.emptySet(), creationClock, scmConfiguration).create();
 
-    JwtAccessTokenBuilderFactory refreshBuilderFactory = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, jwtConfig, Collections.emptySet(), refreshClock);
+    JwtAccessTokenBuilderFactory refreshBuilderFactory = new JwtAccessTokenBuilderFactory(
+      keyGenerator,
+      keyResolver,
+      jwtConfig,
+      Collections.emptySet(),
+      refreshClock,
+      scmConfiguration
+    );
     refresher = new JwtAccessTokenRefresher(refreshBuilderFactory, refreshStrategy, refreshClock);
     when(refreshClock.instant()).thenReturn(NOW);
     lenient().when(refreshStrategy.shouldBeRefreshed(any())).thenReturn(true);
@@ -89,6 +99,11 @@ class JwtAccessTokenRefresherTest {
     ThreadContext.bind(subject);
     when(subject.getPrincipals().oneByType(Scope.class)).thenReturn(Scope.valueOf("trillian"));
     when(subject.getPrincipal()).thenReturn(new User("trillian"));
+  }
+
+  @BeforeEach
+  void initConfig() {
+    this.scmConfiguration = new ScmConfiguration();
   }
 
   @AfterEach

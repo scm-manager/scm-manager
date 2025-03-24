@@ -82,6 +82,7 @@
   "breadcrumb": {
     "home": "Hauptseite",
     "copyPermalink": "Link in Zwischenablage kopieren",
+    "currentPath": "Aktueller Pfad",
     "loading": "Lade ..."
   },
   "errorNotification": {
@@ -232,7 +233,7 @@
   "notifications": {
     "toastTitle": "Benachrichtigung",
     "xMore": "+{{ count }} Benachrichtigung",
-    "xMore_plural": "+{{ count }} Benachrichtigungen",
+    "xMore_other": "+{{ count }} Benachrichtigungen",
     "loading": "Lade ...",
     "bellTitle": "Benachrichtigungen",
     "empty": "Keine Benachrichtigungen",
@@ -249,17 +250,17 @@
   },
   "duration": {
     "ms": "{{count}} Millisekunde",
-    "ms_plural": "{{count}} Millisekunden",
+    "ms_other": "{{count}} Millisekunden",
     "s": "{{count}} Sekunde",
-    "s_plural": "{{count}} Sekunden",
+    "s_other": "{{count}} Sekunden",
     "m": "{{count}} Minute",
-    "m_plural": "{{count}} Minuten",
+    "m_other": "{{count}} Minuten",
     "h": "{{count}} Stunde",
-    "h_plural": "{{count}} Stunden",
+    "h_other": "{{count}} Stunden",
     "d": "{{count}} Tag",
-    "d_plural": "{{count}} Tage",
+    "d_other": "{{count}} Tage",
     "w": "{{count}} Woche",
-    "w_plural": "{{count}} Wochen"
+    "w_other": "{{count}} Wochen"
   },
   "search": {
     "ariaLabel": "Globale Suche",
@@ -281,7 +282,7 @@
       "hints": "Hinweise zu ihrer Suche",
       "screenReaderHintNoResult": "Keine Repositories gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen.",
       "screenReaderHint": "Ein Repository gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen oder Pfeiltasten verwenden um zu den gefunden Repositories zu navigieren und mit Enter bestätigen.",
-      "screenReaderHint_plural": "Mindestens {{ count }} Repositories gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen oder Pfeiltasten verwenden um zu den gefunden Repositories zu navigieren und mit Enter bestätigen.",
+      "screenReaderHint_other": "Mindestens {{ count }} Repositories gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen oder Pfeiltasten verwenden um zu den gefunden Repositories zu navigieren und mit Enter bestätigen.",
       "searchRepo": "In Repository suchen",
       "searchNamespace": "In Namespace suchen",
       "searchEverywhere": "Überall suchen"

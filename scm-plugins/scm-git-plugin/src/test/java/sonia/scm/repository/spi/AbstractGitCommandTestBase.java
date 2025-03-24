@@ -18,51 +18,49 @@ package sonia.scm.repository.spi;
 
 
 import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitRepositoryConfig;
-import sonia.scm.store.InMemoryConfigurationStoreFactory;
+import sonia.scm.store.InMemoryByteConfigurationStoreFactory;
 
 
-public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
-{
+public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase {
 
-   @After
-  public void close()
-  {
+  private GitContext context;
+
+  @After
+  @AfterEach
+  public void close() {
     if (context != null) {
       context.setConfig(new GitRepositoryConfig());
       context.close();
     }
   }
 
-  
-  protected GitContext createContext()
-  {
-    if (context == null)
-    {
-      context = new GitContext(repositoryDirectory, repository, new GitRepositoryConfigStoreProvider(InMemoryConfigurationStoreFactory.create()), new GitConfig());
+  protected GitContext createContext() {
+    return createContext("main");
+  }
+
+  protected GitContext createContext(String defaultBranch) {
+    if (context == null) {
+      GitConfig config = new GitConfig();
+      config.setDefaultBranch(defaultBranch);
+      GitRepositoryConfigStoreProvider storeProvider = new GitRepositoryConfigStoreProvider(new InMemoryByteConfigurationStoreFactory());
+      storeProvider.setDefaultBranch(repository, defaultBranch);
+      context = new GitContext(repositoryDirectory, repository, storeProvider, config);
     }
 
     return context;
   }
 
-
-  
   @Override
-  protected String getType()
-  {
+  protected String getType() {
     return "git";
   }
 
-  
   @Override
-  protected String getZippedRepositoryResource()
-  {
+  protected String getZippedRepositoryResource() {
     return "sonia/scm/repository/spi/scm-git-spi-test.zip";
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  private GitContext context;
 }

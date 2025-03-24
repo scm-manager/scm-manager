@@ -71,6 +71,6 @@ public class GitBrowseCommand_RecursiveDirectoryNameTest extends AbstractGitComm
   }
 
   private GitBrowseCommand createCommand() {
-    return new GitBrowseCommand(createContext(), lfsBlobStoreFactory, synchronousExecutor());
+    return new GitBrowseCommand(createContext("master"), lfsBlobStoreFactory, synchronousExecutor());
   }
 }

@@ -21,6 +21,7 @@ import com.github.sdorra.shiro.SubjectAware;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import sonia.scm.config.ScmConfiguration;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -43,15 +44,11 @@ import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 public class PercentageJwtAccessTokenRefreshStrategyTest {
 
   private static final Instant TOKEN_CREATION = Instant.now().truncatedTo(SECONDS);
-
+  private final KeyGenerator keyGenerator = () -> "key";
+  private final JwtConfig jwtConfig = mock(JwtConfig.class);
+  private final Clock refreshClock = mock(Clock.class);
   @Rule
   public ShiroRule shiro = new ShiroRule();
-
-  private KeyGenerator keyGenerator = () -> "key";
-  private JwtConfig jwtConfig = mock(JwtConfig.class);
-
-  private Clock refreshClock = mock(Clock.class);
-
   private JwtAccessTokenBuilder tokenBuilder;
   private PercentageJwtAccessTokenRefreshStrategy refreshStrategy;
 
@@ -59,11 +56,18 @@ public class PercentageJwtAccessTokenRefreshStrategyTest {
   public void initToken() {
     SecureKeyResolver keyResolver = mock(SecureKeyResolver.class);
     when(keyResolver.getSecureKey(any())).thenReturn(createSecureKey());
-
+    ScmConfiguration scmConfiguration = new ScmConfiguration();
     Clock creationClock = mock(Clock.class);
     when(creationClock.instant()).thenReturn(TOKEN_CREATION);
 
-    tokenBuilder = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, jwtConfig, Collections.emptySet(), creationClock).create();
+    tokenBuilder = new JwtAccessTokenBuilderFactory(
+      keyGenerator,
+      keyResolver,
+      jwtConfig,
+      Collections.emptySet(),
+      creationClock,
+      scmConfiguration
+    ).create();
     tokenBuilder.expiresIn(1, HOURS);
     tokenBuilder.refreshableFor(1, HOURS);
 

@@ -17,6 +17,7 @@
 package sonia.scm.repository.api;
 
 import jakarta.annotation.Nullable;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.cache.CacheManager;
@@ -55,22 +56,6 @@ import java.util.stream.Stream;
  * after work is finished. For closing the connection to the repository use the
  * {@link #close()} method.
  *
- * @apiviz.uses sonia.scm.repository.Feature
- * @apiviz.uses sonia.scm.repository.api.Command
- * @apiviz.uses sonia.scm.repository.api.BlameCommandBuilder
- * @apiviz.uses sonia.scm.repository.api.BrowseCommandBuilder
- * @apiviz.uses sonia.scm.repository.api.CatCommandBuilder
- * @apiviz.uses sonia.scm.repository.api.DiffCommandBuilder
- * @apiviz.uses sonia.scm.repository.api.LogCommandBuilder
- * @apiviz.uses sonia.scm.repository.api.TagsCommandBuilder
- * @apiviz.uses sonia.scm.repository.api.BranchesCommandBuilder
- * @apiviz.uses sonia.scm.repository.api.IncomingCommandBuilder
- * @apiviz.uses sonia.scm.repository.api.OutgoingCommandBuilder
- * @apiviz.uses sonia.scm.repository.api.PullCommandBuilder
- * @apiviz.uses sonia.scm.repository.api.PushCommandBuilder
- * @apiviz.uses sonia.scm.repository.api.BundleCommandBuilder
- * @apiviz.uses sonia.scm.repository.api.UnbundleCommandBuilder
- * @apiviz.uses sonia.scm.repository.api.MergeCommandBuilder
  * @since 1.17
  */
 public final class RepositoryService implements Closeable {
@@ -80,7 +65,10 @@ public final class RepositoryService implements Closeable {
   private final CacheManager cacheManager;
   private final PreProcessorUtil preProcessorUtil;
   private final RepositoryServiceProvider provider;
+
+  @Getter
   private final Repository repository;
+
   @SuppressWarnings({"rawtypes", "java:S3740"})
   private final Set<ScmProtocolProvider> protocolProviders;
   private final WorkdirProvider workdirProvider;
@@ -119,7 +107,7 @@ public final class RepositoryService implements Closeable {
 
   /**
    * Closes the connection to the repository and releases all locks
-   * and resources. This method should be called in a finally block e.g.:
+   * and resources. This method should be called in a finally block; e.g.:
    *
    * <pre><code>
    * RepositoryService service = null;
@@ -143,7 +131,29 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The blame command shows changeset information by line for a given file.
+   * Returns true if the command is supported by the repository service.
+   *
+   * @param command command
+   * @return true if the command is supported
+   */
+  public boolean isSupported(Command command) {
+    return provider.getSupportedCommands().contains(command);
+  }
+
+  /**
+   * Returns true if the feature is supported by the repository service.
+   *
+   * @param feature feature
+   * @return true if the feature is supported
+   * @since 1.25
+   */
+  public boolean isSupported(Feature feature) {
+    return provider.getSupportedFeatures().contains(feature);
+  }
+
+  /**
+   * Creates a {@link BlameCommandBuilder}. It can take the respective parameters and be executed to show
+   * changeset information by line for a given file.
    *
    * @return instance of {@link BlameCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -157,21 +167,8 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The branches command list all repository branches.
-   *
-   * @return instance of {@link BranchesCommandBuilder}
-   * @throws CommandNotSupportedException if the command is not supported
-   *                                      by the implementation of the repository service provider.
-   */
-  public BranchesCommandBuilder getBranchesCommand() {
-    LOG.debug("create branches command for repository {}", repository);
-
-    return new BranchesCommandBuilder(cacheManager,
-      provider.getBranchesCommand(), repository);
-  }
-
-  /**
-   * The branch command creates new branches.
+   * Creates a {@link BranchCommandBuilder}. It can take the respective parameters and be executed to
+   * create new branches, if supported by the particular SCM system.
    *
    * @return instance of {@link BranchCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -186,7 +183,37 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The browse command allows browsing of a repository.
+   * Creates a {@link BranchDetailsCommandBuilder}. It can take the respective parameters and be executed to
+   * get details for a branch.
+   *
+   * @return instance of {@link BranchDetailsCommand}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 2.28.0
+   */
+  public BranchDetailsCommandBuilder getBranchDetailsCommand() {
+    LOG.debug("create branch details command for repository {}", repository);
+    return new BranchDetailsCommandBuilder(repository, provider.getBranchDetailsCommand(), cacheManager);
+  }
+
+  /**
+   * Creates a {@link BranchesCommandBuilder}. It can take the respective parameters and be executed to list
+   * all repository branches.
+   *
+   * @return instance of {@link BranchesCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   */
+  public BranchesCommandBuilder getBranchesCommand() {
+    LOG.debug("create branches command for repository {}", repository);
+
+    return new BranchesCommandBuilder(cacheManager,
+      provider.getBranchesCommand(), repository);
+  }
+
+  /**
+   * Creates a {@link BrowseCommandBuilder}. It can take the respective parameters and be executed to
+   * browse for content within a repository.
    *
    * @return instance of {@link BrowseCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -200,7 +227,8 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The bundle command creates an archive from the repository.
+   * Creates a {@link BundleCommandBuilder}. It can take the respective parameters and be executed to
+   * create an archive from the repository.
    *
    * @return instance of {@link BundleCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -214,7 +242,8 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The cat command show the content of a given file.
+   * Creates a {@link CatCommandBuilder}. It can take the respective parameters and be executed to
+   * show the content of a given file.
    *
    * @return instance of {@link CatCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -227,8 +256,21 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The diff command shows differences between revisions for a specified file
-   * or the entire revision.
+   * Creates a {@link ChangesetsCommandBuilder}. It can take the respective parameters and be executed to
+   * retrieve a set of at least one changeset.
+   *
+   * @return Instance of {@link ChangesetsCommandBuilder}.
+   * @throws CommandNotSupportedException if the command is not supported by
+   *                                      the implementation of the {@link RepositoryServiceProvider}.
+   */
+  public ChangesetsCommandBuilder getChangesetsCommand() {
+    LOG.debug("create changesets command for repository {}", repository);
+    return new ChangesetsCommandBuilder(repository, provider.getChangesetsCommand());
+  }
+
+  /**
+   * Creates a {@link DiffCommandBuilder}. It can take the respective parameters and be executed to
+   * show differences between revisions for a specified file or the entire revision.
    *
    * @return instance of {@link DiffCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -241,8 +283,8 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The diff command shows differences between revisions for a specified file
-   * or the entire revision.
+   * Creates a {@link DiffResultCommandBuilder}. It can take the respective parameters and be executed to
+   * show differences between revisions for a specified file or the entire revision.
    *
    * @return instance of {@link DiffResultCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -255,8 +297,36 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The incoming command shows new {@link Changeset}s found in a different
-   * repository location.
+   * Creates a {@link FullHealthCheckCommandBuilder}. It can take the respective parameters and be executed to
+   * inspect a repository profoundly. This might take a while in contrast to the lighter checks executed at startup.
+   *
+   * @return instance of {@link FullHealthCheckCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 2.17.0
+   */
+  public FullHealthCheckCommandBuilder getFullCheckCommand() {
+    LOG.debug("create full check command for repository {}", repository);
+    return new FullHealthCheckCommandBuilder(provider.getFullHealthCheckCommand());
+  }
+
+  /**
+   * Creates a {@link FileLockCommandBuilder}. It can take the respective parameters and be executed to
+   * lock and unlock files.
+   *
+   * @return instance of {@link FileLockCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 2.26.0
+   */
+  public FileLockCommandBuilder getLockCommand() {
+    LOG.debug("create lock command for repository {}", repository);
+    return new FileLockCommandBuilder(provider.getFileLockCommand(), repository);
+  }
+
+  /**
+   * Creates a {@link IncomingCommandBuilder}. It can take the respective parameters and be executed to
+   * show new {@link Changeset}s found in a different repository location.
    *
    * @return instance of {@link IncomingCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -271,7 +341,8 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The log command shows revision history of entire repository or files.
+   * Creates a {@link LogCommandBuilder}. It can take the respective parameters and be executed to
+   * show revision history of entire repository or files.
    *
    * @return instance of {@link LogCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -285,7 +356,54 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The modification command shows file modifications in a revision.
+   * Creates a {@link LookupCommandBuilder}. It can take the respective parameters and be executed to
+   * conduct a lookup which returns additional information for the repository.
+   *
+   * @return instance of {@link LookupCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 2.10.0
+   */
+  public LookupCommandBuilder getLookupCommand() {
+    LOG.debug("create lookup command for repository {}", repository);
+    return new LookupCommandBuilder(provider.getLookupCommand());
+  }
+
+  /**
+   * Creates a {@link MergeCommandBuilder}. It can take the respective parameters and be executed to
+   * conduct a merge of two branches.
+   *
+   * @return instance of {@link MergeCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 2.0.0
+   */
+  public MergeCommandBuilder getMergeCommand() {
+    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
+    LOG.debug("create merge command for repository {}", repository);
+
+    return new MergeCommandBuilder(provider.getMergeCommand(), eMail);
+  }
+
+  /**
+   * Creates a {@link MirrorCommandBuilder}. It can take the respective parameters and be executed to
+   * create a 'mirror' of an existing repository (specified by a URL) by copying all data
+   * to the repository of this service. Therefore, this repository has to be empty (otherwise the behaviour is
+   * not specified).
+   *
+   * @return instance of {@link MirrorCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 2.19.0
+   */
+  public MirrorCommandBuilder getMirrorCommand() {
+    LOG.debug("create mirror command for repository {}", repository);
+    return new MirrorCommandBuilder(provider.getMirrorCommand(), repository);
+  }
+
+  /**
+   * Creates a {@link ModificationsCommandBuilder}. It can take the respective parameters and be executed to
+   * show file modifications in a revision.
    *
    * @return instance of {@link ModificationsCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -297,7 +415,25 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The outgoing command show {@link Changeset}s not found in a remote repository.
+   * Creates a {@link ModifyCommandBuilder}. It can take the respective parameters and be executed to
+   * makes changes to the files within a changeset.
+   *
+   * @return instance of {@link ModifyCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @see ModifyCommandBuilder
+   * @since 2.0.0
+   */
+  public ModifyCommandBuilder getModifyCommand() {
+    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
+    LOG.debug("create modify command for repository {}", repository);
+
+    return new ModifyCommandBuilder(provider.getModifyCommand(), workdirProvider, repository.getId(), eMail);
+  }
+
+  /**
+   * Creates an {@link OutgoingCommandBuilder}. It can take the respective parameters and be executed to
+   * show {@link Changeset}s not found in a remote repository.
    *
    * @return instance of {@link OutgoingCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -312,7 +448,8 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The pull command pull changes from a other repository.
+   * Creates a {@link PullCommandBuilder}. It can take the respective parameters and be executed to
+   * pull changes from another repository.
    *
    * @return instance of {@link PullCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -327,7 +464,8 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The push command pushes changes to a other repository.
+   * Creates a {@link PushCommandBuilder}. It can take the respective parameters and be executed to
+   * push changes to another repository.
    *
    * @return instance of {@link PushCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -341,12 +479,18 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * Returns the repository of this service.
+   * Creates a {@link RevertCommandBuilder}. It can take the respective parameters and be executed to
+   * apply a revert of a chosen changeset onto the given repository/branch combination.
    *
-   * @return repository of this service
+   * @return Instance of {@link RevertCommandBuilder}.
+   * @throws CommandNotSupportedException if the command is not supported by
+   *                                      the implementation of the {@link RepositoryServiceProvider}.
+   * @since 3.8
+   * @see RevertCommandBuilder
    */
-  public Repository getRepository() {
-    return repository;
+  public RevertCommandBuilder getRevertCommand() {
+    LOG.debug("create revert command for repository {}", repository);
+    return new RevertCommandBuilder(provider.getRevertCommand(), eMail);
   }
 
   /**
@@ -376,7 +520,8 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * The unbundle command restores a repository from the given bundle.
+   * Creates an {@link UnbundleCommandBuilder}. It can take the respective parameters and be executed to
+   * restore a repository from the given bundle.
    *
    * @return instance of {@link UnbundleCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
@@ -388,137 +533,6 @@ public final class RepositoryService implements Closeable {
 
     return new UnbundleCommandBuilder(provider.getUnbundleCommand(),
       repository);
-  }
-
-  /**
-   * The merge command executes a merge of two branches. It is possible to do a dry run to check, whether the given
-   * branches can be merged without conflicts.
-   *
-   * @return instance of {@link MergeCommandBuilder}
-   * @throws CommandNotSupportedException if the command is not supported
-   *                                      by the implementation of the repository service provider.
-   * @since 2.0.0
-   */
-  public MergeCommandBuilder getMergeCommand() {
-    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
-    LOG.debug("create merge command for repository {}", repository);
-
-    return new MergeCommandBuilder(provider.getMergeCommand(), eMail);
-  }
-
-  /**
-   * The modify command makes changes to the head of a branch. It is possible to
-   * <ul>
-   * <li>create new files</li>
-   * <li>delete existing files</li>
-   * <li>modify/replace files</li>
-   * <li>move files</li>
-   * </ul>
-   *
-   * @return instance of {@link ModifyCommandBuilder}
-   * @throws CommandNotSupportedException if the command is not supported
-   *                                      by the implementation of the repository service provider.
-   * @since 2.0.0
-   */
-  public ModifyCommandBuilder getModifyCommand() {
-    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
-    LOG.debug("create modify command for repository {}", repository);
-
-    return new ModifyCommandBuilder(provider.getModifyCommand(), workdirProvider, repository.getId(), eMail);
-  }
-
-  /**
-   * The lookup command executes a lookup which returns additional information for the repository.
-   *
-   * @return instance of {@link LookupCommandBuilder}
-   * @throws CommandNotSupportedException if the command is not supported
-   *                                      by the implementation of the repository service provider.
-   * @since 2.10.0
-   */
-  public LookupCommandBuilder getLookupCommand() {
-    LOG.debug("create lookup command for repository {}", repository);
-    return new LookupCommandBuilder(provider.getLookupCommand());
-  }
-
-  /**
-   * The full health check command inspects a repository in a way, that might take a while in contrast to the
-   * light checks executed at startup.
-   *
-   * @return instance of {@link FullHealthCheckCommandBuilder}
-   * @throws CommandNotSupportedException if the command is not supported
-   *                                      by the implementation of the repository service provider.
-   * @since 2.17.0
-   */
-  public FullHealthCheckCommandBuilder getFullCheckCommand() {
-    LOG.debug("create full check command for repository {}", repository);
-    return new FullHealthCheckCommandBuilder(provider.getFullHealthCheckCommand());
-  }
-
-  /**
-   * The mirror command creates a 'mirror' of an existing repository (specified by a URL) by copying all data
-   * to the repository of this service. Therefore this repository has to be empty (otherwise the behaviour is
-   * not specified).
-   *
-   * @return instance of {@link MirrorCommandBuilder}
-   * @throws CommandNotSupportedException if the command is not supported
-   *                                      by the implementation of the repository service provider.
-   * @since 2.19.0
-   */
-  public MirrorCommandBuilder getMirrorCommand() {
-    LOG.debug("create mirror command for repository {}", repository);
-    return new MirrorCommandBuilder(provider.getMirrorCommand(), repository);
-  }
-
-  /**
-   * Lock and unlock files.
-   *
-   * @return instance of {@link FileLockCommandBuilder}
-   * @throws CommandNotSupportedException if the command is not supported
-   *                                      by the implementation of the repository service provider.
-   * @since 2.26.0
-   */
-  public FileLockCommandBuilder getLockCommand() {
-    LOG.debug("create lock command for repository {}", repository);
-    return new FileLockCommandBuilder(provider.getFileLockCommand(), repository);
-  }
-
-  /**
-   * Get details for a branch.
-   *
-   * @return instance of {@link BranchDetailsCommand}
-   * @throws CommandNotSupportedException if the command is not supported
-   *                                      by the implementation of the repository service provider.
-   * @since 2.28.0
-   */
-  public BranchDetailsCommandBuilder getBranchDetailsCommand() {
-    LOG.debug("create branch details command for repository {}", repository);
-    return new BranchDetailsCommandBuilder(repository, provider.getBranchDetailsCommand(), cacheManager);
-  }
-
-  public ChangesetsCommandBuilder getChangesetsCommand() {
-    LOG.debug("create changesets command for repository {}", repository);
-    return new ChangesetsCommandBuilder(repository, provider.getChangesetsCommand());
-  }
-
-  /**
-   * Returns true if the command is supported by the repository service.
-   *
-   * @param command command
-   * @return true if the command is supported
-   */
-  public boolean isSupported(Command command) {
-    return provider.getSupportedCommands().contains(command);
-  }
-
-  /**
-   * Returns true if the feature is supported by the repository service.
-   *
-   * @param feature feature
-   * @return true if the feature is supported
-   * @since 1.25
-   */
-  public boolean isSupported(Feature feature) {
-    return provider.getSupportedFeatures().contains(feature);
   }
 
   public Stream<ScmProtocol> getSupportedProtocols() {

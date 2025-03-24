@@ -32,6 +32,7 @@ import org.eclipse.jgit.treewalk.filter.PathFilter;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
 import sonia.scm.repository.api.MergePreventReason;
@@ -56,6 +57,9 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
   private final GitWorkingCopyFactory workingCopyFactory;
   private final AttributeAnalyzer attributeAnalyzer;
+  private final RepositoryManager repositoryManager;
+  private final GitRepositoryHookEventFactory eventFactory;
+
   private static final Set<MergeStrategy> STRATEGIES = Set.of(
     MergeStrategy.MERGE_COMMIT,
     MergeStrategy.FAST_FORWARD_IF_POSSIBLE,
@@ -64,14 +68,24 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   );
 
   @Inject
-  GitMergeCommand(@Assisted GitContext context, GitRepositoryHandler handler, AttributeAnalyzer attributeAnalyzer) {
-    this(context, handler.getWorkingCopyFactory(), attributeAnalyzer);
+  GitMergeCommand(@Assisted GitContext context,
+                  GitRepositoryHandler handler,
+                  AttributeAnalyzer attributeAnalyzer,
+                  RepositoryManager repositoryManager,
+                  GitRepositoryHookEventFactory eventFactory) {
+    this(context, handler.getWorkingCopyFactory(), attributeAnalyzer, repositoryManager, eventFactory);
   }
 
-  GitMergeCommand(@Assisted GitContext context, GitWorkingCopyFactory workingCopyFactory, AttributeAnalyzer attributeAnalyzer) {
+  GitMergeCommand(@Assisted GitContext context,
+                  GitWorkingCopyFactory workingCopyFactory,
+                  AttributeAnalyzer attributeAnalyzer,
+                  RepositoryManager repositoryManager,
+                  GitRepositoryHookEventFactory eventFactory) {
     super(context);
     this.workingCopyFactory = workingCopyFactory;
     this.attributeAnalyzer = attributeAnalyzer;
+    this.repositoryManager = repositoryManager;
+    this.eventFactory = eventFactory;
   }
 
   @Override
@@ -85,22 +99,14 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   }
 
   private MergeCommandResult mergeWithStrategy(MergeCommandRequest request) {
-    switch (request.getMergeStrategy()) {
-      case SQUASH:
-        return inClone(clone -> new GitMergeWithSquash(clone, request, context, repository), workingCopyFactory, request.getTargetBranch());
-
-      case FAST_FORWARD_IF_POSSIBLE:
-        return inClone(clone -> new GitFastForwardIfPossible(clone, request, context, repository), workingCopyFactory, request.getTargetBranch());
-
-      case MERGE_COMMIT:
-        return inClone(clone -> new GitMergeCommit(clone, request, context, repository), workingCopyFactory, request.getTargetBranch());
-
-      case REBASE:
-        return inClone(clone -> new GitMergeRebase(clone, request, context, repository), workingCopyFactory, request.getTargetBranch());
-
-      default:
-        throw new MergeStrategyNotSupportedException(repository, request.getMergeStrategy());
-    }
+    return switch (request.getMergeStrategy()) {
+      case SQUASH -> new GitMergeWithSquash(request, context, repositoryManager, eventFactory).run();
+      case FAST_FORWARD_IF_POSSIBLE ->
+        new GitFastForwardIfPossible(request, context, repositoryManager, eventFactory).run();
+      case MERGE_COMMIT -> new GitMergeCommit(request, context, repositoryManager, eventFactory).run();
+      case REBASE -> new GitMergeRebase(request, context, repositoryManager, eventFactory).run();
+      default -> throw new MergeStrategyNotSupportedException(repository, request.getMergeStrategy());
+    };
   }
 
   @Override

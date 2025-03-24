@@ -23,11 +23,11 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 
 import java.io.IOException;
-import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-class GitLazyChangesetResolver implements Callable<Iterable<RevCommit>> {
+class GitLazyChangesetResolver implements Supplier<Iterable<RevCommit>> {
   private final Repository repository;
   private final Git git;
 
@@ -37,7 +37,7 @@ class GitLazyChangesetResolver implements Callable<Iterable<RevCommit>> {
   }
 
   @Override
-  public Iterable<RevCommit> call() {
+  public Iterable<RevCommit> get() {
     try {
       return git.log().all().call();
     } catch (IOException | GitAPIException e) {

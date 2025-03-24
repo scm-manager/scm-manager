@@ -20,14 +20,11 @@ import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.transport.FetchResult;
-import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.WrappedRepositoryHookEvent;
-import sonia.scm.repository.api.ImportFailedException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,18 +43,10 @@ public class PostReceiveRepositoryHookEventFactory {
 
   void fireForFetch(Git git, FetchResult result) {
     PostReceiveRepositoryHookEvent event;
-    try {
-      List<String> branches = getBranchesFromFetchResult(result);
-      List<Tag> tags = getTagsFromFetchResult(result);
-      GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(context.getRepository(), git);
-      event = new PostReceiveRepositoryHookEvent(WrappedRepositoryHookEvent.wrap(eventFactory.createEvent(context, branches, tags, changesetResolver)));
-    } catch (IOException e) {
-      throw new ImportFailedException(
-        ContextEntry.ContextBuilder.entity(context.getRepository()).build(),
-        "Could not fire post receive repository hook event after fetch",
-        e
-      );
-    }
+    List<String> branches = getBranchesFromFetchResult(result);
+    List<Tag> tags = getTagsFromFetchResult(result);
+    GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(context.getRepository(), git);
+    event = new PostReceiveRepositoryHookEvent(WrappedRepositoryHookEvent.wrap(eventFactory.createPostReceiveEvent(context, branches, tags, changesetResolver)));
     eventBus.post(event);
   }
 

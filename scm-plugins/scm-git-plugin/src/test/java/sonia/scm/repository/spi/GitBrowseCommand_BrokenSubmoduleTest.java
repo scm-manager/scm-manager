@@ -44,7 +44,7 @@ public class GitBrowseCommand_BrokenSubmoduleTest extends AbstractGitCommandTest
 
   @Before
   public void createCommand() {
-    command = new GitBrowseCommand(createContext(), lfsBlobStoreFactory, synchronousExecutor());
+    command = new GitBrowseCommand(createContext("master"), lfsBlobStoreFactory, synchronousExecutor());
   }
 
   @Test

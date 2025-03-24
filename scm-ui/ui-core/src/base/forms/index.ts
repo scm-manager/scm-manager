@@ -36,12 +36,14 @@ import RadioButton from "./radio-button/RadioButton";
 import RadioGroupFieldComponent from "./radio-button/RadioGroupField";
 
 export { default as Field } from "./base/Field";
+export { default as FieldMessage } from "./base/field-message/FieldMessage";
 export { default as Checkbox } from "./checkbox/Checkbox";
 export { default as Combobox } from "./combobox/Combobox";
 export { default as ConfigurationForm } from "./ConfigurationForm";
 export { default as SelectField } from "./select/SelectField";
 export { default as ComboboxField } from "./combobox/ComboboxField";
 export { default as Input } from "./input/Input";
+export { default as InputField } from "./input/InputField";
 export { default as Textarea } from "./input/Textarea";
 export { default as Select } from "./select/Select";
 export * from "./resourceHooks";

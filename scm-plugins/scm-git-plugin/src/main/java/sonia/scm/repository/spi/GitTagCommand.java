@@ -41,6 +41,7 @@ import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.Tag;
+import sonia.scm.repository.api.HookBranchProvider;
 import sonia.scm.repository.api.HookChangesetProvider;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
@@ -221,6 +222,21 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
     }
 
     @Override
+    public HookBranchProvider getBranchProvider() {
+      return new HookBranchProvider() {
+        @Override
+        public List<String> getCreatedOrModified() {
+          return List.of();
+        }
+
+        @Override
+        public List<String> getDeletedOrClosed() {
+          return List.of();
+        }
+      };
+    }
+
+    @Override
     public HookChangesetProvider getChangesetProvider() {
       Collection<ReceiveCommand> receiveCommands = new ArrayList<>();
       newTags.stream()
@@ -230,12 +246,7 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
         .map(tag -> new ReceiveCommand(fromString(tag.getRevision()), zeroId(), REFS_TAGS_PREFIX + tag.getName()))
         .forEach(receiveCommands::add);
       return x -> {
-        Repository gitRepo;
-        try {
-          gitRepo = context.open();
-        } catch (IOException e) {
-          throw new InternalRepositoryException(repository, "failed to open repository for post receive hook after internal change", e);
-        }
+        Repository gitRepo = context.open();
         GitHookChangesetCollector collector =
           GitHookChangesetCollector.collectChangesets(
             converterFactory,

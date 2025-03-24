@@ -18,17 +18,17 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { Alert } from "@scm-manager/ui-types";
-import { DateFromNow, Icon } from "@scm-manager/ui-components";
 import { useAlerts } from "@scm-manager/ui-api";
-import HeaderDropDown, { Column, OnlyMobileWrappingColumn, Table } from "../components/HeaderDropDown";
+import { DateFromNow } from "@scm-manager/ui-components";
+import { Icon } from "@scm-manager/ui-core";
+import { Alert } from "@scm-manager/ui-types";
+import HeaderDropDown from "../components/HeaderDropDown";
 
-const FullHeightTable = styled(Table)`
-  height: 100%;
-`;
-
-const RightColumn = styled(OnlyMobileWrappingColumn)`
-  height: 100%;
+const AlertContainer = styled.ul`
+  > *:not(:last-child) {
+    border-bottom: solid 2px var(--scm-border-color);
+  }
+  border-left: 3px solid var(--scm-danger-color);
 `;
 
 type EntryProps = {
@@ -36,27 +36,26 @@ type EntryProps = {
 };
 
 const AlertsEntry: FC<EntryProps> = ({ alert }) => {
-  const navigateTo = () => {
-    if (alert.link) {
-      window.open(alert.link)?.focus();
-    }
-  };
+  const content = (
+    <section>
+      <h2 className="has-text-weight-bold">
+        {alert.title} ({alert.component} {alert.affectedVersions})
+      </h2>
+      <p>{alert.description}</p>
+      <DateFromNow date={alert.issuedAt} className="is-size-7" />
+    </section>
+  );
 
   return (
-    <tr onClick={navigateTo} className={classNames("is-danger", { "is-clickable": !!alert.link })}>
-      <Column>
-        <p className="has-text-weight-bold">{alert.title}</p>
-        <p>{alert.description}</p>
-      </Column>
-      <RightColumn className="has-text-right">
-        <div className="is-flex is-flex-direction-column is-justify-content-space-between">
-          <p className="has-text-weight-semibold">
-            {alert.component} {alert.affectedVersions}
-          </p>
-          <DateFromNow date={alert.issuedAt} className="is-size-7" />
-        </div>
-      </RightColumn>
-    </tr>
+    <li className={classNames("is-danger has-text-secondary-more px-4 py-3")}>
+      {alert.link ? (
+        <a className="is-block" href={alert.link} target="_blank" rel="noreferrer">
+          {content}
+        </a>
+      ) : (
+        <>{content}</>
+      )}
+    </li>
   );
 };
 
@@ -66,19 +65,21 @@ type Props = {
 
 const AlertsList: FC<Props> = ({ data }) => (
   <div className="dropdown-content p-0">
-    <FullHeightTable className="table card-table mb-0 is-fullheight">
-      <tbody>
-        {data.map((a, i) => (
-          <AlertsEntry key={i} alert={a} />
-        ))}
-      </tbody>
-    </FullHeightTable>
+    <AlertContainer className="card-table mb-0 is-flex is-flex-direction-column has-text-left">
+      {data.map((a, i) => (
+        <AlertsEntry key={i} alert={a} />
+      ))}
+    </AlertContainer>
   </div>
 );
 
 const ShieldNotificationIcon: FC = () => {
   const [t] = useTranslation("commons");
-  return <Icon className="is-size-4" name="shield-alt" color="inherit" alt={t("alerts.shieldTitle")} />;
+  return (
+    <Icon className="is-size-4" alt={t("alerts.shieldTitle")}>
+      shield-alt
+    </Icon>
+  );
 };
 
 type ComponentAlert = Alert & {
@@ -89,8 +90,8 @@ const useFlattenedAlerts = () => {
   const { data, error } = useAlerts();
 
   if (data) {
-    const flattenedAlerts: ComponentAlert[] = data.alerts?.map(a => ({ ...a, component: "core" })) || [];
-    data.plugins?.forEach(p => flattenedAlerts.push(...(p.alerts || []).map(a => ({ ...a, component: p.name }))));
+    const flattenedAlerts: ComponentAlert[] = data.alerts?.map((a) => ({ ...a, component: "core" })) || [];
+    data.plugins?.forEach((p) => flattenedAlerts.push(...(p.alerts || []).map((a) => ({ ...a, component: p.name }))));
     flattenedAlerts.sort((a, b) => {
       if (new Date(a.issuedAt) < new Date(b.issuedAt)) {
         return 1;
@@ -99,13 +100,13 @@ const useFlattenedAlerts = () => {
     });
     return {
       data: flattenedAlerts,
-      error
+      error,
     };
   }
 
   return {
     data,
-    error
+    error,
   };
 };
 

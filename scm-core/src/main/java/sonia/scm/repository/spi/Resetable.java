@@ -17,10 +17,12 @@
 package sonia.scm.repository.spi;
 
 /**
+ * @deprecated This interface may get removed at some point in the future.
  * @since 1.17
  */
+@Deprecated(since = "3.8")
 public interface Resetable
 {
 
-   public void reset();
+   void reset();
 }

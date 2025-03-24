@@ -36,12 +36,12 @@ const LastHunkFooter: FC<Props> = ({ expandableHunk, diffExpanded, diffExpansion
     return (
       <HunkExpandDivider>
         <HunkExpandLink
-          icon={"fa-angle-down"}
+          icon={"angle-down"}
           onClick={expandBottom(expandableHunk, 10)}
           text={t("diff.expandLastBottomByLines", { count: 10 })}
         />{" "}
         <HunkExpandLink
-          icon={"fa-angle-double-down"}
+          icon={"angle-double-down"}
           onClick={expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
           text={t("diff.expandLastBottomComplete")}
         />

@@ -29,17 +29,20 @@ type Props<T extends Record<string, unknown>> = Omit<
   rules?: ComponentProps<typeof Controller>["rules"];
   name: Path<T>;
   label?: string;
+  icon?: string;
 };
 
 function ControlledInputField<T extends Record<string, unknown>>({
   name,
   label,
   helpText,
+  descriptionText,
   rules,
   testId,
   defaultValue,
   readOnly,
   className,
+  icon,
   ...props
 }: Props<T>) {
   const { control, t, readOnly: formReadonly, formId } = useScmFormContext();
@@ -48,6 +51,8 @@ function ControlledInputField<T extends Record<string, unknown>>({
   const prefixedNameWithoutIndices = prefixWithoutIndices(nameWithPrefix);
   const labelTranslation = label || t(`${prefixedNameWithoutIndices}.label`) || "";
   const helpTextTranslation = helpText || t(`${prefixedNameWithoutIndices}.helpText`);
+  const descriptionTextTranslation = descriptionText || t(`${prefixedNameWithoutIndices}.descriptionText`);
+
   return (
     <Controller
       control={control}
@@ -63,7 +68,9 @@ function ControlledInputField<T extends Record<string, unknown>>({
           {...field}
           form={formId}
           label={labelTranslation}
+          icon={icon}
           helpText={helpTextTranslation}
+          descriptionText={descriptionTextTranslation}
           error={
             fieldState.error
               ? fieldState.error.message || t(`${prefixedNameWithoutIndices}.error.${fieldState.error.type}`)

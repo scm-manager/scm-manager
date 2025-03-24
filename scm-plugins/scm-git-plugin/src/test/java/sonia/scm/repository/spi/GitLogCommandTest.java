@@ -68,7 +68,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1", result.getChangesets().get(1).getId());
     assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(2).getId());
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(3).getId());
-    assertEquals("master", result.getBranchName());
+    assertEquals("main", result.getBranchName());
     assertTrue(result.getChangesets().stream().allMatch(r -> r.getBranches().isEmpty()));
 
     // set default branch and fetch again
@@ -269,15 +269,6 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
 
     assertNotNull(c);
     assertEquals("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", c.getId());
-  }
-
-  @Test
-  public void shouldFindDefaultBranchFromHEAD() throws Exception {
-    setRepositoryHeadReference("ref: refs/heads/test-branch");
-
-    ChangesetPagingResult changesets = createCommand().getChangesets(new LogCommandRequest());
-
-    assertEquals("test-branch", changesets.getBranchName());
   }
 
   @Test

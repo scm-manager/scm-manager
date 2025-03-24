@@ -97,7 +97,7 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
       log.debug("got exception for invalid branch name {}", request.getNewBranch(), e);
       doThrow().violation("Invalid branch name", "name").when(true);
       return null;
-    } catch (GitAPIException | IOException ex) {
+    } catch (GitAPIException ex) {
       throw new InternalRepositoryException(repository, "could not create branch " + request.getNewBranch(), ex);
     }
   }
@@ -116,7 +116,7 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
       eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
     } catch (CannotDeleteCurrentBranchException e) {
       throw new CannotDeleteDefaultBranchException(context.getRepository(), branchName);
-    } catch (GitAPIException | IOException ex) {
+    } catch (GitAPIException ex) {
       throw new InternalRepositoryException(entity(context.getRepository()), String.format("Could not delete branch: %s", branchName));
     }
   }
@@ -161,12 +161,7 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
 
     @Override
     public HookChangesetProvider getChangesetProvider() {
-      Repository gitRepo;
-      try {
-        gitRepo = context.open();
-      } catch (IOException e) {
-        throw new InternalRepositoryException(repository, "failed to open repository for post receive hook after internal change", e);
-      }
+      Repository gitRepo = context.open();
 
       Collection<ReceiveCommand> receiveCommands = asList(createReceiveCommand());
       return x -> {

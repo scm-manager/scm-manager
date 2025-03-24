@@ -17,9 +17,39 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "@scm-manager/ui-components";
 import { HalRepresentation, Link, Repository } from "@scm-manager/ui-types";
+import { useMutation, useQueryClient } from "react-query";
 
 export type HgRepositoryConfiguration = HalRepresentation & {
   encoding?: string;
+};
+
+export type HgGlobalConfigurationDto = HalRepresentation & {
+  disabled: boolean;
+  allowDisable: boolean;
+  encoding: string;
+  hgBinary?: string | null;
+  showRevisionInId: boolean;
+  enableHttpPostArgs: boolean;
+};
+
+export const useHgAutoConfiguration = (configLink: string) => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading } = useMutation<unknown, Error, HgGlobalConfigurationDto>(
+    (config) => apiClient.put(requiredLink(config, "autoConfiguration"), config),
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(["configLink", configLink]);
+      },
+    }
+  );
+  return { mutate, isLoading };
+};
+
+const requiredLink = (halObject: HalRepresentation, linkName: string): string => {
+  if (!halObject._links[linkName]) {
+    throw new Error("Could not find link: " + linkName);
+  }
+  return (halObject._links[linkName] as Link).href;
 };
 
 export const useHgRepositoryConfiguration = (repository: Repository) => {

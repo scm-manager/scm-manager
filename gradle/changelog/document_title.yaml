@@ -1,2 +1,0 @@
-- type: changed
-  description: Replace title behavior with `useDocumentTitle` hook for setting descriptive document titles

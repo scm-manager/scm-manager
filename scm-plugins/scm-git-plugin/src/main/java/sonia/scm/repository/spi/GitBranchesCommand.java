@@ -53,7 +53,7 @@ public class GitBranchesCommand extends AbstractGitCommand implements BranchesCo
   }
 
   @Override
-  public List<Branch> getBranches() throws IOException {
+  public List<Branch> getBranches() {
     Git git = createGit();
 
     String defaultBranchName = determineDefaultBranchName(git);
@@ -72,7 +72,7 @@ public class GitBranchesCommand extends AbstractGitCommand implements BranchesCo
   }
 
   @VisibleForTesting
-  Git createGit() throws IOException {
+  Git createGit() {
     return new Git(open());
   }
 

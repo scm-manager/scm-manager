@@ -30,6 +30,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.admin.ScmConfigurationStore;
+import sonia.scm.config.SecureKeyService;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
@@ -69,10 +70,22 @@ class ConfigResourceTest {
   private ConfigDtoToScmConfigurationMapperImpl dtoToConfigMapper;
   @InjectMocks
   private ScmConfigurationToConfigDtoMapperImpl configToDtoMapper;
+  @Mock
+  private SecureKeyService secureKeyService;
 
   @BeforeEach
   void prepareEnvironment() {
-    ConfigResource configResource = new ConfigResource(new ScmConfigurationStore(new InMemoryConfigurationStoreFactory(), new ScmConfiguration()), dtoToConfigMapper, configToDtoMapper, namespaceStrategyValidator, jsonMerger);
+    ConfigResource configResource = new ConfigResource(
+      new ScmConfigurationStore(
+        new InMemoryConfigurationStoreFactory(),
+        new ScmConfiguration()
+      ),
+      dtoToConfigMapper,
+      configToDtoMapper,
+      namespaceStrategyValidator,
+      jsonMerger,
+      secureKeyService
+    );
 
     dispatcher.addSingletonResource(configResource);
   }
@@ -108,7 +121,7 @@ class ConfigResourceTest {
     permissions = "configuration:read,write:global"
   )
   void shouldUpdateConfig() throws URISyntaxException, IOException {
-    MockHttpRequest request = put("sonia/scm/api/v2/config-test-update.json");
+    MockHttpRequest request = put();
 
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
@@ -128,7 +141,7 @@ class ConfigResourceTest {
 
   @Test
   void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException, IOException {
-    MockHttpRequest request = put("sonia/scm/api/v2/config-test-update.json");
+    MockHttpRequest request = put();
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -185,8 +198,8 @@ class ConfigResourceTest {
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_FORBIDDEN);
   }
 
-  private MockHttpRequest put(String resourceName) throws IOException, URISyntaxException {
-    URL url = Resources.getResource(resourceName);
+  private MockHttpRequest put() throws IOException, URISyntaxException {
+    URL url = Resources.getResource("sonia/scm/api/v2/config-test-update.json");
     byte[] configJson = Resources.toByteArray(url);
     return MockHttpRequest.put("/" + ConfigResource.CONFIG_PATH_V2)
       .contentType(VndMediaType.CONFIG)

@@ -28,7 +28,6 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useTranslation } from "react-i18next";
 import { withForwardRef } from "../helpers";
 import { Option } from "@scm-manager/ui-types";
-import { waitForRestartAfter } from "@scm-manager/ui-api";
 
 const StyledChipInput: typeof ChipInput = styled(ChipInput)`
   min-height: 40px;

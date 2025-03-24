@@ -95,7 +95,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
     if (!value && field.current?.value) {
       if (props.onChange) {
         if (isUsingRef<BaseProps, HTMLSelectElement, string>(props)) {
-          const event = new Event("change");
+          const event: Event = new CustomEvent("change", { bubbles: true, detail: { target: field } });
           field.current?.dispatchEvent(event);
         } else if (isLegacy(props)) {
           props.onChange(field.current?.value, name);

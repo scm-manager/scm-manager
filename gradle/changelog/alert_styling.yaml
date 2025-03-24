@@ -1,0 +1,2 @@
+- type: fixed
+  description: Incorrect alert message styling for long version conditions

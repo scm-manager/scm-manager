@@ -22,8 +22,9 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.GpgSigner;
+import org.eclipse.jgit.lib.GpgConfig;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Signers;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.junit.After;
@@ -81,7 +82,7 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
 
   @Before
   public void setSigner() {
-    GpgSigner.setDefault(new GitTestHelper.SimpleGpgSigner());
+    Signers.set(GpgConfig.GpgFormat.OPENPGP, new GitTestHelper.SimpleGpgSigner());
   }
 
   @Before

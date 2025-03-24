@@ -21,19 +21,37 @@ import React from "react";
 storiesOf("Duration", module).add("Duration", () => (
   <div className="m-5 p-5">
     <p>
+      <Duration duration={1} />
+    </p>
+    <p>
       <Duration duration={500} />
+    </p>
+    <p>
+      <Duration duration={1000 + 1} />
     </p>
     <p>
       <Duration duration={2000} />
     </p>
     <p>
+      <Duration duration={1000 * 60 + 1} />
+    </p>
+    <p>
       <Duration duration={42 * 1000 * 60} />
+    </p>
+    <p>
+      <Duration duration={1000 * 60 * 60 + 1} />
     </p>
     <p>
       <Duration duration={21 * 1000 * 60 * 60} />
     </p>
     <p>
+      <Duration duration={1000 * 60 * 60 * 24 + 1} />
+    </p>
+    <p>
       <Duration duration={5 * 1000 * 60 * 60 * 24} />
+    </p>
+    <p>
+      <Duration duration={1000 * 60 * 60 * 24 * 7 + 1} />
     </p>
     <p>
       <Duration duration={3 * 1000 * 60 * 60 * 24 * 7} />

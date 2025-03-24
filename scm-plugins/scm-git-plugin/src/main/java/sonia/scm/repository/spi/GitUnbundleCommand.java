@@ -73,11 +73,11 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
       List<String> branches = extractBranches(git);
       List<Tag> tags = extractTags(git);
       GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(context.getRepository(), git);
-      RepositoryHookEvent event = eventFactory.createEvent(context, branches, tags, changesetResolver);
+      RepositoryHookEvent event = eventFactory.createPostReceiveEvent(context, branches, tags, changesetResolver);
       if (event != null) {
         request.getPostEventSink().accept(event);
       }
-    } catch (IOException | GitAPIException e) {
+    } catch (GitAPIException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(context.getRepository()).build(),
         "Could not fire post receive repository hook event after unbundle",

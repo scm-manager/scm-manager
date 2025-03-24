@@ -19,7 +19,8 @@ package sonia.scm.repository;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
-import org.eclipse.jgit.lib.GpgSigner;
+import org.eclipse.jgit.lib.GpgConfig;
+import org.eclipse.jgit.lib.Signers;
 import sonia.scm.plugin.Extension;
 
 @Extension
@@ -34,7 +35,7 @@ public class ScmGpgSignerInitializer implements ServletContextListener {
 
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent) {
-    GpgSigner.setDefault(scmGpgSigner);
+    Signers.set(GpgConfig.GpgFormat.OPENPGP, scmGpgSigner);
   }
 
   @Override

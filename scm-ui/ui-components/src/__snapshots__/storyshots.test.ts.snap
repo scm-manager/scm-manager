@@ -70,19 +70,23 @@ exports[`Storyshots BreadCrumb Default 1`] = `
       aria-label="breadcrumbs"
       className="Breadcrumb__BreadcrumbNav-sc-zvtb4t-1 dInwRH breadcrumb sources-breadcrumb mx-2 my-4 is-flex is-align-items-center is-full-width"
     >
-      <ul>
+      <ul
+        aria-label="breadcrumb.currentPath"
+      >
         <li>
           <a
             aria-label="breadcrumb.home"
             href="/scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources/1/"
             onClick={[Function]}
           >
-            <i
-              aria-label="breadcrumb.home"
-              className="fas fa-fw fa-home has-text-inherit Breadcrumb__HomeIcon-sc-zvtb4t-2 jOnsqH"
-              onKeyPress={[Function]}
-              title="breadcrumb.home"
-            />
+            <span
+              aria-hidden="true"
+              className="Breadcrumb__HomeIcon-sc-zvtb4t-2 jOnsqH icon"
+            >
+              <i
+                className="has-text-inherit fas fa-fw fa-home"
+              />
+            </span>
           </a>
         </li>
         <li>
@@ -140,23 +144,27 @@ exports[`Storyshots BreadCrumb Default 1`] = `
         </li>
       </ul>
       <span
-        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI"
-        onKeyDown={[Function]}
-        tabIndex={0}
+        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI icon"
       >
-        <div
-          className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
+        <span
+          alt="breadcrumb.copyPermalink"
+          aria-hidden="false"
+          aria-label="breadcrumb.copyPermalink"
+          className="focus-zone has-cursor-pointer icon"
+          data-state="closed"
+          onBlur={[Function]}
           onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onPointerDown={[Function]}
+          onPointerLeave={[Function]}
+          onPointerMove={[Function]}
+          tabIndex={0}
         >
           <i
-            aria-label="breadcrumb.copyPermalink"
-            className="fas fa-fw fa-link has-text-inherit"
-            onClick={[Function]}
-            onKeyPress={[Function]}
+            className="has-text-inherit fas fa-fw fa-link"
           />
-        </div>
+        </span>
       </span>
     </nav>
     <div
@@ -180,19 +188,23 @@ exports[`Storyshots BreadCrumb Long path 1`] = `
       aria-label="breadcrumbs"
       className="Breadcrumb__BreadcrumbNav-sc-zvtb4t-1 dInwRH breadcrumb sources-breadcrumb mx-2 my-4 is-flex is-align-items-center is-full-width"
     >
-      <ul>
+      <ul
+        aria-label="breadcrumb.currentPath"
+      >
         <li>
           <a
             aria-label="breadcrumb.home"
             href="/scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources/1/"
             onClick={[Function]}
           >
-            <i
-              aria-label="breadcrumb.home"
-              className="fas fa-fw fa-home has-text-inherit Breadcrumb__HomeIcon-sc-zvtb4t-2 jOnsqH"
-              onKeyPress={[Function]}
-              title="breadcrumb.home"
-            />
+            <span
+              aria-hidden="true"
+              className="Breadcrumb__HomeIcon-sc-zvtb4t-2 jOnsqH icon"
+            >
+              <i
+                className="has-text-inherit fas fa-fw fa-home"
+              />
+            </span>
           </a>
         </li>
         <li>
@@ -300,23 +312,27 @@ exports[`Storyshots BreadCrumb Long path 1`] = `
         </li>
       </ul>
       <span
-        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI"
-        onKeyDown={[Function]}
-        tabIndex={0}
+        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI icon"
       >
-        <div
-          className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
+        <span
+          alt="breadcrumb.copyPermalink"
+          aria-hidden="false"
+          aria-label="breadcrumb.copyPermalink"
+          className="focus-zone has-cursor-pointer icon"
+          data-state="closed"
+          onBlur={[Function]}
           onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onPointerDown={[Function]}
+          onPointerLeave={[Function]}
+          onPointerMove={[Function]}
+          tabIndex={0}
         >
           <i
-            aria-label="breadcrumb.copyPermalink"
-            className="fas fa-fw fa-link has-text-inherit"
-            onClick={[Function]}
-            onKeyPress={[Function]}
+            className="has-text-inherit fas fa-fw fa-link"
           />
-        </div>
+        </span>
       </span>
     </nav>
     <div
@@ -340,12 +356,18 @@ exports[`Storyshots BreadCrumb Not clickable 1`] = `
       aria-label="breadcrumbs"
       className="Breadcrumb__BreadcrumbNav-sc-zvtb4t-1 dInwRH breadcrumb sources-breadcrumb mx-2 my-4 is-flex is-align-items-center is-full-width"
     >
-      <ul>
+      <ul
+        aria-label="breadcrumb.currentPath"
+      >
         <li>
-          <i
-            className="fas fa-fw fa-home has-text-inherit mr-3"
-            onKeyPress={[Function]}
-          />
+          <span
+            aria-hidden="true"
+            className="mr-3 icon"
+          >
+            <i
+              className="fas fa-fw fa-home"
+            />
+          </span>
         </li>
         <li>
           <span
@@ -391,23 +413,27 @@ exports[`Storyshots BreadCrumb Not clickable 1`] = `
         </li>
       </ul>
       <span
-        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI"
-        onKeyDown={[Function]}
-        tabIndex={0}
+        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI icon"
       >
-        <div
-          className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
+        <span
+          alt="breadcrumb.copyPermalink"
+          aria-hidden="false"
+          aria-label="breadcrumb.copyPermalink"
+          className="focus-zone has-cursor-pointer icon"
+          data-state="closed"
+          onBlur={[Function]}
           onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onPointerDown={[Function]}
+          onPointerLeave={[Function]}
+          onPointerMove={[Function]}
+          tabIndex={0}
         >
           <i
-            aria-label="breadcrumb.copyPermalink"
-            className="fas fa-fw fa-link has-text-inherit"
-            onClick={[Function]}
-            onKeyPress={[Function]}
+            className="has-text-inherit fas fa-fw fa-link"
           />
-        </div>
+        </span>
       </span>
     </nav>
     <div
@@ -444,19 +470,23 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
           />
         </a>
       </div>
-      <ul>
+      <ul
+        aria-label="breadcrumb.currentPath"
+      >
         <li>
           <a
             aria-label="breadcrumb.home"
             href="/scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources/1/"
             onClick={[Function]}
           >
-            <i
-              aria-label="breadcrumb.home"
-              className="fas fa-fw fa-home has-text-inherit Breadcrumb__HomeIcon-sc-zvtb4t-2 jOnsqH"
-              onKeyPress={[Function]}
-              title="breadcrumb.home"
-            />
+            <span
+              aria-hidden="true"
+              className="Breadcrumb__HomeIcon-sc-zvtb4t-2 jOnsqH icon"
+            >
+              <i
+                className="has-text-inherit fas fa-fw fa-home"
+              />
+            </span>
           </a>
         </li>
         <li>
@@ -514,23 +544,27 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
         </li>
       </ul>
       <span
-        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI"
-        onKeyDown={[Function]}
-        tabIndex={0}
+        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI icon"
       >
-        <div
-          className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
+        <span
+          alt="breadcrumb.copyPermalink"
+          aria-hidden="false"
+          aria-label="breadcrumb.copyPermalink"
+          className="focus-zone has-cursor-pointer icon"
+          data-state="closed"
+          onBlur={[Function]}
           onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onPointerDown={[Function]}
+          onPointerLeave={[Function]}
+          onPointerMove={[Function]}
+          tabIndex={0}
         >
           <i
-            aria-label="breadcrumb.copyPermalink"
-            className="fas fa-fw fa-link has-text-inherit"
-            onClick={[Function]}
-            onKeyPress={[Function]}
+            className="has-text-inherit fas fa-fw fa-link"
           />
-        </div>
+        </span>
       </span>
     </nav>
     <div
@@ -1523,9 +1557,23 @@ exports[`Storyshots Duration Duration 1`] = `
 >
   <p>
     <time
+      dateTime="1ms"
+    >
+      duration.ms
+    </time>
+  </p>
+  <p>
+    <time
       dateTime="500ms"
     >
       duration.ms
+    </time>
+  </p>
+  <p>
+    <time
+      dateTime="1s"
+    >
+      duration.s
     </time>
   </p>
   <p>
@@ -1537,9 +1585,23 @@ exports[`Storyshots Duration Duration 1`] = `
   </p>
   <p>
     <time
+      dateTime="1m"
+    >
+      duration.m
+    </time>
+  </p>
+  <p>
+    <time
       dateTime="42m"
     >
       duration.m
+    </time>
+  </p>
+  <p>
+    <time
+      dateTime="1h"
+    >
+      duration.h
     </time>
   </p>
   <p>
@@ -1551,9 +1613,23 @@ exports[`Storyshots Duration Duration 1`] = `
   </p>
   <p>
     <time
+      dateTime="1d"
+    >
+      duration.d
+    </time>
+  </p>
+  <p>
+    <time
       dateTime="5d"
     >
       duration.d
+    </time>
+  </p>
+  <p>
+    <time
+      dateTime="1w"
+    >
+      duration.w
     </time>
   </p>
   <p>
@@ -20399,25 +20475,26 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -20425,19 +20502,20 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -20560,25 +20638,26 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -20586,19 +20665,20 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -20679,25 +20759,26 @@ exports[`Storyshots Repositories/Changesets Default 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -20705,19 +20786,20 @@ exports[`Storyshots Repositories/Changesets Default 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -20819,25 +20901,26 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -20845,19 +20928,20 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -20943,25 +21027,26 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -20969,19 +21054,20 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21055,25 +21141,26 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21081,19 +21168,20 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21184,25 +21272,26 @@ exports[`Storyshots Repositories/Changesets Replacements 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21210,19 +21299,20 @@ exports[`Storyshots Repositories/Changesets Replacements 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21315,25 +21405,26 @@ exports[`Storyshots Repositories/Changesets With Committer 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21341,19 +21432,20 @@ exports[`Storyshots Repositories/Changesets With Committer 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21455,25 +21547,26 @@ exports[`Storyshots Repositories/Changesets With Committer and Co-Author 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21481,19 +21574,20 @@ exports[`Storyshots Repositories/Changesets With Committer and Co-Author 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21587,25 +21681,26 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21613,19 +21708,20 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21715,25 +21811,26 @@ exports[`Storyshots Repositories/Changesets With contactless signature 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21741,19 +21838,20 @@ exports[`Storyshots Repositories/Changesets With contactless signature 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21843,25 +21941,26 @@ exports[`Storyshots Repositories/Changesets With invalid signature 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21869,19 +21968,20 @@ exports[`Storyshots Repositories/Changesets With invalid signature 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21975,25 +22075,26 @@ exports[`Storyshots Repositories/Changesets With multiple Co-Authors 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22001,19 +22102,20 @@ exports[`Storyshots Repositories/Changesets With multiple Co-Authors 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -22103,25 +22205,26 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and invalid
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22129,19 +22232,20 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and invalid
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -22231,25 +22335,26 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and not fou
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22257,19 +22362,20 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and not fou
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -22359,25 +22465,26 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and valid s
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22385,19 +22492,20 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and valid s
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -22487,25 +22595,26 @@ exports[`Storyshots Repositories/Changesets With unknown signature 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22513,19 +22622,20 @@ exports[`Storyshots Repositories/Changesets With unknown signature 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -22615,25 +22725,26 @@ exports[`Storyshots Repositories/Changesets With unowned signature 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22641,19 +22752,20 @@ exports[`Storyshots Repositories/Changesets With unowned signature 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -22743,25 +22855,26 @@ exports[`Storyshots Repositories/Changesets With valid signature 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22769,19 +22882,20 @@ exports[`Storyshots Repositories/Changesets With valid signature 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -23699,29 +23813,37 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-down"
+                        />
+                      </span>
                       diff.expandLastBottomByLines
-                    </span>
+                    </button>
                      
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-down"
+                        />
+                      </span>
                       diff.expandLastBottomComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -23845,18 +23967,22 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-up"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-up"
+                        />
+                      </span>
                       diff.expandComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -24047,18 +24173,22 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-down"
+                        />
+                      </span>
                       diff.expandComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -24072,18 +24202,22 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-up"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-up"
+                        />
+                      </span>
                       diff.expandComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -24671,29 +24805,37 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-down"
+                        />
+                      </span>
                       diff.expandLastBottomByLines
-                    </span>
+                    </button>
                      
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-down"
+                        />
+                      </span>
                       diff.expandLastBottomComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -24817,29 +24959,37 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-up"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-up"
+                        />
+                      </span>
                       diff.expandByLines
-                    </span>
+                    </button>
                      
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-up"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-up"
+                        />
+                      </span>
                       diff.expandComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -25214,29 +25364,37 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-down"
+                        />
+                      </span>
                       diff.expandLastBottomByLines
-                    </span>
+                    </button>
                      
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-down"
+                        />
+                      </span>
                       diff.expandLastBottomComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -25360,29 +25518,37 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-up"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-up"
+                        />
+                      </span>
                       diff.expandByLines
-                    </span>
+                    </button>
                      
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-up"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-up"
+                        />
+                      </span>
                       diff.expandComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -25757,29 +25923,37 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-down"
+                        />
+                      </span>
                       diff.expandLastBottomByLines
-                    </span>
+                    </button>
                      
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-down"
+                        />
+                      </span>
                       diff.expandLastBottomComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -25903,18 +26077,22 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-up"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-up"
+                        />
+                      </span>
                       diff.expandComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -26422,29 +26600,37 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-down"
+                        />
+                      </span>
                       diff.expandByLines
-                    </span>
+                    </button>
                      
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-down"
+                        />
+                      </span>
                       diff.expandComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -26458,29 +26644,37 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-up"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-up"
+                        />
+                      </span>
                       diff.expandByLines
-                    </span>
+                    </button>
                      
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-up"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-up"
+                        />
+                      </span>
                       diff.expandComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -26694,18 +26888,22 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-down"
+                        />
+                      </span>
                       diff.expandComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -26719,18 +26917,22 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-up"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-up"
+                        />
+                      </span>
                       diff.expandComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -26990,29 +27192,37 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-down"
+                        />
+                      </span>
                       diff.expandLastBottomByLines
-                    </span>
+                    </button>
                      
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-down"
+                        />
+                      </span>
                       diff.expandLastBottomComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -27573,29 +27783,37 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                   colSpan={3}
                 >
                   <div
-                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                    className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                   >
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-down"
+                        />
+                      </span>
                       diff.expandLastBottomByLines
-                    </span>
+                    </button>
                      
-                    <span
-                      className="is-clickable"
+                    <button
+                      className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                       onClick={[Function]}
                     >
-                      <i
-                        className="fa fa-angle-double-down"
-                      />
-                       
+                      <span
+                        aria-hidden="true"
+                        className="icon"
+                      >
+                        <i
+                          className="fas fa-fw fa-angle-double-down"
+                        />
+                      </span>
                       diff.expandLastBottomComplete
-                    </span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -31178,29 +31396,37 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -31324,18 +31550,22 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -31526,18 +31756,22 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -31551,18 +31785,22 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -32150,29 +32388,37 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -32296,29 +32542,37 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-up"
+                      />
+                    </span>
                     diff.expandByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -32693,29 +32947,37 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -32839,29 +33101,37 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-up"
+                      />
+                    </span>
                     diff.expandByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -33236,29 +33506,37 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -33382,18 +33660,22 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -33901,29 +34183,37 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -33937,29 +34227,37 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-up"
+                      />
+                    </span>
                     diff.expandByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -34173,18 +34471,22 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -34198,18 +34500,22 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -34469,29 +34775,37 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -35052,29 +35366,37 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -35696,29 +36018,37 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -35842,18 +36172,22 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -36044,18 +36378,22 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -36069,18 +36407,22 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -36668,29 +37010,37 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -36814,29 +37164,37 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-up"
+                      />
+                    </span>
                     diff.expandByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -37211,29 +37569,37 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -37357,29 +37723,37 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-up"
+                      />
+                    </span>
                     diff.expandByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -37754,29 +38128,37 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -37900,18 +38282,22 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -38419,29 +38805,37 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -38455,29 +38849,37 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-up"
+                      />
+                    </span>
                     diff.expandByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -38691,18 +39093,22 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -38716,18 +39122,22 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -38987,29 +39397,37 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -39570,29 +39988,37 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -63714,18 +64140,22 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -63939,29 +64369,37 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -72679,29 +73117,37 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -72825,18 +73271,22 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -73027,18 +73477,22 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -73052,18 +73506,22 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -73651,29 +74109,37 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -73797,29 +74263,37 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-up"
+                      />
+                    </span>
                     diff.expandByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -74194,29 +74668,37 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -74340,29 +74822,37 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-up"
+                      />
+                    </span>
                     diff.expandByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -74737,29 +75227,37 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -74883,18 +75381,22 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -75402,29 +75904,37 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -75438,29 +75948,37 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-up"
+                      />
+                    </span>
                     diff.expandByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -75674,18 +76192,22 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -75699,18 +76221,22 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-up"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-up"
+                      />
+                    </span>
                     diff.expandComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -75970,29 +76496,37 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -76553,29 +77087,37 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
                 colSpan={3}
               >
                 <div
-                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 fZfcvP is-size-7 pl-5"
+                  className="HunkExpandDivider__HunkDivider-sc-1f1gat0-0 iXjkKp is-size-7 pl-5"
                 >
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-down"
+                      />
+                    </span>
                     diff.expandLastBottomByLines
-                  </span>
+                  </button>
                    
-                  <span
-                    className="is-clickable"
+                  <button
+                    className="hunk-expander is-clickable diff-decoration-content has-background-transparent is-borderless pr-2"
                     onClick={[Function]}
                   >
-                    <i
-                      className="fa fa-angle-double-down"
-                    />
-                     
+                    <span
+                      aria-hidden="true"
+                      className="icon"
+                    >
+                      <i
+                        className="fas fa-fw fa-angle-double-down"
+                      />
+                    </span>
                     diff.expandLastBottomComplete
-                  </span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -77730,11 +78272,18 @@ exports[`Storyshots Secondary Navigation Active when match 1`] = `
       <div>
         <button
           aria-label="secondaryNavigation.hideContent"
-          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label is-clickable"
+          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label"
           collapsed={false}
           onClick={[Function]}
           type="button"
         >
+          <i
+            className="SecondaryNavigation__Icon-sc-8p1rgi-1 gqxbcY is-medium"
+          >
+            <i
+              className="fas fa-caret-down"
+            />
+          </i>
           Hitchhiker
         </button>
         <ul
@@ -77787,7 +78336,7 @@ exports[`Storyshots Secondary Navigation Default 1`] = `
       <div>
         <button
           aria-label="secondaryNavigation.hideContent"
-          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label is-clickable"
+          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label"
           collapsed={false}
           onClick={[Function]}
           type="button"
@@ -77850,7 +78399,7 @@ exports[`Storyshots Secondary Navigation Extension Point 1`] = `
       <div>
         <button
           aria-label="secondaryNavigation.hideContent"
-          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label is-clickable"
+          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label"
           collapsed={false}
           onClick={[Function]}
           type="button"
@@ -77941,7 +78490,7 @@ exports[`Storyshots Secondary Navigation Sub Navigation 1`] = `
       <div>
         <button
           aria-label="secondaryNavigation.hideContent"
-          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label is-clickable"
+          className="button SecondaryNavigation__MenuButton-sc-8p1rgi-2 fkeiWf menu-label"
           collapsed={false}
           onClick={[Function]}
           type="button"
@@ -84759,6 +85308,7 @@ exports[`Storyshots Tag With title 1`] = `
 >
   <span
     className="tag is-light is-normal"
+    title="good job"
   >
     hover me
   </span>

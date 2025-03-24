@@ -33,6 +33,7 @@ export * from "./repositories";
 export * from "./namespaces";
 export * from "./branches";
 export * from "./changesets";
+export * from "./revert";
 export * from "./tags";
 export * from "./config";
 export * from "./admin";

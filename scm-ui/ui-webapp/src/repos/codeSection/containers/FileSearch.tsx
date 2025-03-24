@@ -14,15 +14,15 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { Link, useHistory, useLocation, useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import { urls, usePaths } from "@scm-manager/ui-api";
-import { createA11yId, ErrorNotification, FilterInput, Help, Icon, Loading } from "@scm-manager/ui-components";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { createA11yId } from "@scm-manager/ui-components";
+import { ErrorNotification, Icon, Loading, Notification, InputField, useDocumentTitle } from "@scm-manager/ui-core";
 import CodeActionBar from "../components/CodeActionBar";
 import FileSearchResults from "../components/FileSearchResults";
 import { filepathSearch } from "../utils/filepathSearch";
@@ -57,10 +57,10 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
   const location = useLocation();
   const history = useHistory();
   const { isLoading, error, data } = usePaths(repository, revision);
-  const [result, setResult] = useState<string[]>([]);
   const query = urls.getQueryStringFromLocation(location) || "";
   const prevSourcePath = urls.getPrevSourcePathFromLocation(location) || "";
   const [t] = useTranslation("repos");
+
   useDocumentTitle(
     t("fileSearch.searchWithRevisionAndNamespaceName", {
       revision: decodeURIComponent(revision),
@@ -70,25 +70,32 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
   );
   const [firstSelectedBranch] = useState<string | undefined>(selectedBranch);
 
-  useEffect(() => {
-    if (query.length > 1 && data) {
-      setResult(filepathSearch(data.paths, query));
-    } else {
-      setResult([]);
-    }
-  }, [data, query]);
+  let result: string[];
 
-  const search = (query: string) => {
+  if (data && query && query.length > 1) {
+    result = filepathSearch(data.paths, query);
+  } else {
+    result = [];
+  }
+
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.currentTarget.value;
     const prevSourceQuery = urls.createPrevSourcePathQuery(prevSourcePath);
-    history.push(`${location.pathname}?q=${encodeURIComponent(query)}${prevSourceQuery ? `&${prevSourceQuery}` : ""}`);
+    if (prevSourceQuery) {
+      history.push(`${location.pathname}?q=${encodeURIComponent(query)}`);
+    } else {
+      history.push(`${location.pathname}?q=${encodeURIComponent(query)}&${prevSourceQuery}`);
+    }
   };
 
   const onSelectBranch = (branch?: Branch) => {
     if (branch) {
       const prevSourceQuery = urls.createPrevSourcePathQuery(prevSourcePath);
-      history.push(
-        `${baseUrl}/search/${encodeURIComponent(branch.name)}?q=${query}${prevSourceQuery ? `&${prevSourceQuery}` : ""}`
-      );
+      if (prevSourceQuery) {
+        history.push(`${baseUrl}/search/${encodeURIComponent(branch.name)}?q=${query}&${prevSourceQuery}`);
+      } else {
+        history.push(`${baseUrl}/search/${encodeURIComponent(branch.name)}?q=${query}`);
+      }
     }
   };
 
@@ -107,11 +114,46 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
       }`;
     }
 
-    return `${baseUrl}/changesets/${prevSourcePath ? `?${urls.createPrevSourcePathQuery(prevSourcePath)}` : ""}`;
+    if (prevSourcePath) {
+      return `${baseUrl}/changesets/${urls.createPrevSourcePathQuery(prevSourcePath)}`;
+    } else {
+      return `${baseUrl}/changesets/${prevSourcePath}`;
+    }
   };
 
   const contentBaseUrl = `${baseUrl}/sources/${revision}/`;
-  const id = createA11yId("file-search");
+
+  const fileSearchDescriptionId = createA11yId("fileSearchDescription");
+  let body;
+
+  if (query.length <= 1) {
+    body = (
+      <Notification className="m-4" type="info" hidden={query.length > 1}>
+        <p id={fileSearchDescriptionId}>{t("fileSearch.input.help")}</p>
+      </Notification>
+    );
+  } else if (!isLoading && result.length === 0) {
+    const queryCmp = <strong>{query}</strong>;
+    body = (
+      <p className="mt-3" id={fileSearchDescriptionId}>
+        <Trans i18nKey="repos:fileSearch.notifications.emptyResult" values={{ query }} components={[queryCmp]} />
+      </p>
+    );
+  } else {
+    body = (
+      <>
+        <p
+          className="pl-4 has-text-weight-semibold"
+          hidden={query.length <= 1}
+          id={fileSearchDescriptionId}
+          aria-hidden={true}
+        >
+          {t("fileSearch.results", { count: result.length })}
+        </p>
+        <FileSearchResults contentBaseUrl={contentBaseUrl} paths={result} />
+      </>
+    );
+  }
 
   return (
     <>
@@ -135,27 +177,28 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
         >
           <HomeLink
             className={classNames("mr-3", "pr-3")}
+            aria-label={t("fileSearch.home")}
             to={firstSelectedBranch !== selectedBranch ? contentBaseUrl : () => evaluateSwitchViewLink("sources")}
           >
-            <HomeIcon
-              title={t("fileSearch.home")}
-              name={firstSelectedBranch !== selectedBranch ? "home" : "arrow-left"}
-              color="inherit"
-            />
+            <HomeIcon title={t("fileSearch.home")} color="inherit">
+              {firstSelectedBranch !== selectedBranch ? "home" : "arrow-left"}
+            </HomeIcon>
           </HomeLink>
-          <FilterInput
-            className="is-full-width pr-2"
-            placeholder={t("fileSearch.input.placeholder")}
-            value={query}
-            filter={search}
+          <InputField
             autoFocus={true}
-            id={id}
+            placeholder={t("fileSearch.input.placeholder")}
+            className="is-full-width is-flex pr-2"
+            label=""
+            labelClassName="mr-2 mt-2"
+            defaultValue={query}
+            aria-describedby={fileSearchDescriptionId}
             testId="file_search_filter_input"
+            icon="fas fa-search"
+            onChange={onSearch}
           />
-          <Help message={t("fileSearch.input.help")} id={id} />
         </div>
         <ErrorNotification error={error} />
-        {isLoading ? <Loading /> : <FileSearchResults contentBaseUrl={contentBaseUrl} query={query} paths={result} />}
+        <div className="panel-block">{isLoading ? <Loading /> : body}</div>
       </div>
     </>
   );

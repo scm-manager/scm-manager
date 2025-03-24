@@ -37,7 +37,7 @@ const determineInitialValue = <T>(key: string, initialValue: T) => {
  */
 export function useLocalStorage<T>(key: string, initialValue: T): [value: T, setValue: LocalStorageSetter<T>] {
   const initialValueOrValueFromStorage = useMemo(() => determineInitialValue(key, initialValue), [key, initialValue]);
-  const [item, setItem] = useState(initialValueOrValueFromStorage);
+  const [item, setItem] = useState<T>(initialValueOrValueFromStorage);
 
   useEffect(() => {
     const listener = (event: StorageEvent) => {
@@ -50,14 +50,27 @@ export function useLocalStorage<T>(key: string, initialValue: T): [value: T, set
   }, [key, initialValue]);
 
   const setValue: LocalStorageSetter<T> = (newValue) => {
-    const computedNewValue = newValue instanceof Function ? newValue(item) : newValue;
-    setItem(computedNewValue);
-    const json = JSON.stringify(computedNewValue);
-    localStorage.setItem(key, json);
-    // storage event is no triggered in same tab
-    window.dispatchEvent(
-      new StorageEvent("storage", { key, oldValue: item, newValue: json, storageArea: localStorage })
-    );
+    // We've got to use setItem here to get the actual current value for item, not the one we got when this function was
+    // created, in other words: We want to get rid of the dependency to item to get a similar behaviour as the setter
+    // from useState.
+    // (We also could wrap this function in a useCallback, but then we'd had to put this function in a dependency array
+    // when we use this function so that we always refer to the current function. This is not the case for useState.)
+    setItem((oldValue) => {
+      const computedNewValue = newValue instanceof Function ? newValue(oldValue) : newValue;
+      setItem(computedNewValue);
+      const json = JSON.stringify(computedNewValue);
+      localStorage.setItem(key, json);
+      // storage event is not triggered in same tab
+      window.dispatchEvent(
+        new StorageEvent("storage", {
+          key,
+          oldValue: JSON.stringify(oldValue),
+          newValue: json,
+          storageArea: localStorage,
+        })
+      );
+      return computedNewValue;
+    });
   };
 
   return [item, setValue];

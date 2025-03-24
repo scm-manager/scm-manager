@@ -14,16 +14,32 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-export const jestMock = jest.mock("react-i18next", () => ({
-  // this mock makes sure any components using the translate HoC receive the t function as a prop
-  withTranslation: () => (Component: any) => {
-    Component.defaultProps = {
-      ...Component.defaultProps,
-      t: (key: string) => key
-    };
-    return Component;
-  },
-  useTranslation: (ns: string) => {
-    return [(key: string) => key];
-  }
-}));
+import { initReactI18next } from "react-i18next";
+import i18n from "i18next";
+
+/**
+ * This provides a minimum i18next scaffold during initialization of a unit test.
+ *
+ * It does not connect to the i18next information used in production,
+ * but avoids warnings emerging due to i18next being uninitialized.
+ *
+ * More information: <a href="https://react.i18next.com/misc/testing">https://react.i18next.com/misc/testing</a>
+ */
+export function stubI18Next() {
+  // TODO should be changed to async/await
+  i18n.use(initReactI18next).init({
+    lng: "de",
+    fallbackLng: "en",
+
+    ns: ["translationsNS"],
+    defaultNS: "translationsNS",
+
+    debug: false,
+
+    interpolation: {
+      escapeValue: false,
+    },
+
+    resources: { en: { translationsNS: {} } },
+  });
+}

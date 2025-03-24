@@ -16,13 +16,10 @@
 
 package sonia.scm.repository.xml;
 
-
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
@@ -37,7 +34,6 @@ import sonia.scm.store.StoreReadOnlyException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -45,8 +41,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 
 @Singleton
 @Slf4j
@@ -61,9 +55,6 @@ public class XmlRepositoryDAO implements RepositoryDAO {
   private final Map<String, Repository> byId;
   private final Map<NamespaceAndName, Repository> byNamespaceAndName;
   private final ReadWriteLock byNamespaceLock = new ReentrantReadWriteLock();
-
-  private static final Logger LOG = LoggerFactory.getLogger(XmlRepositoryDAO.class);
-
 
   @Inject
   public XmlRepositoryDAO(PathBasedRepositoryLocationResolver repositoryLocationResolver, FileSystem fileSystem, RepositoryExportingCheck repositoryExportingCheck) {
@@ -99,10 +90,10 @@ public class XmlRepositoryDAO implements RepositoryDAO {
       pathRepositoryLocationResolverInstance.forAllLocations((repositoryId, repositoryPath) -> {
         try {
           Repository repository = metadataStore.read(repositoryPath);
-        if (byNamespaceAndName.containsKey(repository.getNamespaceAndName())) {
-          LOG.warn("Duplicate repository found. Adding suffix DUPLICATE to repository {}", repository);
-          repository.setName(repository.getName() + "-" + repositoryId + "-DUPLICATE");
-        }
+          if (byNamespaceAndName.containsKey(repository.getNamespaceAndName())) {
+            log.warn("Duplicate repository found. Adding suffix DUPLICATE to repository {}", repository);
+            repository.setName(repository.getName() + "-" + repositoryId + "-DUPLICATE");
+          }
           byNamespaceAndName.put(repository.getNamespaceAndName(), repository);
           byId.put(repositoryId, repository);
         } catch (InternalRepositoryException e) {

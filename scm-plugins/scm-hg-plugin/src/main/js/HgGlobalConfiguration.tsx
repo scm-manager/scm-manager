@@ -16,23 +16,55 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Configuration } from "@scm-manager/ui-components";
-import { Title, useDocumentTitle } from "@scm-manager/ui-core";
-import HgConfigurationForm from "./HgConfigurationForm";
+import { Button, ConfigurationForm, Form, Title, useDocumentTitle } from "@scm-manager/ui-core";
+import { SmallLoadingSpinner, validation } from "@scm-manager/ui-components";
+import { HgGlobalConfigurationDto, useHgAutoConfiguration } from "./hooks";
 
 type Props = {
   link: string;
 };
 
 const HgGlobalConfiguration: FC<Props> = ({ link }) => {
+  const { mutate: triggerAutoConfiguration, isLoading: isAutoConfigLoading } = useHgAutoConfiguration(link);
   const [t] = useTranslation("plugins");
   useDocumentTitle(t("scm-hg-plugin.config.title"));
 
+  const isHgBinaryValid = (hgBinaryPath: string | undefined | null) => {
+    return !hgBinaryPath || validation.isPathValid(hgBinaryPath);
+  };
+
   return (
-    <div>
-      <Title>{t("scm-hg-plugin.config.title")}</Title>
-      <Configuration link={link} render={(props: any) => <HgConfigurationForm {...props} />} />
-    </div>
+    <ConfigurationForm<HgGlobalConfigurationDto> link={link} translationPath={["plugins", "scm-hg-plugin.config"]}>
+      {({ watch, getValues }) => (
+        <>
+          <Title>{t("scm-hg-plugin.config.title")}</Title>
+          <Form.Row>
+            <Form.Checkbox name="disabled" readOnly={!watch("allowDisable")} />
+          </Form.Row>
+          {!watch("disabled") ? (
+            <>
+              <Form.Row>
+                <Form.Input name="hgBinary" rules={{ validate: isHgBinaryValid }} />
+              </Form.Row>
+              <Form.Row>
+                <Form.Input name="encoding" />
+              </Form.Row>
+              <Form.Row>
+                <Form.Checkbox name="showRevisionInId" />
+              </Form.Row>
+              <Form.Row>
+                <Form.Checkbox name="enableHttpPostArgs" />
+              </Form.Row>
+              <Form.Row className="is-justify-content-flex-end">
+                <Button className="mr-2" onClick={() => triggerAutoConfiguration(getValues())}>
+                  {isAutoConfigLoading ? <SmallLoadingSpinner /> : t("scm-hg-plugin.config.autoConfigure")}
+                </Button>
+              </Form.Row>
+            </>
+          ) : null}
+        </>
+      )}
+    </ConfigurationForm>
   );
 };
 

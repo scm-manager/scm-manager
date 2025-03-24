@@ -23,27 +23,41 @@ import Input from "./Input";
 import Help from "../base/help/Help";
 import { useAriaId } from "../../helpers";
 
-type InputFieldProps = {
+export type InputFieldProps = {
   label: string;
+  labelClassName?: string;
   helpText?: string;
+  descriptionText?: string;
   error?: string;
+  icon?: string;
 } & React.ComponentProps<typeof Input>;
 
 /**
  * @see https://bulma.io/documentation/form/input/
  */
 const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ label, helpText, error, className, id, ...props }, ref) => {
+  ({ name, label, helpText, descriptionText, error, icon, className, labelClassName, id, ...props }, ref) => {
     const inputId = useAriaId(id ?? props.testId);
+    const descriptionId = descriptionText ? `input-description-${name}` : undefined;
     const variant = error ? "danger" : undefined;
     return (
       <Field className={className}>
-        <Label htmlFor={inputId}>
+        <Label htmlFor={inputId} className={labelClassName}>
           {label}
           {helpText ? <Help className="ml-1" text={helpText} /> : null}
         </Label>
-        <Control>
-          <Input variant={variant} ref={ref} id={inputId} {...props}></Input>
+        {descriptionText ? (
+          <p className="mb-2" id={descriptionId}>
+            {descriptionText}
+          </p>
+        ) : null}
+        <Control className="has-icons-left">
+          <Input variant={variant} ref={ref} id={inputId} aria-describedby={descriptionId} {...props}></Input>
+          {icon ? (
+            <span className="icon is-small is-left">
+              <i className={icon} />
+            </span>
+          ) : null}
         </Control>
         {error ? <FieldMessage variant={variant}>{error}</FieldMessage> : null}
       </Field>

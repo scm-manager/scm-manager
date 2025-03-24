@@ -20,8 +20,9 @@ import { createMount, createShallow } from "enzyme-context";
 import { routerContext } from "enzyme-context-react-router-4";
 
 const plugins = {
-  history: routerContext()
+  history: routerContext(),
 };
 
+// TODO Enzyme is not going to be supported in React 19+.: https://testing-library.com/docs/react-testing-library/migrate-from-enzyme/
 export const mount = createMount(plugins);
 export const shallow = createShallow(plugins);

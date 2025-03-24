@@ -23,8 +23,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.schedule.Scheduler;
 import sonia.scm.store.ConfigurationStoreFactory;
+import sonia.scm.store.InMemoryByteConfigurationStoreFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -79,7 +83,6 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
     GitConfig config = new GitConfig();
 
-    // TODO fix event bus exception
     repositoryHandler.setConfig(config);
 
     return repositoryHandler;
@@ -115,5 +118,29 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
     repositoryHandler.create(repository);
 
     assertThat(new File(nativeRepoDirectory, "HEAD")).hasContent("ref: refs/heads/other");
+  }
+
+  @Test
+  public void shouldSetAllowFilterConfigByDefault() throws Exception{
+    ConfigurationStoreFactory configurationStoreFactory = new InMemoryByteConfigurationStoreFactory();
+
+    GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(configurationStoreFactory,
+      scheduler, repositoryLocationResolver, gitWorkingCopyFactory,null);
+    GitConfig config = new GitConfig();
+
+    repositoryHandler.setConfig(config);
+    repositoryHandler.create(RepositoryTestData.createHeartOfGold("git"));
+
+    Path repositoryPath = repositoryLocationResolver.forClass(Path.class).getLocation("");
+    File configFile = repositoryPath.resolve("data/config").toFile();
+
+    boolean containsAllowFilter = false;
+    try (BufferedReader br = new BufferedReader(new FileReader(configFile.getAbsolutePath()))) {
+      do {
+        String line = br.readLine();
+        containsAllowFilter |= line.contains("allowFilter") && line.contains("true");
+      } while (br.readLine() != null);
+    }
+    assertTrue(containsAllowFilter);
   }
 }

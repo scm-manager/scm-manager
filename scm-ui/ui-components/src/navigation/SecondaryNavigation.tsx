@@ -16,10 +16,8 @@
 
 import React, { FC } from "react";
 import styled from "styled-components";
-import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { useSecondaryNavigation } from "../useSecondaryNavigation";
-import { SecondaryNavigationContext } from "./SecondaryNavigationContext";
 import { Button } from "@scm-manager/ui-buttons";
 
 type Props = {
@@ -73,14 +71,9 @@ const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true })
   const menuAriaLabel = collapsed ? t("secondaryNavigation.showContent") : t("secondaryNavigation.hideContent");
 
   return (
-    <SectionContainer className="menu" collapsed={collapsed ?? false}>
+    <SectionContainer className="menu" collapsed={collapsed}>
       <div>
-        <MenuButton
-          className={classNames("menu-label", { "is-clickable": true })}
-          collapsed={collapsed}
-          onClick={toggleCollapse}
-          aria-label={menuAriaLabel}
-        >
+        <MenuButton className="menu-label" collapsed={collapsed} onClick={toggleCollapse} aria-label={menuAriaLabel}>
           {isCollapsible ? (
             <Icon className="is-medium" collapsed={collapsed}>
               {arrowIcon}
@@ -88,9 +81,7 @@ const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true })
           ) : null}
           {collapsed ? "" : label}
         </MenuButton>
-        <ul className="menu-list">
-          <SecondaryNavigationContext.Provider value={true}>{children}</SecondaryNavigationContext.Provider>
-        </ul>
+        <ul className="menu-list">{children}</ul>
       </div>
     </SectionContainer>
   );

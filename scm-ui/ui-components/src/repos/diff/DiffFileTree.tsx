@@ -38,12 +38,12 @@ const StyledIcon = styled(Icon)<{ isSmaller?: boolean }>`
   min-width: 1.5rem;
 `;
 
-type Props = { tree: FileTree; currentFile: string; setCurrentFile: (path: string) => void };
-
-const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile }) => {
+type Props = { tree: FileTree; currentFile: string; setCurrentFile: (path: string) => void; gap?: number };
+  
+const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile, gap = 15 }) => {
   return (
     <FileDiffContainer className="mt-4 py-3 pr-2">
-      <FileDiffContent>
+      <FileDiffContent gap={gap}>
         {Object.keys(tree.children).map((key) => (
           <TreeNode
             key={key}

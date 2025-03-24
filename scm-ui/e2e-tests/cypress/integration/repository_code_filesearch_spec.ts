@@ -43,7 +43,7 @@ describe("Repository File Search", () => {
     // Act
     cy.visit(`/repo/${namespace}/${name}/code/sources`);
     cy.byTestId("file_search_button").click();
-    cy.url().should("include", `/repo/${namespace}/${name}/code/search/main?q=`);
+    cy.url().should("include", `/repo/${namespace}/${name}/code/search/main`);
     cy.byTestId("file_search_filter_input").type("README");
 
     // Assert

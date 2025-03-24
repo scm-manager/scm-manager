@@ -18,8 +18,8 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Repository, Tag } from "@scm-manager/ui-types";
-import { Subtitle, DateFromNow, SignatureIcon } from "@scm-manager/ui-components";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { DateFromNow, SignatureIcon } from "@scm-manager/ui-components";
+import { Subtitle, useDocumentTitle } from "@scm-manager/ui-core";
 import TagButtonGroup from "./TagButtonGroup";
 import CompareLink from "../../compare/CompareLink";
 
