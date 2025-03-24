@@ -128,6 +128,7 @@ hr.header-with-actions {
     display: none;
   }
 }
+
 .is-mobile-action-spacing {
   @media screen and (max-width: 768px) {
     display: flow-root !important;
@@ -438,27 +439,6 @@ summary {
       border-color: transparent transparent $primary $primary !important;
     }
     background-color: transparent;
-  }
-
-  &.is-reduced-mobile,
-  &.reduced-mobile {
-    @media screen and (max-width: 1087px) {
-      > span:nth-child(2) {
-        display: none;
-      }
-    }
-    @media screen and (max-width: 1087px) and (min-width: 769px) {
-      // simultaneously with left margin of Bulma
-      > .icon:first-child:not(:last-child) {
-        margin: 0;
-      }
-    }
-    @media screen and (max-width: 768px) {
-      // simultaneously with left margin of Bulma
-      .icon:first-child:not(:last-child) {
-        margin-right: calc(-0.375em - 1px);
-      }
-    }
   }
 }
 

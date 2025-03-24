@@ -20441,25 +20441,26 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -20467,19 +20468,20 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -20602,25 +20604,26 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -20628,19 +20631,20 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -20721,25 +20725,26 @@ exports[`Storyshots Repositories/Changesets Default 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -20747,19 +20752,20 @@ exports[`Storyshots Repositories/Changesets Default 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -20861,25 +20867,26 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -20887,19 +20894,20 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -20985,25 +20993,26 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21011,19 +21020,20 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21097,25 +21107,26 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21123,19 +21134,20 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21226,25 +21238,26 @@ exports[`Storyshots Repositories/Changesets Replacements 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21252,19 +21265,20 @@ exports[`Storyshots Repositories/Changesets Replacements 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21357,25 +21371,26 @@ exports[`Storyshots Repositories/Changesets With Committer 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21383,19 +21398,20 @@ exports[`Storyshots Repositories/Changesets With Committer 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21497,25 +21513,26 @@ exports[`Storyshots Repositories/Changesets With Committer and Co-Author 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21523,19 +21540,20 @@ exports[`Storyshots Repositories/Changesets With Committer and Co-Author 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21629,25 +21647,26 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21655,19 +21674,20 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21757,25 +21777,26 @@ exports[`Storyshots Repositories/Changesets With contactless signature 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21783,19 +21804,20 @@ exports[`Storyshots Repositories/Changesets With contactless signature 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -21885,25 +21907,26 @@ exports[`Storyshots Repositories/Changesets With invalid signature 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -21911,19 +21934,20 @@ exports[`Storyshots Repositories/Changesets With invalid signature 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -22017,25 +22041,26 @@ exports[`Storyshots Repositories/Changesets With multiple Co-Authors 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22043,19 +22068,20 @@ exports[`Storyshots Repositories/Changesets With multiple Co-Authors 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -22145,25 +22171,26 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and invalid
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22171,19 +22198,20 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and invalid
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -22273,25 +22301,26 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and not fou
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22299,19 +22328,20 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and not fou
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -22401,25 +22431,26 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and valid s
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22427,19 +22458,20 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and valid s
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -22529,25 +22561,26 @@ exports[`Storyshots Repositories/Changesets With unknown signature 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22555,19 +22588,20 @@ exports[`Storyshots Repositories/Changesets With unknown signature 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -22657,25 +22691,26 @@ exports[`Storyshots Repositories/Changesets With unowned signature 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22683,19 +22718,20 @@ exports[`Storyshots Repositories/Changesets With unowned signature 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>
@@ -22785,25 +22821,26 @@ exports[`Storyshots Repositories/Changesets With valid signature 1`] = `
         className="column is-flex is-justify-content-flex-end is-align-items-center"
       >
         <div
-          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons"
         >
           <p
             className="control"
           >
             <a
-              aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-list-ul has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-list-ul"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.details
-                 
               </span>
             </a>
           </p>
@@ -22811,19 +22848,20 @@ exports[`Storyshots Repositories/Changesets With valid signature 1`] = `
             className="control"
           >
             <a
-              aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile px-3"
+              className="button px-3 pl-5"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <span>
+              <span
+                aria-hidden="true"
+                className="icon"
+              >
                 <i
-                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                  onKeyPress={[Function]}
+                  className="fas fa-fw fa-code"
                 />
-                 
+              </span>
+              <span>
                 changeset.buttons.sources
-                 
               </span>
             </a>
           </p>

@@ -16,8 +16,9 @@
 
 import React, { FC } from "react";
 import { Tag, Repository } from "@scm-manager/ui-types";
-import { Button, ButtonAddons } from "@scm-manager/ui-components";
+import { ButtonAddons } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
+import { Icon, LinkButton } from "@scm-manager/ui-core";
 
 type Props = {
   repository: Repository;
@@ -35,8 +36,14 @@ const TagButtonGroup: FC<Props> = ({ repository, tag }) => {
   return (
     <>
       <ButtonAddons>
-        <Button link={changesetLink} icon="exchange-alt" label={t("tag.commit")} reducedMobile={true} />
-        <Button link={sourcesLink} icon="code" label={t("tag.sources")} reducedMobile={true} />
+        <LinkButton to={changesetLink}>
+          <Icon>exchange-alt</Icon>
+          <span>{t("tag.commit")}</span>
+        </LinkButton>
+        <LinkButton to={sourcesLink}>
+          <Icon>code</Icon>
+          <span>{t("tag.sources")}</span>
+        </LinkButton>
       </ButtonAddons>
     </>
   );

@@ -16,9 +16,10 @@
 
 import React from "react";
 import { Branch, Changeset, File, Repository } from "@scm-manager/ui-types";
-import { Button, ButtonAddons } from "../../buttons";
 import { createChangesetLink, createChangesetLinkByBranch, createSourcesLink } from "./changesets";
 import { useTranslation } from "react-i18next";
+import { Icon, LinkButton } from "@scm-manager/ui-core";
+import { ButtonAddons } from "../../buttons";
 
 type Props = {
   repository: Repository;
@@ -27,7 +28,7 @@ type Props = {
   branch?: Branch;
 };
 
-const ChangesetButtonGroup = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Props>(
+const ChangesetButtonGroup = React.forwardRef<HTMLAnchorElement, Props>(
   ({ repository, changeset, file, branch }, ref) => {
     const [t] = useTranslation("repos");
     const changesetLink = branch
@@ -35,22 +36,15 @@ const ChangesetButtonGroup = React.forwardRef<HTMLButtonElement | HTMLAnchorElem
       : createChangesetLink(repository, changeset);
     const sourcesLink = createSourcesLink(repository, changeset, file);
     return (
-      <ButtonAddons className="m-0">
-        <Button
-          className="px-3"
-          ref={ref}
-          link={changesetLink}
-          icon="list-ul"
-          label={t("changeset.buttons.details")}
-          reducedMobile={true}
-        />
-        <Button
-          className="px-3"
-          link={sourcesLink}
-          icon="code"
-          label={t("changeset.buttons.sources")}
-          reducedMobile={true}
-        />
+      <ButtonAddons>
+        <LinkButton className="px-3 pl-5" ref={ref} to={changesetLink}>
+          <Icon>list-ul</Icon>
+          <span>{t("changeset.buttons.details")}</span>
+        </LinkButton>
+        <LinkButton className="px-3 pl-5" to={sourcesLink}>
+          <Icon>code</Icon>
+          <span>{t("changeset.buttons.sources")}</span>
+        </LinkButton>
       </ButtonAddons>
     );
   }

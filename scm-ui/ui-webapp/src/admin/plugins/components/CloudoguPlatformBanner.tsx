@@ -19,7 +19,7 @@ import { Trans, useTranslation } from "react-i18next";
 import { Link, PluginCenterAuthenticationInfo } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import styled from "styled-components";
-import { Button } from "@scm-manager/ui-components";
+import { ExternalLinkButton, Icon } from "@scm-manager/ui-core";
 
 type Props = {
   info: PluginCenterAuthenticationInfo;
@@ -57,13 +57,13 @@ const FailedAuthentication: FC<PropsWithLink> = ({ info, link }) => {
           components={[<a href="https://platform.cloudogu.com/">cloudogu platform</a>, <strong />]}
         />
       </p>
-      <Button className="mt-5 has-text-weight-normal has-border-info" reducedMobile={true} link={link}>
+      <ExternalLinkButton className="mt-5 has-text-weight-normal has-border-info" href={link}>
         <Trans
           t={t}
           i18nKey="plugins.cloudoguPlatform.failed.button.label"
           components={[<span className="mx-1 has-text-info">cloudogu platform</span>]}
         />
-      </Button>
+      </ExternalLinkButton>
     </Container>
   );
 };
@@ -91,22 +91,24 @@ const Unauthenticated: FC<PropsWithLink> = ({ link, info }) => {
   const [t] = useTranslation("admin");
   return (
     <Container className="has-border-success">
-      <Button className="mb-5 has-text-weight-normal has-border-info" reducedMobile={true} link={link}>
+      <ExternalLinkButton className="mb-5 has-text-weight-normal has-border-info" href={link}>
         <Trans
           t={t}
           i18nKey="plugins.cloudoguPlatform.login.button.label"
           components={[<span className="mx-1 has-text-info">cloudogu platform</span>]}
         />
-      </Button>
+      </ExternalLinkButton>
       <p className="is-align-self-flex-start is-size-7">
-        <Trans
-          t={t}
-          i18nKey="plugins.cloudoguPlatform.login.description"
-          components={[
-            <a href="https://platform.cloudogu.com/">cloudogu platform</a>,
-            <a href="https://scm-manager.org/data-processing">Data Processing</a>
-          ]}
-        />
+        <span>
+          <Trans
+            t={t}
+            i18nKey="plugins.cloudoguPlatform.login.description"
+            components={[
+              <a href="https://platform.cloudogu.com/">cloudogu platform</a>,
+              <a href="https://scm-manager.org/data-processing">Data Processing</a>,
+            ]}
+          />
+        </span>
       </p>
     </Container>
   );
