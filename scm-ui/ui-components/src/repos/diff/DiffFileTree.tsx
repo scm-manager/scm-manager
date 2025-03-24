@@ -27,8 +27,11 @@ type Props = { tree: FileTree; currentFile: string; setCurrentFile: (path: strin
 const StyledIcon = styled(Icon)`
   min-width: 1.5rem;
 `;
-const StyledStatus = styled(StyledIcon)`
-  margin-left: auto;
+
+const StackedSpan = styled.span`
+  width: 3em;
+  height: 3em;
+  font-size: 0.5em;
 `;
 
 const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile }) => {
@@ -94,75 +97,6 @@ const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile
   );
 };
 
-type FileChangeTypeIconProps = {
-  changeType: string;
-};
-
-const FileChangeTypeIcon: FC<FileChangeTypeIconProps> = ({ changeType }) => {
-  const [t] = useTranslation("repos");
-  if (changeType === "ADD") {
-    return (
-      <StyledStatus
-        className="has-text-success"
-        style={{ minWidth: "1rem", fontSize: "0.7rem", verticalAlign: "top" }}
-        key={"add"}
-        alt={t("diff.changes.add")}
-      >
-        plus
-      </StyledStatus>
-    );
-  }
-  if (changeType === "MODIFY") {
-    return (
-      <StyledStatus
-        className="has-text-info"
-        style={{ minWidth: "1.5rem", fontSize: "0.4rem", verticalAlign: "top" }}
-        key={"modify"}
-        alt={t("diff.changes.modify")}
-      >
-        circle
-      </StyledStatus>
-    );
-  }
-  if (changeType === "DELETE") {
-    return (
-      <StyledStatus
-        className="has-text-danger"
-        style={{ minWidth: "1.5rem", fontSize: "0.7rem", verticalAlign: "top" }}
-        key={"delete"}
-        alt={t("diff.changes.delete")}
-      >
-        minus
-      </StyledStatus>
-    );
-  }
-  if (changeType === "RENAME") {
-    return (
-      <StyledStatus
-        className="has-text-info"
-        style={{ minWidth: "1.5rem", fontSize: "0.4rem", verticalAlign: "top" }}
-        key={"rename"}
-        alt={t("diff.changes.rename")}
-      >
-        circle
-      </StyledStatus>
-    );
-  }
-  if (changeType === "COPY") {
-    return (
-      <StyledStatus
-        className="has-text-info"
-        style={{ minWidth: "1.5rem", fontSize: "0.7rem", verticalAlign: "top" }}
-        key={"copy"}
-        alt={t("diff.changes.copy")}
-      >
-        plus
-      </StyledStatus>
-    );
-  }
-  return null;
-};
-
 type ChangeType = "add" | "modify" | "delete" | "rename" | "copy";
 
 const getColor = (changeType: ChangeType) => {
@@ -213,21 +147,25 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
   return (
     <TreeFileContent className={"is-flex py-1 pl-3"} onClick={() => setCurrentFile(completePath)}>
       {isCurrentFile() ? (
-        <span className="fa-stack" style={{ minWidth: "1.5rem", maxWidth: "1.5rem" }}>
+        <StackedSpan className="fa-stack">
           <StyledIcon
-            className="fa-stack-2x fa-xs"
-            style={{ minWidth: "1.5rem", fontSize: "1.5rem" }}
+            className={classNames("fa-stack-2x", `has-text-${getColor(changeType)}`)}
             key={completePath + "file"}
+            type="fas"
             alt={t("diff.showContent")}
           >
             file
           </StyledIcon>
-          <span className="fa-stack-1x fa-xs" style={{ minWidth: "1.5rem", maxWidth: "1.5rem" }}>
-            <FileChangeTypeIcon changeType={changeType.toUpperCase()} />
-          </span>
-        </span>
+          <StyledIcon
+            className={classNames("fa-stack-1x", "has-text-secondary-least")}
+            key={changeType}
+            alt={t(`diff.changes.${changeType}`)}
+          >
+            {getIcon(changeType)}
+          </StyledIcon>
+        </StackedSpan>
       ) : (
-        <span className="fa-stack" style={{width: "2.5em", height: "3em", fontSize: "0.5em"}}>
+        <StackedSpan className="fa-stack">
           <StyledIcon
             className={classNames("fa-stack-2x", `has-text-${getColor(changeType)}`)}
             key={completePath + "file"}
@@ -243,7 +181,7 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
           >
             {getIcon(changeType)}
           </StyledIcon>
-        </span>
+        </StackedSpan>
       )}
       <div className={"ml-1"}>{path}</div>
     </TreeFileContent>
