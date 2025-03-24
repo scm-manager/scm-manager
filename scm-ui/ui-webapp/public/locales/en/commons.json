@@ -83,6 +83,7 @@
   "breadcrumb": {
     "home": "Main page",
     "copyPermalink": "Copy Permalink to Clipboard",
+    "currentPath": "Current path",
     "loading": "Loading ..."
   },
   "errorNotification": {

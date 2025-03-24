@@ -70,19 +70,23 @@ exports[`Storyshots BreadCrumb Default 1`] = `
       aria-label="breadcrumbs"
       className="Breadcrumb__BreadcrumbNav-sc-zvtb4t-1 dInwRH breadcrumb sources-breadcrumb mx-2 my-4 is-flex is-align-items-center is-full-width"
     >
-      <ul>
+      <ul
+        aria-label="breadcrumb.currentPath"
+      >
         <li>
           <a
             aria-label="breadcrumb.home"
             href="/scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources/1/"
             onClick={[Function]}
           >
-            <i
-              aria-label="breadcrumb.home"
-              className="fas fa-fw fa-home has-text-inherit Breadcrumb__HomeIcon-sc-zvtb4t-2 jOnsqH"
-              onKeyPress={[Function]}
-              title="breadcrumb.home"
-            />
+            <span
+              aria-hidden="true"
+              className="Breadcrumb__HomeIcon-sc-zvtb4t-2 jOnsqH icon"
+            >
+              <i
+                className="has-text-inherit fas fa-fw fa-home"
+              />
+            </span>
           </a>
         </li>
         <li>
@@ -140,23 +144,27 @@ exports[`Storyshots BreadCrumb Default 1`] = `
         </li>
       </ul>
       <span
-        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI"
-        onKeyDown={[Function]}
-        tabIndex={0}
+        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI icon"
       >
-        <div
-          className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
+        <span
+          alt="breadcrumb.copyPermalink"
+          aria-hidden="false"
+          aria-label="breadcrumb.copyPermalink"
+          className="focus-zone has-cursor-pointer icon"
+          data-state="closed"
+          onBlur={[Function]}
           onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onPointerDown={[Function]}
+          onPointerLeave={[Function]}
+          onPointerMove={[Function]}
+          tabIndex={0}
         >
           <i
-            aria-label="breadcrumb.copyPermalink"
-            className="fas fa-fw fa-link has-text-inherit"
-            onClick={[Function]}
-            onKeyPress={[Function]}
+            className="has-text-inherit fas fa-fw fa-link"
           />
-        </div>
+        </span>
       </span>
     </nav>
     <div
@@ -180,19 +188,23 @@ exports[`Storyshots BreadCrumb Long path 1`] = `
       aria-label="breadcrumbs"
       className="Breadcrumb__BreadcrumbNav-sc-zvtb4t-1 dInwRH breadcrumb sources-breadcrumb mx-2 my-4 is-flex is-align-items-center is-full-width"
     >
-      <ul>
+      <ul
+        aria-label="breadcrumb.currentPath"
+      >
         <li>
           <a
             aria-label="breadcrumb.home"
             href="/scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources/1/"
             onClick={[Function]}
           >
-            <i
-              aria-label="breadcrumb.home"
-              className="fas fa-fw fa-home has-text-inherit Breadcrumb__HomeIcon-sc-zvtb4t-2 jOnsqH"
-              onKeyPress={[Function]}
-              title="breadcrumb.home"
-            />
+            <span
+              aria-hidden="true"
+              className="Breadcrumb__HomeIcon-sc-zvtb4t-2 jOnsqH icon"
+            >
+              <i
+                className="has-text-inherit fas fa-fw fa-home"
+              />
+            </span>
           </a>
         </li>
         <li>
@@ -300,23 +312,27 @@ exports[`Storyshots BreadCrumb Long path 1`] = `
         </li>
       </ul>
       <span
-        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI"
-        onKeyDown={[Function]}
-        tabIndex={0}
+        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI icon"
       >
-        <div
-          className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
+        <span
+          alt="breadcrumb.copyPermalink"
+          aria-hidden="false"
+          aria-label="breadcrumb.copyPermalink"
+          className="focus-zone has-cursor-pointer icon"
+          data-state="closed"
+          onBlur={[Function]}
           onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onPointerDown={[Function]}
+          onPointerLeave={[Function]}
+          onPointerMove={[Function]}
+          tabIndex={0}
         >
           <i
-            aria-label="breadcrumb.copyPermalink"
-            className="fas fa-fw fa-link has-text-inherit"
-            onClick={[Function]}
-            onKeyPress={[Function]}
+            className="has-text-inherit fas fa-fw fa-link"
           />
-        </div>
+        </span>
       </span>
     </nav>
     <div
@@ -340,12 +356,18 @@ exports[`Storyshots BreadCrumb Not clickable 1`] = `
       aria-label="breadcrumbs"
       className="Breadcrumb__BreadcrumbNav-sc-zvtb4t-1 dInwRH breadcrumb sources-breadcrumb mx-2 my-4 is-flex is-align-items-center is-full-width"
     >
-      <ul>
+      <ul
+        aria-label="breadcrumb.currentPath"
+      >
         <li>
-          <i
-            className="fas fa-fw fa-home has-text-inherit mr-3"
-            onKeyPress={[Function]}
-          />
+          <span
+            aria-hidden="true"
+            className="mr-3 icon"
+          >
+            <i
+              className="fas fa-fw fa-home"
+            />
+          </span>
         </li>
         <li>
           <span
@@ -391,23 +413,27 @@ exports[`Storyshots BreadCrumb Not clickable 1`] = `
         </li>
       </ul>
       <span
-        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI"
-        onKeyDown={[Function]}
-        tabIndex={0}
+        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI icon"
       >
-        <div
-          className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
+        <span
+          alt="breadcrumb.copyPermalink"
+          aria-hidden="false"
+          aria-label="breadcrumb.copyPermalink"
+          className="focus-zone has-cursor-pointer icon"
+          data-state="closed"
+          onBlur={[Function]}
           onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onPointerDown={[Function]}
+          onPointerLeave={[Function]}
+          onPointerMove={[Function]}
+          tabIndex={0}
         >
           <i
-            aria-label="breadcrumb.copyPermalink"
-            className="fas fa-fw fa-link has-text-inherit"
-            onClick={[Function]}
-            onKeyPress={[Function]}
+            className="has-text-inherit fas fa-fw fa-link"
           />
-        </div>
+        </span>
       </span>
     </nav>
     <div
@@ -444,19 +470,23 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
           />
         </a>
       </div>
-      <ul>
+      <ul
+        aria-label="breadcrumb.currentPath"
+      >
         <li>
           <a
             aria-label="breadcrumb.home"
             href="/scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources/1/"
             onClick={[Function]}
           >
-            <i
-              aria-label="breadcrumb.home"
-              className="fas fa-fw fa-home has-text-inherit Breadcrumb__HomeIcon-sc-zvtb4t-2 jOnsqH"
-              onKeyPress={[Function]}
-              title="breadcrumb.home"
-            />
+            <span
+              aria-hidden="true"
+              className="Breadcrumb__HomeIcon-sc-zvtb4t-2 jOnsqH icon"
+            >
+              <i
+                className="has-text-inherit fas fa-fw fa-home"
+              />
+            </span>
           </a>
         </li>
         <li>
@@ -514,23 +544,27 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
         </li>
       </ul>
       <span
-        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI"
-        onKeyDown={[Function]}
-        tabIndex={0}
+        className="Breadcrumb__PermaLinkWrapper-sc-zvtb4t-0 dwItUI icon"
       >
-        <div
-          className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
+        <span
+          alt="breadcrumb.copyPermalink"
+          aria-hidden="false"
+          aria-label="breadcrumb.copyPermalink"
+          className="focus-zone has-cursor-pointer icon"
+          data-state="closed"
+          onBlur={[Function]}
           onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onPointerDown={[Function]}
+          onPointerLeave={[Function]}
+          onPointerMove={[Function]}
+          tabIndex={0}
         >
           <i
-            aria-label="breadcrumb.copyPermalink"
-            className="fas fa-fw fa-link has-text-inherit"
-            onClick={[Function]}
-            onKeyPress={[Function]}
+            className="has-text-inherit fas fa-fw fa-link"
           />
-        </div>
+        </span>
       </span>
     </nav>
     <div

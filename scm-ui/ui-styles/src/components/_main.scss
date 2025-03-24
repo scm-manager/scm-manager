@@ -365,12 +365,29 @@ a {
   }
 }
 
+// Buttons
 button,
 .button {
   &:focus-visible,
   &.is-focused {
     outline: $focus-outline-color $focus-outline-style;
     outline-offset: $focus-outline-offset;
+    &:not(:active) {
+      box-shadow: none !important;
+    }
+  }
+}
+
+/* Focus zones for general element focus highlighting.
+   We explicitly want elements tagged with 'focus-zone' to have the below behavior overriding
+   Bulma constraints upon focussing an element, which is why !important is used here.
+   Please use this CSS class with consideration.
+ */
+.focus-zone {
+  &:focus-visible,
+  &.is-focused {
+    outline: $focus-outline-color $focus-outline-style !important;
+    outline-offset: $focus-outline-offset !important;
     &:not(:active) {
       box-shadow: none !important;
     }

@@ -82,6 +82,7 @@
   "breadcrumb": {
     "home": "Hauptseite",
     "copyPermalink": "Link in Zwischenablage kopieren",
+    "currentPath": "Aktueller Pfad",
     "loading": "Lade ..."
   },
   "errorNotification": {
