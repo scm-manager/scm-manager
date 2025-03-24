@@ -14,19 +14,13 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { FileTree } from "@scm-manager/ui-types";
 import React, { FC } from "react";
-import classNames from "classnames";
-import { FileDiffContainer, FileDiffContent } from "./styledElements";
-import { Icon } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 import styled from "styled-components";
-
-type Props = { tree: FileTree; currentFile: string; setCurrentFile: (path: string) => void };
-
-const StyledIcon = styled(Icon)`
-  min-width: 1.5rem;
-`;
+import { Icon } from "@scm-manager/ui-core";
+import { FileTree } from "@scm-manager/ui-types";
+import { FileDiffContainer, FileDiffContent } from "./styledElements";
 
 const StackedSpan = styled.span`
   width: 3em;
@@ -34,15 +28,21 @@ const StackedSpan = styled.span`
   font-size: 0.5em;
 `;
 
+const StyledIcon = styled(Icon)`
+  min-width: 1.5rem;
+`;
+
+type Props = { tree: FileTree; currentFile: string; setCurrentFile: (path: string) => void };
+
 const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile }) => {
   return (
-    <FileDiffContainer className={"mt-4 py-3 pr-2"}>
+    <FileDiffContainer className="mt-4 py-3 pr-2">
       <FileDiffContent>
         {Object.keys(tree.children).map((key) => (
           <TreeNode
             key={key}
             node={tree.children[key]}
-            parentPath={""}
+            parentPath=""
             currentFile={currentFile}
             setCurrentFile={setCurrentFile}
           />
@@ -53,6 +53,8 @@ const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile }) => {
 };
 
 export default DiffFileTree;
+
+type ChangeType = "add" | "modify" | "delete" | "rename" | "copy";
 
 type NodeProps = { node: FileTree; parentPath: string; currentFile: string; setCurrentFile: (path: string) => void };
 
@@ -69,10 +71,10 @@ const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile
   return (
     <li>
       {Object.keys(node.children).length > 0 ? (
-        <ul className={"py-1 pr-1 pl-3"}>
-          <li className={"is-flex has-text-grey"}>
+        <ul className="py-1 pr-1 pl-3">
+          <li className="is-flex has-text-grey">
             <StyledIcon alt={t("diff.showContent")}>folder</StyledIcon>
-            <div className={"ml-1"}>{node.nodeName}</div>
+            <div className="ml-1">{node.nodeName}</div>
           </li>
           {Object.keys(node.children).map((key) => (
             <TreeNode
@@ -97,8 +99,6 @@ const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile
   );
 };
 
-type ChangeType = "add" | "modify" | "delete" | "rename" | "copy";
-
 const getColor = (changeType: ChangeType) => {
   switch (changeType) {
     case "add":
@@ -111,6 +111,7 @@ const getColor = (changeType: ChangeType) => {
       return "danger";
   }
 };
+
 const getIcon = (changeType: ChangeType) => {
   switch (changeType) {
     case "add":
@@ -125,7 +126,7 @@ const getIcon = (changeType: ChangeType) => {
 };
 
 type FileProps = {
-  changeType: string;
+  changeType: ChangeType;
   path: string;
   parentPath: string;
   currentFile: string;
@@ -145,7 +146,7 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
   };
 
   return (
-    <TreeFileContent className={"is-flex py-1 pl-3"} onClick={() => setCurrentFile(completePath)}>
+    <TreeFileContent className="is-flex py-1 pl-3" onClick={() => setCurrentFile(completePath)}>
       {isCurrentFile() ? (
         <StackedSpan className="fa-stack">
           <StyledIcon
@@ -183,7 +184,7 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
           </StyledIcon>
         </StackedSpan>
       )}
-      <div className={"ml-1"}>{path}</div>
+      <div className="ml-1">{path}</div>
     </TreeFileContent>
   );
 };
