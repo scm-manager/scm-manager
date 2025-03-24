@@ -149,45 +149,28 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
 
   return (
     <div className="is-flex py-1 pl-3 has-cursor-pointer" onClick={() => setCurrentFile(completePath)}>
-      {isCurrentFile() ? (
-        <StackedSpan className="fa-stack">
-          <StyledIcon
-            className={classNames("fa-stack-2x", `has-text-${getColor(changeType)}`)}
-            isSmaller={getIcon(changeType) === "circle"}
-            key={completePath + "file"}
-            type="fas"
-            alt={t("diff.showContent")}
-          >
-            file
-          </StyledIcon>
-          <StyledIcon
-            className={classNames("fa-stack-1x", "has-text-secondary-least")}
-            key={changeType}
-            alt={t(`diff.changes.${changeType}`)}
-          >
-            {getIcon(changeType)}
-          </StyledIcon>
-        </StackedSpan>
-      ) : (
-        <StackedSpan className="fa-stack">
-          <StyledIcon
-            className={classNames("fa-stack-2x", `has-text-${getColor(changeType)}`)}
-            isSmaller={getIcon(changeType) === "circle"}
-            key={completePath + "file"}
-            type="far"
-            alt={t("diff.showContent")}
-          >
-            file
-          </StyledIcon>
-          <StyledIcon
-            className={classNames("fa-stack-1x", `has-text-${getColor(changeType)}`)}
-            key={changeType}
-            alt={t(`diff.changes.${changeType}`)}
-          >
-            {getIcon(changeType)}
-          </StyledIcon>
-        </StackedSpan>
-      )}
+      <StackedSpan className="fa-stack">
+        <StyledIcon
+          className={classNames("fa-stack-2x", `has-text-${getColor(changeType)}`)}
+          key={completePath + "file"}
+          type={isCurrentFile() ? "fas" : "far"}
+          alt={t("diff.showContent")}
+        >
+          file
+        </StyledIcon>
+        <StyledIcon
+          className={classNames(
+            "fa-stack-1x",
+            "is-relative",
+            isCurrentFile() ? "has-text-secondary-least" : `has-text-${getColor(changeType)}`
+          )}
+          isSmaller={getIcon(changeType) === "circle"}
+          key={changeType}
+          alt={t(`diff.changes.${changeType}`)}
+        >
+          {getIcon(changeType)}
+        </StyledIcon>
+      </StackedSpan>
       <div className="ml-1">{path}</div>
     </div>
   );
