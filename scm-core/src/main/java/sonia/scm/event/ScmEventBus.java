@@ -29,7 +29,6 @@ import java.util.ServiceLoader;
  * themselves. The ScmEventBus searches its implementation with the
  * {@link ServiceLoader}.
  *
- * @apiviz.landmark
  * @see EventBus
  * @since 1.23
  */

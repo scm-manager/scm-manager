@@ -18,26 +18,23 @@ package sonia.scm.store;
 
 /**
  * The BlobStoreFactory can be used to create a new or get an existing {@link BlobStore}s.
- * <br>
- * You can either create a global {@link BlobStore} or a {@link BlobStore} for a specific repository. To create a global
- * {@link BlobStore} call:
- * <code><pre>
- *     blobStoreFactory
- *       .withName("name")
- *       .build();
- * </pre></code>
- * To create a {@link BlobStore} for a specific repository call:
- * <code><pre>
- *     blobStoreFactory
- *       .withName("name")
- *       .forRepository(repository)
- *       .build();
- * </pre></code>
+ * You can either create a global {@link BlobStore} or a {@link BlobStore} for a specific repository.
+ * <br/>
+ * <br/>
+ * Call this to create a global {@link BlobStore}:
+ * <br/>
+ * <code>
+ *     blobStoreFactory.withName("name").build();
+ * </code>
+ * <br/>
+ * <br/>
+ * Call this to create a {@link BlobStore} for a specific repository:
+ * <br/>
+ * <code>
+ *     blobStoreFactory.withName("name").forRepository(repository).build();
+ * </code>
  *
  * @since 1.23
- *
- * @apiviz.landmark
- * @apiviz.uses sonia.scm.store.BlobStore
  */
 public interface BlobStoreFactory {
 

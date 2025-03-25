@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link MDCFilter}.
  *
- * @author Sebastian Sdorra <sebastian.sdorra@gmail.com>
+ * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class MDCFilterTest extends AbstractTestBase {

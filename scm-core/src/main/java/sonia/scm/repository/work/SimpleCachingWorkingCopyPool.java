@@ -52,8 +52,6 @@ import static java.util.Optional.of;
  * If for one repository a working copy is requested, while another is in use already,
  * the process will wait until the other process has finished.
  * The number of directories cached is limited. By default, directories are cached for
- * {@value DEFAULT_WORKING_COPY_POOL_SIZE} repositories. This can be changes with the system
- * property '{@value WORKING_COPY_POOL_SIZE_PROPERTY}' (if this is set to zero, no caching will
  * take place; to cache the directories for each repository without eviction simply set this to a
  * high enough value).
  * <br>

@@ -54,7 +54,8 @@ import java.io.File;
  * <br>
  * The general process looks like this:
  * <br>
- * <img src="doc-files/SimpleWorkingCopyFactory_Sequence.png"/>
+ * <img src="doc-files/SimpleWorkingCopyFactory_Sequence.png" alt="Shows a sequence diagram illustrating the interaction between components in a system related to a working copy process."/>
+ *
  * @param <R> Type of central repository location
  * @param <W> Type of working copy for repository
  * @param <C> Type of repository context
@@ -113,7 +114,7 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
    * Constructs a new {@link SimpleWorkingCopyFactory}
    *
    * @param workingCopyPool pool which provides working copies
-   * @param meterRegistry registry to collect metrics
+   * @param meterRegistry   registry to collect metrics
    */
   public SimpleWorkingCopyFactory(WorkingCopyPool workingCopyPool, MeterRegistry meterRegistry) {
     this.workingCopyPool = workingCopyPool;

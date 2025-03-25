@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author Sebastian Sdorra
  */
 @SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)

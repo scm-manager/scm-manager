@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for {@link GitGcTask}.
  * 
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GitGcTaskTest

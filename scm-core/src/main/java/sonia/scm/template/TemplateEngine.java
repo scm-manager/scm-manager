@@ -25,8 +25,6 @@ import java.util.Locale;
  * template for the rendering process.
  *
  * @since 1.19
- *
- * @apiviz.uses sonia.scm.template.Template
  */
 public interface TemplateEngine
 {

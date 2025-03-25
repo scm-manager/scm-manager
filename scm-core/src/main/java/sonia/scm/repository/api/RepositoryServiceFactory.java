@@ -93,8 +93,6 @@ import static sonia.scm.NotFoundException.notFound;
  * }
  * </code></pre>
  *
- * @apiviz.landmark
- * @apiviz.uses sonia.scm.repository.api.RepositoryService
  * @since 1.17
  */
 @Singleton

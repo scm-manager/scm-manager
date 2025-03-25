@@ -57,8 +57,7 @@ import static sonia.scm.version.Version.parse;
  * <li>a new entry in the new <code>repository-paths.xml</code> database is written,</li>
  * <li>the data directory is moved or copied to a SCM v2 consistent directory. How this is done
  * can be specified by a strategy (@see {@link MigrationStrategy}), that has to be set in
- * a database file named <code>migration-plan.xml</code></li> (to create this file, use {@link DefaultMigrationStrategyDAO}),
- * and
+ * a database file named <code>migration-plan.xml</code> (to create this file, use {@link DefaultMigrationStrategyDAO}), and</li>
  * <li>the new <code>metadata.xml</code> file is created.</li>
  * </ul>
  * </li>

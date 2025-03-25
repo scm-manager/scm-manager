@@ -75,21 +75,21 @@ public abstract class ConfigurationAdapterBase<DAO, DTO extends HalRepresentatio
    * If either one is missing, you will see {@link IllegalDaoClassException}s on your way.
    * <br>
    * The implementation may look like this:
-   * <pre>
-   *   @Path("/v2/test")
-   *     private static class TestConfigurationAdapter extends ConfigurationAdapterBase<TestConfiguration, TestConfigurationDto> {
+   * <pre><code>
+   *   &commat;Path("/v2/test")
+   *     private static class TestConfigurationAdapter extends ConfigurationAdapterBase&lt;TestConfiguration, TestConfigurationDto&gt; {
    *
-   *     @Inject
-   *     public TestConfigurationResource(ConfigurationStoreFactory configurationStoreFactory, Provider<ScmPathInfoStore> scmPathInfoStoreProvider) {
+   *     &commat;Inject
+   *     public TestConfigurationResource(ConfigurationStoreFactory configurationStoreFactory, Provider&lt;ScmPathInfoStore&gt; scmPathInfoStoreProvider) {
    *       super(configurationStoreFactory, scmPathInfoStoreProvider, TestConfiguration.class, TestConfigurationDto.class);
    *     }
    *
-   *     @Override
+   *     &commat;Override
    *     protected String getName() {
    *       return "testConfig";
    *     }
    *   }
-   * </pre>
+   * </code></pre>
    *
    * @param configurationStoreFactory The configuration store factory provided from injection.
    * @param scmPathInfoStoreProvider The path info store provider provided from injection.

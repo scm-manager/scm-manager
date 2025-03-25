@@ -23,7 +23,7 @@ import com.google.common.io.ByteSink;
 /**
  * Request for the bundle command.
  *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
+ * @author Sebastian Sdorra
  * @since 1.43
  */
 public final class BundleCommandRequest

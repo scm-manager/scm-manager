@@ -22,8 +22,6 @@ import java.util.List;
  * The blob store can be used store unstructured data in form of a {@link Blob}.
  *
  * @since 1.23
- *
- * @apiviz.uses sonia.scm.store.Blob
  */
 public interface BlobStore extends MultiEntryStore<Blob>
 {

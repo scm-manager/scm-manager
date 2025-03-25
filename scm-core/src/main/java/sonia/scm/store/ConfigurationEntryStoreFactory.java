@@ -17,32 +17,30 @@
 package sonia.scm.store;
 
 /**
- * The ConfigurationEntryStoreFactory can be used to create new or get existing {@link ConfigurationEntryStore}s.
- * <br>
  * <b>Note:</b> the default implementation uses the same location as the {@link ConfigurationStoreFactory}, so be sure
  * that the store names are unique for all {@link ConfigurationEntryStore}s and {@link ConfigurationEntryStore}s.
- * <br>
+ * <br/>
+ * <br/>
+ * The ConfigurationEntryStoreFactory can be used to create new or get existing {@link ConfigurationEntryStore}s.
+ * <br/>
+ * <br/>
  * You can either create a global {@link ConfigurationEntryStore} or a {@link ConfigurationEntryStore} for a specific
- * repository. To create a global {@link ConfigurationEntryStore} call:
- * <code><pre>
- *     configurationEntryStoreFactory
- *       .withType(PersistedType.class)
- *       .withName("name")
- *       .build();
- * </pre></code>
- * To create a {@link ConfigurationEntryStore} for a specific repository call:
- * <code><pre>
+ * repository. Call this to create a global {@link ConfigurationEntryStore}:
+ * <br/>
+ * <code>configurationEntryStoreFactory.withType(PersistedType.class).withName("name").build();</code>
+ * <br/>
+ * <br/>
+ * Call this to create a {@link ConfigurationEntryStore} for a specific repository:
+ * <br/>
+ * <code>
  *     configurationEntryStoreFactory
  *       .withType(PersistedType.class)
  *       .withName("name")
  *       .forRepository(repository)
  *       .build();
- * </pre></code>
+ * </code>
  *
  * @since 1.31
- *
- * @apiviz.landmark
- * @apiviz.uses sonia.scm.store.ConfigurationEntryStore
  */
 public interface ConfigurationEntryStoreFactory {
 

@@ -18,31 +18,21 @@ package sonia.scm.store;
 
 
 /**
- * The ConfigurationStoreFactory can be used to create new or get existing {@link ConfigurationStore} objects.
- * <br>
  * <b>Note:</b> the default implementation uses the same location as the {@link ConfigurationEntryStoreFactory}, so be
  * sure that the store names are unique for all {@link ConfigurationEntryStore}s and {@link ConfigurationStore}s.
- * <br>
+ * <br/>
+ * <br/>
+ * The ConfigurationStoreFactory can be used to create new or get existing {@link ConfigurationStore} objects.
  * You can either create a global {@link ConfigurationStore} or a {@link ConfigurationStore} for a specific repository.
- * To create a global {@link ConfigurationStore} call:
- * <code><pre>
- *     configurationStoreFactory
- *       .withType(PersistedType.class)
- *       .withName("name")
- *       .build();
- * </pre></code>
- * To create a {@link ConfigurationStore} for a specific repository call:
- * <code><pre>
- *     configurationStoreFactory
- *       .withType(PersistedType.class)
- *       .withName("name")
- *       .forRepository(repository)
- *       .build();
- * </pre></code>
- *
- *
- * @apiviz.landmark
- * @apiviz.uses sonia.scm.store.ConfigurationStore
+ * <br/>
+ * <br/>
+ * Call this to create a global {@link ConfigurationStore}:
+ * <code>configurationStoreFactory.withType(PersistedType.class).withName("name").build();</code>
+ * <br/>
+ * <br/>
+ * Call this to create a {@link ConfigurationStore} for a specific repository:
+ * <br/>
+ * <code>configurationStoreFactory.withType(PersistedType.class).withName("name").forRepository(repository).build();</code>
  */
 public interface ConfigurationStoreFactory  {
 

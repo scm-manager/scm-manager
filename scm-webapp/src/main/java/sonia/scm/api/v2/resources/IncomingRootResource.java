@@ -98,7 +98,6 @@ public class IncomingRootResource {
    * @param page
    * @param pageSize
    * @return
-   * @throws Exception
    */
   @GET
   @Path("{source}/{target}/changesets")

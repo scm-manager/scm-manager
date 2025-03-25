@@ -28,7 +28,7 @@ import java.io.Serializable;
 /**
  * The {@link Person} (author) of a changeset.
  *
- * @person Sebastian Sdorra
+ * @author Sebastian Sdorra
  */
 @EqualsAndHashCode
 @Getter

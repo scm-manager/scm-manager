@@ -25,8 +25,6 @@ import java.util.function.Consumer;
 /**
  * The central class for managing {@link Repository} objects.
  * This class is a singleton and is available via injection.
- *
- * @apiviz.uses sonia.scm.repository.RepositoryHandler
  */
 public interface RepositoryManager
   extends TypeManager<Repository, RepositoryHandler> {

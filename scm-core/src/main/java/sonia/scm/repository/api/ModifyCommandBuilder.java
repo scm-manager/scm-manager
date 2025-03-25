@@ -59,7 +59,6 @@ import java.util.function.Consumer;
  *     .deleteFile("old/file/to/delete")
  *     .execute();
  * </pre>
- * </p>
  */
 public class ModifyCommandBuilder {
 
