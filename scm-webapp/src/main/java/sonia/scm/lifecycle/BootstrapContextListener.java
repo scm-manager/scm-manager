@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.config.LoggingConfiguration;
+import sonia.scm.importexport.RemainingQueryableStoreImporter;
 import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
 import sonia.scm.lifecycle.modules.ApplicationModuleProvider;
 import sonia.scm.lifecycle.modules.BootstrapModule;
@@ -171,6 +172,9 @@ public class BootstrapContextListener extends GuiceServletContextListener {
 
   private void processUpdates(PluginLoader pluginLoader, Injector bootstrapInjector) {
     Injector updateInjector = bootstrapInjector.createChildInjector(new UpdateStepModule(pluginLoader));
+
+    RemainingQueryableStoreImporter importer = updateInjector.getInstance(RemainingQueryableStoreImporter.class);
+    importer.onInitializationCompleted();
 
     UpdateEngine updateEngine = updateInjector.getInstance(UpdateEngine.class);
     updateEngine.update();

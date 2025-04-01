@@ -110,16 +110,4 @@ public class TarArchiveRepositoryStoreImporter {
   private boolean isConfigStore(String storeType) {
     return storeType.equals(StoreType.CONFIG.getValue()) || storeType.equals(StoreType.CONFIG_ENTRY.getValue());
   }
-
-  static class NoneClosingTarArchiveInputStream extends TarArchiveInputStream {
-
-    public NoneClosingTarArchiveInputStream(InputStream is) {
-      super(is);
-    }
-
-    @Override
-    public void close() throws IOException {
-      // Do not close this input stream
-    }
-  }
 }

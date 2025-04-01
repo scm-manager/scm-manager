@@ -32,6 +32,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.ClearRepositoryCacheEvent;
 import sonia.scm.repository.ImportRepositoryHookEvent;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHookEvent;
@@ -62,7 +63,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
@@ -114,6 +114,8 @@ class FullScmRepositoryImporterTest {
   private StoreImportStep storeImportStep;
   @InjectMocks
   private RepositoryImportStep repositoryImportStep;
+  @InjectMocks
+  private QueryableStoreImportStep queryableStoreImportStep;
 
   @Mock
   private RepositoryHookEvent event;
@@ -129,11 +131,13 @@ class FullScmRepositoryImporterTest {
       environmentCheckStep,
       metadataImportStep,
       storeImportStep,
+      queryableStoreImportStep,
       repositoryImportStep,
       repositoryManager,
       repositoryImportExportEncryption,
       loggerFactory,
-      eventBus);
+      eventBus,
+      updateEngine);
   }
 
   @BeforeEach
@@ -256,17 +260,30 @@ class FullScmRepositoryImporterTest {
 
       fullImporter.importFromStream(REPOSITORY, stream, null);
 
-      assertThat(capturedEvents.getAllValues()).hasSize(2);
-      assertThat(capturedEvents.getAllValues()).anyMatch(
-        event ->
-          event instanceof ImportRepositoryHookEvent &&
-            ((ImportRepositoryHookEvent) event).getRepository().equals(REPOSITORY)
-      );
-      assertThat(capturedEvents.getAllValues()).anyMatch(
-        event ->
-          event instanceof RepositoryImportEvent &&
-            ((RepositoryImportEvent) event).getItem().equals(REPOSITORY)
-      );
+      assertThat(capturedEvents.getAllValues()).hasSize(4);
+      assertThat(capturedEvents.getAllValues())
+        .satisfiesExactlyInAnyOrder(
+          event ->
+            assertThat(event)
+              .isInstanceOf(ClearRepositoryCacheEvent.class)
+              .extracting("repository")
+              .isEqualTo(REPOSITORY),
+          event ->
+            assertThat(event)
+              .isInstanceOf(ClearRepositoryCacheEvent.class)
+              .extracting("repository")
+              .isEqualTo(REPOSITORY),
+          event ->
+            assertThat(event)
+              .isInstanceOf(RepositoryImportEvent.class)
+              .extracting("item")
+              .isEqualTo(REPOSITORY),
+          event ->
+            assertThat(event)
+              .isInstanceOf(ImportRepositoryHookEvent.class)
+              .extracting("repository")
+              .isEqualTo(REPOSITORY)
+        );
     }
 
     @Test

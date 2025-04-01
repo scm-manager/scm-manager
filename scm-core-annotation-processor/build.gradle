@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2020 - present Cloudogu GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License as published by the Free
+ * Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see https://www.gnu.org/licenses/.
+ */
+
+plugins {
+  id 'java-library'
+  id 'org.scm-manager.java'
+}
+
+dependencies {
+  implementation platform(project(':'))
+  implementation project(':scm-annotations')
+  implementation project(':scm-core')
+
+  implementation "com.google.auto:auto-common:1.2.2"
+
+  implementation 'com.squareup:javapoet:1.13.0'
+
+  compileOnly libraries.lombok;
+  annotationProcessor libraries.lombok;
+
+  testImplementation "com.google.testing.compile:compile-testing:0.21.0"
+  testImplementation libraries.junitJupiterApi
+  testImplementation libraries.junitJupiterParams
+  testImplementation libraries.junitJupiterEngine
+  testImplementation libraries.assertj
+
+  // service registration
+  compileOnly libraries.metainfServices
+  annotationProcessor libraries.metainfServices
+}
+
+test {
+  // See: https://github.com/google/compile-testing/issues/222
+  jvmArgs("--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED")
+  jvmArgs("--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED")
+  jvmArgs("--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED")
+}

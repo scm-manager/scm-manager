@@ -27,7 +27,7 @@ import lombok.ToString;
 import java.util.HashSet;
 
 @Getter
-@ToString
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @XmlAccessorType(XmlAccessType.FIELD)
 @NoArgsConstructor(access = AccessLevel.PACKAGE)

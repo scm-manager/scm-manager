@@ -27,8 +27,9 @@ import org.mockito.MockitoAnnotations;
 import sonia.scm.AbstractTestBase;
 import sonia.scm.auditlog.Auditor;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
-import sonia.scm.store.StoreCacheConfigProvider;
+import sonia.scm.store.file.JAXBConfigurationEntryStoreFactory;
+import sonia.scm.store.file.StoreCacheConfigProvider;
+import sonia.scm.store.file.StoreCacheFactory;
 import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.MockUtil;
 
@@ -60,7 +61,7 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
   public void createSecuritySystem()
   {
     jaxbConfigurationEntryStoreFactory =
-      spy(new JAXBConfigurationEntryStoreFactory(contextProvider , repositoryLocationResolver, new UUIDKeyGenerator(), null, new StoreCacheConfigProvider(false)) {});
+      spy(new JAXBConfigurationEntryStoreFactory(contextProvider , repositoryLocationResolver, new UUIDKeyGenerator(), null, new StoreCacheFactory(new StoreCacheConfigProvider(false))) {});
     pluginLoader = mock(PluginLoader.class);
     when(pluginLoader.getUberClassLoader()).thenReturn(ClassLoaders.getContextClassLoader(DefaultSecuritySystem.class));
 

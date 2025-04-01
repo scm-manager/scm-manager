@@ -31,7 +31,7 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
-import sonia.scm.store.StoreConstants;
+import sonia.scm.store.file.StoreConstants;
 import sonia.scm.version.Version;
 
 import java.nio.file.Path;

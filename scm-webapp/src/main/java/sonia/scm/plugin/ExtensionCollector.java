@@ -50,6 +50,7 @@ public final class ExtensionCollector {
   private final Set<ConfigElement> configElements = Sets.newHashSet();
   private final Multimap<ExtensionPointElement, Class> extensions = HashMultimap.create();
   private final Map<Class, ExtensionPointElement> extensionPointIndex = Maps.newHashMap();
+  private final Set<QueryableTypeDescriptor> queryableTypes = Sets.newHashSet();
 
   public ExtensionCollector(ClassLoader moduleClassLoader, Set<ScmModule> modules, Set<InstalledPlugin> installedPlugins) {
     this.pluginIndex = createPluginIndex(installedPlugins);
@@ -144,6 +145,10 @@ public final class ExtensionCollector {
     return indexedTypes;
   }
 
+  public Iterable<QueryableTypeDescriptor> getQueryableTypes() {
+    return queryableTypes;
+  }
+
   private void appendExtension(Class extension) {
     boolean found = false;
 
@@ -221,6 +226,16 @@ public final class ExtensionCollector {
     return true;
   }
 
+  private Collection<? extends QueryableTypeDescriptor> collectQueryableTypes(ClassLoader defaultClassLoader, Iterable<QueryableTypeDescriptor> descriptors) {
+    Set<QueryableTypeDescriptor> queryableTypes = new HashSet<>();
+    for (QueryableTypeDescriptor descriptor : descriptors) {
+      if (isRequirementFulfilled(descriptor)) {
+        queryableTypes.add(descriptor);
+      }
+    }
+    return queryableTypes;
+  }
+
   private void collectRootElements(ClassLoader classLoader, ScmModule module) {
     for (ExtensionPointElement epe : module.getExtensionPoints()) {
       extensionPointIndex.put(epe.getClazz(), epe);
@@ -233,5 +248,6 @@ public final class ExtensionCollector {
     webElements.addAll(collectWebElementExtensions(classLoader, module.getWebElements()));
     indexedTypes.addAll(collectIndexedTypes(classLoader, module.getIndexedTypes()));
     Iterables.addAll(configElements, module.getConfigElements());
+    queryableTypes.addAll(collectQueryableTypes(classLoader, module.getQueryableTypes()));
   }
 }

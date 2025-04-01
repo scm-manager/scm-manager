@@ -24,7 +24,7 @@ import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
-import sonia.scm.store.StoreConstants;
+import sonia.scm.store.file.StoreConstants;
 import sonia.scm.version.Version;
 
 import java.io.IOException;

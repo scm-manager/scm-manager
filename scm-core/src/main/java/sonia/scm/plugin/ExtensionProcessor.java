@@ -77,4 +77,12 @@ public interface ExtensionProcessor
   default Iterable<Class<?>> getIndexedTypes() {
     return emptySet();
   }
+
+  /**
+   * Returns all queryable types.
+   * @since 3.7.0
+   */
+  default Iterable<QueryableTypeDescriptor> getQueryableTypes() {
+    return emptySet();
+  }
 }

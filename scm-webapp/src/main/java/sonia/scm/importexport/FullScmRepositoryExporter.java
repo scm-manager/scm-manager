@@ -37,6 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -47,6 +48,7 @@ public class FullScmRepositoryExporter implements FullRepositoryExporter {
   static final String SCM_ENVIRONMENT_FILE_NAME = "scm-environment.xml";
   static final String METADATA_FILE_NAME = "metadata.xml";
   static final String STORE_DATA_FILE_NAME = "store-data.tar";
+  static final String QUERYABLE_STORE_DATA_FILE_NAME = "queryable-store-data.tar";
   private final EnvironmentInformationXmlGenerator environmentGenerator;
   private final RepositoryMetadataXmlGenerator metadataGenerator;
   private final RepositoryServiceFactory serviceFactory;
@@ -55,17 +57,20 @@ public class FullScmRepositoryExporter implements FullRepositoryExporter {
   private final RepositoryExportingCheck repositoryExportingCheck;
   private final RepositoryImportExportEncryption repositoryImportExportEncryption;
   private final ExportNotificationHandler notificationHandler;
-
   private final AdministrationContext administrationContext;
+  private final RepositoryQueryableStoreExporter queryableStoreExporter;
 
   @Inject
-  public FullScmRepositoryExporter(EnvironmentInformationXmlGenerator environmentGenerator,
-                                   RepositoryMetadataXmlGenerator metadataGenerator,
-                                   RepositoryServiceFactory serviceFactory,
-                                   TarArchiveRepositoryStoreExporter storeExporter,
-                                   WorkdirProvider workdirProvider,
-                                   RepositoryExportingCheck repositoryExportingCheck,
-                                   RepositoryImportExportEncryption repositoryImportExportEncryption, ExportNotificationHandler notificationHandler, AdministrationContext administrationContext) {
+  FullScmRepositoryExporter(EnvironmentInformationXmlGenerator environmentGenerator,
+                            RepositoryMetadataXmlGenerator metadataGenerator,
+                            RepositoryServiceFactory serviceFactory,
+                            TarArchiveRepositoryStoreExporter storeExporter,
+                            WorkdirProvider workdirProvider,
+                            RepositoryExportingCheck repositoryExportingCheck,
+                            RepositoryImportExportEncryption repositoryImportExportEncryption,
+                            ExportNotificationHandler notificationHandler,
+                            AdministrationContext administrationContext,
+                            RepositoryQueryableStoreExporter queryableStoreExporter) {
     this.environmentGenerator = environmentGenerator;
     this.metadataGenerator = metadataGenerator;
     this.serviceFactory = serviceFactory;
@@ -75,6 +80,7 @@ public class FullScmRepositoryExporter implements FullRepositoryExporter {
     this.repositoryImportExportEncryption = repositoryImportExportEncryption;
     this.notificationHandler = notificationHandler;
     this.administrationContext = administrationContext;
+    this.queryableStoreExporter = queryableStoreExporter;
   }
 
   public void export(Repository repository, OutputStream outputStream, String password) {
@@ -95,11 +101,12 @@ public class FullScmRepositoryExporter implements FullRepositoryExporter {
       BufferedOutputStream bos = new BufferedOutputStream(outputStream);
       OutputStream cos = repositoryImportExportEncryption.optionallyEncrypt(bos, password);
       GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(cos);
-      TarArchiveOutputStream taos = Archives.createTarOutputStream(gzos);
+      TarArchiveOutputStream taos = Archives.createTarOutputStream(gzos)
     ) {
       writeEnvironmentData(repository, taos);
       writeMetadata(repository, taos);
       writeStoreData(repository, taos);
+      writeQueryableStoreData(repository, taos);
       writeRepository(service, taos);
       taos.finish();
     } catch (IOException e) {
@@ -136,20 +143,13 @@ public class FullScmRepositoryExporter implements FullRepositoryExporter {
   }
 
   private void writeRepository(RepositoryService service, TarArchiveOutputStream taos) throws IOException {
-    File newWorkdir = workdirProvider.createNewWorkdir(service.getRepository().getId());
-    try {
+    createAndAddFromTemporaryDirectory(service.getRepository(), taos, createRepositoryEntryName(service), newWorkdir -> {
       File repositoryFile = Files.createFile(Paths.get(newWorkdir.getPath(), "repository")).toFile();
       try (FileOutputStream repositoryFos = new FileOutputStream(repositoryFile)) {
         service.getBundleCommand().bundle(repositoryFos);
       }
-      TarArchiveEntry entry = new TarArchiveEntry(createRepositoryEntryName(service));
-      entry.setSize(repositoryFile.length());
-      taos.putArchiveEntry(entry);
-      Files.copy(repositoryFile.toPath(), taos);
-      taos.closeArchiveEntry();
-    } finally {
-      IOUtil.deleteSilently(newWorkdir);
-    }
+      return repositoryFile;
+    });
   }
 
   private String createRepositoryEntryName(RepositoryService service) {
@@ -157,19 +157,46 @@ public class FullScmRepositoryExporter implements FullRepositoryExporter {
   }
 
   private void writeStoreData(Repository repository, TarArchiveOutputStream taos) throws IOException {
-    File newWorkdir = workdirProvider.createNewWorkdir(repository.getId());
-    try {
+    createAndAddFromTemporaryDirectory(repository, taos, STORE_DATA_FILE_NAME, newWorkdir -> {
       File metadata = Files.createFile(Paths.get(newWorkdir.getPath(), "metadata")).toFile();
       try (FileOutputStream metadataFos = new FileOutputStream(metadata)) {
         storeExporter.export(repository, metadataFos);
       }
-      TarArchiveEntry entry = new TarArchiveEntry(STORE_DATA_FILE_NAME);
-      entry.setSize(metadata.length());
-      taos.putArchiveEntry(entry);
-      Files.copy(metadata.toPath(), taos);
-      taos.closeArchiveEntry();
+      return metadata;
+    });
+  }
+
+  private void writeQueryableStoreData(Repository repository, TarArchiveOutputStream taos) throws IOException {
+    createAndAddFromTemporaryDirectory(repository, taos, QUERYABLE_STORE_DATA_FILE_NAME, newWorkdir -> {
+      Path queryableTarFilePath = Paths.get(newWorkdir.getPath(), QUERYABLE_STORE_DATA_FILE_NAME);
+      File queryableTarFile = Files.createFile(queryableTarFilePath).toFile();
+      try (FileOutputStream fos = new FileOutputStream(queryableTarFile);
+           TarArchiveOutputStream tempTaos = Archives.createTarOutputStream(fos)) {
+        queryableStoreExporter.addQueryableStoreDataToArchive(repository, newWorkdir, tempTaos);
+      }
+      return queryableTarFile;
+    });
+  }
+
+  private void createAndAddFromTemporaryDirectory(Repository repository, TarArchiveOutputStream taos, String entryName, PackFileProducer packFileProducer) throws IOException {
+    File newWorkdir = workdirProvider.createNewWorkdir(repository.getId());
+    try {
+      File tempFile = packFileProducer.packFile(newWorkdir);
+      addToTar(entryName, tempFile, taos);
     } finally {
       IOUtil.deleteSilently(newWorkdir);
     }
+  }
+
+  private static void addToTar(String storeDataFileName, File metadata, TarArchiveOutputStream taos) throws IOException {
+    TarArchiveEntry entry = new TarArchiveEntry(storeDataFileName);
+    entry.setSize(metadata.length());
+    taos.putArchiveEntry(entry);
+    Files.copy(metadata.toPath(), taos);
+    taos.closeArchiveEntry();
+  }
+
+  private interface PackFileProducer {
+    File packFile(File newWorkdir) throws IOException;
   }
 }

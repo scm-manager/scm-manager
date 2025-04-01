@@ -23,7 +23,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.store.StoreConstants;
+import sonia.scm.store.file.StoreConstants;
 
 import java.io.File;
 import java.nio.file.Paths;

@@ -50,9 +50,11 @@ dependencies {
   assets project(path: ':scm-ui', configuration: 'assets')
 
   implementation project(':scm-core')
-  implementation project(':scm-dao-xml')
+  implementation project(':scm-persistence')
   testImplementation project(':scm-test')
+  testImplementation project(':scm-queryable-test')
   annotationProcessor project(':scm-annotation-processor')
+  testAnnotationProcessor project(':scm-core-annotation-processor')
 
   // servlet api
   providedCompile libraries.servletApi

@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import sonia.scm.migration.UpdateException;
-import sonia.scm.store.CopyOnWrite;
+import sonia.scm.CopyOnWrite;
 import sonia.scm.version.Version;
 import sonia.scm.xml.XmlStreams;
 import sonia.scm.xml.XmlStreams.AutoCloseableXMLReader;
@@ -41,7 +41,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
-import static sonia.scm.store.CopyOnWrite.compute;
+import static sonia.scm.CopyOnWrite.compute;
 
 abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
 

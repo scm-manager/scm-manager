@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.ClearRepositoryCacheEvent;
 import sonia.scm.repository.FullRepositoryImporter;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryImportEvent;
@@ -33,6 +34,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.ImportFailedException;
+import sonia.scm.update.UpdateEngine;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -53,21 +55,31 @@ public class FullScmRepositoryImporter implements FullRepositoryImporter {
   private final RepositoryImportExportEncryption repositoryImportExportEncryption;
   private final ScmEventBus eventBus;
   private final RepositoryImportLoggerFactory loggerFactory;
+  private final UpdateEngine updateEngine;
 
   @Inject
-  public FullScmRepositoryImporter(EnvironmentCheckStep environmentCheckStep,
+  FullScmRepositoryImporter(EnvironmentCheckStep environmentCheckStep,
                                    MetadataImportStep metadataImportStep,
                                    StoreImportStep storeImportStep,
+                                   QueryableStoreImportStep queryableStoreImportStep,
                                    RepositoryImportStep repositoryImportStep,
                                    RepositoryManager repositoryManager,
                                    RepositoryImportExportEncryption repositoryImportExportEncryption,
                                    RepositoryImportLoggerFactory loggerFactory,
-                                   ScmEventBus eventBus) {
+                                   ScmEventBus eventBus,
+                                   UpdateEngine updateEngine) {
     this.repositoryManager = repositoryManager;
     this.loggerFactory = loggerFactory;
     this.repositoryImportExportEncryption = repositoryImportExportEncryption;
     this.eventBus = eventBus;
-    importSteps = new ImportStep[]{environmentCheckStep, metadataImportStep, storeImportStep, repositoryImportStep};
+    this.updateEngine = updateEngine;
+    importSteps = new ImportStep[]{
+      environmentCheckStep,
+      metadataImportStep,
+      storeImportStep,
+      queryableStoreImportStep,
+      repositoryImportStep
+    };
   }
 
   public Repository importFromStream(Repository repository, InputStream inputStream, String password) {
@@ -122,11 +134,17 @@ public class FullScmRepositoryImporter implements FullRepositoryImporter {
     logger.repositoryCreated(state.getRepository());
     try {
       TarArchiveEntry tarArchiveEntry;
-      while ((tarArchiveEntry = tais.getNextTarEntry()) != null) {
+      while ((tarArchiveEntry = tais.getNextEntry()) != null) {
         LOG.trace("Trying to handle tar entry '{}'", tarArchiveEntry.getName());
         handle(tais, state, tarArchiveEntry);
       }
+
       stream(importSteps).forEach(step -> step.finish(state));
+
+      eventBus.post(new ClearRepositoryCacheEvent(createdRepository));
+      updateEngine.update(repository.getId());
+      eventBus.post(new ClearRepositoryCacheEvent(createdRepository));
+
       state.getLogger().finished();
       return state.getRepository();
     } catch (RuntimeException | IOException e) {

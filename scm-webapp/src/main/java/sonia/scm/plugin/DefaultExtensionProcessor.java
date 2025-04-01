@@ -83,8 +83,12 @@ public class DefaultExtensionProcessor implements ExtensionProcessor {
   }
 
   @Override
+  public Iterable<QueryableTypeDescriptor> getQueryableTypes() {
+    return collector.getQueryableTypes();
+  }
+
+  @Override
   public Iterable<ConfigBinding> getConfigBindings() {
     return configBindings;
   }
-
 }

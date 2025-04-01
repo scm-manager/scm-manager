@@ -65,6 +65,9 @@ public class ScmModule {
   @XmlElement(name = "web-element")
   private Set<WebElementDescriptor> webElements;
 
+  @XmlElement(name = "queryable-type")
+  private Set<QueryableTypeDescriptor> queryableTypes;
+
   public Iterable<ClassElement> getEvents() {
     return nonNull(events);
   }
@@ -107,10 +110,16 @@ public class ScmModule {
 
   /**
    * @since 3.0.0
-
    */
   public Iterable<ConfigElement> getConfigElements() {
     return nonNull(configElements);
+  }
+
+  /**
+   * @since 3.7.0
+   */
+  public Iterable<QueryableTypeDescriptor> getQueryableTypes() {
+    return nonNull(queryableTypes);
   }
 
   private <T> Iterable<T> nonNull(Iterable<T> iterable) {

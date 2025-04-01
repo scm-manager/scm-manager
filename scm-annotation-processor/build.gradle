@@ -41,7 +41,24 @@ dependencies {
   // utils
   implementation libraries.guava
 
+  implementation "com.google.auto:auto-common:1.2.2"
+
+  implementation 'com.squareup:javapoet:1.13.0'
+
+  testImplementation "com.google.testing.compile:compile-testing:0.21.0"
+  testImplementation libraries.junitJupiterApi
+  testImplementation libraries.junitJupiterEngine
+  testImplementation libraries.assertj
+
   // service registration
   compileOnly libraries.metainfServices
   annotationProcessor libraries.metainfServices
+
+}
+
+test {
+  // See: https://github.com/google/compile-testing/issues/222
+  jvmArgs("--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED")
+  jvmArgs("--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED")
+  jvmArgs("--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED")
 }

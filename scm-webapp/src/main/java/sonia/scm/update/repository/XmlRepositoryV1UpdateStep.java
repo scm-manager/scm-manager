@@ -29,7 +29,7 @@ import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
-import sonia.scm.store.StoreConstants;
+import sonia.scm.store.file.StoreConstants;
 import sonia.scm.update.CoreUpdateStep;
 import sonia.scm.update.V1Properties;
 import sonia.scm.version.Version;

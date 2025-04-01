@@ -15,6 +15,7 @@ ext {
   bouncycastleVersion = '2.73.6'
   jettyVersion = '11.0.24'
   luceneVersion = '8.11.4'
+  sqliteVersion = '3.49.1.0'
 
   junitJupiterVersion = '5.10.3'
   hamcrestVersion = '3.0'
@@ -193,6 +194,9 @@ ext {
 
     // metrics
     micrometerCore: "io.micrometer:micrometer-core:${micrometerVersion}",
-    micrometerExtra: "io.github.mweirauch:micrometer-jvm-extras:0.2.2"
+    micrometerExtra: "io.github.mweirauch:micrometer-jvm-extras:0.2.2",
+
+    // SQLite
+    sqlite: "org.xerial:sqlite-jdbc:${sqliteVersion}"
   ]
 }

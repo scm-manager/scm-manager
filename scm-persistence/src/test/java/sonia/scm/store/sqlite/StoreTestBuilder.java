@@ -1,0 +1,84 @@
+/*
+ * Copyright (c) 2020 - present Cloudogu GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License as published by the Free
+ * Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see https://www.gnu.org/licenses/.
+ */
+
+package sonia.scm.store.sqlite;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import sonia.scm.security.UUIDKeyGenerator;
+import sonia.scm.store.QueryableMaintenanceStore;
+import sonia.scm.store.QueryableStore;
+import sonia.scm.user.User;
+
+import java.util.List;
+
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
+import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS;
+import static sonia.scm.store.sqlite.QueryableTypeDescriptorTestData.createDescriptor;
+
+class StoreTestBuilder {
+
+  private final ObjectMapper mapper = getObjectMapper();
+
+  private static ObjectMapper getObjectMapper() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.registerModule(new JavaTimeModule());
+    objectMapper.configure(WRITE_DATES_AS_TIMESTAMPS, true);
+    objectMapper.configure(WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
+    objectMapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
+    return objectMapper;
+  }
+
+  private final String connectionString;
+  private final String[] parentClasses;
+
+  StoreTestBuilder(String connectionString, String... parentClasses) {
+    this.connectionString = connectionString;
+    this.parentClasses = parentClasses;
+  }
+
+  SQLiteQueryableMutableStore<User> withIds(String... ids) {
+    return forClassWithIds(User.class, ids);
+  }
+
+  QueryableStore<User> withSubIds(String... ids) {
+    if (ids.length > parentClasses.length) {
+      throw new IllegalArgumentException("id length should be at most " + parentClasses.length);
+    }
+    return createStoreFactory(User.class).getReadOnly(User.class, ids);
+  }
+
+  QueryableMaintenanceStore<User> forMaintenanceWithSubIds(String... ids) {
+    if (ids.length > parentClasses.length) {
+      throw new IllegalArgumentException("id length should be at most " + parentClasses.length);
+    }
+    return createStoreFactory(User.class).getForMaintenance(User.class, ids);
+  }
+
+  <T> SQLiteQueryableMutableStore<T> forClassWithIds(Class<T> clazz, String... ids) {
+    return createStoreFactory(clazz).getMutable(clazz, ids);
+  }
+
+  private <T> SQLiteQueryableStoreFactory createStoreFactory(Class<T> clazz) {
+    return new SQLiteQueryableStoreFactory(
+      connectionString,
+      mapper,
+      new UUIDKeyGenerator(),
+      List.of(createDescriptor(clazz.getName(), parentClasses))
+    );
+  }
+}

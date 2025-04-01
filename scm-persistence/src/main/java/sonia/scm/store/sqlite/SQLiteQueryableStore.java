@@ -1,0 +1,705 @@
+/*
+ * Copyright (c) 2020 - present Cloudogu GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License as published by the Free
+ * Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see https://www.gnu.org/licenses/.
+ */
+
+package sonia.scm.store.sqlite;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import sonia.scm.plugin.QueryableTypeDescriptor;
+import sonia.scm.store.Condition;
+import sonia.scm.store.Conditions;
+import sonia.scm.store.LeafCondition;
+import sonia.scm.store.LogicalCondition;
+import sonia.scm.store.QueryableMaintenanceStore;
+import sonia.scm.store.QueryableStore;
+import sonia.scm.store.StoreException;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.function.BooleanSupplier;
+import java.util.stream.Stream;
+
+import static sonia.scm.store.sqlite.SQLiteIdentifiers.computeColumnIdentifier;
+import static sonia.scm.store.sqlite.SQLiteIdentifiers.computeTableName;
+
+@Slf4j
+class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenanceStore<T> {
+
+  public static final String TEMPORARY_UPDATE_TABLE_NAME = "update_tmp";
+  private final ObjectMapper objectMapper;
+  private final Connection connection;
+
+  private final Class<T> clazz;
+  private final QueryableTypeDescriptor queryableTypeDescriptor;
+  private final String[] parentIds;
+
+  private final ReadWriteLock lock;
+
+  public SQLiteQueryableStore(ObjectMapper objectMapper,
+                              Connection connection,
+                              Class<T> clazz,
+                              QueryableTypeDescriptor queryableTypeDescriptor,
+                              String[] parentIds,
+                              ReadWriteLock lock) {
+    this.objectMapper = objectMapper;
+    this.connection = connection;
+    this.clazz = clazz;
+    this.parentIds = parentIds;
+    this.queryableTypeDescriptor = queryableTypeDescriptor;
+    this.lock = lock;
+  }
+
+  @Override
+  public Query<T, T> query(Condition<T>... conditions) {
+    return new SQLiteQuery<>(clazz, conditions);
+  }
+
+  @Override
+  public void clear() {
+    List<SQLNodeWithValue> parentConditions = new ArrayList<>();
+    evaluateParentConditions(parentConditions);
+
+    SQLDeleteStatement sqlStatementQuery =
+      new SQLDeleteStatement(
+        computeFromTable(),
+        parentConditions
+      );
+
+    executeWrite(
+      sqlStatementQuery,
+      statement -> {
+        statement.executeUpdate();
+        return null;
+      }
+    );
+  }
+
+  @Override
+  public Collection<RawRow> readRaw() {
+    return readAllAs(RawRow::new);
+  }
+
+  @Override
+  public Collection<Row<T>> readAll() {
+    return readAllAs(clazz);
+  }
+
+  @Override
+  public <U> Collection<Row<U>> readAllAs(Class<U> type) {
+    return readAllAs((parentIds, id, json) -> new Row<>(parentIds, id, objectMapper.readValue(json, type)));
+  }
+
+  private <R> Collection<R> readAllAs(RowBuilder<R> rowBuilder) {
+    List<SQLNodeWithValue> parentConditions = new ArrayList<>();
+    evaluateParentConditions(parentConditions);
+    List<SQLField> fields = new ArrayList<>();
+    addParentIdSQLFields(fields);
+    int parentIdsLength = fields.size() - 1; // addParentIdSQLFields has already added the ID field
+    fields.add(new SQLField("PAYLOAD"));
+    SQLSelectStatement sqlSelectQuery =
+      new SQLSelectStatement(
+        fields,
+        computeFromTable(),
+        parentConditions
+      );
+    return executeRead(
+      sqlSelectQuery,
+      statement -> {
+        List<R> result = new ArrayList<>();
+        ResultSet resultSet = statement.executeQuery();
+        String[] allParentIds = new String[parentIdsLength];
+        while (resultSet.next()) {
+          for (int i = 0; i < parentIdsLength; i++) {
+            allParentIds[i] = resultSet.getString(i + 1);
+          }
+          String id = resultSet.getString(parentIdsLength + 1);
+          String json = resultSet.getString(parentIdsLength + 2);
+          result.add(rowBuilder.build(allParentIds, id, json));
+        }
+        return Collections.unmodifiableList(result);
+      }
+    );
+  }
+
+  @Override
+  @SuppressWarnings("rawtypes")
+  public void writeAll(Stream<Row> rows) {
+    writeRaw(rows.map(row -> new RawRow(row.getParentIds(), row.getId(), serialize(row.getValue()))));
+  }
+
+  @Override
+  public void writeRaw(Stream<RawRow> rows) {
+    transactional(
+      () -> {
+        rows.forEach(row -> {
+          List<String> columnsToInsert = new ArrayList<>(Arrays.asList(row.getParentIds()));
+          // overwrite parentIds from the export with the parentIds of the current store:
+          for (int i = 0; i < parentIds.length; i++) {
+            columnsToInsert.set(i, parentIds[i]);
+          }
+          columnsToInsert.add(row.getId());
+          columnsToInsert.add(row.getValue());
+          SQLInsertStatement sqlInsertStatement =
+            new SQLInsertStatement(
+              computeFromTable(),
+              new SQLValue(columnsToInsert)
+            );
+
+          executeWrite(
+            sqlInsertStatement,
+            statement -> {
+              statement.executeUpdate();
+              return null;
+            }
+          );
+        });
+        return true;
+      }
+    );
+  }
+
+  @Override
+  public MaintenanceIterator<T> iterateAll() {
+    List<SQLField> columns = new LinkedList<>();
+    columns.add(new SQLField("payload"));
+    addParentIdSQLFields(columns);
+
+    return new TemporaryTableMaintenanceIterator(columns);
+  }
+
+  public void transactional(BooleanSupplier callback) {
+    log.debug("start transactional operation");
+    Lock writeLock = lock.writeLock();
+    writeLock.lock();
+    try {
+      getConnection().setAutoCommit(false);
+      boolean commit = callback.getAsBoolean();
+      if (commit) {
+        log.debug("commit operation");
+        getConnection().commit();
+      } else {
+        log.debug("rollback operation");
+        getConnection().rollback();
+      }
+      log.debug("operation finished");
+    } catch (SQLException e) {
+      throw new StoreException("failed to disable auto-commit", e);
+    } finally {
+      writeLock.unlock();
+    }
+  }
+
+  List<SQLNodeWithValue> computeConditionsForAllValues() {
+    List<SQLNodeWithValue> conditions = new ArrayList<>();
+    evaluateParentConditions(conditions);
+    return conditions;
+  }
+
+  SQLTable computeFromTable() {
+    return new SQLTable(computeTableName(queryableTypeDescriptor));
+  }
+
+  <R> R executeRead(SQLNodeWithValue sqlStatement, StatementCallback<R> callback) {
+    String sql = sqlStatement.toSQL();
+    log.debug("executing 'read' SQL: {}", sql);
+    return executeWithLock(sqlStatement, callback, lock.readLock(), sql);
+  }
+
+  <R> R executeWrite(SQLNodeWithValue sqlStatement, StatementCallback<R> callback) {
+    String sql = sqlStatement.toSQL();
+    log.debug("executing 'write' SQL: {}", sql);
+    return executeWithLock(sqlStatement, callback, lock.writeLock(), sql);
+  }
+
+  private <R> R executeWithLock(SQLNodeWithValue sqlStatement, StatementCallback<R> callback, Lock writeLock, String sql) {
+    writeLock.lock();
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+      sqlStatement.apply(statement, 1);
+      return callback.apply(statement);
+    } catch (SQLException | JsonProcessingException e) {
+      throw new StoreException("An exception occurred while executing a query on SQLite database: " + sql, e);
+    } finally {
+      writeLock.unlock();
+    }
+  }
+
+  @Override
+  public void close() {
+    try {
+      log.debug("closing connection");
+      connection.close();
+    } catch (SQLException e) {
+      throw new StoreException("failed to close connection", e);
+    }
+  }
+
+  Connection getConnection() {
+    return connection;
+  }
+
+  private class SQLiteQuery<T_RESULT> implements Query<T, T_RESULT> {
+
+    private final Class<T_RESULT> resultType;
+    private final Class<T> entityType;
+    private final Condition<T> condition;
+    private final List<OrderBy<T>> orderBy;
+
+    private SQLiteQuery(Class<T_RESULT> resultType, Condition<T>[] conditions) {
+      this(resultType, resultType, conjunct(conditions), Collections.emptyList());
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private SQLiteQuery(Class<T_RESULT> resultType, Class entityType, Condition<T> condition, List<OrderBy<T>> orderBy) {
+      this.resultType = resultType;
+      this.entityType = entityType;
+      this.condition = condition;
+      this.orderBy = orderBy;
+    }
+
+    @Override
+    public Optional<T_RESULT> findFirst() {
+      return findAll(0, 1).stream().findFirst();
+    }
+
+    @Override
+    public Optional<T_RESULT> findOne() {
+      List<T_RESULT> all = findAll(0, 2);
+      if (all.size() > 1) {
+        throw new TooManyResultsException();
+      } else if (all.size() == 1) {
+        return Optional.of(all.get(0));
+      } else {
+        return Optional.empty();
+      }
+    }
+
+    @Override
+    public List<T_RESULT> findAll() {
+      return findAll(0, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public List<T_RESULT> findAll(long offset, long limit) {
+      StringBuilder orderByBuilder = new StringBuilder();
+      if (orderBy != null && !orderBy.isEmpty()) {
+        toOrderBySQL(orderByBuilder);
+      }
+
+      SQLSelectStatement sqlSelectQuery =
+        new SQLSelectStatement(
+          computeFields(),
+          computeFromTable(),
+          computeCondition(),
+          orderByBuilder.toString(),
+          limit,
+          offset
+        );
+
+      return executeRead(
+        sqlSelectQuery,
+        statement -> {
+          List<T_RESULT> result = new ArrayList<>();
+          ResultSet resultSet = statement.executeQuery();
+          while (resultSet.next()) {
+            result.add(extractResult(resultSet));
+          }
+          return Collections.unmodifiableList(result);
+        }
+      );
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Query<T, Result<T_RESULT>> withIds() {
+      return new SQLiteQuery<>((Class<Result<T_RESULT>>) (Class<?>) Result.class, resultType, condition, orderBy);
+    }
+
+    @Override
+    public long count() {
+      SQLSelectStatement sqlStatementQuery =
+        new SQLSelectStatement(
+          List.of(new SQLField("COUNT(*)")),
+          computeFromTable(),
+          computeCondition()
+        );
+
+      return executeRead(
+        sqlStatementQuery,
+        statement -> {
+          ResultSet resultSet = statement.executeQuery();
+          if (resultSet.next()) {
+            return resultSet.getLong(1);
+          }
+          throw new IllegalStateException("failed to read count for type " + queryableTypeDescriptor);
+        }
+      );
+    }
+
+    @Override
+    public Query<T, T_RESULT> orderBy(QueryField<T, ?> field, Order order) {
+      List<OrderBy<T>> extendedOrderBy = new ArrayList<>(this.orderBy);
+      extendedOrderBy.add(new OrderBy<>(field, order));
+      return new SQLiteQuery<>(resultType, entityType, condition, extendedOrderBy);
+    }
+
+    private List<SQLField> computeFields() {
+      List<SQLField> fields = new ArrayList<>();
+      fields.add(SQLField.PAYLOAD);
+      if (resultType.isAssignableFrom(Result.class)) {
+        addParentIdSQLFields(fields);
+      }
+      return fields;
+    }
+
+    private List<SQLNodeWithValue> computeCondition() {
+      List<SQLNodeWithValue> conditions = new ArrayList<>();
+
+      evaluateParentConditions(conditions);
+
+      if (condition != null) {
+        if (condition instanceof LeafCondition<T, ?> leafCondition) {
+          SQLCondition sqlCondition = SQLConditionMapper.mapToSQLCondition(leafCondition);
+          conditions.add(sqlCondition);
+        }
+        if (condition instanceof LogicalCondition<T> logicalCondition) {
+          SQLLogicalCondition sqlLogicalCondition = SQLConditionMapper.mapToSQLLogicalCondition(logicalCondition);
+          conditions.add(sqlLogicalCondition);
+        }
+      }
+
+      return conditions;
+    }
+
+    private void toOrderBySQL(StringBuilder orderByBuilder) {
+      Iterator<OrderBy<T>> it = orderBy.iterator();
+      while (it.hasNext()) {
+        OrderBy<T> order = it.next();
+        orderByBuilder.append("json_extract(payload, '$.").append(order.field.getName()).append("') ").append(order.order.name());
+        if (it.hasNext()) {
+          orderByBuilder.append(", ");
+        }
+      }
+    }
+
+    @SuppressWarnings("unchecked")
+    private T_RESULT extractResult(ResultSet resultSet) throws JsonProcessingException, SQLException {
+      T entity = objectMapper.readValue(resultSet.getString(1), entityType);
+      if (resultType.isAssignableFrom(Result.class)) {
+        Map<String, String> parentIds = new HashMap<>(queryableTypeDescriptor.getTypes().length);
+        for (int i = 0; i < queryableTypeDescriptor.getTypes().length; i++) {
+          parentIds.put(computeColumnIdentifier(queryableTypeDescriptor.getTypes()[i]), resultSet.getString(i + 2));
+        }
+        String id = resultSet.getString(queryableTypeDescriptor.getTypes().length + 2);
+        return (T_RESULT) new Result<T>() {
+          @Override
+          public Optional<String> getParentId(Class<?> clazz) {
+            String parentClassName = computeColumnIdentifier(clazz.getName());
+            return Optional.ofNullable(parentIds.get(parentClassName));
+          }
+
+          @Override
+          public String getId() {
+            return id;
+          }
+
+          @Override
+          public T getEntity() {
+            return entity;
+          }
+        };
+      } else {
+        return (T_RESULT) entity;
+      }
+    }
+
+    private static <T> Condition<T> conjunct(Condition<T>[] conditions) {
+      if (conditions.length == 0) {
+        return null;
+      } else if (conditions.length == 1) {
+        return conditions[0];
+      } else {
+        return Conditions.and(conditions);
+      }
+    }
+  }
+
+  private void evaluateParentConditions(List<SQLNodeWithValue> conditions) {
+    for (int i = 0; i < parentIds.length; i++) {
+      SQLCondition condition = new SQLCondition("=", new SQLField(computeColumnIdentifier(queryableTypeDescriptor.getTypes()[i])), new SQLValue(parentIds[i]));
+      conditions.add(condition);
+    }
+  }
+
+  private void addParentIdSQLFields(List<SQLField> fields) {
+    for (int i = 0; i < queryableTypeDescriptor.getTypes().length; i++) {
+      fields.add(new SQLField(computeColumnIdentifier(queryableTypeDescriptor.getTypes()[i])));
+    }
+    fields.add(new SQLField("ID"));
+  }
+
+  interface StatementCallback<R> {
+    R apply(PreparedStatement statement) throws SQLException, JsonProcessingException;
+  }
+
+  record OrderBy<T>(QueryField<T, ?> field, Order order) {
+  }
+
+  private class TemporaryTableMaintenanceIterator implements MaintenanceIterator<T> {
+    private final PreparedStatement iterateStatement;
+    private final List<SQLField> columns;
+    private final ResultSet resultSet;
+    private Boolean hasNext;
+
+    public TemporaryTableMaintenanceIterator(List<SQLField> columns) {
+      this.columns = columns;
+      this.hasNext = null;
+      SQLSelectStatement iterateQuery =
+        new SQLSelectStatement(
+          columns,
+          computeFromTable(),
+          computeConditionsForAllValues()
+        );
+      String sql = iterateQuery.toSQL();
+      log.debug("iterating SQL: {}", sql);
+      try {
+        iterateStatement = connection.prepareStatement(sql);
+        iterateQuery.apply(iterateStatement, 1);
+        resultSet = iterateStatement.executeQuery();
+      } catch (SQLException e) {
+        throw new StoreException("Failed to iterate: " + sql, e);
+      }
+
+      createTemporaryTable();
+    }
+
+    private void createTemporaryTable() {
+      dropTemporaryTable();
+      StringBuilder tmpTableStatement = new StringBuilder("create table if not exists ").append(TEMPORARY_UPDATE_TABLE_NAME).append(" (");
+      for (int i = 0; i < queryableTypeDescriptor.getTypes().length; i++) {
+        tmpTableStatement.append(computeColumnIdentifier(queryableTypeDescriptor.getTypes()[i])).append(" TEXT NOT NULL, ");
+      }
+      tmpTableStatement.append("ID TEXT NOT NULL, payload JSONB)");
+      try (Statement statement = connection.createStatement()) {
+        String createTableSql = tmpTableStatement.toString();
+        log.debug("creating table: {}", createTableSql);
+        statement.execute(createTableSql);
+      } catch (SQLException e) {
+        throw new StoreException("Failed to create temporary table: " + tmpTableStatement, e);
+      }
+    }
+
+    private void dropTemporaryTable() {
+      String sql = "DROP TABLE IF EXISTS " + TEMPORARY_UPDATE_TABLE_NAME;
+      try (Statement statement = connection.createStatement()) {
+        log.trace("dropping table: {}", sql);
+        statement.executeUpdate(sql);
+      } catch (SQLException e) {
+        throw new StoreException("Failed to drop temporary table: " + sql, e);
+      }
+    }
+
+    @Override
+    public boolean hasNext() {
+      if (hasNext != null) {
+        return hasNext;
+      }
+      try {
+        hasNext = resultSet.next();
+        return hasNext;
+      } catch (SQLException e) {
+        throw new StoreException("Failed to get next row from result set", e);
+      }
+    }
+
+    @Override
+    public MaintenanceStoreEntry<T> next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
+      hasNext = null;
+      return new InnerStoreEntry();
+    }
+
+    @Override
+    public void remove() {
+      List<SQLNodeWithValue> parentConditions = new ArrayList<>();
+      try {
+        for (int i = 0; i < queryableTypeDescriptor.getTypes().length; i++) {
+          String columnName = computeColumnIdentifier(queryableTypeDescriptor.getTypes()[i]);
+          parentConditions.add(new SQLCondition("=", new SQLField(columnName), new SQLValue(resultSet.getString(columnName))));
+        }
+        parentConditions.add(new SQLCondition("=", new SQLField("ID"), new SQLValue(resultSet.getString("ID"))));
+      } catch (SQLException e) {
+        throw new StoreException("Failed to delete item from table", e);
+      }
+      SQLDeleteStatement sqlStatementQuery =
+        new SQLDeleteStatement(
+          computeFromTable(),
+          parentConditions
+        );
+
+      executeWrite(
+        sqlStatementQuery,
+        statement -> {
+          statement.executeUpdate();
+          return null;
+        }
+      );
+    }
+
+    @Override
+    public void close() throws Exception {
+      iterateStatement.close();
+
+      SQLSelectStatement tmpIterateQuery =
+        new SQLSelectStatement(
+          columns,
+          new SQLTable(TEMPORARY_UPDATE_TABLE_NAME),
+          computeConditionsForAllValues()
+        );
+      String sql = tmpIterateQuery.toSQL();
+      log.debug("iterating temporary table: {}", sql);
+      iterateStatement.close();
+      try (PreparedStatement tmpIterateStatement = connection.prepareStatement(sql)) {
+        tmpIterateQuery.apply(tmpIterateStatement, 1);
+        ResultSet tmpResultSet = tmpIterateStatement.executeQuery();
+        while (tmpResultSet.next()) {
+          Collection<String> allParentIds = computeAllParentIds(tmpResultSet);
+          writeJsonInTable(
+            computeFromTable(),
+            allParentIds,
+            tmpResultSet.getString(queryableTypeDescriptor.getTypes().length + 2),
+            tmpResultSet.getString(1)
+          );
+        }
+      } catch (SQLException e) {
+        throw new StoreException("Failed to transfer entries from temporary table", e);
+      }
+      dropTemporaryTable();
+    }
+
+    private List<String> computeAllParentIds(ResultSet tmpResultSet) throws SQLException {
+      List<String> allParentIds = new ArrayList<>();
+      for (int columnNr = 0; columnNr < queryableTypeDescriptor.getTypes().length; ++columnNr) {
+        allParentIds.add(tmpResultSet.getString(columnNr + 2));
+      }
+      return allParentIds;
+    }
+
+    private void writeJsonInTable(SQLTable table, Collection<String> allParentIds, String id, String json) {
+      List<String> columnsToInsert = new ArrayList<>(allParentIds);
+      columnsToInsert.add(id);
+      columnsToInsert.add(json);
+      SQLInsertStatement sqlInsertStatement =
+        new SQLInsertStatement(
+          table,
+          new SQLValue(columnsToInsert)
+        );
+
+      executeWrite(
+        sqlInsertStatement,
+        statement -> {
+          statement.executeUpdate();
+          return null;
+        }
+      );
+    }
+
+    private class InnerStoreEntry implements MaintenanceStoreEntry<T> {
+
+      private final Map<String, String> parentIds = new LinkedHashMap<>();
+      private final String id;
+      private final String json;
+
+      InnerStoreEntry() {
+        try {
+          json = resultSet.getString(1);
+          for (int i = 0; i < queryableTypeDescriptor.getTypes().length; i++) {
+            parentIds.put(computeColumnIdentifier(queryableTypeDescriptor.getTypes()[i]), resultSet.getString(i + 2));
+          }
+          id = resultSet.getString(queryableTypeDescriptor.getTypes().length + 2);
+        } catch (SQLException e) {
+          throw new StoreException("Failed to read next entry for maintenance", e);
+        }
+      }
+
+      @Override
+      public String getId() {
+        return id;
+      }
+
+      @Override
+      public Optional<String> getParentId(Class<?> clazz) {
+        String parentClassName = computeColumnIdentifier(clazz.getName());
+        return Optional.ofNullable(parentIds.get(parentClassName));
+      }
+
+      @Override
+      public T get() {
+        return getAs(clazz);
+      }
+
+      @Override
+      public <U> U getAs(Class<U> type) {
+        try {
+          return objectMapper.readValue(json, type);
+        } catch (JsonProcessingException e) {
+          throw new SerializationException("failed to read object from json", e);
+        }
+      }
+
+      void updateJson(String json) {
+        SQLTable table = new SQLTable(TEMPORARY_UPDATE_TABLE_NAME);
+        writeJsonInTable(table, parentIds.values(), id, json);
+      }
+
+      @Override
+      public void update(Object object) {
+        updateJson(serialize(object));
+      }
+    }
+  }
+
+  private String serialize(Object object) {
+    try {
+      return objectMapper.writeValueAsString(object);
+    } catch (JsonProcessingException e) {
+      throw new SerializationException("failed to serialize object to json", e);
+    }
+  }
+
+  private interface RowBuilder<R> {
+    R build(String[] parentIds, String id, String json) throws JsonProcessingException;
+  }
+}

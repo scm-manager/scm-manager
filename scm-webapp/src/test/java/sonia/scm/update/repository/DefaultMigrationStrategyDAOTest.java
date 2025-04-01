@@ -26,8 +26,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.store.ConfigurationStoreFactory;
-import sonia.scm.store.JAXBConfigurationStoreFactory;
-import sonia.scm.store.StoreCacheConfigProvider;
+import sonia.scm.store.file.JAXBConfigurationStoreFactory;
+import sonia.scm.store.file.StoreCacheConfigProvider;
+import sonia.scm.store.file.StoreCacheFactory;
 
 import java.nio.file.Path;
 import java.util.Optional;
@@ -47,7 +48,7 @@ class DefaultMigrationStrategyDAOTest {
   @BeforeEach
   void initStore(@TempDir Path tempDir) {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
-    storeFactory = new JAXBConfigurationStoreFactory(contextProvider, null, null, emptySet(), new StoreCacheConfigProvider(false));
+    storeFactory = new JAXBConfigurationStoreFactory(contextProvider, null, null, emptySet(), new StoreCacheFactory(new StoreCacheConfigProvider(false)));
   }
 
   @Test

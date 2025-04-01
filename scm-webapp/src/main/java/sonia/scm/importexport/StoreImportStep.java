@@ -21,7 +21,6 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
-import sonia.scm.update.UpdateEngine;
 
 import java.io.InputStream;
 
@@ -32,12 +31,10 @@ class StoreImportStep implements ImportStep {
   private static final Logger LOG = LoggerFactory.getLogger(StoreImportStep.class);
 
   private final TarArchiveRepositoryStoreImporter storeImporter;
-  private final UpdateEngine updateEngine;
 
   @Inject
-  StoreImportStep(TarArchiveRepositoryStoreImporter storeImporter, UpdateEngine updateEngine) {
+  StoreImportStep(TarArchiveRepositoryStoreImporter storeImporter) {
     this.storeImporter = storeImporter;
-    this.updateEngine = updateEngine;
   }
 
   @Override
@@ -47,15 +44,11 @@ class StoreImportStep implements ImportStep {
       state.getLogger().step("importing stores");
       // Inside the repository tar archive stream is another tar archive.
       // The nested tar archive is wrapped in another TarArchiveInputStream inside the storeImporter
-      importStores(state.getRepository(), inputStream, state.getLogger());
+      Repository repository = state.getRepository();
+      storeImporter.importFromTarArchive(repository, inputStream, state.getLogger());
       state.storeImported();
       return true;
     }
     return false;
-  }
-
-  private void importStores(Repository repository, InputStream inputStream, RepositoryImportLogger logger) {
-    storeImporter.importFromTarArchive(repository, inputStream, logger);
-    updateEngine.update(repository.getId());
   }
 }

@@ -29,8 +29,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static sonia.scm.store.StoreConstants.DATA_DIRECTORY_NAME;
-import static sonia.scm.store.StoreConstants.VARIABLE_DATA_DIRECTORY_NAME;
+import static sonia.scm.store.file.StoreConstants.DATA_DIRECTORY_NAME;
+import static sonia.scm.store.file.StoreConstants.VARIABLE_DATA_DIRECTORY_NAME;
 
 @Extension
 public class RemoveCombinedIndex implements UpdateStep {

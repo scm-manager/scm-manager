@@ -16,7 +16,6 @@
 
 package sonia.scm.lifecycle.modules;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Provider;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.servlet.RequestScoped;
@@ -31,7 +30,6 @@ import sonia.scm.PushStateDispatcherProvider;
 import sonia.scm.RootURL;
 import sonia.scm.Undecorated;
 import sonia.scm.admin.ScmConfigurationStore;
-import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.api.v2.resources.BranchLinkProvider;
 import sonia.scm.api.v2.resources.DefaultBranchLinkProvider;
 import sonia.scm.api.v2.resources.DefaultRepositoryLinkProvider;
@@ -110,7 +108,7 @@ import sonia.scm.security.LoginAttemptHandler;
 import sonia.scm.security.RepositoryPermissionProvider;
 import sonia.scm.security.SecuritySystem;
 import sonia.scm.store.ConfigurationStoreDecoratorFactory;
-import sonia.scm.store.FileStoreExporter;
+import sonia.scm.store.file.FileStoreExporter;
 import sonia.scm.store.StoreExporter;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
@@ -258,7 +256,6 @@ class ScmServletModule extends ServletModule {
     bind(TemplateEngine.class).annotatedWith(Default.class).to(
       MustacheTemplateEngine.class);
     bind(TemplateEngineFactory.class);
-    bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class);
 
     // bind events
 

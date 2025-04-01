@@ -16,6 +16,7 @@
 
 package sonia.scm.importexport;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +37,7 @@ import sonia.scm.web.security.PrivilegedAction;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -48,6 +50,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -76,6 +79,8 @@ class FullScmRepositoryExporterTest {
   private AdministrationContext administrationContext;
   @Mock
   private RepositoryImportExportEncryption repositoryImportExportEncryption;
+  @Mock
+  private RepositoryQueryableStoreExporter queryableStoreExporter;
 
   @InjectMocks
   private FullScmRepositoryExporter exporter;
@@ -88,10 +93,23 @@ class FullScmRepositoryExporterTest {
     when(metadataGenerator.generate(REPOSITORY)).thenReturn(new byte[0]);
     when(repositoryExportingCheck.withExportingLock(any(), any())).thenAnswer(invocation -> invocation.getArgument(1, Supplier.class).get());
     when(repositoryImportExportEncryption.optionallyEncrypt(any(), any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+    doAnswer(invocation -> {
+      File directory = invocation.getArgument(1, File.class);
+      File dummyFile = new File(directory, "dummy.xml");
+      try (FileWriter writer = new FileWriter(dummyFile)) {
+        writer.write("<dummy>Dummy content for testing</dummy>");
+      }
+      return null;
+    }).when(queryableStoreExporter).addQueryableStoreDataToArchive(
+      any(Repository.class),
+      any(File.class),
+      any(TarArchiveOutputStream.class)
+    );
   }
 
   @Test
-  void shouldExportEverythingAsTarArchive(@TempDir Path temp) {
+  void shouldExportEverythingAsTarArchive(@TempDir Path temp) throws IOException {
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(repositoryService.getBundleCommand()).thenReturn(bundleCommandBuilder);
     when(repositoryService.getRepository()).thenReturn(REPOSITORY);
@@ -104,6 +122,8 @@ class FullScmRepositoryExporterTest {
     verify(metadataGenerator, times(1)).generate(REPOSITORY);
     verify(bundleCommandBuilder, times(1)).bundle(any(OutputStream.class));
     verify(repositoryExportingCheck).withExportingLock(eq(REPOSITORY), any());
+    verify(queryableStoreExporter, times(1))
+      .addQueryableStoreDataToArchive(eq(REPOSITORY), any(File.class), any(TarArchiveOutputStream.class));
     workDirsCreated.forEach(wd -> assertThat(wd).doesNotExist());
   }
 

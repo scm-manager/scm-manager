@@ -16,6 +16,7 @@
 
 package sonia.scm.update;
 
+import sonia.scm.store.QueryableMaintenanceStore;
 import sonia.scm.store.StoreParameters;
 import sonia.scm.store.StoreType;
 
@@ -24,6 +25,8 @@ public interface StoreUpdateStepUtilFactory {
   default UtilForTypeBuilder forType(StoreType type) {
     return new UtilForTypeBuilder(this, type);
   }
+
+  <T> QueryableMaintenanceStore<T> forQueryableType(Class<T> clazz, String... parents);
 
   final class UtilForTypeBuilder {
     private final StoreUpdateStepUtilFactory factory;

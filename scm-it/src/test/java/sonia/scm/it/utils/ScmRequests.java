@@ -18,15 +18,23 @@ package sonia.scm.it.utils;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.api.v2.resources.RepositoryDto;
 import sonia.scm.web.VndMediaType;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.hamcrest.Matchers.is;
 import static sonia.scm.it.utils.TestData.createPasswordChangeJson;
 
@@ -41,6 +49,7 @@ import static sonia.scm.it.utils.TestData.createPasswordChangeJson;
  * that return the *Response class containing specific operations related to the specific response
  * the *Response class contains also the request*() method to apply the next GET request from a link in the response.
  */
+@SuppressWarnings("rawtypes")
 public class ScmRequests {
 
   private static final Logger LOG = LoggerFactory.getLogger(ScmRequests.class);
@@ -65,19 +74,24 @@ public class ScmRequests {
   public UserResponse<UserResponse> requestUser(String username, String password, String pathParam) {
     setUsername(username);
     setPassword(password);
-    return new UserResponse<>(applyGETRequest(RestUtil.REST_BASE_URL.resolve("users/"+pathParam).toString()), null);
+    return new UserResponse<>(applyGETRequest(RestUtil.REST_BASE_URL.resolve("users/" + pathParam).toString()), null);
   }
 
   public ChangePasswordResponse<ChangePasswordResponse> requestUserChangePassword(String username, String password, String userPathParam, String newPassword) {
     setUsername(username);
     setPassword(password);
-    return new ChangePasswordResponse<>(applyPUTRequest(RestUtil.REST_BASE_URL.resolve("users/"+userPathParam+"/password").toString(), VndMediaType.PASSWORD_OVERWRITE, TestData.createPasswordChangeJson(password,newPassword)), null);
+    return new ChangePasswordResponse<>(applyPUTRequest(RestUtil.REST_BASE_URL.resolve("users/" + userPathParam + "/password").toString(), VndMediaType.PASSWORD_OVERWRITE, TestData.createPasswordChangeJson(password, newPassword)), null);
   }
 
   @SuppressWarnings("unchecked")
   public ModelResponse requestPluginTranslations(String language) {
     Response response = applyGETRequest(RestUtil.BASE_URL.resolve("locales/" + language + "/plugins.json").toString());
     return new ModelResponse(response, null);
+  }
+
+  public RequestSpecification withBasicAuth() {
+    return RestAssured.given()
+      .auth().preemptive().basic(username, password);
   }
 
   /**
@@ -117,13 +131,12 @@ public class ScmRequests {
    */
   private Response applyGETRequestWithQueryParams(String url, String params) {
     LOG.info("GET {}", url);
-    if (username == null || password == null){
+    if (username == null || password == null) {
       return RestAssured.given()
         .when()
         .get(url + params);
     }
-    return RestAssured.given()
-      .auth().preemptive().basic(username, password)
+    return withBasicAuth()
       .when()
       .get(url + params);
   }
@@ -138,13 +151,11 @@ public class ScmRequests {
     return applyGETRequestWithQueryParams(url, "");
   }
 
-
   /**
    * Apply a PUT Request to the extracted url from the given link
    *
    * @param response         the response containing the link
    * @param linkPropertyName the property name of link
-   * @param body
    * @return the response of the PUT request using the given link
    */
   private Response applyPUTRequestFromLink(Response response, String linkPropertyName, String content, String body) {
@@ -158,20 +169,48 @@ public class ScmRequests {
   /**
    * Apply a PUT Request to the given <code>url</code> and return the response.
    *
-   * @param url       the url of the PUT request
-   * @param mediaType
-   * @param body
+   * @param url the url of the PUT request
    * @return the response of the PUT request using the given <code>url</code>
    */
   private Response applyPUTRequest(String url, String mediaType, String body) {
     LOG.info("PUT {}", url);
-    return RestAssured.given()
-      .auth().preemptive().basic(username, password)
+    return withBasicAuth()
       .when()
       .contentType(mediaType)
       .accept(mediaType)
       .body(body)
       .put(url);
+  }
+
+  /**
+   * Apply a PUT Request to the extracted url from the given link
+   *
+   * @param response         the response containing the link
+   * @param linkPropertyName the property name of link
+   * @return the response of the PUT request using the given link
+   */
+  private Response applyPOSTRequestFromLink(Response response, String linkPropertyName, String content, String body) {
+    return applyPOSTRequest(response
+      .then()
+      .extract()
+      .path(linkPropertyName), content, body);
+  }
+
+
+  /**
+   * Apply a POST Request to the given <code>url</code> and return the response.
+   *
+   * @param url the url of the PUT request
+   * @return the response of the PUT request using the given <code>url</code>
+   */
+  private Response applyPOSTRequest(String url, String mediaType, String body) {
+    LOG.info("POST {}", url);
+    return withBasicAuth()
+      .when()
+      .contentType(mediaType)
+      .accept(mediaType)
+      .body(body)
+      .post(url);
   }
 
   private void setUsername(String username) {
@@ -186,6 +225,7 @@ public class ScmRequests {
     public static final String LINK_AUTOCOMPLETE_USERS = "_links.autocomplete.find{it.name=='users'}.href";
     public static final String LINK_AUTOCOMPLETE_GROUPS = "_links.autocomplete.find{it.name=='groups'}.href";
     public static final String LINK_REPOSITORIES = "_links.repositories.href";
+    public static final String LINK_REPOSITORY_TYPES = "_links.repositoryTypes.href";
     private static final String LINK_ME = "_links.me.href";
     private static final String LINK_USERS = "_links.users.href";
 
@@ -199,6 +239,10 @@ public class ScmRequests {
 
     public AutoCompleteResponse<IndexResponse> requestAutoCompleteGroups(String q) {
       return new AutoCompleteResponse<>(applyGETRequestFromLinkWithParams(response, LINK_AUTOCOMPLETE_GROUPS, "?q=" + q), this);
+    }
+
+    public RepositoryTypeResponse<IndexResponse> requestRepositoryType(String type) {
+      return new RepositoryTypeResponse<>(applyGETRequestFromLinkWithParams(response, LINK_REPOSITORY_TYPES, type), this);
     }
 
     public RepositoryResponse<IndexResponse> requestRepository(String namespace, String name) {
@@ -221,12 +265,11 @@ public class ScmRequests {
       return response
         .then()
         .extract()
-        .path("_links."  + linkName + ".href");
+        .path("_links." + linkName + ".href");
     }
   }
 
   public class RepositoryResponse<PREV extends ModelResponse> extends ModelResponse<RepositoryResponse<PREV>, PREV> {
-
 
     public static final String LINKS_SOURCES = "_links.sources.href";
     public static final String LINKS_CHANGESETS = "_links.changesets.href";
@@ -243,6 +286,45 @@ public class ScmRequests {
       return new ChangesetsResponse<>(applyGETRequestFromLink(response, LINKS_CHANGESETS), this);
     }
 
+    public FullExportResponse<RepositoryResponse> requestFullExport() {
+      return new FullExportResponse<>(applyGETRequestFromLinkWithParams(response, "_links.fullExport.href", "?compressed=true"), this);
+    }
+
+    public void writeTestData(String value) {
+      applyPOSTRequestFromLink(response, "_links.test-data.href", APPLICATION_JSON, "{\"value\":\"" + value + "\"}");
+    }
+
+    public TestDataResponse<RepositoryResponse> requestTestData() {
+      return new TestDataResponse<>(applyGETRequestFromLink(response, "_links.test-data.href"), this);
+    }
+  }
+
+  public class RepositoryTypeResponse<PREV extends ModelResponse> extends ModelResponse<RepositoryResponse<PREV>, PREV> {
+
+    public RepositoryTypeResponse(Response response, PREV previousResponse) {
+      super(response, previousResponse);
+    }
+
+    public void requestImport(String type, Path file, String repositoryName) {
+      String url = response
+        .then()
+        .extract()
+        .path("_links.import.find{it.name=='" + type + "'}.href");
+      Assert.assertNotNull("no url found for link " + "_links.import.find{it.name=='" + type + "'}.href", url);
+
+      LOG.info("POST for import to  {}", url);
+      RepositoryDto repository = new RepositoryDto();
+      repository.setType("git");
+      repository.setName(repositoryName);
+      withBasicAuth()
+        .multiPart("bundle", file.toFile())
+        .multiPart("repository", repository)
+        .when()
+        .post(url + "?compressed=true")
+        .then()
+        .statusCode(201);
+      System.out.println("done");
+    }
   }
 
   public class ChangesetsResponse<PREV extends ModelResponse> extends ModelResponse<ChangesetsResponse<PREV>, PREV> {
@@ -291,6 +373,35 @@ public class ScmRequests {
 
     public SourcesResponse<SourcesResponse> requestSelf(String fileName) {
       return new SourcesResponse<>(applyGETRequestFromLink(response, "_embedded.children.find{it.name=='" + fileName + "'}._links.self.href"), this);
+    }
+  }
+
+  public class FullExportResponse<PREV extends ModelResponse> extends ModelResponse<FullExportResponse<PREV>, PREV> {
+
+    public FullExportResponse(Response response, PREV previousResponse) {
+      super(response, previousResponse);
+    }
+
+    public Path exportFile() {
+      InputStream exportStream = response.asInputStream();
+      try {
+        Path tempFile = Files.createTempFile("scm-export", ".tgz");
+        Files.copy(exportStream, tempFile, REPLACE_EXISTING);
+        return tempFile;
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
+  public class TestDataResponse<PREV extends ModelResponse> extends ModelResponse<FullExportResponse<PREV>, PREV> {
+
+    public TestDataResponse(Response response, PREV previousResponse) {
+      super(response, previousResponse);
+    }
+
+    public List<String> getTestData() {
+      return response.then().contentType(APPLICATION_JSON).extract().path("value");
     }
   }
 
@@ -382,7 +493,7 @@ public class ScmRequests {
       this.previousResponse = previousResponse;
     }
 
-    public Response getResponse(){
+    public Response getResponse() {
       return response;
     }
 

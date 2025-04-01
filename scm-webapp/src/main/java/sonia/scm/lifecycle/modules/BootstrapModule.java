@@ -16,6 +16,7 @@
 
 package sonia.scm.lifecycle.modules;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
@@ -25,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.io.DefaultFileSystem;
@@ -52,15 +54,19 @@ import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreDecoratorFactory;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.DataStoreFactory;
-import sonia.scm.store.DefaultBlobDirectoryAccess;
-import sonia.scm.store.FileBlobStoreFactory;
-import sonia.scm.store.FileNamespaceUpdateIterator;
-import sonia.scm.store.FileRepositoryUpdateIterator;
 import sonia.scm.store.FileStoreUpdateStepUtilFactory;
-import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
-import sonia.scm.store.JAXBConfigurationStoreFactory;
-import sonia.scm.store.JAXBDataStoreFactory;
-import sonia.scm.store.JAXBPropertyFileAccess;
+import sonia.scm.store.QueryableStoreFactory;
+import sonia.scm.store.StoreMetaDataProvider;
+import sonia.scm.store.file.DefaultBlobDirectoryAccess;
+import sonia.scm.store.file.FileBlobStoreFactory;
+import sonia.scm.store.file.FileNamespaceUpdateIterator;
+import sonia.scm.store.file.FileRepositoryUpdateIterator;
+import sonia.scm.store.file.JAXBConfigurationEntryStoreFactory;
+import sonia.scm.store.file.JAXBConfigurationStoreFactory;
+import sonia.scm.store.file.JAXBDataStoreFactory;
+import sonia.scm.store.file.JAXBPropertyFileAccess;
+import sonia.scm.store.sqlite.SQLiteQueryableStoreFactory;
+import sonia.scm.store.sqlite.SQLiteStoreMetaDataProvider;
 import sonia.scm.update.BlobDirectoryAccess;
 import sonia.scm.update.DefaultRepositoryPermissionUpdater;
 import sonia.scm.update.NamespaceUpdateIterator;
@@ -116,6 +122,8 @@ public class BootstrapModule extends AbstractModule {
     bind(ConfigurationEntryStoreFactory.class, JAXBConfigurationEntryStoreFactory.class);
     bind(DataStoreFactory.class, JAXBDataStoreFactory.class);
     bind(BlobStoreFactory.class, FileBlobStoreFactory.class);
+    bind(QueryableStoreFactory.class, SQLiteQueryableStoreFactory.class);
+    bind(StoreMetaDataProvider.class, SQLiteStoreMetaDataProvider.class);
     bind(PluginLoader.class).toInstance(pluginLoader);
     bind(V1PropertyDAO.class, XmlV1PropertyDAO.class);
     bind(PropertyFileAccess.class, JAXBPropertyFileAccess.class);
@@ -123,8 +131,9 @@ public class BootstrapModule extends AbstractModule {
     bind(RepositoryUpdateIterator.class, FileRepositoryUpdateIterator.class);
     bind(NamespaceUpdateIterator.class, FileNamespaceUpdateIterator.class);
     bind(StoreUpdateStepUtilFactory.class, FileStoreUpdateStepUtilFactory.class);
-    bind(RepositoryPermissionUpdater.class, DefaultRepositoryPermissionUpdater.class);
+    bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class);
     bind(new TypeLiteral<UpdateStepRepositoryMetadataAccess<Path>>() {}).to(new TypeLiteral<MetadataStore>() {});
+    bind(RepositoryPermissionUpdater.class, DefaultRepositoryPermissionUpdater.class);
 
     // bind metrics
     bind(MeterRegistry.class).toProvider(MeterRegistryProvider.class).asEagerSingleton();

@@ -17,13 +17,17 @@
 package sonia.scm.repository;
 
 
+import lombok.Getter;
 import sonia.scm.repository.api.HookContext;
+
+import java.time.Instant;
 
 /**
  * Repository hook event represents an change event of a repository.
  *
  * @since 1.6
  */
+@Getter
 public class RepositoryHookEvent
 {
 
@@ -36,30 +40,19 @@ public class RepositoryHookEvent
   /** hook type */
   private final RepositoryHookType type;
 
+  /**
+   * creation date of the event
+   *
+   * @since 3.8.0
+   */
+  private final Instant creationDate = Instant.now();
+
   public RepositoryHookEvent(HookContext context, Repository repository,
     RepositoryHookType type)
   {
     this.context = context;
     this.repository = repository;
     this.type = type;
-  }
-
-
-  public HookContext getContext()
-  {
-    return context;
-  }
-
-  
-  public Repository getRepository()
-  {
-    return repository;
-  }
-
-  
-  public RepositoryHookType getType()
-  {
-    return type;
   }
 
   @Override

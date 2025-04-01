@@ -31,7 +31,7 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.security.AssignedPermission;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
-import sonia.scm.store.StoreConstants;
+import sonia.scm.store.file.StoreConstants;
 import sonia.scm.version.Version;
 
 import java.io.File;
