@@ -15,46 +15,27 @@
  */
 
 import React, { FC } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import styled from "styled-components";
-import { Icon } from "@scm-manager/ui-core";
 import { FileTree } from "@scm-manager/ui-types";
-import { FileDiffContainer, FileDiffContent } from "./styledElements";
-
-const StackedSpan = styled.span`
-  width: 3em;
-  height: 3em;
-  font-size: 0.5em;
-`;
-
-const StyledIcon = styled(Icon)<{ isSmaller?: boolean }>`
-  ${({ isSmaller }) =>
-    isSmaller &&
-    `
-      font-size: 0.5em;
-      margin-top: 0.05rem;
-  `}
-  min-width: 1.5rem;
-`;
+import { FileDiffContent, StackedSpan, StyledIcon } from "./styledElements";
 
 type Props = { tree: FileTree; currentFile: string; setCurrentFile: (path: string) => void; gap?: number };
-  
+
 const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile, gap = 15 }) => {
   return (
-    <FileDiffContainer className="mt-4 py-3 pr-2">
-      <FileDiffContent gap={gap}>
-        {Object.keys(tree.children).map((key) => (
-          <TreeNode
-            key={key}
-            node={tree.children[key]}
-            parentPath=""
-            currentFile={currentFile}
-            setCurrentFile={setCurrentFile}
-          />
-        ))}
-      </FileDiffContent>
-    </FileDiffContainer>
+    <FileDiffContent gap={gap}>
+      {Object.keys(tree.children).map((key) => (
+        <TreeNode
+          key={key}
+          node={tree.children[key]}
+          parentPath=""
+          currentFile={currentFile}
+          setCurrentFile={setCurrentFile}
+        />
+      ))}
+    </FileDiffContent>
   );
 };
 
@@ -77,7 +58,7 @@ const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile
   return (
     <li>
       {Object.keys(node.children).length > 0 ? (
-        <ul className="py-1 pr-1 pl-3">
+        <ul className="py-1 pl-3">
           <li className="is-flex has-text-grey">
             <StyledIcon alt={t("diff.showContent")}>folder</StyledIcon>
             <div className="ml-1">{node.nodeName}</div>
@@ -148,7 +129,11 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
   };
 
   return (
-    <div className="is-flex py-1 pl-3 has-cursor-pointer" onClick={() => setCurrentFile(completePath)}>
+    <Link
+      className="is-flex py-1 pl-3 has-cursor-pointer"
+      onClick={() => setCurrentFile(completePath)}
+      to={`#diff-${encodeURIComponent(completePath)}`}
+    >
       <StackedSpan className="fa-stack">
         <StyledIcon
           className={classNames("fa-stack-2x", `has-text-${getColor(changeType)}`)}
@@ -172,6 +157,6 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
         </StyledIcon>
       </StackedSpan>
       <div className="ml-1">{path}</div>
-    </div>
+    </Link>
   );
 };
