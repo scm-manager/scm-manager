@@ -74,7 +74,8 @@ git rm -rf gradle/changelog \
 && git add CHANGELOG.md \
 && git checkout -b release/$VERSION \
 && git commit -m "Adjust changelog for release $VERSION" \
-&& git push origin release/$VERSION
+&& git push origin release/$VERSION \
+&& xdg-open https://ecosystem.cloudogu.com/jenkins/view/SCMM/job/scm-manager/job/scm-manager/job/release%252F${VERSION}/
 ```
 
 ### Wait for Jenkins build
@@ -221,7 +222,8 @@ git rm -rf gradle/changelog \
 && git add CHANGELOG.md \
 && git checkout -b release/$VERSION \
 && git commit -m "Prepare release of $VERSION" \
-&& git push origin release/$VERSION
+&& git push origin release/$VERSION \
+&& xdg-open https://ecosystem.cloudogu.com/jenkins/view/SCMM/job/scm-manager-plugins/job/$(basename $(pwd))/job/release%252F${VERSION}/
 ```
 
 ### Wait for Jenkins build
