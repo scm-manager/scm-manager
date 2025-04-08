@@ -17,6 +17,8 @@
 import styled from "styled-components";
 // @ts-ignore react-diff-view does not provide types
 import { Hunk } from "react-diff-view";
+import { Icon } from "@scm-manager/ui-core";
+import { devices } from "../../devices";
 
 export type Collapsible = {
   collapsed?: boolean;
@@ -83,27 +85,37 @@ export const PanelHeading = styled.div<{ sticky?: boolean | number }>`
   }}
 `;
 
+export const StickyFileDiffContainer = styled.div`
+  top: 5rem;
+  position: sticky;
+  height: 100%;
+
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    top: 0;
+    position: relative;
+    flex: 0 0 100%;
+    margin-bottom: 0.5rem;
+  }
+`;
+
 export const FileTreeContent = styled.div<{ isBorder: boolean }>`
   ${({ isBorder }) =>
     isBorder &&
     `
     border: 1px solid var(--scm-border-color);
-    border-radius: 1rem;
+    border-radius: 0.25rem;
+    overflow: hidden;
   `}
+`;
+
+export const DiffTreeTitle = styled.h3`
+  border-bottom: 1px solid var(--scm-border-color);
+  box-shadow: 0 24px 3px -24px var(--scm-border-color);
 `;
 
 export const DiffContent = styled.div`
   width: 100%;
-`;
-
-export const StickyFileDiffContainer = styled.div`
-  top: 3rem;
-  position: sticky;
-  height: 100%;
-`;
-
-export const FileDiffContainer = styled.div`
-  top: 5rem;
+  padding-top: 0;
 `;
 
 export const FileDiffContent = styled.ul<{ gap?: number }>`
@@ -120,8 +132,18 @@ export const FileDiffContent = styled.ul<{ gap?: number }>`
   }};
 `;
 
-export const Divider = styled.div`
-  margin-bottom: 16px;
-  border-bottom: 1px solid var(--scm-border-color);
-  box-shadow: 0 24px 3px -24px var(--scm-border-color);
+export const StackedSpan = styled.span`
+  width: 3em;
+  height: 3em;
+  font-size: 0.5em;
+`;
+
+export const StyledIcon = styled(Icon)<{ isSmaller?: boolean }>`
+  ${({ isSmaller }) =>
+    isSmaller &&
+    `
+      font-size: 0.5em;
+      margin-top: 0.05rem;
+  `}
+  min-width: 1.5rem;
 `;

@@ -16,6 +16,7 @@
 
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 import { NotFoundError, useDiff } from "@scm-manager/ui-api";
 import ErrorNotification from "../ErrorNotification";
 import Loading from "../Loading";
@@ -26,8 +27,8 @@ import { DiffObjectProps } from "./DiffTypes";
 import DiffStatistics from "./DiffStatistics";
 import { DiffDropDown } from "../index";
 import DiffFileTree from "./diff/DiffFileTree";
-import { DiffContent, Divider, FileTreeContent, StickyFileDiffContainer } from "./diff/styledElements";
-import { useHistory, useLocation } from "react-router-dom";
+import { DiffContent, DiffTreeTitle, FileTreeContent, StickyFileDiffContainer } from "./diff/styledElements";
+import { useLocation } from "react-router-dom";
 import { getFileNameFromHash } from "./diffs";
 import LayoutRadioButtons from "./LayoutRadioButtons";
 import { useAriaId } from "@scm-manager/ui-core";
@@ -66,7 +67,6 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
   const [prevHash, setPrevHash] = useState("");
   const diffContentId = useAriaId();
   const location = useLocation();
-  const history = useHistory();
 
   const { error, isLoading, data, fetchNextPage, isFetchingNextPage } = useDiff(url, {
     limit,
@@ -79,10 +79,9 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
     setCollapsed(!collapsed);
   };
 
-  const setFilePath = (path: string) => {
+  const setFilePath = () => {
     setPrevHash("");
     setLayout("Both");
-    history.push(`#diff-${encodeURIComponent(path)}`);
   };
 
   if (error) {
@@ -97,7 +96,7 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
   } else {
     return (
       <>
-        <Divider />
+        <hr />
         <div className="is-flex is-justify-content-space-between">
           <DiffStatistics data={data.statistics} />
           <DiffDropDown
@@ -110,22 +109,23 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
           />
         </div>
         <LayoutRadioButtons layout={layout} setLayout={setLayout} />
-        <div className="is-flex mb-4 mt-1 columns is-multiline">
+        <div className="is-flex columns is-multiline mb-4 mt-1 ">
           <StickyFileDiffContainer
-            className={
-              (layout === "Both" ? "column pl-3 is-one-quarter" : "column pl-3 is-full") +
-              (layout !== "Diff" ? "" : " is-hidden")
-            }
+            className={classNames(
+              "column",
+              "pt-0",
+              layout === "Both" ? "is-one-quarter" : "is-full",
+              layout !== "Diff" ? "" : " is-hidden"
+            )}
           >
-            <FileTreeContent className={"p-3"} isBorder={layout !== "Diff"}>
-              <h3 className={"title is-6 pt-4"}>{t("changesets.diffTree.title")}</h3>
-              <Divider />
+            <FileTreeContent className="p-0" isBorder={layout !== "Diff"}>
+              <DiffTreeTitle className="title is-6 m-0 p-4">{t("changesets.diffTree.title")}</DiffTreeTitle>
               {data?.tree && (
                 <DiffFileTree
                   tree={data.tree}
                   currentFile={decodeURIComponent(getFileNameFromHash(location.hash) ?? "")}
                   setCurrentFile={setFilePath}
-                  gap={12}
+                  gap={10}
                 />
               )}
             </FileTreeContent>

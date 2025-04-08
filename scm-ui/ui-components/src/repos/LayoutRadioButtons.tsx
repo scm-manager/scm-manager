@@ -28,10 +28,10 @@ const LayoutRadioButtons = ({ setLayout, layout }: LayoutProps) => {
   const [t] = useTranslation("repos");
 
   return (
-    <Field as="fieldset" className={"pl-4"}>
+    <Field as="fieldset">
       <RadioGroup
         aria-label={t("changesets.diffTree.layout")}
-        className="mt-2 columns is is-multiline is-align-items-center"
+        className="is-flex is-flex-wrap-wrap is-align-items-center mt-2"
         value={layout}
         onValueChange={(value) => setLayout(value as unknown as LayoutMode)}
       >
