@@ -1442,7 +1442,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Missing copy on write in the data store ([#1155](https://github.com/scm-manager/scm-manager/pull/1155))
 - Resolved conflicting dependencies for scm-webapp ([#1159](https://github.com/scm-manager/scm-manager/pull/1159))
 
-## [2.0.0-rc8] - 2020-05-08
+## 2.0.0-rc8 - 2020-05-08
 ### Added
 - Add iconStyle + onClick option and story shot for icon component ([#1100](https://github.com/scm-manager/scm-manager/pull/1100))
 - Making WebElements (Servlet or Filter) optional by using the `@Requires` annotation ([#1101](https://github.com/scm-manager/scm-manager/pull/1101))
@@ -1463,7 +1463,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Validate subversion client checksum ([#1113](https://github.com/scm-manager/scm-manager/issues/1113))
 - Fix plugin manage permission ([#1135](https://github.com/scm-manager/scm-manager/pull/1135))
 
-## [2.0.0-rc7] - 2020-04-09
+## 2.0.0-rc7 - 2020-04-09
 ### Added
 - Fire various plugin events ([#1088](https://github.com/scm-manager/scm-manager/pull/1088))
 - Display version for plugins ([#1089](https://github.com/scm-manager/scm-manager/pull/1089))
@@ -1476,7 +1476,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Authentication for write requests for repositories with anonymous read access ([#108](https://github.com/scm-manager/scm-manager/pull/1081))
 - Submodules in git do no longer lead to a server error in the browser command ([#1093](https://github.com/scm-manager/scm-manager/pull/1093))
 
-## [2.0.0-rc6] - 2020-03-26
+## 2.0.0-rc6 - 2020-03-26
 ### Added
 - Extension point to add links to the repository cards from plug ins ([#1041](https://github.com/scm-manager/scm-manager/pull/1041))
 - Libc based restart strategy for posix operating systems ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
@@ -1500,7 +1500,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show specific notification for plugin actions on plugin administration ([#1057](https://github.com/scm-manager/scm-manager/pull/1057))
 - Invalid markdown could make parts of the page inaccessible ([#1077](https://github.com/scm-manager/scm-manager/pull/1077))
 
-## [2.0.0-rc5] - 2020-03-12
+## 2.0.0-rc5 - 2020-03-12
 ### Added
 - Added footer extension points for links and avatar
 - Create OpenAPI specification during build
@@ -1525,7 +1525,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enunciate rest documentation
 - Obsolete fields in data transfer objects
 
-## [2.0.0-rc4] - 2020-02-14
+## 2.0.0-rc4 - 2020-02-14
 ### Added
 - Support for Java versions > 8
 - Simple ClassLoaderLifeCycle to fix integration tests on Java > 8
@@ -1541,12 +1541,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Committer of new Git commits set to "SCM-Manager <noreply@scm-manager.org>"
 
-## [2.0.0-rc3] - 2020-01-31
+## 2.0.0-rc3 - 2020-01-31
 ### Fixed
 - Broken plugin order fixed
 - MarkdownViewer in code section renders markdown properly
 
-## [2.0.0-rc2] - 2020-01-29
+## 2.0.0-rc2 - 2020-01-29
 ### Added
 - Set individual page title
 - Copy on write
@@ -1568,7 +1568,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Page title is now set correctly
 - Restart after migration
 
-## [2.0.0-rc1] - 2019-12-02
+## 2.0.0-rc1 - 2019-12-02
 ### Added
 - Namespace concept and endpoints
 - File history
@@ -1586,14 +1586,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cache and x-requested-with header to bundle requests
 - remove public flag from repository and migrate permissions to anonymous user
 
-[2.0.0-rc1]: https://scm-manager.org/download/2.0.0-rc1
-[2.0.0-rc2]: https://scm-manager.org/download/2.0.0-rc2
-[2.0.0-rc3]: https://scm-manager.org/download/2.0.0-rc3
-[2.0.0-rc4]: https://scm-manager.org/download/2.0.0-rc4
-[2.0.0-rc5]: https://scm-manager.org/download/2.0.0-rc5
-[2.0.0-rc6]: https://scm-manager.org/download/2.0.0-rc6
-[2.0.0-rc7]: https://scm-manager.org/download/2.0.0-rc7
-[2.0.0-rc8]: https://scm-manager.org/download/2.0.0-rc8
 [2.0.0]: https://scm-manager.org/download/2.0.0
 [2.1.0]: https://scm-manager.org/download/2.1.0
 [2.1.1]: https://scm-manager.org/download/2.1.1
