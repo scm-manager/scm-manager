@@ -17,7 +17,13 @@
 import React, { FC, useCallback, useContext, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useShortcut } from "../index";
-import { Callback, CallbackIterator, CallbackRegistry, useCallbackIterator } from "./callbackIterator";
+import {
+  Callback,
+  CallbackIterator,
+  CallbackRegistry,
+  IterableCallback,
+  useCallbackIterator,
+} from "./callbackIterator";
 
 const KeyboardIteratorContext = React.createContext<CallbackRegistry>({
   register: () => {
@@ -33,6 +39,18 @@ const KeyboardIteratorContext = React.createContext<CallbackRegistry>({
       console.warn("Keyboard iterator targets have to be declared inside a KeyboardIterator");
     }
   },
+  deregisterItem: () => {
+    if (process.env.NODE_ENV === "development") {
+      // eslint-disable-next-line no-console
+      console.warn("Keyboard iterator targets have to be declared inside a KeyboardIterator");
+    }
+  },
+  registerItem: () => {
+    if (process.env.NODE_ENV === "development") {
+      // eslint-disable-next-line no-console
+      console.warn("Keyboard iterator targets have to be declared inside a KeyboardIterator");
+    }
+  },
 });
 
 export const useKeyboardIteratorItem = (item: Callback | CallbackIterator) => {
@@ -41,6 +59,14 @@ export const useKeyboardIteratorItem = (item: Callback | CallbackIterator) => {
     const index = register(item);
     return () => deregister(index);
   }, [item, register, deregister]);
+};
+
+export const useKeyboardIteratorItemV2 = (iterable: IterableCallback) => {
+  const { registerItem, deregisterItem } = useContext(KeyboardIteratorContext);
+  useEffect(() => {
+    registerItem?.(iterable);
+    return () => deregisterItem?.(iterable);
+  }, [iterable, registerItem, deregisterItem]);
 };
 
 export const KeyboardSubIteratorContextProvider: FC<{ initialIndex?: number }> = ({ children, initialIndex }) => {
@@ -73,6 +99,7 @@ export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number }> = ({
 };
 
 /**
+ * @deprecated since version 3.8.0. Use {@link useKeyboardIteratorTargetV2} instead.
  * Use the {@link React.RefObject} returned from this hook to register a target to the nearest enclosing {@link KeyboardIterator} or {@link KeyboardSubIterator}.
  *
  * @example
@@ -88,6 +115,32 @@ export function useKeyboardIteratorTarget(): React.RefCallback<HTMLElement> {
     }
   }, []);
   useKeyboardIteratorItem(callback);
+  return refCallback;
+}
+
+/**
+ * @deprecated since version 3.8.0. Use {@link useKeyboardIteratorTargetV2} instead.
+ * Use the {@link React.RefObject} returned from this hook to register a target to the nearest enclosing {@link KeyboardIterator} or {@link KeyboardSubIterator},
+ * while respecting its expected index / position.
+ *
+ * @example
+ * const ref = useKeyboardIteratorTarget({ expectedIndex: 0});
+ * const target = <button ref={ref}>My Iteration Target</button>
+ */
+export function useKeyboardIteratorTargetV2({
+  expectedIndex,
+}: {
+  expectedIndex: number;
+}): React.RefCallback<HTMLElement> {
+  const ref = useRef<HTMLElement>();
+  const callback = useCallback(() => ref.current?.focus(), []);
+  const cleanup = useCallback(() => ref.current?.blur(), []);
+  const refCallback: React.RefCallback<HTMLElement> = useCallback((el) => {
+    if (el) {
+      ref.current = el;
+    }
+  }, []);
+  useKeyboardIteratorItemV2({ item: callback, cleanup, expectedIndex });
   return refCallback;
 }
 

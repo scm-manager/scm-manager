@@ -20,6 +20,12 @@ const INACTIVE_INDEX = -1;
 
 export type Callback = () => void;
 
+export type IterableCallback = {
+  item: Callback | CallbackIterator;
+  expectedIndex: number;
+  cleanup?: Callback;
+};
+
 type Direction = "forward" | "backward";
 
 /**
@@ -31,11 +37,18 @@ export type CallbackRegistry = {
    * Registers the given item and returns its index to use in {@link deregister}.
    */
   register: (item: Callback | CallbackIterator) => number;
-
   /**
    * Use the index returned from {@link register} to de-register.
    */
   deregister: (index: number) => void;
+  /**
+   * Registers the given iterable item while maintaining the order of the expected index of each item.
+   */
+  registerItem?: (iterable: IterableCallback) => void;
+  /**
+   * Removes the passed iterable item.
+   */
+  deregisterItem?: (iterable: IterableCallback) => void;
 };
 
 const isSubiterator = (item?: Callback | CallbackIterator): item is CallbackIterator =>
@@ -51,6 +64,8 @@ const offset = (direction: Direction) => (direction === "forward" ? 1 : -1);
  *
  * ## Terminology
  * - Item: Either a callback or a nested iterator
+ * - Cleanup: A callback that is called, if the corresponding item is removed
+ * - Iterable: A wrapper containing an item, a cleanup callback and the index that this iterable is expected to be at
  * - Available: Item is a non-empty iterator OR a regular callback
  * - Inactive: Current index is -1
  * - Activate: Move iterator while in inactive state OR call regular callback
@@ -68,7 +83,7 @@ export class CallbackIterator implements CallbackRegistry {
 
   constructor(
     private readonly activeIndexRef: MutableRefObject<number>,
-    private readonly itemsRef: MutableRefObject<Array<Callback | CallbackIterator>>
+    private readonly itemsRef: MutableRefObject<Array<IterableCallback>>
   ) {}
 
   private get activeIndex() {
@@ -83,7 +98,7 @@ export class CallbackIterator implements CallbackRegistry {
     return this.itemsRef.current;
   }
 
-  private get currentItem(): Callback | CallbackIterator | undefined {
+  private get currentItem(): IterableCallback | undefined {
     return this.items[this.activeIndex];
   }
 
@@ -101,9 +116,9 @@ export class CallbackIterator implements CallbackRegistry {
 
   private firstAvailableIndex = (direction: Direction, fromIndex = this.firstIndex(direction)) => {
     for (; direction === "forward" ? fromIndex < this.items.length : fromIndex >= 0; fromIndex += offset(direction)) {
-      const callback = this.items[fromIndex];
-      if (callback) {
-        if (!isSubiterator(callback) || callback.hasNext(direction)) {
+      const iterableCallback = this.items[fromIndex];
+      if (iterableCallback) {
+        if (!isSubiterator(iterableCallback.item) || iterableCallback.item.hasNext(direction)) {
           return fromIndex;
         }
       }
@@ -116,14 +131,15 @@ export class CallbackIterator implements CallbackRegistry {
   };
 
   private activateCurrentItem = (direction: Direction) => {
-    if (isSubiterator(this.currentItem)) {
-      this.currentItem.move(direction);
+    if (isSubiterator(this.currentItem?.item)) {
+      this.currentItem?.item.move(direction);
     } else if (this.currentItem) {
-      this.currentItem();
+      this.currentItem.item();
     }
   };
 
   private setIndexAndActivateCurrentItem = (index: number | null, direction: Direction) => {
+    this.currentItem?.cleanup?.();
     if (index !== null && index !== INACTIVE_INDEX) {
       this.activeIndex = index;
       this.activateCurrentItem(direction);
@@ -131,11 +147,11 @@ export class CallbackIterator implements CallbackRegistry {
   };
 
   private move = (direction: Direction) => {
-    if (isSubiterator(this.currentItem) && this.currentItem.hasNext(direction)) {
-      this.currentItem.move(direction);
+    if (isSubiterator(this.currentItem?.item) && this.currentItem?.item.hasNext(direction)) {
+      this.currentItem?.item.move(direction);
     } else {
-      if (isSubiterator(this.currentItem)) {
-        this.currentItem.reset();
+      if (isSubiterator(this.currentItem?.item)) {
+        this.currentItem?.item.reset();
       }
       let nextIndex: number | null;
       if (this.isInactive) {
@@ -151,7 +167,7 @@ export class CallbackIterator implements CallbackRegistry {
     if (this.isInactive) {
       return this.hasAvailableIndex(inDirection);
     }
-    if (isSubiterator(this.currentItem) && this.currentItem.hasNext(inDirection)) {
+    if (isSubiterator(this.currentItem?.item) && this.currentItem?.item.hasNext(inDirection)) {
       return true;
     }
     return this.hasAvailableIndex(inDirection, this.activeIndex + offset(inDirection));
@@ -172,41 +188,66 @@ export class CallbackIterator implements CallbackRegistry {
   public reset = () => {
     this.activeIndex = INACTIVE_INDEX;
     for (const cb of this.items) {
-      if (isSubiterator(cb)) {
-        cb.reset();
+      if (isSubiterator(cb.item)) {
+        cb.item.reset();
       }
     }
   };
 
   public register = (item: Callback | CallbackIterator) => {
-    if (isSubiterator(item)) {
-      item.parent = this;
-    }
-    return this.items.push(item) - 1;
+    const expectedIndex = this.items.length;
+    this.registerItem({ item, expectedIndex });
+    return expectedIndex;
   };
 
   public deregister = (index: number) => {
-    this.items.splice(index, 1);
-    if (this.activeIndex === index || this.activeIndex >= this.items.length) {
-      if (this.hasAvailableIndex("backward", index)) {
-        this.setIndexAndActivateCurrentItem(this.firstAvailableIndex("backward", index), "backward");
-      } else if (this.hasAvailableIndex("forward", index)) {
-        this.setIndexAndActivateCurrentItem(this.firstAvailableIndex("forward", index), "backward");
-      } else if (this.parent) {
-        if (this.parent.hasNext("forward")) {
-          this.parent.move("forward");
-        } else if (this.parent.hasNext("backward")) {
-          this.parent.move("backward");
-        }
+    if (this.items[index]) {
+      this.deregisterItem(this.items[index]);
+    }
+  };
+
+  public deregisterItem = (iterable: IterableCallback) => {
+    const itemIndex = this.items.findIndex((value) => value.expectedIndex === iterable.expectedIndex);
+    if (itemIndex === -1) {
+      return;
+    }
+
+    const removedIterable = this.items[itemIndex];
+    removedIterable.cleanup?.();
+
+    this.items.splice(itemIndex, 1);
+    if (this.activeIndex >= itemIndex) {
+      if (this.hasAvailableIndex("backward")) {
+        this.setIndexAndActivateCurrentItem(this.firstAvailableIndex("backward", itemIndex), "backward");
+      } else if (this.hasAvailableIndex("forward")) {
+        this.setIndexAndActivateCurrentItem(this.firstAvailableIndex("forward", itemIndex), "forward");
+      } else if (this.parent?.hasNext("forward")) {
+        this.parent?.move("forward");
+      } else if (this.parent?.hasNext("backward")) {
+        this.parent?.move("backward");
       } else {
         this.reset();
       }
     }
   };
+
+  public registerItem = (iterable: IterableCallback) => {
+    if (isSubiterator(iterable.item)) {
+      iterable.item.parent = this;
+    }
+
+    const insertAt = this.items.findIndex((value) => value.expectedIndex > iterable.expectedIndex);
+
+    if (insertAt === -1) {
+      this.items.push(iterable);
+    } else {
+      this.items.splice(insertAt, 0, iterable);
+    }
+  };
 }
 
 export const useCallbackIterator = (initialIndex = INACTIVE_INDEX) => {
-  const items = useRef<Array<Callback | CallbackIterator>>([]);
+  const items = useRef<Array<IterableCallback>>([]);
   const activeIndex = useRef<number>(initialIndex);
   return useMemo(() => new CallbackIterator(activeIndex, items), [activeIndex, items]);
 };

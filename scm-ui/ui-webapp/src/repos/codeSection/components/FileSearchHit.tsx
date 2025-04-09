@@ -17,13 +17,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { urls } from "@scm-manager/ui-api";
-import { Icon, useKeyboardIteratorTarget } from "@scm-manager/ui-core";
+import { Icon, useKeyboardIteratorTargetV2 } from "@scm-manager/ui-core";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 type FileSearchHitProps = {
   contentBaseUrl: string;
   path: string;
+  expectedIndex?: number;
 };
 
 const IconColumn = styled.td`
@@ -39,17 +40,17 @@ const LeftOverflowTd = styled.td`
   text-align: left !important;
 `;
 
-export function FileSearchHit({ contentBaseUrl, path }: FileSearchHitProps) {
+export function FileSearchHit({ contentBaseUrl, path, expectedIndex }: FileSearchHitProps) {
   const [t] = useTranslation("repos");
   const link = urls.concat(contentBaseUrl, path);
-  const ref = useKeyboardIteratorTarget();
+  const ref = useKeyboardIteratorTargetV2({ expectedIndex: expectedIndex ?? 0 });
   return (
     <tr>
       <IconColumn aria-hidden="true">
         <Icon title={t("fileSearch.file")}>file</Icon>
       </IconColumn>
       <LeftOverflowTd>
-        <Link title={path} to={link} data-testid="file_search_single_result" ref={ref} key={path}>
+        <Link title={path} to={link} data-testid="file_search_single_result" ref={ref}>
           {path}
         </Link>
       </LeftOverflowTd>

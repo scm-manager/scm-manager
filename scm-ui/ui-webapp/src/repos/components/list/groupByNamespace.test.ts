@@ -76,16 +76,19 @@ it("should group the repositories by their namespace", () => {
       name: "hitchhiker",
       namespace: { namespace: "hitchhiker" },
       repositories: [hitchhikerHeartOfGold, hitchhikerPuzzle42, hitchhikerRestand],
+      currentPageOffset: 0,
     },
     {
       name: "slarti",
       namespace: { namespace: "slarti" },
       repositories: [slartiFjords, slartiBlueprintsFjords],
+      currentPageOffset: 3,
     },
     {
       name: "zaphod",
       namespace: { namespace: "zaphod" },
       repositories: [zaphodMarvinFirmware],
+      currentPageOffset: 5,
     },
   ];
 

@@ -85,4 +85,5 @@ export type RepositoryGroup = {
   name: string;
   namespace?: Namespace;
   repositories: Repository[];
+  currentPageOffset?: number;
 };

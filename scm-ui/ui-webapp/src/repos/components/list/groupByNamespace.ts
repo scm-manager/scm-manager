@@ -20,7 +20,7 @@ export default function groupByNamespace(
   repositories: Repository[],
   namespaces: NamespaceCollection
 ): RepositoryGroup[] {
-  const groups = {};
+  const groups: Record<string, RepositoryGroup> = {};
   for (const repository of repositories) {
     const groupName = repository.namespace;
 
@@ -37,21 +37,30 @@ export default function groupByNamespace(
     group.repositories.push(repository);
   }
 
-  const groupArray = [];
+  const groupArray: RepositoryGroup[] = [];
   for (const groupName in groups) {
     groupArray.push(groups[groupName]);
   }
   groupArray.sort(sortByName);
+  applyOffsets(groupArray);
   return groupArray;
 }
 
-function sortByName(a, b) {
+function sortByName(a: RepositoryGroup, b: RepositoryGroup) {
   if (a.name < b.name) {
     return -1;
   } else if (a.name > b.name) {
     return 1;
   }
   return 0;
+}
+
+function applyOffsets(groups: RepositoryGroup[]) {
+  let offset = 0;
+  for (const group of groups) {
+    group.currentPageOffset = offset;
+    offset += group.repositories.length;
+  }
 }
 
 function findNamespace(namespaces: NamespaceCollection, namespaceToFind: string) {

@@ -32,8 +32,8 @@ const ResultTable: FC<ResultTableProps> = ({ contentBaseUrl, paths }) => {
     <table className="table table-hover table-sm is-fullwidth">
       <KeyboardIterator>
         <tbody>
-          {paths.map((path) => (
-            <FileSearchHit contentBaseUrl={contentBaseUrl} path={path} key={path} />
+          {paths.map((path, index) => (
+            <FileSearchHit contentBaseUrl={contentBaseUrl} path={path} key={path} expectedIndex={index} />
           ))}
         </tbody>
       </KeyboardIterator>

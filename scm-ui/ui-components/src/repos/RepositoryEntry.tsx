@@ -22,11 +22,11 @@ import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import RepositoryFlags from "./RepositoryFlags";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 import { Card } from "@scm-manager/ui-layout";
 import { Link } from "react-router-dom";
 import { Menu } from "@scm-manager/ui-overlays";
 import { Icon } from "@scm-manager/ui-buttons";
+import { useKeyboardIteratorTargetV2 } from "@scm-manager/ui-core";
 
 type DateProp = Date | string;
 
@@ -35,6 +35,7 @@ type Props = {
   // @VisibleForTesting
   // the baseDate is only to avoid failing snapshot tests
   baseDate?: DateProp;
+  expectedIndex?: number;
 };
 
 const Avatar = styled.div`
@@ -59,9 +60,9 @@ const DetailsRow = styled(Card.Row)`
   gap: 0.5rem;
 `;
 
-const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
+const RepositoryEntry: FC<Props> = ({ repository, baseDate, expectedIndex }) => {
   const [t] = useTranslation("repos");
-  const ref = useKeyboardIteratorTarget();
+  const ref = useKeyboardIteratorTargetV2({ expectedIndex: expectedIndex ?? 0 });
 
   const actions = () => (
     <Menu>

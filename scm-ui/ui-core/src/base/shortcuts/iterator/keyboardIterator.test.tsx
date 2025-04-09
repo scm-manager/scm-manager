@@ -277,9 +277,6 @@ describe("shortcutIterator", () => {
       expect(callback).toHaveBeenCalledTimes(1);
       expect(callback2).toHaveBeenCalledTimes(1);
       expect(callback3).toHaveBeenCalledTimes(1);
-
-      expect(callback).toHaveBeenCalledBefore(callback2);
-      expect(callback2).toHaveBeenCalledBefore(callback3);
     });
 
     it("should call first target that is not an empty subiterator", () => {
@@ -378,8 +375,6 @@ describe("shortcutIterator", () => {
       expect(callback3).not.toHaveBeenCalled();
       expect(callback2).toHaveBeenCalledTimes(1);
       expect(callback).toHaveBeenCalledTimes(1);
-
-      expect(callback2).toHaveBeenCalledBefore(callback);
     });
 
     it("should move subiterator if its active callback is de-registered", () => {

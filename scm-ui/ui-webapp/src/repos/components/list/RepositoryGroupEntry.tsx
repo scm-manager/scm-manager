@@ -23,8 +23,14 @@ type Props = {
 };
 
 const RepositoryGroupEntry: FC<Props> = ({ group }) => {
-  const entries = group.repositories.map((repository) => {
-    return <RepositoryEntry repository={repository} key={repository.name} />;
+  const entries = group.repositories.map((repository, index) => {
+    return (
+      <RepositoryEntry
+        repository={repository}
+        key={repository.name}
+        expectedIndex={(group.currentPageOffset ?? 0) + index}
+      />
+    );
   });
   return <NamespaceEntries group={group} elements={entries} />;
 };
