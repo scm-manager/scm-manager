@@ -16,26 +16,10 @@
 
 package sonia.scm.store.sqlite;
 
-import lombok.Getter;
+import sonia.scm.store.QueryableStore;
 
-/**
- * Representation of a value of a row within an {@link SQLTable}.
- *
- * @since 3.8.0
- */
-@Getter
-class SQLField implements SQLNode {
-
-  static final SQLField PAYLOAD = new SQLField("json(payload)");
-
-  private final String name;
-
-  SQLField(String name) {
-    this.name = name;
-  }
-
-  @Override
-  public String toSQL() {
-    return name;
+class SQLAggregate extends SQLField {
+  public SQLAggregate(String operator, QueryableStore.AggregatableQueryField<?, ?> queryField) {
+    super(operator + "(" + SQLFieldHelper.computeSQLField(queryField) + ") ");
   }
 }

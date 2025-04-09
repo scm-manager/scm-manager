@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * This interface is used to query objects annotated with {@link QueryableType}. It will be created by the
@@ -32,7 +33,7 @@ import java.util.Optional;
  * processor for the annotated type.
  *
  * @param <T> The type of the objects to query.
- * @since 3.7.0
+ * @since 3.8.0
  */
 public interface QueryableStore<T> extends AutoCloseable {
 
@@ -90,7 +91,9 @@ public interface QueryableStore<T> extends AutoCloseable {
     /**
      * Returns all objects that match the query. If the query returns no result, an empty list will be returned.
      */
-    List<T_RESULT> findAll();
+    default List<T_RESULT> findAll() {
+      return findAll(0, Integer.MAX_VALUE);
+    }
 
     /**
      * Returns a subset of all objects that match the query. If the query returns no result or the {@code offset} and
@@ -100,6 +103,24 @@ public interface QueryableStore<T> extends AutoCloseable {
      * @param limit  The maximum number of results to return.
      */
     List<T_RESULT> findAll(long offset, long limit);
+
+    /**
+     * Calls the given consumer for all objects that match the query.
+     *
+     * @param consumer The consumer that will be called for each single found object.
+     */
+    default void forEach(Consumer<T_RESULT> consumer) {
+      forEach(consumer, 0, Integer.MAX_VALUE);
+    }
+
+    /**
+     * Calls the given consumer for a subset of all objects that match the query.
+     *
+     * @param consumer The consumer that will be called for each single found object.
+     * @param offset The offset to start feeding results to the consumer.
+     * @param limit  The maximum number of results.
+     */
+    void forEach(Consumer<T_RESULT> consumer, long offset, long limit);
 
     /**
      * Returns the found objects in combination with the parent ids they belong to. This is useful if you are using a
@@ -124,6 +145,26 @@ public interface QueryableStore<T> extends AutoCloseable {
      * Returns the count of all objects that match the query.
      */
     long count();
+
+    /**
+     * Returns the minimum value of the given field that match the query.
+     */
+    <A> A min(AggregatableQueryField<T, A> field);
+
+    /**
+     * Returns the maximum value of the given field that match the query.
+     */
+    <A> A max(AggregatableQueryField<T, A> field);
+
+    /**
+     * Returns the sum of the given field that match the query.
+     */
+    <A> A sum(AggregatableNumberQueryField<T, A> field);
+
+    /**
+     * Returns the average value of the given field that match the query.
+     */
+    <A> Double average(AggregatableNumberQueryField<T, A> field);
   }
 
   /**
@@ -160,10 +201,17 @@ public interface QueryableStore<T> extends AutoCloseable {
    * @param <F> The type of the field.
    */
   @SuppressWarnings("unused")
-  class QueryField<T, F> {
-    final String name;
+  interface QueryField<T, F> {
+    String getName();
 
-    public QueryField(String name) {
+    boolean isIdField();
+  }
+
+  @SuppressWarnings("unused")
+  abstract class BaseQueryField<T, F> implements QueryField<T, F> {
+    private final String name;
+
+    BaseQueryField(String name) {
       this.name = name;
     }
 
@@ -186,6 +234,19 @@ public interface QueryableStore<T> extends AutoCloseable {
   }
 
   /**
+   * Query fields implementing this can compute aggregates like minimum or maximum.
+   */
+  interface AggregatableQueryField<T, A> extends QueryField<T, A> {
+    Class<A> getFieldType();
+  }
+
+  /**
+   * Query fields implementing this can compute aggregates like sum or average.
+   */
+  interface AggregatableNumberQueryField<T, A> extends AggregatableQueryField<T, A> {
+  }
+
+  /**
    * This class is used to create conditions for queries. Instances of this class will be created by the annotation
    * processor for each {@link String} field of a class annotated with {@link QueryableType}.
    * <br/>
@@ -193,7 +254,7 @@ public interface QueryableStore<T> extends AutoCloseable {
    *
    * @param <T> The type of the objects this condition is used for.
    */
-  class StringQueryField<T> extends QueryField<T, String> {
+  class StringQueryField<T> extends BaseQueryField<T, String> implements AggregatableQueryField<T, String> {
 
     public StringQueryField(String name) {
       super(name);
@@ -239,6 +300,11 @@ public interface QueryableStore<T> extends AutoCloseable {
     public Condition<T> in(Collection<String> values) {
       return in(values.toArray(new String[0]));
     }
+
+    @Override
+    public Class<String> getFieldType() {
+      return String.class;
+    }
   }
 
   /**
@@ -274,9 +340,9 @@ public interface QueryableStore<T> extends AutoCloseable {
    * @param <T> The type of the objects this condition is used for.
    * @param <N> The type of the number field.
    */
-  class NumberQueryField<T, N extends Number> extends QueryField<T, N> {
+  abstract class NumberQueryField<T, N extends Number> extends BaseQueryField<T, N> {
 
-    public NumberQueryField(String name) {
+    NumberQueryField(String name) {
       super(name);
     }
 
@@ -362,6 +428,50 @@ public interface QueryableStore<T> extends AutoCloseable {
     }
   }
 
+  class IntegerQueryField<T> extends NumberQueryField<T, Integer> implements AggregatableNumberQueryField<T, Integer> {
+    public IntegerQueryField(String name) {
+      super(name);
+    }
+
+    @Override
+    public Class<Integer> getFieldType() {
+      return Integer.class;
+    }
+  }
+
+  class LongQueryField<T> extends NumberQueryField<T, Long> implements AggregatableNumberQueryField<T, Long> {
+    public LongQueryField(String name) {
+      super(name);
+    }
+
+    @Override
+    public Class<Long> getFieldType() {
+      return Long.class;
+    }
+  }
+
+  class FloatQueryField<T> extends NumberQueryField<T, Float> implements AggregatableNumberQueryField<T, Float> {
+    public FloatQueryField(String name) {
+      super(name);
+    }
+
+    @Override
+    public Class<Float> getFieldType() {
+      return Float.class;
+    }
+  }
+
+  class DoubleQueryField<T> extends NumberQueryField<T, Double> implements AggregatableNumberQueryField<T, Double> {
+    public DoubleQueryField(String name) {
+      super(name);
+    }
+
+    @Override
+    public Class<Double> getFieldType() {
+      return Double.class;
+    }
+  }
+
   /**
    * This class is used to create conditions for queries. Instances of this class will be created by the annotation
    * processor for each date field of a class annotated with {@link QueryableType}.
@@ -370,7 +480,7 @@ public interface QueryableStore<T> extends AutoCloseable {
    *
    * @param <T> The type of the objects this condition is used for.
    */
-  class InstantQueryField<T> extends QueryField<T, Instant> {
+  class InstantQueryField<T> extends BaseQueryField<T, Instant> {
     public InstantQueryField(String name) {
       super(name);
     }
@@ -467,7 +577,7 @@ public interface QueryableStore<T> extends AutoCloseable {
    *
    * @param <T> The type of the objects this condition is used for.
    */
-  class BooleanQueryField<T> extends QueryField<T, Boolean> {
+  class BooleanQueryField<T> extends BaseQueryField<T, Boolean> {
 
     public BooleanQueryField(String name) {
       super(name);
@@ -511,7 +621,7 @@ public interface QueryableStore<T> extends AutoCloseable {
    * @param <T> The type of the objects this condition is used for.
    * @param <E> The type of the enum field.
    */
-  class EnumQueryField<T, E extends Enum<E>> extends QueryField<T, Enum<E>> {
+  class EnumQueryField<T, E extends Enum<E>> extends BaseQueryField<T, Enum<E>> {
     public EnumQueryField(String name) {
       super(name);
     }
@@ -556,7 +666,7 @@ public interface QueryableStore<T> extends AutoCloseable {
    *
    * @param <T> The type of the objects this condition is used for.
    */
-  class CollectionQueryField<T> extends QueryField<T, Object> {
+  class CollectionQueryField<T> extends BaseQueryField<T, Object> {
     public CollectionQueryField(String name) {
       super(name);
     }
@@ -582,7 +692,7 @@ public interface QueryableStore<T> extends AutoCloseable {
    *
    * @param <T> The type of the objects this condition is used for.
    */
-  class CollectionSizeQueryField<T> extends NumberQueryField<T, Long> {
+  class CollectionSizeQueryField<T> extends NumberQueryField<T, Long> implements AggregatableNumberQueryField<T, Long> {
     public CollectionSizeQueryField(String name) {
       super(name);
     }
@@ -595,6 +705,11 @@ public interface QueryableStore<T> extends AutoCloseable {
     public Condition<T> isEmpty() {
       return eq(0L);
     }
+
+    @Override
+    public Class<Long> getFieldType() {
+      return Long.class;
+    }
   }
 
   /**
@@ -606,7 +721,7 @@ public interface QueryableStore<T> extends AutoCloseable {
    *
    * @param <T> The type of the objects this condition is used for.
    */
-  class MapQueryField<T> extends QueryField<T, Object> {
+  class MapQueryField<T> extends BaseQueryField<T, Object> {
     public MapQueryField(String name) {
       super(name);
     }
@@ -642,7 +757,7 @@ public interface QueryableStore<T> extends AutoCloseable {
    *
    * @param <T> The type of the objects this condition is used for.
    */
-  class MapSizeQueryField<T> extends NumberQueryField<T, Long> {
+  class MapSizeQueryField<T> extends NumberQueryField<T, Long> implements AggregatableNumberQueryField<T, Long> {
     public MapSizeQueryField(String name) {
       super(name);
     }
@@ -654,6 +769,11 @@ public interface QueryableStore<T> extends AutoCloseable {
      */
     public Condition<T> isEmpty() {
       return eq(0L);
+    }
+
+    @Override
+    public Class<Long> getFieldType() {
+      return Long.class;
     }
   }
 

@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Representation of a column or a list of columns within an {@link SQLTable}.
  *
- * @since 3.7.0
+ * @since 3.8.0
  */
 @Slf4j
 class SQLValue implements SQLNodeWithValue {

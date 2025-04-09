@@ -20,21 +20,17 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 
 class NumberQueryFieldHandler extends QueryFieldHandler {
-  public NumberQueryFieldHandler(String packageName, String className) {
-    this(packageName, className, null);
-  }
-
-  public NumberQueryFieldHandler(String packageName, String className, String suffix) {
+  NumberQueryFieldHandler(String className) {
     super(
-      "NumberQueryField",
-      new TypeName[]{ClassName.get(packageName, className)},
+      className + "QueryField",
+      new TypeName[]{},
       (fieldBuilder, element, fieldClass, fieldName) -> fieldBuilder
         .initializer(
           "new $T<>($S)",
           ClassName.get("sonia.scm.store", "QueryableStore").nestedClass(fieldClass),
           fieldName
         ),
-      suffix
+      null
     );
   }
 }

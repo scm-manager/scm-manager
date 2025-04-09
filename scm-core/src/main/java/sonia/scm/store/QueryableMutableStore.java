@@ -29,7 +29,7 @@ import java.util.function.BooleanSupplier;
  * processor for the annotated type.
  *
  * @param <T> The type of the objects to query.
- * @since 3.7.0
+ * @since 3.8.0
  */
 public interface QueryableMutableStore<T> extends DataStore<T>, QueryableStore<T>, AutoCloseable {
   void transactional(BooleanSupplier callback);

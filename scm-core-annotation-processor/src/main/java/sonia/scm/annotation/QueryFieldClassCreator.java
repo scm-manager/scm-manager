@@ -264,19 +264,15 @@ class QueryFieldClassCreator {
           SIMPLE_INITIALIZER));
       case "int", "java.lang.Integer" -> List.of(
         new NumberQueryFieldHandler(
-          "java.lang",
           "Integer"));
       case "long", "java.lang.Long" -> List.of(
         new NumberQueryFieldHandler(
-          "java.lang",
           "Long"));
       case "float", "java.lang.Float" -> List.of(
         new NumberQueryFieldHandler(
-          "java.lang",
           "Float"));
       case "double", "java.lang.Double" -> List.of(
         new NumberQueryFieldHandler(
-          "java.lang",
           "Double"));
       case "java.util.Date", "java.time.Instant" -> List.of(
         new QueryFieldHandler(

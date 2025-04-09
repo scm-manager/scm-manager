@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  * possible to store objects related to repositories; with this annotation it is possible to use other objects as
  * parents, too, like for instance users).
  *
- * @since 3.7.0
+ * @since 3.8.0
  */
 @Documented
 @Target(ElementType.TYPE)

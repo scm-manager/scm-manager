@@ -29,7 +29,7 @@ package sonia.scm.store;
  * Implementations probably are backed by a database or a similar storage system instead of the familiar
  * file based storage using XML.
  *
- * @since 3.7.0
+ * @since 3.8.0
  */
 public interface QueryableStoreFactory {
 

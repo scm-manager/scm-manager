@@ -26,12 +26,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.Instant;
 
-import static sonia.scm.store.sqlite.SQLiteIdentifiers.computeColumnIdentifier;
-
 /**
  * <b>SQLCondition</b> represents a condition given in an agnostic SQL statement.
  *
- * @since 3.7.0
+ * @since 3.8.0
  */
 @Getter
 @Setter
@@ -96,14 +94,8 @@ class SQLCondition implements SQLNodeWithValue {
       return "select * from json_each(payload, '$." + queryField.getName() + "') where ";
     } else if (queryField instanceof QueryableStore.InstantQueryField) {
       return "json_extract(payload, '$." + queryField.getName() + "')";
-    } else if (queryField instanceof QueryableStore.CollectionSizeQueryField<?>) {
-      return "json_array_length(payload, '$." + queryField.getName() + "')";
-    } else if (queryField instanceof QueryableStore.MapSizeQueryField<?>) {
-      return "(select count(*) from json_each(payload, '$." + queryField.getName() + "')) ";
-    } else if (queryField.isIdField()) {
-      return computeColumnIdentifier(queryField.getName());
     } else {
-      return "json_extract(payload, '$." + queryField.getName() + "')";
+      return SQLFieldHelper.computeSQLField(queryField);
     }
   }
 

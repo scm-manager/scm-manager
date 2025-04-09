@@ -21,7 +21,7 @@ import sonia.scm.store.StoreException;
 /**
  * This exception is thrown if a name for a store element doesn't meet the internal verification requirements.
  *
- * @since 3.7.0
+ * @since 3.8.0
  */
 class BadStoreNameException extends StoreException {
   BadStoreNameException(String badName) {

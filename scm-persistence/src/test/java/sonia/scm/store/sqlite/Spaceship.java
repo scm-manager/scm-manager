@@ -37,6 +37,7 @@ class Spaceship {
   Collection<String> crew;
   Map<String, Boolean> destinations;
   Instant inServiceSince;
+  int flightCount;
 
   public Spaceship() {
   }
@@ -94,5 +95,13 @@ class Spaceship {
 
   public void setInServiceSince(Instant inServiceSince) {
     this.inServiceSince = inServiceSince;
+  }
+
+  public int getFlightCount() {
+    return flightCount;
+  }
+
+  public void setFlightCount(int flightCount) {
+    this.flightCount = flightCount;
   }
 }

@@ -116,7 +116,7 @@ public class ScmModule {
   }
 
   /**
-   * @since 3.7.0
+   * @since 3.8.0
    */
   public Iterable<QueryableTypeDescriptor> getQueryableTypes() {
     return nonNull(queryableTypes);

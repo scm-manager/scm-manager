@@ -16,35 +16,31 @@
 
 package sonia.scm.testing;
 
-import java.lang.Double;
-import java.lang.Float;
-import java.lang.Integer;
-import java.lang.Long;
 import sonia.scm.store.QueryableStore;
 
 public final class DQueryFields {
   public static final QueryableStore.IdQueryField<D> INTERNAL_ID =
     new QueryableStore.IdQueryField<>();
 
-  public static final QueryableStore.NumberQueryField<D, Integer> AGE =
-    new QueryableStore.NumberQueryField<>("age");
-  public static final QueryableStore.NumberQueryField<D, Integer> WEIGHT =
-    new QueryableStore.NumberQueryField<>("weight");
+  public static final QueryableStore.IntegerQueryField<D> AGE =
+    new QueryableStore.IntegerQueryField<>("age");
+  public static final QueryableStore.IntegerQueryField<D> WEIGHT =
+    new QueryableStore.IntegerQueryField<>("weight");
 
-  public static final QueryableStore.NumberQueryField<D, Long> CREATIONTIME =
-    new QueryableStore.NumberQueryField<>("creationTime");
-  public static final QueryableStore.NumberQueryField<D, Long> LASTMODIFIED =
-    new QueryableStore.NumberQueryField<>("lastModified");
+  public static final QueryableStore.LongQueryField<D> CREATIONTIME =
+    new QueryableStore.LongQueryField<>("creationTime");
+  public static final QueryableStore.LongQueryField<D> LASTMODIFIED =
+    new QueryableStore.LongQueryField<>("lastModified");
 
-  public static final QueryableStore.NumberQueryField<D, Float> HEIGHT =
-    new QueryableStore.NumberQueryField<>("height");
-  public static final QueryableStore.NumberQueryField<D, Float> WIDTH =
-    new QueryableStore.NumberQueryField<>("width");
+  public static final QueryableStore.FloatQueryField<D> HEIGHT =
+    new QueryableStore.FloatQueryField<>("height");
+  public static final QueryableStore.FloatQueryField<D> WIDTH =
+    new QueryableStore.FloatQueryField<>("width");
 
-  public static final QueryableStore.NumberQueryField<D, Double> PRICE =
-    new QueryableStore.NumberQueryField<>("price");
-  public static final QueryableStore.NumberQueryField<D, Double> MARGIN =
-    new QueryableStore.NumberQueryField<>("margin");
+  public static final QueryableStore.DoubleQueryField<D> PRICE =
+    new QueryableStore.DoubleQueryField<>("price");
+  public static final QueryableStore.DoubleQueryField<D> MARGIN =
+    new QueryableStore.DoubleQueryField<>("margin");
 
   private DQueryFields() {
   }

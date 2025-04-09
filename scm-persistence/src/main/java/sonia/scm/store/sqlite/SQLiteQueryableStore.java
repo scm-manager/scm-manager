@@ -48,6 +48,7 @@ import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static sonia.scm.store.sqlite.SQLiteIdentifiers.computeColumnIdentifier;
@@ -305,12 +306,14 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
     }
 
     @Override
-    public List<T_RESULT> findAll() {
-      return findAll(0, Integer.MAX_VALUE);
+    public List<T_RESULT> findAll(long offset, long limit) {
+      List<T_RESULT> result = new ArrayList<>();
+      forEach(result::add, offset, limit);
+      return Collections.unmodifiableList(result);
     }
 
     @Override
-    public List<T_RESULT> findAll(long offset, long limit) {
+    public void forEach(Consumer<T_RESULT> consumer, long offset, long limit) {
       StringBuilder orderByBuilder = new StringBuilder();
       if (orderBy != null && !orderBy.isEmpty()) {
         toOrderBySQL(orderByBuilder);
@@ -326,15 +329,15 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
           offset
         );
 
-      return executeRead(
+      executeRead(
         sqlSelectQuery,
         statement -> {
-          List<T_RESULT> result = new ArrayList<>();
-          ResultSet resultSet = statement.executeQuery();
-          while (resultSet.next()) {
-            result.add(extractResult(resultSet));
+          try (ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+              consumer.accept(extractResult(resultSet));
+            }
           }
-          return Collections.unmodifiableList(result);
+          return null;
         }
       );
     }
@@ -360,6 +363,49 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
           ResultSet resultSet = statement.executeQuery();
           if (resultSet.next()) {
             return resultSet.getLong(1);
+          }
+          throw new IllegalStateException("failed to read count for type " + queryableTypeDescriptor);
+        }
+      );
+    }
+
+    @Override
+    public <A> A min(AggregatableQueryField<T, A> field) {
+      return aggregate(field, "MIN", field.getFieldType());
+    }
+
+    @Override
+    public <A> A max(AggregatableQueryField<T, A> field) {
+      return aggregate(field, "MAX", field.getFieldType());
+    }
+
+    @Override
+    public <A> A sum(AggregatableNumberQueryField<T, A> field) {
+      return aggregate(field, "SUM", field.getFieldType());
+    }
+
+    @Override
+    public <A> Double average(AggregatableNumberQueryField<T, A> field) {
+      return aggregate(field, "AVG", Double.class);
+    }
+
+    private <A> A aggregate(AggregatableQueryField<T, ?> field, String aggregate, Class<A> resultType) {
+      SQLSelectStatement sqlStatementQuery =
+        new SQLSelectStatement(
+          List.of(new SQLAggregate(aggregate, field)),
+          computeFromTable(),
+          computeCondition()
+        );
+
+      return executeRead(
+        sqlStatementQuery,
+        statement -> {
+          ResultSet resultSet = statement.executeQuery();
+          if (resultSet.next()) {
+            if (resultSet.getObject(1) == null) {
+              return null;
+            }
+            return resultSet.getObject(1, resultType);
           }
           throw new IllegalStateException("failed to read count for type " + queryableTypeDescriptor);
         }

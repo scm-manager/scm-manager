@@ -80,7 +80,7 @@ public interface ExtensionProcessor
 
   /**
    * Returns all queryable types.
-   * @since 3.7.0
+   * @since 3.8.0
    */
   default Iterable<QueryableTypeDescriptor> getQueryableTypes() {
     return emptySet();

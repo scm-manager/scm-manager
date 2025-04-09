@@ -64,7 +64,7 @@ class SQLiteQueryableStoreTest {
         store.put(new Spaceship("Heart Of Gold", Range.INTER_GALACTIC));
 
         List<Spaceship> all = store
-          .query(SPACESHIP_RANGE_ENUM_QUERY_FIELD.eq(Range.SOLAR_SYSTEM))
+          .query(SPACESHIP_RANGE.eq(Range.SOLAR_SYSTEM))
           .findAll();
 
         assertThat(all).hasSize(1);
@@ -82,7 +82,7 @@ class SQLiteQueryableStoreTest {
         store.put(arthur);
 
         List<User> all = store.query(
-            CREATION_DATE_QUERY_FIELD.lessOrEquals(9999999999L)
+            CREATION_DATE.lessOrEquals(9999999999L)
           )
           .findAll();
 
@@ -102,7 +102,7 @@ class SQLiteQueryableStoreTest {
         store.put(arthur);
 
         List<User> all = store.query(
-            CREATION_DATE_AS_INTEGER_QUERY_FIELD.less(40)
+            CREATION_DATE_AS_INTEGER.less(40)
           )
           .findAll();
 
@@ -122,7 +122,7 @@ class SQLiteQueryableStoreTest {
         store.put(arthur);
 
         List<User> all = store.query(
-            ACTIVE_QUERY_FIELD.isTrue()
+            ACTIVE.isTrue()
           )
           .findAll();
 
@@ -142,7 +142,7 @@ class SQLiteQueryableStoreTest {
         store.put(arthur);
 
         long count = store.query(
-            ACTIVE_QUERY_FIELD.isTrue()
+            ACTIVE.isTrue()
           )
           .count();
 
@@ -161,7 +161,7 @@ class SQLiteQueryableStoreTest {
         store.put(new Spaceship("Heart Of Gold", "Trillian", "Arthur", "Ford", "Zaphod", "Marvin"));
 
         List<Spaceship> result = store.query(
-          SPACESHIP_CREW_QUERY_FIELD.contains("Marvin")
+          SPACESHIP_CREW.contains("Marvin")
         ).findAll();
 
         assertThat(result).hasSize(1);
@@ -174,7 +174,7 @@ class SQLiteQueryableStoreTest {
         store.put(new Spaceship("Heart Of Gold", "Trillian", "Arthur", "Ford", "Zaphod", "Marvin"));
 
         long result = store.query(
-          SPACESHIP_CREW_QUERY_FIELD.contains("Marvin")
+          SPACESHIP_CREW.contains("Marvin")
         ).count();
 
         assertThat(result).isEqualTo(1);
@@ -192,6 +192,90 @@ class SQLiteQueryableStoreTest {
       }
 
       @Test
+      void shouldHandleEmptyCollectionWithMaxString() {
+        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        Integer result = store.query().max(
+          SPACESHIP_FLIGHT_COUNT
+        );
+
+        assertThat(result).isNull();
+      }
+
+      @Nested
+      class ForAggregations {
+
+        SQLiteQueryableMutableStore<Spaceship> store;
+
+        @BeforeEach
+        void createData() {
+          store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+          Spaceship spaceshuttle = new Spaceship("Spaceshuttle", "Buzz", "Anndre");
+          spaceshuttle.setFlightCount(12);
+          store.put("Spaceshuttle", spaceshuttle);
+          Spaceship heartOfGold = new Spaceship("Heart Of Gold", "Trillian", "Arthur", "Ford", "Zaphod", "Marvin");
+          heartOfGold.setFlightCount(42);
+          store.put("Heart Of Gold", heartOfGold);
+          Spaceship vogon = new Spaceship("Vogon", "Prostetnic Vogon Jeltz");
+          vogon.setFlightCount(321);
+          store.put("Vogon", vogon);
+        }
+
+        @Test
+        void shouldGetMaxString() {
+          String result = store.query().max(
+            SPACESHIP_NAME
+          );
+
+          assertThat(result).isEqualTo("Vogon");
+        }
+
+        @Test
+        void shouldGetMaxOfCollectionSize() {
+          Long result = store.query().max(
+            SPACESHIP_CREW_SIZE
+          );
+
+          assertThat(result).isEqualTo(5);
+        }
+
+        @Test
+        void shouldGetMinOfId() {
+          String result = store.query().min(
+            SPACESHIP_ID
+          );
+
+          assertThat(result).isEqualTo("Heart Of Gold");
+        }
+
+        @Test
+        void shouldGetMinNumber() {
+          int result = store.query().min(
+            SPACESHIP_FLIGHT_COUNT
+          );
+
+          assertThat(result).isEqualTo(12);
+        }
+
+        @Test
+        void shouldGetAverageNumber() {
+          double result = store.query().average(
+            SPACESHIP_FLIGHT_COUNT
+          );
+
+          assertThat(result).isEqualTo(125);
+        }
+
+        @Test
+        void shouldGetSum() {
+          int result = store.query().sum(
+            SPACESHIP_FLIGHT_COUNT
+          );
+
+          assertThat(result).isEqualTo(375);
+        }
+      }
+
+      @Test
       void shouldHandleCollectionSize() {
         SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
         store.put(new Spaceship("Spaceshuttle", "Buzz", "Anndre"));
@@ -199,20 +283,20 @@ class SQLiteQueryableStoreTest {
         store.put(new Spaceship("MillenniumFalcon"));
 
         List<Spaceship> onlyEmpty = store.query(
-          SPACESHIP_CREW_SIZE_QUERY_FIELD.isEmpty()
+          SPACESHIP_CREW_SIZE.isEmpty()
         ).findAll();
         assertThat(onlyEmpty).hasSize(1);
         assertThat(onlyEmpty.get(0).getName()).isEqualTo("MillenniumFalcon");
 
 
         List<Spaceship> exactlyTwoCrewMates = store.query(
-          SPACESHIP_CREW_SIZE_QUERY_FIELD.eq(2L)
+          SPACESHIP_CREW_SIZE.eq(2L)
         ).findAll();
         assertThat(exactlyTwoCrewMates).hasSize(1);
         assertThat(exactlyTwoCrewMates.get(0).getName()).isEqualTo("Spaceshuttle");
 
         List<Spaceship> moreThanTwoCrewMates = store.query(
-          SPACESHIP_CREW_SIZE_QUERY_FIELD.greater(2L)
+          SPACESHIP_CREW_SIZE.greater(2L)
         ).findAll();
         assertThat(moreThanTwoCrewMates).hasSize(1);
         assertThat(moreThanTwoCrewMates.get(0).getName()).isEqualTo("Heart of Gold");
@@ -226,13 +310,13 @@ class SQLiteQueryableStoreTest {
         store.put(new Spaceship("MillenniumFalcon", Map.of("dagobah", false)));
 
         List<Spaceship> keyResult = store.query(
-          SPACESHIP_DESTINATIONS_QUERY_FIELD.containsKey("vogon")
+          SPACESHIP_DESTINATIONS.containsKey("vogon")
         ).findAll();
         assertThat(keyResult).hasSize(1);
         assertThat(keyResult.get(0).getName()).isEqualTo("Heart of Gold");
 
         List<Spaceship> valueResult = store.query(
-          SPACESHIP_DESTINATIONS_QUERY_FIELD.containsValue(false)
+          SPACESHIP_DESTINATIONS.containsValue(false)
         ).findAll();
         assertThat(valueResult).hasSize(1);
         assertThat(valueResult.get(0).getName()).isEqualTo("MillenniumFalcon");
@@ -246,14 +330,14 @@ class SQLiteQueryableStoreTest {
         store.put(new Spaceship("MillenniumFalcon", Map.of("dagobah", false)));
 
         long keyResult = store.query(
-          SPACESHIP_DESTINATIONS_QUERY_FIELD.containsKey("vogon")
+          SPACESHIP_DESTINATIONS.containsKey("vogon")
         ).count();
 
         assertThat(keyResult).isEqualTo(1);
 
 
         long valueResult = store.query(
-          SPACESHIP_DESTINATIONS_QUERY_FIELD.containsValue(false)
+          SPACESHIP_DESTINATIONS.containsValue(false)
         ).count();
         assertThat(valueResult).isEqualTo(1);
       }
@@ -267,20 +351,20 @@ class SQLiteQueryableStoreTest {
         store.put(new Spaceship("MillenniumFalcon", Map.of()));
 
         List<Spaceship> onlyEmpty = store.query(
-          SPACESHIP_DESTINATIONS_SIZE_QUERY_FIELD.isEmpty()
+          SPACESHIP_DESTINATIONS_SIZE.isEmpty()
         ).findAll();
         assertThat(onlyEmpty).hasSize(1);
         assertThat(onlyEmpty.get(0).getName()).isEqualTo("MillenniumFalcon");
 
 
         List<Spaceship> exactlyTwoDestinations = store.query(
-          SPACESHIP_DESTINATIONS_SIZE_QUERY_FIELD.eq(2L)
+          SPACESHIP_DESTINATIONS_SIZE.eq(2L)
         ).findAll();
         assertThat(exactlyTwoDestinations).hasSize(1);
         assertThat(exactlyTwoDestinations.get(0).getName()).isEqualTo("Spaceshuttle");
 
         List<Spaceship> moreThanTwoDestinations = store.query(
-          SPACESHIP_DESTINATIONS_SIZE_QUERY_FIELD.greater(2L)
+          SPACESHIP_DESTINATIONS_SIZE.greater(2L)
         ).findAll();
         assertThat(moreThanTwoDestinations).hasSize(1);
         assertThat(moreThanTwoDestinations.get(0).getName()).isEqualTo("Heart of Gold");
@@ -298,22 +382,22 @@ class SQLiteQueryableStoreTest {
         store.put(falcon);
 
         List<Spaceship> resultEqOperator = store.query(
-          SPACESHIP_INSERVICE_QUERY_FIELD.eq(Instant.parse("2015-12-21T10:00:00Z"))).findAll();
+          SPACESHIP_INSERVICE.eq(Instant.parse("2015-12-21T10:00:00Z"))).findAll();
         assertThat(resultEqOperator).hasSize(1);
         assertThat(resultEqOperator.get(0).getName()).isEqualTo("Falcon9");
 
         List<Spaceship> resultBeforeOperator = store.query(
-          SPACESHIP_INSERVICE_QUERY_FIELD.before(Instant.parse("2000-12-21T10:00:00Z"))).findAll();
+          SPACESHIP_INSERVICE.before(Instant.parse("2000-12-21T10:00:00Z"))).findAll();
         assertThat(resultBeforeOperator).hasSize(1);
         assertThat(resultBeforeOperator.get(0).getName()).isEqualTo("Spaceshuttle");
 
         List<Spaceship> resultAfterOperator = store.query(
-          SPACESHIP_INSERVICE_QUERY_FIELD.after(Instant.parse("2000-01-01T00:00:00Z"))).findAll();
+          SPACESHIP_INSERVICE.after(Instant.parse("2000-01-01T00:00:00Z"))).findAll();
         assertThat(resultAfterOperator).hasSize(1);
         assertThat(resultAfterOperator.get(0).getName()).isEqualTo("Falcon9");
 
         List<Spaceship> resultBetweenOperator = store.query(
-          SPACESHIP_INSERVICE_QUERY_FIELD.between(Instant.parse("1980-04-12T10:00:00Z"), Instant.parse("2016-12-21T10:00:00Z"))).findAll();
+          SPACESHIP_INSERVICE.between(Instant.parse("1980-04-12T10:00:00Z"), Instant.parse("2016-12-21T10:00:00Z"))).findAll();
         assertThat(resultBetweenOperator).hasSize(2);
 
       }
@@ -344,8 +428,8 @@ class SQLiteQueryableStoreTest {
         store.put(new User("marvin", "Marvin", "marvin@hog.org"));
 
         List<User> all = store.query()
-          .orderBy(USER_NAME_QUERY_FIELD, QueryableStore.Order.ASC)
-          .orderBy(DISPLAY_NAME_QUERY_FIELD, QueryableStore.Order.DESC)
+          .orderBy(USER_NAME, QueryableStore.Order.ASC)
+          .orderBy(DISPLAY_NAME, QueryableStore.Order.DESC)
           .findAll();
 
         assertThat(all)
@@ -364,7 +448,7 @@ class SQLiteQueryableStoreTest {
         store.put("3", new User("arthur", "Arthur Dent", "arthur@hog.org"));
 
         List<User> all = store.query(
-            ID_QUERY_FIELD.eq("1")
+            ID.eq("1")
           )
           .findAll();
 
@@ -385,7 +469,7 @@ class SQLiteQueryableStoreTest {
         SQLiteQueryableStore<User> store = new StoreTestBuilder(connectionString, Group.class.getName()).withIds();
 
         List<User> all = store.query(
-            GROUP_QUERY_FIELD.eq("42")
+            GROUP.eq("42")
           )
           .findAll();
 
@@ -402,7 +486,7 @@ class SQLiteQueryableStoreTest {
         store.put("dent", new User("arthur", "Arthur Dent", "arthur@hog.org"));
 
         List<User> all = store.query(
-            USER_NAME_QUERY_FIELD.contains("ri")
+            USER_NAME.contains("ri")
           )
           .findAll();
 
@@ -416,7 +500,7 @@ class SQLiteQueryableStoreTest {
         store.put("dent", new User("arthur", "Arthur Dent", "arthur@hog.org"));
 
         List<User> all = store.query(
-            DISPLAY_NAME_QUERY_FIELD.isNull()
+            DISPLAY_NAME.isNull()
           )
           .findAll();
 
@@ -432,7 +516,7 @@ class SQLiteQueryableStoreTest {
         store.put("dent", new User("arthur", "Arthur Dent", "arthur@hog.org"));
 
         List<User> all = store.query(
-            Conditions.not(DISPLAY_NAME_QUERY_FIELD.isNull())
+            Conditions.not(DISPLAY_NAME.isNull())
           )
           .findAll();
 
@@ -450,8 +534,8 @@ class SQLiteQueryableStoreTest {
 
         List<User> all = store.query(
             Conditions.or(
-              DISPLAY_NAME_QUERY_FIELD.eq("Tricia"),
-              DISPLAY_NAME_QUERY_FIELD.eq("Trillian McMillan")
+              DISPLAY_NAME.eq("Tricia"),
+              DISPLAY_NAME.eq("Trillian McMillan")
             )
           )
           .findAll();
@@ -510,7 +594,7 @@ class SQLiteQueryableStoreTest {
           .withIds("1337")
           .put("tricia", new User("trillian", "Trillian McMillan", "tricia@hog.org"));
 
-        List<User> all = store.query(USER_NAME_QUERY_FIELD.eq("trillian")).findAll();
+        List<User> all = store.query(USER_NAME.eq("trillian")).findAll();
 
         assertThat(all)
           .extracting("displayName")
@@ -525,7 +609,7 @@ class SQLiteQueryableStoreTest {
         store.put(new User("zaphod", "Beeblebrox", "zaphod@hog.org"));
 
         List<User> all = store.query(
-            USER_NAME_QUERY_FIELD.in("trillian", "arthur")
+            USER_NAME.in("trillian", "arthur")
           )
           .findAll();
 
@@ -551,7 +635,7 @@ class SQLiteQueryableStoreTest {
       store.put("tricia", new User("trillian"));
       store.put("dent", new User("arthur"));
 
-      List<User> all = store.query(USER_NAME_QUERY_FIELD.eq("trillian")).findAll();
+      List<User> all = store.query(USER_NAME.eq("trillian")).findAll();
       assertThat(all).hasSize(1);
     }
 
@@ -582,8 +666,8 @@ class SQLiteQueryableStoreTest {
       store.put("dent", new User("arthur", "Arthur Dent", "arthur@hog.org"));
 
       List<User> all = store.query(
-          USER_NAME_QUERY_FIELD.eq("trillian"),
-          DISPLAY_NAME_QUERY_FIELD.eq("Tricia")
+          USER_NAME.eq("trillian"),
+          DISPLAY_NAME.eq("Tricia")
         )
         .findAll();
 
@@ -614,7 +698,7 @@ class SQLiteQueryableStoreTest {
     @Test
     void shouldReturnEmptyOptionalIfNoResultFound() {
       SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
-      assertThat(store.query(SPACESHIP_NAME_QUERY_FIELD.eq("Heart Of Gold")).findOne()).isEmpty();
+      assertThat(store.query(SPACESHIP_NAME.eq("Heart Of Gold")).findOne()).isEmpty();
     }
 
     @Test
@@ -622,7 +706,7 @@ class SQLiteQueryableStoreTest {
       SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
       Spaceship expectedShip = new Spaceship("Heart Of Gold", Range.INNER_GALACTIC);
       store.put(expectedShip);
-      Spaceship ship = store.query(SPACESHIP_NAME_QUERY_FIELD.eq("Heart Of Gold")).findOne().get();
+      Spaceship ship = store.query(SPACESHIP_NAME.eq("Heart Of Gold")).findOne().get();
 
       assertThat(ship).isEqualTo(expectedShip);
     }
@@ -634,7 +718,7 @@ class SQLiteQueryableStoreTest {
       Spaceship localShip = new Spaceship("Heart Of Gold", Range.SOLAR_SYSTEM);
       store.put(expectedShip);
       store.put(localShip);
-      assertThatThrownBy(() -> store.query(SPACESHIP_NAME_QUERY_FIELD.eq("Heart Of Gold")).findOne().get())
+      assertThatThrownBy(() -> store.query(SPACESHIP_NAME.eq("Heart Of Gold")).findOne().get())
         .isInstanceOf(QueryableStore.TooManyResultsException.class);
     }
   }
@@ -651,7 +735,7 @@ class SQLiteQueryableStoreTest {
       store.put("3", new User("arthur", "Arthur Dent", "arthur@hog.org"));
 
       Optional<User> user = store.query(
-          USER_NAME_QUERY_FIELD.eq("trillian")
+          USER_NAME.eq("trillian")
         )
         .findFirst();
 
@@ -669,8 +753,8 @@ class SQLiteQueryableStoreTest {
       store.put("4", new User("arthur", "Arthur Dent", "arthur@hog.org"));
 
       Optional<User> user = store.query(
-          USER_NAME_QUERY_FIELD.eq("trillian"),
-          MAIL_QUERY_FIELD.eq("mcmillan-alternate@gmail.com")
+          USER_NAME.eq("trillian"),
+          MAIL.eq("mcmillan-alternate@gmail.com")
         )
         .findFirst();
 
@@ -692,11 +776,11 @@ class SQLiteQueryableStoreTest {
       Optional<User> user = store.query(
         Conditions.and(
           Conditions.and(
-            DISPLAY_NAME_QUERY_FIELD.eq("Trillian McMillan"),
-            MAIL_QUERY_FIELD.eq("mcmillan@gmail.com")
+            DISPLAY_NAME.eq("Trillian McMillan"),
+            MAIL.eq("mcmillan@gmail.com")
           ),
           Conditions.not(
-            ID_QUERY_FIELD.eq("1")
+            ID.eq("1")
           )
         )
       ).findFirst();
@@ -708,7 +792,7 @@ class SQLiteQueryableStoreTest {
     void shouldReturnEmptyOptionalIfNoResultFound() {
       SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
       Optional<User> user = store.query(
-          USER_NAME_QUERY_FIELD.eq("dave")
+          USER_NAME.eq("dave")
         )
         .findFirst();
       assertThat(user).isEmpty();
@@ -870,39 +954,43 @@ class SQLiteQueryableStoreTest {
     }
   }
 
-  private static final QueryableStore.IdQueryField<User> ID_QUERY_FIELD =
+  private static final QueryableStore.IdQueryField<User> ID =
     new QueryableStore.IdQueryField<>();
-  private static final QueryableStore.IdQueryField<User> GROUP_QUERY_FIELD =
+  private static final QueryableStore.IdQueryField<User> GROUP =
     new QueryableStore.IdQueryField<>(Group.class);
-  private static final QueryableStore.StringQueryField<User> USER_NAME_QUERY_FIELD =
+  private static final QueryableStore.StringQueryField<User> USER_NAME =
     new QueryableStore.StringQueryField<>("name");
-  private static final QueryableStore.StringQueryField<User> DISPLAY_NAME_QUERY_FIELD =
+  private static final QueryableStore.StringQueryField<User> DISPLAY_NAME =
     new QueryableStore.StringQueryField<>("displayName");
-  private static final QueryableStore.StringQueryField<User> MAIL_QUERY_FIELD =
+  private static final QueryableStore.StringQueryField<User> MAIL =
     new QueryableStore.StringQueryField<>("mail");
-  private static final QueryableStore.NumberQueryField<User, Long> CREATION_DATE_QUERY_FIELD =
-    new QueryableStore.NumberQueryField<>("creationDate");
-  private static final QueryableStore.NumberQueryField<User, Integer> CREATION_DATE_AS_INTEGER_QUERY_FIELD =
-    new QueryableStore.NumberQueryField<>("creationDate");
-  private static final QueryableStore.BooleanQueryField<User> ACTIVE_QUERY_FIELD =
+  private static final QueryableStore.LongQueryField<User> CREATION_DATE =
+    new QueryableStore.LongQueryField<>("creationDate");
+  private static final QueryableStore.IntegerQueryField<User> CREATION_DATE_AS_INTEGER =
+    new QueryableStore.IntegerQueryField<>("creationDate");
+  private static final QueryableStore.BooleanQueryField<User> ACTIVE =
     new QueryableStore.BooleanQueryField<>("active");
 
   enum Range {
     SOLAR_SYSTEM, INNER_GALACTIC, INTER_GALACTIC
   }
 
-  private static final QueryableStore.StringQueryField<Spaceship> SPACESHIP_NAME_QUERY_FIELD =
+  private static final QueryableStore.StringQueryField<Spaceship> SPACESHIP_ID =
+    new QueryableStore.IdQueryField<>();
+  private static final QueryableStore.StringQueryField<Spaceship> SPACESHIP_NAME =
     new QueryableStore.StringQueryField<>("name");
-  private static final QueryableStore.EnumQueryField<Spaceship, Range> SPACESHIP_RANGE_ENUM_QUERY_FIELD =
+  private static final QueryableStore.EnumQueryField<Spaceship, Range> SPACESHIP_RANGE =
     new QueryableStore.EnumQueryField<>("range");
-  private static final QueryableStore.CollectionQueryField<Spaceship> SPACESHIP_CREW_QUERY_FIELD =
+  private static final QueryableStore.CollectionQueryField<Spaceship> SPACESHIP_CREW =
     new QueryableStore.CollectionQueryField<>("crew");
-  private static final QueryableStore.CollectionSizeQueryField<Spaceship> SPACESHIP_CREW_SIZE_QUERY_FIELD =
+  private static final QueryableStore.CollectionSizeQueryField<Spaceship> SPACESHIP_CREW_SIZE =
     new QueryableStore.CollectionSizeQueryField<>("crew");
-  private static final QueryableStore.MapQueryField<Spaceship> SPACESHIP_DESTINATIONS_QUERY_FIELD =
+  private static final QueryableStore.MapQueryField<Spaceship> SPACESHIP_DESTINATIONS =
     new QueryableStore.MapQueryField<>("destinations");
-  private static final QueryableStore.MapSizeQueryField<Spaceship> SPACESHIP_DESTINATIONS_SIZE_QUERY_FIELD =
+  private static final QueryableStore.MapSizeQueryField<Spaceship> SPACESHIP_DESTINATIONS_SIZE =
     new QueryableStore.MapSizeQueryField<>("destinations");
-  private static final QueryableStore.InstantQueryField<Spaceship> SPACESHIP_INSERVICE_QUERY_FIELD =
+  private static final QueryableStore.InstantQueryField<Spaceship> SPACESHIP_INSERVICE =
     new QueryableStore.InstantQueryField<>("inServiceSince");
+  private static final QueryableStore.IntegerQueryField<Spaceship> SPACESHIP_FLIGHT_COUNT =
+    new QueryableStore.IntegerQueryField<>("flightCount");
 }
