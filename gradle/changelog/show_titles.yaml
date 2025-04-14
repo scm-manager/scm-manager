@@ -1,2 +1,0 @@
-- type: fixed
-  description: Fix setting of document title for create repository page, if only a translation key was provided
