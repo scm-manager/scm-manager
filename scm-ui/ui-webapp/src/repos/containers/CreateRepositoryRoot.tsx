@@ -48,7 +48,7 @@ const useCreateRepositoryData = () => {
 const CreatorRoute: FC<CreatorRouteProps> = ({ creator, creators }) => {
   const { isPageLoading, pageLoadingError, namespaceStrategies, repositoryTypes, index } = useCreateRepositoryData();
   const [t] = useTranslation(["repos", "plugins"]);
-  useDocumentTitle(creator.subtitle);
+  useDocumentTitle(t(`plugins:${creator.subtitle}`, creator.subtitle));
 
   const Component = creator.component;
 
