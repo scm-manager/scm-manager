@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-shortcuts",
-  "version": "3.7.4",
+  "version": "3.7.5",
   "license": "AGPL-3.0-only",
   "private": true,
   "main": "index.ts",
@@ -18,7 +18,7 @@
     "@scm-manager/tsconfig": "^2.13.0"
   },
   "dependencies": {
-    "@scm-manager/ui-core": "3.7.4"
+    "@scm-manager/ui-core": "3.7.5"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
