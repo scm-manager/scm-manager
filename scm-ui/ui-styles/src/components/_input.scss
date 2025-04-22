@@ -14,12 +14,10 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-@import "bulma/bulma";
-@import "../variables/_derived.scss";
-@import "bulma-popover/css/bulma-popover";
-@import "../components/_main.scss";
-@import "../components/_gap.scss";
-@import "../components/_flex.scss";
-@import "../components/_tooltip.scss";
-@import "../components/_card.scss";
-@import "../components/_input.scss";
+.file-label {
+  border-radius: 4px;
+}
+.file-label:has(.file-input:focus-visible){
+  outline: #af3ee7 3px solid;
+  outline-offset: 1px;
+}

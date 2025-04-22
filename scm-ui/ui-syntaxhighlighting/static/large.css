@@ -2621,7 +2621,7 @@ a.box:active {
   justify-content: flex-start;
   overflow: hidden;
   position: relative;
-  border-radius: 4px; }
+}
   .file-label:hover .file-cta {
     background-color: #eeeeee;
     color: #363636; }
@@ -2632,10 +2632,6 @@ a.box:active {
     color: #363636; }
   .file-label:active .file-name {
     border-color: #cfcfcf; }
-  .file-label:has(.file-input:focus-visible){
-    outline: #af3ee7 3px solid;
-    outline-offset: 1px;
-  }
 
 .file-input {
   height: 0.01em;
