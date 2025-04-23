@@ -123,6 +123,8 @@ $tooltip-color: $scheme-main;
   --diff-code-selected-background-color: #fffce0;
   --diff-omit-gutter-line-color: #cb2a1d;
   --diff-whitespace-color: #fffce0;
+
+  color-scheme: dark;
 }
 
 @mixin button-variant($name, $variant, $variant-invert: $scheme-main) {

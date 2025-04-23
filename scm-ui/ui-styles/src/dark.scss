@@ -225,6 +225,8 @@ $danger-25: scale-color($danger, $lightness: -75%);
   --diff-code-selected-background-color: #{desaturate(#fffce0, 20%)};
   --diff-omit-gutter-line-color: #cb2a1d;
   --diff-whitespace-color: #{desaturate(#fffce0, 20%)};
+
+  color-scheme: dark;
 }
 
 .menu-list {
