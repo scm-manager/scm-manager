@@ -280,8 +280,8 @@
     "commitsWithRevisionAndNamespaceName": "Commits on {{revision}} in {{namespace}}/{{name}}",
     "idWithNamespaceName": "{{id}} in {{namespace}}/{{name}}",
     "errorTitle": "Error",
-    "errorSubtitle": "Could not fetch changesets",
-    "noChangesets": "No changesets found for this branch. The commits could have been removed.",
+    "errorSubtitle": "Could not fetch commits",
+    "noChangesets": "No commits found for this branch. The commits could have been removed.",
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Collapse",
     "ignoreWhitespace": "Ignore whitespaces changes",
@@ -305,10 +305,10 @@
     }
   },
   "changeset": {
-    "label": "Changeset",
+    "label": "Commit",
     "description": "Description",
-    "summary": "Changeset <0/> was committed <1/>",
-    "shortSummary": "Committed <0/> <1/>",
+    "summary": "Commit <0/> was created <1/>",
+    "shortSummary": "Created <0/> <1/>",
     "tags": "Tags",
     "keyOwner": "Key Owner",
     "keyId": "Key ID",
@@ -320,9 +320,9 @@
     "signatureInvalid": "invalid",
     "signatures": "Signatures",
     "shortlink": {
-      "title": "Changeset {{id}} of {{namespace}}/{{name}}"
+      "title": "Commit {{id}} of {{namespace}}/{{name}}"
     },
-    "diffNotSupported": "Diff of changesets is not supported by the type of repository",
+    "diffNotSupported": "Diff of commits is not supported by the type of repository",
     "buttons": {
       "details": "Details",
       "sources": "Sources"
@@ -349,7 +349,7 @@
     "revert": {
       "button": "Revert",
       "modal": {
-        "title": "Revert Changeset",
+        "title": "Revert Commit",
         "description": "You are going to apply a revert for commit {{commit}} on",
         "branch": "Branch",
         "commitMessage": "Commit Message",

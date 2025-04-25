@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableSet;
 import lombok.Value;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -27,6 +28,7 @@ import java.util.regex.Pattern;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 
 @Value
 public class Contributor implements Serializable {
@@ -41,6 +43,7 @@ public class Contributor implements Serializable {
 
   private String type;
   private Person person;
+  private Instant time;
 
   static Optional<Contributor> fromCommitLine(String line) {
     Matcher matcher = CONTRIBUTOR_PATTERN.matcher(line);
@@ -53,6 +56,20 @@ public class Contributor implements Serializable {
       }
     }
     return empty();
+  }
+
+  public Contributor(String type, Person person) {
+    this(type, person, null);
+  }
+
+  public Contributor(String type, Person person, Instant time) {
+    this.type = type;
+    this.person = person;
+    this.time = time;
+  }
+
+  public Optional<Instant> getTime() {
+    return ofNullable(time);
   }
 
   public String toCommitLine() {

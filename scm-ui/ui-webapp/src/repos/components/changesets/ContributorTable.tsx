@@ -18,7 +18,7 @@ import React, { FC } from "react";
 import { Changeset } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { CommaSeparatedList, Contributor, ContributorRow } from "@scm-manager/ui-components";
+import { CommaSeparatedList, Contributor, ContributorRow, DateFromNow } from "@scm-manager/ui-components";
 
 type Props = {
   changeset: Changeset;
@@ -45,7 +45,14 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
   };
 
   const getPersonsByContributorType = (type: string) => {
-    return changeset.contributors?.filter((contributor) => contributor.type === type).map((t) => t.person);
+    return changeset.contributors
+      ?.filter((contributor) => contributor.type === type)
+      .map((t) => {
+        return {
+          ...t.person,
+          time: t.time,
+        };
+      });
   };
 
   const getContributorsByType = () => {
@@ -61,14 +68,22 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
   return (
     <table>
       <ContributorRow label={t("changeset.contributor.type.author")}>
-        <Contributor person={changeset.author} />
+        <Contributor person={changeset.author} /> <DateFromNow date={changeset.date} />
       </ContributorRow>
 
       {getContributorsByType().map((contribution) => (
         <ContributorRow key={contribution.type} label={t("changeset.contributor.type." + contribution.type)}>
           <CommaSeparatedList>
             {contribution.contributors?.map((contributor) => (
-              <Contributor key={contributor.name} person={contributor} />
+              <>
+                <Contributor key={contributor.name} person={contributor} />
+                {contributor.time && (
+                  <>
+                    {" "}
+                    <DateFromNow date={contributor.time} />
+                  </>
+                )}
+              </>
             ))}
           </CommaSeparatedList>
         </ContributorRow>

@@ -29,10 +29,8 @@ import org.bouncycastle.openpgp.PGPSignatureGenerator;
 import org.bouncycastle.openpgp.operator.jcajce.JcaPGPContentSignerBuilder;
 import org.bouncycastle.openpgp.operator.jcajce.JcaPGPKeyPair;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.UnsupportedSigningFormatException;
 import org.eclipse.jgit.internal.JGitText;
 import org.eclipse.jgit.lib.GpgConfig;
 import org.eclipse.jgit.lib.GpgSignature;
@@ -67,12 +65,14 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.time.ZoneOffset.UTC;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -82,6 +82,9 @@ import static org.mockito.Mockito.when;
 class GitChangesetConverterTest {
 
   private static Git git;
+
+  private static final Instant AUTHOR_TIME = Instant.parse("2020-01-01T00:00:00Z");
+  private static final Instant COMMIT_TIME = Instant.parse("2024-12-24T00:00:00Z");
 
   @BeforeAll
   static void setUpRepository(@TempDir Path repositoryPath) throws GitAPIException {
@@ -96,24 +99,51 @@ class GitChangesetConverterTest {
 
   @Test
   void shouldConvertChangeset() throws GitAPIException, IOException {
-    long now = System.currentTimeMillis() - 1000L;
     Changeset changeset = commit(
-      "Tricia McMillan", "trillian@hitchhiker.com", "Added awesome markdown file"
+      "Tricia McMillan", "trillian@hitchhiker.com",
+      "Added awesome markdown file"
     );
     assertThat(changeset.getId()).isNotEmpty();
-    assertThat(changeset.getDate()).isGreaterThanOrEqualTo(now);
+    assertThat(changeset.getDate()).isEqualTo(AUTHOR_TIME.toEpochMilli());
     assertThat(changeset.getDescription()).isEqualTo("Added awesome markdown file");
 
     Person author = changeset.getAuthor();
     assertThat(author.getName()).isEqualTo("Tricia McMillan");
     assertThat(author.getMail()).isEqualTo("trillian@hitchhiker.com");
+
+    assertThat(changeset.getContributors()).isEmpty();
+  }
+
+  @Test
+  void shouldConvertChangesetWithDifferentCommitter() throws GitAPIException, IOException {
+    Changeset changeset = commit(
+      "Tricia McMillan", "trillian@hitchhiker.com",
+      "Ford Prefect", "ford@hitchhiker.com",
+      "Added awesome markdown file"
+    );
+
+    Person author = changeset.getAuthor();
+    assertThat(author.getName()).isEqualTo("Tricia McMillan");
+    assertThat(author.getMail()).isEqualTo("trillian@hitchhiker.com");
+    assertThat(changeset.getDate()).isEqualTo(AUTHOR_TIME.toEpochMilli());
+
+    assertThat(changeset.getContributors()).containsExactly(new Contributor("Committed-by", new Person("Ford Prefect", "ford@hitchhiker.com"), COMMIT_TIME));
   }
 
   private Changeset commit(String name, String mail, String message) throws GitAPIException, IOException {
+    return commit(name, mail, AUTHOR_TIME, name, mail, AUTHOR_TIME, message);
+  }
+
+  private Changeset commit(String name, String mail, String committer, String committerMail, String message) throws GitAPIException, IOException {
+    return commit(name, mail, AUTHOR_TIME, committer, committerMail, COMMIT_TIME, message);
+  }
+
+  private Changeset commit(String name, String mail, Instant authorTime, String committer, String committerMail, Instant commitTime, String message) throws GitAPIException, IOException {
     addRandomFileToRepository();
 
     RevCommit commit = git.commit()
-      .setAuthor(name, mail)
+      .setAuthor(new PersonIdent(name, mail, authorTime, UTC))
+      .setCommitter(new PersonIdent(committer, committerMail, commitTime, UTC))
       .setMessage(message)
       .call();
 
@@ -255,7 +285,7 @@ class GitChangesetConverterTest {
     }
 
     @Override
-    public GpgSignature sign(Repository repository, GpgConfig gpgConfig, byte[] bytes, PersonIdent personIdent, String s, CredentialsProvider credentialsProvider) throws CanceledException, IOException, UnsupportedSigningFormatException {
+    public GpgSignature sign(Repository repository, GpgConfig gpgConfig, byte[] bytes, PersonIdent personIdent, String s, CredentialsProvider credentialsProvider) {
       try {
         if (keyPair == null) {
           throw new JGitInternalException(JGitText.get().unableToSignCommitNoSecretKey);
@@ -281,7 +311,7 @@ class GitChangesetConverterTest {
     }
 
     @Override
-    public boolean canLocateSigningKey(Repository repository, GpgConfig gpgConfig, PersonIdent personIdent, String s, CredentialsProvider credentialsProvider) throws CanceledException {
+    public boolean canLocateSigningKey(Repository repository, GpgConfig gpgConfig, PersonIdent personIdent, String s, CredentialsProvider credentialsProvider) {
       return true;
     }
   }

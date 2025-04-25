@@ -25,7 +25,7 @@ There is a tooltip for each permission that provide some more details about the 
 ![User Permissions](assets/user-settings-permissions.png)
 
 ### Public keys
-Add public keys to users to enable changeset signature verification.
+Add public keys to users to enable commit signature verification.
 
 ![Public keys](assets/user-settings-publickeys.png)
 

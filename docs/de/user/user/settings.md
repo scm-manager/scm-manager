@@ -25,7 +25,7 @@ Für die einzelnen Rechte sind Tooltips verfügbar, welche Auskunft über die Au
 ![Benutzer Berechtigungen](assets/user-settings-permissions.png)
 
 ### Öffentliche Schlüssel
-Es können öffentliche Schlüssel (Public Keys) zu Benutzern hinzugefügt werden, um die Changeset Signaturen damit zu verifizieren.
+Es können öffentliche Schlüssel (Public Keys) zu Benutzern hinzugefügt werden, um die Commit-Signaturen damit zu verifizieren.
 
 ![Öffentliche Schlüssel](assets/user-settings-publickeys.png)
 

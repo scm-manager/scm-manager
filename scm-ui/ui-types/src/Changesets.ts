@@ -38,6 +38,7 @@ export type Changeset = HalRepresentationWithEmbedded<ChangesetEmbedded> & {
 export type Contributor = {
   person: Person;
   type: string;
+  time?: Date;
 };
 
 export type ParentChangeset = {

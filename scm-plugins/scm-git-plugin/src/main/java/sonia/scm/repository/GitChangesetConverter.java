@@ -16,7 +16,6 @@
 
 package sonia.scm.repository;
 
-
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -38,7 +37,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 
 public class GitChangesetConverter implements Closeable {
 
@@ -69,19 +67,18 @@ public class GitChangesetConverter implements Closeable {
       }
     }
 
-    long date = GitUtil.getCommitTime(commit);
-    PersonIdent authorIndent = commit.getAuthorIdent();
+    PersonIdent authorIdent = commit.getAuthorIdent();
     PersonIdent committerIdent = commit.getCommitterIdent();
-    Person author = createPersonFor(authorIndent);
+    Person author = createPersonFor(authorIdent);
     String message = commit.getFullMessage();
 
     if (message != null) {
       message = message.trim();
     }
 
-    Changeset changeset = new Changeset(id, date, author, message);
-    if (!committerIdent.equals(authorIndent)) {
-      changeset.addContributor(new Contributor("Committed-by", createPersonFor(committerIdent)));
+    Changeset changeset = new Changeset(id, authorIdent.getWhenAsInstant().toEpochMilli(), author, message);
+    if (!committerIdent.equals(authorIdent)) {
+      changeset.addContributor(new Contributor(Contributor.COMMITTED_BY, createPersonFor(committerIdent), committerIdent.getWhenAsInstant()));
     }
 
     if (parentList != null) {

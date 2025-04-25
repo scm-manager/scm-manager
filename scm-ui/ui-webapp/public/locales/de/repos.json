@@ -280,8 +280,8 @@
     "commitsWithRevisionAndNamespaceName": "Commits auf {{revision}} in {{namespace}}/{{name}}",
     "idWithNamespaceName": "{{id}} in {{namespace}}/{{name}}",
     "errorTitle": "Fehler",
-    "errorSubtitle": "Changesets konnten nicht abgerufen werden",
-    "noChangesets": "Keine Changesets in diesem Branch gefunden. Die Commits könnten gelöscht worden sein.",
+    "errorSubtitle": "Commits konnten nicht abgerufen werden",
+    "noChangesets": "Keine Commits in diesem Branch gefunden. Die Commits könnten gelöscht worden sein.",
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Auf-/Zuklappen",
     "ignoreWhitespace": "Whitespace-Änderungen ignorieren",
@@ -305,12 +305,12 @@
     }
   },
   "changeset": {
-    "label": "Changeset",
+    "label": "Commit",
     "description": "Beschreibung",
-    "summary": "Changeset <0/> wurde <1/> committet",
-    "shortSummary": "Committet <0/> <1/>",
+    "summary": "Commit <0/> wurde <1/> erstellt",
+    "shortSummary": "Erstellt <0/> <1/>",
     "tags": "Tags",
-    "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
+    "diffNotSupported": "Diff des Commits wird von diesem Repositorytyp nicht unterstützt",
     "keyOwner": "Schlüsselbesitzer",
     "signatureStatus": "Status",
     "keyId": "Schlüssel-ID",
@@ -321,7 +321,7 @@
     "signatureInvalid": "Ungültig",
     "signatures": "Signaturen",
     "shortlink": {
-      "title": "Changeset {{id}} aus {{namespace}}/{{name}}"
+      "title": "Commit {{id}} aus {{namespace}}/{{name}}"
     },
     "parents": {
       "label": "Parent",
@@ -349,7 +349,7 @@
     "revert": {
       "button": "Revert",
       "modal": {
-        "title": "Changeset zurücksetzen",
+        "title": "Commit zurücksetzen",
         "description": "Sie wenden einen Revert an von Commit {{commit}} auf",
         "branch": "Branch",
         "commitMessage": "Commit-Nachricht",

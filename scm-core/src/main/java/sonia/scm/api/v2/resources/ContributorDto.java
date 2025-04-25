@@ -20,10 +20,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
+import java.util.Optional;
+
 @Getter
 @Setter
 @NoArgsConstructor
 public class ContributorDto {
   private String type;
   private PersonDto person;
+  private Optional<Instant> time;
 }
