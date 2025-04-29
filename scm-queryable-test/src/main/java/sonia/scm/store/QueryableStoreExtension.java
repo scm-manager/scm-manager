@@ -16,9 +16,11 @@
 
 package sonia.scm.store;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -61,11 +63,15 @@ public class QueryableStoreExtension implements ParameterResolver, BeforeEachCal
   private SQLiteQueryableStoreFactory storeFactory;
 
   private static ObjectMapper getObjectMapper() {
+    // this should be the same as in ObjectMapperProvider
     return new ObjectMapper()
-      .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+      .registerModule(new Jdk8Module())
       .registerModule(new JavaTimeModule())
-      .configure(JsonParser.Feature.IGNORE_UNDEFINED, true)
-      .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+      .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+      .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+      .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
+      .configure(SerializationFeature.WRITE_DATES_WITH_ZONE_ID, true)
+      .setDateFormat(new StdDateFormat());
   }
 
   @Override
