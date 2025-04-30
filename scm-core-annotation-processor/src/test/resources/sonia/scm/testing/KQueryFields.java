@@ -16,9 +16,11 @@
 
 package sonia.scm.testing;
 
+import javax.annotation.processing.Generated;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.QueryableStore;
 
+@Generated("sonia.scm.annotation.QueryableTypeAnnotationProcessor")
 public final class KQueryFields {
   public static final QueryableStore.IdQueryField<K> REPOSITORY_ID =
     new QueryableStore.IdQueryField<>(Repository.class);

@@ -16,6 +16,7 @@
 
 package sonia.scm.annotation;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -26,6 +27,7 @@ import jakarta.inject.Inject;
 import sonia.scm.ModelObject;
 import sonia.scm.store.QueryableStoreFactory;
 
+import javax.annotation.processing.Generated;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
@@ -56,7 +58,9 @@ class FactoryClassCreator {
       TypeSpec
         .classBuilder(element.getSimpleName() + "StoreFactory")
         .addModifiers(Modifier.PUBLIC)
-        .addJavadoc("Generated queryable store factory for type {@link $T}.\nTo create conditions in queries, use the static fields in the class {@link $TQueryFields}.\n", typeNameOfDataClass, typeNameOfDataClass);
+        .addAnnotation(AnnotationSpec.builder(Generated.class).addMember("value", "$S", "sonia.scm.annotation.QueryableTypeAnnotationProcessor").build())
+        .addJavadoc("Generated queryable store factory for type {@link $T}.\nTo create conditions in queries, use the static fields in the class {@link $TQueryFields}.\n", typeNameOfDataClass, typeNameOfDataClass)
+        .addOriginatingElement(dataClassTypeElement);
 
     createStoreFactoryField(builder);
     createConstructor(builder);

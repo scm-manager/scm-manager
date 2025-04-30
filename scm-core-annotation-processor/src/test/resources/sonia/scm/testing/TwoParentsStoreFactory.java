@@ -18,12 +18,15 @@ package sonia.scm.testing;
 
 import jakarta.inject.Inject;
 import java.lang.String;
+import javax.annotation.processing.Generated;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.QueryableMutableStore;
 import sonia.scm.store.QueryableStore;
 import sonia.scm.store.QueryableStoreFactory;
 import sonia.scm.user.User;
 
+
+@Generated("sonia.scm.annotation.QueryableTypeAnnotationProcessor")
 public class TwoParentsStoreFactory {
 
   private final QueryableStoreFactory storeFactory;

@@ -18,6 +18,7 @@ package sonia.scm.annotation;
 
 import com.google.auto.common.MoreElements;
 import org.kohsuke.MetaInfServices;
+import sonia.scm.store.QueryableType;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
@@ -29,6 +30,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,6 +44,15 @@ public class QueryableTypeAnnotationProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
+    if (roundEnvironment.processingOver()) {
+      return false;
+    }
+    // Only process elements that actually have the annotation
+    Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(QueryableType.class);
+    if (elements.isEmpty()) {
+      return false;
+    }
+
     for (TypeElement annotation : annotations) {
       log("Found annotation: " + annotation.getQualifiedName());
       roundEnvironment.getElementsAnnotatedWith(annotation).forEach(element -> {
@@ -51,6 +62,11 @@ public class QueryableTypeAnnotationProcessor extends AbstractProcessor {
       });
     }
     return true;
+  }
+
+  @Override
+  public Set<String> getSupportedOptions() {
+    return Collections.emptySet();
   }
 
   @SuppressWarnings("UnstableApiUsage")

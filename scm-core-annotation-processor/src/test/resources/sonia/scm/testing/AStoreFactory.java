@@ -17,10 +17,12 @@
 package sonia.scm.testing;
 
 import jakarta.inject.Inject;
+import javax.annotation.processing.Generated;
 import sonia.scm.store.QueryableMutableStore;
 import sonia.scm.store.QueryableStore;
 import sonia.scm.store.QueryableStoreFactory;
 
+@Generated("sonia.scm.annotation.QueryableTypeAnnotationProcessor")
 public class AStoreFactory {
 
   private final QueryableStoreFactory storeFactory;

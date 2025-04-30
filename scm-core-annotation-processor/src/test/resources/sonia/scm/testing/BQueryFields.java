@@ -16,8 +16,10 @@
 
 package sonia.scm.testing;
 
+import javax.annotation.processing.Generated;
 import sonia.scm.store.QueryableStore;
 
+@Generated("sonia.scm.annotation.QueryableTypeAnnotationProcessor")
 public final class BQueryFields {
   public static final QueryableStore.IdQueryField<B> INTERNAL_ID =
     new QueryableStore.IdQueryField<>();

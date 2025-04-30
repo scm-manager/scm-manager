@@ -18,6 +18,7 @@ package sonia.scm.annotation;
 
 import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -28,6 +29,7 @@ import com.squareup.javapoet.TypeSpec;
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import javax.annotation.processing.Generated;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -70,7 +72,9 @@ class QueryFieldClassCreator {
       TypeSpec
         .classBuilder(element.getSimpleName() + "QueryFields")
         .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-        .addJavadoc("Generated query fields for type {@link $T}.\nTo create a queryable store for this, use an injected instance of the {@link $TStoreFactory}.\n", TypeName.get(typeElement.asType()), TypeName.get(typeElement.asType()));
+        .addAnnotation(AnnotationSpec.builder(Generated.class).addMember("value", "$S", "sonia.scm.annotation.QueryableTypeAnnotationProcessor").build())
+        .addJavadoc("Generated query fields for type {@link $T}.\nTo create a queryable store for this, use an injected instance of the {@link $TStoreFactory}.\n", TypeName.get(typeElement.asType()), TypeName.get(typeElement.asType()))
+        .addOriginatingElement(typeElement);
 
     createPrivateConstructor(builder);
     processParents(typeElement, builder);
