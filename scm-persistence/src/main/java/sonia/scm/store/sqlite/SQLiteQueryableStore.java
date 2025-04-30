@@ -139,8 +139,8 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
       statement -> {
         List<R> result = new ArrayList<>();
         ResultSet resultSet = statement.executeQuery();
-        String[] allParentIds = new String[parentIdsLength];
         while (resultSet.next()) {
+          String[] allParentIds = new String[parentIdsLength];
           for (int i = 0; i < parentIdsLength; i++) {
             allParentIds[i] = resultSet.getString(i + 1);
           }

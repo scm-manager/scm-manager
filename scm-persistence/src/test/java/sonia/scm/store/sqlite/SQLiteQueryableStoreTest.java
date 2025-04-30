@@ -916,6 +916,35 @@ class SQLiteQueryableStoreTest {
     }
 
     @Test
+    void shouldReadAllWithMultipleIds() {
+      StoreTestBuilder testStoreBuilder = new StoreTestBuilder(connectionString, Repository.class.getName(), Group.class.getName());
+      SQLiteQueryableMutableStore<User> store1 = testStoreBuilder.withIds("42", "astronauts");
+      store1.put("trisha", new User("trillian", "Trillian McMillan", "mcmillan@hog.com"));
+      SQLiteQueryableMutableStore<User> store2 = testStoreBuilder.withIds("42", "earthlings");
+      store2.put("dent", new User("dent", "Arthur Dent", "dent@hog.com"));
+
+      QueryableMaintenanceStore<User> store = testStoreBuilder.forMaintenanceWithSubIds("42");
+
+      Collection<QueryableMaintenanceStore.Row<User>> rows = store.readAll();
+
+      Optional<QueryableMaintenanceStore.Row<User>> trisha = rows.stream()
+        .filter(row -> row.getId().equals("trisha"))
+        .findFirst();
+      assertThat(trisha)
+        .get()
+        .extracting(QueryableMaintenanceStore.Row::getParentIds)
+        .isEqualTo(new String[]{"42", "astronauts"});
+
+      Optional<QueryableMaintenanceStore.Row<User>> dent = rows.stream()
+        .filter(row -> row.getId().equals("dent"))
+        .findFirst();
+      assertThat(dent)
+        .get()
+        .extracting(QueryableMaintenanceStore.Row::getParentIds)
+        .isEqualTo(new String[]{"42", "earthlings"});
+    }
+
+    @Test
     void shouldWriteAllForNewParent() {
       StoreTestBuilder testStoreBuilder = new StoreTestBuilder(connectionString, Repository.class.getName());
 
