@@ -21,6 +21,8 @@ import { Route } from "react-router-dom";
 import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import { Link, Links, Namespace, Repository } from "@scm-manager/ui-types";
 import { urls } from "@scm-manager/ui-api";
+import { useDocumentTitleForRepository } from "@scm-manager/ui-core";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
 type GlobalRouteProps = {
   url: string;
@@ -75,10 +77,20 @@ class ConfigurationBinder {
     // route for global configuration, passes the link from the index resource to component
     const ConfigRoute = ({ url, links, ...additionalProps }: GlobalRouteProps) => {
       const link = links[linkName];
+
+      const TitledGlobalSettingComponent: FC = ({ children }) => {
+        const [t] = useTranslation(this.i18nNamespace);
+        const [commonTranslation] = useTranslation("commons");
+        useDocumentTitle(t(labelI18nKey), commonTranslation("documentTitle.globalConfiguration"));
+        return <>{children}</>;
+      };
+
       if (link) {
         return this.route(
           url + "/settings" + to,
-          <ConfigurationComponent link={(link as Link).href} {...additionalProps} />
+          <TitledGlobalSettingComponent>
+            <ConfigurationComponent link={(link as Link).href} {...additionalProps} />
+          </TitledGlobalSettingComponent>
         );
       }
     };
@@ -138,7 +150,13 @@ class ConfigurationBinder {
     binder.bind("repository.route", RepoRoute, repoPredicate);
   }
 
-  bindRepositorySetting(to: string, labelI18nKey: string, linkName: string, RepositoryComponent: any, sortKey?: string) {
+  bindRepositorySetting(
+    to: string,
+    labelI18nKey: string,
+    linkName: string,
+    RepositoryComponent: any,
+    sortKey?: string
+  ) {
     // create predicate based on the link name of the current repository route
     // if the linkname is not available, the navigation link and the route are not bound to the extension points
     const repoPredicate = (props: any) => {
@@ -156,10 +174,24 @@ class ConfigurationBinder {
     // route for global configuration, passes the current repository to component
     const RepoRoute = ({ url, repository, ...additionalProps }: RepositoryRouteProps) => {
       const link = repository._links[linkName];
+
+      const TitledRepositorySettingComponent: FC = ({ children }) => {
+        const [t] = useTranslation(this.i18nNamespace);
+        const [commonTranslation] = useTranslation("commons");
+        useDocumentTitleForRepository(
+          repository,
+          t(labelI18nKey),
+          commonTranslation("documentTitle.repositoryConfiguration")
+        );
+        return <>{children}</>;
+      };
+
       if (link) {
         return this.route(
           urls.unescapeUrlForRoute(url) + "/settings" + to,
-          <RepositoryComponent repository={repository} link={(link as Link).href} {...additionalProps} />
+          <TitledRepositorySettingComponent>
+            <RepositoryComponent repository={repository} link={(link as Link).href} {...additionalProps} />
+          </TitledRepositorySettingComponent>
         );
       }
     };
@@ -186,10 +218,24 @@ class ConfigurationBinder {
 
     const NamespaceRoute: FC<extensionPoints.NamespaceRoute["props"]> = ({ url, namespace, ...additionalProps }) => {
       const link = namespace._links[linkName];
+
+      const TitledNamespaceSettingComponent: FC = ({ children }) => {
+        const [t] = useTranslation(this.i18nNamespace);
+        const [commonTranslation] = useTranslation("commons");
+        useDocumentTitle(
+          t(labelI18nKey),
+          commonTranslation("documentTitle.namespaceConfiguration"),
+          namespace.namespace
+        );
+        return <>{children}</>;
+      };
+
       if (link) {
         return this.route(
           urls.unescapeUrlForRoute(url) + "/settings" + to,
-          <ConfigurationComponent namespace={namespace} link={(link as Link).href} {...additionalProps} />
+          <TitledNamespaceSettingComponent>
+            <ConfigurationComponent namespace={namespace} link={(link as Link).href} {...additionalProps} />
+          </TitledNamespaceSettingComponent>
         );
       }
       return null;

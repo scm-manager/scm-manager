@@ -17,6 +17,7 @@
 import { useEffect } from "react";
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import { Repository } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
 
 /**
  * Hook to set the document title.
@@ -25,9 +26,10 @@ import { Repository } from "@scm-manager/ui-types";
  *                     Title parts should be sorted with the highest specificity first.
  */
 export default function useDocumentTitle(...titleParts: string[]) {
+  const [t] = useTranslation("commons");
   useEffect(() => {
     const extension = binder.getExtension<extensionPoints.DocumentTitleExtensionPoint>("document.title");
-    let title = `${titleParts.join(" - ")} - SCM-Manager`;
+    let title = [...titleParts, t("documentTitle.suffix")].join(" - ");
     if (extension) {
       if (typeof extension.documentTitle === "string") {
         title += ` (${extension.documentTitle})`;
