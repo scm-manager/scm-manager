@@ -16,12 +16,17 @@
 
 package sonia.scm.store;
 
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationIntrospector;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -67,11 +72,19 @@ public class QueryableStoreExtension implements ParameterResolver, BeforeEachCal
     return new ObjectMapper()
       .registerModule(new Jdk8Module())
       .registerModule(new JavaTimeModule())
+      .setAnnotationIntrospector(createAnnotationIntrospector())
       .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
       .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
       .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
       .configure(SerializationFeature.WRITE_DATES_WITH_ZONE_ID, true)
       .setDateFormat(new StdDateFormat());
+  }
+
+  private static AnnotationIntrospector createAnnotationIntrospector() {
+    return new AnnotationIntrospectorPair(
+      new JakartaXmlBindAnnotationIntrospector(TypeFactory.defaultInstance()),
+      new JacksonAnnotationIntrospector()
+    );
   }
 
   @Override

@@ -27,6 +27,7 @@ dependencies {
   api libraries.junitJupiterApi
   api libraries.mockitoCore
   implementation libraries.jacksonDatatypeJsr310
+  implementation libraries.jacksonJaxbAnnotations
 
   // tests
   testImplementation project(':scm-test')
