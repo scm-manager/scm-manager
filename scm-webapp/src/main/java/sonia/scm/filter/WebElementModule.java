@@ -25,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.WebElementDescriptor;
+import sonia.scm.security.DefaultShouldRequestPassChecker;
+import sonia.scm.security.ShouldRequestPassChecker;
 
 
 public class WebElementModule extends ServletModule {
@@ -59,6 +61,7 @@ public class WebElementModule extends ServletModule {
 
     // filters must be in singleton scope
     bind(clazz).in(Scopes.SINGLETON);
+    bind(ShouldRequestPassChecker.class).to(DefaultShouldRequestPassChecker.class);
 
     WebElementDescriptor opts = filter.getDescriptor();
     FilterKeyBindingBuilder builder;

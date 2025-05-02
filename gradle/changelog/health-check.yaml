@@ -1,0 +1,2 @@
+- type: added
+  description: Anonymous endpoint to check whether the SCM-Manager is healthy or not
