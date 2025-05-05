@@ -337,3 +337,19 @@ input[type="date"].input::-webkit-calendar-picker-indicator {
 .popover-close:focus {
   background: $grey-light !important;
 }
+
+.icon-color-inverted {
+  color: $scheme-main;
+}
+
+.icon-color-inverted-secondary {
+  color: $white;
+}
+
+.icon-warning-inverted {
+  color: $scheme-main;
+}
+
+.icon-color-secondary {
+  color: $white;
+}

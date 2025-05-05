@@ -29,6 +29,7 @@ export const ButtonVariants = {
   SECONDARY: "secondary",
   TERTIARY: "tertiary",
   SIGNAL: "signal",
+  DANGER: "danger",
   INFO: "info",
 } as const;
 
@@ -43,6 +44,7 @@ const createButtonClasses = (variant?: ButtonVariant, isLoading?: boolean) =>
     "is-primary is-inverted": variant === "tertiary",
     "is-warning": variant === "signal",
     "is-info is-outlined": variant === "info",
+    "is-danger": variant === "danger",
     "is-loading": isLoading,
   });
 
