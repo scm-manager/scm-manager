@@ -361,5 +361,11 @@
       "next": "Fokussiere den nächsten Listeneintrag",
       "previous": "Fokussiere den vorherigen Listeneintrag"
     }
+  },
+  "documentTitle": {
+    "suffix": "SCM-Manager",
+    "repositoryConfiguration": "Konfiguration",
+    "namespaceConfiguration": "Konfiguration",
+    "globalConfiguration": "Konfiguration"
   }
 }

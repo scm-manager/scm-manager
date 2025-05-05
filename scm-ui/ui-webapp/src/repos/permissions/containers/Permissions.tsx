@@ -45,8 +45,10 @@ const usePermissionData = (namespaceOrRepository: Namespace | Repository) => {
 const Permissions: FC<Props> = ({ namespaceOrRepository }) => {
   const { isLoading, error, permissions, availablePermissions } = usePermissionData(namespaceOrRepository);
   const [t] = useTranslation("repos");
+  const [commonTranslation] = useTranslation("commons");
   useDocumentTitle(
     t("repositoryRoot.menu.permissionsNavLink"),
+    commonTranslation(`documentTitle.${isRepository(namespaceOrRepository) ? "repository" : "namespace"}Configuration`),
     namespaceOrRepository.namespace + (isRepository(namespaceOrRepository) ? "/" + namespaceOrRepository.name : "")
   );
 
