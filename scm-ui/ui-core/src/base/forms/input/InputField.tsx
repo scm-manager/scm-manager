@@ -15,6 +15,7 @@
  */
 
 import React from "react";
+import classNames from "classnames";
 import Field from "../base/Field";
 import Control from "../base/Control";
 import Label from "../base/label/Label";
@@ -25,7 +26,6 @@ import { useAriaId } from "../../helpers";
 
 export type InputFieldProps = {
   label: string;
-  labelClassName?: string;
   helpText?: string;
   descriptionText?: string;
   error?: string;
@@ -36,13 +36,13 @@ export type InputFieldProps = {
  * @see https://bulma.io/documentation/form/input/
  */
 const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ name, label, helpText, descriptionText, error, icon, className, labelClassName, id, ...props }, ref) => {
+  ({ name, label, helpText, descriptionText, error, icon, className, id, ...props }, ref) => {
     const inputId = useAriaId(id ?? props.testId);
     const descriptionId = descriptionText ? `input-description-${name}` : undefined;
     const variant = error ? "danger" : undefined;
     return (
       <Field className={className}>
-        <Label htmlFor={inputId} className={labelClassName}>
+        <Label htmlFor={inputId}>
           {label}
           {helpText ? <Help className="ml-1" text={helpText} /> : null}
         </Label>
@@ -51,7 +51,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             {descriptionText}
           </p>
         ) : null}
-        <Control className="has-icons-left">
+        <Control className={classNames({ "has-icons-left": icon })}>
           <Input variant={variant} ref={ref} id={inputId} aria-describedby={descriptionId} {...props}></Input>
           {icon ? (
             <span className="icon is-small is-left">

@@ -187,9 +187,8 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
           <InputField
             autoFocus={true}
             placeholder={t("fileSearch.input.placeholder")}
-            className="is-full-width is-flex pr-2"
+            className="is-full-width is-flex pr-2 ml-2"
             label=""
-            labelClassName="mr-2 mt-2"
             defaultValue={query}
             aria-describedby={fileSearchDescriptionId}
             testId="file_search_filter_input"
