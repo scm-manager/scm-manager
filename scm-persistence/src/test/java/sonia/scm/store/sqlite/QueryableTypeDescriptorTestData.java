@@ -18,19 +18,22 @@ package sonia.scm.store.sqlite;
 
 import sonia.scm.plugin.QueryableTypeDescriptor;
 
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
+import java.lang.reflect.Constructor;
 
 public class QueryableTypeDescriptorTestData {
-  static QueryableTypeDescriptor createDescriptor(String[] t) {
-    return createDescriptor("com.cloudogu.space.to.be.Spaceship", t);
+
+  public static QueryableTypeDescriptor createDescriptor(String clazz, String[] t) {
+    return createDescriptor("", clazz, t);
   }
 
-  static QueryableTypeDescriptor createDescriptor(String clazz, String[] t) {
-    QueryableTypeDescriptor descriptor = mock(QueryableTypeDescriptor.class);
-    lenient().when(descriptor.getTypes()).thenReturn(t);
-    lenient().when(descriptor.getClazz()).thenReturn(clazz);
-    lenient().when(descriptor.getName()).thenReturn("");
-    return descriptor;
+  public static QueryableTypeDescriptor createDescriptor(String name, String clazz, String[] t) {
+    try {
+      Constructor<QueryableTypeDescriptor> constructor = QueryableTypeDescriptor.class
+        .getDeclaredConstructor(String.class, String.class, String[].class);
+      constructor.setAccessible(true);
+      return constructor.newInstance(name, clazz, t);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 }

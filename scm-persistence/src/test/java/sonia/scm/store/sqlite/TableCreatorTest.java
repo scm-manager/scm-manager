@@ -46,7 +46,7 @@ class TableCreatorTest {
 
   @Test
   void shouldCreateTableWithoutParents() throws SQLException {
-    QueryableTypeDescriptor descriptor = createDescriptor(new String[0]);
+    QueryableTypeDescriptor descriptor = createDescriptor("com.cloudogu.space.to.be.Spaceship", new String[0]);
 
     tableCreator.initializeTable(descriptor);
 
@@ -57,8 +57,7 @@ class TableCreatorTest {
 
   @Test
   void shouldCreateNamedTableWithoutParents() throws SQLException {
-    QueryableTypeDescriptor descriptor = createDescriptor(new String[0]);
-    when(descriptor.getName()).thenReturn("ships");
+    QueryableTypeDescriptor descriptor = createDescriptor("ships", "com.cloudogu.space.to.be.Spaceship", new String[0]);
 
     tableCreator.initializeTable(descriptor);
 
@@ -69,7 +68,7 @@ class TableCreatorTest {
 
   @Test
   void shouldCreateTableWithSingleParent() throws SQLException {
-    QueryableTypeDescriptor descriptor = createDescriptor(new String[]{"sonia.scm.repo.Repository.class"});
+    QueryableTypeDescriptor descriptor = createDescriptor("com.cloudogu.space.to.be.Spaceship", new String[]{"sonia.scm.repo.Repository.class"});
 
     tableCreator.initializeTable(descriptor);
 
@@ -81,7 +80,7 @@ class TableCreatorTest {
 
   @Test
   void shouldCreateTableWithMultipleParents() throws SQLException {
-    QueryableTypeDescriptor descriptor = createDescriptor(new String[]{"sonia.scm.repo.Repository.class", "sonia.scm.user.User"});
+    QueryableTypeDescriptor descriptor = createDescriptor("com.cloudogu.space.to.be.Spaceship", new String[]{"sonia.scm.repo.Repository.class", "sonia.scm.user.User"});
 
     tableCreator.initializeTable(descriptor);
 
@@ -94,7 +93,7 @@ class TableCreatorTest {
 
   @Test
   void shouldFailIfTableExistsWithoutIdColumn() throws SQLException {
-    QueryableTypeDescriptor descriptor = createDescriptor(new String[0]);
+    QueryableTypeDescriptor descriptor = createDescriptor("com.cloudogu.space.to.be.Spaceship", new String[0]);
     try {
       connection.createStatement().execute("CREATE TABLE com_cloudogu_space_to_be_Spaceship_STORE (payload JSONB)");
       tableCreator.initializeTable(descriptor);
@@ -106,7 +105,7 @@ class TableCreatorTest {
 
   @Test
   void shouldFailIfTableExistsWithoutPayloadColumn() throws SQLException {
-    QueryableTypeDescriptor descriptor = createDescriptor(new String[0]);
+    QueryableTypeDescriptor descriptor = createDescriptor("com.cloudogu.space.to.be.Spaceship", new String[0]);
     try {
       connection.createStatement().execute("CREATE TABLE com_cloudogu_space_to_be_Spaceship_STORE (ID TEXT)");
       tableCreator.initializeTable(descriptor);
@@ -118,7 +117,7 @@ class TableCreatorTest {
 
   @Test
   void shouldFailIfTableExistsWithoutParentColumn() throws SQLException {
-    QueryableTypeDescriptor descriptor = createDescriptor(new String[]{"sonia.scm.repo.Repository.class"});
+    QueryableTypeDescriptor descriptor = createDescriptor("com.cloudogu.space.to.be.Spaceship", new String[]{"sonia.scm.repo.Repository.class"});
     try {
       connection.createStatement().execute("CREATE TABLE com_cloudogu_space_to_be_Spaceship_STORE (ID TEXT, payload JSONB)");
       tableCreator.initializeTable(descriptor);
@@ -130,7 +129,7 @@ class TableCreatorTest {
 
   @Test
   void shouldFailIfTableExistsWithTooManyParentColumns() throws SQLException {
-    QueryableTypeDescriptor descriptor = createDescriptor(new String[]{"sonia.scm.repo.Repository.class"});
+    QueryableTypeDescriptor descriptor = createDescriptor("com.cloudogu.space.to.be.Spaceship", new String[]{"sonia.scm.repo.Repository.class"});
     try {
       connection.createStatement().execute("CREATE TABLE com_cloudogu_space_to_be_Spaceship_STORE (ID TEXT, Repository_ID, User_ID, payload JSONB)");
       tableCreator.initializeTable(descriptor);

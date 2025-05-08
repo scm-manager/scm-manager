@@ -33,6 +33,11 @@ public class QueryableTypeDescriptor extends NamedClassElement {
   @XmlJavaTypeAdapter(XmlArrayStringAdapter.class)
   private String[] types;
 
+  QueryableTypeDescriptor(String name, String clazz, String[] types) {
+    super(name, clazz);
+    this.types = types;
+  }
+
   public String[] getTypes() {
     return types == null ? new String[0] : types;
   }
