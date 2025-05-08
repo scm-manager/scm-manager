@@ -31,9 +31,11 @@ export const StatusVariantList = Object.values(StatusVariants);
 export type StatusVariant = typeof StatusVariants[keyof typeof StatusVariants];
 
 export const StatusIconSizeVariants = {
-  SMALL: "xs",
-  MEDIUM: "lg",
-  LARGE: "2x",
+  SMALL_X: "xs",
+  SMALL: "sm",
+  MEDIUM: "md",
+  LARGE: "lg",
+  LARGE_2X: "2x",
 };
 
 export const StatusIconSizeVariantList = Object.values(StatusIconSizeVariants);
