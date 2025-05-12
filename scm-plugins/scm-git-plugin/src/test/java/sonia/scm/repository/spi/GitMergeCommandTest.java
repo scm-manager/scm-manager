@@ -71,8 +71,8 @@ import static org.mockito.Mockito.when;
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
 public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
+  static final User COMMITTER_PRINCIPAL = new User("committer", "Comrade Mitter", "ilike@mittens.net");
   private static final String REALM = "AdminRealm";
-
   @Rule
   public ShiroRule shiro = new ShiroRule();
   @Mock
@@ -167,18 +167,22 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     assertThat(mergeCommandResult.getRevisionToMerge()).isEqualTo("91b99de908fcd04772798a31c308a64aea1a5523");
     assertThat(mergeCommandResult.getTargetRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
 
-    Repository repository = createContext().open();
-    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
-    RevCommit mergeCommit = commits.iterator().next();
-    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
-    String message = mergeCommit.getFullMessage();
-    assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
-    assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
-    assertThat(message).contains("master", "mergeable");
-    // We expect the merge result of file b.txt here by looking up the sha hash of its content.
-    // If the file is missing (aka not merged correctly) this will throw a MissingObjectException:
-    byte[] contentOfFileB = repository.open(repository.resolve("9513e9c76e73f3e562fd8e4c909d0607113c77c6")).getBytes();
-    assertThat(new String(contentOfFileB)).isEqualTo("b\ncontent from branch\n");
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+      Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+      RevCommit mergeCommit = commits.iterator().next();
+      PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+      PersonIdent mergeCommitter = mergeCommit.getCommitterIdent();
+      String message = mergeCommit.getFullMessage();
+      assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
+      assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
+      assertThat(mergeCommitter.getName()).isEqualTo("Dirk Gently");
+      assertThat(mergeCommitter.getEmailAddress()).isEqualTo("dirk@holistic.det");
+      assertThat(message).contains("master", "mergeable");
+      // We expect the merge result of file b.txt here by looking up the sha hash of its content.
+      // If the file is missing (aka not merged correctly) this will throw a MissingObjectException:
+      byte[] contentOfFileB = repository.open(repository.resolve("9513e9c76e73f3e562fd8e4c909d0607113c77c6")).getBytes();
+      assertThat(new String(contentOfFileB)).isEqualTo("b\ncontent from branch\n");
+    }
   }
 
   @Test
@@ -194,12 +198,13 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 
-    Repository repository = createContext().open();
-    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
-    RevCommit mergeCommit = commits.iterator().next();
-    assertThat(mergeCommit.getParentCount()).isEqualTo(2);
-    assertThat(mergeCommit.getParent(0).name()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
-    assertThat(mergeCommit.getParent(1).name()).isEqualTo("d81ad6c63d7e2162308d69637b339dedd1d9201c");
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+      Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+      RevCommit mergeCommit = commits.iterator().next();
+      assertThat(mergeCommit.getParentCount()).isEqualTo(2);
+      assertThat(mergeCommit.getParent(0).name()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
+      assertThat(mergeCommit.getParent(1).name()).isEqualTo("d81ad6c63d7e2162308d69637b339dedd1d9201c");
+    }
   }
 
   @Test(expected = NoChangesMadeException.class)
@@ -215,8 +220,9 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 
-    Repository repository = createContext().open();
-    new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call().iterator().next().getId();
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+      new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call().iterator().next().getId();
+    }
 
     command.merge(request);
   }
@@ -235,11 +241,12 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 
-    Repository repository = createContext().open();
-    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
-    RevCommit mergeCommit = commits.iterator().next();
-    String message = mergeCommit.getFullMessage();
-    assertThat(message).isEqualTo("simple");
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+      Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+      RevCommit mergeCommit = commits.iterator().next();
+      String message = mergeCommit.getFullMessage();
+      assertThat(message).isEqualTo("simple");
+    }
   }
 
   @Test
@@ -267,12 +274,12 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     // create concurrent modification after the pre commit hook was fired
     doAnswer(invocation -> {
-      RefUpdate refUpdate = createCommand()
-        .open()
-        .updateRef("refs/heads/master");
-      refUpdate.setNewObjectId(ObjectId.fromString("2f95f02d9c568594d31e78464bd11a96c62e3f91"));
-      refUpdate.update();
-      return null;
+      try (Repository repository = createCommand().open()) {
+        RefUpdate refUpdate = repository.updateRef("refs/heads/master");
+        refUpdate.setNewObjectId(ObjectId.fromString("2f95f02d9c568594d31e78464bd11a96c62e3f91"));
+        refUpdate.update();
+        return null;
+      }
     }).when(repositoryManager).fireHookEvent(any());
 
     command.merge(request);
@@ -280,14 +287,8 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldTakeAuthorFromSubjectIfNotSet() throws IOException, GitAPIException {
-    SimplePrincipalCollection principals = new SimplePrincipalCollection();
-    principals.add("admin", REALM);
-    principals.add(new User("dirk", "Dirk Gently", "dirk@holistic.det"), REALM);
-    shiro.setSubject(
-      new Subject.Builder()
-        .principals(principals)
-        .authenticated(true)
-        .buildSubject());
+    prepareCommitterSubject();
+
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("master");
@@ -298,11 +299,16 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 
-    Repository repository = createContext().open();
-    Iterable<RevCommit> mergeCommit = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
-    PersonIdent mergeAuthor = mergeCommit.iterator().next().getAuthorIdent();
-    assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
-    assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+      Iterable<RevCommit> mergeCommitIterator = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+      RevCommit mergeCommit = mergeCommitIterator.iterator().next();
+      PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+      PersonIdent mergeCommitter = mergeCommit.getCommitterIdent();
+
+      assertThat(mergeAuthor.getName()).isEqualTo(COMMITTER_PRINCIPAL.getDisplayName());
+      assertThat(mergeAuthor.getEmailAddress()).isEqualTo(COMMITTER_PRINCIPAL.getMail());
+      assertCommitter(mergeCommitter);
+    }
   }
 
   @Test
@@ -316,26 +322,34 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     MergeCommandResult mergeCommandResult = command.merge(request);
 
-    Repository repository = createContext().open();
-    assertThat(mergeCommandResult.isSuccess()).isTrue();
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+      assertThat(mergeCommandResult.isSuccess()).isTrue();
 
-    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("mergeable")).setMaxCount(1).call();
-    RevCommit mergeCommit = commits.iterator().next();
-    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
-    String message = mergeCommit.getFullMessage();
-    assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
-    assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
-    assertThat(message).contains("master", "mergeable");
-    // We expect the merge result of file b.txt here by looking up the sha hash of its content.
-    // If the file is missing (aka not merged correctly) this will throw a MissingObjectException:
-    byte[] contentOfFileB = repository.open(repository.resolve("9513e9c76e73f3e562fd8e4c909d0607113c77c6")).getBytes();
-    assertThat(new String(contentOfFileB)).isEqualTo("b\ncontent from branch\n");
+      Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("mergeable")).setMaxCount(1).call();
+      RevCommit mergeCommit = commits.iterator().next();
+      PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+      PersonIdent mergeCommitter = mergeCommit.getCommitterIdent();
+      String message = mergeCommit.getFullMessage();
+      assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
+      assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
+      assertThat(mergeCommitter.getName()).isEqualTo("Dirk Gently");
+      assertThat(mergeCommitter.getEmailAddress()).isEqualTo("dirk@holistic.det");
+      assertThat(message).contains("master", "mergeable");
+      // We expect the merge result of file b.txt here by looking up the sha hash of its content.
+      // If the file is missing (aka not merged correctly) this will throw a MissingObjectException:
+      byte[] contentOfFileB = repository.open(repository.resolve("9513e9c76e73f3e562fd8e4c909d0607113c77c6")).getBytes();
+      assertThat(new String(contentOfFileB)).isEqualTo("b\ncontent from branch\n");
+    }
   }
 
   @Test
   public void shouldSquashCommitsIfSquashIsEnabled() throws IOException, GitAPIException {
+
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
+
+    prepareCommitterSubject();
+
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
     request.setBranchToMerge("squash");
     request.setTargetBranch("master");
@@ -344,75 +358,91 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     MergeCommandResult mergeCommandResult = command.merge(request);
 
-    Repository repository = createContext().open();
-    assertThat(mergeCommandResult.isSuccess()).isTrue();
-    assertThat(mergeCommandResult.getRevisionToMerge()).isEqualTo("35597e9e98fe53167266583848bfef985c2adb27");
-    assertThat(mergeCommandResult.getTargetRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+      assertThat(mergeCommandResult.isSuccess()).isTrue();
+      assertThat(mergeCommandResult.getRevisionToMerge()).isEqualTo("35597e9e98fe53167266583848bfef985c2adb27");
+      assertThat(mergeCommandResult.getTargetRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
 
-    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
-    RevCommit mergeCommit = commits.iterator().next();
-    assertThat(mergeCommit.getParentCount()).isEqualTo(1);
-    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
-    String message = mergeCommit.getFullMessage();
-    assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
-    assertThat(message).isEqualTo("this is a squash");
+      Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+      RevCommit mergeCommit = commits.iterator().next();
+      assertThat(mergeCommit.getParentCount()).isEqualTo(1);
+      PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+      PersonIdent mergeCommitter = mergeCommit.getCommitterIdent();
+      String message = mergeCommit.getFullMessage();
+      assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
+      assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
+      assertCommitter(mergeCommitter);
+      assertThat(message).isEqualTo("this is a squash");
+    }
   }
 
   @Test
   public void shouldSquashThreeCommitsIntoOne() throws IOException, GitAPIException {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
+
+    prepareCommitterSubject();
+
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
     request.setBranchToMerge("squash");
     request.setTargetBranch("master");
     request.setMessageTemplate("squash three commits");
     request.setMergeStrategy(MergeStrategy.SQUASH);
-    Repository gitRepository = createContext().open();
-    MergeCommandResult mergeCommandResult = command.merge(request);
 
-    assertThat(mergeCommandResult.isSuccess()).isTrue();
+    try (GitContext context = createContext(); Repository gitRepository = context.open()) {
+      MergeCommandResult mergeCommandResult = command.merge(request);
 
-    Iterable<RevCommit> commits = new Git(gitRepository).log().add(gitRepository.resolve("master")).setMaxCount(1).call();
-    RevCommit mergeCommit = commits.iterator().next();
-    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
-    String message = mergeCommit.getFullMessage();
-    assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
-    assertThat(message).isEqualTo("squash three commits");
-    assertThat(mergeCommit.getParentCount()).isEqualTo(1);
-    assertThat(mergeCommit.getParent(0).name()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
+      assertThat(mergeCommandResult.isSuccess()).isTrue();
 
-    GitModificationsCommand modificationsCommand = new GitModificationsCommand(createContext());
-    List<Added> changes = modificationsCommand.getModifications("master").getAdded();
-    assertThat(changes).hasSize(3);
+      Iterable<RevCommit> commits = new Git(gitRepository).log().add(gitRepository.resolve("master")).setMaxCount(1).call();
+      RevCommit mergeCommit = commits.iterator().next();
+      PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+      PersonIdent mergeCommitter = mergeCommit.getCommitterIdent();
+      String message = mergeCommit.getFullMessage();
+
+      assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
+      assertCommitter(mergeCommitter);
+      assertThat(message).isEqualTo("squash three commits");
+      assertThat(mergeCommit.getParentCount()).isEqualTo(1);
+      assertThat(mergeCommit.getParent(0).name()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
+
+      GitModificationsCommand modificationsCommand = new GitModificationsCommand(createContext());
+      List<Added> changes = modificationsCommand.getModifications("master").getAdded();
+      assertThat(changes).hasSize(3);
+    }
   }
 
 
   @Test
   public void shouldMergeWithFastForward() throws IOException, GitAPIException {
-    Repository repository = createContext().open();
+    try (GitContext context = createContext(); Repository repository = context.open()) {
 
-    ObjectId featureBranchHead = new Git(repository).log().add(repository.resolve("squash")).setMaxCount(1).call().iterator().next().getId();
+      ObjectId featureBranchHead = new Git(repository).log().add(repository.resolve("squash")).setMaxCount(1).call().iterator().next().getId();
 
-    GitMergeCommand command = createCommand();
-    MergeCommandRequest request = new MergeCommandRequest();
-    request.setBranchToMerge("squash");
-    request.setTargetBranch("master");
-    request.setMergeStrategy(MergeStrategy.FAST_FORWARD_IF_POSSIBLE);
-    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+      GitMergeCommand command = createCommand();
+      MergeCommandRequest request = new MergeCommandRequest();
+      request.setBranchToMerge("squash");
+      request.setTargetBranch("master");
+      request.setMergeStrategy(MergeStrategy.FAST_FORWARD_IF_POSSIBLE);
+      request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
-    MergeCommandResult mergeCommandResult = command.merge(request);
-    assertThat(mergeCommandResult.getNewHeadRevision()).isEqualTo("35597e9e98fe53167266583848bfef985c2adb27");
-    assertThat(mergeCommandResult.getRevisionToMerge()).isEqualTo("35597e9e98fe53167266583848bfef985c2adb27");
-    assertThat(mergeCommandResult.getTargetRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
+      MergeCommandResult mergeCommandResult = command.merge(request);
+      assertThat(mergeCommandResult.getNewHeadRevision()).isEqualTo("35597e9e98fe53167266583848bfef985c2adb27");
+      assertThat(mergeCommandResult.getRevisionToMerge()).isEqualTo("35597e9e98fe53167266583848bfef985c2adb27");
+      assertThat(mergeCommandResult.getTargetRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
 
-    assertThat(mergeCommandResult.isSuccess()).isTrue();
+      assertThat(mergeCommandResult.isSuccess()).isTrue();
 
-    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
-    RevCommit mergeCommit = commits.iterator().next();
-    assertThat(mergeCommit.getParentCount()).isEqualTo(1);
-    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
-    assertThat(mergeAuthor.getName()).isEqualTo("Philip J Fry");
-    assertThat(mergeCommit.getId()).isEqualTo(featureBranchHead);
+      Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+      RevCommit mergeCommit = commits.iterator().next();
+      assertThat(mergeCommit.getParentCount()).isEqualTo(1);
+      PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+      PersonIdent mergeCommitter = mergeCommit.getCommitterIdent();
+
+      assertThat(mergeAuthor.getName()).isEqualTo("Philip J Fry");
+      assertThat(mergeCommitter.getName()).isEqualTo("Eduard Heimbuch");
+      assertThat(mergeCommit.getId()).isEqualTo(featureBranchHead);
+    }
   }
 
   @Test
@@ -428,15 +458,16 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 
-    Repository repository = createContext().open();
-    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
-    RevCommit mergeCommit = commits.iterator().next();
-    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
-    assertThat(mergeCommit.getParentCount()).isEqualTo(2);
-    String message = mergeCommit.getFullMessage();
-    assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
-    assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
-    assertThat(message).contains("master", "mergeable");
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+      Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+      RevCommit mergeCommit = commits.iterator().next();
+      PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+      assertThat(mergeCommit.getParentCount()).isEqualTo(2);
+      String message = mergeCommit.getFullMessage();
+      assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
+      assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
+      assertThat(message).contains("master", "mergeable");
+    }
   }
 
   @Test(expected = NotFoundException.class)
@@ -494,12 +525,12 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 
-    Repository repository = createContext().open();
-    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
-    RevCommit mergeCommit = commits.iterator().next();
-    assertThat(mergeCommit.getRawGpgSignature()).isNotEmpty();
-    assertThat(mergeCommit.getRawGpgSignature()).isEqualTo(GitTestHelper.SimpleGpgSigner.getSignature());
-
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+      Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+      RevCommit mergeCommit = commits.iterator().next();
+      assertThat(mergeCommit.getRawGpgSignature()).isNotEmpty();
+      assertThat(mergeCommit.getRawGpgSignature()).isEqualTo(GitTestHelper.SimpleGpgSigner.getSignature());
+    }
   }
 
   @Test
@@ -516,40 +547,53 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 
-    Repository repository = createContext().open();
-    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
-    RevCommit mergeCommit = commits.iterator().next();
-    assertThat(mergeCommit.getRawGpgSignature()).isNullOrEmpty();
-
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+      Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+      RevCommit mergeCommit = commits.iterator().next();
+      assertThat(mergeCommit.getRawGpgSignature()).isNullOrEmpty();
+    }
   }
 
   @Test
   public void shouldAllowMergeWithRebase() throws IOException, GitAPIException {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
+
+    prepareCommitterSubject();
+
     request.setTargetBranch("master");
     request.setBranchToMerge("mergeable");
     request.setMergeStrategy(MergeStrategy.REBASE);
-    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     MergeCommandResult mergeCommandResult = command.merge(request);
 
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 
-    Repository repository = createContext().open();
-    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
-    RevCommit mergeCommit = commits.iterator().next();
-    assertThat(mergeCommit.getParentCount()).isEqualTo(1);
-    assertThat(mergeCommit.getParent(0).name()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
-    assertThat(mergeCommit.getName()).isEqualTo(mergeCommandResult.getNewHeadRevision());
-    assertThat(mergeCommit.getName()).doesNotStartWith("91b99de908fcd04772798a31c308a64aea1a5523");
-    assertThat(mergeCommit.getAuthorIdent().getWhenAsInstant()).isEqualTo("2018-11-07T10:20:52Z"); // the timestamp of the original commit
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+      Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+      RevCommit mergeCommit = commits.iterator().next();
+      assertThat(mergeCommit.getParentCount()).isEqualTo(1);
+      assertThat(mergeCommit.getParent(0).name()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
+      assertThat(mergeCommit.getName()).isEqualTo(mergeCommandResult.getNewHeadRevision());
+      assertThat(mergeCommit.getName()).doesNotStartWith("91b99de908fcd04772798a31c308a64aea1a5523");
+      assertThat(mergeCommit.getAuthorIdent().getWhenAsInstant()).isEqualTo("2018-11-07T10:20:52Z"); // the timestamp of the original commit
+
+      PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+      PersonIdent mergeCommitter = mergeCommit.getCommitterIdent();
+
+      assertThat(mergeAuthor.getName()).isEqualTo("Douglas Adams");
+      assertThat(mergeAuthor.getEmailAddress()).isEqualTo("douglas.adams@hitchhiker.com");
+      assertCommitter(mergeCommitter);
+    }
   }
 
   @Test
   public void shouldRebaseMultipleCommits() throws IOException, GitAPIException {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
+
+    prepareCommitterSubject();
+
     request.setTargetBranch("master");
     request.setBranchToMerge("squash");
     request.setMergeStrategy(MergeStrategy.REBASE);
@@ -557,19 +601,19 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     command.merge(request);
 
-    Repository repository = createContext().open();
-    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(6).call();
-
-    assertThat(commits)
-      .extracting("shortMessage")
-      .containsExactly(
-        "third",
-        "second commit",
-        "first commit",
-        "added new line for blame",
-        "added file f",
-        "added file d and e in folder c"
-      );
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+      Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(6).call();
+      assertThat(commits)
+        .extracting("shortMessage")
+        .containsExactly(
+          "third",
+          "second commit",
+          "first commit",
+          "added new line for blame",
+          "added file f",
+          "added file d and e in folder c"
+        );
+    }
   }
 
   @Test
@@ -581,12 +625,16 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setMergeStrategy(MergeStrategy.REBASE);
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
+    prepareCommitterSubject();
+
     MergeCommandResult mergeCommandResult = command.merge(request);
 
     assertThat(mergeCommandResult.isSuccess()).isFalse();
     assertThat(mergeCommandResult.getFilesWithConflict()).containsExactly("a.txt");
-    Repository repository = createContext().open();
-    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+    Iterable<RevCommit> commits;
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+      commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+    }
     RevCommit headCommit = commits.iterator().next();
     assertThat(headCommit.getName()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
   }
@@ -627,5 +675,21 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
         return super.inClone(interceptedWorkerSupplier, workingCopyFactory, initialBranch);
       }
     };
+  }
+
+  private void prepareCommitterSubject() {
+    SimplePrincipalCollection principals = new SimplePrincipalCollection();
+    principals.add("admin", REALM);
+    principals.add(COMMITTER_PRINCIPAL, REALM);
+    shiro.setSubject(
+      new Subject.Builder()
+        .principals(principals)
+        .authenticated(true)
+        .buildSubject());
+  }
+
+  private void assertCommitter(PersonIdent mergeCommitter) {
+    assertThat(mergeCommitter.getName()).isEqualTo(COMMITTER_PRINCIPAL.getDisplayName());
+    assertThat(mergeCommitter.getEmailAddress()).isEqualTo(COMMITTER_PRINCIPAL.getMail());
   }
 }

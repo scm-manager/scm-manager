@@ -16,9 +16,13 @@
 
 package sonia.scm.repository.spi;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.lib.ObjectId;
+import sonia.scm.repository.Person;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.MergeCommandResult;
+import sonia.scm.user.User;
 
 class GitMergeWithSquash {
 
@@ -31,6 +35,14 @@ class GitMergeWithSquash {
   }
 
   MergeCommandResult run() {
-    return mergeHelper.doRecursiveMerge(request, (sourceRevision, targetRevision) -> new ObjectId[]{targetRevision});
+    return mergeHelper.doRecursiveMerge(request, determineCommitter(), (sourceRevision, targetRevision) -> new ObjectId[]{targetRevision});
+  }
+
+  private Person determineCommitter() {
+    Subject subject = SecurityUtils.getSubject();
+    User user = subject.getPrincipals().oneByType(User.class);
+    String name = user.getDisplayName();
+    String email = user.getMail();
+    return new Person(name, email);
   }
 }
