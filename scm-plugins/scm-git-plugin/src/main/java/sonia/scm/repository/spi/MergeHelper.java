@@ -22,12 +22,12 @@ import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.UnsupportedSigningFormatException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.merge.RecursiveMerger;
 import org.eclipse.jgit.merge.ResolveMerger;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.Person;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.MergeCommandResult;
 
@@ -128,6 +128,10 @@ class MergeHelper {
   }
 
   MergeCommandResult doRecursiveMerge(MergeCommandRequest request, BiFunction<ObjectId, ObjectId, ObjectId[]> parents) {
+    return doRecursiveMerge(request, request.getAuthor(), parents);
+  }
+
+  MergeCommandResult doRecursiveMerge(MergeCommandRequest request, Person committer, BiFunction<ObjectId, ObjectId, ObjectId[]> parents) {
     log.trace("merge branch {} into {}", branchToMerge, targetBranch);
     try {
       org.eclipse.jgit.lib.Repository repository = context.open();
@@ -149,7 +153,7 @@ class MergeHelper {
       ObjectId commitId = commitHelper.createCommit(
         newTreeId,
         request.getAuthor(),
-        request.getAuthor(),
+        committer,
         determineMessage(),
         request.isSign(),
         parents.apply(sourceRevision, targetRevision)
