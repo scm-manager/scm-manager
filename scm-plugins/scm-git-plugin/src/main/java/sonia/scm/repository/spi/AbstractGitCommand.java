@@ -18,16 +18,11 @@ package sonia.scm.repository.spi;
 
 
 import com.google.common.base.Strings;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
@@ -37,21 +32,15 @@ import sonia.scm.ConcurrentModificationException;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Person;
 import sonia.scm.repository.work.WorkingCopy;
-import sonia.scm.user.User;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.NON_EXISTING;
 import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.OK;
@@ -65,7 +54,7 @@ import static sonia.scm.repository.spi.IntegrateChangesFromWorkdirException.forM
 
 class AbstractGitCommand {
 
- 
+
   private static final Logger logger = LoggerFactory.getLogger(AbstractGitCommand.class);
   private static final Collection<RemoteRefUpdate.Status> ACCEPTED_UPDATE_STATUS = asList(OK, UP_TO_DATE, NON_EXISTING);
 
@@ -76,6 +65,15 @@ class AbstractGitCommand {
   AbstractGitCommand(GitContext context) {
     this.repository = context.getRepository();
     this.context = context;
+  }
+
+  static ObjectId resolveRevisionOrThrowNotFound(Repository repository, String revision, sonia.scm.repository.Repository scmRepository) throws IOException {
+    ObjectId resolved = repository.resolve(revision);
+    if (resolved == null) {
+      throw notFound(entity("Revision", revision).in(scmRepository));
+    } else {
+      return resolved;
+    }
   }
 
   Repository open() {
@@ -125,15 +123,6 @@ class AbstractGitCommand {
     return resolveRevisionOrThrowNotFound(repository, revision, scmRepository);
   }
 
-  static ObjectId resolveRevisionOrThrowNotFound(Repository repository, String revision, sonia.scm.repository.Repository scmRepository) throws IOException {
-    ObjectId resolved = repository.resolve(revision);
-    if (resolved == null) {
-      throw notFound(entity("Revision", revision).in(scmRepository));
-    } else {
-      return resolved;
-    }
-  }
-
   abstract static class GitCloneWorker<R> {
     private final Git clone;
     private final GitContext context;
@@ -151,35 +140,8 @@ class AbstractGitCommand {
       return clone;
     }
 
-    GitContext getContext() {
-      return context;
-    }
-
     sonia.scm.repository.Repository getRepository() {
       return repository;
-    }
-
-    void checkOutBranch(String branchName) throws IOException {
-      try {
-        clone.checkout().setName(branchName).call();
-      } catch (RefNotFoundException e) {
-        logger.trace("could not checkout branch {} directly; trying to create local branch", branchName, e);
-        checkOutTargetAsNewLocalBranch(branchName);
-      } catch (GitAPIException e) {
-        throw new InternalRepositoryException(repository, "could not checkout branch: " + branchName, e);
-      }
-    }
-
-    private void checkOutTargetAsNewLocalBranch(String branchName) throws IOException {
-      try {
-        ObjectId targetRevision = resolveRevision(branchName);
-        clone.checkout().setStartPoint(targetRevision.getName()).setName(branchName).setCreateBranch(true).call();
-      } catch (RefNotFoundException e) {
-        logger.debug("could not checkout branch {} as local branch", branchName, e);
-        throw notFound(entity("Revision", branchName).in(repository));
-      } catch (GitAPIException e) {
-        throw new InternalRepositoryException(repository, "could not checkout branch as local branch: " + branchName, e);
-      }
     }
 
     ObjectId resolveRevision(String revision) throws IOException {
@@ -189,40 +151,6 @@ class AbstractGitCommand {
       } else {
         return resolved;
       }
-    }
-
-    void failIfNotChanged(Supplier<RuntimeException> doThrow) {
-      try {
-        if (clone.status().call().isClean()) {
-          throw doThrow.get();
-        }
-      } catch (GitAPIException e) {
-        throw new InternalRepositoryException(repository, "could not read status of repository", e);
-      }
-    }
-
-    Optional<RevCommit> doCommit(String message, Person author, boolean sign) {
-      Person authorToUse = determineAuthor(author);
-      try {
-        Status status = clone.status().call();
-        if (!status.isClean() || isInMerge()) {
-          return of(clone.commit()
-            .setAuthor(authorToUse.getName(), authorToUse.getMail())
-            .setCommitter(authorToUse.getName(), authorToUse.getMail())
-            .setMessage(message)
-            .setSign(sign)
-            .setSigningKey(sign ? "SCM-MANAGER-DEFAULT-KEY" : null)
-            .call());
-        } else {
-          return empty();
-        }
-      } catch (GitAPIException | IOException e) {
-        throw new InternalRepositoryException(repository, "could not commit changes", e);
-      }
-    }
-
-    private boolean isInMerge() throws IOException {
-      return clone.getRepository().readMergeHeads() != null && !clone.getRepository().readMergeHeads().isEmpty();
     }
 
     void push(String... refSpecs) {
@@ -268,23 +196,6 @@ class AbstractGitCommand {
         throw new InternalRepositoryException(repository, "could not push changes into central repository", e);
       }
       logger.debug("pushed changes");
-    }
-
-    ObjectId getCurrentObjectId() throws IOException {
-      return getClone().getRepository().getRefDatabase().findRef("HEAD").getObjectId();
-    }
-
-    private Person determineAuthor(Person author) {
-      if (author == null) {
-        Subject subject = SecurityUtils.getSubject();
-        User user = subject.getPrincipals().oneByType(User.class);
-        String name = user.getDisplayName();
-        String email = user.getMail();
-        logger.debug("no author set; using logged in user: {} <{}>", name, email);
-        return new Person(name, email);
-      } else {
-        return author;
-      }
     }
   }
 }
