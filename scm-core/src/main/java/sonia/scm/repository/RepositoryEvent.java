@@ -22,6 +22,8 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.event.AbstractHandlerEvent;
 import sonia.scm.event.Event;
 
+import java.util.stream.Stream;
+
 /**
  * The RepositoryEvent is fired if a {@link Repository} object changes.
  *
