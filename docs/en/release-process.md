@@ -258,6 +258,12 @@ released, yet.
 6. Double check this all
 7. Commit the changes and push the hotfix branch
 8. Jenkins will build and release this hotfix with the given version
+
+**Important Note:**
+After the first successful run, a second will start and always fail.
+This is due to the pipeline updating the tag version and commit / pushing this change to the hotfix branch.
+This second build will always fail, but this second build has no impact on whether the release has been successful or not.
+
 9. When Jenkins has finished, fetch the changes (and the new tag)
 10. Merge this new Tag into `main` (or fast-forward `main` if possible) and push `main`
     (`git checkout main && git pull && git merge hotfix/<new version> && git push`)
