@@ -602,7 +602,7 @@ export type RepositorySourcesContentDownloadButton = RenderableExtensionPointDef
 
 export type RepositoryRoute = RenderableExtensionPointDefinition<
   "repository.route",
-  { repository: Repository; url: string; indexLinks: Links }
+  { repository: Repository; url: string; indexLinks: Links; urlForLinks: string }
 >;
 
 type RepositoryRedirectProps = {
@@ -686,7 +686,7 @@ export type RepositoryInformationTableBottom = RenderableExtensionPointDefinitio
 
 export type RepositoryBanner = RenderableExtensionPointDefinition<
   "repository.banner",
-  { repository: Repository, url: string }
+  { repository: Repository; url: string }
 >;
 
 export type UserInformationTableBottom = RenderableExtensionPointDefinition<

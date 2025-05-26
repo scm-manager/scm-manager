@@ -343,6 +343,7 @@ const RepositoryRoot = () => {
                   repository,
                   url: urls.escapeUrlForRoute(url),
                   indexLinks,
+                  urlForLinks: url,
                 }}
                 renderAll={true}
               />
