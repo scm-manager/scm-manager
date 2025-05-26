@@ -21,8 +21,11 @@ import { Route } from "react-router-dom";
 import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import { Link, Links, Namespace, Repository } from "@scm-manager/ui-types";
 import { urls } from "@scm-manager/ui-api";
-import { useDocumentTitleForRepository } from "@scm-manager/ui-core";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import {
+  TitledGlobalSettingComponent,
+  TitledNamespaceSettingComponent,
+  TitledRepositorySettingComponent,
+} from "./TitledSettings";
 
 type GlobalRouteProps = {
   url: string;
@@ -78,17 +81,10 @@ class ConfigurationBinder {
     const ConfigRoute = ({ url, links, ...additionalProps }: GlobalRouteProps) => {
       const link = links[linkName];
 
-      const TitledGlobalSettingComponent: FC = ({ children }) => {
-        const [t] = useTranslation(this.i18nNamespace);
-        const [commonTranslation] = useTranslation("commons");
-        useDocumentTitle(t(labelI18nKey), commonTranslation("documentTitle.globalConfiguration"));
-        return <>{children}</>;
-      };
-
       if (link) {
         return this.route(
           url + "/settings" + to,
-          <TitledGlobalSettingComponent>
+          <TitledGlobalSettingComponent i18nNamespace={this.i18nNamespace} label={labelI18nKey}>
             <ConfigurationComponent link={(link as Link).href} {...additionalProps} />
           </TitledGlobalSettingComponent>
         );
@@ -175,21 +171,14 @@ class ConfigurationBinder {
     const RepoRoute = ({ url, repository, ...additionalProps }: RepositoryRouteProps) => {
       const link = repository._links[linkName];
 
-      const TitledRepositorySettingComponent: FC = ({ children }) => {
-        const [t] = useTranslation(this.i18nNamespace);
-        const [commonTranslation] = useTranslation("commons");
-        useDocumentTitleForRepository(
-          repository,
-          t(labelI18nKey),
-          commonTranslation("documentTitle.repositoryConfiguration")
-        );
-        return <>{children}</>;
-      };
-
       if (link) {
         return this.route(
           urls.unescapeUrlForRoute(url) + "/settings" + to,
-          <TitledRepositorySettingComponent>
+          <TitledRepositorySettingComponent
+            i18nNamespace={this.i18nNamespace}
+            label={labelI18nKey}
+            repository={repository}
+          >
             <RepositoryComponent repository={repository} link={(link as Link).href} {...additionalProps} />
           </TitledRepositorySettingComponent>
         );
@@ -219,21 +208,14 @@ class ConfigurationBinder {
     const NamespaceRoute: FC<extensionPoints.NamespaceRoute["props"]> = ({ url, namespace, ...additionalProps }) => {
       const link = namespace._links[linkName];
 
-      const TitledNamespaceSettingComponent: FC = ({ children }) => {
-        const [t] = useTranslation(this.i18nNamespace);
-        const [commonTranslation] = useTranslation("commons");
-        useDocumentTitle(
-          t(labelI18nKey),
-          commonTranslation("documentTitle.namespaceConfiguration"),
-          namespace.namespace
-        );
-        return <>{children}</>;
-      };
-
       if (link) {
         return this.route(
           urls.unescapeUrlForRoute(url) + "/settings" + to,
-          <TitledNamespaceSettingComponent>
+          <TitledNamespaceSettingComponent
+            i18nNamespace={this.i18nNamespace}
+            label={labelI18nKey}
+            namespace={namespace}
+          >
             <ConfigurationComponent namespace={namespace} link={(link as Link).href} {...additionalProps} />
           </TitledNamespaceSettingComponent>
         );
