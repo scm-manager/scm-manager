@@ -1,0 +1,2 @@
+- type: fixed
+  description: The logging configuration is applied correctly at the start of the application
