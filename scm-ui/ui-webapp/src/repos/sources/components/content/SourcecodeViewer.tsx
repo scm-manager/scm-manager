@@ -38,7 +38,7 @@ const SourcecodeViewer: FC<Props> = ({ file, language }) => {
     return <Loading />;
   }
 
-  const permalink = replaceBranchWithRevision(location.pathname, file.revision);
+  const permalink = replaceBranchWithRevision(location.pathname, encodeURIComponent(file.revision));
 
   return <SyntaxHighlighter language={language.toLowerCase()} value={content || ""} permalink={permalink} />;
 };

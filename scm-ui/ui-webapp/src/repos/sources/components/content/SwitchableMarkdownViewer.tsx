@@ -47,7 +47,7 @@ const SwitchableMarkdownViewer: FC<Props> = ({ file, basePath, repository }) => 
     return <ErrorNotification error={error} />;
   }
 
-  const permalink = replaceBranchWithRevision(location.pathname, file.revision);
+  const permalink = replaceBranchWithRevision(location.pathname, encodeURIComponent(file.revision));
 
   return (
     <div className="is-relative">
