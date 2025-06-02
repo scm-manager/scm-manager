@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.plugin.QueryableTypeDescriptor;
 import sonia.scm.security.KeyGenerator;
+import sonia.scm.store.IdHandlerForStores;
 import sonia.scm.store.QueryableMutableStore;
 import sonia.scm.store.StoreException;
 
@@ -38,10 +39,11 @@ import java.util.concurrent.locks.ReadWriteLock;
 class SQLiteQueryableMutableStore<T> extends SQLiteQueryableStore<T> implements QueryableMutableStore<T> {
 
   private final ObjectMapper objectMapper;
-  private final KeyGenerator keyGenerator;
 
   private final Class<T> clazz;
   private final String[] parentIds;
+
+  private final IdHandlerForStores<T> idHandlerForStores;
 
   public SQLiteQueryableMutableStore(ObjectMapper objectMapper,
                                      KeyGenerator keyGenerator,
@@ -52,20 +54,22 @@ class SQLiteQueryableMutableStore<T> extends SQLiteQueryableStore<T> implements 
                                      ReadWriteLock lock) {
     super(objectMapper, connection, clazz, queryableTypeDescriptor, parentIds, lock);
     this.objectMapper = objectMapper;
-    this.keyGenerator = keyGenerator;
     this.clazz = clazz;
     this.parentIds = parentIds;
+    this.idHandlerForStores = new IdHandlerForStores<>(clazz, keyGenerator, this::doPut);
   }
 
   @Override
   public String put(T item) {
-    String id = keyGenerator.createKey();
-    put(id, item);
-    return id;
+    return idHandlerForStores.put(item);
   }
 
   @Override
   public void put(String id, T item) {
+    idHandlerForStores.put(id, item);
+  }
+
+  private void doPut(String id, T item) {
     List<String> columnsToInsert = new ArrayList<>(Arrays.asList(parentIds));
     columnsToInsert.add(id);
     columnsToInsert.add(marshal(item));

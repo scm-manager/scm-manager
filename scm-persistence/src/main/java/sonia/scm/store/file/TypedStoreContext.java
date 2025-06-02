@@ -86,7 +86,7 @@ final class TypedStoreContext<T> {
     withClassLoader(consumer, unmarshaller);
   }
 
-  Class<?> getType() {
+  Class<T> getType() {
     return parameters.getType();
   }
 

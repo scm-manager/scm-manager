@@ -29,31 +29,33 @@ import java.util.Map;
 public interface DataStore<T> extends MultiEntryStore<T> {
 
   /**
-   * Put a item with automatically generated id to the store.
-   *
+   * Put an item into the store. If the item has an attribute that is
+   * annotated with {@link Id}, then the value from this field will
+   * be taken as an id if it is not null. Otherwise, a new id will be
+   * generated and used.
    *
    * @param item item to store
    *
    * @return automatically generated id of the item
    */
-  public String put(T item);
+  String put(T item);
 
   /**
    * Put the item with the given id to the store.
-   *
+   * If the item has an attribute that is annotated with {@link Id},
+   * then this field will be set to the given id.
    *
    * @param id id of the item
    * @param item item to store
    */
-  public void put(String id, T item);
+  void put(String id, T item);
 
 
   /**
    * Returns a map of all stored items. The key of the map is the item id and 
    * the value is item.
    *
-   *
    * @return map of all stored items
    */
-  public Map<String, T> getAll();
+  Map<String, T> getAll();
 }

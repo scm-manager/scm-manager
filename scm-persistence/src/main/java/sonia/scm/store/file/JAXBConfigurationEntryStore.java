@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.CopyOnWrite;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.ConfigurationEntryStore;
+import sonia.scm.store.IdHandlerForStores;
 import sonia.scm.xml.XmlStreams;
 import sonia.scm.xml.XmlStreams.AutoCloseableXMLReader;
 import sonia.scm.xml.XmlStreams.AutoCloseableXMLWriter;
@@ -44,19 +45,17 @@ class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V> {
   private static final String TAG_KEY = "key";
   private static final String TAG_VALUE = "value";
 
- 
   private static final Logger LOG = LoggerFactory.getLogger(JAXBConfigurationEntryStore.class);
 
-
   private final File file;
-  private final KeyGenerator keyGenerator;
   private final Class<V> type;
   private final TypedStoreContext<V> context;
   private final Map<String, V> entries = Maps.newHashMap();
 
+  private final IdHandlerForStores<V> idHandlerForStores;
+
   JAXBConfigurationEntryStore(File file, KeyGenerator keyGenerator, Class<V> type, TypedStoreContext<V> context) {
     this.file = file;
-    this.keyGenerator = keyGenerator;
     this.type = type;
     this.context = context;
     // initial load
@@ -65,6 +64,7 @@ class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V> {
         load();
       }
     }).withLockedFileForRead(file);
+    this.idHandlerForStores = new IdHandlerForStores<>(type, keyGenerator, this::doPut);
   }
 
   @Override
@@ -79,15 +79,15 @@ class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V> {
 
   @Override
   public String put(V item) {
-    String id = keyGenerator.createKey();
-
-    put(id, item);
-
-    return id;
+    return idHandlerForStores.put(item);
   }
 
   @Override
   public void put(String id, V item) {
+    idHandlerForStores.put(id, item);
+  }
+
+  private void doPut(String id, V item) {
     LOG.debug("put item {} to configuration store", id);
 
     execute(() -> {

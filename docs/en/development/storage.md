@@ -392,6 +392,40 @@ public class GroupDeletionNotifier implements StoreDeletionNotifier {
 }
 ```
 
+## Handling of IDs
+
+If you have an entity that has an id field, you can use the `@Id` annotation to mark this field as the ID of the entity.
+This field must be of type `String`. If such a field is present, the store will automatically use it as the ID of the
+entity. This means that
+
+- if an entity is stored using the put method without explicit ID parameter (`DataStore#put(T)`), the store will check
+  if the ID field has a non-null value. If this is the case, this value will be used as the ID. If the ID field is
+  null, a new ID will be generated and assigned to the annotated field of the entity.
+- if an entity is stored using the put method with an explicit ID parameter (`DataStore#put(String, T)`), this ID
+  will be used to store the entity. The ID field of the entity will be set with this given ID.
+
+Please note that if you change the ID field of an entity after it has been stored, the store will not automatically
+update the ID in the store. You must explicitly call the `put` method with the new ID to store the entity with the
+new ID and remove the old entry with the old ID.
+
+```java
+import lombok.Data;
+import sonia.scm.store.QueryableType;
+import sonia.scm.store.Id;
+
+@Data
+@QueryableType
+public class MyEntity {
+  @Id
+  private String id;
+  private String name;
+  private String alias;
+  private int age;
+  private List<String> tags;
+}
+```
+
+
 ## Update Steps
 
 Update steps can be used to update data in the database. The following example shows how to update all entities of a

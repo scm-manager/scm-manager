@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.CopyOnWrite;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.DataStore;
+import sonia.scm.store.IdHandlerForStores;
 import sonia.scm.store.StoreException;
 import sonia.scm.xml.XmlStreams;
 
@@ -44,20 +45,30 @@ class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> {
  
   private static final Logger LOG = LoggerFactory.getLogger(JAXBDataStore.class);
 
-  private final KeyGenerator keyGenerator;
   private final TypedStoreContext<T> context;
   private final DataFileCache.DataFileCacheInstance cache;
 
+  private final IdHandlerForStores<T> idHandlerForStores;
+
   JAXBDataStore(KeyGenerator keyGenerator, TypedStoreContext<T> context, File directory, boolean readOnly, DataFileCache.DataFileCacheInstance cache) {
     super(directory, StoreConstants.FILE_EXTENSION, readOnly);
-    this.keyGenerator = keyGenerator;
     this.cache = cache;
     this.directory = directory;
     this.context = context;
+    this.idHandlerForStores = new IdHandlerForStores<>(context.getType(), keyGenerator, this::doPut);
+  }
+
+  @Override
+  public String put(T item) {
+    return idHandlerForStores.put(item);
   }
 
   @Override
   public void put(String id, T item) {
+    idHandlerForStores.put(id, item);
+  }
+
+  private void doPut(String id, T item) {
     LOG.debug("put item {} to store", id);
 
     assertNotReadOnly();
@@ -77,15 +88,6 @@ class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> {
       throw new StoreException("could not write object with id ".concat(id),
         ex);
     }
-  }
-
-  @Override
-  public String put(T item) {
-    String key = keyGenerator.createKey();
-
-    put(key, item);
-
-    return key;
   }
 
   @Override
