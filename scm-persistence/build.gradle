@@ -35,4 +35,5 @@ dependencies {
   testCompileOnly libraries.lombok
   annotationProcessor libraries.lombok
   testAnnotationProcessor libraries.lombok
+  testRuntimeOnly libraries.logback
 }
