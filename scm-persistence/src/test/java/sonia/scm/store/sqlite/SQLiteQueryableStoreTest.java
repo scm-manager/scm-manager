@@ -458,6 +458,39 @@ class SQLiteQueryableStoreTest {
       }
 
       @Test
+      void shouldQueryForIdAndOrderByDESC() {
+        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        store.put("1", new User("trish", "Tricia", "tricia@hog.org"));
+        store.put("2", new User("trillian", "Trillian McMillan", "mcmillan@gmail.com"));
+        store.put("3", new User("arthur", "Arthur Dent", "arthur@hog.org"));
+
+        List<User> all = store.query().orderBy(ID, QueryableStore.Order.DESC)
+          .findAll();
+
+        assertThat(all)
+          .extracting("name")
+          .containsExactly("arthur","trillian","trish");
+      }
+
+      @Test
+      void shouldOrderIdsAndPayload() {
+        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        store.put("1", new User("trish", "Tricia", "tricia@hog.org"));
+        store.put("2", new User("trillian", "Trillian McMillan", "mcmillan@gmail.com"));
+        store.put("3", new User("trillian", "Arthur Dent", "arthur@hog.org"));
+
+        List<User> all = store.query()
+          .orderBy(USER_NAME, QueryableStore.Order.DESC)
+          .orderBy(ID, QueryableStore.Order.ASC)
+          .findAll();
+
+        System.out.println(all);
+        assertThat(all)
+          .extracting("displayName")
+          .containsExactly("Tricia","Trillian McMillan","Arthur Dent");
+      }
+
+      @Test
       void shouldQueryForParents() {
         new StoreTestBuilder(connectionString, Group.class.getName())
           .withIds("42")

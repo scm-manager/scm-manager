@@ -451,7 +451,12 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
       Iterator<OrderBy<T>> it = orderBy.iterator();
       while (it.hasNext()) {
         OrderBy<T> order = it.next();
-        orderByBuilder.append("json_extract(payload, '$.").append(order.field.getName()).append("') ").append(order.order.name());
+        if (order.field instanceof IdQueryField) {
+          orderByBuilder.append("ID ");
+        } else {
+          orderByBuilder.append("json_extract(payload, '$.").append(order.field.getName()).append("') ");
+        }
+        orderByBuilder.append(order.order.name());
         if (it.hasNext()) {
           orderByBuilder.append(", ");
         }

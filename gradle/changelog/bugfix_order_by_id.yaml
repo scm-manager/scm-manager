@@ -1,0 +1,2 @@
+- type: fixed
+  description: Ensure query results are ordered by the ID field
