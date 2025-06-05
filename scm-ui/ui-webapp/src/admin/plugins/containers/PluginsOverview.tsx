@@ -29,11 +29,8 @@ import {
   useAvailablePlugins,
   useInstalledPlugins,
   usePendingPlugins,
-  usePluginCenterAuthInfo,
 } from "@scm-manager/ui-api";
 import PluginModal from "../components/PluginModal";
-import CloudoguPlatformBanner from "../components/CloudoguPlatformBanner";
-import PluginCenterAuthInfo from "../components/PluginCenterAuthInfo";
 import styled from "styled-components";
 import { Button } from "@scm-manager/ui-buttons";
 import { useDocumentTitle } from "@scm-manager/ui-core";
@@ -42,7 +39,6 @@ export enum PluginAction {
   INSTALL = "install",
   UPDATE = "update",
   UNINSTALL = "uninstall",
-  CLOUDOGU = "cloudoguInstall",
 }
 
 export type PluginModalContent = {
@@ -83,7 +79,6 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     error: installedPluginsError,
   } = useInstalledPlugins({ enabled: installed });
   const { data: pendingPlugins, isLoading: isLoadingPendingPlugins, error: pendingPluginsError } = usePendingPlugins();
-  const pluginCenterAuthInfo = usePluginCenterAuthInfo();
   const [showPendingModal, setShowPendingModal] = useState(false);
   const [showExecutePendingModal, setShowExecutePendingModal] = useState(false);
   const [showUpdateAllModal, setShowUpdateAllModal] = useState(false);
@@ -97,9 +92,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     return (
       <StickyHeader className="has-background-secondary-least is-flex is-justify-content-space-between is-align-items-baseline has-gap-2">
         <div className="is-flex-shrink-0">
-          <Title className="is-flex">
-            {t("plugins.title")} <PluginCenterAuthInfo {...pluginCenterAuthInfo} />
-          </Title>
+          <Title>{t("plugins.title")}</Title>
           <Subtitle subtitle={installed ? t("plugins.installedSubtitle") : t("plugins.availableSubtitle")} />
         </div>
         <PluginTopActions>{actions}</PluginTopActions>
@@ -166,11 +159,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
       return (
         <>
           {pluginCenterStatusNotification}
-          <PluginsList
-            plugins={collection._embedded.plugins}
-            openModal={setPluginModalContent}
-            pluginCenterAuthInfo={pluginCenterAuthInfo.data}
-          />
+          <PluginsList plugins={collection._embedded.plugins} openModal={setPluginModalContent} />
         </>
       );
     }
@@ -211,7 +200,6 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   return (
     <>
       {renderHeader(actions)}
-      {pluginCenterAuthInfo.data?.default ? <CloudoguPlatformBanner info={pluginCenterAuthInfo.data} /> : null}
       {renderPluginsList()}
       {renderModals()}
     </>

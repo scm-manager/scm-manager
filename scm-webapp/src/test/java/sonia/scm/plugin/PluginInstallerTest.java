@@ -37,7 +37,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,7 +45,6 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,9 +58,6 @@ class PluginInstallerTest {
 
   @Mock
   private SmpDescriptorExtractor extractor;
-
-  @Mock
-  private PluginCenterAuthenticator authenticator;
 
   @InjectMocks
   private PluginInstaller installer;
@@ -202,17 +197,6 @@ class PluginInstallerTest {
     PluginInformationMismatchException exception = assertThrows(PluginInformationMismatchException.class, () -> installer.install(context, gitPlugin));
     assertThat(exception.getApi().getVersion()).isEqualTo("1.0.0");
     assertThat(exception.getDownloaded().getVersion()).isEqualTo("1.1.0");
-  }
-
-  @Test
-  void shouldAppendBearerAuth() throws IOException {
-    when(authenticator.isAuthenticated()).thenReturn(true);
-    when(authenticator.fetchAccessToken()).thenReturn(Optional.of("atat"));
-    mockContent("42");
-
-    installer.install(PluginInstallationContext.empty(), createGitPlugin());
-
-    verify(request).bearerAuth("atat");
   }
 
   private AvailablePlugin createPlugin(String name, String url, String checksum) {

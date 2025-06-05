@@ -26,6 +26,7 @@ import classNames from "classnames";
 type Props = {
   realmDescription: string;
   loginInfoUrl: string;
+  pluginUrl: string;
   disableGroupingGrid: boolean;
   dateFormat: string;
   anonymousMode: AnonymousMode;
@@ -44,6 +45,7 @@ type Props = {
 const GeneralSettings: FC<Props> = ({
   realmDescription,
   loginInfoUrl,
+  pluginUrl,
   anonymousMode,
   alertsUrl,
   releaseFeedUrl,
@@ -61,6 +63,9 @@ const GeneralSettings: FC<Props> = ({
 
   const handleLoginInfoUrlChange = (value: string) => {
     onChange(true, value, "loginInfoUrl");
+  };
+  const handlePluginCenterUrlChange = (value: string) => {
+    onChange(true, value, "pluginUrl");
   };
   const handleRealmDescriptionChange = (value: string) => {
     onChange(true, value, "realmDescription");
@@ -129,6 +134,17 @@ const GeneralSettings: FC<Props> = ({
       </div>
       <div className="columns">
         <div className="column">
+          <InputField
+            label={t("general-settings.pluginUrl")}
+            onChange={handlePluginCenterUrlChange}
+            value={pluginUrl}
+            disabled={!hasUpdatePermission}
+            helpText={t("help.pluginUrlHelpText")}
+          />
+        </div>
+      </div>
+      <div className="columns">
+        <div className="column">
           <Checkbox
             label={t("general-settings.enabled-xsrf-protection")}
             onChange={handleEnabledXsrfProtectionChange}
@@ -148,9 +164,9 @@ const GeneralSettings: FC<Props> = ({
             disabled={!hasUpdatePermission}
             className="is-fullwidth"
             options={[
-              { label: t("general-settings.anonymousMode.full"), value: "FULL" },
-              { label: t("general-settings.anonymousMode.protocolOnly"), value: "PROTOCOL_ONLY" },
-              { label: t("general-settings.anonymousMode.off"), value: "OFF" },
+              {label: t("general-settings.anonymousMode.full"), value: "FULL"},
+              {label: t("general-settings.anonymousMode.protocolOnly"), value: "PROTOCOL_ONLY"},
+              {label: t("general-settings.anonymousMode.off"), value: "OFF"},
             ]}
             helpText={t("help.allowAnonymousAccessHelpText")}
             testId={"anonymous-mode-select"}
@@ -197,12 +213,12 @@ const GeneralSettings: FC<Props> = ({
             helpText={t("general-settings.emergencyContacts.helpText")}
             placeholder={t("general-settings.emergencyContacts.autocompletePlaceholder")}
             aria-label="general-settings.emergencyContacts.ariaLabel"
-            value={emergencyContacts.map((m) => ({ label: m, value: { id: m, displayName: m } }))}
+            value={emergencyContacts.map((m) => ({label: m, value: {id: m, displayName: m}}))}
             onChange={handleEmergencyContactsChange}
           >
             <Combobox<AutocompleteObject>
               options={userOptions || []}
-              className={classNames({ "is-loading": userOptionsLoading })}
+              className={classNames({"is-loading": userOptionsLoading})}
               onQueryChange={setQuery}
             />
           </ChipInputField>

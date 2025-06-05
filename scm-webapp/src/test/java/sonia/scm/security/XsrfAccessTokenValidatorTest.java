@@ -16,7 +16,6 @@
 
 package sonia.scm.security;
 
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -46,8 +45,6 @@ class XsrfAccessTokenValidatorTest {
   @Mock
   private AccessToken accessToken;
 
-  private final XsrfExcludes excludes = new XsrfExcludes();
-
   private XsrfAccessTokenValidator validator;
 
   /**
@@ -55,7 +52,7 @@ class XsrfAccessTokenValidatorTest {
    */
   @BeforeEach
   void prepareObjectUnderTest() {
-    validator = new XsrfAccessTokenValidator(() -> request, excludes);
+    validator = new XsrfAccessTokenValidator(() -> request);
   }
 
   @Nested
@@ -115,20 +112,6 @@ class XsrfAccessTokenValidatorTest {
       // execute and assert
       assertThat(validator.validate(accessToken)).isTrue();
     }
-
-    @Test
-    void shouldNotValidateExcludedRequest() {
-      excludes.add("/excluded");
-
-      // prepare
-      when(accessToken.getCustom(Xsrf.TOKEN_KEY)).thenReturn(Optional.of("abc"));
-      when(request.getRequestURI()).thenReturn("/excluded");
-
-      // execute and assert
-      assertThat(validator.validate(accessToken)).isTrue();
-    }
-
-
   }
 
   @ParameterizedTest

@@ -531,12 +531,12 @@ ul.is-separated {
 // card columns for repo and plugins overview
 .card-columns {
   .column {
-    height: 160px;
+    height: 120px;
     margin-bottom: 1.5rem;
 
     .overlay-column {
       position: absolute;
-      height: calc(160px - 1.5rem);
+      height: calc(120px - 1.5rem);
     }
   }
 

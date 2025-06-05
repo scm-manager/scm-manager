@@ -48,7 +48,6 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
   private String author;
   private String category;
   private String avatarUrl;
-  private PluginType type = PluginType.SCM;
 
   @Override
   public PluginInformation clone() {
@@ -60,7 +59,6 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
     clone.setAuthor(author);
     clone.setCategory(category);
     clone.setAvatarUrl(avatarUrl);
-    clone.setType(type);
     return clone;
   }
 
@@ -81,10 +79,5 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
   @Override
   public boolean isValid() {
     return Util.isNotEmpty(name) && Util.isNotEmpty(version);
-  }
-
-  public enum PluginType {
-    SCM,
-    CLOUDOGU
   }
 }

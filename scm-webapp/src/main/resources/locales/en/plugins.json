@@ -393,34 +393,6 @@
       "displayName": "Modification failed",
       "description": "The modification could not be applied. This can have many reasons, for example a file that could not be moved, invalid file names, etc."
     },
-    "5DSqG6Mcg1": {
-      "displayName": "Source missing",
-      "description": "The source parameter is missing."
-    },
-    "8tSqFDot11": {
-      "displayName": "Authentication disabled",
-      "description": "Plugin center authentication is disabled."
-    },
-    "8XSqFEBd41": {
-      "displayName": "Already authenticated",
-      "description": "The plugin center is already authenticated."
-    },
-    "FNSqFKQIR1": {
-      "displayName": "Challenge missing",
-      "description": "The callback for the plugin center authentication is missing the challenge parameter."
-    },
-    "8ESqFElpI1": {
-      "displayName": "Challenge mismatch",
-      "description": "The provided challenge does not match."
-    },
-    "AHSqALeEv1": {
-      "displayName": "Authentication failed",
-      "description": "Plugin center authentication failed."
-    },
-    "52SqQBdpO1": {
-      "displayName": "Params missing",
-      "description": "The parameter params is missing."
-    },
     "8OT4gBVvp1": {
       "displayName": "Repository type invalid",
       "description": "The repository type is not supported."

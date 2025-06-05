@@ -11,20 +11,6 @@
       "no-write-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Bearbeiten der Einstellungen!"
     }
   },
-  "pluginSettings": {
-    "subtitle": "Plugin Einstellungen",
-    "pluginUrl": "Plugin Center URL",
-    "pluginAuthUrl": "Plugin Center Authentifizierungs URL",
-    "auth": {
-      "loading": "Lade Authentifizierungs Informationen ...",
-      "notAuthenticated": "Das Plugin Center ist nicht authentifiziert",
-      "authenticate": "Authentifizieren",
-      "authenticated": "Das Plugin Center ist als <0 /> authentifiziert",
-      "subjectTooltip": "Authentifiziert als {{ principal }} {{ ago }}",
-      "logout": "Abmelden",
-      "notConfiguredHint": "Authentifizierungs URL ist nicht gesetzt"
-    }
-  },
   "jwtSettings": {
     "subtitle": "JWT Einstellungen",
     "label": "Ablaufzeit",
@@ -87,6 +73,7 @@
     "enabled-file-search": "Dateisuche aktivieren",
     "namespace-strategy": "Namespace Strategie",
     "login-info-url": "Login Info URL",
+    "pluginUrl": "Plugin Center URL",
     "emergencyContacts": {
       "label": "Notfallkontakte",
       "helpText": "Liste der Benutzer, die über administrative Vorfälle informiert werden.",
@@ -116,7 +103,6 @@
     "realmDescriptionHelpText": "Beschreibung des Authentication Realm.",
     "dateFormatHelpText": "Moments Datumsformat. Zulässige Formate sind in der MomentJS Dokumentation beschrieben.",
     "pluginUrlHelpText": "Die URL der Plugin Center API. Beschreibung der Platzhalter: version = SCM-Manager Version; os = Betriebssystem; arch = Architektur",
-    "pluginAuthUrlHelpText": "Die URL der Plugin Center Authentifizierungs API.",
     "alertsUrlHelpText": "Die URL der Alerts API. Darüber wird über Alerts die Ihr System betreffen informiert. Um diese Funktion zu deaktivieren lassen Sie dieses Feld leer.",
     "releaseFeedUrlHelpText": "Die URL des RSS Release Feed des SCM-Manager. Darüber wird über die neue SCM-Manager Version informiert. Um diese Funktion zu deaktivieren lassen Sie dieses Feld leer.",
     "mailDomainNameHelpText": "Dieser Domain Name wird genutzt, wenn für einen User eine E-Mail-Adresse benötigt wird, für den keine hinterlegt ist. Diese Domain wird nicht zum Versenden von E-Mails genutzt und auch keine anderweitige Verbindung aufgebaut.",

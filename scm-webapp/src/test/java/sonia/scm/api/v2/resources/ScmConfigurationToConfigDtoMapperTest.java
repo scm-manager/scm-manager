@@ -89,7 +89,6 @@ class ScmConfigurationToConfigDtoMapperTest {
     assertThat(dto.getProxyExcludes()).contains(expectedExcludes);
     assertThat(dto.isSkipFailedAuthenticators()).isTrue();
     assertThat(dto.getPluginUrl()).isEqualTo("https://plug.ins");
-    assertThat(dto.getPluginAuthUrl()).isEqualTo("https://plug.ins/oidc");
     assertThat(dto.getLoginAttemptLimitTimeout()).isEqualTo(2);
     assertThat(dto.isEnabledXsrfProtection()).isTrue();
     assertThat(dto.getNamespaceStrategy()).isEqualTo("username");
@@ -155,7 +154,6 @@ class ScmConfigurationToConfigDtoMapperTest {
     config.setProxyExcludes(Sets.newSet(expectedExcludes));
     config.setSkipFailedAuthenticators(true);
     config.setPluginUrl("https://plug.ins");
-    config.setPluginAuthUrl("https://plug.ins/oidc");
     config.setLoginAttemptLimitTimeout(2);
     config.setEnabledXsrfProtection(true);
     config.setNamespaceStrategy("username");
