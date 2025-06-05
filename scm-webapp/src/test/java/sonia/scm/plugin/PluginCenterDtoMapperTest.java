@@ -56,7 +56,6 @@ class PluginCenterDtoMapperTest {
       "trillian",
       "http://avatar.url",
       "555000444",
-      PluginInformation.PluginType.SCM,
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       ImmutableSet.of("scm-review-plugin"),
       ImmutableSet.of(),
@@ -111,7 +110,6 @@ class PluginCenterDtoMapperTest {
       "trillian",
       "https://avatar.url",
       "12345678aa",
-      PluginInformation.PluginType.SCM,
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       ImmutableSet.of("scm-review-plugin"),
       ImmutableSet.of(),
@@ -127,7 +125,6 @@ class PluginCenterDtoMapperTest {
       "dent",
       "http://avatar.url",
       "555000444",
-      PluginInformation.PluginType.CLOUDOGU,
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       ImmutableSet.of("scm-review-plugin"),
       ImmutableSet.of(),
@@ -146,8 +143,6 @@ class PluginCenterDtoMapperTest {
     assertThat(pluginInformation1.getVersion()).isEqualTo(plugin1.getVersion());
     assertThat(pluginInformation2.getAuthor()).isEqualTo(plugin2.getAuthor());
     assertThat(pluginInformation2.getVersion()).isEqualTo(plugin2.getVersion());
-    assertThat(pluginInformation1.getType()).isEqualTo(PluginInformation.PluginType.SCM);
-    assertThat(pluginInformation2.getType()).isEqualTo(PluginInformation.PluginType.CLOUDOGU);
     assertThat(resultSet.size()).isEqualTo(2);
   }
 

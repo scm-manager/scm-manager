@@ -68,7 +68,6 @@ const ConfigForm: FC<Props> = ({
     proxyExcludes: [],
     skipFailedAuthenticators: false,
     pluginUrl: "",
-    pluginAuthUrl: "",
     loginAttemptLimitTimeout: 0,
     enabledXsrfProtection: true,
     enabledUserConverter: false,
@@ -149,6 +148,7 @@ const ConfigForm: FC<Props> = ({
         dateFormat={innerConfig.dateFormat}
         anonymousMode={innerConfig.anonymousMode}
         skipFailedAuthenticators={innerConfig.skipFailedAuthenticators}
+        pluginUrl={innerConfig.pluginUrl}
         alertsUrl={innerConfig.alertsUrl}
         releaseFeedUrl={innerConfig.releaseFeedUrl}
         mailDomainName={innerConfig.mailDomainName}
@@ -178,13 +178,6 @@ const ConfigForm: FC<Props> = ({
         baseUrl={innerConfig.baseUrl}
         forceBaseUrl={innerConfig.forceBaseUrl}
         onChange={onChange}
-        hasUpdatePermission={configUpdatePermission}
-      />
-      <hr />
-      <PluginSettings
-        pluginUrl={innerConfig.pluginUrl}
-        pluginAuthUrl={innerConfig.pluginAuthUrl}
-        onChange={(isValid, changedValue, name) => onChange(isValid, changedValue, name)}
         hasUpdatePermission={configUpdatePermission}
       />
       <hr />

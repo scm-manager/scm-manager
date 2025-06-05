@@ -18,12 +18,11 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { Link, Plugin } from "@scm-manager/ui-types";
+import { Plugin } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, Checkbox, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
 import SuccessNotification from "./SuccessNotification";
-import { useInstallPlugin, usePluginCenterAuthInfo, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
+import { useInstallPlugin, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
 import { PluginAction } from "../containers/PluginsOverview";
-import CloudoguPlatformTag from "./CloudoguPlatformTag";
 
 type Props = {
   plugin: Plugin;
@@ -48,16 +47,11 @@ const ListChild = styled.div`
 const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   const [t] = useTranslation("admin");
   const [shouldRestart, setShouldRestart] = useState<boolean>(false);
-  const {
-    data: pluginCenterAuthInfo,
-    isLoading: isLoadingPluginCenterAuthInfo,
-    error: pluginCenterAuthInfoError
-  } = usePluginCenterAuthInfo();
   const { isLoading: isInstalling, error: installError, install, isInstalled } = useInstallPlugin();
   const { isLoading: isUninstalling, error: uninstallError, uninstall, isUninstalled } = useUninstallPlugin();
   const { isLoading: isUpdating, error: updateError, update, isUpdated } = useUpdatePlugins();
-  const error = installError || uninstallError || updateError || pluginCenterAuthInfoError;
-  const loading = isInstalling || isUninstalling || isUpdating || isLoadingPluginCenterAuthInfo;
+  const error = installError || uninstallError || updateError;
+  const loading = isInstalling || isUninstalling || isUpdating;
   const isDone = isInstalled || isUninstalled || isUpdated;
   const initialFocusRef = useRef<HTMLButtonElement>(null);
 
@@ -70,9 +64,6 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   const handlePluginAction = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.preventDefault();
     switch (pluginAction) {
-      case PluginAction.CLOUDOGU:
-        window.open((pluginCenterAuthInfo?._links?.login as Link).href, "_self");
-        break;
       case PluginAction.INSTALL:
         install(plugin, { restart: shouldRestart });
         break;
@@ -195,7 +186,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
           disabled={false}
         />
       );
-    } else if (pluginAction !== PluginAction.CLOUDOGU) {
+    } else {
       return <Notification type="warning">{t("plugins.modal.manualRestartRequired")}</Notification>;
     }
   };
@@ -213,18 +204,6 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
             <ListParent pluginAction={pluginAction}>{t("plugins.modal.author")}:</ListParent>
             <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.author}</ListChild>
           </div>
-          {pluginAction === PluginAction.CLOUDOGU && (
-            <>
-              <div className="field is-horizontal">
-                <CloudoguPlatformTag />
-              </div>
-              <div className="field is-horizontal">
-                <Notification type="info" className="is-full-width">
-                  {t("plugins.modal.cloudoguInstallInfo")}
-                </Notification>
-              </div>
-            </>
-          )}
           {pluginAction === PluginAction.INSTALL && (
             <div className="field is-horizontal">
               <ListParent pluginAction={pluginAction}>{t("plugins.modal.version")}:</ListParent>

@@ -55,7 +55,6 @@ export * from "./annotations";
 export * from "./search";
 export * from "./loginInfo";
 export * from "./useInvalidation";
-export * from "./usePluginCenterAuthInfo";
 export * from "./compare";
 export * from "./utils";
 export * from "./links";

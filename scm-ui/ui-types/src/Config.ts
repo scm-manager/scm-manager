@@ -35,7 +35,6 @@ export type Config = HalRepresentation & {
   proxyExcludes: string[];
   skipFailedAuthenticators: boolean;
   pluginUrl: string;
-  pluginAuthUrl: string;
   loginAttemptLimitTimeout: number;
   enabledXsrfProtection: boolean;
   enabledUserConverter: boolean;

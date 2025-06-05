@@ -29,7 +29,6 @@ import sonia.scm.net.ahc.AdvancedHttpResponse;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,9 +48,6 @@ class PluginCenterLoaderTest {
 
   @Mock
   private ScmEventBus eventBus;
-
-  @Mock
-  private PluginCenterAuthenticator authenticator;
 
   @InjectMocks
   private PluginCenterLoader loader;
@@ -78,8 +74,7 @@ class PluginCenterLoaderTest {
     when(client.get(PLUGIN_URL)).thenReturn(request);
     AdvancedHttpResponse response = mock(AdvancedHttpResponse.class);
     when(request.request()).thenReturn(response);
-    return response;
-  }
+    return response;  }
 
   @Test
   void shouldReturnEmptySetIfPluginCenterIsDeactivated() {
@@ -109,25 +104,4 @@ class PluginCenterLoaderTest {
 
     verify(eventBus).post(any(PluginCenterErrorEvent.class));
   }
-
-  @Test
-  void shouldAppendAccessToken() throws IOException {
-    when(authenticator.isAuthenticated()).thenReturn(true);
-    when(authenticator.fetchAccessToken()).thenReturn(Optional.of("mega-cool-at"));
-
-    mockResponse();
-    loader.load(PLUGIN_URL);
-
-    verify(request).bearerAuth("mega-cool-at");
-  }
-
-  private Set<AvailablePlugin> mockResponse() throws IOException {
-    PluginCenterDto dto = new PluginCenterDto();
-    Set<AvailablePlugin> plugins = Collections.emptySet();
-    Set<PluginSet> pluginSets = Collections.emptySet();
-    when(request().contentFromJson(PluginCenterDto.class)).thenReturn(dto);
-    when(mapper.map(dto)).thenReturn(new PluginCenterResult(plugins, pluginSets));
-    return plugins;
-  }
-
 }

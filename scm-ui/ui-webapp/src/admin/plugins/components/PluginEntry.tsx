@@ -16,19 +16,16 @@
 
 import React, { FC } from "react";
 import styled from "styled-components";
-import { Link, Plugin, PluginCenterAuthenticationInfo } from "@scm-manager/ui-types";
+import { Link, Plugin } from "@scm-manager/ui-types";
 import { CardColumn, Icon } from "@scm-manager/ui-components";
 import { PluginAction, PluginModalContent } from "../containers/PluginsOverview";
 import { useTranslation } from "react-i18next";
 import PluginAvatar from "./PluginAvatar";
-import classNames from "classnames";
-import CloudoguPlatformTag from "./CloudoguPlatformTag";
 import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   plugin: Plugin;
   openModal: (content: PluginModalContent) => void;
-  pluginCenterAuthInfo?: PluginCenterAuthenticationInfo;
 };
 
 const ActionbarWrapper = styled.div`
@@ -37,7 +34,7 @@ const ActionbarWrapper = styled.div`
   }
 `;
 
-const IconWrapperStyle = styled.span.attrs((props) => ({
+const IconWrapperStyle = styled.span.attrs(() => ({
   className: "level-item mb-0 p-2 is-clickable",
 }))`
   border: 1px solid #cdcdcd; // $dark-25
@@ -56,13 +53,11 @@ const IconWrapper: FC<{ action: () => void }> = ({ action, children }) => {
   );
 };
 
-const PluginEntry: FC<Props> = ({ plugin, openModal, pluginCenterAuthInfo }) => {
+const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
   const [t] = useTranslation("admin");
   const isInstallable = plugin._links.install && (plugin._links.install as Link).href;
   const isUpdatable = plugin._links.update && (plugin._links.update as Link).href;
   const isUninstallable = plugin._links.uninstall && (plugin._links.uninstall as Link).href;
-  const isCloudoguPlugin = plugin.type === "CLOUDOGU";
-  const isDefaultPluginCenterLoginAvailable = pluginCenterAuthInfo?.default && !!pluginCenterAuthInfo?._links?.login;
   const ref = useKeyboardIteratorTarget();
 
   const evaluateAction = () => {
@@ -70,29 +65,16 @@ const PluginEntry: FC<Props> = ({ plugin, openModal, pluginCenterAuthInfo }) => 
       return () => openModal({ plugin, action: PluginAction.INSTALL });
     }
 
-    if (isCloudoguPlugin && isDefaultPluginCenterLoginAvailable) {
-      return () => openModal({ plugin, action: PluginAction.CLOUDOGU });
-    }
-
     return undefined;
   };
 
   const pendingInfo = () => (
     <>
-      <Icon
-      className="fa-lg"
-      name="check"
-      color="info"
-      alt={t("plugins.markedAsPending")}
-    /></>
+      <Icon className="fa-lg" name="check" color="info" alt={t("plugins.markedAsPending")} />
+    </>
   );
   const actionBar = () => (
     <ActionbarWrapper className="is-flex">
-      {isCloudoguPlugin && isDefaultPluginCenterLoginAvailable && (
-        <IconWrapper action={() => openModal({ plugin, action: PluginAction.CLOUDOGU })}>
-          <Icon title={t("plugins.modal.cloudoguInstall")} name="link" color="success-dark" />
-        </IconWrapper>
-      )}
       {isInstallable && (
         <IconWrapper action={() => openModal({ plugin, action: PluginAction.INSTALL })}>
           <Icon title={t("plugins.modal.install")} name="download" color="info" />
@@ -121,17 +103,8 @@ const PluginEntry: FC<Props> = ({ plugin, openModal, pluginCenterAuthInfo }) => 
         description={plugin.description}
         contentRight={plugin.pending || plugin.markedForUninstall ? pendingInfo() : actionBar()}
         footerLeft={<small>{plugin.version}</small>}
-        footerRight={null}
+        footerRight={<small className="level-item is-block shorten-text">{plugin.author}</small>}
       />
-      <div
-        className={classNames("is-flex", {
-          "is-justify-content-space-between": isCloudoguPlugin,
-          "is-justify-content-end": !isCloudoguPlugin,
-        })}
-      >
-        {isCloudoguPlugin ? <CloudoguPlatformTag /> : null}
-        <small className="level-item is-block shorten-text is-align-self-flex-end">{plugin.author}</small>
-      </div>
     </>
   );
 };

@@ -36,7 +36,6 @@ import java.net.URI;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import static sonia.scm.plugin.PluginInformation.PluginType.*;
 import static sonia.scm.plugin.PluginTestHelper.createAvailable;
 import static sonia.scm.plugin.PluginTestHelper.createInstalled;
 
@@ -78,14 +77,9 @@ class PluginDtoMapperTest {
     assertThat(dto.getAuthor()).isEqualTo("Sebastian Sdorra");
     assertThat(dto.getCategory()).isEqualTo("Authentication");
     assertThat(dto.getAvatarUrl()).isEqualTo("https://avatar.scm-manager.org/plugins/cas.png");
-    assertThat(dto.getType()).isEqualTo(SCM);
   }
 
   private PluginInformation createPluginInformation() {
-    return createPluginInformation(SCM);
-  }
-
-  private PluginInformation createPluginInformation(PluginInformation.PluginType type) {
     PluginInformation information = new PluginInformation();
     information.setName("scm-cas-plugin");
     information.setVersion("1.0.0");
@@ -93,7 +87,6 @@ class PluginDtoMapperTest {
     information.setAuthor("Sebastian Sdorra");
     information.setCategory("Authentication");
     information.setAvatarUrl("https://avatar.scm-manager.org/plugins/cas.png");
-    information.setType(type);
     return information;
   }
 
@@ -135,18 +128,6 @@ class PluginDtoMapperTest {
   }
 
   @Test
-  void shouldAppendCloudoguInstallLink() {
-    when(subject.isPermitted("plugin:write")).thenReturn(true);
-    AvailablePlugin plugin = createAvailable(createPluginInformation(CLOUDOGU));
-
-    PluginDto dto = mapper.mapAvailable(plugin);
-
-    assertThat(dto.getType()).isEqualTo(CLOUDOGU);
-    assertThat(dto.getLinks().getLinkBy("cloudoguInstall").get().getHref())
-      .isEqualTo("mycloudogu.com/install/my_plugin");
-  }
-
-  @Test
   void shouldAppendInstallWithRestartLink() {
     when(restarter.isSupported()).thenReturn(true);
     when(subject.isPermitted("plugin:write")).thenReturn(true);
@@ -155,16 +136,6 @@ class PluginDtoMapperTest {
     PluginDto dto = mapper.mapAvailable(plugin);
     assertThat(dto.getLinks().getLinkBy("installWithRestart").get().getHref())
       .isEqualTo("https://hitchhiker.com/v2/plugins/available/scm-cas-plugin/install?restart=true");
-  }
-
-  @Test
-  void shouldNotAppendInstallLinkWithEmptyDownloadUrl() {
-    when(subject.isPermitted("plugin:write")).thenReturn(true);
-    AvailablePlugin plugin = createAvailable(createPluginInformation(), "");
-
-    PluginDto dto = mapper.mapAvailable(plugin);
-    assertThat(dto.getLinks().hasLink("install")).isFalse();
-    assertThat(dto.getLinks().hasLink("installWithRestart")).isFalse();
   }
 
   @Test

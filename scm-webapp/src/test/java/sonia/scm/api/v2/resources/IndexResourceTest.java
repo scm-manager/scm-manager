@@ -72,22 +72,6 @@ public class IndexResourceTest {
   }
 
   @Test
-  @SubjectAware(username = "dent", password = "secret")
-  public void shouldRenderPluginCenterAuthLink() {
-    IndexDto index = indexResource.getIndex(httpServletRequest);
-
-    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterAuth")).isPresent();
-  }
-
-  @Test
-  @SubjectAware(username = "trillian", password = "secret")
-  public void shouldNotRenderPluginCenterLoginLinkIfPermissionsAreMissing() {
-    IndexDto index = indexResource.getIndex(httpServletRequest);
-
-    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterAuth")).isNotPresent();
-  }
-
-  @Test
   public void shouldRenderLoginUrlsForUnauthenticatedRequest() {
     IndexDto index = indexResource.getIndex(httpServletRequest);
 

@@ -50,8 +50,7 @@
       "title": {
         "install": "{{name}} Plugin installieren",
         "update": "{{name}} Plugin aktualisieren",
-        "uninstall": "{{name}} Plugin deinstallieren",
-        "cloudoguInstall": "{{name}} Plugin installieren"
+        "uninstall": "{{name}} Plugin deinstallieren"
       },
       "restart": "Neustarten, um Plugin-Änderungen wirksam zu machen",
       "install": "Installieren",
@@ -71,8 +70,6 @@
       "version": "Version",
       "currentVersion": "Installierte Version",
       "newVersion": "Neue Version",
-      "cloudoguInstallInfo": "Verbinden Sie Ihre SCM-Manager-Instanz mit ihrem cloudogu platform-Account um Zugriff auf cloudogu platform-Plugins zu erhalten. Falls Sie noch über keinen Account verfügen, können Sie sich einfach kostenlos registrieren.",
-      "cloudoguInstall": "Mit cloudogu platform verbinden und installieren",
       "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installiert bzw. aktualisiert, wenn sie noch nicht in der aktuellen Version vorhanden sind!",
       "optionalDependencyNotification": "Mit diesem Plugin werden folgende optionale Abhängigkeiten mit aktualisiert, falls sie installiert sind!",
       "dependencies": "Abhängigkeiten",
@@ -87,26 +84,6 @@
       "updateAllInfo": "Die folgenden Plugins werden aktualisiert. Die Änderungen werden nach dem nächsten Neustart wirksam.",
       "manualRestartRequired": "Nachdem die Plugin-Änderung durchgeführt wurde, muss SCM-Manager neu gestartet werden.",
       "showPending": "Um die folgenden Plugin-Änderungen auszuführen, muss SCM-Manager neu gestartet werden."
-    },
-    "cloudoguPlatform": {
-      "connectionInfo": "Instanz ist mit der cloudogu platform verbunden.\nAccount: {{pluginCenterSubject}}",
-      "error": {
-        "info": "cloudogu platform Authentifizierungsinformationen konnten nicht abgerufen werden. Klicken Sie, um Details zu sehen.",
-        "title": "Fehler"
-      },
-      "failed": {
-        "info": "Verbindung zur cloudogu platform mit Account {{pluginCenterSubject}} is fehlgeschlagen",
-        "message": "Die Verbindung der SCM-Manager Instanz mit der <0>cloudogu platform</0> is fehlgeschlagen. Der Benutzer <1>{{subject}}</1> konnte nicht authentifiziert werden.",
-        "button": {
-          "label": "Erneut mit der <0>cloudogu platform</0> verbinden"
-        }
-      },
-      "login": {
-        "button": {
-          "label": "Mit der <0>cloudogu platform</0> verbinden"
-        },
-        "description": "Verbinden Sie Ihren SCM-Manager mit der <0>cloudogu platform</0>, um besondere Plugins zu installieren. Die cloudogu platform ist die Heimat der SCM-Manager Community, getragen von Maintainern des SCM-Managers. Sie haben noch kein Konto? Erstellen Sie während der Verbindung der SCM-Manager-Instanz kostenfrei ein cloudogu platform-Konto. <1>Mehr Details zur Datenverarbeitung.</1>"
-      }
     }
   },
   "repositoryRole": {

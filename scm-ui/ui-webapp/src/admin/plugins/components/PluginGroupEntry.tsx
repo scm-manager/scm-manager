@@ -16,26 +16,18 @@
 
 import React, { FC } from "react";
 import { CardColumnGroup } from "@scm-manager/ui-components";
-import { PluginCenterAuthenticationInfo, PluginGroup } from "@scm-manager/ui-types";
+import { PluginGroup } from "@scm-manager/ui-types";
 import PluginEntry from "./PluginEntry";
 import { PluginModalContent } from "../containers/PluginsOverview";
 
 type Props = {
   group: PluginGroup;
   openModal: (content: PluginModalContent) => void;
-  pluginCenterAuthInfo?: PluginCenterAuthenticationInfo;
 };
 
-const PluginGroupEntry: FC<Props> = ({ openModal, group, pluginCenterAuthInfo }) => {
-  const entries = group.plugins.map(plugin => {
-    return (
-      <PluginEntry
-        plugin={plugin}
-        openModal={openModal}
-        key={plugin.name}
-        pluginCenterAuthInfo={pluginCenterAuthInfo}
-      />
-    );
+const PluginGroupEntry: FC<Props> = ({ openModal, group }) => {
+  const entries = group.plugins.map((plugin) => {
+    return <PluginEntry plugin={plugin} openModal={openModal} key={plugin.name} />;
   });
   return <CardColumnGroup name={group.name} elements={entries} />;
 };

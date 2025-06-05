@@ -52,13 +52,6 @@ class BaseHttpRequestTest {
   }
 
   @Test
-  void shouldAddAuthorizationHeaderWithBearerScheme() {
-    request.bearerAuth("awesome-access-token");
-    Multimap<String,String> headers = request.getHeaders();
-    assertThat(headers.get("Authorization").iterator().next()).isEqualTo("Bearer awesome-access-token");
-  }
-  
-  @Test
   void shouldAppendQueryString(){
     request.queryString("a", "b");
     assertThat(request.getUrl()).isEqualTo("https://www.scm-manager.org?a=b");
