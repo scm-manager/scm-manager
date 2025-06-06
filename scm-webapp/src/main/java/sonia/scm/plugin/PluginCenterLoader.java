@@ -32,21 +32,24 @@ class PluginCenterLoader {
   private static final Logger LOG = LoggerFactory.getLogger(PluginCenterLoader.class);
 
   private final AdvancedHttpClient client;
+  private final PluginCenterAuthenticator authenticator;
   private final PluginCenterDtoMapper mapper;
   private final ScmEventBus eventBus;
 
   @Inject
-  public PluginCenterLoader(AdvancedHttpClient client, ScmEventBus eventBus) {
-    this(client, PluginCenterDtoMapper.INSTANCE, eventBus);
+  public PluginCenterLoader(AdvancedHttpClient client, ScmEventBus eventBus, PluginCenterAuthenticator authenticator) {
+    this(client, authenticator, PluginCenterDtoMapper.INSTANCE, eventBus);
   }
 
   @VisibleForTesting
   PluginCenterLoader(
     AdvancedHttpClient client,
+    PluginCenterAuthenticator authenticator,
     PluginCenterDtoMapper mapper,
     ScmEventBus eventBus
   ) {
     this.client = client;
+    this.authenticator = authenticator;
     this.mapper = mapper;
     this.eventBus = eventBus;
   }
@@ -58,8 +61,11 @@ class PluginCenterLoader {
         return new PluginCenterResult(PluginCenterStatus.DEACTIVATED);
       }
       LOG.info("fetch plugins from {}", url);
-      PluginCenterDto pluginCenterDto = client.get(url).spanKind(SPAN_KIND).request()
-        .contentFromJson(PluginCenterDto.class);
+      AdvancedHttpRequest request = client.get(url).spanKind(SPAN_KIND);
+      if (authenticator.isAuthenticated()) {
+        authenticator.fetchAccessToken().ifPresent(request::bearerAuth);
+      }
+      PluginCenterDto pluginCenterDto = request.request().contentFromJson(PluginCenterDto.class);
       return mapper.map(pluginCenterDto);
     } catch (Exception ex) {
       LOG.error("failed to load plugins from plugin center, returning empty list", ex);

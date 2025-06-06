@@ -41,10 +41,12 @@ public class XsrfAccessTokenValidator implements AccessTokenValidator {
   );
 
   private final Provider<HttpServletRequest> requestProvider;
-
+  private final XsrfExcludes excludes;
+  
   @Inject
-  public XsrfAccessTokenValidator(Provider<HttpServletRequest> requestProvider) {
+  public XsrfAccessTokenValidator(Provider<HttpServletRequest> requestProvider, XsrfExcludes excludes) {
     this.requestProvider = requestProvider;
+    this.excludes = excludes;
   }
   
   @Override
@@ -52,6 +54,10 @@ public class XsrfAccessTokenValidator implements AccessTokenValidator {
     Optional<String> xsrfClaim = accessToken.getCustom(Xsrf.TOKEN_KEY);
     if (xsrfClaim.isPresent()) {
       HttpServletRequest request = requestProvider.get();
+
+      if (excludes.contains(request.getRequestURI())) {
+        return true;
+      }
 
       String xsrfHeaderValue = request.getHeader(Xsrf.HEADER_KEY);
       return ALLOWED_METHOD.contains(request.getMethod().toUpperCase(Locale.ENGLISH))

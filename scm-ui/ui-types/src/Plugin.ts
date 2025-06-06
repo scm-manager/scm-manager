@@ -16,6 +16,8 @@
 
 import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
 
+type PluginType = "SCM" | "CLOUDOGU";
+
 export type PluginSet = HalRepresentation & {
   id: string;
   name: string;
@@ -35,6 +37,7 @@ export type Plugin = HalRepresentation & {
   category: string;
   avatarUrl?: string;
   pending: boolean;
+  type: PluginType;
   markedForUninstall?: boolean;
   dependencies: string[];
   optionalDependencies: string[];
@@ -59,3 +62,11 @@ export type PendingPlugins = HalRepresentationWithEmbedded<{
   update: Plugin[];
   uninstall: Plugin[];
 }>;
+
+export type PluginCenterAuthenticationInfo = HalRepresentation & {
+  principal?: string;
+  pluginCenterSubject?: string;
+  date?: string;
+  default: boolean;
+  failed: boolean;
+};

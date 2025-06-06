@@ -18,6 +18,8 @@ package sonia.scm.plugin;
 
 import org.mockito.Answers;
 
+import java.util.Optional;
+
 import static org.mockito.Mockito.*;
 
 public class PluginTestHelper {
@@ -50,8 +52,14 @@ public class PluginTestHelper {
   }
 
   public static AvailablePlugin createAvailable(PluginInformation information) {
+    return createAvailable(information, "https://scm-manager.org/download");
+  }
+
+  public static AvailablePlugin createAvailable(PluginInformation information, String url) {
     AvailablePluginDescriptor descriptor = mock(AvailablePluginDescriptor.class);
     lenient().when(descriptor.getInformation()).thenReturn(information);
+    lenient().when(descriptor.getInstallLink()).thenReturn(Optional.of("mycloudogu.com/install/my_plugin"));
+    lenient().when(descriptor.getUrl()).thenReturn(url);
     return new AvailablePlugin(descriptor);
   }
 

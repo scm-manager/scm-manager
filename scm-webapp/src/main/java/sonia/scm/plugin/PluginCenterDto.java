@@ -79,6 +79,7 @@ public final class PluginCenterDto implements Serializable {
     private final String author;
     private final String avatarUrl;
     private final String sha256sum;
+    private PluginInformation.PluginType type;
 
     @XmlElement(name = "conditions")
     private final Condition conditions;

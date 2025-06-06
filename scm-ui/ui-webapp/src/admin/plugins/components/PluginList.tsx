@@ -15,7 +15,7 @@
  */
 
 import React, { FC } from "react";
-import { Plugin } from "@scm-manager/ui-types";
+import { Plugin, PluginCenterAuthenticationInfo } from "@scm-manager/ui-types";
 import PluginGroupEntry from "../components/PluginGroupEntry";
 import groupByCategory from "./groupByCategory";
 import { PluginModalContent } from "../containers/PluginsOverview";
@@ -24,15 +24,23 @@ import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 type Props = {
   plugins: Plugin[];
   openModal: (content: PluginModalContent) => void;
+  pluginCenterAuthInfo?: PluginCenterAuthenticationInfo;
 };
 
-const PluginList: FC<Props> = ({ plugins, openModal }) => {
+const PluginList: FC<Props> = ({ plugins, openModal, pluginCenterAuthInfo }) => {
   const groups = groupByCategory(plugins);
   return (
     <div className="content is-plugin-page">
       <KeyboardIterator>
         {groups.map((group) => {
-          return <PluginGroupEntry group={group} openModal={openModal} key={group.name} />;
+          return (
+            <PluginGroupEntry
+              group={group}
+              openModal={openModal}
+              key={group.name}
+              pluginCenterAuthInfo={pluginCenterAuthInfo}
+            />
+          );
         })}
       </KeyboardIterator>
     </div>

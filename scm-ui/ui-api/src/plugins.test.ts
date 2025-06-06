@@ -40,6 +40,7 @@ describe("Test plugin hooks", () => {
     pending: false,
     dependencies: [],
     optionalDependencies: [],
+    type: "SCM",
     _links: {
       install: { href: "/plugins/available/heart-of-gold-plugin/install" },
       installWithRestart: {
@@ -58,6 +59,7 @@ describe("Test plugin hooks", () => {
     markedForUninstall: false,
     dependencies: [],
     optionalDependencies: [],
+    type: "SCM",
     _links: {
       self: {
         href: "/plugins/installed/heart-of-gold-plugin",
@@ -85,6 +87,7 @@ describe("Test plugin hooks", () => {
     name: "heart-of-gold-core-plugin",
     pending: false,
     markedForUninstall: false,
+    type: "SCM",
     dependencies: [],
     optionalDependencies: [],
     _links: {

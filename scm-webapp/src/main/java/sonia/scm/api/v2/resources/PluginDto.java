@@ -22,6 +22,7 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sonia.scm.plugin.PluginInformation;
 
 import java.util.Set;
 
@@ -40,6 +41,7 @@ public class PluginDto extends HalRepresentation {
   private String author;
   private String category;
   private String avatarUrl;
+  private PluginInformation.PluginType type = PluginInformation.PluginType.SCM;
   private boolean pending;
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Boolean core;

@@ -53,6 +53,12 @@ public class PluginCenter {
   }
 
   @Subscribe
+  public void handle(PluginCenterAuthenticationEvent event) {
+    LOG.debug("clear plugin center cache, because of {}", event);
+    pluginCenterResultCache.clear();
+  }
+
+  @Subscribe
   public void handle(ScmConfigurationChangedEvent event) {
     LOG.debug("clear plugin center cache, because of {}", event);
     pluginCenterResultCache.clear();

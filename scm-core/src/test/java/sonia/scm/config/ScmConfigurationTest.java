@@ -16,6 +16,7 @@
 
 package sonia.scm.config;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -24,6 +25,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ScmConfigurationTest {
 
   private final ScmConfiguration scmConfiguration = new ScmConfiguration();
+
+  @Test
+  void shouldReturnTrueForInitialPluginAuthUrl() {
+    assertThat(scmConfiguration.isDefaultPluginAuthUrl()).isTrue();
+  }
+
+  @Test
+  void shouldReturnFalseIfPluginAuthUrlHasChanged() {
+    scmConfiguration.setPluginAuthUrl("https://plug.ins/oidc");
+    assertThat(scmConfiguration.isDefaultPluginAuthUrl()).isFalse();
+  }
 
   @ParameterizedTest
   @CsvSource({"https://hog.hitchiker.com/scm,scm", "https://hog.hitchiker.com/scm/,scm", "https://hog.hitchiker.com/,", "https://hog.hitchiker.com,"})

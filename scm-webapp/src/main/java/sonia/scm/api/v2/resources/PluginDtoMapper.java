@@ -16,6 +16,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.base.Strings;
 import de.otto.edison.hal.Links;
 import jakarta.inject.Inject;
 import org.mapstruct.Mapper;
@@ -62,6 +63,9 @@ public abstract class PluginDtoMapper {
     PluginDto dto = createDtoForAvailable(plugin);
     map(dto, plugin);
     dto.setPending(plugin.isPending());
+    if (dto.getType() == null) {
+      dto.setType(PluginInformation.PluginType.SCM);
+    }
     return dto;
   }
 
@@ -82,8 +86,16 @@ public abstract class PluginDtoMapper {
         .self(information.getName()));
 
     if (!plugin.isPending() && PluginPermissions.write().isPermitted()) {
-      String href = resourceLinks.availablePlugin().install(information.getName());
-      appendLink(links, "install", href);
+      boolean isCloudoguPlugin = plugin.getDescriptor().getInformation().getType() == PluginInformation.PluginType.CLOUDOGU;
+      if (isCloudoguPlugin) {
+        Optional<String> cloudoguInstallLink = plugin.getDescriptor().getInstallLink();
+        cloudoguInstallLink.ifPresent(link -> links.single(link("cloudoguInstall", link)));
+      }
+
+      if (!Strings.isNullOrEmpty(plugin.getDescriptor().getUrl())) {
+        String href = resourceLinks.availablePlugin().install(information.getName());
+        appendLink(links, "install", href);
+      }
     }
 
     return new PluginDto(links.build());

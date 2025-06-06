@@ -59,6 +59,13 @@ public class ScmConfiguration implements Configuration {
     "https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}&jre={jre}";
 
   /**
+   * Default url for plugin center authentication.
+   *
+   * @since 2.28.0
+   */
+  public static final String DEFAULT_PLUGIN_AUTH_URL = "https://plugin-center-api.scm-manager.org/api/v1/auth/oidc";
+
+  /**
    * SCM Manager alerts url.
    *
    * @since 2.30.0
@@ -142,6 +149,9 @@ public class ScmConfiguration implements Configuration {
 
   @XmlElement(name = "plugin-url")
   private String pluginUrl = DEFAULT_PLUGIN_URL;
+
+  @XmlElement(name = "plugin-auth-url")
+  private String pluginAuthUrl = DEFAULT_PLUGIN_AUTH_URL;
 
   /**
    * Url of the alerts api.
@@ -261,6 +271,7 @@ public class ScmConfiguration implements Configuration {
     this.realmDescription = other.realmDescription;
     this.dateFormat = other.dateFormat;
     this.pluginUrl = other.pluginUrl;
+    this.pluginAuthUrl = other.pluginAuthUrl;
     this.anonymousMode = other.anonymousMode;
     this.enableProxy = other.enableProxy;
     this.proxyPort = other.proxyPort;
@@ -354,6 +365,26 @@ public class ScmConfiguration implements Configuration {
    */
   public String getPluginUrl() {
     return pluginUrl;
+  }
+
+  /**
+   * Returns the url which is used for plugin center authentication.
+   *
+   * @return authentication url
+   * @since 2.28.0
+   */
+  public String getPluginAuthUrl() {
+    return pluginAuthUrl;
+  }
+
+  /**
+   * Returns {@code true} if the default plugin auth url is used.
+   *
+   * @return {@code true} if the default plugin auth url is used
+   * @since 2.28.0
+   */
+  public boolean isDefaultPluginAuthUrl() {
+    return DEFAULT_PLUGIN_AUTH_URL.equals(pluginAuthUrl);
   }
 
   /**
@@ -616,6 +647,16 @@ public class ScmConfiguration implements Configuration {
 
   public void setPluginUrl(String pluginUrl) {
     this.pluginUrl = pluginUrl;
+  }
+
+  /**
+   * Set the url for plugin center authentication.
+   *
+   * @param pluginAuthUrl authentication url
+   * @since 2.28.0
+   */
+  public void setPluginAuthUrl(String pluginAuthUrl) {
+    this.pluginAuthUrl = pluginAuthUrl;
   }
 
   /**

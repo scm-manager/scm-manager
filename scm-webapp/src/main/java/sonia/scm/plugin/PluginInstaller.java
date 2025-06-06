@@ -22,6 +22,7 @@ import com.google.common.hash.HashingInputStream;
 import jakarta.inject.Inject;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.net.ahc.AdvancedHttpClient;
+import sonia.scm.net.ahc.AdvancedHttpRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,12 +38,14 @@ class PluginInstaller {
 
   private final SCMContextProvider scmContext;
   private final AdvancedHttpClient client;
+  private final PluginCenterAuthenticator authenticator;
   private final SmpDescriptorExtractor smpDescriptorExtractor;
 
   @Inject
-  public PluginInstaller(SCMContextProvider scmContext, AdvancedHttpClient client, SmpDescriptorExtractor smpDescriptorExtractor) {
+  public PluginInstaller(SCMContextProvider scmContext, AdvancedHttpClient client, PluginCenterAuthenticator authenticator, SmpDescriptorExtractor smpDescriptorExtractor) {
     this.scmContext = scmContext;
     this.client = client;
+    this.authenticator = authenticator;
     this.smpDescriptorExtractor = smpDescriptorExtractor;
   }
 
@@ -119,10 +122,11 @@ class PluginInstaller {
   }
 
   private InputStream download(AvailablePlugin plugin) throws IOException {
-    return client.get(plugin.getDescriptor().getUrl())
-      .spanKind(SPAN_KIND)
-      .request()
-      .contentAsStream();
+    AdvancedHttpRequest request = client.get(plugin.getDescriptor().getUrl()).spanKind(SPAN_KIND);
+    if (authenticator.isAuthenticated()) {
+      authenticator.fetchAccessToken().ifPresent(request::bearerAuth);
+    }
+    return request.request().contentAsStream();
   }
 
   private Path createFile(AvailablePlugin plugin) throws IOException {

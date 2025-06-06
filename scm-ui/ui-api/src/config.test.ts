@@ -43,6 +43,7 @@ describe("Test config hooks", () => {
     namespaceStrategy: "",
     emergencyContacts: [],
     pluginUrl: "",
+    pluginAuthUrl: "",
     proxyExcludes: [],
     proxyPassword: null,
     proxyPort: 0,

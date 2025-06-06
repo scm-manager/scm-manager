@@ -93,6 +93,22 @@ class PluginCenterTest {
 
   @Test
   @SuppressWarnings("unchecked")
+  void shouldClearCacheOnPluginCenterLogin() {
+    Set<AvailablePlugin> plugins = new HashSet<>();
+    Set<PluginSet> pluginSets = new HashSet<>();
+
+    PluginCenterResult first = new PluginCenterResult(plugins, pluginSets);
+    when(loader.load(anyString())).thenReturn(first, new PluginCenterResult());
+
+    assertThat(pluginCenter.getAvailablePlugins()).isSameAs(plugins);
+    assertThat(pluginCenter.getAvailablePluginSets()).isSameAs(pluginSets);
+    pluginCenter.handle(new PluginCenterLoginEvent(null));
+    assertThat(pluginCenter.getAvailablePlugins()).isNotSameAs(plugins);
+    assertThat(pluginCenter.getAvailablePluginSets()).isNotSameAs(pluginSets);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
   void shouldClearCacheOnConfigChange() {
     Set<AvailablePlugin> plugins = new HashSet<>();
     Set<PluginSet> pluginSets = new HashSet<>();
