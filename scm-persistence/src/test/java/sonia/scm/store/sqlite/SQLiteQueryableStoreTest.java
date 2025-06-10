@@ -40,6 +40,15 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static sonia.scm.store.sqlite.Spaceship.SPACESHIP_CREW;
+import static sonia.scm.store.sqlite.Spaceship.SPACESHIP_CREW_SIZE;
+import static sonia.scm.store.sqlite.Spaceship.SPACESHIP_DESTINATIONS;
+import static sonia.scm.store.sqlite.Spaceship.SPACESHIP_DESTINATIONS_SIZE;
+import static sonia.scm.store.sqlite.Spaceship.SPACESHIP_FLIGHT_COUNT;
+import static sonia.scm.store.sqlite.Spaceship.SPACESHIP_ID;
+import static sonia.scm.store.sqlite.Spaceship.SPACESHIP_INSERVICE;
+import static sonia.scm.store.sqlite.Spaceship.SPACESHIP_NAME;
+import static sonia.scm.store.sqlite.Spaceship.SPACESHIP_RANGE;
 
 @SuppressWarnings({"resource", "unchecked"})
 class SQLiteQueryableStoreTest {
@@ -1036,23 +1045,4 @@ class SQLiteQueryableStoreTest {
   enum Range {
     SOLAR_SYSTEM, INNER_GALACTIC, INTER_GALACTIC
   }
-
-  private static final QueryableStore.StringQueryField<Spaceship> SPACESHIP_ID =
-    new QueryableStore.IdQueryField<>();
-  private static final QueryableStore.StringQueryField<Spaceship> SPACESHIP_NAME =
-    new QueryableStore.StringQueryField<>("name");
-  private static final QueryableStore.EnumQueryField<Spaceship, Range> SPACESHIP_RANGE =
-    new QueryableStore.EnumQueryField<>("range");
-  private static final QueryableStore.CollectionQueryField<Spaceship> SPACESHIP_CREW =
-    new QueryableStore.CollectionQueryField<>("crew");
-  private static final QueryableStore.CollectionSizeQueryField<Spaceship> SPACESHIP_CREW_SIZE =
-    new QueryableStore.CollectionSizeQueryField<>("crew");
-  private static final QueryableStore.MapQueryField<Spaceship> SPACESHIP_DESTINATIONS =
-    new QueryableStore.MapQueryField<>("destinations");
-  private static final QueryableStore.MapSizeQueryField<Spaceship> SPACESHIP_DESTINATIONS_SIZE =
-    new QueryableStore.MapSizeQueryField<>("destinations");
-  private static final QueryableStore.InstantQueryField<Spaceship> SPACESHIP_INSERVICE =
-    new QueryableStore.InstantQueryField<>("inServiceSince");
-  private static final QueryableStore.IntegerQueryField<Spaceship> SPACESHIP_FLIGHT_COUNT =
-    new QueryableStore.IntegerQueryField<>("flightCount");
 }

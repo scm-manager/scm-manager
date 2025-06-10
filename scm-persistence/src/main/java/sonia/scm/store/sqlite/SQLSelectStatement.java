@@ -33,6 +33,9 @@ class SQLSelectStatement extends ConditionalSQLStatement {
 
   SQLSelectStatement(List<SQLField> columns, SQLTable fromTable, List<SQLNodeWithValue> whereCondition, String orderBy, long limit, long offset) {
     super(whereCondition);
+    if (limit < 0 || offset < 0) {
+      throw new IllegalArgumentException("limit and offset must be non-negative");
+    }
     this.columns = columns;
     this.fromTable = fromTable;
     this.orderBy = orderBy;

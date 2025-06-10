@@ -91,6 +91,22 @@ extends `QueryableStore` and `DataStore` to allow both queries and changes to st
 pure Queryable Store, it is mandatory to specify all parents to create a mutable store. This is needed so that new
 entities can be assigned to the correct parent(s).
 
+Deleting objects in mutual stores can be done by either selecting all elements to be deleted with a query and 
+execute the `deleteAll()` function of the API or using a `retain(long keptElements)`. The latter is the recommended way 
+to implement FIFO *(first in, first out)* lists, which is especially intended for managing log entries.
+Take this example: You are maintaining a display of when your spaceships received their maintenance.
+
+```java
+spaceshipStore
+  .query(Spaceship.SPACESHIP_INSERVICE
+    .after(Instant.now().minus(5, ChronoUnit.DAYS)))
+  .orderBy(Order.DESC)
+  .retain(10);
+```
+
+With this code snippet, you will delete all alements older than five days and only keep 10 newest ones 
+matching this criterion. 
+
 ### Queryable Maintenance Store
 
 The `QueryableMaintenanceStore` is responsible for maintenance tasks,

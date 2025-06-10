@@ -20,6 +20,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.EqualsAndHashCode;
+import sonia.scm.store.QueryableStore;
 import sonia.scm.store.QueryableType;
 
 import java.time.Instant;
@@ -32,6 +33,26 @@ import java.util.Map;
 @QueryableType
 @EqualsAndHashCode
 class Spaceship {
+
+  static final QueryableStore.StringQueryField<Spaceship> SPACESHIP_ID =
+    new QueryableStore.IdQueryField<>();
+  static final QueryableStore.StringQueryField<Spaceship> SPACESHIP_NAME =
+    new QueryableStore.StringQueryField<>("name");
+  static final QueryableStore.EnumQueryField<Spaceship, SQLiteQueryableStoreTest.Range> SPACESHIP_RANGE =
+    new QueryableStore.EnumQueryField<>("range");
+  static final QueryableStore.CollectionQueryField<Spaceship> SPACESHIP_CREW =
+    new QueryableStore.CollectionQueryField<>("crew");
+  static final QueryableStore.CollectionSizeQueryField<Spaceship> SPACESHIP_CREW_SIZE =
+    new QueryableStore.CollectionSizeQueryField<>("crew");
+  static final QueryableStore.MapQueryField<Spaceship> SPACESHIP_DESTINATIONS =
+    new QueryableStore.MapQueryField<>("destinations");
+  static final QueryableStore.MapSizeQueryField<Spaceship> SPACESHIP_DESTINATIONS_SIZE =
+    new QueryableStore.MapSizeQueryField<>("destinations");
+  static final QueryableStore.InstantQueryField<Spaceship> SPACESHIP_INSERVICE =
+    new QueryableStore.InstantQueryField<>("inServiceSince");
+  static final QueryableStore.IntegerQueryField<Spaceship> SPACESHIP_FLIGHT_COUNT =
+    new QueryableStore.IntegerQueryField<>("flightCount");
+
   String name;
   SQLiteQueryableStoreTest.Range range;
   Collection<String> crew;

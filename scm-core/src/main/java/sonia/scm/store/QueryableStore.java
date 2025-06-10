@@ -50,7 +50,7 @@ public interface QueryableStore<T> extends AutoCloseable {
    * @param conditions The conditions to filter the objects.
    * @return The query object to retrieve the result.
    */
-  Query<T, T> query(Condition<T>... conditions);
+  Query<T, T, ?> query(Condition<T>... conditions);
 
   /**
    * Used to specify the order of the result of a query.
@@ -74,7 +74,7 @@ public interface QueryableStore<T> extends AutoCloseable {
    * @param <T_RESULT> The type of the result objects (if a projection had been made, for example using
    *                   {@link #withIds()}).
    */
-  interface Query<T, T_RESULT> {
+  interface Query<T, T_RESULT, SELF extends Query<T, T_RESULT, SELF>> {
 
     /**
      * Returns the first found object, if the query returns at least one result.
@@ -129,7 +129,7 @@ public interface QueryableStore<T> extends AutoCloseable {
      *
      * @return The query object to continue building the query.
      */
-    Query<T, Result<T_RESULT>> withIds();
+    Query<T, Result<T_RESULT>, ?> withIds();
 
     /**
      * Orders the result by the given field in the given order. If the order is not set, the order of the result is not
@@ -139,7 +139,7 @@ public interface QueryableStore<T> extends AutoCloseable {
      * @param order The order to use (either ascending or descending).
      * @return The query object to continue building the query.
      */
-    Query<T, T_RESULT> orderBy(QueryField<T, ?> field, Order order);
+    SELF orderBy(QueryField<T, ?> field, Order order);
 
     /**
      * Returns the count of all objects that match the query.

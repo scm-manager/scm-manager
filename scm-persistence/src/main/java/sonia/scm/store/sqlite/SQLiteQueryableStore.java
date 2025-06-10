@@ -18,6 +18,9 @@ package sonia.scm.store.sqlite;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.plugin.QueryableTypeDescriptor;
 import sonia.scm.store.Condition;
@@ -51,6 +54,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
 import static sonia.scm.store.sqlite.SQLiteIdentifiers.computeColumnIdentifier;
 import static sonia.scm.store.sqlite.SQLiteIdentifiers.computeTableName;
 
@@ -82,7 +86,7 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
   }
 
   @Override
-  public Query<T, T> query(Condition<T>... conditions) {
+  public Query<T, T, ?> query(Condition<T>... conditions) {
     return new SQLiteQuery<>(clazz, conditions);
   }
 
@@ -269,14 +273,67 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
     return connection;
   }
 
-  private class SQLiteQuery<T_RESULT> implements Query<T, T_RESULT> {
+  void evaluateParentConditions(List<SQLNodeWithValue> conditions) {
+    for (int i = 0; i < parentIds.length; i++) {
+      SQLCondition condition = new SQLCondition("=", new SQLField(computeColumnIdentifier(queryableTypeDescriptor.getTypes()[i])), new SQLValue(parentIds[i]));
+      conditions.add(condition);
+    }
+  }
+
+  void addParentIdSQLFields(List<SQLField> fields) {
+    for (int i = 0; i < queryableTypeDescriptor.getTypes().length; i++) {
+      fields.add(new SQLField(computeColumnIdentifier(queryableTypeDescriptor.getTypes()[i])));
+    }
+    fields.add(new SQLField("ID"));
+  }
+
+  private String serialize(Object object) {
+    try {
+      return objectMapper.writeValueAsString(object);
+    } catch (JsonProcessingException e) {
+      throw new SerializationException("failed to serialize object to json", e);
+    }
+  }
+
+  @Override
+  public String toString() {
+    return format("Store for class %s with parent ids %s", this.clazz.getName(), Arrays.toString(this.parentIds));
+  }
+
+
+  interface StatementCallback<R> {
+    R apply(PreparedStatement statement) throws SQLException, JsonProcessingException;
+  }
+
+  private interface RowBuilder<R> {
+    R build(String[] parentIds, String id, String json) throws JsonProcessingException;
+  }
+
+  record OrderBy<T>(QueryField<T, ?> field, Order order) {
+    @Override
+    public String toString() {
+      if (order == null) {
+        return field.getName();
+      } else {
+        return field.getName() + " " + order;
+      }
+    }
+  }
+
+  /**
+   * @param <T_RESULT> "Result" &ndash; result type
+   * @param <SELF>     "Self" &ndash; instance type of this query
+   */
+  @Setter(AccessLevel.PACKAGE)
+  @Getter(AccessLevel.PROTECTED)
+  class SQLiteQuery<T_RESULT, SELF extends SQLiteQuery<T_RESULT, SELF>> implements Query<T, T_RESULT, SELF>, Cloneable {
 
     private final Class<T_RESULT> resultType;
     private final Class<T> entityType;
     private final Condition<T> condition;
-    private final List<OrderBy<T>> orderBy;
+    private List<OrderBy<T>> orderBy;
 
-    private SQLiteQuery(Class<T_RESULT> resultType, Condition<T>[] conditions) {
+    SQLiteQuery(Class<T_RESULT> resultType, Condition<T>[] conditions) {
       this(resultType, resultType, conjunct(conditions), Collections.emptyList());
     }
 
@@ -286,6 +343,16 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
       this.entityType = entityType;
       this.condition = condition;
       this.orderBy = orderBy;
+    }
+
+    private static <T> Condition<T> conjunct(Condition<T>[] conditions) {
+      if (conditions.length == 0) {
+        return null;
+      } else if (conditions.length == 1) {
+        return conditions[0];
+      } else {
+        return Conditions.and(conditions);
+      }
     }
 
     @Override
@@ -314,17 +381,14 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
 
     @Override
     public void forEach(Consumer<T_RESULT> consumer, long offset, long limit) {
-      StringBuilder orderByBuilder = new StringBuilder();
-      if (orderBy != null && !orderBy.isEmpty()) {
-        toOrderBySQL(orderByBuilder);
-      }
+      String orderByString = getOrderByString();
 
       SQLSelectStatement sqlSelectQuery =
         new SQLSelectStatement(
           computeFields(),
           computeFromTable(),
           computeCondition(),
-          orderByBuilder.toString(),
+          orderByString,
           limit,
           offset
         );
@@ -342,9 +406,17 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
       );
     }
 
+    String getOrderByString() {
+      StringBuilder orderByBuilder = new StringBuilder();
+      if (orderBy != null && !orderBy.isEmpty()) {
+        toOrderBySQL(orderByBuilder);
+      }
+      return orderByBuilder.toString();
+    }
+
     @Override
     @SuppressWarnings("unchecked")
-    public Query<T, Result<T_RESULT>> withIds() {
+    public Query<T, Result<T_RESULT>, ?> withIds() {
       return new SQLiteQuery<>((Class<Result<T_RESULT>>) (Class<?>) Result.class, resultType, condition, orderBy);
     }
 
@@ -413,10 +485,12 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
     }
 
     @Override
-    public Query<T, T_RESULT> orderBy(QueryField<T, ?> field, Order order) {
+    public SELF orderBy(QueryField<T, ?> field, Order order) {
       List<OrderBy<T>> extendedOrderBy = new ArrayList<>(this.orderBy);
       extendedOrderBy.add(new OrderBy<>(field, order));
-      return new SQLiteQuery<>(resultType, entityType, condition, extendedOrderBy);
+      SELF newOrderBy = (SELF) this.clone();
+      newOrderBy.setOrderBy(extendedOrderBy);
+      return newOrderBy;
     }
 
     private List<SQLField> computeFields() {
@@ -428,20 +502,19 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
       return fields;
     }
 
-    private List<SQLNodeWithValue> computeCondition() {
+    List<SQLNodeWithValue> computeCondition() {
       List<SQLNodeWithValue> conditions = new ArrayList<>();
 
       evaluateParentConditions(conditions);
 
       if (condition != null) {
         if (condition instanceof LeafCondition<T, ?> leafCondition) {
-          SQLCondition sqlCondition = SQLConditionMapper.mapToSQLCondition(leafCondition);
-          conditions.add(sqlCondition);
+          conditions.add(SQLConditionMapper.mapToSQLCondition(leafCondition));
         }
         if (condition instanceof LogicalCondition<T> logicalCondition) {
-          SQLLogicalCondition sqlLogicalCondition = SQLConditionMapper.mapToSQLLogicalCondition(logicalCondition);
-          conditions.add(sqlLogicalCondition);
+          conditions.add(SQLConditionMapper.mapToSQLLogicalCondition(logicalCondition));
         }
+        log.debug("Unsupported condition type: {}", condition.getClass().getName());
       }
 
       return conditions;
@@ -467,16 +540,16 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
     private T_RESULT extractResult(ResultSet resultSet) throws JsonProcessingException, SQLException {
       T entity = objectMapper.readValue(resultSet.getString(1), entityType);
       if (resultType.isAssignableFrom(Result.class)) {
-        Map<String, String> parentIds = new HashMap<>(queryableTypeDescriptor.getTypes().length);
+        Map<String, String> parentIdMapping = new HashMap<>(queryableTypeDescriptor.getTypes().length);
         for (int i = 0; i < queryableTypeDescriptor.getTypes().length; i++) {
-          parentIds.put(computeColumnIdentifier(queryableTypeDescriptor.getTypes()[i]), resultSet.getString(i + 2));
+          parentIdMapping.put(computeColumnIdentifier(queryableTypeDescriptor.getTypes()[i]), resultSet.getString(i + 2));
         }
         String id = resultSet.getString(queryableTypeDescriptor.getTypes().length + 2);
         return (T_RESULT) new Result<T>() {
           @Override
           public Optional<String> getParentId(Class<?> clazz) {
             String parentClassName = computeColumnIdentifier(clazz.getName());
-            return Optional.ofNullable(parentIds.get(parentClassName));
+            return Optional.ofNullable(parentIdMapping.get(parentClassName));
           }
 
           @Override
@@ -494,36 +567,19 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
       }
     }
 
-    private static <T> Condition<T> conjunct(Condition<T>[] conditions) {
-      if (conditions.length == 0) {
-        return null;
-      } else if (conditions.length == 1) {
-        return conditions[0];
-      } else {
-        return Conditions.and(conditions);
+    /* We explicitly suppress this warning since it's based on a generic whose information is lost during runtime,
+    which can be conveniently circumvented with clone().
+     */
+    @SuppressWarnings("java:S2975")
+    @Override
+    public SQLiteQuery<T_RESULT, SELF> clone() {
+      try {
+        // Keep in mind that this clone shares the mutable entities with its origin.
+        return (SQLiteQuery<T_RESULT, SELF>) super.clone();
+      } catch (CloneNotSupportedException e) {
+        throw new AssertionError();
       }
     }
-  }
-
-  private void evaluateParentConditions(List<SQLNodeWithValue> conditions) {
-    for (int i = 0; i < parentIds.length; i++) {
-      SQLCondition condition = new SQLCondition("=", new SQLField(computeColumnIdentifier(queryableTypeDescriptor.getTypes()[i])), new SQLValue(parentIds[i]));
-      conditions.add(condition);
-    }
-  }
-
-  private void addParentIdSQLFields(List<SQLField> fields) {
-    for (int i = 0; i < queryableTypeDescriptor.getTypes().length; i++) {
-      fields.add(new SQLField(computeColumnIdentifier(queryableTypeDescriptor.getTypes()[i])));
-    }
-    fields.add(new SQLField("ID"));
-  }
-
-  interface StatementCallback<R> {
-    R apply(PreparedStatement statement) throws SQLException, JsonProcessingException;
-  }
-
-  record OrderBy<T>(QueryField<T, ?> field, Order order) {
   }
 
   private class TemporaryTableMaintenanceIterator implements MaintenanceIterator<T> {
@@ -740,17 +796,5 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
         updateJson(serialize(object));
       }
     }
-  }
-
-  private String serialize(Object object) {
-    try {
-      return objectMapper.writeValueAsString(object);
-    } catch (JsonProcessingException e) {
-      throw new SerializationException("failed to serialize object to json", e);
-    }
-  }
-
-  private interface RowBuilder<R> {
-    R build(String[] parentIds, String id, String json) throws JsonProcessingException;
   }
 }

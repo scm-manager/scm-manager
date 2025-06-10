@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.plugin.QueryableTypeDescriptor;
 import sonia.scm.security.KeyGenerator;
+import sonia.scm.store.Condition;
 import sonia.scm.store.IdHandlerForStores;
 import sonia.scm.store.QueryableMutableStore;
 import sonia.scm.store.StoreException;
@@ -157,6 +158,11 @@ class SQLiteQueryableMutableStore<T> extends SQLiteQueryableStore<T> implements 
     );
   }
 
+  @Override
+  public MutableQuery<T, ?> query(Condition<T>... conditions) {
+    return new SQLiteMutableQuery(clazz, conditions);
+  }
+
   private String marshal(T item) {
     try {
       return objectMapper.writeValueAsString(item);
@@ -169,5 +175,78 @@ class SQLiteQueryableMutableStore<T> extends SQLiteQueryableStore<T> implements 
     List<SQLNodeWithValue> conditions = computeConditionsForAllValues();
     conditions.add(new SQLCondition("=", new SQLField("ID"), new SQLValue(id)));
     return conditions;
+  }
+
+  private class SQLiteMutableQuery extends SQLiteQuery<T, SQLiteMutableQuery> implements MutableQuery<T, SQLiteMutableQuery>, Cloneable {
+    SQLiteMutableQuery(Class<T> type, Condition<T>[] conditions) {
+      super(type, conditions);
+    }
+
+    @Override
+    public void deleteAll() {
+      List<SQLNodeWithValue> parentConditions = new ArrayList<>();
+      evaluateParentConditions(parentConditions);
+
+      SQLDeleteStatement sqlStatementQuery =
+        new SQLDeleteStatement(
+          computeFromTable(),
+          computeCondition()
+        );
+
+      executeWrite(
+        sqlStatementQuery,
+        statement -> {
+          statement.executeUpdate();
+          return null;
+        }
+      );
+
+      log.debug("All entries for {} have been deleted.", SQLiteQueryableMutableStore.this);
+    }
+
+    @Override
+    public void retain(long n) {
+
+      List<SQLField> columns = new ArrayList<>();
+      addParentIdSQLFields(columns);
+
+      List<SQLNodeWithValue> conditions = new ArrayList<>();
+      List<SQLNodeWithValue> parentConditions = new ArrayList<>();
+
+      evaluateParentConditions(parentConditions);
+      conditions.addAll(parentConditions);
+      conditions.addAll(this.computeCondition());
+
+      SQLSelectStatement selectStatement = new SQLSelectStatement(
+        columns,
+        computeFromTable(),
+        conditions,
+        getOrderByString(),
+        n,
+        0L
+      );
+
+      SQLiteRetainStatement retainStatement = new SQLiteRetainStatement(
+        computeFromTable(),
+        columns,
+        selectStatement,
+        parentConditions
+      );
+
+      executeWrite(
+        retainStatement,
+        statement -> {
+          statement.executeUpdate();
+          return null;
+        }
+      );
+
+      log.debug("All entries for {} have been deleted retaining the {} highest ones by ordering.", SQLiteQueryableMutableStore.this, n);
+    }
+
+    @Override
+    public SQLiteMutableQuery clone() {
+      return (SQLiteMutableQuery) super.clone();
+    }
   }
 }
