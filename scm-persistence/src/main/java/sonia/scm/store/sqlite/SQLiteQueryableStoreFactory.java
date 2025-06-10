@@ -63,11 +63,7 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
                                      KeyGenerator keyGenerator) {
     this(
       "jdbc:sqlite:" + contextProvider.resolve(Path.of("scm.db")),
-      objectMapper
-        .copy()
-        .configure(WRITE_DATES_AS_TIMESTAMPS, true)
-        .configure(WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
-        .configure(READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false),
+      objectMapper,
       keyGenerator,
       pluginLoader.getExtensionProcessor().getQueryableTypes()
     );
@@ -86,7 +82,11 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
       config
     );
     ((SQLiteDataSource) dataSource).setUrl(connectionString);
-    this.objectMapper = objectMapper;
+    this.objectMapper = objectMapper
+      .copy()
+      .configure(WRITE_DATES_AS_TIMESTAMPS, true)
+      .configure(WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
+      .configure(READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
     this.keyGenerator = keyGenerator;
     Connection connection = openDefaultConnection();
     try {
