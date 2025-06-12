@@ -309,13 +309,13 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
     R build(String[] parentIds, String id, String json) throws JsonProcessingException;
   }
 
-  record OrderBy<T>(QueryField<T, ?> field, Order order) {
+  record OrderBy<T>(QueryField<T, ?> field, OrderOptions options) {
     @Override
     public String toString() {
-      if (order == null) {
+      if (options == null) {
         return field.getName();
       } else {
-        return field.getName() + " " + order;
+        return field.getName() + " " + options;
       }
     }
   }
@@ -485,9 +485,9 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
     }
 
     @Override
-    public SELF orderBy(QueryField<T, ?> field, Order order) {
+    public SELF orderBy(QueryField<T, ?> field, OrderOptions options) {
       List<OrderBy<T>> extendedOrderBy = new ArrayList<>(this.orderBy);
-      extendedOrderBy.add(new OrderBy<>(field, order));
+      extendedOrderBy.add(new OrderBy<>(field, options));
       SELF newOrderBy = (SELF) this.clone();
       newOrderBy.setOrderBy(extendedOrderBy);
       return newOrderBy;
@@ -524,12 +524,18 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
       Iterator<OrderBy<T>> it = orderBy.iterator();
       while (it.hasNext()) {
         OrderBy<T> order = it.next();
+        if (order.options.isNumerical()) {
+          orderByBuilder.append("CAST(");
+        }
         if (order.field instanceof IdQueryField) {
           orderByBuilder.append("ID ");
         } else {
           orderByBuilder.append("json_extract(payload, '$.").append(order.field.getName()).append("') ");
         }
-        orderByBuilder.append(order.order.name());
+        if (order.options.isNumerical()) {
+          orderByBuilder.append("AS REAL) ");
+        }
+        orderByBuilder.append(order.options.getOrder().name());
         if (it.hasNext()) {
           orderByBuilder.append(", ");
         }

@@ -445,6 +445,42 @@ class SQLiteQueryableStoreTest {
           .extracting("mail")
           .containsExactly("arthur@hog.org", "marvin@hog.org", "tricia@hog.org", "zaphod2@hog.org", "zaphod1@hog.org");
       }
+
+      @Test
+      void shouldOrderResultsAsNumbers() {
+        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        store.put(new User("1"));
+        store.put(new User("2"));
+        store.put(new User("10"));
+        store.put(new User("11"));
+        store.put(new User("100"));
+
+        List<User> all = store.query()
+          .orderBy(USER_NAME, new QueryableStore.OrderOptions(QueryableStore.Order.ASC, true))
+          .findAll();
+
+        assertThat(all)
+          .extracting("name")
+          .containsExactly("1", "2", "10", "11", "100");
+      }
+
+      @Test
+      void shouldOrderResultsAsStrings() {
+        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        store.put(new User("1"));
+        store.put(new User("2"));
+        store.put(new User("10"));
+        store.put(new User("11"));
+        store.put(new User("100"));
+
+        List<User> all = store.query()
+          .orderBy(USER_NAME, new QueryableStore.OrderOptions(QueryableStore.Order.ASC, false))
+          .findAll();
+
+        assertThat(all)
+          .extracting("name")
+          .containsExactly("1", "10", "100", "11", "2");
+      }
     }
 
     @Nested

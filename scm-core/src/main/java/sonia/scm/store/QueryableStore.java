@@ -16,6 +16,10 @@
 
 package sonia.scm.store;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -51,6 +55,23 @@ public interface QueryableStore<T> extends AutoCloseable {
    * @return The query object to retrieve the result.
    */
   Query<T, T, ?> query(Condition<T>... conditions);
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  class OrderOptions {
+    /**
+     * The order to use for the query.
+     */
+    private Order order = Order.ASC;
+    /**
+     * If true, the field is treated as a number field, so that the order will be done numerically.
+     * If false, the field is order "naturally", so that the order will be done lexicographically for string fields.
+     * Probably this is mostly relevant for the id field, which is a string but should be ordered numerically.
+     * Most likely this will lead to runtime exceptions, when the field contains strings that cannot be parsed to numbers.
+     */
+    private boolean numerical = false;
+  }
 
   /**
    * Used to specify the order of the result of a query.
@@ -139,7 +160,19 @@ public interface QueryableStore<T> extends AutoCloseable {
      * @param order The order to use (either ascending or descending).
      * @return The query object to continue building the query.
      */
-    SELF orderBy(QueryField<T, ?> field, Order order);
+    default SELF orderBy(QueryField<T, ?> field, Order order) {
+      return orderBy(field, new OrderOptions(order, false));
+    }
+
+    /**
+     * Orders the result by the given field in the given order. If the order is not set, the order of the result is not
+     * specified. Orders can be chained, so you can call this method multiple times to order by multiple fields.
+     *
+     * @param field The field to order by.
+     * @param options The options for the order.
+     * @return The query object to continue building the query.
+     */
+    SELF orderBy(QueryField<T, ?> field, OrderOptions options);
 
     /**
      * Returns the count of all objects that match the query.
