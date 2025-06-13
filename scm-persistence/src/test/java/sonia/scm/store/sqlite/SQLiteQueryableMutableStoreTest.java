@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import sonia.scm.store.IdGenerator;
 import sonia.scm.store.QueryableMutableStore;
 import sonia.scm.store.QueryableStore;
 import sonia.scm.user.User;
@@ -79,6 +80,34 @@ class SQLiteQueryableMutableStoreTest {
 
       assertThat(resultSet.next()).isTrue();
       assertThat(resultSet.getString("name")).isEqualTo("McMillan");
+    }
+
+    @Test
+    void shouldPutObjectWithAutoIncrementId() {
+      SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString, IdGenerator.AUTO_INCREMENT).forClassWithIds(Spaceship.class);
+      store.put(new Spaceship("42"));
+      store.put(new Spaceship("23"));
+
+      Spaceship first = store.get("1");
+      Spaceship second = store.get("2");
+
+      assertThat(first.getName()).isEqualTo("42");
+      assertThat(second.getName()).isEqualTo("23");
+    }
+
+    @Test
+    void shouldPutObjectWithGivenIdsThoughAutoIncrementActivated() {
+      SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString, IdGenerator.AUTO_INCREMENT).forClassWithIds(Spaceship.class);
+      store.put("42", new Spaceship("42", SQLiteQueryableStoreTest.Range.INTER_GALACTIC));
+      store.put("23", new Spaceship("23", SQLiteQueryableStoreTest.Range.SOLAR_SYSTEM));
+
+      Spaceship first = store.get("42");
+      Spaceship second = store.get("23");
+
+      assertThat(first.getName()).isEqualTo("42");
+      assertThat(first.getRange()).isEqualTo(SQLiteQueryableStoreTest.Range.INTER_GALACTIC);
+      assertThat(second.getName()).isEqualTo("23");
+      assertThat(second.getRange()).isEqualTo(SQLiteQueryableStoreTest.Range.SOLAR_SYSTEM);
     }
 
     @Test
@@ -181,7 +210,7 @@ class SQLiteQueryableMutableStoreTest {
 
     @Test
     void shouldGetObjectWithSingleParent() {
-      new StoreTestBuilder(connectionString, new String[]{"sonia.Group"}).withIds("1337").put("tricia", new User("McMillan"));
+      new StoreTestBuilder(connectionString, "sonia.Group").withIds("1337").put("tricia", new User("McMillan"));
       SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group").withIds("42");
       store.put("tricia", new User("trillian"));
 
@@ -195,7 +224,7 @@ class SQLiteQueryableMutableStoreTest {
 
     @Test
     void shouldGetObjectWithMultipleParents() {
-      new StoreTestBuilder(connectionString, new String[]{"sonia.Company", "sonia.Group"}).withIds("cloudogu", "1337").put("tricia", new User("McMillan"));
+      new StoreTestBuilder(connectionString, "sonia.Company", "sonia.Group").withIds("cloudogu", "1337").put("tricia", new User("McMillan"));
       SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Company", "sonia.Group").withIds("cloudogu", "42");
       store.put("tricia", new User("trillian"));
 
@@ -209,7 +238,7 @@ class SQLiteQueryableMutableStoreTest {
 
     @Test
     void shouldGetAllForSingleEntry() {
-      new StoreTestBuilder(connectionString, new String[]{"sonia.Company", "sonia.Group"}).withIds("cloudogu", "1337").put("tricia", new User("McMillan"));
+      new StoreTestBuilder(connectionString, "sonia.Company", "sonia.Group").withIds("cloudogu", "1337").put("tricia", new User("McMillan"));
       SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Company", "sonia.Group").withIds("cloudogu", "42");
       store.put("tricia", new User("trillian"));
 

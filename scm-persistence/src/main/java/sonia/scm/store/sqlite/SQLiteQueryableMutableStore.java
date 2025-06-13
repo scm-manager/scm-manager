@@ -22,7 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 import sonia.scm.plugin.QueryableTypeDescriptor;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.Condition;
+import sonia.scm.store.IdGenerator;
 import sonia.scm.store.IdHandlerForStores;
+import sonia.scm.store.IdHandlerForStoresForGeneratedId;
+import sonia.scm.store.IdHandlerForStoresWithAutoIncrement;
 import sonia.scm.store.QueryableMutableStore;
 import sonia.scm.store.StoreException;
 
@@ -57,7 +60,10 @@ class SQLiteQueryableMutableStore<T> extends SQLiteQueryableStore<T> implements 
     this.objectMapper = objectMapper;
     this.clazz = clazz;
     this.parentIds = parentIds;
-    this.idHandlerForStores = new IdHandlerForStores<>(clazz, keyGenerator, this::doPut);
+    this.idHandlerForStores =
+      queryableTypeDescriptor.getIdGenerator() == IdGenerator.AUTO_INCREMENT ?
+        new IdHandlerForStoresWithAutoIncrement<>(clazz, this::doPut) :
+        new IdHandlerForStoresForGeneratedId<>(clazz, keyGenerator, this::doPut);
   }
 
   @Override
@@ -70,7 +76,7 @@ class SQLiteQueryableMutableStore<T> extends SQLiteQueryableStore<T> implements 
     idHandlerForStores.put(id, item);
   }
 
-  private void doPut(String id, T item) {
+  private String doPut(String id, T item) {
     List<String> columnsToInsert = new ArrayList<>(Arrays.asList(parentIds));
     columnsToInsert.add(id);
     columnsToInsert.add(marshal(item));
@@ -80,11 +86,18 @@ class SQLiteQueryableMutableStore<T> extends SQLiteQueryableStore<T> implements 
         new SQLValue(columnsToInsert)
       );
 
-    executeWrite(
+    return executeWrite(
       sqlInsertStatement,
       statement -> {
         statement.executeUpdate();
-        return null;
+        ResultSet generatedKeys = statement.getGeneratedKeys();
+        if (generatedKeys.next()) {
+          String generatedKey = generatedKeys.getString(1);
+          log.trace("Generated key for item with id {}: {}", id, generatedKey);
+          return generatedKey;
+        } else {
+          return null;
+        }
       }
     );
   }

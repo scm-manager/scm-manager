@@ -60,6 +60,8 @@ class SQLSelectStatement extends ConditionalSQLStatement {
 
     if (orderBy != null && !orderBy.isEmpty()) {
       query.append(" ORDER BY ").append(orderBy);
+    } else {
+      query.append(" ORDER BY ROWID");
     }
 
     if (limit > 0) {

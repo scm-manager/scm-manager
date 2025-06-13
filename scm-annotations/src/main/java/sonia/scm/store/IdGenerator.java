@@ -16,8 +16,13 @@
 
 package sonia.scm.store;
 
-public interface IdHandlerForStores<T> {
-  String put(T item);
-
-  void put(String id, T item);
+public enum IdGenerator {
+  /**
+   * The default id generator using random strings with characters and numbers.
+   */
+  DEFAULT,
+  /**
+   * An id generator that uses auto-incrementing ids.
+   */
+  AUTO_INCREMENT,
 }

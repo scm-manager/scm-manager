@@ -53,4 +53,11 @@ public @interface QueryableType {
    * name of the queryable type.
    */
   String name() default "";
+
+  /**
+   * The id generator to use for the queryable type. If no id generator is specified, the default id generator is used.
+   * The default id generator generates the default random ids used everywhere else in SCM-Manager. If this is set
+   * to {@link IdGenerator#AUTO_INCREMENT}, the store will use number based auto-incrementing ids.
+   */
+  IdGenerator idGenerator() default IdGenerator.DEFAULT;
 }

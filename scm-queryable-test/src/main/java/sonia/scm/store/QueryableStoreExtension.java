@@ -50,9 +50,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Arrays.stream;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Loads {@link QueryableTypes} into a JUnit test suite.
@@ -123,11 +120,13 @@ public class QueryableStoreExtension implements ParameterResolver, BeforeEachCal
   }
 
   private QueryableTypeDescriptor createDescriptor(Class<?> clazz) {
-    QueryableTypeDescriptor descriptor = mock(QueryableTypeDescriptor.class);
     QueryableType queryableAnnotation = clazz.getAnnotation(QueryableType.class);
-    when(descriptor.getTypes()).thenReturn(stream(queryableAnnotation.value()).map(Class::getName).toArray(String[]::new));
-    lenient().when(descriptor.getClazz()).thenReturn(clazz.getName());
-    when(descriptor.getName()).thenReturn(queryableAnnotation.name());
+    QueryableTypeDescriptor descriptor = new QueryableTypeDescriptor(
+      queryableAnnotation.name(),
+      clazz.getName(),
+      stream(queryableAnnotation.value()).map(Class::getName).toArray(String[]::new),
+      queryableAnnotation.idGenerator()
+    );
     try {
       Class<?> storeFactoryClass = Class.forName(clazz.getName() + "StoreFactory");
       storeFactoryClasses.add(storeFactoryClass);

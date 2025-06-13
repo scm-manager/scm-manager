@@ -55,6 +55,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static sonia.scm.store.sqlite.SQLiteIdentifiers.computeColumnIdentifier;
 import static sonia.scm.store.sqlite.SQLiteIdentifiers.computeTableName;
 
@@ -249,7 +250,7 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
 
   private <R> R executeWithLock(SQLNodeWithValue sqlStatement, StatementCallback<R> callback, Lock writeLock, String sql) {
     writeLock.lock();
-    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+    try (PreparedStatement statement = connection.prepareStatement(sql, RETURN_GENERATED_KEYS)) {
       sqlStatement.apply(statement, 1);
       return callback.apply(statement);
     } catch (SQLException | JsonProcessingException e) {

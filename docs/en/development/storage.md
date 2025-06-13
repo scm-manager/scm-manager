@@ -441,6 +441,27 @@ public class MyEntity {
 }
 ```
 
+## Generated IDs with auto-increment
+
+If you want to use auto-generated IDs, you can set the `idGenerator` property of the `@QueryableType` annotation to
+`IdGenerator.AUTO_INCREMENT`. This will cause the store to generate a numerical, incremented ID for each entity when it
+is stored (and no explicit ID is set). Note that this ID will be a `String` representation of the numerical value, so it
+can still be used as a `String` ID in the store. The ID will start at 1 and increment for each new entity stored.
+
+```java
+import lombok.Data;
+import sonia.scm.store.QueryableType;
+import sonia.scm.store.Id;
+import sonia.scm.store.IdGenerator;
+
+@Data
+@QueryableType(idGenerator = IdGenerator.AUTO_INCREMENT)
+public class MyEntity {
+  private String name;
+}
+```
+
+This feature cannot be used in combination with an explicit ID field annotated with `@Id`.
 
 ## Update Steps
 

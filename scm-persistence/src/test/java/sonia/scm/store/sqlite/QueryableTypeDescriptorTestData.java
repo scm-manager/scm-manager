@@ -17,6 +17,7 @@
 package sonia.scm.store.sqlite;
 
 import sonia.scm.plugin.QueryableTypeDescriptor;
+import sonia.scm.store.IdGenerator;
 
 import java.lang.reflect.Constructor;
 
@@ -27,11 +28,15 @@ public class QueryableTypeDescriptorTestData {
   }
 
   public static QueryableTypeDescriptor createDescriptor(String name, String clazz, String[] t) {
+    return createDescriptor(name, clazz, t, IdGenerator.DEFAULT);
+  }
+
+  public static QueryableTypeDescriptor createDescriptor(String name, String clazz, String[] t, IdGenerator idGenerator) {
     try {
       Constructor<QueryableTypeDescriptor> constructor = QueryableTypeDescriptor.class
-        .getDeclaredConstructor(String.class, String.class, String[].class);
+        .getDeclaredConstructor(String.class, String.class, String[].class, IdGenerator.class);
       constructor.setAccessible(true);
-      return constructor.newInstance(name, clazz, t);
+      return constructor.newInstance(name, clazz, t, idGenerator);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

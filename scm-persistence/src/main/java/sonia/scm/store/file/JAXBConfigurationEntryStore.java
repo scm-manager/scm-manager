@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.CopyOnWrite;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.IdHandlerForStores;
+import sonia.scm.store.IdHandlerForStoresForGeneratedId;
 import sonia.scm.xml.XmlStreams;
 import sonia.scm.xml.XmlStreams.AutoCloseableXMLReader;
 import sonia.scm.xml.XmlStreams.AutoCloseableXMLWriter;
@@ -52,7 +52,7 @@ class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V> {
   private final TypedStoreContext<V> context;
   private final Map<String, V> entries = Maps.newHashMap();
 
-  private final IdHandlerForStores<V> idHandlerForStores;
+  private final IdHandlerForStoresForGeneratedId<V> idHandlerForStores;
 
   JAXBConfigurationEntryStore(File file, KeyGenerator keyGenerator, Class<V> type, TypedStoreContext<V> context) {
     this.file = file;
@@ -64,7 +64,7 @@ class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V> {
         load();
       }
     }).withLockedFileForRead(file);
-    this.idHandlerForStores = new IdHandlerForStores<>(type, keyGenerator, this::doPut);
+    this.idHandlerForStores = new IdHandlerForStoresForGeneratedId<>(type, keyGenerator, this::doPut);
   }
 
   @Override

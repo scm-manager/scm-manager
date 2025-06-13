@@ -24,6 +24,10 @@ import java.lang.annotation.Target;
  * Marks a field as id field. The value of this field will be used as id
  * in a {@link DataStore}. The field must be of type {@code String}. Only one
  * field in a class can be annotated with this annotation.
+ * <br/>
+ * Please note that this annotation is not compatible with stores using auto-incrementing
+ * ids (stores for {@link QueryableType} with {@link IdGenerator#AUTO_INCREMENT}) option.
+ * If you want to use auto-incrementing, do not annotate any field with this annotation.
  */
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})

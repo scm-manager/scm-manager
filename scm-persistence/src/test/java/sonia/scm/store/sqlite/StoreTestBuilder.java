@@ -19,6 +19,7 @@ package sonia.scm.store.sqlite;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import sonia.scm.security.UUIDKeyGenerator;
+import sonia.scm.store.IdGenerator;
 import sonia.scm.store.QueryableMaintenanceStore;
 import sonia.scm.store.QueryableStore;
 import sonia.scm.user.User;
@@ -45,9 +46,15 @@ class StoreTestBuilder {
 
   private final String connectionString;
   private final String[] parentClasses;
+  private final IdGenerator idGenerator;
 
   StoreTestBuilder(String connectionString, String... parentClasses) {
+    this(connectionString, IdGenerator.DEFAULT, parentClasses);
+  }
+
+  StoreTestBuilder(String connectionString, IdGenerator idGenerator, String... parentClasses) {
     this.connectionString = connectionString;
+    this.idGenerator = idGenerator;
     this.parentClasses = parentClasses;
   }
 
@@ -78,7 +85,7 @@ class StoreTestBuilder {
       connectionString,
       mapper,
       new UUIDKeyGenerator(),
-      List.of(createDescriptor(clazz.getName(), parentClasses))
+      List.of(createDescriptor("", clazz.getName(), parentClasses, idGenerator))
     );
   }
 }

@@ -20,7 +20,11 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import sonia.scm.store.IdGenerator;
 import sonia.scm.xml.XmlArrayStringAdapter;
 
 @ToString(callSuper = true)
@@ -33,12 +37,19 @@ public class QueryableTypeDescriptor extends NamedClassElement {
   @XmlJavaTypeAdapter(XmlArrayStringAdapter.class)
   private String[] types;
 
-  QueryableTypeDescriptor(String name, String clazz, String[] types) {
+  private IdGenerator idGenerator;
+
+  public QueryableTypeDescriptor(String name, String clazz, String[] types, IdGenerator idGenerator) {
     super(name, clazz);
     this.types = types;
+    this.idGenerator = idGenerator;
   }
 
   public String[] getTypes() {
     return types == null ? new String[0] : types;
+  }
+
+  public IdGenerator getIdGenerator() {
+    return idGenerator == null ? IdGenerator.DEFAULT : idGenerator;
   }
 }

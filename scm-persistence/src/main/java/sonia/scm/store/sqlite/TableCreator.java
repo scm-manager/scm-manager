@@ -18,6 +18,7 @@ package sonia.scm.store.sqlite;
 
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.plugin.QueryableTypeDescriptor;
+import sonia.scm.store.IdGenerator;
 import sonia.scm.store.StoreException;
 
 import java.sql.Connection;
@@ -75,8 +76,17 @@ class TableCreator {
     for (String type : descriptor.getTypes()) {
       builder.append(computeColumnIdentifier(type)).append(" TEXT NOT NULL, ");
     }
-    builder.append("ID TEXT NOT NULL, payload JSONB");
-    builder.append(", PRIMARY KEY (");
+    if (descriptor.getIdGenerator() == IdGenerator.AUTO_INCREMENT) {
+      builder.append("ID INTEGER PRIMARY KEY, ");
+    } else {
+      builder.append("ID TEXT NOT NULL, ");
+    }
+    builder.append("payload JSONB");
+    if (descriptor.getIdGenerator() == IdGenerator.AUTO_INCREMENT) {
+      builder.append(", UNIQUE (");
+    } else {
+      builder.append(", PRIMARY KEY (");
+    }
     for (String type : descriptor.getTypes()) {
       builder.append(computeColumnIdentifier(type)).append(", ");
     }

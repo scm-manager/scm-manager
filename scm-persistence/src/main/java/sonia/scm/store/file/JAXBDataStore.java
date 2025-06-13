@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.CopyOnWrite;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.DataStore;
-import sonia.scm.store.IdHandlerForStores;
+import sonia.scm.store.IdHandlerForStoresForGeneratedId;
 import sonia.scm.store.StoreException;
 import sonia.scm.xml.XmlStreams;
 
@@ -48,14 +48,14 @@ class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> {
   private final TypedStoreContext<T> context;
   private final DataFileCache.DataFileCacheInstance cache;
 
-  private final IdHandlerForStores<T> idHandlerForStores;
+  private final IdHandlerForStoresForGeneratedId<T> idHandlerForStores;
 
   JAXBDataStore(KeyGenerator keyGenerator, TypedStoreContext<T> context, File directory, boolean readOnly, DataFileCache.DataFileCacheInstance cache) {
     super(directory, StoreConstants.FILE_EXTENSION, readOnly);
     this.cache = cache;
     this.directory = directory;
     this.context = context;
-    this.idHandlerForStores = new IdHandlerForStores<>(context.getType(), keyGenerator, this::doPut);
+    this.idHandlerForStores = new IdHandlerForStoresForGeneratedId<>(context.getType(), keyGenerator, this::doPut);
   }
 
   @Override
