@@ -1,0 +1,2 @@
+- type: added
+  description: "Like" condition for string fields in queryable stores

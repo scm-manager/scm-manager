@@ -313,6 +313,18 @@ public interface QueryableStore<T> extends AutoCloseable {
       return new LeafCondition<>(this, Operator.CONTAINS, value);
     }
 
+    /**
+     * Creates a condition that checks if the field matches the given pattern. The pattern can contain asterisks (*) as
+     * wildcards, which will match any sequence of characters.
+     * <br/>For example, <code>Heart*Gold</code> will match "Heart Of Gold", "HeartGold", or "Heart of Gold" but not
+     * "Heart of Gold and Silver". For now, escaping of asterisks is not supported.
+     *
+     * @param value The pattern to check for.
+     * @return The condition to use in a query.
+     */
+    public Condition<T> like(String value) {
+      return new LeafCondition<>(this, Operator.LIKE, value);
+    }
 
     /**
      * Creates a condition that checks if the field is equal to any of the given values.

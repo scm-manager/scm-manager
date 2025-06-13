@@ -20,6 +20,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import sonia.scm.group.Group;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.Conditions;
@@ -65,6 +67,36 @@ class SQLiteQueryableStoreTest {
 
     @Nested
     class QueryClassTypes {
+
+      @ParameterizedTest
+      @ValueSource(strings = {"*Of*", "Heart*Gold", "H*", "*d", "*Heart Of Gold*", "Heart Of Gold", "Heart Of *Gold"})
+      void shouldWorkWithLikes(String searchString) {
+        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        store.put(new Spaceship("Space Shuttle", Range.SOLAR_SYSTEM));
+        store.put(new Spaceship("Heart Of Gold", Range.INTER_GALACTIC));
+
+        List<Spaceship> all = store
+          .query(SPACESHIP_NAME.like(searchString))
+          .findAll();
+
+        assertThat(all)
+          .extracting("name")
+          .containsExactly("Heart Of Gold");
+      }
+
+      @ParameterizedTest
+      @ValueSource(strings = {"Of", "*of*", "heart of gold"})
+      void shouldNotFindNotMatchingValuesWithLike() {
+        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        store.put(new Spaceship("Space Shuttle", Range.SOLAR_SYSTEM));
+        store.put(new Spaceship("Heart Of Gold", Range.INTER_GALACTIC));
+
+        List<Spaceship> all = store
+          .query(SPACESHIP_NAME.like("Of"))
+          .findAll();
+
+        assertThat(all).isEmpty();
+      }
 
       @Test
       void shouldWorkWithEnums() {

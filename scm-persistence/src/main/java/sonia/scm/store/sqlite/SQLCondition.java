@@ -73,6 +73,7 @@ class SQLCondition implements SQLNodeWithValue {
       case GREATER -> ">";
       case GREATER_OR_EQUAL -> ">=";
       case CONTAINS -> "LIKE '%' ||";
+      case LIKE -> "LIKE ";
       case NULL -> "IS NULL";
       case IN -> "IN";
       case KEY -> "key =";
@@ -106,14 +107,14 @@ class SQLCondition implements SQLNodeWithValue {
     switch (operator) {
       case NULL:
         return new SQLValue(null);
-
       case IN:
         if (value instanceof Object[] valueArray) {
           return new SQLValue(valueArray);
         } else {
           throw new IllegalArgumentException("Value for IN operator must be an array.");
         }
-
+      case LIKE:
+        return new SQLValue(value.toString().replace('*', '%'));
       default:
         return new SQLValue(computeParameter(leafCondition));
     }
