@@ -822,6 +822,9 @@ public interface QueryableStore<T> extends AutoCloseable {
     }
   }
 
+  @Override
+  void close();
+
   /**
    * An exception occurring, if the client queried for one result with {@link Query#findOne()}, but the query returned multiple results.
    */
