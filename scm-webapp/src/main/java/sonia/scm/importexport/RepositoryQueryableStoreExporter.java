@@ -85,7 +85,10 @@ public class RepositoryQueryableStoreExporter {
       JAXBContext jaxbContext = JAXBContext.newInstance(StoreExport.class);
       Marshaller marshaller = jaxbContext.createMarshaller();
       for (Class<?> type : metaDataProvider.getTypesWithParent(Repository.class)) {
-        Collection<QueryableMaintenanceStore.RawRow> rows = storeFactory.getForMaintenance(type, repositoryId).readRaw();
+        Collection<QueryableMaintenanceStore.RawRow> rows;
+        try (QueryableMaintenanceStore<?> store = storeFactory.getForMaintenance(type, repositoryId)) {
+          rows = store.readRaw();
+        }
         StoreExport export = new StoreExport(type, rows);
         marshaller.marshal(export, new File(workdir, type.getName() + ".xml"));
       }
@@ -116,7 +119,9 @@ public class RepositoryQueryableStoreExporter {
           continue;
         }
 
-        storeFactory.getForMaintenance(type, repositoryId).writeRaw(rows);
+        try (QueryableMaintenanceStore<?> store = storeFactory.getForMaintenance(type, repositoryId)) {
+          store.writeRaw(rows);
+        }
 
         try {
           Files.delete(file.toPath());

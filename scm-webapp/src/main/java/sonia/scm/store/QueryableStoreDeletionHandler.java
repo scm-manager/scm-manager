@@ -46,6 +46,10 @@ class QueryableStoreDeletionHandler implements StoreDeletionNotifier.DeletionHan
       ids[i] = classWithIds[i].id();
     }
     Collection<Class<?>> typesWithParent = metaDataProvider.getTypesWithParent(classes);
-    typesWithParent.forEach(type -> storeFactory.getForMaintenance(type, ids).clear());
+    typesWithParent.forEach(type -> {
+      try (QueryableMaintenanceStore<?> store = storeFactory.getForMaintenance(type, ids)) {
+        store.clear();
+      }
+    });
   }
 }

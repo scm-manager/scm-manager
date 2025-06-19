@@ -34,7 +34,7 @@ import java.util.stream.Stream;
  *
  * @param <T> The entity type of the store.
  */
-public interface QueryableMaintenanceStore<T> {
+public interface QueryableMaintenanceStore<T> extends AutoCloseable {
 
   Collection<Row<T>> readAll() throws SerializationException;
 
@@ -137,6 +137,9 @@ public interface QueryableMaintenanceStore<T> {
      */
     void update(Object object);
   }
+
+  @Override
+  void close();
 
   class SerializationException extends RuntimeException {
     public SerializationException(String message, Throwable cause) {

@@ -14,27 +14,15 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-plugins {
-  id 'java-library'
-  id 'org.scm-manager.java'
-}
+package sonia.scm.store;
 
-dependencies {
-  implementation libraries.commonsIo
-  implementation libraries.commonsLang3
-  implementation libraries.sqlite
-  implementation libraries.hikariCp
+import lombok.Data;
+import sonia.scm.group.Group;
+import sonia.scm.repository.Repository;
+import sonia.scm.user.User;
 
-  api platform(project(':'))
-
-  api project(':scm-core')
-  annotationProcessor project(':scm-annotation-processor')
-  testImplementation project(':scm-test')
-
-  // lombok
-  compileOnly libraries.lombok
-  testCompileOnly libraries.lombok
-  annotationProcessor libraries.lombok
-  testAnnotationProcessor libraries.lombok
-  testRuntimeOnly libraries.logback
+@Data
+@QueryableType({Group.class, User.class, Repository.class})
+public class QueryableTypeWithMultipleParents {
+  private String someValue;
 }

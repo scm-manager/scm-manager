@@ -25,6 +25,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
+import sonia.scm.store.QueryableMutableStore;
 import sonia.scm.store.QueryableStoreExtension;
 import sonia.scm.store.QueryableStoreFactory;
 import sonia.scm.store.StoreMetaDataProvider;
@@ -47,20 +48,25 @@ class RepositoryQueryableStoreExporterTest {
   @Mock
   private StoreMetaDataProvider storeMetaDataProvider;
 
+  private RepositoryQueryableStoreExporter exporter;
+
   @BeforeEach
-  void initMetaDataProvider() {
+  void initExporter(QueryableStoreFactory storeFactory) {
     lenient().when(storeMetaDataProvider.getTypesWithParent(Repository.class)).thenReturn(List.of(SimpleType.class, SimpleTypeWithTwoParents.class));
+    exporter = new RepositoryQueryableStoreExporter(storeMetaDataProvider, storeFactory);
   }
 
   @Nested
   class ExportStores {
     @Test
-    void shouldExportSimpleType(QueryableStoreFactory storeFactory, SimpleTypeStoreFactory simpleTypeStoreFactory, @TempDir java.nio.file.Path tempDir) {
-      simpleTypeStoreFactory.getMutable("23").put("1", new SimpleType("hack"));
-      simpleTypeStoreFactory.getMutable("42").put("1", new SimpleType("hitchhike"));
-      simpleTypeStoreFactory.getMutable("42").put("2", new SimpleType("heart of gold"));
-
-      RepositoryQueryableStoreExporter exporter = new RepositoryQueryableStoreExporter(storeMetaDataProvider, storeFactory);
+    void shouldExportSimpleType(SimpleTypeStoreFactory simpleTypeStoreFactory, @TempDir java.nio.file.Path tempDir) {
+      try (QueryableMutableStore<SimpleType> store = simpleTypeStoreFactory.getMutable("23")) {
+        store.put("1", new SimpleType("hack"));
+      }
+      try (QueryableMutableStore<SimpleType> store = simpleTypeStoreFactory.getMutable("42")) {
+        store.put("1", new SimpleType("hitchhike"));
+        store.put("2", new SimpleType("heart of gold"));
+      }
 
       exporter.exportStores("42", tempDir.toFile());
 
@@ -68,12 +74,14 @@ class RepositoryQueryableStoreExporterTest {
     }
 
     @Test
-    void shouldExportTypeWithTwoParents(QueryableStoreFactory storeFactory, SimpleTypeWithTwoParentsStoreFactory simpleTypeStoreFactory, @TempDir java.nio.file.Path tempDir) {
-      simpleTypeStoreFactory.getMutable("23", "1").put("1", new SimpleTypeWithTwoParents("hack"));
-      simpleTypeStoreFactory.getMutable("42", "1").put("1", new SimpleTypeWithTwoParents("hitchhike"));
-      simpleTypeStoreFactory.getMutable("42", "1").put("2", new SimpleTypeWithTwoParents("heart of gold"));
-
-      RepositoryQueryableStoreExporter exporter = new RepositoryQueryableStoreExporter(storeMetaDataProvider, storeFactory);
+    void shouldExportTypeWithTwoParents(SimpleTypeWithTwoParentsStoreFactory simpleTypeStoreFactory, @TempDir java.nio.file.Path tempDir) {
+      try (QueryableMutableStore<SimpleTypeWithTwoParents> store = simpleTypeStoreFactory.getMutable("23", "1")) {
+        store.put("1", new SimpleTypeWithTwoParents("hack"));
+      }
+      try (QueryableMutableStore<SimpleTypeWithTwoParents> store = simpleTypeStoreFactory.getMutable("42", "1")) {
+        store.put("1", new SimpleTypeWithTwoParents("hitchhike"));
+        store.put("2", new SimpleTypeWithTwoParents("heart of gold"));
+      }
 
       exporter.exportStores("42", tempDir.toFile());
 
@@ -96,68 +104,75 @@ class RepositoryQueryableStoreExporterTest {
     }
 
     @Test
-    void shouldImportSimpleType(QueryableStoreFactory storeFactory, SimpleTypeStoreFactory simpleTypeStoreFactory) throws IOException {
-      simpleTypeStoreFactory.getMutable("23").put("1", new SimpleType("hack"));
+    void shouldImportSimpleType(SimpleTypeStoreFactory simpleTypeStoreFactory) throws IOException {
+      try (QueryableMutableStore<SimpleType> store = simpleTypeStoreFactory.getMutable("23")) {
+        store.put("1", new SimpleType("hack"));
+      }
       URL url = Resources.getResource("sonia/scm/importexport/SimpleType.xml");
 
       Files.createFile(queryableStoreDir.toPath().resolve("sonia.scm.importexport.SimpleType.xml"));
       Files.writeString(queryableStoreDir.toPath().resolve("sonia.scm.importexport.SimpleType.xml"), Resources.toString(url, StandardCharsets.UTF_8));
 
-      RepositoryQueryableStoreExporter exporter = new RepositoryQueryableStoreExporter(storeMetaDataProvider, storeFactory);
-
       exporter.importStores("42", tempDir);
 
-      assertThat(simpleTypeStoreFactory.getMutable("42").getAll()).hasSize(2);
+      try (QueryableMutableStore<SimpleType> store = simpleTypeStoreFactory.getMutable("42")) {
+        assertThat(store.getAll()).hasSize(2);
+      }
     }
 
     @Test
-    void shouldImportTypeWithTwoParents(QueryableStoreFactory storeFactory, SimpleTypeWithTwoParentsStoreFactory simpleTypeStoreFactory) throws IOException {
-      simpleTypeStoreFactory.getMutable("23", "1").put("1", new SimpleTypeWithTwoParents("hack"));
+    void shouldImportTypeWithTwoParents(SimpleTypeWithTwoParentsStoreFactory simpleTypeStoreFactory) throws IOException {
+      try (QueryableMutableStore<SimpleTypeWithTwoParents> store = simpleTypeStoreFactory.getMutable("23", "1")) {
+        store.put("1", new SimpleTypeWithTwoParents("hack"));
+      }
       URL url = Resources.getResource("sonia/scm/importexport/SimpleTypeWithTwoParents.xml");
       Files.writeString(queryableStoreDir.toPath().resolve("sonia.scm.importexport.SimpleTypeWithTwoParents.xml"), Resources.toString(url, StandardCharsets.UTF_8));
 
-      RepositoryQueryableStoreExporter exporter = new RepositoryQueryableStoreExporter(storeMetaDataProvider, storeFactory);
       exporter.importStores("42", tempDir);
 
-      assertThat(simpleTypeStoreFactory.getMutable("42", "1").getAll()).hasSize(2);
+      try (QueryableMutableStore<SimpleTypeWithTwoParents> store = simpleTypeStoreFactory.getMutable("42", "1")) {
+        assertThat(store.getAll()).hasSize(2);
+      }
     }
 
     @Test
-    void shouldNotImportWhenFileDoesNotExist(QueryableStoreFactory storeFactory, SimpleTypeStoreFactory simpleTypeStoreFactory) {
-      simpleTypeStoreFactory.getMutable("23").put("1", new SimpleType("hack"));
+    void shouldNotImportWhenFileDoesNotExist(SimpleTypeStoreFactory simpleTypeStoreFactory) {
+      try (QueryableMutableStore<SimpleType> store = simpleTypeStoreFactory.getMutable("23")) {
+        store.put("1", new SimpleType("hack"));
+      }
 
       File nonExistentFile = queryableStoreDir.toPath().resolve("sonia.scm.importexport.SimpleType.xml").toFile();
       assertThat(nonExistentFile).doesNotExist();
 
-      RepositoryQueryableStoreExporter exporter = new RepositoryQueryableStoreExporter(storeMetaDataProvider, storeFactory);
       exporter.importStores("42", tempDir);
 
-      assertThat(simpleTypeStoreFactory.getMutable("42").getAll()).isEmpty();
+      try (QueryableMutableStore<SimpleType> store = simpleTypeStoreFactory.getMutable("42")) {
+        assertThat(store.getAll()).isEmpty();
+      }
     }
 
     @Test
-    void shouldThrowExceptionForMalformedXML(QueryableStoreFactory storeFactory) throws IOException {
+    void shouldThrowExceptionForMalformedXML() throws IOException {
       Files.writeString(queryableStoreDir.toPath().resolve("sonia.scm.importexport.SimpleType.xml"), "<malformed><xml></broken>");
-
-      RepositoryQueryableStoreExporter exporter = new RepositoryQueryableStoreExporter(storeMetaDataProvider, storeFactory);
 
       assertThrows(RuntimeException.class, () -> exporter.importStores("42", tempDir));
     }
 
     @Test
-    void shouldNotImportFromEmptyFile(QueryableStoreFactory storeFactory, SimpleTypeStoreFactory simpleTypeStoreFactory) throws IOException {
-      simpleTypeStoreFactory.getMutable("42").put("1", new SimpleType("existing data"));
+    void shouldNotImportFromEmptyFile(SimpleTypeStoreFactory simpleTypeStoreFactory) throws IOException {
+      try (QueryableMutableStore<SimpleType> store = simpleTypeStoreFactory.getMutable("42")) {
+        store.put("1", new SimpleType("existing data"));
 
-      Files.createFile(queryableStoreDir.toPath().resolve("sonia.scm.importexport.SimpleType.xml"));
+        Files.createFile(queryableStoreDir.toPath().resolve("sonia.scm.importexport.SimpleType.xml"));
 
-      RepositoryQueryableStoreExporter exporter = new RepositoryQueryableStoreExporter(storeMetaDataProvider, storeFactory);
-      exporter.importStores("42", tempDir);
+        exporter.importStores("42", tempDir);
 
-      SimpleType simpleType = simpleTypeStoreFactory.getMutable("42").get("1");
+        SimpleType simpleType = store.get("1");
 
-      assertThat(simpleType)
-        .extracting("someField")
-        .isEqualTo("existing data");
+        assertThat(simpleType)
+          .extracting("someField")
+          .isEqualTo("existing data");
+      }
     }
   }
 }

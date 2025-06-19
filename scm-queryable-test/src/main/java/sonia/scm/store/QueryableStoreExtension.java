@@ -47,7 +47,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.BooleanSupplier;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
 
@@ -62,7 +66,8 @@ public class QueryableStoreExtension implements ParameterResolver, BeforeEachCal
   private final Set<Class<?>> storeFactoryClasses = new HashSet<>();
   private Path tempDirectory;
   private Collection<QueryableTypeDescriptor> queryableTypeDescriptors;
-  private SQLiteQueryableStoreFactory storeFactory;
+  private QueryableStoreFactory storeFactory;
+  private Collection<ClosedChecking> createdStores;
 
   private static ObjectMapper getObjectMapper() {
     // this should be the same as in ObjectMapperProvider
@@ -90,17 +95,23 @@ public class QueryableStoreExtension implements ParameterResolver, BeforeEachCal
     String connectionString = "jdbc:sqlite:" + tempDirectory.toString() + "/test.db";
     queryableTypeDescriptors = new ArrayList<>();
     addDescriptors(context);
-    storeFactory = new SQLiteQueryableStoreFactory(
-      connectionString,
-      mapper,
-      new UUIDKeyGenerator(),
-      queryableTypeDescriptors
+    createdStores = new ArrayList<>();
+    storeFactory = new ClosedCheckingQueryableStoreFactory(
+      new SQLiteQueryableStoreFactory(
+        connectionString,
+        mapper,
+        new UUIDKeyGenerator(),
+        queryableTypeDescriptors
+      )
     );
   }
 
   @Override
   public void afterEach(ExtensionContext context) throws IOException {
     IOUtil.delete(tempDirectory.toFile());
+    for (ClosedChecking store : createdStores) {
+      store.assertClosed();
+    }
   }
 
   private void addDescriptors(ExtensionContext context) {
@@ -164,5 +175,202 @@ public class QueryableStoreExtension implements ParameterResolver, BeforeEachCal
   @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
   public @interface QueryableTypes {
     Class<?>[] value();
+  }
+
+  private class ClosedCheckingQueryableStoreFactory implements QueryableStoreFactory {
+    private final QueryableStoreFactory delegate;
+
+    ClosedCheckingQueryableStoreFactory(QueryableStoreFactory delegate) {
+      this.delegate = delegate;
+    }
+
+    @Override
+    public <T> QueryableMaintenanceStore<T> getForMaintenance(Class<T> clazz, String... parentIds) {
+      ClosedCheckingQueryableMaintenanceStore<T> store = new ClosedCheckingQueryableMaintenanceStore<>(delegate.getForMaintenance(clazz, parentIds));
+      createdStores.add(store);
+      return store;
+    }
+
+    @Override
+    public <T> QueryableStore<T> getReadOnly(Class<T> clazz, String... parentIds) {
+      ClosedCheckingQueryableStore<T> store = new ClosedCheckingQueryableStore<>(delegate.getReadOnly(clazz, parentIds));
+      createdStores.add(store);
+      return store;
+    }
+
+    @Override
+    public <T> QueryableMutableStore<T> getMutable(Class<T> clazz, String... parentIds) {
+      ClosedCheckingQueryableMutableStore<T> store = new ClosedCheckingQueryableMutableStore<>(delegate.getMutable(clazz, parentIds));
+      createdStores.add(store);
+      return store;
+    }
+  }
+
+  private interface ClosedChecking {
+    default void assertClosed() {
+      if (!isClosed()) {
+        throw new IllegalStateException("Store has not been closed. Use stores in a try-with-resources block or call close() manually.");
+      }
+    }
+
+    boolean isClosed();
+  }
+
+  private static class ClosedCheckingQueryableMaintenanceStore<T> implements QueryableMaintenanceStore<T>, ClosedChecking {
+    private final QueryableMaintenanceStore<T> delegate;
+
+    private boolean closed = false;
+
+    ClosedCheckingQueryableMaintenanceStore(QueryableMaintenanceStore<T> delegate) {
+      this.delegate = delegate;
+    }
+
+    @Override
+    public void clear() {
+      delegate.clear();
+    }
+
+    @Override
+    public void close() {
+      delegate.close();
+      closed = true;
+    }
+
+    @Override
+    public MaintenanceIterator<T> iterateAll() {
+      return delegate.iterateAll();
+    }
+
+    @Override
+    public Collection<Row<T>> readAll() throws SerializationException {
+      return delegate.readAll();
+    }
+
+    @Override
+    public <U> Collection<Row<U>> readAllAs(Class<U> type) throws SerializationException {
+      return delegate.readAllAs(type);
+    }
+
+    @Override
+    public Collection<RawRow> readRaw() {
+      return delegate.readRaw();
+    }
+
+    @Override
+    public void writeAll(Iterable<Row> rows) throws SerializationException {
+      delegate.writeAll(rows);
+    }
+
+    @Override
+    public void writeAll(Stream<Row> rows) throws SerializationException {
+      delegate.writeAll(rows);
+    }
+
+    @Override
+    public void writeRaw(Iterable<RawRow> rows) {
+      delegate.writeRaw(rows);
+    }
+
+    @Override
+    public void writeRaw(Stream<RawRow> rows) {
+      delegate.writeRaw(rows);
+    }
+
+    @Override
+    public boolean isClosed() {
+      return closed;
+    }
+  }
+
+  private static class ClosedCheckingQueryableStore<T> implements QueryableStore<T>, ClosedChecking {
+    private final QueryableStore<T> delegate;
+
+    private boolean closed = false;
+
+    ClosedCheckingQueryableStore(QueryableStore<T> delegate) {
+      this.delegate = delegate;
+    }
+
+    @Override
+    public void close() {
+      delegate.close();
+      closed = true;
+    }
+
+    @Override
+    public Query<T, T, ?> query(Condition<T>... conditions) {
+      return delegate.query(conditions);
+    }
+
+    @Override
+    public boolean isClosed() {
+      return closed;
+    }
+  }
+
+  private static class ClosedCheckingQueryableMutableStore<T> implements QueryableMutableStore<T>, ClosedChecking {
+    private final QueryableMutableStore<T> delegate;
+
+    private boolean closed = false;
+
+    ClosedCheckingQueryableMutableStore(QueryableMutableStore<T> delegate) {
+      this.delegate = delegate;
+    }
+
+    @Override
+    public void close() {
+      delegate.close();
+      closed = true;
+    }
+
+    @Override
+    public MutableQuery<T, ?> query(Condition<T>... conditions) {
+      return delegate.query(conditions);
+    }
+
+    @Override
+    public void transactional(BooleanSupplier callback) {
+      delegate.transactional(callback);
+    }
+
+    @Override
+    public Map<String, T> getAll() {
+      return delegate.getAll();
+    }
+
+    @Override
+    public void put(String id, T item) {
+      delegate.put(id, item);
+    }
+
+    @Override
+    public String put(T item) {
+      return delegate.put(item);
+    }
+
+    @Override
+    public void clear() {
+      delegate.clear();
+    }
+
+    @Override
+    public T get(String id) {
+      return delegate.get(id);
+    }
+
+    @Override
+    public Optional<T> getOptional(String id) {
+      return delegate.getOptional(id);
+    }
+
+    @Override
+    public void remove(String id) {
+      delegate.remove(id);
+    }
+
+    @Override
+    public boolean isClosed() {
+      return closed;
+    }
   }
 }

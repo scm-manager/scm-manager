@@ -27,16 +27,18 @@ class QueryableStoreExtensionTest {
 
   @Test
   void shouldProvideQueryableStoreFactory(QueryableStoreFactory storeFactory) {
-    QueryableMutableStore<Spaceship> store = storeFactory.getMutable(Spaceship.class);
-    store.put(new Spaceship("Heart Of Gold"));
-    assertEquals(1, store.getAll().size());
+    try (QueryableMutableStore<Spaceship> store = storeFactory.getMutable(Spaceship.class)) {
+      store.put(new Spaceship("Heart Of Gold"));
+      assertEquals(1, store.getAll().size());
+    }
   }
 
   @Test
   void shouldProvideTypeRelatedStoreFactory(SpaceshipStoreFactory storeFactory) {
-    QueryableMutableStore<Spaceship> store = storeFactory.getMutable();
-    store.put(new Spaceship("Heart Of Gold"));
-    assertEquals(1, store.getAll().size());
+    try (QueryableMutableStore<Spaceship> store = storeFactory.getMutable()) {
+      store.put(new Spaceship("Heart Of Gold"));
+      assertEquals(1, store.getAll().size());
+    }
   }
 }
 

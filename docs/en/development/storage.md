@@ -78,6 +78,13 @@ however, specific methods are created here based on the parent classes mentioned
 To create and change data, specific IDs must be specified to access the store if parent classes have been defined. This
 store implements the known Store API (the `DataStore` interface), so no adjustments are needed in the application.
 
+Since the new persistence layer is based on SQL, the stored have to be closed after use. This is done best with
+a try-with-resources block. If the store is not closed, the connection to the database will not be released,
+which can lead to performance issues and memory leaks that will let the application crash in the long run.
+If stores are not closed, the application will log a warning message. The best way to avoid this is to use
+unit tests with the `QueryableStoreExtension`, which will assert that all stores are closed correctly in the tested
+code.
+
 ### Queryable Store
 
 For more advanced queries that also extend beyond the boundaries of the parent classes, there is a new store with a new
@@ -308,33 +315,38 @@ public class Demo {
     entity.setAge(age);
     entity.setTags(tags);
 
-    QueryableMutableStore<MyEntity> store = storeFactory.getMutable();
-    return store.put(entity);
+    try (QueryableMutableStore<MyEntity> store = storeFactory.getMutable()) {
+      return store.put(entity);
+    }
   }
 
   public MyEntity readById(String id) {
-    QueryableMutableStore<MyEntity> store = storeFactory.getMutable();
-    return store.get(id);
+    try (QueryableMutableStore<MyEntity> store = storeFactory.getMutable()) {
+      return store.get(id);
+    }
   }
 
   public Collection<MyEntity> findByAge(int age) {
-    QueryableStore<MyEntity> store = storeFactory.get();
-    return store.query(MyEntityQueryFields.AGE.eq(age)).findAll();
+    try (QueryableStore<MyEntity> store = storeFactory.get()) {
+      return store.query(MyEntityQueryFields.AGE.eq(age)).findAll();
+    }
   }
 
   public Collection<MyEntity> findByName(String name) {
-    QueryableStore<MyEntity> store = storeFactory.get();
-    return store.query(
-      Conditions.or(
-        MyEntityQueryFields.NAME.eq(name),
-        MyEntityQueryFields.ALIAS.eq(name)
-      )
-    ).findAll();
+    try (QueryableStore<MyEntity> store = storeFactory.get()) {
+      return store.query(
+        Conditions.or(
+          MyEntityQueryFields.NAME.eq(name),
+          MyEntityQueryFields.ALIAS.eq(name)
+        )
+      ).findAll();
+    }
   }
 
   public Collection<MyEntity> findByTag(String tag) {
-    QueryableStore<MyEntity> store = storeFactory.get();
-    return store.query(MyEntityQueryFields.TAGS.contains(tag)).findAll();
+    try (QueryableStore<MyEntity> store = storeFactory.get()) {
+      return store.query(MyEntityQueryFields.TAGS.contains(tag)).findAll();
+    }
   }
 }
 ```
@@ -364,22 +376,25 @@ public class Demo {
   }
 
   public void addContact(User user, String mail) {
-    QueryableMutableStore<Contact> store = storeFactory.getMutable(user);
     Contact contact = new Contact();
     contact.setMail(mail);
-    store.put(contact);
+    try (QueryableMutableStore<Contact> store = storeFactory.getMutable(user)) {
+      store.put(contact);
+    }
   }
 
   /** Get contact for a single user. */
   public Collection<Contact> getContacts(User user) {
-    QueryableMutableStore<Contact> store = storeFactory.getMutable(user);
-    return store.getAll().values();
+    try (QueryableMutableStore<Contact> store = storeFactory.getMutable(user)) {
+      return store.getAll().values();
+    }
   }
 
   /** Get all contacts for all users. */
   public Collection<Contact> getAllContacts() {
-    QueryableStore<Contact> store = storeFactory.getOverall();
-    return store.query().findAll();
+    try (QueryableStore<Contact> store = storeFactory.getOverall()) {
+      return store.query().findAll();
+    }
   }
 }
 ```
@@ -481,6 +496,7 @@ public class Contact {
 The following update step can be used to add the `type` field to all `Contact` entities:
 
 ```java
+
 @Extension
 public class AddTypeToContactsUpdateStep implements UpdateStep {
 
@@ -493,8 +509,9 @@ public class AddTypeToContactsUpdateStep implements UpdateStep {
 
   @Override
   public void doUpdate() {
-    try (MaintenanceIterator<Contact> iter = updateStepUtilFactory.forQueryableType(Contact.class).iterateAll()) {
-      while(iter.hasNext()) {
+    try (sonia.scm.store.QueryableMaintenanceStore<Object> store = updateStepUtilFactory.forQueryableType(Contact.class);
+         MaintenanceIterator<Contact> iter = store.iterateAll()) {
+      while (iter.hasNext()) {
         MaintenanceStoreEntry<Contact> entry = iter.next();
         Contact contact = entry.get();
         contact.setType("personal");

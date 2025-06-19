@@ -18,12 +18,14 @@ package sonia.scm.store.sqlite;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import org.sqlite.SQLiteConfig;
-import org.sqlite.SQLiteDataSource;
+import org.sqlite.JDBC;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.config.ConfigValue;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.QueryableTypeDescriptor;
 import sonia.scm.security.KeyGenerator;
@@ -48,6 +50,12 @@ import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATE_TIM
 @Singleton
 public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
 
+  public static final String DEFAULT_MAX_POOL_SIZE = "10";
+  public static final int MIN_IDLE = 0;
+  public static final String DEFAULT_CONNECTION_TIMEOUT_IN_SECONDS = "30";
+  public static final String DEFAULT_IDLE_TIMEOUT_IN_SECONDS = "600";
+  public static final String DEFAULT_MAX_LIFETIME_IN_SECONDS = "1800";
+  public static final String DEFAULT_LEAK_DETECTION_THRESHOLD_IN_SECONDS = "30";
   private final ObjectMapper objectMapper;
   private final KeyGenerator keyGenerator;
   private final DataSource dataSource;
@@ -60,12 +68,23 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
   public SQLiteQueryableStoreFactory(SCMContextProvider contextProvider,
                                      PluginLoader pluginLoader,
                                      ObjectMapper objectMapper,
-                                     KeyGenerator keyGenerator) {
+                                     KeyGenerator keyGenerator,
+                                     @ConfigValue(key = "queryableStore.maxPoolSize", defaultValue = DEFAULT_MAX_POOL_SIZE) int maxPoolSize,
+                                     @ConfigValue(key = "queryableStore.connectionTimeout", defaultValue = DEFAULT_CONNECTION_TIMEOUT_IN_SECONDS) int connectionTimeoutInSeconds,
+                                     @ConfigValue(key = "queryableStore.idleTimeout", defaultValue = DEFAULT_IDLE_TIMEOUT_IN_SECONDS) int idleTimeoutInSeconds,
+                                     @ConfigValue(key = "queryableStore.maxLifetime", defaultValue = DEFAULT_MAX_LIFETIME_IN_SECONDS) int maxLifetimeInSeconds,
+                                     @ConfigValue(key = "queryableStore.leakDetectionThreshold", defaultValue = DEFAULT_LEAK_DETECTION_THRESHOLD_IN_SECONDS) int leakDetectionThresholdInSeconds
+  ) {
     this(
-      "jdbc:sqlite:" + contextProvider.resolve(Path.of("scm.db")),
+      "jdbc:sqlite:" + contextProvider.resolve(Path.of("scm.db?shared_cache=true&journal_mode=WAL")),
       objectMapper,
       keyGenerator,
-      pluginLoader.getExtensionProcessor().getQueryableTypes()
+      pluginLoader.getExtensionProcessor().getQueryableTypes(),
+      maxPoolSize,
+      connectionTimeoutInSeconds,
+      idleTimeoutInSeconds,
+      maxLifetimeInSeconds,
+      leakDetectionThresholdInSeconds
     );
   }
 
@@ -74,14 +93,27 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
                                      ObjectMapper objectMapper,
                                      KeyGenerator keyGenerator,
                                      Iterable<QueryableTypeDescriptor> queryableTypeIterable) {
-    SQLiteConfig config = new SQLiteConfig();
-    config.setSharedCache(true);
-    config.setJournalMode(SQLiteConfig.JournalMode.WAL);
+    this(connectionString, objectMapper, keyGenerator, queryableTypeIterable, 10, 30, 600, 1800, 30);
+  }
 
-    this.dataSource = new SQLiteDataSource(
-      config
-    );
-    ((SQLiteDataSource) dataSource).setUrl(connectionString);
+  private SQLiteQueryableStoreFactory(String connectionString,
+                                      ObjectMapper objectMapper,
+                                      KeyGenerator keyGenerator,
+                                      Iterable<QueryableTypeDescriptor> queryableTypeIterable,
+                                      int maxPoolSize,
+                                      int connectionTimeoutInSeconds,
+                                      int idleTimeoutInSeconds,
+                                      int maxLifetimeInSeconds,
+                                      int leakDetectionThresholdInSeconds) {
+    HikariConfig config = createConnectionPoolConfig(
+      connectionString,
+      maxPoolSize,
+      connectionTimeoutInSeconds,
+      idleTimeoutInSeconds,
+      maxLifetimeInSeconds,
+      leakDetectionThresholdInSeconds);
+    this.dataSource = new HikariDataSource(config);
+
     this.objectMapper = objectMapper
       .copy()
       .configure(WRITE_DATES_AS_TIMESTAMPS, true)
@@ -102,6 +134,27 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
         log.warn("could not close connection", e);
       }
     }
+  }
+
+  private static HikariConfig createConnectionPoolConfig(String connectionString,
+                                                         int maxPoolSize,
+                                                         int connectionTimeoutInSeconds,
+                                                         int idleTimeoutInSeconds,
+                                                         int maxLifetimeInSeconds,
+                                                         int leakDetectionThresholdInSeconds) {
+    HikariConfig config = new HikariConfig();
+    config.setJdbcUrl(connectionString);
+    config.setMaximumPoolSize(maxPoolSize);
+    config.setMinimumIdle(MIN_IDLE);
+    config.setConnectionTimeout(connectionTimeoutInSeconds * 1000L);
+    config.setIdleTimeout(idleTimeoutInSeconds * 1000L);
+    config.setMaxLifetime(maxLifetimeInSeconds * 1000L);
+    config.setConnectionTestQuery("SELECT 1");
+    config.setPoolName("SCMM_SQLitePool");
+    config.setDriverClassName(JDBC.class.getName());
+    // If a connection is held for longer than 30 seconds, HikariCP will log a warning:
+    config.setLeakDetectionThreshold(leakDetectionThresholdInSeconds * 1000L);
+    return config;
   }
 
   private Connection openDefaultConnection() {

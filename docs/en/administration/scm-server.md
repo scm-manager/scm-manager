@@ -214,22 +214,37 @@ webapp:
   workingCopyPoolStrategy: sonia.scm.repository.work.SimpleCachingWorkingCopyPool
   ## Amount of "cached" working copies
   workingCopyPoolSize: 5
+  ## Settings for queryable stores, which are backed by an SQLite database.
+  ## Timeouts and lifetimes are in seconds
+  queryableStores:
+    maxPoolSize: 10
+    connectionTimeout: 30
+    idleTimeout: 600
+    maxLifetime: 1800
+    leakDetectionThreshold: 30
+
+
 ```
 
 **Environment variables**
 
-| Environment Variable                | Corresponding config.yml property | Example                                                                                          |
-| ----------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------ |
-| SCM_WEBAPP_WORKDIR                  | webapp.workDir                    | export SCM_WEBAPP_WORKDIR=/tmp/scm-work                                                          |
-| SCM_WEBAPP_HOMEDIR                  | webapp.homeDir                    | export SCM_WEBAPP_HOMEDIR=/var/lib/scm                                                           |
-| SCM_WEBAPP_CACHE_DATAFILE_ENABLED   | webapp.cache.datafile.enabled     | export SCM_WEBAPP_CACHE_DATAFILE_ENABLED=true                                                    |
-| SCM_WEBAPP_CACHE_STORE_ENABLED      | webapp.cache.store.enabled        | export SCM_WEBAPP_CACHE_STORE_ENABLED=true                                                       |
-| SCM_WEBAPP_ENDLESSJWT               | webapp.endlessJwt                 | export SCM_WEBAPP_ENDLESSJWT=false                                                               |
-| SCM_WEBAPP_ASYNCTHREADS             | webapp.asyncThreads               | export SCM_WEBAPP_ASYNCTHREADS=4                                                                 |
-| SCM_WEBAPP_MAXASYNCABORTSECONDS     | webapp.maxAsyncAbortSeconds       | export SCM_WEBAPP_MAXASYNCABORTSECONDS=60                                                        |
-| SCM_WEBAPP_CENTRALWORKQUEUE_WORKERS | webapp.centralWorkQueue.workers   | export SCM_WEBAPP_CENTRALWORKQUEUE_WORKERS=4                                                     |
-| SCM_WEBAPP_WORKINGCOPYPOOLSTRATEGY  | webapp.workingCopyPoolStrategy    | export SCM_WEBAPP_WORKINGCOPYPOOLSTRATEGY=sonia.scm.repository.work.SimpleCachingWorkingCopyPool |
-| SCM_WEBAPP_WORKINGCOPYPOOLSIZE      | webapp.workingCopyPoolSize        | export SCM_WEBAPP_WORKINGCOPYPOOLSIZE=5                                                          |
-| SCM_WEBAPP_INITIALUSER              | webapp.initialUser                | export SCM_WEBAPP_INITIALUSER=scmadmin                                                           |
-| SCM_WEBAPP_INITIALPASSWORD          | webapp.initialPassword            | export SCM_WEBAPP_INITIALPASSWORD=scmadmin                                                       |
-| SCM_WEBAPP_SKIPADMINCREATION        | webapp.skipAdminCreation          | export SCM_WEBAPP_SKIPADMINCREATION=true                                                         |
+| Environment Variable                              | Corresponding config.yml property             | Example                                                                                          |
+|---------------------------------------------------|-----------------------------------------------|--------------------------------------------------------------------------------------------------|
+| SCM_WEBAPP_WORKDIR                                | webapp.workDir                                | export SCM_WEBAPP_WORKDIR=/tmp/scm-work                                                          |
+| SCM_WEBAPP_HOMEDIR                                | webapp.homeDir                                | export SCM_WEBAPP_HOMEDIR=/var/lib/scm                                                           |
+| SCM_WEBAPP_CACHE_DATAFILE_ENABLED                 | webapp.cache.datafile.enabled                 | export SCM_WEBAPP_CACHE_DATAFILE_ENABLED=true                                                    |
+| SCM_WEBAPP_CACHE_STORE_ENABLED                    | webapp.cache.store.enabled                    | export SCM_WEBAPP_CACHE_STORE_ENABLED=true                                                       |
+| SCM_WEBAPP_ENDLESSJWT                             | webapp.endlessJwt                             | export SCM_WEBAPP_ENDLESSJWT=false                                                               |
+| SCM_WEBAPP_ASYNCTHREADS                           | webapp.asyncThreads                           | export SCM_WEBAPP_ASYNCTHREADS=4                                                                 |
+| SCM_WEBAPP_MAXASYNCABORTSECONDS                   | webapp.maxAsyncAbortSeconds                   | export SCM_WEBAPP_MAXASYNCABORTSECONDS=60                                                        |
+| SCM_WEBAPP_CENTRALWORKQUEUE_WORKERS               | webapp.centralWorkQueue.workers               | export SCM_WEBAPP_CENTRALWORKQUEUE_WORKERS=4                                                     |
+| SCM_WEBAPP_WORKINGCOPYPOOLSTRATEGY                | webapp.workingCopyPoolStrategy                | export SCM_WEBAPP_WORKINGCOPYPOOLSTRATEGY=sonia.scm.repository.work.SimpleCachingWorkingCopyPool |
+| SCM_WEBAPP_WORKINGCOPYPOOLSIZE                    | webapp.workingCopyPoolSize                    | export SCM_WEBAPP_WORKINGCOPYPOOLSIZE=5                                                          |
+| SCM_WEBAPP_INITIALUSER                            | webapp.initialUser                            | export SCM_WEBAPP_INITIALUSER=scmadmin                                                           |
+| SCM_WEBAPP_INITIALPASSWORD                        | webapp.initialPassword                        | export SCM_WEBAPP_INITIALPASSWORD=scmadmin                                                       |
+| SCM_WEBAPP_SKIPADMINCREATION                      | webapp.skipAdminCreation                      | export SCM_WEBAPP_SKIPADMINCREATION=true                                                         |
+| SCM_WEBAPP_QUERYABLESTORES_MAXPOOLSIZE            | webapp.queryableStores.maxPoolSize            | export SCM_WEBAPP_QUERYABLESTORES_MAXPOOLSIZE=20                                                 |
+| SCM_WEBAPP_QUERYABLESTORES_CONNECTIONTIMEOUT      | webapp.queryableStores.connectionTimeout      | export SCM_WEBAPP_QUERYABLESTORES_CONNECTIONTIMEOUT=30                                           |
+| SCM_WEBAPP_QUERYABLESTORES_IDLETIMEOUT            | webapp.queryableStores.idleTimeout            | export SCM_WEBAPP_QUERYABLESTORES_IDLETIMEOUT=600                                                |
+| SCM_WEBAPP_QUERYABLESTORES_MAXLIFETIME            | webapp.queryableStores.maxLifetime            | export SCM_WEBAPP_QUERYABLESTORES_MAXLIFETIME=1800                                               |
+| SCM_WEBAPP_QUERYABLESTORES_LEAKDETECTIONTHRESHOLD | webapp.queryableStores.leakDetectionThreshold | export SCM_WEBAPP_QUERYABLESTORES_LEAKDETECTIONTHRESHOLD=1800                                    |
