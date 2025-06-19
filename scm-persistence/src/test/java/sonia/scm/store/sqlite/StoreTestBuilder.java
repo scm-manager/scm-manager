@@ -18,17 +18,25 @@ package sonia.scm.store.sqlite;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.mockito.Mockito;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.UUIDKeyGenerator;
 import sonia.scm.store.IdGenerator;
 import sonia.scm.store.QueryableMaintenanceStore;
 import sonia.scm.store.QueryableStore;
 import sonia.scm.user.User;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.when;
 import static sonia.scm.store.sqlite.QueryableTypeDescriptorTestData.createDescriptor;
 
 class StoreTestBuilder {
@@ -47,6 +55,8 @@ class StoreTestBuilder {
   private final String connectionString;
   private final String[] parentClasses;
   private final IdGenerator idGenerator;
+
+  private Collection<String> readOnlyRepositoryIds = new HashSet<>();
 
   StoreTestBuilder(String connectionString, String... parentClasses) {
     this(connectionString, IdGenerator.DEFAULT, parentClasses);
@@ -80,12 +90,27 @@ class StoreTestBuilder {
     return createStoreFactory(clazz).getMutable(clazz, ids);
   }
 
+  StoreTestBuilder readOnly(String... repositoryIds) {
+    readOnlyRepositoryIds.addAll(List.of(repositoryIds));
+    return this;
+  }
+
   private <T> SQLiteQueryableStoreFactory createStoreFactory(Class<T> clazz) {
+    RepositoryReadOnlyChecker readOnlyChecker;
+    if (readOnlyRepositoryIds.isEmpty()) {
+      readOnlyChecker = new RepositoryReadOnlyChecker();
+    } else {
+      readOnlyChecker = Mockito.mock(RepositoryReadOnlyChecker.class);
+      when(readOnlyChecker.isReadOnly(argThat((String repoId) -> readOnlyRepositoryIds.contains(repoId))))
+        .thenReturn(true);
+      when(readOnlyChecker.isReadOnly(any(Repository.class))).thenCallRealMethod();
+    }
     return new SQLiteQueryableStoreFactory(
       connectionString,
       mapper,
       new UUIDKeyGenerator(),
-      List.of(createDescriptor("", clazz.getName(), parentClasses, idGenerator))
+      List.of(createDescriptor("", clazz.getName(), parentClasses, idGenerator)),
+      readOnlyChecker
     );
   }
 }

@@ -35,6 +35,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import sonia.scm.plugin.QueryableTypeDescriptor;
+import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.UUIDKeyGenerator;
 import sonia.scm.store.sqlite.SQLiteQueryableStoreFactory;
 import sonia.scm.util.IOUtil;
@@ -101,7 +102,8 @@ public class QueryableStoreExtension implements ParameterResolver, BeforeEachCal
         connectionString,
         mapper,
         new UUIDKeyGenerator(),
-        queryableTypeDescriptors
+        queryableTypeDescriptors,
+        new RepositoryReadOnlyChecker()
       )
     );
   }

@@ -55,8 +55,9 @@ class SQLiteQueryableMutableStore<T> extends SQLiteQueryableStore<T> implements 
                                      Class<T> clazz,
                                      QueryableTypeDescriptor queryableTypeDescriptor,
                                      String[] parentIds,
-                                     ReadWriteLock lock) {
-    super(objectMapper, connection, clazz, queryableTypeDescriptor, parentIds, lock);
+                                     ReadWriteLock lock,
+                                     boolean readOnly) {
+    super(objectMapper, connection, clazz, queryableTypeDescriptor, parentIds, lock, readOnly);
     this.objectMapper = objectMapper;
     this.clazz = clazz;
     this.parentIds = parentIds;

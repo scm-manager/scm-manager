@@ -21,9 +21,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import sonia.scm.group.Group;
+import sonia.scm.repository.Repository;
 import sonia.scm.store.IdGenerator;
 import sonia.scm.store.QueryableMutableStore;
 import sonia.scm.store.QueryableStore;
+import sonia.scm.store.StoreReadOnlyException;
 import sonia.scm.user.User;
 
 import java.nio.file.Path;
@@ -36,6 +39,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SuppressWarnings("resource")
 class SQLiteQueryableMutableStoreTest {
@@ -510,6 +514,75 @@ class SQLiteQueryableMutableStoreTest {
         assertThat(crewmateStoreForShipTwo.getAll()).hasSize(2);
       }
     }
+  }
 
+  @Test
+  void shouldThrowExceptionWhenReadOnlyStoreIsModified() {
+    StoreTestBuilder storeTestBuilder = new StoreTestBuilder(
+      connectionString,
+      Repository.class.getName() + ".class"
+    ).readOnly("42");
+
+    assertThrows(StoreReadOnlyException.class, () ->
+      storeTestBuilder
+        .withIds("42")
+        .put("tricia", new User("trillian"))
+    );
+  }
+
+  @Test
+  void shouldThrowExceptionWhenStoreForReadOnlyRepositoryAsFirstParentIsModified() {
+    StoreTestBuilder storeTestBuilder = new StoreTestBuilder(
+      connectionString,
+      Repository.class.getName() + ".class",
+      Group.class.getName() + ".class"
+    ).readOnly("42");
+
+    assertThrows(StoreReadOnlyException.class, () ->
+      storeTestBuilder
+        .withIds("42", "hitchhikers")
+        .put("tricia", new User("trillian"))
+    );
+  }
+
+  @Test
+  void shouldThrowExceptionWhenStoreForReadOnlyRepositoryAsSecondParentIsModified() {
+    StoreTestBuilder storeTestBuilder = new StoreTestBuilder(
+      connectionString,
+      Group.class.getName() + ".class",
+      Repository.class.getName() + ".class"
+    ).readOnly("42");
+
+    assertThrows(StoreReadOnlyException.class, () ->
+      storeTestBuilder
+        .withIds("hitchhikers", "42")
+        .put("tricia", new User("trillian"))
+    );
+  }
+
+  @Test
+  void shouldWriteToWritableStore() {
+    StoreTestBuilder storeTestBuilder = new StoreTestBuilder(
+      connectionString,
+      Repository.class.getName() + ".class"
+    ).readOnly("42");
+
+    SQLiteQueryableMutableStore<User> store = storeTestBuilder.withIds("23");
+    store.put("tricia", new User("trillian"));
+
+    assertThat(store.get("tricia")).isNotNull();
+  }
+
+  @Test
+  void shouldWriteToWritableStoreWithDifferentParentClass() {
+    StoreTestBuilder storeTestBuilder = new StoreTestBuilder(
+      connectionString,
+      Group.class.getName() + ".class"
+    ).readOnly("42");
+
+    SQLiteQueryableMutableStore<User> store = storeTestBuilder.withIds("42");
+    store.put("tricia", new User("trillian"));
+
+    assertThat(store.get("tricia")).isNotNull();
   }
 }

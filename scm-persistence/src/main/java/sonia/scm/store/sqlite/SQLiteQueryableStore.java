@@ -30,6 +30,7 @@ import sonia.scm.store.LogicalCondition;
 import sonia.scm.store.QueryableMaintenanceStore;
 import sonia.scm.store.QueryableStore;
 import sonia.scm.store.StoreException;
+import sonia.scm.store.StoreReadOnlyException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -71,19 +72,22 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
   private final String[] parentIds;
 
   private final ReadWriteLock lock;
+  private final boolean readOnly;
 
   public SQLiteQueryableStore(ObjectMapper objectMapper,
                               Connection connection,
                               Class<T> clazz,
                               QueryableTypeDescriptor queryableTypeDescriptor,
                               String[] parentIds,
-                              ReadWriteLock lock) {
+                              ReadWriteLock lock,
+                              boolean readOnly) {
     this.objectMapper = objectMapper;
     this.connection = connection;
     this.clazz = clazz;
     this.parentIds = parentIds;
     this.queryableTypeDescriptor = queryableTypeDescriptor;
     this.lock = lock;
+    this.readOnly = readOnly;
   }
 
   @Override
@@ -243,9 +247,16 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
   }
 
   <R> R executeWrite(SQLNodeWithValue sqlStatement, StatementCallback<R> callback) {
+    assertNotReadOnly();
     String sql = sqlStatement.toSQL();
     log.debug("executing 'write' SQL: {}", sql);
     return executeWithLock(sqlStatement, callback, lock.writeLock(), sql);
+  }
+
+  private void assertNotReadOnly() {
+    if (readOnly) {
+      throw new StoreReadOnlyException(clazz.getName());
+    }
   }
 
   private <R> R executeWithLock(SQLNodeWithValue sqlStatement, StatementCallback<R> callback, Lock writeLock, String sql) {

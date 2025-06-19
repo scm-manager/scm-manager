@@ -28,6 +28,8 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ConfigValue;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.QueryableTypeDescriptor;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.QueryableMaintenanceStore;
 import sonia.scm.store.QueryableStoreFactory;
@@ -59,6 +61,7 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
   private final ObjectMapper objectMapper;
   private final KeyGenerator keyGenerator;
   private final DataSource dataSource;
+  private final RepositoryReadOnlyChecker readOnlyChecker;
 
   private final Map<String, QueryableTypeDescriptor> queryableTypes = new HashMap<>();
 
@@ -69,6 +72,7 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
                                      PluginLoader pluginLoader,
                                      ObjectMapper objectMapper,
                                      KeyGenerator keyGenerator,
+                                     RepositoryReadOnlyChecker readOnlyChecker,
                                      @ConfigValue(key = "queryableStore.maxPoolSize", defaultValue = DEFAULT_MAX_POOL_SIZE) int maxPoolSize,
                                      @ConfigValue(key = "queryableStore.connectionTimeout", defaultValue = DEFAULT_CONNECTION_TIMEOUT_IN_SECONDS) int connectionTimeoutInSeconds,
                                      @ConfigValue(key = "queryableStore.idleTimeout", defaultValue = DEFAULT_IDLE_TIMEOUT_IN_SECONDS) int idleTimeoutInSeconds,
@@ -80,6 +84,7 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
       objectMapper,
       keyGenerator,
       pluginLoader.getExtensionProcessor().getQueryableTypes(),
+      readOnlyChecker,
       maxPoolSize,
       connectionTimeoutInSeconds,
       idleTimeoutInSeconds,
@@ -92,14 +97,16 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
   public SQLiteQueryableStoreFactory(String connectionString,
                                      ObjectMapper objectMapper,
                                      KeyGenerator keyGenerator,
-                                     Iterable<QueryableTypeDescriptor> queryableTypeIterable) {
-    this(connectionString, objectMapper, keyGenerator, queryableTypeIterable, 10, 30, 600, 1800, 30);
+                                     Iterable<QueryableTypeDescriptor> queryableTypeIterable,
+                                     RepositoryReadOnlyChecker readOnlyChecker) {
+    this(connectionString, objectMapper, keyGenerator, queryableTypeIterable, readOnlyChecker, 10, 30, 600, 1800, 30);
   }
 
   private SQLiteQueryableStoreFactory(String connectionString,
                                       ObjectMapper objectMapper,
                                       KeyGenerator keyGenerator,
                                       Iterable<QueryableTypeDescriptor> queryableTypeIterable,
+                                      RepositoryReadOnlyChecker readOnlyChecker,
                                       int maxPoolSize,
                                       int connectionTimeoutInSeconds,
                                       int idleTimeoutInSeconds,
@@ -112,6 +119,7 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
       idleTimeoutInSeconds,
       maxLifetimeInSeconds,
       leakDetectionThresholdInSeconds);
+    this.readOnlyChecker = readOnlyChecker;
     this.dataSource = new HikariDataSource(config);
 
     this.objectMapper = objectMapper
@@ -170,17 +178,57 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
 
   @Override
   public <T> SQLiteQueryableStore<T> getReadOnly(Class<T> clazz, String... parentIds) {
-    return new SQLiteQueryableStore<>(objectMapper, openDefaultConnection(), clazz, getQueryableTypeDescriptor(clazz), parentIds, lock);
+    QueryableTypeDescriptor queryableTypeDescriptor = getQueryableTypeDescriptor(clazz);
+    return new SQLiteQueryableStore<>(
+      objectMapper,
+      openDefaultConnection(),
+      clazz,
+      queryableTypeDescriptor,
+      parentIds,
+      lock,
+      mustBeReadOnly(queryableTypeDescriptor, parentIds)
+    );
   }
 
   @Override
   public <T> QueryableMaintenanceStore<T> getForMaintenance(Class<T> clazz, String... parentIds) {
-    return new SQLiteQueryableStore<>(objectMapper, openDefaultConnection(), clazz, getQueryableTypeDescriptor(clazz), parentIds, lock);
+    QueryableTypeDescriptor queryableTypeDescriptor = getQueryableTypeDescriptor(clazz);
+    return new SQLiteQueryableStore<>(
+      objectMapper,
+      openDefaultConnection(),
+      clazz,
+      queryableTypeDescriptor,
+      parentIds,
+      lock,
+      mustBeReadOnly(queryableTypeDescriptor, parentIds)
+    );
   }
 
   @Override
   public <T> SQLiteQueryableMutableStore<T> getMutable(Class<T> clazz, String... parentIds) {
-    return new SQLiteQueryableMutableStore<>(objectMapper, keyGenerator, openDefaultConnection(), clazz, getQueryableTypeDescriptor(clazz), parentIds, lock);
+    QueryableTypeDescriptor queryableTypeDescriptor = getQueryableTypeDescriptor(clazz);
+    return new SQLiteQueryableMutableStore<>(
+      objectMapper,
+      keyGenerator,
+      openDefaultConnection(),
+      clazz,
+      queryableTypeDescriptor,
+      parentIds,
+      lock,
+      mustBeReadOnly(queryableTypeDescriptor, parentIds)
+    );
+  }
+
+  private boolean mustBeReadOnly(QueryableTypeDescriptor queryableTypeDescriptor, String... parentIds) {
+    for (int i = 0; i < queryableTypeDescriptor.getTypes().length; i++) {
+      if (queryableTypeDescriptor.getTypes()[i].startsWith(Repository.class.getName()) && parentIds.length > i) {
+        String repositoryId = parentIds[i];
+        if (repositoryId != null && readOnlyChecker.isReadOnly(repositoryId)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private <T> QueryableTypeDescriptor getQueryableTypeDescriptor(Class<T> clazz) {
