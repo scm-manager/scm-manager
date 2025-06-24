@@ -208,6 +208,19 @@ SCM-Manager provides a DAO (data access object) layer to persist data like users
 For data persistence beneath the DAO layer, the store layer should be used. 
 Different types of stores can persist data globally or repository specific.
 
+#### SQLite Persistence Layer
+SCM-Manager has introduced a dedicated SQLite persistence layer for specific metadata, including repository-specific data like pull requests 
+and global or cross-repository data such as metadata used by plugins (e.g., the landing page plugin). 
+This new persistence approach addresses performance challenges inherent to XML storage, particularly for frequently changing or extensive data. 
+SQLite was selected due to its performance benefits, cross-platform compatibility, and embedded usage without requiring a separate database server.
+
+The SQLite persistence layer maintains compatibility with existing SCM-Manager functionalities like data export/import, 
+automatic cleanup, and querying across multiple entries and repositories. 
+It also preserves simplicity in installation, usage, and plugin integration.
+
+Further details about the SQLite-based persistence layer and its architecture can be found in the [SQLite Documentation](../storage).
+
+
 ## Examples
 ### Fetch all repositories
 One of the main pages in SCM-Manager is the repository overview. 

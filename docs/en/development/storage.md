@@ -435,9 +435,12 @@ entity. This means that
 - if an entity is stored using the put method with an explicit ID parameter (`DataStore#put(String, T)`), this ID
   will be used to store the entity. The ID field of the entity will be set with this given ID.
 
-Please note that if you change the ID field of an entity after it has been stored, the store will not automatically
-update the ID in the store. You must explicitly call the `put` method with the new ID to store the entity with the
-new ID and remove the old entry with the old ID.
+**IMPORTANT:**
+
+If you change the ID field of an entity after it has already been stored, the store will not automatically update the ID entry. 
+You must explicitly:
+- Call the `put()` method with the new ID to store the entity under this ID.
+- Remove the previous entry associated with the old ID to prevent inconsistencies.
 
 ```java
 import lombok.Data;
@@ -475,6 +478,8 @@ public class MyEntity {
   private String name;
 }
 ```
+
+**IMPORTANT:**
 
 This feature cannot be used in combination with an explicit ID field annotated with `@Id`.
 
@@ -531,6 +536,7 @@ public class AddTypeToContactsUpdateStep implements UpdateStep {
   }
 }
 ```
+IMPORTANT:
 
 Please note that the iterator from the `StoreUpdateStepUtilFactory` has to be closed after usage. This is done best with
 a try-with-resources block like in the example above.

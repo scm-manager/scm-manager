@@ -10,7 +10,7 @@ Also it is a good guide line to adapt Postel's law: *Be conservative in what you
 
 ## Java
 
-Please mind the [EditorConfig](https://editorconfig.org/) file `.editorconfig` in the root of the SCM-Manager and the [configuration guide](docs/en/intellij-idea-configuration.mdation.md) for IntelliJ IDEA. There are plugins for a lot of IDEs and text editors.
+Please mind the [EditorConfig](https://editorconfig.org/) file `.editorconfig` in the root of the SCM-Manager and the [configuration guide](../intellij-idea-configuration) for IntelliJ IDEA. There are plugins for a lot of IDEs and text editors.
 
 In the following, there are some rules we have come to value and that we would like to follow. Some are simple, others might need
 more skill. If you feel overwhelmed by them, do not let them deter you. We love to support you in keeping these rules.
