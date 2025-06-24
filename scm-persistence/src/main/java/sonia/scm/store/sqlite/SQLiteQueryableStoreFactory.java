@@ -80,7 +80,7 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
                                      @ConfigValue(key = "queryableStore.leakDetectionThreshold", defaultValue = DEFAULT_LEAK_DETECTION_THRESHOLD_IN_SECONDS) int leakDetectionThresholdInSeconds
   ) {
     this(
-      "jdbc:sqlite:" + contextProvider.resolve(Path.of("scm.db?shared_cache=true&journal_mode=WAL")),
+      "jdbc:sqlite:" + contextProvider.resolve(Path.of("scm.db")) + "?shared_cache=true&journal_mode=WAL",
       objectMapper,
       keyGenerator,
       pluginLoader.getExtensionProcessor().getQueryableTypes(),

@@ -1,0 +1,2 @@
+- type: fixed
+  description: Adjust connection string to match windows path resolver
