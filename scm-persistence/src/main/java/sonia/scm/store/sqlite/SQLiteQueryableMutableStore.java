@@ -105,7 +105,7 @@ class SQLiteQueryableMutableStore<T> extends SQLiteQueryableStore<T> implements 
 
   @Override
   public Map<String, T> getAll() {
-    List<SQLField> columns = List.of(
+    List<SQLNode> columns = List.of(
       SQLField.PAYLOAD,
       new SQLField("ID")
     );
@@ -221,7 +221,7 @@ class SQLiteQueryableMutableStore<T> extends SQLiteQueryableStore<T> implements 
     @Override
     public void retain(long n) {
 
-      List<SQLField> columns = new ArrayList<>();
+      List<SQLNode> columns = new ArrayList<>();
       addParentIdSQLFields(columns);
 
       List<SQLNodeWithValue> conditions = new ArrayList<>();

@@ -26,12 +26,12 @@ import static java.lang.String.format;
 class SQLiteRetainStatement implements SQLNodeWithValue {
 
   private final SQLTable table;
-  private final List<SQLField> columns;
+  private final List<SQLNode> columns;
   private final SQLSelectStatement selectStatement;
   private final List<SQLNodeWithValue> parentConditions;
 
 
-  SQLiteRetainStatement(SQLTable table, List<SQLField> columns, SQLSelectStatement selectStatement, List<SQLNodeWithValue> parentConditions) {
+  SQLiteRetainStatement(SQLTable table, List<SQLNode> columns, SQLSelectStatement selectStatement, List<SQLNodeWithValue> parentConditions) {
     this.table = table;
     this.columns = columns;
     this.selectStatement = selectStatement;
@@ -57,7 +57,7 @@ class SQLiteRetainStatement implements SQLNodeWithValue {
     }
     return format("DELETE FROM %s WHERE (%s) NOT IN (%s) %s",
             table.toSQL(),
-            columns.stream().map(SQLField::toSQL).collect(Collectors.joining(",")),
+            columns.stream().map(SQLNode::toSQL).collect(Collectors.joining(",")),
             selectStatement.toSQL(),
             parentConditionStatement);
   }

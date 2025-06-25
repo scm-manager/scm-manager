@@ -133,7 +133,7 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
   private <R> Collection<R> readAllAs(RowBuilder<R> rowBuilder) {
     List<SQLNodeWithValue> parentConditions = new ArrayList<>();
     evaluateParentConditions(parentConditions);
-    List<SQLField> fields = new ArrayList<>();
+    List<SQLNode> fields = new ArrayList<>();
     addParentIdSQLFields(fields);
     int parentIdsLength = fields.size() - 1; // addParentIdSQLFields has already added the ID field
     fields.add(new SQLField("PAYLOAD"));
@@ -201,7 +201,7 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
 
   @Override
   public MaintenanceIterator<T> iterateAll() {
-    List<SQLField> columns = new LinkedList<>();
+    List<SQLNode> columns = new LinkedList<>();
     columns.add(new SQLField("payload"));
     addParentIdSQLFields(columns);
 
@@ -292,7 +292,7 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
     }
   }
 
-  void addParentIdSQLFields(List<SQLField> fields) {
+  void addParentIdSQLFields(List<SQLNode> fields) {
     for (int i = 0; i < queryableTypeDescriptor.getTypes().length; i++) {
       fields.add(new SQLField(computeColumnIdentifier(queryableTypeDescriptor.getTypes()[i])));
     }
@@ -343,18 +343,21 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
     private final Class<T_RESULT> resultType;
     private final Class<T> entityType;
     private final Condition<T> condition;
+    private final QueryField<T, ?>[] projection;
     private List<OrderBy<T>> orderBy;
+    private boolean distinct = false;
 
     SQLiteQuery(Class<T_RESULT> resultType, Condition<T>[] conditions) {
-      this(resultType, resultType, conjunct(conditions), Collections.emptyList());
+      this(resultType, resultType, conjunct(conditions), Collections.emptyList(), null);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private SQLiteQuery(Class<T_RESULT> resultType, Class entityType, Condition<T> condition, List<OrderBy<T>> orderBy) {
+    private SQLiteQuery(Class<T_RESULT> resultType, Class entityType, Condition<T> condition, List<OrderBy<T>> orderBy, QueryField<T, ?>[] projection) {
       this.resultType = resultType;
       this.entityType = entityType;
       this.condition = condition;
       this.orderBy = orderBy;
+      this.projection = projection;
     }
 
     private static <T> Condition<T> conjunct(Condition<T>[] conditions) {
@@ -385,13 +388,6 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
     }
 
     @Override
-    public List<T_RESULT> findAll(long offset, long limit) {
-      List<T_RESULT> result = new ArrayList<>();
-      forEach(result::add, offset, limit);
-      return Collections.unmodifiableList(result);
-    }
-
-    @Override
     public void forEach(Consumer<T_RESULT> consumer, long offset, long limit) {
       String orderByString = getOrderByString();
 
@@ -402,7 +398,8 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
           computeCondition(),
           orderByString,
           limit,
-          offset
+          offset,
+          distinct
         );
 
       executeRead(
@@ -418,6 +415,17 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
       );
     }
 
+    @Override
+    public Query<T, T_RESULT, ?> distinct() {
+      this.distinct = true;
+      return this;
+    }
+
+    @Override
+    public Query<T, Object[], ?> project(QueryField<T, ?>... fields) {
+      return new SQLiteQuery<>(Object[].class, resultType, condition, orderBy, fields);
+    }
+
     String getOrderByString() {
       StringBuilder orderByBuilder = new StringBuilder();
       if (orderBy != null && !orderBy.isEmpty()) {
@@ -429,14 +437,14 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
     @Override
     @SuppressWarnings("unchecked")
     public Query<T, Result<T_RESULT>, ?> withIds() {
-      return new SQLiteQuery<>((Class<Result<T_RESULT>>) (Class<?>) Result.class, resultType, condition, orderBy);
+      return new SQLiteQuery<>((Class<Result<T_RESULT>>) (Class<?>) Result.class, resultType, condition, orderBy, null);
     }
 
     @Override
     public long count() {
       SQLSelectStatement sqlStatementQuery =
         new SQLSelectStatement(
-          List.of(new SQLField("COUNT(*)")),
+          List.of(new SQLCountField(computeFields(), distinct)),
           computeFromTable(),
           computeCondition()
         );
@@ -505,13 +513,28 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
       return newOrderBy;
     }
 
-    private List<SQLField> computeFields() {
-      List<SQLField> fields = new ArrayList<>();
+    private List<SQLNode> computeFields() {
+      if (projection != null && projection.length > 0) {
+        return computeProjectedFields();
+      }
+      return computeDefaultFields();
+    }
+
+    private List<SQLNode> computeDefaultFields() {
+      List<SQLNode> fields = new ArrayList<>();
       fields.add(SQLField.PAYLOAD);
       if (resultType.isAssignableFrom(Result.class)) {
         addParentIdSQLFields(fields);
       }
       return fields;
+    }
+
+    private List<SQLNode> computeProjectedFields() {
+      return Arrays.stream(projection)
+        .map(SQLFieldHelper::computeSQLField)
+        .map(SQLField::new)
+        .map(field -> (SQLNode) field)
+        .toList();
     }
 
     List<SQLNodeWithValue> computeCondition() {
@@ -556,6 +579,22 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
 
     @SuppressWarnings("unchecked")
     private T_RESULT extractResult(ResultSet resultSet) throws JsonProcessingException, SQLException {
+      if (projection != null && projection.length > 0) {
+        Object[] values = new Object[projection.length];
+        for (int i = 0; i < projection.length; i++) {
+          QueryField<T, ?> field = projection[i];
+          if (field instanceof QueryableStore.CollectionSizeQueryField<?>) {
+            values[i] = resultSet.getInt(i + 1);
+          } else if (field instanceof QueryableStore.MapSizeQueryField<?>) {
+            values[i] = resultSet.getInt(i + 1);
+          } else if (field.isIdField()) {
+            values[i] = resultSet.getString(i + 1);
+          } else {
+            values[i] = resultSet.getObject(i + 1);
+          }
+        }
+        return (T_RESULT) values;
+      }
       T entity = objectMapper.readValue(resultSet.getString(1), entityType);
       if (resultType.isAssignableFrom(Result.class)) {
         Map<String, String> parentIdMapping = new HashMap<>(queryableTypeDescriptor.getTypes().length);
@@ -602,11 +641,11 @@ class SQLiteQueryableStore<T> implements QueryableStore<T>, QueryableMaintenance
 
   private class TemporaryTableMaintenanceIterator implements MaintenanceIterator<T> {
     private final PreparedStatement iterateStatement;
-    private final List<SQLField> columns;
+    private final List<SQLNode> columns;
     private final ResultSet resultSet;
     private Boolean hasNext;
 
-    public TemporaryTableMaintenanceIterator(List<SQLField> columns) {
+    public TemporaryTableMaintenanceIterator(List<SQLNode> columns) {
       this.columns = columns;
       this.hasNext = null;
       SQLSelectStatement iterateQuery =

@@ -22,8 +22,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -123,7 +125,11 @@ public interface QueryableStore<T> extends AutoCloseable {
      * @param offset The offset to start the result list.
      * @param limit  The maximum number of results to return.
      */
-    List<T_RESULT> findAll(long offset, long limit);
+    default List<T_RESULT> findAll(long offset, long limit) {
+      List<T_RESULT> result = new ArrayList<>();
+      forEach(result::add, offset, limit);
+      return Collections.unmodifiableList(result);
+    }
 
     /**
      * Calls the given consumer for all objects that match the query.
@@ -142,6 +148,28 @@ public interface QueryableStore<T> extends AutoCloseable {
      * @param limit  The maximum number of results.
      */
     void forEach(Consumer<T_RESULT> consumer, long offset, long limit);
+
+    /**
+     * Projects the found objects to a specific values. This is useful if you want to retrieve only a subset of the
+     * fields of the found objects.
+     * <br/>
+     * The projection will return an array of objects, where each object corresponds to a field that was specified in
+     * the {@code fields} parameter. The order of the fields in the array will be the same as the order of the fields in
+     * the parameter.
+     *
+     * @param fields The fields to project.
+     * @return The query object to continue building the query.
+     */
+    Query<T, Object[], ?> project(QueryField<T, ?>... fields);
+
+    /**
+     * Returns the found objects as a distinct set. This is useful if you want to ensure that no duplicate values are
+     * returned, for example to determine the unique values of all parent ids. Most likely this is usefull only with
+     * #project(QueryField[]) to limit the selected "columns".
+     *
+     * @return The query object to continue building the query.
+     */
+    Query<T, T_RESULT, ?> distinct();
 
     /**
      * Returns the found objects in combination with the parent ids they belong to. This is useful if you are using a

@@ -546,7 +546,7 @@ class SQLiteQueryableStoreTest {
 
         assertThat(all)
           .extracting("name")
-          .containsExactly("arthur","trillian","trish");
+          .containsExactly("arthur", "trillian", "trish");
       }
 
       @Test
@@ -564,7 +564,7 @@ class SQLiteQueryableStoreTest {
         System.out.println(all);
         assertThat(all)
           .extracting("displayName")
-          .containsExactly("Tricia","Trillian McMillan","Arthur Dent");
+          .containsExactly("Tricia", "Trillian McMillan", "Arthur Dent");
       }
 
       @Test
@@ -906,6 +906,69 @@ class SQLiteQueryableStoreTest {
         )
         .findFirst();
       assertThat(user).isEmpty();
+    }
+  }
+
+  @Nested
+  class Distinct {
+
+    @BeforeEach
+    void fillData() {
+      new StoreTestBuilder(connectionString, "sonia.Group")
+        .withIds("42")
+        .put("1", new User("trillian", "Trillian McMillan", ""));
+      new StoreTestBuilder(connectionString, "sonia.Group")
+        .withIds("42")
+        .put("2", new User("zaphod", "Zaphod Beeblebrox", ""));
+      new StoreTestBuilder(connectionString, "sonia.Group")
+        .withIds("42")
+        .put("3", new User("marvin", "Marvin", ""));
+      new StoreTestBuilder(connectionString, "sonia.Group")
+        .withIds("23")
+        .put("1", new User("dent", "Arthur Dent", ""));
+      new StoreTestBuilder(connectionString, "sonia.Group")
+        .withIds("23")
+        .put("2", new User("trillian", "Trillian McMillan", ""));
+    }
+
+    @Test
+    void shouldReturnDistinctValuesFromObject() {
+      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group")
+        .withIds();
+
+      List<Object[]> result = store.query().project(USER_NAME).distinct().findAll();
+
+      assertThat(result)
+        .containsExactlyInAnyOrder(
+          new String[]{"trillian"},
+          new String[]{"zaphod"},
+          new String[]{"marvin"},
+          new String[]{"dent"}
+        );
+    }
+
+    @Test
+    void shouldReturnDistinctParentIds() {
+      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group")
+        .withIds();
+
+      List<Object[]> result = store.query().project(GROUP).distinct().findAll();
+
+      assertThat(result)
+        .containsExactlyInAnyOrder(
+          new String[]{"42"},
+          new String[]{"23"}
+        );
+    }
+
+    @Test
+    void shouldReturnDistinctCount() {
+      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group")
+        .withIds();
+
+      long count = store.query().project(GROUP).distinct().count();
+
+      assertThat(count).isEqualTo(2);
     }
   }
 

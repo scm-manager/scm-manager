@@ -21,17 +21,35 @@ import java.util.stream.Collectors;
 
 class SQLSelectStatement extends ConditionalSQLStatement {
 
-  private final List<SQLField> columns;
+  private final List<SQLNode> columns;
   private final SQLTable fromTable;
   private final String orderBy;
   private final long limit;
   private final long offset;
+  private final boolean distinct;
 
-  SQLSelectStatement(List<SQLField> columns, SQLTable fromTable, List<SQLNodeWithValue> whereCondition) {
+  SQLSelectStatement(List<SQLNode> columns,
+                     SQLTable fromTable,
+                     List<SQLNodeWithValue> whereCondition) {
     this(columns, fromTable, whereCondition, null, 0, 0);
   }
 
-  SQLSelectStatement(List<SQLField> columns, SQLTable fromTable, List<SQLNodeWithValue> whereCondition, String orderBy, long limit, long offset) {
+  SQLSelectStatement(List<SQLNode> columns,
+                     SQLTable fromTable,
+                     List<SQLNodeWithValue> whereCondition,
+                     String orderBy,
+                     long limit,
+                     long offset) {
+    this(columns, fromTable, whereCondition, orderBy, limit, offset, false);
+  }
+
+  SQLSelectStatement(List<SQLNode> columns,
+                     SQLTable fromTable,
+                     List<SQLNodeWithValue> whereCondition,
+                     String orderBy,
+                     long limit,
+                     long offset,
+                     boolean distinct) {
     super(whereCondition);
     if (limit < 0 || offset < 0) {
       throw new IllegalArgumentException("limit and offset must be non-negative");
@@ -41,6 +59,7 @@ class SQLSelectStatement extends ConditionalSQLStatement {
     this.orderBy = orderBy;
     this.limit = limit;
     this.offset = offset;
+    this.distinct = distinct;
   }
 
   @Override
@@ -48,9 +67,12 @@ class SQLSelectStatement extends ConditionalSQLStatement {
     StringBuilder query = new StringBuilder();
 
     query.append("SELECT ");
+    if (distinct) {
+      query.append("DISTINCT ");
+    }
     if (columns != null && !columns.isEmpty()) {
       String columnList = columns.stream()
-        .map(SQLField::toSQL)
+        .map(SQLNode::toSQL)
         .collect(Collectors.joining(", "));
       query.append(columnList);
     }
