@@ -22,6 +22,7 @@ import com.cronutils.model.definition.CronDefinition;
 import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.model.time.ExecutionTime;
 import com.cronutils.parser.CronParser;
+import com.google.common.annotations.VisibleForTesting;
 
 import java.time.Clock;
 import java.time.Duration;
@@ -35,9 +36,10 @@ final class CronExpression {
   private final ExecutionTime executionTime;
 
   CronExpression(String expression) {
-    this(Clock.systemUTC(), expression);
+    this(Clock.systemDefaultZone(), expression);
   }
 
+  @VisibleForTesting
   CronExpression(Clock clock, String expression) {
     this.clock = clock;
     this.expression = expression;

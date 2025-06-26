@@ -1,0 +1,2 @@
+- type: changed
+  description: The default time zone for cron expression is now the system default time zone instead of UTC
