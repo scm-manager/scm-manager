@@ -22,10 +22,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.util.Collections.synchronizedMap;
 
 class IdFieldFinder {
 
-  private static final Map<Class<?>, Optional<Field>> FIELD_CACHE = new HashMap<>();
+  private static final Map<Class<?>, Optional<Field>> FIELD_CACHE = synchronizedMap(new HashMap<>());
 
   Optional<Field> getIdField(Class<?> clazz) {
     return FIELD_CACHE.computeIfAbsent(clazz, this::findIdField);
