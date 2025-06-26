@@ -88,6 +88,11 @@ public abstract class ConfigurationAdapterBase<DAO, DTO extends HalRepresentatio
    *     protected String getName() {
    *       return "testConfig";
    *     }
+   *
+   *     &commat;Override
+   *     protected void postUpdateHook() {
+   *       //Some logic that needs to be executed after the update
+   *     }
    *   }
    * </code></pre>
    *
@@ -163,6 +168,11 @@ public abstract class ConfigurationAdapterBase<DAO, DTO extends HalRepresentatio
       writePermission.check();
     }
     getConfigStore().set(dtoToDaoMapper.mapDtoToDao(payload));
+    postUpdateHook();
+  }
+
+  protected void postUpdateHook() {
+
   }
 
   private Links.Builder createDtoLinks() {
