@@ -16,14 +16,6 @@
     "name-invalid": "This name is invalid",
     "displayname-invalid": "This displayname is invalid"
   },
-  "help": {
-    "usernameHelpText": "Unique name of the user.",
-    "displayNameHelpText": "Display name of the user.",
-    "mailHelpText": "Email address of the user.",
-    "adminHelpText": "An administrator is able to create, modify and delete repositories, groups and users.",
-    "activeHelpText": "Activate or deactivate the user.",
-    "externalFlagHelpText": "This user is managed by an external system."
-  },
   "users": {
     "title": "Users",
     "subtitle": "Create, read, update and delete users",
@@ -57,21 +49,18 @@
       "submit-success-notification": "The user was updated successfully",
       "name": {
         "label": "User Name",
-        "helpText": "Unique name of the user.",
         "error": {
           "validate": "This name is invalid"
         }
       },
       "displayName": {
         "label": "Display Name",
-        "helpText": "Display name of the user.",
         "error": {
           "validate": "This display name is invalid"
         }
       },
       "mail": {
         "label": "Email",
-        "helpText": "Email address of the user.",
         "error": {
           "validate": "This email address is invalid"
         }

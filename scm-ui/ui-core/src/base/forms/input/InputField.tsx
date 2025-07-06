@@ -19,15 +19,21 @@ import classNames from "classnames";
 import Field from "../base/Field";
 import Control from "../base/Control";
 import Label from "../base/label/Label";
+import Help from "../base/help/Help";
 import FieldMessage from "../base/field-message/FieldMessage";
 import Input from "./Input";
-import Help from "../base/help/Help";
 import { useAriaId } from "../../helpers";
+import ExpandableText from "../base/ExpandableText";
 
 export type InputFieldProps = {
   label: string;
+  /**
+   * @deprecated This property is deprecated and will be removed in future versions.
+   * Use `descriptionText` instead.
+   */
   helpText?: string;
   descriptionText?: string;
+  extendedText?: string;
   error?: string;
   icon?: string;
 } & React.ComponentProps<typeof Input>;
@@ -36,9 +42,11 @@ export type InputFieldProps = {
  * @see https://bulma.io/documentation/form/input/
  */
 const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ name, label, helpText, descriptionText, error, icon, className, id, ...props }, ref) => {
+  ({ name, label, helpText, descriptionText, extendedText, error, icon, className, id, ...props }, ref) => {
     const inputId = useAriaId(id ?? props.testId);
+    const helpTextId = helpText ? `input-helptext-${name}` : undefined;
     const descriptionId = descriptionText ? `input-description-${name}` : undefined;
+    const extendedDescriptionId = extendedText ? `input-extended-${name}` : undefined;
     const variant = error ? "danger" : undefined;
     return (
       <Field className={className}>
@@ -46,13 +54,25 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           {label}
           {helpText ? <Help className="ml-1" text={helpText} /> : null}
         </Label>
-        {descriptionText ? (
+        {extendedText && descriptionText ? (
+          <ExpandableText
+            id={extendedDescriptionId}
+            descriptionText={descriptionText}
+            extendedDescriptionText={extendedText}
+          />
+        ) : (
           <p className="mb-2" id={descriptionId}>
             {descriptionText}
           </p>
-        ) : null}
+        )}
         <Control className={classNames({ "has-icons-left": icon })}>
-          <Input variant={variant} ref={ref} id={inputId} aria-describedby={descriptionId} {...props}></Input>
+          <Input
+            variant={variant}
+            ref={ref}
+            id={inputId}
+            aria-describedby={descriptionId || helpTextId}
+            {...props}
+          ></Input>
           {icon ? (
             <span className="icon is-small is-left">
               <i className={icon} />

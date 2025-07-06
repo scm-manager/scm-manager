@@ -15,13 +15,6 @@
     "name-invalid": "El nombre es incorrecto",
     "displayname-invalid": "El nombre a mostrar es incorrecto"
   },
-  "help": {
-    "usernameHelpText": "Nombre único del usuario.",
-    "displayNameHelpText": "Nombre de usuario a mostrar.",
-    "mailHelpText": "Dirección de correo electrónico del usuario.",
-    "adminHelpText": "Un administrador es capaz de crear, modificar y borrar repositorios, grupos y usuarios.",
-    "activeHelpText": "Activar o desactivar el usuario."
-  },
   "users": {
     "title": "Usuarios",
     "subtitle": "Crear, leer, actualizar y borrar usuarios",
@@ -46,21 +39,18 @@
     "form": {
       "name": {
         "label": "Nombre de usuario",
-        "helpText": "Nombre único del usuario.",
         "error": {
           "validate": "El nombre es incorrecto"
         }
       },
       "displayName": {
         "label": "Nombre a mostrar",
-        "helpText": "Nombre de usuario a mostrar.",
         "error": {
           "validate": "El nombre a mostrar es incorrecto"
         }
       },
       "mail": {
         "label": "Correo electrónico",
-        "helpText": "Dirección de correo electrónico del usuario.",
         "error": {
           "validate": "El correo electrónico es incorrecto"
         }

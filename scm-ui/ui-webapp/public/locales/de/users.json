@@ -16,14 +16,6 @@
     "name-invalid": "Dieser Name ist ungültig",
     "displayname-invalid": "Dieser Anzeigename ist ungültig"
   },
-  "help": {
-    "usernameHelpText": "Einzigartiger Name des Benutzers",
-    "displayNameHelpText": "Anzeigename des Benutzers",
-    "mailHelpText": "E-Mail Adresse des Benutzers",
-    "adminHelpText": "Ein Administrator kann Repositories, Gruppen und Benutzer erstellen, bearbeiten und löschen.",
-    "activeHelpText": "Aktivierung oder Deaktivierung eines Benutzers",
-    "externalFlagHelpText": "Der Benutzer wird über ein Fremdsystem verwaltet."
-  },
   "users": {
     "title": "Benutzer",
     "subtitle": "Verwaltung der Benutzer",
@@ -57,21 +49,18 @@
       "submit-success-notification": "Der Benutzer wurde erfolgreich aktualisiert",
       "name": {
         "label": "Benutzername",
-        "helpText": "Einzigartiger Name des Benutzers.",
         "error": {
           "validate": "Dieser Name ist ungültig"
         }
       },
       "displayName": {
         "label": "Anzeigename",
-        "helpText": "Anzeigename des Benutzers.",
         "error": {
           "validate": "Dieser Anzeigename ist ungültig"
         }
       },
       "mail": {
         "label": "E-Mail",
-        "helpText": "E-Mail Adresse des Benutzers.",
         "error": {
           "validate": "Diese E-Mail ist ungültig"
         }
