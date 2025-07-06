@@ -25,10 +25,12 @@ dependencies {
     exclude group: 'org.tmatesoft.svnkit', module: 'trilead-ssh2'
     exclude group: 'org.apache.sshd', module: 'sshd-core'
     exclude group: 'org.apache.sshd', module: 'sshd-common'
+    exclude group: 'net.i2p.crypto',  module: 'eddsa'
   }
   implementation ("sonia.svnkit:svnkit-dav:${svnkitVersion}") {
     exclude group: 'org.apache.sshd', module: 'sshd-core'
     exclude group: 'org.apache.sshd', module: 'sshd-common'
+    exclude group: 'net.i2p.crypto',  module: 'eddsa'
   }
   testImplementation libraries.shiroUnit
 }
