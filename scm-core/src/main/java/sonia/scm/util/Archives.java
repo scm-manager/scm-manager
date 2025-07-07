@@ -142,12 +142,14 @@ public final class Archives {
       }
     }
 
-    @SuppressWarnings("java:S1075") // We use / here because we build tar entries, not files
+      @SuppressWarnings("java:S1075") // We use / here because we build tar entries, not files
     private void bundleFileOrDir(String path, Path fileOrDir, TarArchiveOutputStream taos) {
       try {
         String filePath = path + "/" + fileOrDir.getFileName().toString();
         if (Files.isDirectory(fileOrDir)) {
           createTarEntryForFiles(filePath, fileOrDir, taos);
+        } else if (Files.isSymbolicLink(fileOrDir)) {
+          createArchiveEntryForLink(filePath, fileOrDir, taos);
         } else {
           createArchiveEntryForFile(filePath, fileOrDir, taos);
         }
@@ -157,6 +159,14 @@ public final class Archives {
           e
         );
       }
+    }
+
+    private static void createArchiveEntryForLink(String filePath, Path path, TarArchiveOutputStream taos) throws IOException {
+      String linkTarget = Files.readSymbolicLink(path).toString();
+      TarArchiveEntry entry = new TarArchiveEntry(filePath, TarArchiveEntry.LF_SYMLINK);
+      entry.setLinkName(linkTarget);
+      taos.putArchiveEntry(entry);
+      taos.closeArchiveEntry();
     }
 
     private void createArchiveEntryForFile(String filePath, Path path, TarArchiveOutputStream taos) throws IOException {
@@ -189,7 +199,17 @@ public final class Archives {
         while ((entry = tais.getNextTarEntry()) != null) {
           Path filePath = targetPath.resolve(entry.getName());
           createDirectoriesIfNestedFile(filePath);
-          Files.copy(tais, filePath, StandardCopyOption.REPLACE_EXISTING);
+          if (entry.isDirectory()) {
+            Files.createDirectories(filePath);
+          } else if (entry.isSymbolicLink() || entry.isLink()) {
+            String linkTarget = entry.getLinkName();
+            if (linkTarget == null || linkTarget.isEmpty()) {
+              throw new ArchiveException("Symbolic link entry '" + entry.getName() + "' has no target", null);
+            }
+            Files.createSymbolicLink(filePath, Path.of(linkTarget));
+          } else {
+            Files.copy(tais, filePath, StandardCopyOption.REPLACE_EXISTING);
+          }
         }
       }
     }

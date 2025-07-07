@@ -474,7 +474,7 @@ public class RepositoryExportResource {
         };
         return createResponse(repository, fileExtension, compressed, output);
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       notificationHandler.handleFailedExport(repository);
       throw new ExportFailedException(entity(repository).build(), "repository export failed", e);
     }

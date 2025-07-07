@@ -1,0 +1,2 @@
+- type: fixed
+  description: Various issues for repository dump export and import without metadata

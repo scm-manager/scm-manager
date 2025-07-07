@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.api.UnbundleResponse;
+import sonia.scm.util.IOUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -56,6 +57,10 @@ public class HgUnbundleCommand implements UnbundleCommand {
 
     if (!Files.exists(repositoryDir)) {
       Files.createDirectories(repositoryDir);
+    }
+    Path hgDir = repositoryDir.resolve(".hg");
+    if (Files.exists(hgDir)) {
+      IOUtil.delete(hgDir.toFile());
     }
 
     unbundleRepositoryFromRequest(request, repositoryDir);
