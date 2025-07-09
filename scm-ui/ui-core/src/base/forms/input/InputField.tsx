@@ -46,7 +46,6 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     const inputId = useAriaId(id ?? props.testId);
     const helpTextId = helpText ? `input-helptext-${name}` : undefined;
     const descriptionId = descriptionText ? `input-description-${name}` : undefined;
-    const extendedDescriptionId = extendedText ? `input-extended-${name}` : undefined;
     const variant = error ? "danger" : undefined;
     return (
       <Field className={className}>
@@ -55,11 +54,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           {helpText ? <Help className="ml-1" text={helpText} /> : null}
         </Label>
         {extendedText && descriptionText ? (
-          <ExpandableText
-            id={extendedDescriptionId}
-            descriptionText={descriptionText}
-            extendedDescriptionText={extendedText}
-          />
+          <ExpandableText id={descriptionId} descriptionText={descriptionText} extendedDescriptionText={extendedText} />
         ) : (
           <p className="mb-2" id={descriptionId}>
             {descriptionText}

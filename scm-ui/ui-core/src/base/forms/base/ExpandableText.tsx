@@ -14,12 +14,12 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { HTMLAttributes, useState } from "react";
-import { Icon } from "../../buttons";
+import React, { HTMLAttributes } from "react";
 
 interface Props extends HTMLAttributes<HTMLParagraphElement> {
   descriptionText: string;
   extendedDescriptionText: string;
+  id?: string;
 }
 
 /**
@@ -29,27 +29,20 @@ interface Props extends HTMLAttributes<HTMLParagraphElement> {
  * with an icon to toggle the visibility of the extended text.
  *
  * @param desription - The text content that will always be displayed.
- * @param extended - The text content that will be displayed after you toggle the icon.
- * @param props - Additional props to pass to the `<p>` element.
- * @param ref - A ref to the `<p>` element.
+ * @param extended - The text content that will be displayed after you toggle details.
+ * @param id - Additional props to pass to the `<details>` element.
+ * @param ref - A ref to the `<details>` element.
  *
  * @beta
  * @since 3.9.0
  */
-const ExpandableText = React.forwardRef<HTMLParagraphElement, Props>(
-  ({ descriptionText, extendedDescriptionText, ...props }, ref) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-
+const ExpandableText = React.forwardRef<HTMLDetailsElement, Props>(
+  ({ descriptionText, extendedDescriptionText, id }, ref) => {
     return (
-      <p {...props} ref={ref} className="is-flex is-flex-direction-column mb-2">
-        <div>
-          <Icon className="is-clickable" onClick={() => setIsExpanded(!isExpanded)} aria-expanded={isExpanded}>
-            {isExpanded ? "chevron-down" : "chevron-right"}
-          </Icon>
-          {descriptionText}
-        </div>
-        <>{isExpanded && <span className="mt-1">{extendedDescriptionText}</span>}</>
-      </p>
+      <details className="mb-2" id={id} ref={ref}>
+        <summary>{descriptionText}</summary>
+        <span>{extendedDescriptionText}</span>
+      </details>
     );
   }
 );
