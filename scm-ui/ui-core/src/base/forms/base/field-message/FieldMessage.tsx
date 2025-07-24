@@ -18,9 +18,11 @@ import React, { ReactNode } from "react";
 import classNames from "classnames";
 import { createVariantClass, Variant } from "../../variants";
 
-type Props = { variant?: Variant; className?: string; children?: ReactNode };
+type Props = { id?: string; variant?: Variant; className?: string; children?: ReactNode };
 
-const FieldMessage = ({ variant, className, children }: Props) => (
-  <p className={classNames("help", createVariantClass(variant), className)}>{children}</p>
+const FieldMessage = ({ id, variant, className, children }: Props) => (
+  <p id={id} className={classNames("help", createVariantClass(variant), className)}>
+    {children}
+  </p>
 );
 export default FieldMessage;

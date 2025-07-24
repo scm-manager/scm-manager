@@ -515,6 +515,8 @@
     "confirmAlert": {
       "title": "Delete Repository",
       "message": "Do you really want to delete the repository?",
+      "confirmationText": "Enter \"{{confirmationText}}\" to confirm the deletion of the repository.",
+      "inputNotMatching": "The input doesn't match.",
       "submit": "Yes",
       "cancel": "No"
     }

@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { useDeleteRepository } from "@scm-manager/ui-api";
+import { InputField } from "@scm-manager/ui-core";
 
 type Props = {
   repository: Repository;
@@ -31,9 +32,12 @@ const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
   const { isLoading, error, remove, isDeleted } = useDeleteRepository({
     onSuccess: () => {
       history.push("/repos/");
-    }
+    },
   });
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const [enteredValue, setEnteredValue] = useState("");
+  const [inputError, setInputError] = useState();
+  const [errorId, setErrorId] = useState(error ? "input-error-delete" : undefined);
   const [t] = useTranslation("repos");
   useEffect(() => {
     if (isDeleted) {
@@ -47,29 +51,60 @@ const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
 
   const confirmDelete = () => {
     setShowConfirmAlert(true);
+    setEnteredValue("");
+    setInputError(undefined);
+    setErrorId(undefined);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEnteredValue(e.target.value);
+    if (isInvalidEnteredValue && !inputError) {
+      setInputError(t("deleteRepo.confirmAlert.inputNotMatching"));
+      setErrorId("input-error-delete");
+    }
   };
 
   const action = confirmDialog ? confirmDelete : deleteRepoCallback;
+
+  const confirmationText = `${repository.namespace}/${repository.name}`;
+  const isInvalidEnteredValue = enteredValue !== confirmationText;
+
+  const confirmationDialog = (
+    <>
+      <InputField
+        name="delete"
+        label={t("deleteRepo.confirmAlert.confirmationText", { confirmationText: confirmationText })}
+        value={enteredValue}
+        onChange={handleChange}
+        error={isInvalidEnteredValue ? inputError : undefined}
+        aria-describedby={errorId}
+        aria-invalid={errorId !== undefined}
+        autoComplete="off"
+      ></InputField>
+    </>
+  );
 
   if (showConfirmAlert) {
     return (
       <ConfirmAlert
         title={t("deleteRepo.confirmAlert.title")}
-        message={t("deleteRepo.confirmAlert.message")}
         buttons={[
           {
             label: t("deleteRepo.confirmAlert.submit"),
-            onClick: () => deleteRepoCallback()
+            onClick: () => deleteRepoCallback(),
+            disabled: isInvalidEnteredValue,
           },
           {
             className: "is-info",
             label: t("deleteRepo.confirmAlert.cancel"),
             onClick: () => null,
-            autofocus: true
-          }
+            autofocus: true,
+          },
         ]}
         close={() => setShowConfirmAlert(false)}
-      />
+      >
+        {confirmationDialog}
+      </ConfirmAlert>
     );
   }
 

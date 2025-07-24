@@ -45,10 +45,10 @@ eingebunden sind. Wenn bei dem Zugriff auf ein Repository Fehler auftreten, soll
 Integritätsprüfung gestartet werden. Ein Teil dieser Prüfungen wird bei jedem Start des SCM-Managers ausgeführt.
 
 Werden bei einer dieser Integritätsprüfungen Fehler gefunden, wird auf der Repository-Übersicht sowie auf den
-Detailseiten zum Repository neben dem Namen ein Tag „fehlerhaft" angezeigt. In den Einstellungen wird zudem eine Meldung
+Detailseiten zum Repository neben dem Namen ein Tag „fehlerhaft“ angezeigt. In den Einstellungen wird zudem eine Meldung
 eingeblendet. Durch Klick auf diese Meldung oder die Tags wird ein Popup mit weiteren Details angezeigt.
 
-Der Server führt immer nur eine Prüfung zur Zeit durch. Es können jedoch für mehrere Repositories Prüfungen in die
+Der Server führt immer nur eine Prüfung zurzeit durch. Es können jedoch für mehrere Repositories Prüfungen in die
 Warteschlange gestellt werden, die dann nacheinander durchgeführt werden.
 
 ![Repository-Settings-General-Health-Check](assets/repository-settings-general-health-check.png)

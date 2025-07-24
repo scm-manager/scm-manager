@@ -172,6 +172,8 @@
       "confirmAlert": {
         "title": "Branch löschen",
         "message": "Möchten Sie den Branch \"{{branch}}\" wirklich löschen?",
+        "typeNameConfirmation": "Bitte geben Sie \"{{confirmationText}}\" ein, um Ihre Entscheidung zu bestätigen.",
+        "inputNotMatching": "Die Eingabe stimmt nicht überein.",
         "cancel": "Nein",
         "submit": "Ja"
       }
@@ -515,6 +517,8 @@
     "confirmAlert": {
       "title": "Repository löschen",
       "message": "Soll das Repository wirklich gelöscht werden?",
+      "confirmationText": "Geben Sie \"{{confirmationText}}\" ein, um das Löschen des Repositories zu bestätigen.",
+      "inputNotMatching": "Die Eingabe stimmt nicht überein.",
       "submit": "Ja",
       "cancel": "Nein"
     }

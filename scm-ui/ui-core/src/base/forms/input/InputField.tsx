@@ -46,6 +46,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     const inputId = useAriaId(id ?? props.testId);
     const helpTextId = helpText ? `input-helptext-${name}` : undefined;
     const descriptionId = descriptionText ? `input-description-${name}` : undefined;
+    const errorId = error ? `input-error-${name}` : undefined;
     const variant = error ? "danger" : undefined;
     return (
       <Field className={className}>
@@ -74,7 +75,11 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             </span>
           ) : null}
         </Control>
-        {error ? <FieldMessage variant={variant}>{error}</FieldMessage> : null}
+        {error ? (
+          <FieldMessage id={errorId} variant={variant}>
+            {error}
+          </FieldMessage>
+        ) : null}
       </Field>
     );
   }

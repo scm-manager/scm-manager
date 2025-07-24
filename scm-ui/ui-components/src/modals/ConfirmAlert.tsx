@@ -26,16 +26,17 @@ type Button = {
   isLoading?: boolean;
   onClick?: () => void | null;
   autofocus?: boolean;
+  disabled?: boolean;
 };
 
 type Props = {
   title: string;
-  message: string;
+  message?: string;
   buttons: Button[];
   close?: () => void;
 };
 
-export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
+export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close, children }) => {
   const [showModal, setShowModal] = useState(true);
   const initialFocusButton = useRef<HTMLButtonElement>(null);
 
@@ -54,7 +55,11 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
     onClose();
   };
 
-  const body = <>{message}</>;
+  const body = (
+    <>
+      {message} {children}
+    </>
+  );
 
   const footer = (
     <div className="field is-grouped">
@@ -63,8 +68,9 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
           <button
             className={classNames("button", button.className, button.isLoading ? "is-loading" : "")}
             key={index}
+            disabled={button.disabled}
             onClick={() => handleClickButton(button)}
-            onKeyDown={e => e.key === "Enter" && handleClickButton(button)}
+            onKeyDown={(e) => e.key === "Enter" && handleClickButton(button)}
             tabIndex={0}
             ref={button.autofocus ? initialFocusButton : undefined}
           >
