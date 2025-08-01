@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-syntaxhighlighting",
-  "version": "3.8.1-SNAPSHOT",
+  "version": "3.9.0",
   "private": true,
   "main": "src/index.ts",
   "scripts": {
@@ -13,7 +13,7 @@
     "depcheck": "depcheck"
   },
   "dependencies": {
-    "@scm-manager/ui-text": "3.8.1-SNAPSHOT",
+    "@scm-manager/ui-text": "3.9.0",
     "nanoid": "^3.3.2",
     "refractor": "^4.5.0"
   },
