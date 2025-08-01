@@ -1,6 +1,0 @@
-- type: added
-  description: Different timestamps for commit contributors
-- type: fixed
-  description: Distinction between author and commit time in git
-- type: changed
-  description: Changesets are now called commits in frontend

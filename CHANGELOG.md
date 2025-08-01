@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.9.0] - 2025-08-01
+### Added
+- Delete and retain functionality for mutable queryable stores
+- SQLite persistence documentation link in architecture overview documentation
+- Different timestamps for commit contributors
+- New option for input field to expand the description text with an icon an displays a new text
+- Auto-increment ids for queryable types
+- Possibility to use distinct and projection in queryable stores
+- Option in queryable stores to order string fields numerically
+- Anonymous endpoint to check whether the SCM-Manager is healthy or not
+- Annotation for id fields in data objects
+- Confirmation dialog before repository deletion
+- Dark scrollbar for dark and high contrast theme
+- Like condition for string fields in queryable stores
+- Write lock check for queryable stores
+- Icon for displaying a status like success
+
+### Fixed
+- Various issues for repository dump export and import without metadata
+- Distinction between author and commit time in git
+- Permalink generation for line numbers in code view
+- The committer in squash merge, rebase, and regular merge is now set to the current user.
+- Mapper configuration in queryable unit test extension
+- Ensure query results are ordered by the ID field
+- Exclude net.i2p.crypto:eddsa from svn-plugin to prevent classloader conflicts with ssh-plugin
+- Export with multiple parent IDs
+- File upload indicates focus visually
+- Closing the queryable stores in maintenance actions (repository import, export and cleanup)
+- Adjust connection string to match windows path resolver
+- Excessive left padding in input fields
+- The logging configuration is applied correctly at the start of the application
+
+### Changed
+- Changesets are now called 'commits' in frontend
+- The default time zone for cron expression is now the system default time zone instead of UTC
+- Remove plugin center authentication in order to grant access to former premium plugins
+- Uniform document titles for configuration pages
+- HikariCP introduced as the default connection pool for queryable stores
+
 ## [3.8.0] - 2025-04-14
 ### Added
 - Keyboard shortcut (g+f) within code view for file search
@@ -1733,3 +1772,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.7.4]: https://scm-manager.org/download/3.7.4
 [3.7.5]: https://scm-manager.org/download/3.7.5
 [3.8.0]: https://scm-manager.org/download/3.8.0
+[3.9.0]: https://scm-manager.org/download/3.9.0

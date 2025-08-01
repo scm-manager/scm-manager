@@ -1,4 +1,0 @@
-- type: changed
-  description: HikariCP introduced as the default connection pool for queryable stores
-- type: fixed
-  description: Closing the queryable stores in maintenance actions (repository import, export and cleanup)

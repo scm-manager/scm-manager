@@ -1,2 +1,0 @@
-- type: fixed
-  description: Exclude net.i2p.crypto:eddsa from svn-plugin to prevent classloader conflicts with ssh-plugin
