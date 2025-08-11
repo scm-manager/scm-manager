@@ -1,0 +1,2 @@
+- type: fixed
+  description: Cross-Origin-Opener-Policy and Cross-Origin-Embedder-Policy headers added to all responses

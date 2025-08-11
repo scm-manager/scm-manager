@@ -44,6 +44,8 @@ public class SecurityHeadersFilter extends HttpFilter {
     if (contextProvider.getStage() != Stage.TESTING) {
       response.setHeader("X-Frame-Options", "sameorigin");
       response.setHeader("X-Content-Type-Options", "nosniff");
+      response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+      response.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
       response.setHeader("Content-Security-Policy",
         "form-action 'self'; " +
           "object-src 'self'; " +
