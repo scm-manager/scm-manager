@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,10 @@ import sonia.scm.plugin.QueryableTypeDescriptor;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.KeyGenerator;
+import sonia.scm.store.StoreInvocationMicrometerWrapper;
 import sonia.scm.store.QueryableMaintenanceStore;
+import sonia.scm.store.QueryableMutableStore;
+import sonia.scm.store.QueryableStore;
 import sonia.scm.store.QueryableStoreFactory;
 import sonia.scm.store.StoreException;
 
@@ -62,6 +66,7 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
   private final KeyGenerator keyGenerator;
   private final DataSource dataSource;
   private final RepositoryReadOnlyChecker readOnlyChecker;
+  private final MeterRegistry meterRegistry;
 
   private final Map<String, QueryableTypeDescriptor> queryableTypes = new HashMap<>();
 
@@ -73,6 +78,7 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
                                      ObjectMapper objectMapper,
                                      KeyGenerator keyGenerator,
                                      RepositoryReadOnlyChecker readOnlyChecker,
+                                     MeterRegistry meterRegistry,
                                      @ConfigValue(key = "queryableStore.maxPoolSize", defaultValue = DEFAULT_MAX_POOL_SIZE) int maxPoolSize,
                                      @ConfigValue(key = "queryableStore.connectionTimeout", defaultValue = DEFAULT_CONNECTION_TIMEOUT_IN_SECONDS) int connectionTimeoutInSeconds,
                                      @ConfigValue(key = "queryableStore.idleTimeout", defaultValue = DEFAULT_IDLE_TIMEOUT_IN_SECONDS) int idleTimeoutInSeconds,
@@ -85,6 +91,7 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
       keyGenerator,
       pluginLoader.getExtensionProcessor().getQueryableTypes(),
       readOnlyChecker,
+      meterRegistry,
       maxPoolSize,
       connectionTimeoutInSeconds,
       idleTimeoutInSeconds,
@@ -99,7 +106,19 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
                                      KeyGenerator keyGenerator,
                                      Iterable<QueryableTypeDescriptor> queryableTypeIterable,
                                      RepositoryReadOnlyChecker readOnlyChecker) {
-    this(connectionString, objectMapper, keyGenerator, queryableTypeIterable, readOnlyChecker, 10, 30, 600, 1800, 30);
+    this(
+      connectionString,
+      objectMapper,
+      keyGenerator,
+      queryableTypeIterable,
+      readOnlyChecker,
+      null,
+      10,
+      30,
+      600,
+      1800,
+      30
+    );
   }
 
   private SQLiteQueryableStoreFactory(String connectionString,
@@ -107,6 +126,7 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
                                       KeyGenerator keyGenerator,
                                       Iterable<QueryableTypeDescriptor> queryableTypeIterable,
                                       RepositoryReadOnlyChecker readOnlyChecker,
+                                      MeterRegistry meterRegistry,
                                       int maxPoolSize,
                                       int connectionTimeoutInSeconds,
                                       int idleTimeoutInSeconds,
@@ -120,6 +140,7 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
       maxLifetimeInSeconds,
       leakDetectionThresholdInSeconds);
     this.readOnlyChecker = readOnlyChecker;
+    this.meterRegistry = meterRegistry;
     this.dataSource = new HikariDataSource(config);
 
     this.objectMapper = objectMapper
@@ -177,9 +198,9 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
   }
 
   @Override
-  public <T> SQLiteQueryableStore<T> getReadOnly(Class<T> clazz, String... parentIds) {
+  public <T> QueryableStore<T> getReadOnly(Class<T> clazz, String... parentIds) {
     QueryableTypeDescriptor queryableTypeDescriptor = getQueryableTypeDescriptor(clazz);
-    return new SQLiteQueryableStore<>(
+    SQLiteQueryableStore<T> store = new SQLiteQueryableStore<>(
       objectMapper,
       openDefaultConnection(),
       clazz,
@@ -187,13 +208,22 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
       parentIds,
       lock,
       mustBeReadOnly(queryableTypeDescriptor, parentIds)
+    );
+
+    return StoreInvocationMicrometerWrapper.create(
+      "QueryableStore",
+      clazz,
+      parentIds,
+      QueryableStore.class,
+      store,
+      meterRegistry
     );
   }
 
   @Override
   public <T> QueryableMaintenanceStore<T> getForMaintenance(Class<T> clazz, String... parentIds) {
     QueryableTypeDescriptor queryableTypeDescriptor = getQueryableTypeDescriptor(clazz);
-    return new SQLiteQueryableStore<>(
+    SQLiteQueryableStore<T> store = new SQLiteQueryableStore<>(
       objectMapper,
       openDefaultConnection(),
       clazz,
@@ -202,12 +232,21 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
       lock,
       mustBeReadOnly(queryableTypeDescriptor, parentIds)
     );
+
+    return StoreInvocationMicrometerWrapper.create(
+      "QueryableMaintenanceStore",
+      clazz,
+      parentIds,
+      QueryableMaintenanceStore.class,
+      store,
+      meterRegistry
+    );
   }
 
   @Override
-  public <T> SQLiteQueryableMutableStore<T> getMutable(Class<T> clazz, String... parentIds) {
+  public <T> QueryableMutableStore<T> getMutable(Class<T> clazz, String... parentIds) {
     QueryableTypeDescriptor queryableTypeDescriptor = getQueryableTypeDescriptor(clazz);
-    return new SQLiteQueryableMutableStore<>(
+    SQLiteQueryableMutableStore<T> store = new SQLiteQueryableMutableStore<>(
       objectMapper,
       keyGenerator,
       openDefaultConnection(),
@@ -216,6 +255,15 @@ public class SQLiteQueryableStoreFactory implements QueryableStoreFactory {
       parentIds,
       lock,
       mustBeReadOnly(queryableTypeDescriptor, parentIds)
+    );
+
+    return StoreInvocationMicrometerWrapper.create(
+      "QueryableMutableStore",
+      clazz,
+      parentIds,
+      QueryableMutableStore.class,
+      store,
+      meterRegistry
     );
   }
 

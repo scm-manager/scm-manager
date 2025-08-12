@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.QueryableMaintenanceStore;
+import sonia.scm.store.QueryableMutableStore;
 import sonia.scm.user.User;
 
 import java.nio.file.Path;
@@ -56,7 +57,7 @@ class SQLiteParallelizationTest {
     ExecutorService executor = Executors.newFixedThreadPool(numThreads);
     List<Future<?>> futures = new ArrayList<>();
 
-    SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+    QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
 
     for (int i = 0; i < numThreads; i++) {
       final String userId = "user-" + i;

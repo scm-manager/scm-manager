@@ -16,14 +16,17 @@
 
 package sonia.scm.store.file;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import io.micrometer.core.instrument.MeterRegistry;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreDecoratorFactory;
 import sonia.scm.store.ConfigurationStoreFactory;
+import sonia.scm.store.StoreInvocationMicrometerWrapper;
 import sonia.scm.store.StoreDecoratorFactory;
 import sonia.scm.store.TypedStoreParameters;
 
@@ -40,7 +43,9 @@ public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory impleme
 
   private final StoreCache<ConfigurationStore<?>> storeCache;
 
-  @Inject
+  private final MeterRegistry meterRegistry;
+
+  @VisibleForTesting
   public JAXBConfigurationStoreFactory(
     SCMContextProvider contextProvider,
     RepositoryLocationResolver repositoryLocationResolver,
@@ -48,9 +53,29 @@ public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory impleme
     Set<ConfigurationStoreDecoratorFactory> decoratorFactories,
     StoreCacheFactory storeCacheFactory
   ) {
+    this(
+      contextProvider,
+      repositoryLocationResolver,
+      readOnlyChecker,
+      decoratorFactories,
+      storeCacheFactory,
+      null
+    );
+  }
+
+  @Inject
+  public JAXBConfigurationStoreFactory(
+    SCMContextProvider contextProvider,
+    RepositoryLocationResolver repositoryLocationResolver,
+    RepositoryReadOnlyChecker readOnlyChecker,
+    Set<ConfigurationStoreDecoratorFactory> decoratorFactories,
+    StoreCacheFactory storeCacheFactory,
+    MeterRegistry meterRegistry
+  ) {
     super(contextProvider, repositoryLocationResolver, Store.CONFIG, readOnlyChecker);
     this.decoratorFactories = decoratorFactories;
     this.storeCache = storeCacheFactory.createStoreCache(this::createStore);
+    this.meterRegistry = meterRegistry;
   }
 
   @Override
@@ -76,6 +101,12 @@ public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory impleme
       store = factory.createDecorator(store, new StoreDecoratorFactory.Context(storeParameters));
     }
 
-    return store;
+    return StoreInvocationMicrometerWrapper.create(
+      "configuration-store",
+      storeParameters,
+      ConfigurationStore.class,
+      store,
+      meterRegistry
+    );
   }
 }

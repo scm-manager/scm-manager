@@ -16,19 +16,21 @@
 
 package sonia.scm.store.file;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import io.micrometer.core.instrument.MeterRegistry;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
+import sonia.scm.store.StoreInvocationMicrometerWrapper;
 import sonia.scm.store.TypedStoreParameters;
 import sonia.scm.util.IOUtil;
 
 import java.io.File;
-
 
 @Singleton
 public class JAXBDataStoreFactory extends FileBasedStoreFactory
@@ -40,7 +42,9 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
 
   private final DataFileCache dataFileCache;
 
-  @Inject
+  private final MeterRegistry meterRegistry;
+
+  @VisibleForTesting
   public JAXBDataStoreFactory(
     SCMContextProvider contextProvider,
     RepositoryLocationResolver repositoryLocationResolver,
@@ -49,10 +53,32 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
     DataFileCache dataFileCache,
     StoreCacheFactory storeCacheFactory
   ) {
+    this(
+      contextProvider,
+      repositoryLocationResolver,
+      keyGenerator,
+      readOnlyChecker,
+      dataFileCache,
+      storeCacheFactory,
+      null
+    );
+  }
+
+  @Inject
+  public JAXBDataStoreFactory(
+    SCMContextProvider contextProvider,
+    RepositoryLocationResolver repositoryLocationResolver,
+    KeyGenerator keyGenerator,
+    RepositoryReadOnlyChecker readOnlyChecker,
+    DataFileCache dataFileCache,
+    StoreCacheFactory storeCacheFactory,
+    MeterRegistry meterRegistry
+  ) {
     super(contextProvider, repositoryLocationResolver, Store.DATA, readOnlyChecker);
     this.keyGenerator = keyGenerator;
     this.dataFileCache = dataFileCache;
     this.storeCache = storeCacheFactory.createStoreCache(this::createStore);
+    this.meterRegistry = meterRegistry;
   }
 
   @Override
@@ -61,15 +87,25 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
     return (DataStore<T>) storeCache.getStore(storeParameters);
   }
 
-  private  <T> DataStore<T> createStore(TypedStoreParameters<T> storeParameters) {
+  private <T> DataStore<T> createStore(TypedStoreParameters<T> storeParameters) {
     File storeLocation = getStoreLocation(storeParameters);
     IOUtil.mkdirs(storeLocation);
-    return new JAXBDataStore<>(
+
+    // Create a proxy for the created store and use Micrometer to instrument it
+    JAXBDataStore<T> store = new JAXBDataStore<>(
       keyGenerator,
       TypedStoreContext.of(storeParameters),
       storeLocation,
       mustBeReadOnly(storeParameters),
       dataFileCache.instanceFor(storeParameters.getType())
+    );
+
+    return StoreInvocationMicrometerWrapper.create(
+      "data-store",
+      storeParameters,
+      DataStore.class,
+      store,
+      meterRegistry
     );
   }
 }

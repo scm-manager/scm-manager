@@ -24,6 +24,7 @@ import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.UUIDKeyGenerator;
 import sonia.scm.store.IdGenerator;
 import sonia.scm.store.QueryableMaintenanceStore;
+import sonia.scm.store.QueryableMutableStore;
 import sonia.scm.store.QueryableStore;
 import sonia.scm.user.User;
 
@@ -68,7 +69,7 @@ class StoreTestBuilder {
     this.parentClasses = parentClasses;
   }
 
-  SQLiteQueryableMutableStore<User> withIds(String... ids) {
+  QueryableMutableStore<User> withIds(String... ids) {
     return forClassWithIds(User.class, ids);
   }
 
@@ -86,7 +87,7 @@ class StoreTestBuilder {
     return createStoreFactory(User.class).getForMaintenance(User.class, ids);
   }
 
-  <T> SQLiteQueryableMutableStore<T> forClassWithIds(Class<T> clazz, String... ids) {
+  <T> QueryableMutableStore<T> forClassWithIds(Class<T> clazz, String... ids) {
     return createStoreFactory(clazz).getMutable(clazz, ids);
   }
 

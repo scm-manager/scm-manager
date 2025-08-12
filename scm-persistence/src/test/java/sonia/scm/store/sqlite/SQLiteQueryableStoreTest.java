@@ -30,6 +30,7 @@ import sonia.scm.store.Operator;
 import sonia.scm.store.QueryableMaintenanceStore;
 import sonia.scm.store.QueryableMaintenanceStore.MaintenanceIterator;
 import sonia.scm.store.QueryableMaintenanceStore.MaintenanceStoreEntry;
+import sonia.scm.store.QueryableMutableStore;
 import sonia.scm.store.QueryableStore;
 import sonia.scm.user.User;
 
@@ -71,7 +72,7 @@ class SQLiteQueryableStoreTest {
       @ParameterizedTest
       @ValueSource(strings = {"*Of*", "Heart*Gold", "H*", "*d", "*Heart Of Gold*", "Heart Of Gold", "Heart Of *Gold"})
       void shouldWorkWithLikes(String searchString) {
-        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
         store.put(new Spaceship("Space Shuttle", Range.SOLAR_SYSTEM));
         store.put(new Spaceship("Heart Of Gold", Range.INTER_GALACTIC));
 
@@ -87,7 +88,7 @@ class SQLiteQueryableStoreTest {
       @ParameterizedTest
       @ValueSource(strings = {"Of", "*of*", "heart of gold"})
       void shouldNotFindNotMatchingValuesWithLike() {
-        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
         store.put(new Spaceship("Space Shuttle", Range.SOLAR_SYSTEM));
         store.put(new Spaceship("Heart Of Gold", Range.INTER_GALACTIC));
 
@@ -100,7 +101,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldWorkWithEnums() {
-        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
         store.put(new Spaceship("Space Shuttle", Range.SOLAR_SYSTEM));
         store.put(new Spaceship("Heart Of Gold", Range.INTER_GALACTIC));
 
@@ -114,7 +115,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldWorkWithLongs() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         User trillian = new User("trillian", "McMillan", "tricia@hog.org");
         trillian.setCreationDate(10000000000L);
         store.put(trillian);
@@ -134,7 +135,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldWorkWithIntegers() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         User trillian = new User("trillian", "McMillan", "tricia@hog.org");
         trillian.setCreationDate(42L);
         store.put(trillian);
@@ -154,7 +155,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldWorkWithNumberCollection() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         User trillian = new User("trillian", "McMillan", "tricia@hog.org");
         trillian.setActive(true);
         store.put(trillian);
@@ -174,7 +175,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldCountAndWorkWithNumberCollection() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         User trillian = new User("trillian", "McMillan", "tricia@hog.org");
         trillian.setActive(true);
         store.put(trillian);
@@ -197,7 +198,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldHandleCollections() {
-        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
         store.put(new Spaceship("Spaceshuttle", "Buzz", "Anndre"));
         store.put(new Spaceship("Heart Of Gold", "Trillian", "Arthur", "Ford", "Zaphod", "Marvin"));
 
@@ -210,7 +211,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldCountAndHandleCollections() {
-        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
         store.put(new Spaceship("Spaceshuttle", "Buzz", "Anndre"));
         store.put(new Spaceship("Heart Of Gold", "Trillian", "Arthur", "Ford", "Zaphod", "Marvin"));
 
@@ -223,7 +224,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldCountWithoutConditions() {
-        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
         store.put(new Spaceship("Spaceshuttle", "Buzz", "Anndre"));
         store.put(new Spaceship("Heart Of Gold", "Trillian", "Arthur", "Ford", "Zaphod", "Marvin"));
 
@@ -234,7 +235,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldHandleEmptyCollectionWithMaxString() {
-        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
         Integer result = store.query().max(
           SPACESHIP_FLIGHT_COUNT
         );
@@ -245,7 +246,7 @@ class SQLiteQueryableStoreTest {
       @Nested
       class ForAggregations {
 
-        SQLiteQueryableMutableStore<Spaceship> store;
+        QueryableMutableStore<Spaceship> store;
 
         @BeforeEach
         void createData() {
@@ -318,7 +319,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldHandleCollectionSize() {
-        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
         store.put(new Spaceship("Spaceshuttle", "Buzz", "Anndre"));
         store.put(new Spaceship("Heart of Gold", "Trillian", "Arthur", "Ford", "Zaphod", "Marvin"));
         store.put(new Spaceship("MillenniumFalcon"));
@@ -345,7 +346,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldHandleMap() {
-        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
         store.put(new Spaceship("Spaceshuttle", Map.of("moon", true, "earth", true)));
         store.put(new Spaceship("Heart of Gold", Map.of("vogon", true, "earth", true)));
         store.put(new Spaceship("MillenniumFalcon", Map.of("dagobah", false)));
@@ -365,7 +366,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldCountAndHandleMap() {
-        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
         store.put(new Spaceship("Spaceshuttle", Map.of("moon", true, "earth", true)));
         store.put(new Spaceship("Heart of Gold", Map.of("vogon", true, "earth", true)));
         store.put(new Spaceship("MillenniumFalcon", Map.of("dagobah", false)));
@@ -386,7 +387,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldHandleMapSize() {
-        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
         store.put(new Spaceship("Spaceshuttle", Map.of("moon", true, "earth", true)));
         store.put(new Spaceship("Heart of Gold", Map.of("vogon", true, "earth", true, "dagobah", true)));
         store.put(new Spaceship("MillenniumFalcon", Map.of()));
@@ -413,7 +414,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldRetrieveTime() {
-        SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+        QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
         Spaceship spaceshuttle = new Spaceship("Spaceshuttle", Range.SOLAR_SYSTEM);
         spaceshuttle.setInServiceSince(Instant.parse("1981-04-12T10:00:00Z"));
         store.put(spaceshuttle);
@@ -445,7 +446,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldLimitQuery() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         store.put(new User("trillian", "McMillan", "tricia@hog.org"));
         store.put(new User("arthur", "Dent", "arthur@hog.org"));
         store.put(new User("zaphod", "Beeblebrox", "zaphod@hog.org"));
@@ -461,7 +462,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldOrderResults() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         store.put(new User("trillian", "McMillan", "tricia@hog.org"));
         store.put(new User("arthur", "Dent", "arthur@hog.org"));
         store.put(new User("zaphod", "Beeblebrox Head 1", "zaphod1@hog.org"));
@@ -480,7 +481,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldOrderResultsAsNumbers() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         store.put(new User("1"));
         store.put(new User("2"));
         store.put(new User("10"));
@@ -498,7 +499,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldOrderResultsAsStrings() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         store.put(new User("1"));
         store.put(new User("2"));
         store.put(new User("10"));
@@ -519,7 +520,7 @@ class SQLiteQueryableStoreTest {
     class QueryLogicalHandling {
       @Test
       void shouldQueryForId() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         store.put("1", new User("trillian", "Tricia", "tricia@hog.org"));
         store.put("2", new User("trillian", "Trillian McMillan", "mcmillan@gmail.com"));
         store.put("3", new User("arthur", "Arthur Dent", "arthur@hog.org"));
@@ -536,7 +537,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldQueryForIdAndOrderByDESC() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         store.put("1", new User("trish", "Tricia", "tricia@hog.org"));
         store.put("2", new User("trillian", "Trillian McMillan", "mcmillan@gmail.com"));
         store.put("3", new User("arthur", "Arthur Dent", "arthur@hog.org"));
@@ -551,7 +552,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldOrderIdsAndPayload() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         store.put("1", new User("trish", "Tricia", "tricia@hog.org"));
         store.put("2", new User("trillian", "Trillian McMillan", "mcmillan@gmail.com"));
         store.put("3", new User("trillian", "Arthur Dent", "arthur@hog.org"));
@@ -576,7 +577,7 @@ class SQLiteQueryableStoreTest {
           .withIds("1337")
           .put("tricia", new User("trillian", "Trillian McMillan", "tricia@hog.org"));
 
-        SQLiteQueryableStore<User> store = new StoreTestBuilder(connectionString, Group.class.getName()).withIds();
+        QueryableStore<User> store = new StoreTestBuilder(connectionString, Group.class.getName()).withIds();
 
         List<User> all = store.query(
             GROUP.eq("42")
@@ -590,7 +591,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldHandleContainsCondition() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         store.put("tricia", new User("trillian", "Tricia", "tricia@hog.org"));
         store.put("McMillan", new User("trillian", "Trillian McMillan", "mcmillan@gmail.com"));
         store.put("dent", new User("arthur", "Arthur Dent", "arthur@hog.org"));
@@ -605,7 +606,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldHandleIsNullCondition() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         store.put("tricia", new User("trillian", null, "tricia@hog.org"));
         store.put("dent", new User("arthur", "Arthur Dent", "arthur@hog.org"));
 
@@ -621,7 +622,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldHandleNotNullCondition() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         store.put("tricia", new User("trillian", null, "tricia@hog.org"));
         store.put("dent", new User("arthur", "Arthur Dent", "arthur@hog.org"));
 
@@ -637,7 +638,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldHandleOr() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         store.put("tricia", new User("trillian", "Tricia", "tricia@hog.org"));
         store.put("McMillan", new User("trillian", "Trillian McMillan", "mcmillan@gmail.com"));
         store.put("dent", new User("arthur", "Arthur Dent", "arthur@hog.org"));
@@ -658,7 +659,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldHandleOrWithMultipleStores() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group").withIds("CoolGroup");
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group").withIds("CoolGroup");
         User tricia = new User("trillian", "Tricia", "tricia@hog.org");
         User mcmillan = new User("trillian", "Trillian McMillan", "mcmillan@gmail.com");
         User dent = new User("arthur", "Arthur Dent", "arthur@hog.org");
@@ -666,7 +667,7 @@ class SQLiteQueryableStoreTest {
         store.put("McMillan", mcmillan);
         store.put("dent", dent);
 
-        SQLiteQueryableMutableStore<User> parallelStore = new StoreTestBuilder(connectionString, "sonia.Group").withIds("LameGroup");
+        QueryableMutableStore<User> parallelStore = new StoreTestBuilder(connectionString, "sonia.Group").withIds("LameGroup");
         parallelStore.put("tricia", new User("trillian", "Trillian IAMINAPARALLELSTORE McMillan", "mcmillan@gmail.com"));
 
         List<User> result = store.query(
@@ -680,7 +681,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldHandleGroup() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group")
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group")
           .withIds("42");
         store.put("tricia", new User("trillian", "Tricia", "tricia@hog.org"));
         new StoreTestBuilder(connectionString, "sonia.Group")
@@ -696,7 +697,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldHandleGroupWithCondition() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group")
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group")
           .withIds("42");
         store
           .put("tricia", new User("trillian", "Tricia", "tricia@hog.org"));
@@ -713,7 +714,7 @@ class SQLiteQueryableStoreTest {
 
       @Test
       void shouldHandleInArrayCondition() {
-        SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+        QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
         store.put(new User("trillian", "McMillan", "tricia@hog.org"));
         store.put(new User("arthur", "Dent", "arthur@hog.org"));
         store.put(new User("zaphod", "Beeblebrox", "zaphod@hog.org"));
@@ -731,7 +732,7 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldFindAllObjectsWithoutParentWithoutConditions() {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
       store.put("tricia", new User("trillian"));
 
       List<User> all = store.query().findAll();
@@ -741,7 +742,7 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldFindAllObjectsWithoutParentWithCondition() {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
       store.put("tricia", new User("trillian"));
       store.put("dent", new User("arthur"));
 
@@ -751,7 +752,7 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldFindAllObjectsWithOneParentAndMultipleConditions() {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group").withIds("CoolGroup");
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group").withIds("CoolGroup");
       User tricia = new User("trillian", "Tricia", "tricia@hog.org");
       User mcmillan = new User("trillian", "Trillian McMillan", "mcmillan@gmail.com");
       User dent = new User("arthur", "Arthur Dent", "arthur@hog.org");
@@ -770,7 +771,7 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldFindAllObjectsWithoutParentWithMultipleConditions() {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
       store.put("tricia", new User("trillian", "Tricia", "tricia@hog.org"));
       store.put("McMillan", new User("trillian", "Trillian McMillan", "mcmillan@gmail.com"));
       store.put("dent", new User("arthur", "Arthur Dent", "arthur@hog.org"));
@@ -786,7 +787,7 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldReturnIds() {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, Spaceship.class.getName())
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString, Spaceship.class.getName())
         .withIds("hog");
       store.put("tricia", new User("trillian", "Tricia", "tricia@hog.org"));
 
@@ -807,13 +808,13 @@ class SQLiteQueryableStoreTest {
   class FindOne {
     @Test
     void shouldReturnEmptyOptionalIfNoResultFound() {
-      SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+      QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
       assertThat(store.query(SPACESHIP_NAME.eq("Heart Of Gold")).findOne()).isEmpty();
     }
 
     @Test
     void shouldReturnOneResultIfOneIsGiven() {
-      SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+      QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
       Spaceship expectedShip = new Spaceship("Heart Of Gold", Range.INNER_GALACTIC);
       store.put(expectedShip);
       Spaceship ship = store.query(SPACESHIP_NAME.eq("Heart Of Gold")).findOne().get();
@@ -823,7 +824,7 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldThrowErrorIfMoreThanOneResultIsSaved() {
-      SQLiteQueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
+      QueryableMutableStore<Spaceship> store = new StoreTestBuilder(connectionString).forClassWithIds(Spaceship.class);
       Spaceship expectedShip = new Spaceship("Heart Of Gold", Range.INNER_GALACTIC);
       Spaceship localShip = new Spaceship("Heart Of Gold", Range.SOLAR_SYSTEM);
       store.put(expectedShip);
@@ -837,7 +838,7 @@ class SQLiteQueryableStoreTest {
   class FindFirst {
     @Test
     void shouldFindFirst() {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
       User expectedUser = new User("trillian", "Tricia", "tricia@hog.org");
 
       store.put("1", expectedUser);
@@ -854,7 +855,7 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldFindFirstWithMatchingCondition() {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
       User expectedUser = new User("trillian", "Trillian McMillan", "mcmillan-alternate@gmail.com");
 
       store.put("1", new User("trillian", "Tricia", "tricia@hog.org"));
@@ -874,7 +875,7 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldFindFirstWithMatchingLogicalCondition() {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
       User expectedUser = new User("trillian", "Trillian McMillan", "mcmillan@gmail.com");
 
       store.put("1", new User("trillian-old", "Tricia", "tricia@hog.org"));
@@ -900,7 +901,7 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldReturnEmptyOptionalIfNoResultFound() {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
       Optional<User> user = store.query(
           USER_NAME.eq("dave")
         )
@@ -933,7 +934,7 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldReturnDistinctValuesFromObject() {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group")
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group")
         .withIds();
 
       List<Object[]> result = store.query().project(USER_NAME).distinct().findAll();
@@ -949,7 +950,7 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldReturnDistinctParentIds() {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group")
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group")
         .withIds();
 
       List<Object[]> result = store.query().project(GROUP).distinct().findAll();
@@ -963,7 +964,7 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldReturnDistinctCount() {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group")
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString, "sonia.Group")
         .withIds();
 
       long count = store.query().project(GROUP).distinct().count();
@@ -976,11 +977,12 @@ class SQLiteQueryableStoreTest {
   class ForMaintenance {
     @Test
     void shouldUpdateRawJson() throws Exception {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
       User user = new User("trillian", "Trillian McMillan", "mcmillan@gmail.com");
       store.put("1", user);
 
-      try (MaintenanceIterator<User> iterator = store.iterateAll()) {
+      QueryableMaintenanceStore<User> maintenanceStore = new StoreTestBuilder(connectionString).forMaintenanceWithSubIds();
+      try (MaintenanceIterator<User> iterator = maintenanceStore.iterateAll()) {
         assertThat(iterator.hasNext()).isTrue();
         MaintenanceStoreEntry<User> entry = iterator.next();
         assertThat(entry.getId()).isEqualTo("1");
@@ -997,7 +999,7 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldUpdateRawJsonForItemWithParent() throws Exception {
-      SQLiteQueryableMutableStore<User> subStore = new StoreTestBuilder(connectionString, Group.class.getName()).withIds("hitchhiker");
+      QueryableMutableStore<User> subStore = new StoreTestBuilder(connectionString, Group.class.getName()).withIds("hitchhiker");
       User user = new User("trillian", "Trillian McMillan", "mcmillan@gmail.com");
       subStore.put("1", user);
 
@@ -1019,11 +1021,12 @@ class SQLiteQueryableStoreTest {
 
     @Test
     void shouldRemoveFromIteratorWithoutParent() {
-      SQLiteQueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
+      QueryableMutableStore<User> store = new StoreTestBuilder(connectionString).withIds();
       store.put(new User("trillian", "Trillian McMillan", "mcmillan@gmail.com"));
       store.put(new User("dent", "Arthur Dent", "dent@gmail.com"));
 
-      for (MaintenanceIterator<User> iter = store.iterateAll(); iter.hasNext(); ) {
+      QueryableMaintenanceStore<User> maintenanceStore = new StoreTestBuilder(connectionString).forMaintenanceWithSubIds();
+      for (MaintenanceIterator<User> iter = maintenanceStore.iterateAll(); iter.hasNext(); ) {
         MaintenanceStoreEntry<User> next = iter.next();
         if (next.get().getName().equals("dent")) {
           iter.remove();
@@ -1039,11 +1042,11 @@ class SQLiteQueryableStoreTest {
     @Test
     void shouldRemoveFromIteratorWithParents() {
       StoreTestBuilder testStoreBuilder = new StoreTestBuilder(connectionString, Repository.class.getName(), Group.class.getName());
-      SQLiteQueryableMutableStore<User> hogStore = testStoreBuilder.withIds("42", "hog");
+      QueryableMutableStore<User> hogStore = testStoreBuilder.withIds("42", "hog");
       hogStore.put("trisha", new User("trillian", "Trillian McMillan", "mcmillan@hog.com"));
       hogStore.put("dent", new User("dent", "Arthur Dent", "dent@hog.com"));
 
-      SQLiteQueryableMutableStore<User> earthStore = testStoreBuilder.withIds("42", "earth");
+      QueryableMutableStore<User> earthStore = testStoreBuilder.withIds("42", "earth");
       earthStore.put("dent", new User("dent", "Arthur Dent", "dent@gmail.com"));
 
       QueryableMaintenanceStore<User> store = testStoreBuilder.forMaintenanceWithSubIds("42");
@@ -1068,7 +1071,7 @@ class SQLiteQueryableStoreTest {
     @Test
     void shouldReadAll() {
       StoreTestBuilder testStoreBuilder = new StoreTestBuilder(connectionString, Repository.class.getName());
-      SQLiteQueryableMutableStore<User> hogStore = testStoreBuilder.withIds("42");
+      QueryableMutableStore<User> hogStore = testStoreBuilder.withIds("42");
       hogStore.put("trisha", new User("trillian", "Trillian McMillan", "mcmillan@hog.com"));
       hogStore.put("dent", new User("dent", "Arthur Dent", "dent@hog.com"));
 
@@ -1091,9 +1094,9 @@ class SQLiteQueryableStoreTest {
     @Test
     void shouldReadAllWithMultipleIds() {
       StoreTestBuilder testStoreBuilder = new StoreTestBuilder(connectionString, Repository.class.getName(), Group.class.getName());
-      SQLiteQueryableMutableStore<User> store1 = testStoreBuilder.withIds("42", "astronauts");
+      QueryableMutableStore<User> store1 = testStoreBuilder.withIds("42", "astronauts");
       store1.put("trisha", new User("trillian", "Trillian McMillan", "mcmillan@hog.com"));
-      SQLiteQueryableMutableStore<User> store2 = testStoreBuilder.withIds("42", "earthlings");
+      QueryableMutableStore<User> store2 = testStoreBuilder.withIds("42", "earthlings");
       store2.put("dent", new User("dent", "Arthur Dent", "dent@hog.com"));
 
       QueryableMaintenanceStore<User> store = testStoreBuilder.forMaintenanceWithSubIds("42");
@@ -1128,7 +1131,7 @@ class SQLiteQueryableStoreTest {
         )
       );
 
-      SQLiteQueryableMutableStore<User> hogStore = testStoreBuilder.withIds("42");
+      QueryableMaintenanceStore<User> hogStore = testStoreBuilder.forMaintenanceWithSubIds("42");
       Collection<QueryableMaintenanceStore.Row<User>> allValues = hogStore.readAll();
       assertThat(allValues)
         .extracting("value")
@@ -1147,7 +1150,7 @@ class SQLiteQueryableStoreTest {
         )
       );
 
-      SQLiteQueryableMutableStore<User> hogStore = testStoreBuilder.withIds("42");
+      QueryableMaintenanceStore<User> hogStore = testStoreBuilder.forMaintenanceWithSubIds("42");
       Collection<QueryableMaintenanceStore.Row<User>> allValues = hogStore.readAll();
       assertThat(allValues)
         .extracting("value")

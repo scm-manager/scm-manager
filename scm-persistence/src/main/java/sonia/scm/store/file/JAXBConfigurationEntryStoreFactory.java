@@ -16,16 +16,18 @@
 
 package sonia.scm.store.file;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import io.micrometer.core.instrument.MeterRegistry;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
+import sonia.scm.store.StoreInvocationMicrometerWrapper;
 import sonia.scm.store.TypedStoreParameters;
-
 
 @Singleton
 public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
@@ -35,7 +37,9 @@ public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
 
   private final StoreCache<ConfigurationEntryStore<?>> storeCache;
 
-  @Inject
+  private final MeterRegistry meterRegistry;
+
+  @VisibleForTesting
   public JAXBConfigurationEntryStoreFactory(
     SCMContextProvider contextProvider,
     RepositoryLocationResolver repositoryLocationResolver,
@@ -43,9 +47,29 @@ public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
     RepositoryReadOnlyChecker readOnlyChecker,
     StoreCacheFactory storeCacheFactory
   ) {
+    this(
+      contextProvider,
+      repositoryLocationResolver,
+      keyGenerator,
+      readOnlyChecker,
+      storeCacheFactory,
+      null
+    );
+  }
+
+  @Inject
+  public JAXBConfigurationEntryStoreFactory(
+    SCMContextProvider contextProvider,
+    RepositoryLocationResolver repositoryLocationResolver,
+    KeyGenerator keyGenerator,
+    RepositoryReadOnlyChecker readOnlyChecker,
+    StoreCacheFactory storeCacheFactory,
+    MeterRegistry meterRegistry
+  ) {
     super(contextProvider, repositoryLocationResolver, Store.CONFIG, readOnlyChecker);
     this.keyGenerator = keyGenerator;
     this.storeCache = storeCacheFactory.createStoreCache(this::createStore);
+    this.meterRegistry = meterRegistry;
   }
 
   @Override
@@ -54,8 +78,8 @@ public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
     return (ConfigurationEntryStore<T>) storeCache.getStore(storeParameters);
   }
 
-  private  <T> ConfigurationEntryStore<T> createStore(TypedStoreParameters<T> storeParameters) {
-    return new JAXBConfigurationEntryStore<>(
+  private <T> ConfigurationEntryStore<T> createStore(TypedStoreParameters<T> storeParameters) {
+    JAXBConfigurationEntryStore<T> store = new JAXBConfigurationEntryStore<>(
       getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION),
         storeParameters.getType(),
         storeParameters.getRepositoryId(),
@@ -63,6 +87,14 @@ public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
       keyGenerator,
       storeParameters.getType(),
       TypedStoreContext.of(storeParameters)
+    );
+
+    return StoreInvocationMicrometerWrapper.create(
+      "configuration-entry-store",
+      storeParameters,
+      ConfigurationEntryStore.class,
+      store,
+      meterRegistry
     );
   }
 }
