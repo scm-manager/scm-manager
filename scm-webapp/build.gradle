@@ -155,8 +155,8 @@ dependencies {
   testImplementation libraries.shiroUnit
 
   // plugin transformer
-  implementation 'org.eclipse.transformer:org.eclipse.transformer:0.5.0'
-  implementation 'org.eclipse.transformer:org.eclipse.transformer.jakarta:0.5.0'
+  implementation 'org.eclipse.transformer:org.eclipse.transformer:1.0.0'
+  implementation 'org.eclipse.transformer:org.eclipse.transformer.jakarta:1.0.0'
 }
 
 war {
