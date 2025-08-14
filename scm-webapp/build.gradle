@@ -77,10 +77,10 @@ dependencies {
   implementation libraries.bouncycastleProv
   implementation libraries.bouncycastlePkix
 
-  implementation 'org.pgpainless:pgpainless-core:1.6.7'
+  implementation 'org.pgpainless:pgpainless-core:1.7.6'
   constraints {
-    implementation 'org.bouncycastle:bcprov-jdk18on:1.78'
-    implementation 'org.bouncycastle:bcpg-jdk18on:1.78'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.81'
+    implementation 'org.bouncycastle:bcpg-jdk18on:1.81'
   }
 
   // json

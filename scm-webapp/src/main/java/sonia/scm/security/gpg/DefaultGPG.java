@@ -103,7 +103,7 @@ public class DefaultGPG implements GPG {
         publicKeyStore.add("Default SCM-Manager Signing Key", userId, rawPublicKey, true);
 
         return DefaultPrivateKey.parseRaw(rawPrivateKey);
-      } catch (PGPException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | IOException e) {
+      } catch (PGPException | NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
         throw new GPGException("Private key could not be generated", e);
       }
     } else {
