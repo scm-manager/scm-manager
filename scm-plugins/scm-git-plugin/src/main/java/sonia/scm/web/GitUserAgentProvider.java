@@ -69,7 +69,12 @@ public class GitUserAgentProvider implements UserAgentProvider {
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
 
+  private static final String PREFIX_GOGIT = "go-git/";
 
+  @VisibleForTesting
+  static final UserAgent GOGIT = UserAgent.scmClient("go-git")
+    .basicAuthenticationCharset(Charsets.UTF_8)
+    .build();
 
   //~--- methods --------------------------------------------------------------
 
@@ -85,6 +90,8 @@ public class GitUserAgentProvider implements UserAgentProvider {
       return GIT_LFS;
     } else if (isGit(lowerUserAgent)) {
       return GIT;
+    } else if (isGoGit(lowerUserAgent)) {
+      return GOGIT;
     } else {
       return null;
     }
@@ -109,4 +116,6 @@ public class GitUserAgentProvider implements UserAgentProvider {
   private boolean isGit(String userAgent) {
     return userAgent.startsWith(PREFIX_REGULAR);
   }
+
+  private boolean isGoGit(String userAgent) { return userAgent.startsWith(PREFIX_GOGIT); }
 }

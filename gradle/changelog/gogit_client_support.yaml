@@ -1,0 +1,2 @@
+- type: fixed
+  description: Support for go-git user agents (e.g. ArgoCD ≥ 2.14)

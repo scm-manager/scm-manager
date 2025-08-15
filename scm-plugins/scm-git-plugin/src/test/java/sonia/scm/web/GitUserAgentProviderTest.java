@@ -47,6 +47,7 @@ public class GitUserAgentProviderTest {
     assertEquals(GitUserAgentProvider.JGIT, parse("jgit/4.5.2"));
     assertEquals(GitUserAgentProvider.GIT_LFS, parse("git-lfs/2.0.1 (GitHub; windows amd64; go 1.8; git 678cdbd4)"));
     assertEquals(GitUserAgentProvider.MSYSGIT, parse("git/1.8.3.msysgit.0"));
+    assertEquals(GitUserAgentProvider.GOGIT, parse("go-git/5.x"));
     assertNull(parse("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"));
   }
 
