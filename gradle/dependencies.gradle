@@ -22,7 +22,7 @@ ext {
   hamcrestVersion = '3.0'
   mockitoVersion = '5.14.2'
   jerseyVersion = '3.1.11'
-  micrometerVersion = '1.14.2'
+  micrometerVersion = '1.15.3'
 
   nodeVersion = '21.7.3'
   yarnVersion = '1.22.18'
