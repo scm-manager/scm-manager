@@ -20,7 +20,7 @@ ext {
 
   junitJupiterVersion = '5.10.3'
   hamcrestVersion = '3.0'
-  mockitoVersion = '5.14.2'
+  mockitoVersion = '5.18.0'
   jerseyVersion = '3.1.11'
   micrometerVersion = '1.15.3'
 
