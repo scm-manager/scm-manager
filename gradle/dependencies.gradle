@@ -91,7 +91,7 @@ ext {
     jaxbRuntime: "org.glassfish.jaxb:jaxb-runtime:${jaxbVersion}",
 
     // validation
-    validator: 'org.hibernate.validator:hibernate-validator:8.0.1.Final',
+    validator: 'org.hibernate.validator:hibernate-validator:8.0.3.Final',
     elApi: 'jakarta.el:jakarta.el-api:5.0.1',
     elRuntime: 'org.glassfish:jakarta.el:4.0.2',
 
