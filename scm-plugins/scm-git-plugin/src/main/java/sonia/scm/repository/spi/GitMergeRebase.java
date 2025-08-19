@@ -53,7 +53,7 @@ class GitMergeRebase {
     this.context = context;
     this.mergeHelper = new MergeHelper(context, request, repositoryManager, eventFactory);
     this.commitHelper = new CommitHelper(context, repositoryManager, eventFactory);
-    this.fastForwardMerge = new GitFastForwardIfPossible(request, context, repositoryManager, eventFactory);
+    this.fastForwardMerge = new GitFastForwardIfPossible(request, context, repositoryManager, eventFactory, FastForwardFallbackStrategy.THROW_EXCEPTION);
   }
 
   MergeCommandResult run() {

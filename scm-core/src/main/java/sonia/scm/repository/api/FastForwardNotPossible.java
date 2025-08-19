@@ -16,20 +16,25 @@
 
 package sonia.scm.repository.api;
 
-public enum MergeStrategy {
-  MERGE_COMMIT(true),
-  FAST_FORWARD_IF_POSSIBLE(true),
-  FAST_FORWARD_ONLY(false),
-  SQUASH(true),
-  REBASE(false);
+import sonia.scm.BadRequestException;
+import sonia.scm.repository.Repository;
 
-  private final boolean commitMessageAllowed;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-  MergeStrategy(boolean commitMessageAllowed) {
-    this.commitMessageAllowed = commitMessageAllowed;
+public class FastForwardNotPossible extends BadRequestException {
+
+  private static final String CODE = "Re6hF5g14U";
+
+  public FastForwardNotPossible(Repository repository, String source, String target) {
+    super(entity(repository).build(), createMessage(source, target));
   }
 
-  public boolean isCommitMessageAllowed() {
-    return commitMessageAllowed;
+  @Override
+  public String getCode() {
+    return CODE;
+  }
+
+  private static String createMessage(String source, String target) {
+    return String.format("Fast forward not possible with source revision %s and target revision %s", source, target);
   }
 }

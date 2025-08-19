@@ -45,6 +45,7 @@ import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.api.FastForwardNotPossible;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
 import sonia.scm.repository.api.MergePreventReason;
@@ -446,6 +447,38 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldMergeWithFastForwardOnly() throws IOException, GitAPIException {
+    try (GitContext context = createContext(); Repository repository = context.open()) {
+
+      ObjectId featureBranchHead = new Git(repository).log().add(repository.resolve("squash")).setMaxCount(1).call().iterator().next().getId();
+
+      GitMergeCommand command = createCommand();
+      MergeCommandRequest request = new MergeCommandRequest();
+      request.setBranchToMerge("squash");
+      request.setTargetBranch("master");
+      request.setMergeStrategy(MergeStrategy.FAST_FORWARD_ONLY);
+      request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+      MergeCommandResult mergeCommandResult = command.merge(request);
+      assertThat(mergeCommandResult.getNewHeadRevision()).isEqualTo("35597e9e98fe53167266583848bfef985c2adb27");
+      assertThat(mergeCommandResult.getRevisionToMerge()).isEqualTo("35597e9e98fe53167266583848bfef985c2adb27");
+      assertThat(mergeCommandResult.getTargetRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
+
+      assertThat(mergeCommandResult.isSuccess()).isTrue();
+
+      Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+      RevCommit mergeCommit = commits.iterator().next();
+      assertThat(mergeCommit.getParentCount()).isEqualTo(1);
+      PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+      PersonIdent mergeCommitter = mergeCommit.getCommitterIdent();
+
+      assertThat(mergeAuthor.getName()).isEqualTo("Philip J Fry");
+      assertThat(mergeCommitter.getName()).isEqualTo("Eduard Heimbuch");
+      assertThat(mergeCommit.getId()).isEqualTo(featureBranchHead);
+    }
+  }
+
+  @Test
   public void shouldDoMergeCommitIfFastForwardIsNotPossible() throws IOException, GitAPIException {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
@@ -468,6 +501,18 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
       assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
       assertThat(message).contains("master", "mergeable");
     }
+  }
+
+  @Test(expected = FastForwardNotPossible.class)
+  public void shouldThrowErrorBecauseFastForwardNotPossible() throws IOException, GitAPIException {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setTargetBranch("master");
+    request.setBranchToMerge("mergeable");
+    request.setMergeStrategy(MergeStrategy.FAST_FORWARD_ONLY);
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    MergeCommandResult mergeCommandResult = command.merge(request);
   }
 
   @Test(expected = NotFoundException.class)

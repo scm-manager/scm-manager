@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.lib.ObjectId;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.api.FastForwardNotPossible;
 import sonia.scm.repository.api.MergeCommandResult;
 
 @Slf4j
@@ -30,9 +31,11 @@ class GitFastForwardIfPossible {
   private final GitMergeCommit fallbackMerge;
   private final CommitHelper commitHelper;
   private final Repository repository;
+  private final FastForwardFallbackStrategy fastForwardStrategy;
 
-  GitFastForwardIfPossible(MergeCommandRequest request, GitContext context, RepositoryManager repositoryManager, GitRepositoryHookEventFactory eventFactory) {
+  GitFastForwardIfPossible(MergeCommandRequest request, GitContext context, RepositoryManager repositoryManager, GitRepositoryHookEventFactory eventFactory, FastForwardFallbackStrategy fastForwardStrategy) {
     this.request = request;
+    this.fastForwardStrategy = fastForwardStrategy;
     this.mergeHelper = new MergeHelper(context, request, repositoryManager, eventFactory);
     this.fallbackMerge = new GitMergeCommit(request, context, repositoryManager, eventFactory);
     this.commitHelper = new CommitHelper(context, repositoryManager, eventFactory);
@@ -48,9 +51,17 @@ class GitFastForwardIfPossible {
       log.trace("fast forward branch {} onto {}", request.getBranchToMerge(), request.getTargetBranch());
       commitHelper.updateBranch(request.getTargetBranch(), sourceRevision, targetRevision);
       return MergeCommandResult.success(targetRevision.name(), mergeHelper.getRevisionToMerge().name(), sourceRevision.name());
-    } else {
-      log.trace("fast forward is not possible, fallback to merge");
-      return fallbackMerge.run();
     }
+
+    return switch (fastForwardStrategy) {
+      case MERGE_COMMIT -> {
+        log.trace("fast forward is not possible, fallback to merge");
+        yield fallbackMerge.run();
+      }
+      case THROW_EXCEPTION -> {
+        log.trace("fast forward is not possible, fallback to exception");
+        throw new FastForwardNotPossible(repository, request.getBranchToMerge(), request.getTargetBranch());
+      }
+    };
   }
 }

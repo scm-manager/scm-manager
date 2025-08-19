@@ -289,6 +289,10 @@
       "displayName": "Nicht unterstützte Merge-Strategie",
       "description": "Die gewählte Merge-Strategie wird von dem Repository nicht unterstützt."
     },
+    "Re6hF5g14U": {
+      "displayName": "Fast-Forward fehlgeschlagen",
+      "description": "Die beiden Branches können nicht per Fast-Forward miteinander gemerged werden"
+    },
     "78RhWxTIw1": {
       "displayName": "Der Default-Branch kann nicht gelöscht werden",
       "description": "Der Default-Branch kann nicht gelöscht werden. Bitte wählen Sie zuerst einen neuen Default-Branch."

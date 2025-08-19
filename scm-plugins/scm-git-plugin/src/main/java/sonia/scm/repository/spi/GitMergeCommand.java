@@ -63,6 +63,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   private static final Set<MergeStrategy> STRATEGIES = Set.of(
     MergeStrategy.MERGE_COMMIT,
     MergeStrategy.FAST_FORWARD_IF_POSSIBLE,
+    MergeStrategy.FAST_FORWARD_ONLY,
     MergeStrategy.SQUASH,
     MergeStrategy.REBASE
   );
@@ -102,7 +103,9 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     return switch (request.getMergeStrategy()) {
       case SQUASH -> new GitMergeWithSquash(request, context, repositoryManager, eventFactory).run();
       case FAST_FORWARD_IF_POSSIBLE ->
-        new GitFastForwardIfPossible(request, context, repositoryManager, eventFactory).run();
+        new GitFastForwardIfPossible(request, context, repositoryManager, eventFactory, FastForwardFallbackStrategy.MERGE_COMMIT).run();
+      case FAST_FORWARD_ONLY ->
+        new GitFastForwardIfPossible(request, context, repositoryManager, eventFactory, FastForwardFallbackStrategy.THROW_EXCEPTION).run();
       case MERGE_COMMIT -> new GitMergeCommit(request, context, repositoryManager, eventFactory).run();
       case REBASE -> new GitMergeRebase(request, context, repositoryManager, eventFactory).run();
       default -> throw new MergeStrategyNotSupportedException(repository, request.getMergeStrategy());

@@ -289,6 +289,10 @@
       "displayName": "Merge strategy not supported",
       "description": "The selected merge strategy is not supported by the repository."
     },
+    "Re6hF5g14U": {
+      "displayName": "Fast forward failed",
+      "description": "The branches cannot be merged via fast forward"
+    },
     "78RhWxTIw1": {
       "displayName": "Default branch cannot be deleted",
       "description": "The default branch of a repository cannot be deleted. Please select another default branch first."

@@ -14,22 +14,9 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
-public enum MergeStrategy {
-  MERGE_COMMIT(true),
-  FAST_FORWARD_IF_POSSIBLE(true),
-  FAST_FORWARD_ONLY(false),
-  SQUASH(true),
-  REBASE(false);
-
-  private final boolean commitMessageAllowed;
-
-  MergeStrategy(boolean commitMessageAllowed) {
-    this.commitMessageAllowed = commitMessageAllowed;
-  }
-
-  public boolean isCommitMessageAllowed() {
-    return commitMessageAllowed;
-  }
+public enum FastForwardFallbackStrategy {
+  MERGE_COMMIT,
+  THROW_EXCEPTION
 }
