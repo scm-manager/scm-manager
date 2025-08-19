@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.10.0] - 2025-08-19
+### Added
+- Performance of stores can be measured with Micrometer metrics
+- Merge strategy fast forward only, which either fast forwards the commits if possible or throws an error
+
+### Fixed
+- The committer in squash merge, rebase, and regular merge is now set to the current user.
+- Cross-Origin-Opener-Policy and Cross-Origin-Embedder-Policy headers added to all responses
+- Support for go-git user agents (e.g. ArgoCD ≥ 2.14) (Patch from 2.46.6)
+
 ## [3.7.6] - 2025-08-19
 ### Fixed
 - Support for go-git user agents (e.g. ArgoCD ≥ 2.14) (Patch from 2.46.6)
@@ -1782,3 +1792,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.7.5]: https://scm-manager.org/download/3.7.5
 [3.8.0]: https://scm-manager.org/download/3.8.0
 [3.9.0]: https://scm-manager.org/download/3.9.0
+[3.10.0]: https://scm-manager.org/download/3.10.0

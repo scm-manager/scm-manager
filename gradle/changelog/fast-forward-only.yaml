@@ -1,2 +1,0 @@
-- type: added
-  description: Merge strategy fast forward only, which either fast forwards the commits if possible or throws an error
