@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-types",
-  "version": "3.7.6",
+  "version": "3.7.7-SNAPSHOT",
   "description": "Typescript types for SCM-Manager related Objects",
   "main": "src/index.ts",
   "files": [
@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@scm-manager/eslint-config": "^2.17.0",
-    "@scm-manager/tsconfig": "^2.13.0",
+    "@scm-manager/tsconfig": "3.7.7-SNAPSHOT",
     "@scm-manager/prettier-config": "^2.12.0"
   },
   "babel": {

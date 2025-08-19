@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-api",
-  "version": "3.7.6",
+  "version": "3.7.7-SNAPSHOT",
   "description": "React hook api for the SCM-Manager backend",
   "main": "build/index.js",
   "module": "build/index.mjs",
@@ -26,14 +26,14 @@
     "react-i18next": "11"
   },
   "devDependencies": {
-    "@scm-manager/ui-types": "3.7.6",
+    "@scm-manager/ui-types": "3.7.7-SNAPSHOT",
     "tsup": "^5.12.6",
     "@types/react-test-renderer": "^17.0.1",
     "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/eslint-config": "^2.17.0",
     "@scm-manager/jest-preset": "^2.14.1",
     "@scm-manager/prettier-config": "^2.12.0",
-    "@scm-manager/tsconfig": "^2.13.0",
+    "@scm-manager/tsconfig": "3.7.7-SNAPSHOT",
     "@testing-library/react-hooks": "8.0.1",
     "@types/react": "^17.0.1",
     "react-test-renderer": "^17.0.1",
