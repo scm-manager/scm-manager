@@ -1,0 +1,2 @@
+- type: fixed
+  description: The committer in squash merge, rebase, and regular merge is now set to the current user.

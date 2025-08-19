@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.6] - 2025-08-19
+### Fixed
+- Support for go-git user agents (e.g. ArgoCD ≥ 2.14) (Patch from 2.46.6)
+
+## [2.46.6] - 2025-08-19
+### Fixed
+- Support for go-git user agents (e.g. ArgoCD ≥ 2.14)
+
 ## [3.9.0] - 2025-08-01
 ### Added
 - Delete and retain functionality for mutable queryable stores
@@ -1744,6 +1752,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.46.3]: https://scm-manager.org/download/2.46.3
 [2.46.4]: https://scm-manager.org/download/2.46.4
 [2.46.5]: https://scm-manager.org/download/2.46.5
+[2.46.6]: https://scm-manager.org/download/2.46.6
 [2.47.0]: https://scm-manager.org/download/2.47.0
 [2.48.0]: https://scm-manager.org/download/2.48.0
 [2.48.1]: https://scm-manager.org/download/2.48.1
