@@ -26,16 +26,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationReader;
-import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.net.GlobalProxyConfiguration;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 class TemporaryConfigFactoryTest {
@@ -45,40 +42,28 @@ class TemporaryConfigFactoryTest {
   private TemporaryConfigFactory configFactory;
   private ScmConfiguration configuration;
 
-  private Path hgrc;
-
   @BeforeEach
   void setUp(@TempDir Path directory) throws IOException {
-    Path hg = Files.createDirectories(directory.resolve(".hg"));
-    hgrc = hg.resolve("hgrc");
-    lenient().when(commandContext.getDirectory()).thenReturn(directory.toFile());
-
     configuration = new ScmConfiguration();
     configFactory = new TemporaryConfigFactory(new GlobalProxyConfiguration(configuration));
   }
 
   @Test
   void shouldNotCreateHgrc() throws IOException {
-    configFactory.withContext(commandContext).call(() -> {
-      assertThat(hgrc).doesNotExist();
+    configFactory.withContext(commandContext).call((Path configFile) -> {
+      assertThat(configFile).isNull();
       return null;
     });
   }
 
-  @Test
-  @SuppressWarnings("java:S2699") // test should just ensure that no exception is thrown
-  void shouldNotFailIfFileExistsButWithoutProxyOrAuthentication() throws IOException {
-    Files.createFile(hgrc);
-    configFactory.withContext(commandContext).call(() -> null);
-  }
 
   @Test
   void shouldCreateHgrcWithAuthentication() throws IOException {
     configFactory
       .withContext(commandContext)
       .withCredentials("https://hg.hitchhiker.org/repo", "trillian", "secret")
-      .call(() -> {
-        INIConfiguration ini = assertHgrc();
+      .call((Path configFile) -> {
+        INIConfiguration ini = assertHgrc(configFile);
 
         INISection auth = ini.getSection("auth");
         assertThat(auth).isNotNull();
@@ -91,7 +76,7 @@ class TemporaryConfigFactoryTest {
       });
   }
 
-  private INIConfiguration assertHgrc() throws IOException {
+  private INIConfiguration assertHgrc(Path hgrc) throws IOException {
     assertThat(hgrc).exists();
 
     INIConfigurationReader reader = new INIConfigurationReader();
@@ -103,8 +88,8 @@ class TemporaryConfigFactoryTest {
     configuration.setEnableProxy(true);
     configuration.setProxyServer("proxy.hitchhiker.org");
     configuration.setProxyPort(3128);
-    configFactory.withContext(commandContext).call(() -> {
-      INIConfiguration ini = assertHgrc();
+    configFactory.withContext(commandContext).call((Path configFile) -> {
+      INIConfiguration ini = assertHgrc(configFile);
 
       INISection proxy = ini.getSection("http_proxy");
       assertThat(proxy).isNotNull();
@@ -121,8 +106,8 @@ class TemporaryConfigFactoryTest {
     configuration.setProxyUser("trillian");
     configuration.setProxyPassword("secret");
 
-    configFactory.withContext(commandContext).call(() -> {
-      INIConfiguration ini = assertHgrc();
+    configFactory.withContext(commandContext).call((Path configFile) -> {
+      INIConfiguration ini = assertHgrc(configFile);
 
       INISection proxy = ini.getSection("http_proxy");
       assertThat(proxy).isNotNull();
@@ -140,8 +125,8 @@ class TemporaryConfigFactoryTest {
     configuration.setProxyPort(3128);
     configuration.setProxyExcludes(ImmutableSet.of("hg.hitchhiker.org", "localhost", "127.0.0.1"));
 
-    configFactory.withContext(commandContext).call(() -> {
-      INIConfiguration ini = assertHgrc();
+    configFactory.withContext(commandContext).call((Path configFile) -> {
+      INIConfiguration ini = assertHgrc(configFile);
 
       INISection proxy = ini.getSection("http_proxy");
       assertThat(proxy).isNotNull();
@@ -152,85 +137,13 @@ class TemporaryConfigFactoryTest {
 
   @Test
   void shouldRemoveCreatedHgrc() throws IOException {
-    configFactory
+    Path hgrc = configFactory
       .withContext(commandContext)
       .withCredentials("https://hg.hitchhiker.com", "marvin", "brainLikeAPlanet")
-      .call(() -> {
-        assertThat(hgrc).exists();
-        return null;
+      .call((Path configFile) -> {
+        assertThat(configFile).exists();
+        return configFile;
       });
     assertThat(hgrc).doesNotExist();
   }
-
-  @Test
-  void shouldKeepAuthenticationInformation() throws IOException {
-    writeAuthentication();
-
-    configFactory
-      .withContext(commandContext)
-      .withCredentials("https://hg.hitchhiker.com", "marvin", "brainLikeAPlanet")
-      .call(() -> {
-        INIConfiguration configuration = assertHgrc();
-        INISection auth = configuration.getSection("auth");
-        assertThat(auth).isNotNull();
-        assertThat(auth.getParameter("a.username")).isEqualTo("dent");
-        assertThat(auth.getParameter("temporary.username")).isEqualTo("marvin");
-        return null;
-      });
-
-    INIConfiguration configuration = assertHgrc();
-    INISection auth = configuration.getSection("auth");
-    assertThat(auth).isNotNull();
-    assertThat(auth.getParameter("a.username")).isEqualTo("dent");
-    assertThat(auth.getParameter("temporary.username")).isNull();
-  }
-
-  @Test
-  void shouldRestoreProxyConfiguration() throws IOException {
-    writeProxyConfiguration();
-
-    configuration.setEnableProxy(true);
-    configuration.setProxyServer("proxy.hitchhiker.org");
-    configuration.setProxyPort(3128);
-
-    configFactory.withContext(commandContext).call(() -> {
-      INIConfiguration ini = assertHgrc();
-
-      INISection proxy = ini.getSection("http_proxy");
-      assertThat(proxy).isNotNull();
-      assertThat(proxy.getParameter("host")).isEqualTo("proxy.hitchhiker.org:3128");
-      return null;
-    });
-
-    INIConfiguration ini = assertHgrc();
-
-    INISection proxy = ini.getSection("http_proxy");
-    assertThat(proxy).isNotNull();
-    assertThat(proxy.getParameter("host")).isEqualTo("awesome.hitchhiker.com:3128");
-  }
-
-  private void writeAuthentication() throws IOException {
-    INIConfiguration configuration = new INIConfiguration();
-    INISection auth = new INISection("auth");
-    auth.setParameter("a.prefix", "awesome.hitchhiker.com");
-    auth.setParameter("a.schemes", "ssh");
-    auth.setParameter("a.username", "dent");
-    auth.setParameter("a.password", "arthur123");
-    configuration.addSection(auth);
-    INIConfigurationWriter writer = new INIConfigurationWriter();
-    writer.write(configuration, hgrc.toFile());
-  }
-
-  private void writeProxyConfiguration() throws IOException {
-    INIConfiguration configuration = new INIConfiguration();
-    INISection proxy = new INISection("http_proxy");
-    proxy.setParameter("host", "awesome.hitchhiker.com:3128");
-    proxy.setParameter("user", "dent");
-    proxy.setParameter("passwd", "arthur123");
-    configuration.addSection(proxy);
-    INIConfigurationWriter writer = new INIConfigurationWriter();
-    writer.write(configuration, hgrc.toFile());
-  }
-
-
 }
