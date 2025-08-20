@@ -128,20 +128,20 @@ pipeline {
       }
     }
 
-    stage('Update tap') {
-      when {
-        anyOf {
-          branch pattern: 'release/*', comparator: 'GLOB'
-          branch pattern: 'hotfix/*', comparator: 'GLOB'
-        }
-        expression { return isBuildSuccess() }
-      }
-      steps {
-        build wait: false, propagate: false, job: 'scm-manager/homebrew-tap/master', parameters: [
-          string(name: 'Version', value: getReleaseVersion())
-        ]
-      }
-    }
+//    stage('Update tap') {
+//      when {
+//        anyOf {
+//          branch pattern: 'release/*', comparator: 'GLOB'
+//          branch pattern: 'hotfix/*', comparator: 'GLOB'
+//        }
+//        expression { return isBuildSuccess() }
+//      }
+//      steps {
+//        build wait: false, propagate: false, job: 'scm-manager/homebrew-tap/master', parameters: [
+//          string(name: 'Version', value: getReleaseVersion())
+//        ]
+//      }
+//    }
 
     stage('Presentation Environment') {
       when {
