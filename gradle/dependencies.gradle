@@ -75,7 +75,7 @@ ext {
     edison: 'de.otto.edison:edison-hal:2.1.1',
 
     // openapi
-    swaggerJaxRs: 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.35',
+    swaggerJaxRs: 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.26',
 
     // dto mapping
     mapstruct: "org.mapstruct:mapstruct:${mapstructVersion}",

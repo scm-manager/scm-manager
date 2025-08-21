@@ -19,7 +19,7 @@ plugins {
   id 'org.scm-manager.java'
   id 'org.scm-manager.run'
   id 'org.scm-manager.core-plugins'
-  id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.2.19'
+  id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.2.26'
 }
 
 configurations {
@@ -33,7 +33,7 @@ configurations {
         dependencies.add(project.getDependencies().create("org.apache.commons:commons-lang3:3.12.0"))
         dependencies.add(project.getDependencies().create("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"))
         dependencies.add(project.getDependencies().create("jakarta.servlet:jakarta.servlet-api:6.0.0"))
-        dependencies.add(project.getDependencies().create("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.19"))
+        dependencies.add(project.getDependencies().create("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.26"))
         dependencies.add(project.getDependencies().create("com.fasterxml.jackson.core:jackson-core:2.18.2"))
       }
     })
