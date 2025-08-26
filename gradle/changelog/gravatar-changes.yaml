@@ -1,0 +1,6 @@
+- type: fixed
+  description: Overlapping text inside the footer section if the alt text of an avatar is rendered
+- type: fixed
+  description: Overlapping text inside the commit overview if the alt text of an avatar is rendered
+- type: fixed
+  description: Fetching of gravatar images getting blocked by Cross-Origin-Embedder-Policy

@@ -51,23 +51,19 @@ type TitleWithAvatarProps = {
 };
 
 const VCenteredAvatar = styled(AvatarImage)`
-  vertical-align: middle;
-`;
-
-const AvatarContainer = styled.span`
-  float: left;
+  width: 1rem !important;
+  height: 1rem !important;
   margin-right: 0.3em;
   padding-top: 0.2em;
-  width: 1em;
-  height: 1em;
+  border-radius: 100%;
 `;
 
 const TitleWithAvatar: FC<TitleWithAvatarProps> = ({ me }) => (
-  <div {...createAttributesForTesting(me.displayName)}>
-    <AvatarContainer className="image is-rounded">
+  <div {...createAttributesForTesting(me.displayName)} className="is-flex">
+    <div>
       <VCenteredAvatar person={me} representation="rounded" />
-    </AvatarContainer>
-    {me.displayName}
+    </div>
+    <div>{me.displayName}</div>
   </div>
 );
 

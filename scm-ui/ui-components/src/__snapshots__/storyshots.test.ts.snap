@@ -1825,18 +1825,20 @@ exports[`Storyshots Footer Full 1`] = `
           className="has-text-weight-bold mb-2"
         >
           <div
+            className="is-flex"
             data-testid="trillian-mcmillian"
           >
-            <span
-              className="Footer__AvatarContainer-sc-k70cxq-1 kckyuz image is-rounded"
-            >
+            <div>
               <img
                 alt="trillian"
-                className="is-rounded Footer__VCenteredAvatar-sc-k70cxq-0 bGojWR"
+                className="is-rounded Footer__VCenteredAvatar-sc-k70cxq-0 gNPbnb"
+                crossOrigin="anonymous"
                 src="test-file-stub"
               />
-            </span>
-            Trillian McMillian
+            </div>
+            <div>
+              Trillian McMillian
+            </div>
           </div>
         </h2>
         <ul
@@ -2031,18 +2033,20 @@ exports[`Storyshots Footer With Avatar 1`] = `
           className="has-text-weight-bold mb-2"
         >
           <div
+            className="is-flex"
             data-testid="trillian-mcmillian"
           >
-            <span
-              className="Footer__AvatarContainer-sc-k70cxq-1 kckyuz image is-rounded"
-            >
+            <div>
               <img
                 alt="trillian"
-                className="is-rounded Footer__VCenteredAvatar-sc-k70cxq-0 bGojWR"
+                className="is-rounded Footer__VCenteredAvatar-sc-k70cxq-0 gNPbnb"
+                crossOrigin="anonymous"
                 src="test-file-stub"
               />
-            </span>
-            Trillian McMillian
+            </div>
+            <div>
+              Trillian McMillian
+            </div>
           </div>
         </h2>
         <ul
@@ -20086,6 +20090,7 @@ exports[`Storyshots Repositories/Annotate With Avatars 1`] = `
                 <img
                   alt="Arthur Dent"
                   className="has-rounded-border AuthorImage-sc-ygvjd8-0 dTapGF"
+                  crossOrigin="anonymous"
                   src="https://robohash.org/arthur.dent@hitchhiker.com.png"
                 />
                 Arthur Dent
@@ -20148,6 +20153,7 @@ exports[`Storyshots Repositories/Annotate With Avatars 1`] = `
                 <img
                   alt="Tricia Marie McMillan"
                   className="has-rounded-border AuthorImage-sc-ygvjd8-0 dTapGF"
+                  crossOrigin="anonymous"
                   src="https://robohash.org/trillian@hitchhiker.com.png"
                 />
                 Tricia Marie McMillan
@@ -20210,6 +20216,7 @@ exports[`Storyshots Repositories/Annotate With Avatars 1`] = `
                 <img
                   alt="Arthur Dent"
                   className="has-rounded-border AuthorImage-sc-ygvjd8-0 dTapGF"
+                  crossOrigin="anonymous"
                   src="https://robohash.org/arthur.dent@hitchhiker.com.png"
                 />
                 Arthur Dent
@@ -20254,6 +20261,7 @@ exports[`Storyshots Repositories/Annotate With Avatars 1`] = `
                 <img
                   alt="Ford Prefect"
                   className="has-rounded-border AuthorImage-sc-ygvjd8-0 dTapGF"
+                  crossOrigin="anonymous"
                   src="https://robohash.org/ford.prefect@hitchhiker.com.png"
                 />
                 Ford Prefect
@@ -20298,6 +20306,7 @@ exports[`Storyshots Repositories/Annotate With Avatars 1`] = `
                 <img
                   alt="Arthur Dent"
                   className="has-rounded-border AuthorImage-sc-ygvjd8-0 dTapGF"
+                  crossOrigin="anonymous"
                   src="https://robohash.org/arthur.dent@hitchhiker.com.png"
                 />
                 Arthur Dent
@@ -20380,11 +20389,12 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
                 className="media-left mt-2 mr-2"
               >
                 <div
-                  className="SingleChangeset__FixedSizedAvatar-sc-ytpqp9-0 cDjLjl image"
+                  className="SingleChangeset__FixedSizedAvatar-sc-ytpqp9-0 dLAXC image"
                 >
                   <img
                     alt="SCM Administrator"
                     className="has-rounded-border"
+                    crossOrigin="anonymous"
                     src="https://robohash.org/scm-admin@scm-manager.org"
                   />
                 </div>
@@ -20554,11 +20564,12 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
                 className="media-left mt-2 mr-2"
               >
                 <div
-                  className="SingleChangeset__FixedSizedAvatar-sc-ytpqp9-0 cDjLjl image"
+                  className="SingleChangeset__FixedSizedAvatar-sc-ytpqp9-0 dLAXC image"
                 >
                   <img
                     alt="SCM Administrator"
                     className="has-rounded-border"
+                    crossOrigin="anonymous"
                     src="https://robohash.org/scm-admin@scm-manager.org"
                   />
                 </div>
@@ -21626,11 +21637,12 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
                 className="media-left mt-2 mr-2"
               >
                 <div
-                  className="SingleChangeset__FixedSizedAvatar-sc-ytpqp9-0 cDjLjl image"
+                  className="SingleChangeset__FixedSizedAvatar-sc-ytpqp9-0 dLAXC image"
                 >
                   <img
                     alt="SCM Administrator"
                     className="has-rounded-border"
+                    crossOrigin="anonymous"
                     src="test-file-stub"
                   />
                 </div>

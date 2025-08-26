@@ -15,7 +15,7 @@
  */
 
 import React, { FC } from "react";
-import { Image } from "..";
+import { Image } from "@scm-manager/ui-core";
 import { EXTENSION_POINT, Person } from "./Avatar";
 import { useBinder } from "@scm-manager/ui-extensions";
 
@@ -36,7 +36,7 @@ const AvatarImage: FC<Props> = ({ person, representation = "rounded-border", cla
       classes += " " + className;
     }
 
-    return <Image className={classes} src={avatar} alt={person.name} />;
+    return <Image className={classes} src={avatar} alt={person.name} crossOrigin="anonymous" />;
   }
 
   return null;
