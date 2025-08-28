@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/ui-forms",
   "private": false,
-  "version": "3.10.1",
+  "version": "3.10.2-SNAPSHOT",
   "main": "index.ts",
   "scripts": {
     "depcheck": "depcheck"
@@ -21,7 +21,7 @@
     "styled-components": "^5.3.5"
   },
   "dependencies": {
-    "@scm-manager/ui-core": "3.10.1"
+    "@scm-manager/ui-core": "3.10.2-SNAPSHOT"
   },
   "devDependencies": {
     "@scm-manager/eslint-config": "^2.17.0",
