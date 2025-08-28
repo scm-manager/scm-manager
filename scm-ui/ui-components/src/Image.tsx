@@ -22,6 +22,7 @@ type Props = {
   alt: string;
   title?: string;
   className?: string;
+  crossOrigin?: "anonymous" | "";
 };
 
 /**
@@ -37,8 +38,8 @@ class Image extends React.Component<Props> {
   };
 
   render() {
-    const { alt, title, className } = this.props;
-    return <img className={className} src={this.createImageSrc()} alt={alt} title={title} />;
+    const { alt, title, className, crossOrigin } = this.props;
+    return <img className={className} src={this.createImageSrc()} alt={alt} title={title} crossOrigin={crossOrigin} />;
   }
 }
 

@@ -30,7 +30,7 @@ const Contributor: FC<{ person: Person }> = ({ person }) => {
     if (avatar) {
       prefix = (
         <>
-          <ContributorAvatar src={avatar} alt={person.name} />{" "}
+          <ContributorAvatar src={avatar} alt={person.name} crossOrigin="anonymous" />{" "}
         </>
       );
     }
