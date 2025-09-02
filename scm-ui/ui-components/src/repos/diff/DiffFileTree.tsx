@@ -18,12 +18,19 @@ import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { FileTree } from "@scm-manager/ui-types";
+import { FileChangeType, FileTree } from "@scm-manager/ui-types";
 import { FileDiffContent, StackedSpan, StyledIcon } from "./styledElements";
+import { FileTreeNodeWrapper } from "../DiffTypes";
 
-type Props = { tree: FileTree; currentFile: string; setCurrentFile: (path: string) => void; gap?: number };
+type Props = {
+  tree: FileTree;
+  currentFile: string;
+  setCurrentFile: (path: string) => void;
+  gap?: number;
+  FileTreeNodeWrapper?: FileTreeNodeWrapper;
+};
 
-const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile, gap = 15 }) => {
+const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile, gap = 15, FileTreeNodeWrapper }) => {
   return (
     <FileDiffContent gap={gap}>
       {Object.keys(tree.children).map((key) => (
@@ -33,6 +40,7 @@ const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile, gap = 15 }
           parentPath=""
           currentFile={currentFile}
           setCurrentFile={setCurrentFile}
+          FileTreeNodeWrapper={FileTreeNodeWrapper}
         />
       ))}
     </FileDiffContent>
@@ -41,9 +49,13 @@ const DiffFileTree: FC<Props> = ({ tree, currentFile, setCurrentFile, gap = 15 }
 
 export default DiffFileTree;
 
-type ChangeType = "add" | "modify" | "delete" | "rename" | "copy";
-
-type NodeProps = { node: FileTree; parentPath: string; currentFile: string; setCurrentFile: (path: string) => void };
+type NodeProps = {
+  node: FileTree;
+  parentPath: string;
+  currentFile: string;
+  setCurrentFile: (path: string) => void;
+  FileTreeNodeWrapper?: FileTreeNodeWrapper;
+};
 
 const addPath = (parentPath: string, path: string) => {
   if ("" === parentPath) {
@@ -52,16 +64,31 @@ const addPath = (parentPath: string, path: string) => {
   return parentPath + "/" + path;
 };
 
-const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile }) => {
+const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile, FileTreeNodeWrapper }) => {
   const [t] = useTranslation("repos");
 
+  FileTreeNodeWrapper = FileTreeNodeWrapper || (({ children }) => <>{children}</>);
+
+  const label = <div className="ml-1">{node.nodeName}</div>;
+  const icon = <StyledIcon alt={t("diff.showContent")}>folder</StyledIcon>;
   return (
     <li>
       {Object.keys(node.children).length > 0 ? (
         <ul className="py-1 pl-3">
           <li className="is-flex has-text-grey">
-            <StyledIcon alt={t("diff.showContent")}>folder</StyledIcon>
-            <div className="ml-1">{node.nodeName}</div>
+            <FileTreeNodeWrapper
+              path={addPath(parentPath, node.nodeName)}
+              isFile={false}
+              isCurrentFile={false}
+              name={node.nodeName}
+              iconName={"folder"}
+              iconColor={"grey"}
+              originalIcon={icon}
+              originalLabel={label}
+            >
+              {icon}
+              {label}
+            </FileTreeNodeWrapper>
           </li>
           {Object.keys(node.children).map((key) => (
             <TreeNode
@@ -70,23 +97,25 @@ const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile
               parentPath={addPath(parentPath, node.nodeName)}
               currentFile={currentFile}
               setCurrentFile={setCurrentFile}
+              FileTreeNodeWrapper={FileTreeNodeWrapper}
             />
           ))}
         </ul>
       ) : (
         <TreeFile
-          changeType={node.changeType.toLowerCase() as ChangeType}
+          changeType={node.changeType.toLowerCase() as FileChangeType}
           path={node.nodeName}
           parentPath={parentPath}
           currentFile={currentFile}
           setCurrentFile={setCurrentFile}
+          FileTreeNodeWrapper={FileTreeNodeWrapper}
         />
       )}
     </li>
   );
 };
 
-const getColor = (changeType: ChangeType) => {
+const getColor = (changeType: FileChangeType) => {
   switch (changeType) {
     case "add":
       return "success";
@@ -99,7 +128,7 @@ const getColor = (changeType: ChangeType) => {
   }
 };
 
-const getIcon = (changeType: ChangeType) => {
+const getIcon = (changeType: FileChangeType) => {
   switch (changeType) {
     case "add":
     case "copy":
@@ -113,14 +142,22 @@ const getIcon = (changeType: ChangeType) => {
 };
 
 type FileProps = {
-  changeType: ChangeType;
+  changeType: FileChangeType;
   path: string;
   parentPath: string;
   currentFile: string;
   setCurrentFile: (path: string) => void;
+  FileTreeNodeWrapper: FileTreeNodeWrapper;
 };
 
-const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, setCurrentFile }) => {
+const TreeFile: FC<FileProps> = ({
+  changeType,
+  path,
+  parentPath,
+  currentFile,
+  setCurrentFile,
+  FileTreeNodeWrapper,
+}) => {
   const [t] = useTranslation("repos");
   const completePath = addPath(parentPath, path);
 
@@ -128,35 +165,50 @@ const TreeFile: FC<FileProps> = ({ changeType, path, parentPath, currentFile, se
     return currentFile === completePath;
   };
 
+  const iconName = getIcon(changeType);
+
+  const icon = (
+    <StackedSpan className="fa-stack">
+      <StyledIcon
+        className={classNames("fa-stack-2x", `has-text-${getColor(changeType)}`)}
+        key={completePath + "file"}
+        type="fas"
+        alt={t("diff.showContent")}
+      >
+        file
+      </StyledIcon>
+      <StyledIcon
+        className={classNames("fa-stack-1x", "is-relative", "has-text-secondary-least")}
+        isSmaller={iconName === "circle"}
+        key={changeType}
+        alt={t(`diff.changes.${changeType}`)}
+      >
+        {iconName}
+      </StyledIcon>
+    </StackedSpan>
+  );
+  const label = <div className={classNames("ml-1", isCurrentFile() ? "has-text-weight-bold" : "")}>{path}</div>;
+
   return (
     <Link
       className="is-flex py-1 pl-3 has-cursor-pointer"
       onClick={() => setCurrentFile(completePath)}
       to={`#diff-${encodeURIComponent(completePath)}`}
     >
-      <StackedSpan className="fa-stack">
-        <StyledIcon
-          className={classNames("fa-stack-2x", `has-text-${getColor(changeType)}`)}
-          key={completePath + "file"}
-          type={isCurrentFile() ? "fas" : "far"}
-          alt={t("diff.showContent")}
-        >
-          file
-        </StyledIcon>
-        <StyledIcon
-          className={classNames(
-            "fa-stack-1x",
-            "is-relative",
-            isCurrentFile() ? "has-text-secondary-least" : `has-text-${getColor(changeType)}`
-          )}
-          isSmaller={getIcon(changeType) === "circle"}
-          key={changeType}
-          alt={t(`diff.changes.${changeType}`)}
-        >
-          {getIcon(changeType)}
-        </StyledIcon>
-      </StackedSpan>
-      <div className="ml-1">{path}</div>
+      <FileTreeNodeWrapper
+        name={path}
+        path={completePath}
+        changeType={changeType}
+        isFile={true}
+        iconName={iconName}
+        iconColor={getColor(changeType)}
+        originalIcon={icon}
+        originalLabel={label}
+        isCurrentFile={isCurrentFile()}
+      >
+        {icon}
+        {label}
+      </FileTreeNodeWrapper>
     </Link>
   );
 };

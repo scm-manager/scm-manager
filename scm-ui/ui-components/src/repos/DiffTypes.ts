@@ -14,9 +14,9 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { DefaultCollapsed } from "./defaultCollapsed";
-import { Change, Hunk, FileDiff as File } from "@scm-manager/ui-types";
+import { Change, Hunk, FileDiff as File, FileChangeType } from "@scm-manager/ui-types";
 
 export type ChangeEvent = {
   change: Change;
@@ -30,6 +30,18 @@ export type BaseContext = {
 export type AnnotationFactoryContext = BaseContext;
 
 export type FileAnnotationFactory = (file: File) => ReactNode[];
+
+export type FileTreeNodeWrapper = FC<{
+  name: string;
+  path: string;
+  changeType?: FileChangeType;
+  iconName: string;
+  iconColor: string;
+  isFile: boolean;
+  originalIcon: ReactNode;
+  originalLabel: ReactNode;
+  isCurrentFile: boolean;
+}>;
 
 // key = change id, value = react component
 export type AnnotationFactory = (context: AnnotationFactoryContext) => {
