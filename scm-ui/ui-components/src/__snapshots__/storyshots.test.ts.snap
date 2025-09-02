@@ -20389,7 +20389,7 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
                 className="media-left mt-2 mr-2"
               >
                 <div
-                  className="SingleChangeset__FixedSizedAvatar-sc-ytpqp9-0 dLAXC image"
+                  className="SingleChangeset__FixedSizedAvatar-sc-ytpqp9-0 gwbxYG image"
                 >
                   <img
                     alt="SCM Administrator"
@@ -20448,6 +20448,7 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
                         <img
                           alt="Ford Prefect"
                           className="ContributorAvatar-sc-1yz8zn-0 lhgGHS"
+                          crossOrigin="anonymous"
                           src="https://robohash.org/ford.prefect@hitchhiker.com"
                         />
                       </a>
@@ -20458,6 +20459,7 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
                         <img
                           alt="Zaphod Beeblebrox"
                           className="ContributorAvatar-sc-1yz8zn-0 lhgGHS"
+                          crossOrigin="anonymous"
                           src="https://robohash.org/zaphod.beeblebrox@hitchhiker.cm"
                         />
                       </a>
@@ -20468,6 +20470,7 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
                         <img
                           alt="Tricia Marie McMillan"
                           className="ContributorAvatar-sc-1yz8zn-0 lhgGHS"
+                          crossOrigin="anonymous"
                           src="https://robohash.org/trillian@hitchhiker.cm"
                         />
                       </a>
@@ -20564,7 +20567,7 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
                 className="media-left mt-2 mr-2"
               >
                 <div
-                  className="SingleChangeset__FixedSizedAvatar-sc-ytpqp9-0 dLAXC image"
+                  className="SingleChangeset__FixedSizedAvatar-sc-ytpqp9-0 gwbxYG image"
                 >
                   <img
                     alt="SCM Administrator"
@@ -20618,6 +20621,7 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
                       <img
                         alt="Zaphod Beeblebrox"
                         className="ContributorAvatar-sc-1yz8zn-0 lhgGHS"
+                        crossOrigin="anonymous"
                         src="https://robohash.org/zaphod.beeblebrox@hitchhiker.cm"
                       />
                     </a>
@@ -20633,6 +20637,7 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
                       <img
                         alt="Ford Prefect"
                         className="ContributorAvatar-sc-1yz8zn-0 lhgGHS"
+                        crossOrigin="anonymous"
                         src="https://robohash.org/ford.prefect@hitchhiker.com"
                       />
                     </a>
@@ -21637,7 +21642,7 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
                 className="media-left mt-2 mr-2"
               >
                 <div
-                  className="SingleChangeset__FixedSizedAvatar-sc-ytpqp9-0 dLAXC image"
+                  className="SingleChangeset__FixedSizedAvatar-sc-ytpqp9-0 gwbxYG image"
                 >
                   <img
                     alt="SCM Administrator"
