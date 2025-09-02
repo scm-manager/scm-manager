@@ -37,7 +37,7 @@ type Props = {
 const FixedSizedAvatar = styled.div`
   width: 35px;
   height: 35px;
-  min-width: fit-content;
+  overflow: hidden;
 `;
 
 const FullWidthDiv = styled.div`

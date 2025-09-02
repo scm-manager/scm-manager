@@ -57,11 +57,11 @@ const ContributorWithAvatar: FC<PersonAvatarProps> = ({ person, avatar }) => {
   if (person.mail) {
     return (
       <a href={"mailto:" + person.mail} title={t("changeset.contributors.mailto") + " " + person.mail}>
-        <ContributorAvatar src={avatar} alt={person.name} />
+        <ContributorAvatar src={avatar} alt={person.name} crossOrigin="anonymous" />
       </a>
     );
   }
-  return <ContributorAvatar src={avatar} alt={person.name} title={person.name} />;
+  return <ContributorAvatar src={avatar} alt={person.name} title={person.name} crossOrigin="anonymous" />;
 };
 
 export const SingleContributor: FC<PersonProps> = ({ person, className, displayTextOnly }) => {
