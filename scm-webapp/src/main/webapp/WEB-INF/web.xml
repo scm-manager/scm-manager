@@ -26,6 +26,7 @@
   <filter>
     <filter-name>BootstrapFilter</filter-name>
     <filter-class>sonia.scm.lifecycle.BootstrapContextFilter</filter-class>
+    <async-supported>true</async-supported>
   </filter>
 
   <filter-mapping>
