@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/ui-layout",
   "private": false,
-  "version": "3.10.3",
+  "version": "3.10.4-SNAPSHOT",
   "main": "index.ts",
   "scripts": {
     "depcheck": "depcheck"
@@ -14,7 +14,7 @@
     "react": "^17.0.1"
   },
   "dependencies": {
-    "@scm-manager/ui-core": "3.10.3"
+    "@scm-manager/ui-core": "3.10.4-SNAPSHOT"
   },
   "devDependencies": {
     "@scm-manager/eslint-config": "^2.17.0",
