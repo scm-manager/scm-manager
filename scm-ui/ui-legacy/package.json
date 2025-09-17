@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-legacy",
-  "version": "3.10.3-SNAPSHOT",
+  "version": "3.10.3",
   "private": true,
   "main": "build/index.js",
   "module": "build/index.mjs",
@@ -13,13 +13,13 @@
     "depcheck": "depcheck"
   },
   "dependencies": {
-    "@scm-manager/ui-api": "3.10.3-SNAPSHOT",
-    "@scm-manager/ui-extensions": "3.10.3-SNAPSHOT",
+    "@scm-manager/ui-api": "3.10.3",
+    "@scm-manager/ui-extensions": "3.10.3",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0"
   },
   "devDependencies": {
-    "@scm-manager/ui-types": "3.10.3-SNAPSHOT",
+    "@scm-manager/ui-types": "3.10.3",
     "@types/react-redux": "5.0.7",
     "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/eslint-config": "^2.17.0",

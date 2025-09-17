@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/scm-legacy-plugin",
   "private": true,
-  "version": "3.10.3-SNAPSHOT",
+  "version": "3.10.3",
   "license": "AGPL-3.0-only",
   "main": "./src/main/js/index.tsx",
   "scripts": {
@@ -10,7 +10,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@scm-manager/ui-plugins": "3.10.3-SNAPSHOT"
+    "@scm-manager/ui-plugins": "3.10.3"
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.13.1",
