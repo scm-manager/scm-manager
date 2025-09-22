@@ -52,7 +52,7 @@ public final class DefaultRepositoryExportingCheck implements RepositoryExportin
     } finally {
       int lockCount = getLockCount(repository.getId()).decrementAndGet();
       if (lockCount <= 0) {
-        LOG.warn("Got negative export lock count {} for repository {}", lockCount, repository);
+        LOG.debug("Lock count {} for repository {}", lockCount, repository);
         EXPORTING_REPOSITORIES.remove(repository.getId());
       }
     }

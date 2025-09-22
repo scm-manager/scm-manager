@@ -43,6 +43,7 @@ import jakarta.ws.rs.core.UriInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
@@ -78,6 +79,7 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.importexport.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.importexport.RepositoryTypeSupportChecker.type;
 
+@Slf4j
 public class RepositoryExportResource {
 
   private static final String NO_PASSWORD = "";
@@ -484,7 +486,11 @@ public class RepositoryExportResource {
     if (compressed) {
       GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
       bundleCommand.bundle(gzipCompressorOutputStream);
-      gzipCompressorOutputStream.finish();
+      try {
+        gzipCompressorOutputStream.finish();
+      } catch (NullPointerException e) {
+        log.info("Could not finish gzip stream", e);
+      }
     } else {
       bundleCommand.bundle(os);
     }
