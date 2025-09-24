@@ -28,8 +28,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
-import sonia.scm.notifications.Type;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
@@ -48,7 +48,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
@@ -73,6 +72,9 @@ class ExportServiceTest {
   @Mock
   private ExportNotificationHandler notificationHandler;
 
+  @Mock
+  private RepositoryManager repositoryManager;
+
   private BlobStore blobStore;
   private DataStore<RepositoryExportInformation> dataStore;
 
@@ -92,7 +94,7 @@ class ExportServiceTest {
     );
 
     blobStore = new InMemoryBlobStore();
-    when(blobStoreFactory.withName(STORE_NAME).forRepository(REPOSITORY.getId()).build())
+    when(blobStoreFactory.withName(STORE_NAME).forRepository(REPOSITORY.getId()).withReadOnlyIgnore().build())
       .thenReturn(blobStore);
 
     dataStore = new InMemoryDataStore<>();
@@ -205,6 +207,7 @@ class ExportServiceTest {
     );
     when(blobStoreFactory.withName(STORE_NAME).forRepository(finishedExport.getId()).build())
       .thenReturn(finishedExportBlobStore);
+    when(repositoryManager.get(REPOSITORY.getId())).thenReturn(REPOSITORY);
 
     exportService.cleanupUnfinishedExports();
 
@@ -212,6 +215,21 @@ class ExportServiceTest {
     assertThat(dataStore.get(REPOSITORY.getId()).getStatus()).isEqualTo(ExportStatus.INTERRUPTED);
     assertThat(finishedExportBlobStore.get(finishedExport.getId())).isEqualTo(finishedExportBlob);
     assertThat(dataStore.get(finishedExport.getId()).getStatus()).isEqualTo(ExportStatus.FINISHED);
+  }
+
+  @Test
+  void shouldDeleteUnfinishedExportsOfDeletedRepository() {
+    RepositoryExportInformation info = new RepositoryExportInformation();
+    info.setStatus(ExportStatus.EXPORTING);
+    dataStore.put(
+      REPOSITORY.getId(),
+      info
+    );
+    when(repositoryManager.get(REPOSITORY.getId())).thenReturn(null);
+
+    exportService.cleanupUnfinishedExports();
+
+    assertThat(dataStore.getOptional(REPOSITORY.getId())).isEmpty();
   }
 
   @Test
@@ -229,7 +247,7 @@ class ExportServiceTest {
     Instant old = Instant.now().minus(11, ChronoUnit.DAYS);
     oldExportInfo.setCreated(old);
     dataStore.put(oldExportRepo.getId(), oldExportInfo);
-    when(blobStoreFactory.withName(STORE_NAME).forRepository(oldExportRepo.getId()).build())
+    when(blobStoreFactory.withName(STORE_NAME).forRepository(oldExportRepo.getId()).withReadOnlyIgnore().build())
       .thenReturn(oldExportBlobStore);
 
     exportService.cleanupOutdatedExports();

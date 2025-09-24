@@ -17,9 +17,11 @@
 package sonia.scm.importexport;
 
 import jakarta.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.store.Blob;
@@ -37,10 +39,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
+@Slf4j
 public class ExportService {
 
   static final String STORE_NAME = "repository-export";
@@ -48,16 +50,23 @@ public class ExportService {
   private final DataStoreFactory dataStoreFactory;
   private final ExportFileExtensionResolver fileExtensionResolver;
   private final ExportNotificationHandler notificationHandler;
+  private final RepositoryManager repositoryManager;
 
   @Inject
-  public ExportService(BlobStoreFactory blobStoreFactory, DataStoreFactory dataStoreFactory, ExportFileExtensionResolver fileExtensionResolver, ExportNotificationHandler notificationHandler) {
+  public ExportService(BlobStoreFactory blobStoreFactory,
+                       DataStoreFactory dataStoreFactory,
+                       ExportFileExtensionResolver fileExtensionResolver,
+                       ExportNotificationHandler notificationHandler,
+                       RepositoryManager repositoryManager) {
     this.blobStoreFactory = blobStoreFactory;
     this.dataStoreFactory = dataStoreFactory;
     this.fileExtensionResolver = fileExtensionResolver;
     this.notificationHandler = notificationHandler;
+    this.repositoryManager = repositoryManager;
   }
 
   public OutputStream store(Repository repository, boolean withMetadata, boolean compressed, boolean encrypted) {
+    log.debug("Start storing export for repository {}",  repository);
     RepositoryPermissions.export(repository).check();
     storeExportInformation(repository.getId(), withMetadata, compressed, encrypted);
     try {
@@ -104,12 +113,14 @@ public class ExportService {
   }
 
   public void clear(String repositoryId) {
+    log.debug("Clearing export for repository {}",  repositoryId);
     RepositoryPermissions.export(repositoryId).check();
     createDataStore().remove(repositoryId);
     createBlobStore(repositoryId).clear();
   }
 
   public void setExportFinished(Repository repository) {
+    log.debug("Setting export as finished for repository {}",  repository);
     RepositoryPermissions.export(repository).check();
     DataStore<RepositoryExportInformation> dataStore = createDataStore();
     RepositoryExportInformation info = dataStore.get(repository.getId());
@@ -121,31 +132,48 @@ public class ExportService {
   public boolean isExporting(Repository repository) {
     RepositoryPermissions.export(repository).check();
     RepositoryExportInformation info = createDataStore().get(repository.getId());
-    return info != null && info.getStatus() == ExportStatus.EXPORTING;
+    boolean isExporting = info != null && info.getStatus() == ExportStatus.EXPORTING;
+
+    if (isExporting) {
+      log.debug("Repository {} is still exporting", repository);
+    }
+
+    return isExporting;
   }
 
   public void cleanupUnfinishedExports() {
     DataStore<RepositoryExportInformation> dataStore = createDataStore();
     List<Map.Entry<String, RepositoryExportInformation>> unfinishedExports = dataStore.getAll().entrySet().stream()
       .filter(e -> e.getValue().getStatus() == ExportStatus.EXPORTING)
-      .collect(Collectors.toList());
+      .toList();
 
     for (Map.Entry<String, RepositoryExportInformation> export : unfinishedExports) {
-      createBlobStore(export.getKey()).clear();
-      RepositoryExportInformation info = dataStore.get(export.getKey());
-      info.setStatus(ExportStatus.INTERRUPTED);
-      dataStore.put(export.getKey(), info);
+      log.debug("Cleaning up export for repository {}",  export.getKey());
+      if (isRepositoryExisting(export.getKey())) {
+        createBlobStore(export.getKey()).clear();
+        RepositoryExportInformation info = dataStore.get(export.getKey());
+        info.setStatus(ExportStatus.INTERRUPTED);
+        dataStore.put(export.getKey(), info);
+        log.debug("Export for repository {} has been cleaned up",  export.getKey());
+      } else {
+        dataStore.remove(export.getKey());
+        log.debug("Repository {} has already been deleted. Deleting dangling export.",  export.getKey());
+      }
     }
   }
 
   void cleanupOutdatedExports() {
+    log.debug("Cleaning up outdated exports");
     DataStore<RepositoryExportInformation> dataStore = createDataStore();
     List<String> outdatedExportIds = collectOutdatedExportIds(dataStore);
 
     for (String id : outdatedExportIds) {
       createBlobStore(id).clear();
+      log.debug("Cleaned up blob of outdated export for repository {}",  id);
     }
+
     outdatedExportIds.forEach(dataStore::remove);
+    log.debug("Cleaned up outdated exports");
   }
 
   private List<String> collectOutdatedExportIds(DataStore<RepositoryExportInformation> dataStore) {
@@ -190,6 +218,10 @@ public class ExportService {
   }
 
   private BlobStore createBlobStore(String repositoryId) {
-    return blobStoreFactory.withName(STORE_NAME).forRepository(repositoryId).build();
+    return blobStoreFactory.withName(STORE_NAME).forRepository(repositoryId).withReadOnlyIgnore().build();
+  }
+
+  private boolean isRepositoryExisting(String repositoryId) {
+    return this.repositoryManager.get(repositoryId) != null;
   }
 }

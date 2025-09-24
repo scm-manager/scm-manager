@@ -16,7 +16,6 @@
 
 package sonia.scm.store.file;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
@@ -75,7 +74,23 @@ abstract class FileBasedStoreFactory {
   }
 
   protected boolean mustBeReadOnly(StoreParameters storeParameters) {
-    return storeParameters.getRepositoryId() != null && readOnlyChecker.isReadOnly(storeParameters.getRepositoryId());
+    if (storeParameters.isIgnoreReadOnly()) {
+      LOG.debug("ignoring if store should be readonly");
+      return false;
+    }
+
+    if (storeParameters.getRepositoryId() == null) {
+      LOG.debug("store cannot be readonly, because it is not built for a repository");
+      return false;
+    }
+
+    if (!readOnlyChecker.isReadOnly(storeParameters.getRepositoryId())) {
+      LOG.debug("created writeable store for repository {}", storeParameters.getRepositoryId());
+      return false;
+    }
+
+    LOG.debug("created readonly store for repository {}", storeParameters.getRepositoryId());
+    return true;
   }
 
   /**
@@ -92,7 +107,7 @@ abstract class FileBasedStoreFactory {
   /**
    * Get the store directory of a specific namespace
    *
-   * @param store        the type of the store
+   * @param store     the type of the store
    * @param namespace the name of the namespace
    * @return the store directory of a specific namespace
    */

@@ -46,6 +46,7 @@ public final class StoreParametersBuilder<S> {
     private final String name;
     private String repositoryId;
     private String namespace;
+    private boolean ignoreReadOnly;
   }
 
 
@@ -70,6 +71,20 @@ public final class StoreParametersBuilder<S> {
    */
   public StoreParametersBuilder<S> forRepository(String repositoryId) {
     parameters.repositoryId = repositoryId;
+    return this;
+  }
+
+  /**
+   * Use this to create or get a store, that can write data into a repository store,
+   * even if the repository itself is read-only.
+   * One use-case example is the 'ExportService' within scm-webapp.
+   * Only use this feature, if you are sure that your service needs to write data into a repository,
+   * even if it is read-only.
+   *
+   * @return Floating API to finish the call.
+   */
+  public StoreParametersBuilder<S> withReadOnlyIgnore() {
+    parameters.ignoreReadOnly = true;
     return this;
   }
 

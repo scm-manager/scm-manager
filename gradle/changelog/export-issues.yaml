@@ -1,0 +1,4 @@
+- type: fixed
+  description: Startup issues, if an unfinished export of a deleted repository exists
+- type: fixed
+  description: Archived repositories can now be exported

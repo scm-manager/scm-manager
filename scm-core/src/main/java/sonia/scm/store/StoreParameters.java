@@ -28,9 +28,17 @@ public interface StoreParameters {
   String getRepositoryId();
 
   /**
-   * Returns optional namespace to which the store is related
+   * Returns optional namespace to which the store is related.
    * @return namespace
    * @since 2.44.0
    */
   String getNamespace();
+
+  /**
+   * Whether the store that is supposed to be built, should ignore that the repository is read-only or not.
+   * @return true if it should ignore the read-only property of a repository
+   */
+  default boolean isIgnoreReadOnly() {
+    return false;
+  }
 }
