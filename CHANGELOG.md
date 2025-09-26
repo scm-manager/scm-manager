@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.11.0] - 2025-09-26
+### Added
+- API to change diff tree
+
+### Fixed
+- Export of repositories
+- Startup issues, if an unfinished export of a deleted repository exists
+- Archived repositories can now be exported
+
 ## [3.10.3] - 2025-09-17
 ### Fixed
 - Async support for servlets is now enabled
@@ -1810,3 +1819,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.10.1]: https://scm-manager.org/download/3.10.1
 [3.10.2]: https://scm-manager.org/download/3.10.2
 [3.10.3]: https://scm-manager.org/download/3.10.3
+[3.11.0]: https://scm-manager.org/download/3.11.0
