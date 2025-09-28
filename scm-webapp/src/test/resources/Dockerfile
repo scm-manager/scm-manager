@@ -14,7 +14,7 @@
 # along with this program. If not, see https://www.gnu.org/licenses/.
 #
 
-FROM ubuntu
+FROM ubuntu:24.10
 
 COPY nothing /nowhere
 
