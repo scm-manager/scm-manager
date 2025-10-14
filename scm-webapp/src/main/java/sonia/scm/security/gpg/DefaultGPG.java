@@ -61,9 +61,9 @@ public class DefaultGPG implements GPG {
       PGPSignatureList signatures = (PGPSignatureList) pgpObjectFactory.nextObject();
       return "0x" + Long.toHexString(signatures.get(0).getKeyID()).toUpperCase();
     } catch (IOException e) {
-      LOG.error("Could not find public key id in signature");
+      LOG.info("Could not find public key id in signature", e);
+      return "";
     }
-    return "";
   }
 
   @Override
