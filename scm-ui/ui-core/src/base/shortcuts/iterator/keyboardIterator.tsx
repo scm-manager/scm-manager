@@ -119,7 +119,6 @@ export function useKeyboardIteratorTarget(): React.RefCallback<HTMLElement> {
 }
 
 /**
- * @deprecated since version 3.8.0. Use {@link useKeyboardIteratorTargetV2} instead.
  * Use the {@link React.RefObject} returned from this hook to register a target to the nearest enclosing {@link KeyboardIterator} or {@link KeyboardSubIterator},
  * while respecting its expected index / position.
  *
