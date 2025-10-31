@@ -29,6 +29,7 @@ import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -71,7 +72,15 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
     List<Changeset> result;
 
     try {
-      result = builder.call(() -> org.javahg.commands.PullCommand.on(open()).execute(url));
+      result = builder.call((Path configFile) -> {
+        org.javahg.commands.PullCommand cmd = org.javahg.commands.PullCommand.on(open());
+
+        if(configFile != null) {
+          cmd.cmdAppend("--config-file", configFile.toFile().getAbsolutePath());
+        }
+
+        return cmd.execute(url);
+      });
     } catch (ExecutionException ex) {
       throw new ImportFailedException(entity(getRepository()).build(), "could not execute pull command", ex);
     }
