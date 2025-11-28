@@ -5,8 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.7] - 2025-11-28
+### Fixed
+- Significantly improved repository load times for large numbers of repositories
+
 ## [3.7.6] - 2025-08-19
 ### Fixed
+- The committer in squash merge, rebase, and regular merge is now set to the current user.
 - Support for go-git user agents (e.g. ArgoCD ≥ 2.14) (Patch from 2.46.6)
 
 ## [2.46.6] - 2025-08-19
@@ -1724,3 +1729,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.7.3]: https://scm-manager.org/download/3.7.2
 [3.7.4]: https://scm-manager.org/download/3.7.4
 [3.7.5]: https://scm-manager.org/download/3.7.5
+[3.7.7]: https://scm-manager.org/download/3.7.7
