@@ -3148,7 +3148,7 @@
     unist-util-generated "^1.1.6"
     unist-util-visit "^2.0.3"
 
-"@scm-manager/tsconfig@^2.12.0", "@scm-manager/tsconfig@^2.13.0":
+"@scm-manager/tsconfig@^2.13.0":
   version "2.13.0"
   resolved "https://registry.npmjs.org/@scm-manager/tsconfig/-/tsconfig-2.13.0.tgz"
   integrity sha512-Tc9LZAxHUKd+yVBHcCMyRVYTBjhJez+zj+ABxiTOdZOQp/WtJ2Zt084HWxWEOyrXHI6dgo3qv+1H6P1m+UcpoQ==

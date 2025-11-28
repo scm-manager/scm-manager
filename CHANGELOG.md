@@ -38,14 +38,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cross-Origin-Opener-Policy and Cross-Origin-Embedder-Policy headers added to all responses
 - Support for go-git user agents (e.g. ArgoCD ≥ 2.14) (Patch from 2.46.6)
 
-## [3.7.6] - 2025-08-19
-### Fixed
-- Support for go-git user agents (e.g. ArgoCD ≥ 2.14) (Patch from 2.46.6)
-
-## [2.46.6] - 2025-08-19
-### Fixed
-- Support for go-git user agents (e.g. ArgoCD ≥ 2.14)
-
 ## [3.9.0] - 2025-08-01
 ### Added
 - Delete and retain functionality for mutable queryable stores
@@ -110,6 +102,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disabling hg repositories is now the first setting within the configuration form
 - Disabling svn repositories is now the first setting within the configuration form
 
+## [3.7.7] - 2025-11-28
+### Fixed
+- Significantly improved repository load times for large numbers of repositories
+
+## [3.7.6] - 2025-08-19
+### Fixed
+- The committer in squash merge, rebase, and regular merge is now set to the current user.
+- Support for go-git user agents (e.g. ArgoCD ≥ 2.14) (Patch from 2.46.6)
+
 ## [3.7.5] - 2025-04-14
 ### Fixed
 - Fix setting of document title for create repository page, if only a translation key was provided
@@ -156,10 +157,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.48.4] - 2025-01-17
 ### Fixed
 - Fixes from version 2.46.2, 2.46.3, 2.46.4, and 2.46.5
-
-## [2.46.5] - 2025-01-17
-### Fixed
-- Removed the API token error log message that was being printed when the API token was invalid
 
 ## [3.6.0] - 2024-12-05
 ### Added
@@ -413,6 +410,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The checkbox now has a bigger click target
 - The chip input api now provides an external add button
 - OmniSearchbar now makes use of the Combobox
+
+## [2.46.6] - 2025-08-19
+### Fixed
+- Support for go-git user agents (e.g. ArgoCD ≥ 2.14)
+
+## [2.46.5] - 2025-01-17
+### Fixed
+- Removed the API token error log message that was being printed when the API token was invalid
 
 ## [2.46.4] - 2024-06-24
 ### Fixed
@@ -1813,6 +1818,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.7.3]: https://scm-manager.org/download/3.7.3
 [3.7.4]: https://scm-manager.org/download/3.7.4
 [3.7.5]: https://scm-manager.org/download/3.7.5
+[3.7.6]: https://scm-manager.org/download/3.7.6
+[3.7.7]: https://scm-manager.org/download/3.7.7
 [3.8.0]: https://scm-manager.org/download/3.8.0
 [3.9.0]: https://scm-manager.org/download/3.9.0
 [3.10.0]: https://scm-manager.org/download/3.10.0
