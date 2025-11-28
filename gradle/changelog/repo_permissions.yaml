@@ -1,0 +1,2 @@
+- type: fixed
+  description: Significantly improved repository load times for large numbers of repositories

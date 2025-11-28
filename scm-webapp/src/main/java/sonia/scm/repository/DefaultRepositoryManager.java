@@ -55,6 +55,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptySet;
 import static sonia.scm.AlreadyExistsException.alreadyExists;
@@ -373,6 +374,16 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     return repositories;
   }
 
+  private Stream<Repository> streamAll(Predicate<Repository> filter) {
+    return repositoryDAO
+      .getAll()
+      .stream()
+      .filter(repository -> handlerMap.containsKey(repository.getType()))
+      .filter(filter)
+      .filter(repository -> RepositoryPermissions.read().isPermitted(repository))
+      .map(this::postProcess);
+  }
+
   @Override
   public Collection<Repository> getAll() {
     return getAll(repository -> true, null);
@@ -402,9 +413,10 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   @Deprecated
   @Override
   public Collection<String> getAllNamespaces() {
-    return getAll().stream()
-      .map(Repository::getNamespace)
-      .collect(LINKED_HASH_SET_COLLECTOR);
+    Set<String> foundNamespaces = new HashSet<>();
+    streamAll(repository -> !foundNamespaces.contains(repository.getNamespace()))
+      .forEach(repository -> foundNamespaces.add(repository.getNamespace()));
+    return foundNamespaces;
   }
 
   @Override
