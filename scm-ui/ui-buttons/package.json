@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-buttons",
-  "version": "3.11.1",
+  "version": "3.11.2-SNAPSHOT",
   "private": false,
   "main": "index.ts",
   "license": "AGPL-3.0-only",
@@ -13,7 +13,7 @@
     "classnames": "^2.3.1"
   },
   "dependencies": {
-    "@scm-manager/ui-core": "3.11.1"
+    "@scm-manager/ui-core": "3.11.2-SNAPSHOT"
   },
   "devDependencies": {
     "@scm-manager/prettier-config": "^2.12.0",
