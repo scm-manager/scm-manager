@@ -20,6 +20,7 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Strings;
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -34,9 +35,6 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.util.IOUtil;
 
 import java.io.IOException;
-
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
-import static sonia.scm.NotFoundException.notFound;
 
 
 public class GitLogCommand extends AbstractGitCommand implements LogCommand {
@@ -58,17 +56,13 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand {
   @Override
   @SuppressWarnings("java:S2093")
   public Changeset getChangeset(String revision, LogCommandRequest request) {
-    if (logger.isDebugEnabled()) {
-      logger.debug("fetch changeset {}", revision);
-    }
+    logger.debug("fetch changeset {}", revision);
 
-    Changeset changeset = null;
-    Repository gr = null;
     GitChangesetConverter converter = null;
     RevWalk revWalk = null;
 
     try {
-      gr = open();
+      Repository gr = open();
 
       if (!gr.getAllRefs().isEmpty()) {
         revWalk = new RevWalk(gr);
@@ -82,27 +76,31 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand {
             String branch = request.getBranch();
             if (isMergedIntoBranch(gr, revWalk, commit, branch)) {
               logger.trace("returning commit {} with branch {}", commit.getId(), branch);
-              changeset = converter.createChangeset(commit, branch);
+              return converter.createChangeset(commit, branch);
             } else {
               logger.debug("returning null, because commit {} was not merged into branch {}", commit.getId(), branch);
             }
           } else {
-            changeset = converter.createChangeset(commit);
+            logger.trace("returning commit {}", commit.getId());
+            return converter.createChangeset(commit);
           }
-        } else if (logger.isWarnEnabled()) {
-          logger.warn("could not find revision {}", revision);
         }
+        logger.debug("could not find revision {}", revision);
       }
+      return null;
+    } catch (MissingObjectException e) {
+      logger.debug("could not find revision {} in repository {}", revision, repository, e);
+      return null;
     } catch (IOException ex) {
-      logger.error("could not open repository: " + repository.getNamespaceAndName(), ex);
+      logger.error("could not open repository {}", repository, ex);
+      return null;
     } catch (NullPointerException e) {
-      throw notFound(entity(REVISION, revision).in(this.repository));
+      logger.info("null pointer while trying to log revision {} in repository {}: ", revision, repository, e);
+      return null;
     } finally {
       IOUtil.close(converter);
       GitUtil.release(revWalk);
     }
-
-    return changeset;
   }
 
   private boolean isMergedIntoBranch(Repository repository, RevWalk revWalk, RevCommit commit, String branchName) throws IOException {
