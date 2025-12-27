@@ -9,7 +9,7 @@
         "author": "Autor",
         "Reviewed-by": "Reviewer",
         "Co-authored-by": "Co-Autoren",
-        "Committed-by": "Committed von",
+        "Committed-by": "Committet von",
         "Signed-off-by": "Signiert von"
       }
     }
@@ -49,13 +49,13 @@
       "archive": {
         "*": {
           "displayName": "Repositories archivieren",
-          "description": "Darf Repositories als \"archiviert\" und somit als schreibgeschützt markieren."
+          "description": "Darf Repositories als „archiviert“ und somit als schreibgeschützt markieren."
         }
       },
       "read,export": {
         "*": {
           "displayName": "Repositories exportieren",
-          "description": "Achtung: Darf alle Repositories inkl. aller Metadaten exportieren."
+          "description": "Achtung: Darf alle Repositories inklusive aller Metadaten exportieren."
         }
       },
       "read,healthCheck": {
@@ -80,7 +80,7 @@
     "permission": {
       "*": {
         "displayName": "Berechtigungen verwalten",
-        "description": "Darf Berechtigungen verwalten (benötigt zusätzlich 'Benutzer administrieren' bzw. 'Gruppen administrieren')."
+        "description": "Darf Berechtigungen verwalten (benötigt zusätzlich „Benutzer administrieren“ beziehungsweise „Gruppen administrieren“)."
       }
     },
     "configuration": {
@@ -91,48 +91,48 @@
       "read,write": {
         "global": {
           "displayName": "Zentrale Konfiguration",
-          "description": "Darf die Konfiguration des SCM-Manager anpassen"
+          "description": "Darf die Konfiguration des SCM-Managers anpassen."
         },
         "*": {
-          "displayName": "Zentrale + Plugin Konfiguration",
-          "description": "Darf die Konfiguration des SCM-Manager und aller Plugins anpassen"
+          "displayName": "Zentrale + Plugin-Konfiguration",
+          "description": "Darf die Konfiguration des SCM-Managers und aller Plugins anpassen."
         }
       }
     },
     "repositoryRole": {
       "read,write": {
         "displayName": "Benutzerdefinierte Repository-Rollen-Berechtigungen verwalten",
-        "description": "Kann benutzerdefinierte Rollen und deren Berechtigungen erstellen, ändern und löschen"
+        "description": "Kann benutzerdefinierte Rollen und deren Berechtigungen erstellen, ändern und löschen."
       }
     },
     "plugin": {
       "read": {
         "displayName": "Alle Plugins lesen",
-        "description": "Darf alle installierten und verfügbaren Plugins lesen"
+        "description": "Darf alle installierten und verfügbaren Plugins lesen."
       },
       "read,write": {
         "displayName": "Alle Plugins lesen und verwalten",
-        "description": "Darf alle installierten und verfügbaren Plugins lesen und verwalten"
+        "description": "Darf alle installierten und verfügbaren Plugins lesen und verwalten."
       }
     },
     "namespace": {
       "permissionRead": {
         "*": {
           "displayName": "Berechtigungen auf Namespaces lesen",
-          "description": "Darf die Berechtigungen auf Namespace-Ebene sehen"
+          "description": "Darf die Berechtigungen auf Namespace-Ebene sehen."
         }
       },
       "permissionRead,permissionWrite": {
         "*": {
-          "displayName": "Berechtigungen auf Namespaces modifizieren",
-          "description": "Darf die Berechtigungen auf Namespace-Ebene lesen und bearbeiten"
+          "displayName": "Berechtigungen auf Namespaces bearbeiten",
+          "description": "Darf die Berechtigungen auf Namespace-Ebene lesen und bearbeiten."
         }
       }
     },
     "metrics": {
       "read": {
         "displayName": "Metriken lesen",
-        "description": "Darf Metriken über die zur Verfügung gestellten Endpunkte lesen"
+        "description": "Darf Metriken über die zur Verfügung gestellten Endpunkte lesen."
       }
     },
     "unknown": "Unbekannte Berechtigung"
@@ -145,7 +145,7 @@
       },
       "modify": {
         "displayName": "Repository modifizieren",
-        "description": "Darf die Eigenschaften des Repository verändern."
+        "description": "Darf die Eigenschaften des Repositorys verändern."
       },
       "delete": {
         "displayName": "Repository löschen",
@@ -157,41 +157,41 @@
       },
       "pull": {
         "displayName": "Pull/Checkout",
-        "description": "Darf pull/checkout auf das Repository ausführen."
+        "description": "Darf „pull/checkout“ auf das Repository ausführen."
       },
       "push": {
         "displayName": "Push/Commit",
-        "description": "Darf push/commit auf das Repository ausführen und damit den Inhalt verändern."
+        "description": "Darf „push/commit“ auf das Repository ausführen und damit den Inhalt verändern."
       },
       "permissionRead": {
         "displayName": "Berechtigungen lesen",
-        "description": "Darf die Berechtigungen des Repository sehen."
+        "description": "Darf die Berechtigungen des Repositorys sehen."
       },
       "permissionWrite": {
         "displayName": "Berechtigungen modifizieren",
-        "description": "Darf die Berechtigungen des Repository bearbeiten."
+        "description": "Darf die Berechtigungen des Repositorys bearbeiten."
       },
       "archive": {
         "displayName": "Repository archivieren",
-        "description": "Darf das Repository als \"archiviert\" und somit als schreibgeschützt markieren."
+        "description": "Darf das Repository als „archiviert“ und somit als schreibgeschützt markieren."
       },
       "export": {
         "displayName": "Repository exportieren",
-        "description": "Achtung: Darf das Repository inkl. aller Metadaten exportieren."
+        "description": "Achtung: Darf das Repository inklusive aller Metadaten exportieren."
       },
       "healthCheck": {
         "displayName": "überprüfen",
         "description": "Darf das Repository überprüfen."
       },
       "*": {
-        "displayName": "Alle Repository Rechte",
-        "description": "Darf im Repository Kontext alles ausführen. Dies beinhaltet alle Repository Berechtigungen."
+        "displayName": "Alle Repositoryrechte",
+        "description": "Darf im Repositorykontext alles ausführen. Dies beinhaltet alle Repositoryberechtigungen."
       }
     },
     "namespace": {
       "*": {
-        "displayName": "Alle Namespace Rechte",
-        "description": "Darf im Namespace und allen darin enthaltenen Repositories alles ausführen. Dies beinhaltet alle Namespace und Repository Berechtigungen."
+        "displayName": "Alle Namespacerechte",
+        "description": "Darf im Namespace und allen darin enthaltenen Repositories alles ausführen. Dies beinhaltet alle Namespace- und Repositoryberechtigungen."
       }
     }
   },
@@ -203,7 +203,7 @@
     "violations": "Ungültige Werte:",
     "dnWjIroRhT": {
       "displayName": "Push fehlgeschlagen",
-      "description": "Das Pushen des Repositorys ist fehlgeschlagen"
+      "description": "Das Pushen des Repositorys ist fehlgeschlagen."
     },
     "AGR7UzkhA1": {
       "displayName": "Nicht gefunden",
@@ -211,7 +211,7 @@
     },
     "9tSzgRvIu1": {
       "displayName": "Revision nicht einzigartig",
-      "description": "Es gab mehrere Treffer zu dieser Revision. Bitte nutzen Sie eine eindeutige Id."
+      "description": "Es gab mehrere Treffer zu dieser Revision. Bitte nutzen Sie eine eindeutige ID."
     },
     "FtR7UznKU1": {
       "displayName": "Existiert bereits",
@@ -231,23 +231,23 @@
     },
     "9SR8G0kmU1": {
       "displayName": "Feature nicht unterstützt",
-      "description": "Das Versionsverwaltungssystem dieses Repositories unterstützt das angefragte Feature nicht."
+      "description": "Das Versionsverwaltungssystem dieses Repositorys unterstützt das angefragte Feature nicht."
     },
     "CmR8GCJb31": {
       "displayName": "Interner Serverfehler",
-      "description": "Im Server ist ein interner Fehler aufgetreten. Bitte wenden Sie sich an ihren Administrator für weitere Hinweise."
+      "description": "Im Server ist ein interner Fehler aufgetreten. Bitte wenden Sie sich an Ihren Administrator für weitere Hinweise."
     },
     "92RCCCMHO1": {
       "displayName": "Eine interne URL wurde nicht gefunden",
-      "description": "Ein interner Serveraufruf konnte nicht verarbeitet werden. Bitte wenden Sie sich an ihren Administrator für weitere Hinweise."
+      "description": "Ein interner Serveraufruf konnte nicht verarbeitet werden. Bitte wenden Sie sich an Ihren Administrator für weitere Hinweise."
     },
     "2VRCrvpL71": {
       "displayName": "Ungültiges Datenformat",
-      "description": "Die zum Server gesendeten Daten konnten nicht verarbeitet werden. Bitte prüfen Sie die eingegebenen Werte oder wenden Sie sich an ihren Administrator für weitere Hinweise."
+      "description": "Die zum Server gesendeten Daten konnten nicht verarbeitet werden. Bitte prüfen Sie die eingegebenen Werte oder wenden Sie sich an Ihren Administrator für weitere Hinweise."
     },
     "8pRBYDURx1": {
       "displayName": "Ungültiger Datentyp",
-      "description": "Die zum Server gesendeten Daten hatten einen ungültigen Typen. Bitte wenden Sie sich an ihren Administrator für weitere Hinweise."
+      "description": "Die zum Server gesendeten Daten hatten einen ungültigen Typen. Bitte wenden Sie sich an Ihren Administrator für weitere Hinweise."
     },
     "1wR7ZBe7H1": {
       "displayName": "Ungültige Eingabe",
@@ -258,11 +258,11 @@
       "description": "Die eingegebenen Daten konnten nicht validiert werden. Bitte korrigieren Sie die Eingaben und senden Sie sie erneut."
     },
     "CHRM7IQzo1": {
-      "displayName": "Änderung des Repositories nicht möglich",
-      "description": "Die gewünschte Änderung am Repository konnte nicht durchgeführt werden. Höchst wahrscheinlich liegt dieses an Prüfungen von Plugins. Bitte prüfen Sie die Einstellungen. Im Folgenden finden Sie weitere Meldungen zu dem Fehler:"
+      "displayName": "Änderung des Repositorys nicht möglich",
+      "description": "Die gewünschte Änderung am Repository konnte nicht durchgeführt werden. Weitere Prüfungen durch Plugins sind mit hoher Wahrscheinlichkeit die Ursache. Bitte prüfen Sie die Einstellungen. Im Folgenden finden Sie weitere Meldungen zu dem Fehler:"
     },
     "ASSG1ehZ01": {
-      "displayName": "Änderung des Repositories nicht möglich",
+      "displayName": "Änderung des Repositorys nicht möglich",
       "description": "Die gewünschte Änderung am Repository konnte nicht durchgeführt werden. Es gab keine weiteren Meldungen."
     },
     "thbsUFokjk": {
@@ -271,11 +271,11 @@
     },
     "40RaYIeeR1": {
       "displayName": "Es wurden keine Änderungen durchgeführt",
-      "description": "Das Repository wurde nicht verändert. Daher konnte kein neuer Commit erzeugt werden. Womöglich werden Änderungen aufgrund einer .ignore-Datei Definition nicht berücksichtigt."
+      "description": "Das Repository wurde nicht verändert. Daher konnte kein neuer Commit erzeugt werden. Womöglich werden Änderungen aufgrund einer .ignore-Dateidefinition nicht berücksichtigt."
     },
     "ERS2vYb7U1": {
       "displayName": "Änderung des Namespace nicht möglich",
-      "description": "Namespaces dürfen nur mit der Namespace Strategie \"Benutzerdefiniert\" verändert werden."
+      "description": "Namespaces dürfen nur mit der Namespace-Strategie „Benutzerdefiniert“ verändert werden."
     },
     "4iRct4avG1": {
       "displayName": "Die Revisionen haben keinen gemeinsamen Ursprung",
@@ -283,7 +283,7 @@
     },
     "65RdZ5atX1": {
       "displayName": "Fehler beim Löschen von Plugin-Dateien",
-      "description": "Einige Dateien für die Plugin-Deinstallation konnten nicht gelöscht werden. Dieses kann zu Inkonsistenzen führen, so dass der SCM-Manager nicht mehr korrekt starten kann. Bitte prüfen Sie die Logs und bereinigen Sie das Plugin-Verzeichnis des SCM-Managers manuell. Um die Installation eines Plugins abzubrechen, löschen Sie die zugehörige smp Datei aus dem Plugin-Verzeichnis. Um ein Entfernen eines Plugins zu verhindern, entfernen Sie die Datei namens 'uninstall' aus dem entsprechenden Verzeichnis des Plugins."
+      "description": "Einige Dateien für die Plugin-Deinstallation konnten nicht gelöscht werden. Dies kann zu Inkonsistenzen führen, sodass der SCM-Manager nicht mehr korrekt starten kann. Bitte prüfen Sie die Logs und bereinigen Sie das Plugin-Verzeichnis des SCM-Managers manuell. Um die Installation eines Plugins abzubrechen, löschen Sie die zugehörige .smp-Datei aus dem Plugin-Verzeichnis. Um ein Entfernen eines Plugins zu verhindern, entfernen Sie die Datei namens „uninstall“ aus dem entsprechenden Verzeichnis des Plugins."
     },
     "6eRhF9gU41": {
       "displayName": "Nicht unterstützte Merge-Strategie",
@@ -291,7 +291,7 @@
     },
     "Re6hF5g14U": {
       "displayName": "Fast-Forward fehlgeschlagen",
-      "description": "Die beiden Branches können nicht per Fast-Forward miteinander gemerged werden"
+      "description": "Die beiden Branches können nicht per Fast-Forward miteinander gemergt werden."
     },
     "78RhWxTIw1": {
       "displayName": "Der Default-Branch kann nicht gelöscht werden",
@@ -299,11 +299,11 @@
     },
     "1yRiASshD1": {
       "displayName": "Fehler beim Löschen des anonymen Nutzers",
-      "description": "Der anonyme Nutzer kann nicht gelöscht werden, solange der anonyme Zugriff in den Einstellungen aktiviert ist."
+      "description": "Der anonyme Benutzer kann nicht gelöscht werden, solange der anonyme Zugriff in den Einstellungen aktiviert ist."
     },
     "8LRncum0S1": {
       "displayName": "Interner Fehler im Repository",
-      "description": "Bei der Bearbeitung des internen Repositories ist ein Fehler oder ein unerwarteter Zustand aufgetreten. Bitte prüfen Sie die Logs für weitere Informationen."
+      "description": "Bei der Bearbeitung des internen Repositorys ist ein Fehler oder ein unerwarteter Zustand aufgetreten. Bitte prüfen Sie die Logs für weitere Informationen."
     },
     "4GRrgkSC01": {
       "displayName": "Unerwartetes Merge-Ergebnis",
@@ -315,11 +315,11 @@
     },
     "9iRuFz1UB1": {
       "displayName": "Fehler beim Herunterladen",
-      "description": "Das Plugin konnte nicht vom Server heruntergeladen werden. BitteThe plugin could not be loaded from the server. Bitte versuchen Sie es erneut und prüfen Sie die Interneteinstellungen wie z. B. die Proxy-Einstellungen. Weitere Details finden sich im Server Log."
+      "description": "Das Plugin konnte nicht vom Server heruntergeladen werden. Bitte versuchen Sie es erneut und prüfen Sie die Interneteinstellungen wie z. B. die Proxy-Einstellungen. Weitere Details finden sich im Serverlog."
     },
     "8nRuFzjss1": {
       "displayName": "Fehler beim Löschen falscher Downloads",
-      "description": "Ein fehlerhaft heruntergeladenes Plugin konnte nicht gelöscht werden. Bitte prüfen Sie die Server Logs und löschen die Datei manuell."
+      "description": "Ein fehlerhaft heruntergeladenes Plugin konnte nicht gelöscht werden. Bitte prüfen Sie die Serverlogs und löschen Sie die Datei manuell."
     },
     "5GS6lwvWF1": {
       "displayName": "Abhängigkeit konnte nicht gefunden werden",
@@ -330,16 +330,16 @@
       "description": "Die Version einer Abhängigkeit des Plugin ist zu niedrig. Bitte prüfen Sie die Logs für weitere Informationen."
     },
     "4RS6niPRX1": {
-      "displayName": "Plugin information stimmen nicht überein",
-      "description": "Die Informationen des heruntergeladenen Plugins stimmen nicht mit den Informationen des Plugin Centers überein. Bitte prüfen Sie die Logs für weitere Informationen."
+      "displayName": "Plugininformationen stimmen nicht überein",
+      "description": "Die Informationen des heruntergeladenen Plugins stimmen nicht mit den Informationen des Plugin-Centers überein. Bitte prüfen Sie die Logs für weitere Informationen."
     },
     "2qRyyaVcJ1": {
       "displayName": "Ungültig formatiertes Element",
-      "description": "Die Eingabe beinhaltete ungültige Formate. Bitte prüfen Sie die Server Logs für genauere Informationen."
+      "description": "Die Eingabe beinhaltete ungültige Formate. Bitte prüfen Sie die Serverlogs für genauere Informationen."
     },
     "3tS0mjSoo1": {
       "displayName": "Fehler bei der Erstellung eines Arbeitsverzeichnisses",
-      "description": "Der Server konnte kein Arbeitsverzeichnis zur Abarbeitung der Anfrage erstellen. Bitte prüfen Sie die Server Logs für genauere Informationen."
+      "description": "Der Server konnte kein Arbeitsverzeichnis zur Abarbeitung der Anfrage erstellen. Bitte prüfen Sie die Serverlogs für genauere Informationen."
     },
     "3US6mweXy1": {
       "displayName": "Fehler beim Löschen eines schreibgeschützen Schlüssels",
@@ -351,10 +351,10 @@
     },
     "FVS9JY1T21": {
       "displayName": "Fehler bei der Anfrage",
-      "description": "Bei der Anfrage trat ein Fehler auf. Prüfen Sie bitte den Status der HTTP Antwort und die konkrete Meldung."
+      "description": "Bei der Anfrage trat ein Fehler auf. Prüfen Sie bitte den Status der HTTP-Antwort und die konkrete Meldung."
     },
     "D6SHRfqQw1": {
-      "displayName": "Repository Import fehlgeschlagen",
+      "displayName": "Repositoryimport fehlgeschlagen",
       "description": "Das Repository konnte nicht importiert werden. Möglicherweise wurden die Zugangsdaten (Benutzername/Passwort) nicht gesetzt oder sind fehlerhaft. Bitte prüfen Sie Ihre Eingaben."
     },
     "3FSIYtBJw1": {
@@ -363,15 +363,15 @@
     },
     "3hSIlptme1": {
       "displayName": "Repository ist archiviert",
-      "description": "Das Repository ist als \"archiviert\" markiert und darf nicht modifiziert werden."
+      "description": "Das Repository ist als „archiviert“ markiert und darf nicht modifiziert werden."
     },
     "67SM3DANZ1": {
-      "displayName": "Repository Export fehlgeschlagen",
-      "description": "Das Repository konnte nicht exportiert werden. Für weitere Informationen wenden Sie sich an Ihren Administrator oder schauen Sie im Log."
+      "displayName": "Repositoryexport fehlgeschlagen",
+      "description": "Das Repository konnte nicht exportiert werden. Für weitere Informationen wenden Sie sich an Ihren Administrator oder schauen Sie in die Logs."
     },
     "4hSNNTBiu1": {
-      "displayName": "Falscher Repository Typ",
-      "description": "Der gegebene Typ entspricht nicht dem Typen des Repositories."
+      "displayName": "Falscher Repositorytyp",
+      "description": "Der gegebene Typ entspricht nicht dem Typen des Repositorys."
     },
     "1mSNlpe1V1": {
       "displayName": "Repository wird exportiert",
@@ -386,24 +386,24 @@
       "description": "Das aktuelle Passwort ist falsch. Bitte versuchen Sie es noch einmal."
     },
     "CISPvega31": {
-      "displayName": "Ungültiger Repository-Typ für Import",
-      "description": "Der Import ist für den gegebenen Repository-Typen nicht möglich."
+      "displayName": "Ungültiger Repositorytyp für Import",
+      "description": "Der Import ist für den gegebenen Repositorytypen nicht möglich."
     },
     "3mSmwOtOd1": {
       "displayName": "Datei gesperrt",
-      "description": "Die Datei oder ihre Sperre kann nicht bearbeitet werden, da eine andere Sperre existiert. Die andere Sperre kann ggf. durch eine 'forcierte' Aktion umgangen werden."
+      "description": "Die Datei oder ihre Sperre kann nicht bearbeitet werden, da eine andere Sperre existiert. Die andere Sperre kann gegebenenfalls durch eine „forcierte“ Aktion umgangen werden."
     },
     "8wSpi62oJ1": {
       "displayName": "Änderung fehlgeschlagen",
-      "description": "Die Änderung konnte nicht durchgeführt werden. Dieses kann mehrere Ursachen haben, z. B. eine Datei die nicht verschoben werden kann, ungültige Dateinamen o. ä."
+      "description": "Die Änderung konnte nicht durchgeführt werden. Dies kann mehrere Ursachen haben, beispielsweise aufgrund einer unverschiebbaren Datei oder ungültiger Dateinamen."
     },
     "8OT4gBVvp1": {
-      "displayName": "Repository Typ ungültig",
-      "description": "Dieser Repository Typ wird nicht unterstützt."
+      "displayName": "Repositorytyp ungültig",
+      "description": "Dieser Repositorytyp wird nicht unterstützt."
     },
     "3ITWbABz91": {
-      "displayName": "API Schlüssel deaktiviert",
-      "description": "Die Nutzung von API Schlüsseln ist in der globalen Konfiguration deaktiviert. Zur Nutzung der API Schlüssel muss diese Option wieder aktiviert werden."
+      "displayName": "API-Schlüssel deaktiviert",
+      "description": "Die Nutzung von API-Schlüsseln ist in der globalen Konfiguration deaktiviert. Zur Nutzung der API-Schlüssel muss diese Option wieder aktiviert werden."
     },
     "5HU4ouwQr1": {
       "displayName": "Plugin-Bedingung nicht erfüllt: Version",
@@ -415,7 +415,7 @@
     },
     "DHU4pfOtA1": {
       "displayName": "Plugin-Bedingung nicht erfüllt: Architektur",
-      "description": "Die derzeitige Prozessor Architektur erfüllt nicht die Anforderungen. Nähere Informationen zu den Bedingungen finden sich im Log."
+      "description": "Die derzeitige Prozessorarchitektur erfüllt nicht die Anforderungen. Nähere Informationen zu den Bedingungen finden sich im Log."
     },
     "BaSXkAztI1": {
       "displayName": "Schreibgeschütztes Repository",
@@ -425,64 +425,64 @@
   "healthCheckFailures": {
     "detailUrl": "Hier finden sich weitere Informationen.",
     "AnOTx99ex1": {
-      "summary": "Inkompatibles DB Format",
-      "description": "Das Subversion DB Format ist inkompatibel mit der SVN Version, die im SCM-Manager genutzt wird."
+      "summary": "Inkompatibles DB-Format",
+      "description": "Das Subversion-DB-Format ist inkompatibel mit der SVN-Version, die im SCM-Manager genutzt wird."
     },
     "4IOTx8pvv1": {
-      "summary": "DB/Format Datei kann nicht gelesen werden",
-      "description": "Die DB/Format Datei des Repositories konnte nicht gelesen werden."
+      "summary": "DB/Format-Datei kann nicht gelesen werden",
+      "description": "Die DB/Format-Datei des Repositorys konnte nicht gelesen werden."
     },
     "6TOTx9RLD1": {
       "summary": "Das Repository lässt sich nicht öffnen",
-      "description": "Das SVN Repository kann nicht geöffnet werden."
+      "description": "Das Subversion-Repository kann nicht geöffnet werden."
     },
     "A9OTx8leC1": {
-      "summary": "DB/Format Datei kann nicht gefunden werden",
-      "description": "Das Subversion Repository enthält keine DB/Format Datei."
+      "summary": "DB/Format-Datei kann nicht gefunden werden",
+      "description": "Das Subversion-Repository enthält keine DB/Format-Datei."
     },
     "2OOTx6ta71": {
-      "summary": "Repository hat keinen Typen",
+      "summary": "Repositorytyp fehlt",
       "description": "Das Repository hat keinen konfigurierten Typ."
     },
     "CqOTx7Jkq1": {
-      "summary": "Kein Handler für Repository Typ",
-      "description": "Es ist kein Handler für den Typen des Repositories registriert."
+      "summary": "Kein Handler für Repositorytyp",
+      "description": "Es ist kein Handler für den Typen des Repositorys registriert."
     },
     "AcOTx7fD51": {
       "summary": "Handler kann Verzeichnis nicht zurückgeben",
       "description": "Der Handler war nicht in der Lage, ein Verzeichnis für das Repository zurückzugeben."
     },
     "1oOTx803F1": {
-      "summary": "Repository Verzeichnis existiert nicht",
+      "summary": "Repositoryverzeichnis existiert nicht",
       "description": "Das Repository existiert nicht. Eventuell wurde es außerhalb des SCM-Managers gelöscht."
     },
     "AKOdhQ0pw1": {
-      "summary": "Kein .git oder refs Verzeichnis gefunden",
-      "description": "Das Git-Repository enthält weder ein '.git' noch ein 'refs' Verzeichnis"
+      "summary": "Kein .git„…“- oder refs-Verzeichnis gefunden",
+      "description": "Das Git-Repository enthält weder ein „.git“- noch ein „refs“-Verzeichnis."
     },
     "FaSUYbZUR1": {
-      "summary": "'hg verify' fehlgeschlagen",
-      "description": "Die Prüfung 'hg verify' ist für das Repository fehlgeschlagen."
+      "summary": "„hg verify“ fehlgeschlagen",
+      "description": "Die Prüfung „hg verify“ ist für das Repository fehlgeschlagen."
     },
     "6bOdhOXpB1": {
-      "summary": "Verzeichnis .hg nicht gefunden",
-      "description": "Das Mercurial Repository enthält kein .hg Verzeichnis."
+      "summary": "Verzeichnis „.hg“ nicht gefunden",
+      "description": "Das Mercurial-Repository enthält kein „.hg“-Verzeichnis."
     },
     "9cSV1eaVF1": {
-      "summary": "Repository Verzeichnis nicht schreibbar",
+      "summary": "Repositoryverzeichnis nicht schreibbar",
       "description": "Der Systemuser hat keine Berechtigung, Dateien im Verzeichnis für das Repository zu erstellen oder zu löschen."
     },
     "6bSUg4dZ41": {
-      "summary": "Metadaten Datei nicht schreibbar",
-      "description": "Die Datei für die Metadaten des Repositories kann vom Systemuser nicht geschrieben werden."
+      "summary": "Metadatendatei nicht schreibbar",
+      "description": "Die Datei für die Metadaten des Repositorys kann vom Systemuser nicht geschrieben werden."
     },
     "5FSV2kreE1": {
-      "summary": "'svn verify' fehlgeschlagen",
-      "description": "Die Prüfung 'svn verify' ist für das Repository fehlgeschlagen."
+      "summary": "„svn verify“ fehlgeschlagen",
+      "description": "Die Prüfung „svn verify“ ist für das Repository fehlgeschlagen."
     },
     "E4TrutUSv1": {
-      "summary": "Speicherung des Repositories fehlgeschlagen",
-      "description": "Beim Speichern des Repositories ist ein Fehler aufgetreten. Weitere Hinweise finden sich im Server Log."
+      "summary": "Speicherung des Repositorys fehlgeschlagen",
+      "description": "Beim Speichern des Repositorys ist ein Fehler aufgetreten. Weitere Hinweise finden sich im Serverlog."
     },
     "99UQi5FKd1": {
       "displayName": "Tags sind geschützt",
@@ -497,17 +497,17 @@
     "UsernameNamespaceStrategy": "Benutzername",
     "CustomNamespaceStrategy": "Benutzerdefiniert",
     "CurrentYearNamespaceStrategy": "Aktuelles Jahr",
-    "RepositoryTypeNamespaceStrategy": "Repository Typ"
+    "RepositoryTypeNamespaceStrategy": "Repositorytyp"
   },
   "notifications": {
-    "exportFinished": "Der Repository Export wurde abgeschlossen.",
-    "exportFailed": "Der Repository Export ist fehlgeschlagen. Versuchen Sie es erneut oder wenden Sie sich an einen Administrator.",
-    "importFinished": "Der Repository Import wurde abgeschlossen.",
-    "importWithLfsFinished": "Der Repository Import wurde abgeschlossen. Dabei wurden {{successCount}} LFS Dateien importiert.",
-    "importLfsFailed": "Der Repository Import wurde abgeschlossen. Jedoch konnten {{failureCount}} von {{overallCount}} LFS Dateien nicht geladen werden.",
-    "importFailed": "Der Repository Import ist fehlgeschlagen. Versuchen Sie es erneut oder wenden Sie sich an einen Administrator.",
-    "healthCheckFailed": "Der Repository Health Check ist fehlgeschlagen.",
-    "healthCheckSuccess": "Der Repository Health Check war erfolgreich."
+    "exportFinished": "Der Repositoryexport wurde abgeschlossen.",
+    "exportFailed": "Der Repositoryexport ist fehlgeschlagen. Versuchen Sie es erneut oder wenden Sie sich an einen Administrator.",
+    "importFinished": "Der Repositoryimport wurde abgeschlossen.",
+    "importWithLfsFinished": "Der Repositoryimport wurde abgeschlossen. Dabei wurden {{successCount}} LFS-Dateien importiert.",
+    "importLfsFailed": "Der Repositoryimport wurde abgeschlossen. Jedoch konnten {{failureCount}} von {{overallCount}} LFS-Dateien nicht geladen werden.",
+    "importFailed": "Der Repositoryimport ist fehlgeschlagen. Versuchen Sie es erneut oder wenden Sie sich an einen Administrator.",
+    "healthCheckFailed": "Der Repository-Health-Check ist fehlgeschlagen.",
+    "healthCheckSuccess": "Der Repository-Health-Check war erfolgreich."
   },
   "search": {
     "types": {
@@ -539,14 +539,14 @@
         },
         "examples": [
           {
-            "description": "...einem  Repository mit dem Namen ultimate-Repository oder ultimate_Repository. Sie sind nicht sicher, welches Zeichen die beiden Begriffe verbindet",
+            "description": "...einem Repository mit dem Namen „ultimate-Repository“ oder „ultimate_Repository“. Sie sind nicht sicher, welches Zeichen die beiden Begriffe verbindet.",
             "query": "name:ultimate?Repository",
             "explanation": "Sucht nach „ultimate“ und „Repository“ verbunden mit einem einzelnen Zeichen."
           },
           {
-            "description": "...alle Repositories, die zwischen dem 01.01.2021 und dem 01.02.2021 im Namespace ultimate geändert wurden.",
+            "description": "...alle Repositories, die zwischen dem 01.01.2021 und dem 01.02.2021 im Namespace „ultimate“ geändert wurden.",
             "query": "nameSpace:ultimate AND lastModified:[1609459200000 TO 1612137600000]",
-            "explanation": "Sucht nach Repositories im Namespace „ultimate“, die im gewünschten Zeitraum geändert wurden Der Zeitraum wird über Zeitstemple in Epoch Millisekunden angegeben. Rechnen Sie Zeitstempel mit unserem Converter in Epoch Millisekunden um."
+            "explanation": "Sucht nach Repositories im Namespace „ultimate“, die im gewünschten Zeitraum geändert wurden. Der Zeitraum wird über Zeitstempel in Millisekunden seit Unix Epoch („Epoch-Millisekunden“) angegeben. Rechnen Sie Zeitstempel mit unserem Converter in Epoch-Millisekunden um."
           }
         ]
       },
