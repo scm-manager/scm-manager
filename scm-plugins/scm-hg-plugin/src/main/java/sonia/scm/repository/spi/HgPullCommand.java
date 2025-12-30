@@ -75,7 +75,7 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
       result = builder.call((Path configFile) -> {
         org.javahg.commands.PullCommand cmd = org.javahg.commands.PullCommand.on(open());
 
-        if(configFile != null) {
+        if (configFile != null) {
           cmd.cmdAppend("--config-file", configFile.toFile().getAbsolutePath());
         }
 

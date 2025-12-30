@@ -25,7 +25,6 @@ import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.net.GlobalProxyConfiguration;
-import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.util.Util;
 
 import java.io.File;
@@ -88,7 +87,7 @@ public class TemporaryConfigFactory {
         return callable.call(hgrc);
       } finally {
         if (hgrc != null) {
-          if(!hgrc.toFile().delete()) {
+          if (!hgrc.toFile().delete()) {
             LOG.warn("error cleaning up hgrc {}", hgrc.toFile().getAbsoluteFile());
           }
         }

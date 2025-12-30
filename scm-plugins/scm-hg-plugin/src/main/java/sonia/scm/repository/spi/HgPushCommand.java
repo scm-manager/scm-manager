@@ -67,7 +67,7 @@ public class HgPushCommand extends AbstractHgPushOrPullCommand implements PushCo
           hgPush.force();
         }
 
-        if(configFile != null) {
+        if (configFile != null) {
           hgPush.cmdAppend("--config-file", configFile.toFile().getAbsolutePath());
         }
 
