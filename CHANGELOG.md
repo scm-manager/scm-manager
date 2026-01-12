@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.11.2] - 2026-01-12
+### Fixed
+- Update of Tika to mitigate CVE-2025-54988 and CVE-2025-66516
+- System log with scope ERROR for not-found commit id
+
 ## [3.11.1] - 2025-11-28
 ### Fixed
 - Significantly improved repository load times for large numbers of repositories (Patch from 3.7.7)
@@ -1831,3 +1836,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.10.2]: https://scm-manager.org/download/3.10.2
 [3.10.3]: https://scm-manager.org/download/3.10.3
 [3.11.0]: https://scm-manager.org/download/3.11.0
+[3.11.2]: https://scm-manager.org/download/3.11.2
