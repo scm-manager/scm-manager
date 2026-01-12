@@ -1,0 +1,2 @@
+- type: fixed
+  description: Update of Tika to mitigate CVE-2025-54988 and CVE-2025-66516

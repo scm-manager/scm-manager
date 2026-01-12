@@ -1,5 +1,5 @@
 ext {
-  slf4jVersion = '1.7.36'
+  slf4jVersion = '2.0.17'
   guiceVersion = '7.0.0'
   resteasyVersion = '6.2.12.Final'
 
@@ -40,7 +40,7 @@ ext {
     // logging
     slf4jApi: "org.slf4j:slf4j-api:${slf4jVersion}",
     slf4jJcl: "org.slf4j:jcl-over-slf4j:${slf4jVersion}",
-    logback: 'ch.qos.logback:logback-classic:1.2.9',
+    logback: 'ch.qos.logback:logback-classic:1.5.23',
 
     // injection
     guice: "com.google.inject:guice:${guiceVersion}",
@@ -136,8 +136,8 @@ ext {
     webResources: 'com.github.sdorra:web-resources:2.0.0',
 
     // content type detection
-    spotter: 'com.cloudogu.spotter:spotter-core:4.0.0',
-    tika: 'org.apache.tika:tika-core:1.28.5',
+    spotter: 'com.cloudogu.spotter:spotter-core:4.1.0',
+    tika: 'org.apache.tika:tika-core:3.2.2',
 
     // restart on unix
     akuma: 'org.kohsuke:akuma:1.10',
