@@ -1,73 +1,58 @@
 ---
-title: Intellij IDEA Configuration
+title: IntelliJ IDEA Configuration
 ---
+
+# Plugins
+
+Make sure the following plugins are installed:
+
+* EditorConfig
+* Lombok
+* MapStruct Support
+* Prettier
+
+# Settings
 
 ## Backend
 
-### Plugins
-
-* Lombok Plugin
-* MapStruct Support
-
-### Settings
-
 * Build, Execution, Deployment / Compiler
-  * Add runtime assertions for non-null-annotated methods and parameters (must be checked)
-  * Configure annotation ... (of "Add runtime assertions...")
-    * Nullable annotations: select (✓) `jakarta.annotation.Nullable`
-    * NotNull annotations: select (✓) `jakarta.annotation.Nonnull` and check Instrument
+  * Check "Add runtime assertions for notnull-annotated methods and parameters"
+  * Configure annotations...
+    * Nullable
+      * Add "Nullabel annotations" (if not exist): `jakarta.annotation.Nullable`
+    * NotNull
+      * Add "NotNull annotations" (if not exist): `jakarta.annotation.Nonnull` and check "Instrument"
 
 * Editor / Code Style / Java
-  * Tab Imports
-    * Class count to use import with '*': <MAX_INT>
-    * Names count to use static import with '*': <MAX_INT>
+  * Imports
+    * Set "Class count to use import with '*'" to `9999`
+    * Set "Names count to use static import with '*'" to `9999`
 
 ## Frontend
 
-### Plugins
-
-* Prettier
-* File Watchers
-
-### Settings
-
-* Languages & Frameworks / Node.js and NPM
-  * Package Manager: yarn
+* Languages & Frameworks / JavaScript Runtime
+  * Set "Preferred runtime" to `Node.js`
+  * Set "Package manager" to `yarn`
 
 * Languages & Frameworks / Javascript / Code Quality Tools / ESLint
-  * Enable
-  * ESLint package: .../node_modules/eslint
-  * -OR- Automatic ESLint configuration
+  * Enable "Automatic ESLint configuration"
 
 * Languages & Frameworks / Javascript / Prettier
-  * Prettier package: .../node_modules/prettier
-
-* Tools / File Watchers
-  * Add Prettier
-    * Deselect: Track only root files
-    * Scope: Current File
-    * Program: $ProjectFileDir$/node_modules/.bin/prettier
-    * Working Directory: $ProjectFileDir$
+  * Enable "Automatic Prettier configuration"
 
 ## Both
 
-### Plugins
-
-* EditorConfig
-
-### Settings
-
 * Editor / Copyright / Copyright Profiles
-  * Add Profile
-  * Name: SCM-AGPL
-  * Copyright text: see https://www.gnu.org/licenses/
-  * Regex: GNU Affero General Public License
+  * Add Profile with name `SCM-AGPL`
+  * Replace the text with content from `LICENSE-HEADER.txt`
+  * Set "Regex to detect copyright in comments" to `Copyright`
 
 * Editor / Copyright
-  * Default project copyright: SCM-AGPL
+  * Set "Default project copyright" to `SCM-AGPL`
+  * Add "Scopes" with "All" and "Copyright" `SCM-AGPL`
 
 * Editor / Copyright / Formatting / XML
-  * Use custom formatting options
-  * Use block comment, check prefix each line
-  * Select: Separator before, Length: 0
-  * Separator: *space*
+  * Enable "Use custom formatting options"
+  * Enable "Use block comment" and check "Prefix each line"
+  * Check "Separator before" and set "Length" to `0`
+  * Set "Separator" to ` ` (*Space*)
