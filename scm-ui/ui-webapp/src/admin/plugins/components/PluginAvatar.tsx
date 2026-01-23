@@ -18,7 +18,7 @@ import React from "react";
 import styled from "styled-components";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Plugin } from "@scm-manager/ui-types";
-import { Image } from "@scm-manager/ui-components";
+import { Image } from "@scm-manager/ui-core";
 
 type Props = {
   plugin: Plugin;
@@ -40,10 +40,14 @@ export default class PluginAvatar extends React.Component<Props> {
         <ExtensionPoint<extensionPoints.PluginAvatar>
           name="plugins.plugin-avatar"
           props={{
-            plugin
+            plugin,
           }}
         >
-          <Image src={plugin.avatarUrl ? plugin.avatarUrl : "/images/blibTransparentBG.png"} alt="Logo" />
+          <Image
+            crossOrigin="anonymous"
+            src={plugin.avatarUrl ? plugin.avatarUrl : "/images/blibTransparentBG.png"}
+            alt="Logo"
+          />
         </ExtensionPoint>
       </BoundingBox>
     );
