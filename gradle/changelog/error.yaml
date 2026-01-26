@@ -1,0 +1,2 @@
+- type: fixed
+  description: Enhanced error message including filename of corrupt file

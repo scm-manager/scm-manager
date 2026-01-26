@@ -123,92 +123,99 @@ class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V> {
   private void load() {
     LOG.debug("load configuration from {}", file);
     execute(() ->
-      context.withUnmarshaller(u -> {
-        try (AutoCloseableXMLReader reader = XmlStreams.createReader(file)) {
+      context.withUnmarshaller(
+        u -> {
+          try (AutoCloseableXMLReader reader = XmlStreams.createReader(file)) {
 
-          // configuration
-          reader.nextTag();
-
-          // entry start
-          reader.nextTag();
-
-          while (reader.isStartElement() && reader.getLocalName().equals(TAG_ENTRY)) {
-
-            // read key
+            // configuration
             reader.nextTag();
 
-            String key = reader.getElementText();
-
-            // read value
+            // entry start
             reader.nextTag();
 
-            JAXBElement<V> element = u.unmarshal(reader, type);
+            while (reader.isStartElement() && reader.getLocalName().equals(TAG_ENTRY)) {
 
-            if (!element.isNil()) {
-              V v = element.getValue();
-
-              LOG.trace("add element {} to configuration entry store", v);
-
-              entries.put(key, v);
-            } else {
-              LOG.warn("could not unmarshall object of entry store");
-            }
-
-            // closed or new entry tag
-            if (reader.nextTag() == END_ELEMENT) {
-
-              // fixed format, start new entry
+              // read key
               reader.nextTag();
+
+              String key = reader.getElementText();
+
+              // read value
+              reader.nextTag();
+
+              JAXBElement<V> element = u.unmarshal(reader, type);
+
+              if (!element.isNil()) {
+                V v = element.getValue();
+
+                LOG.trace("add element {} to configuration entry store", v);
+
+                entries.put(key, v);
+              } else {
+                LOG.warn("could not unmarshall object of entry store");
+              }
+
+              // closed or new entry tag
+              if (reader.nextTag() == END_ELEMENT) {
+
+                // fixed format, start new entry
+                reader.nextTag();
+              }
             }
           }
-        }
-      })).withLockedFileForRead(file);
+        },
+        file.getAbsoluteFile()
+      )
+    ).withLockedFileForRead(file);
   }
 
   private void store() {
     LOG.debug("store configuration to {}", file);
 
-    context.withMarshaller(m -> {
-      m.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+    context.withMarshaller(
+      m -> {
+        m.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
 
-      CopyOnWrite.withTemporaryFile(
-        temp -> {
-          try (AutoCloseableXMLWriter writer = XmlStreams.createWriter(temp)) {
-            writer.writeStartDocument();
+        CopyOnWrite.withTemporaryFile(
+          temp -> {
+            try (AutoCloseableXMLWriter writer = XmlStreams.createWriter(temp)) {
+              writer.writeStartDocument();
 
-            // configuration start
-            writer.writeStartElement(TAG_CONFIGURATION);
-            writer.writeAttribute("type", "config-entry");
+              // configuration start
+              writer.writeStartElement(TAG_CONFIGURATION);
+              writer.writeAttribute("type", "config-entry");
 
-            for (Entry<String, V> e : entries.entrySet()) {
+              for (Entry<String, V> e : entries.entrySet()) {
 
-              // entry start
-              writer.writeStartElement(TAG_ENTRY);
+                // entry start
+                writer.writeStartElement(TAG_ENTRY);
 
-              // key start
-              writer.writeStartElement(TAG_KEY);
-              writer.writeCharacters(e.getKey());
+                // key start
+                writer.writeStartElement(TAG_KEY);
+                writer.writeCharacters(e.getKey());
 
-              // key end
+                // key end
+                writer.writeEndElement();
+
+                // value
+                JAXBElement<V> je = new JAXBElement<>(QName.valueOf(TAG_VALUE), type,
+                  e.getValue());
+
+                m.marshal(je, writer);
+
+                // entry end
+                writer.writeEndElement();
+              }
+
+              // configuration end
               writer.writeEndElement();
-
-              // value
-              JAXBElement<V> je = new JAXBElement<>(QName.valueOf(TAG_VALUE), type,
-                e.getValue());
-
-              m.marshal(je, writer);
-
-              // entry end
-              writer.writeEndElement();
+              writer.writeEndDocument();
             }
-
-            // configuration end
-            writer.writeEndElement();
-            writer.writeEndDocument();
-          }
-        },
-        file.toPath()
-      );
-    });
+          },
+          file.toPath()
+        );
+      },
+      file.getAbsoluteFile()
+    );
   }
 }

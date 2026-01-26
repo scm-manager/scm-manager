@@ -64,33 +64,35 @@ final class TypedStoreContext<T> {
   T unmarshal(File file) {
     log.trace("unmarshal file {}", file);
     AtomicReference<T> ref = new AtomicReference<>();
-    withUnmarshaller(unmarshaller -> {
-      T value = parameters.getType().cast(unmarshaller.unmarshal(file));
-      ref.set(value);
-    });
+    withUnmarshaller(
+      unmarshaller -> {
+        T value = parameters.getType().cast(unmarshaller.unmarshal(file));
+        ref.set(value);
+      },
+      file.getAbsoluteFile());
     return ref.get();
   }
 
   void marshal(Object object, File file) {
     log.trace("marshal file {}", file);
-    withMarshaller(marshaller -> marshaller.marshal(object, XmlStreams.createWriter(file)));
+    withMarshaller(marshaller -> marshaller.marshal(object, XmlStreams.createWriter(file)), file.getAbsoluteFile());
   }
 
-  void withMarshaller(ThrowingConsumer<Marshaller> consumer) {
+  void withMarshaller(ThrowingConsumer<Marshaller> consumer, Object context) {
     Marshaller marshaller = createMarshaller();
-    withClassLoader(consumer, marshaller);
+    withClassLoader(consumer, marshaller, context);
   }
 
-  void withUnmarshaller(ThrowingConsumer<Unmarshaller> consumer) {
+  void withUnmarshaller(ThrowingConsumer<Unmarshaller> consumer, Object context) {
     Unmarshaller unmarshaller = createUnmarshaller();
-    withClassLoader(consumer, unmarshaller);
+    withClassLoader(consumer, unmarshaller, context);
   }
 
   Class<T> getType() {
     return parameters.getType();
   }
 
-  private <C> void withClassLoader(ThrowingConsumer<C> consumer, C consume) {
+  private <C> void withClassLoader(ThrowingConsumer<C> consumer, C consume, Object context) {
     ClassLoader contextClassLoader = null;
     Optional<ClassLoader> classLoader = parameters.getClassLoader();
     if (classLoader.isPresent()) {
@@ -100,7 +102,7 @@ final class TypedStoreContext<T> {
     try {
       consumer.consume(consume);
     } catch (Exception e) {
-      throw new StoreException("failure during marshalling/unmarshalling", e);
+      throw new StoreException("failure during marshalling/unmarshalling '" + context + "'", e);
     } finally {
       if (contextClassLoader != null) {
         Thread.currentThread().setContextClassLoader(contextClassLoader);
@@ -135,7 +137,8 @@ final class TypedStoreContext<T> {
 
   @FunctionalInterface
   interface ThrowingConsumer<T> {
-    @SuppressWarnings("java:S112") // we need to throw Exception here
+    @SuppressWarnings("java:S112")
+      // we need to throw Exception here
     void consume(T item) throws Exception;
   }
 

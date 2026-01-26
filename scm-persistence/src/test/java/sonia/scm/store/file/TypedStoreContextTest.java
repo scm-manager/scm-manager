@@ -59,16 +59,19 @@ class TypedStoreContextTest {
 
     File file = tempDir.resolve("test.xml").toFile();
 
-    context.withMarshaller(marshaller -> {
-      marshaller.marshal(new Sample("wow"), file);
-    });
+    context.withMarshaller(
+      marshaller -> {
+        marshaller.marshal(new Sample("wow"), file);
+      },
+      file);
 
     AtomicReference<Sample> ref = new AtomicReference<>();
 
-    context.withUnmarshaller(unmarshaller -> {
-      Sample sample = (Sample) unmarshaller.unmarshal(file);
-      ref.set(sample);
-    });
+    context.withUnmarshaller(
+      unmarshaller -> {
+        Sample sample = (Sample) unmarshaller.unmarshal(file);
+        ref.set(sample);
+      }, file);
 
     assertThat(ref.get().value).isEqualTo("wow");
   }
@@ -85,9 +88,12 @@ class TypedStoreContextTest {
     TypedStoreContext<Sample> context = TypedStoreContext.of(params);
 
     AtomicReference<ClassLoader> ref = new AtomicReference<>();
-    context.withMarshaller(marshaller -> {
-      ref.set(Thread.currentThread().getContextClassLoader());
-    });
+    context.withMarshaller(
+      marshaller -> {
+        ref.set(Thread.currentThread().getContextClassLoader());
+      },
+      "nothing"
+    );
 
     assertThat(ref.get()).isSameAs(classLoader);
     assertThat(Thread.currentThread().getContextClassLoader()).isSameAs(contextClassLoader);
