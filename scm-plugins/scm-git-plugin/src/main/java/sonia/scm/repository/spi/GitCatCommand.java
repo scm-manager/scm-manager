@@ -85,7 +85,10 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
     org.eclipse.jgit.lib.Repository repo = open();
     ObjectId revId = getCommitOrDefault(repo, request.getRevision());
     if (revId == null) {
-      throw notFound(entity("Revision", request.getRevision()).in(repository));
+      throw notFound(entity(
+        "Revision",
+        request.getRevision() == null ? "default" : request.getRevision()
+      ).in(repository));
     }
     LOG.debug("loading content for file {} for revision {} in repository {}", request.getPath(), revId, repository);
     return getLoader(repo, revId, request.getPath());

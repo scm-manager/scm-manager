@@ -1,0 +1,2 @@
+- type: fixed
+  description: Internal server error for cat command on empty repository
