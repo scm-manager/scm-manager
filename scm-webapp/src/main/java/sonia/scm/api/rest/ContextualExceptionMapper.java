@@ -41,7 +41,9 @@ public class ContextualExceptionMapper<E extends ExceptionWithContext> implement
 
   @Override
   public Response toResponse(E exception) {
-    if (logger.isTraceEnabled()) {
+    if (status.getStatusCode() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
+      logger.warn("map {} to status code {}", type.getSimpleName(), status.getStatusCode(), exception);
+    } else if (logger.isTraceEnabled()) {
       logger.trace("map {} to status code {}", type.getSimpleName(), status.getStatusCode(), exception);
     } else {
       logger.debug("map {} to status code {} with message '{}'", type.getSimpleName(), status.getStatusCode(), exception.getMessage());
