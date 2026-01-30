@@ -1,0 +1,2 @@
+- type: fixed
+  description: Subversion/Lucene exception when opening an empty repository without a revision 1

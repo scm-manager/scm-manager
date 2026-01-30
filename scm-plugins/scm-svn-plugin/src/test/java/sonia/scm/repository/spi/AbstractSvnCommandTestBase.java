@@ -17,13 +17,15 @@
 package sonia.scm.repository.spi;
 
 import org.junit.After;
-
-import java.io.IOException;
+import org.junit.jupiter.api.AfterEach;
 
 public class AbstractSvnCommandTestBase extends ZippedRepositoryTestBase {
 
+  private SvnContext context;
+
   @After
-  public void close() throws IOException {
+  @AfterEach
+  public void close() {
     if (context != null) {
       context.close();
     }
@@ -46,6 +48,4 @@ public class AbstractSvnCommandTestBase extends ZippedRepositoryTestBase {
   protected String getZippedRepositoryResource() {
     return "sonia/scm/repository/spi/scm-svn-spi-test.zip";
   }
-
-  private SvnContext context;
 }

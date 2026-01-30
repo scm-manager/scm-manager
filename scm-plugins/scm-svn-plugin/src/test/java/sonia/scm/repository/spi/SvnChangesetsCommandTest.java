@@ -16,33 +16,56 @@
 
 package sonia.scm.repository.spi;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import sonia.scm.repository.Changeset;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SvnChangesetsCommandTest extends AbstractSvnCommandTestBase {
+public class SvnChangesetsCommandTest {
 
-  @Test
-  public void getAllChangesetsFromRepository() {
-    Iterable<Changeset> changesets = createCommand().getChangesets(new ChangesetsCommandRequest());
-
-    assertThat(changesets).hasSize(5);
+  private SvnChangesetsCommand createCommand(SvnContext context) {
+    return new SvnChangesetsCommand(context);
   }
 
-  @Test
-  public void getLatestChangesetFromRepository() {
-    Optional<Changeset> changeset = createCommand().getLatestChangeset();
+  @Nested
+  class GetChangesets extends AbstractSvnCommandTestBase {
+    @Test
+    void getAllChangesetsFromRepository() {
+      Iterable<Changeset> changesets = createCommand(createContext()).getChangesets(new ChangesetsCommandRequest());
 
-    assertThat(changeset).isPresent();
-    assertThat(changeset.get().getId()).isEqualTo("5");
+      assertThat(changesets).hasSize(5);
+    }
   }
 
-  private SvnChangesetsCommand createCommand()
-  {
-    return new SvnChangesetsCommand(createContext());
+  @Nested
+  class GetLatestChangesets extends AbstractSvnCommandTestBase {
+
+    @Test
+    void getLatestChangesetFromRepository() {
+      Optional<Changeset> changeset = createCommand(createContext()).getLatestChangeset();
+
+      assertThat(changeset).isPresent();
+      assertThat(changeset.get().getId()).isEqualTo("5");
+    }
+  }
+
+  @Nested
+  class GetChangesets_Empty extends AbstractSvnCommandTestBase {
+    @Test
+    void shouldReturnEmptyIterableWithEmptyRepository() {
+      Iterable<Changeset> changesets = createCommand(createContext()).getChangesets(new ChangesetsCommandRequest());
+
+      assertThat(changesets).isEmpty();
+    }
+
+
+    @Override
+    protected String getZippedRepositoryResource() {
+      return "sonia/scm/repository/spi/scm-svn-spi-empty-test.zip";
+    }
   }
 
 }
