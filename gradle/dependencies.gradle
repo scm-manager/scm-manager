@@ -16,13 +16,13 @@ ext {
   jettyVersion = '11.0.25'
   luceneVersion = '8.11.4'
   sqliteVersion = '3.50.3.0'
-  hikariCpVersion = '6.3.0'
+  hikariCpVersion = '7.0.2'
 
   junitJupiterVersion = '5.10.3'
   hamcrestVersion = '3.0'
   mockitoVersion = '5.18.0'
   jerseyVersion = '3.1.11'
-  micrometerVersion = '1.15.3'
+  micrometerVersion = '1.16.2'
 
   nodeVersion = '24.12.0'
   yarnVersion = '1.22.18'
