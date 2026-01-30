@@ -9,7 +9,8 @@ ext {
   legmanVersion = '2.0.3'
 
   mapstructVersion = '1.6.3'
-  jaxbVersion = '4.0.2'
+  jaxbBindApiVersion = '4.0.4'
+  jaxbRuntimeVersion = '4.0.6'
   shiroVersion = '1.12.0'
   sspVersion = '1.3.0'
   jjwtVersion = '0.11.5'
@@ -88,8 +89,8 @@ ext {
     legmanMicrometer: "com.cloudogu.legman.support:micrometer:${legmanVersion}",
 
     // xml binding
-    jaxbApi: "jakarta.xml.bind:jakarta.xml.bind-api:${jaxbVersion}",
-    jaxbRuntime: "org.glassfish.jaxb:jaxb-runtime:${jaxbVersion}",
+    jaxbApi: "jakarta.xml.bind:jakarta.xml.bind-api:${jaxbBindApiVersion}",
+    jaxbRuntime: "org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}",
 
     // validation
     validator: 'org.hibernate.validator:hibernate-validator:8.0.3.Final',
