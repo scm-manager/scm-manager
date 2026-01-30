@@ -3,7 +3,8 @@ ext {
   guiceVersion = '7.0.0'
   resteasyVersion = '6.2.15.Final'
 
-  jacksonVersion = '2.19.2'
+  jacksonVersion = '2.21.0'
+  jacksonAnnotationsVersion = '2.21'
 
   legmanVersion = '2.0.3'
 
@@ -62,7 +63,7 @@ ext {
 
     // json
     jacksonCore: "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}!!",
-    jacksonAnnotations: "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}!!",
+    jacksonAnnotations: "com.fasterxml.jackson.core:jackson-annotations:${jacksonAnnotationsVersion}!!",
     jacksonDatabind: "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}!!",
     jacksonJaxbAnnotations: "com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations:${jacksonVersion}",
     jacksonJaxRsBase: "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:${jacksonVersion}",
