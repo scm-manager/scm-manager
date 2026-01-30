@@ -1,0 +1,2 @@
+- type: fixed
+  description: Server freeze during random token generation on startup

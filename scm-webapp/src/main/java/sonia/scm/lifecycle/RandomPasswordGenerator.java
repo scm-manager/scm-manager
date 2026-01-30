@@ -18,17 +18,12 @@ package sonia.scm.lifecycle;
 
 import org.apache.commons.lang.RandomStringUtils;
 
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 final class RandomPasswordGenerator {
 
   String createRandomPassword() {
-    try {
-      SecureRandom random = SecureRandom.getInstanceStrong();
-      return RandomStringUtils.random(20, 0, 0, true, true, null, random);
-    } catch (NoSuchAlgorithmException e) {
-      throw new IllegalStateException("Every Java distribution is required to support a strong secure random generator; this should not have happened", e);
-    }
+    SecureRandom random = new SecureRandom();
+    return RandomStringUtils.random(20, 0, 0, true, true, null, random);
   }
 }
