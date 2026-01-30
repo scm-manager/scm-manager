@@ -90,6 +90,7 @@ public class ScmSecurityModule extends ShiroWebModule
     bindConstant().annotatedWith(Names.named("shiro.blockNonAscii")).to(false);
     bindConstant().annotatedWith(Names.named("shiro.blockTraversal")).to(false);
     bindConstant().annotatedWith(Names.named("shiro.blockSemicolon")).to(false);
+    bindConstant().annotatedWith(Names.named("shiro.blockEncodedForwardSlash")).to(false);
 
     // disable access to mustache resources
     addFilterChain("/**.mustache", filterConfig(ROLES, "nobody"));
