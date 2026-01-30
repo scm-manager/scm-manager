@@ -72,6 +72,7 @@ dependencies {
 
   // hypermedia
   api libraries.edison
+  api libraries.damnhandy
 
   // dto mapping
   api libraries.mapstruct
