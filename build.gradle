@@ -21,6 +21,7 @@ plugins {
   id "org.scm-manager.changelog" version "0.2.0"
   id 'org.scm-manager.license' version "0.7.1"
   id "com.github.hierynomus.license-report" version"0.16.1"
+  id "com.github.ben-manes.versions" version "0.53.0"
 }
 
 changelog {
