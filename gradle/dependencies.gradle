@@ -1,7 +1,7 @@
 ext {
   slf4jVersion = '2.0.17'
   guiceVersion = '7.0.0'
-  resteasyVersion = '6.2.12.Final'
+  resteasyVersion = '6.2.15.Final'
 
   jacksonVersion = '2.19.2'
 
