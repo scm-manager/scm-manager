@@ -17,7 +17,7 @@ ext {
   bouncycastleVersion = '2.73.10'
   jettyVersion = '11.0.26'
   luceneVersion = '8.11.4'
-  sqliteVersion = '3.50.3.0'
+  sqliteVersion = '3.51.1.0'
   hikariCpVersion = '7.0.2'
 
   junitJupiterVersion = '5.10.3'
