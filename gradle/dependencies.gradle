@@ -60,7 +60,7 @@ ext {
     resteasyValidatorProvider: "org.jboss.resteasy:resteasy-validator-provider:${resteasyVersion}",
 
     // cli
-    picocli: 'info.picocli:picocli:4.6.3',
+    picocli: 'info.picocli:picocli:4.7.7',
 
     // json
     jacksonCore: "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}!!",
