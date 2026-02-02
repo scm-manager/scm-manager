@@ -30,11 +30,11 @@ configurations {
     create("swaggerCoreDeps").defaultDependencies(new Action<DependencySet>() {
       @Override
       void execute(DependencySet dependencies) {
-        dependencies.add(project.getDependencies().create("org.apache.commons:commons-lang3:3.12.0"))
-        dependencies.add(project.getDependencies().create("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"))
-        dependencies.add(project.getDependencies().create("jakarta.servlet:jakarta.servlet-api:6.0.0"))
-        dependencies.add(project.getDependencies().create("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.26"))
-        dependencies.add(project.getDependencies().create("com.fasterxml.jackson.core:jackson-core:2.18.2"))
+        dependencies.add(project.getDependencies().create(libraries.commonsLang3))
+        dependencies.add(project.getDependencies().create(libraries.jaxRs))
+        dependencies.add(project.getDependencies().create(libraries.servletApi))
+        dependencies.add(project.getDependencies().create(libraries.swaggerJaxRs))
+        dependencies.add(project.getDependencies().create(libraries.jacksonCore))
       }
     })
   }
