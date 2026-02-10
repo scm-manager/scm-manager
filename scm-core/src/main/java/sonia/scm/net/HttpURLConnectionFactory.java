@@ -124,15 +124,11 @@ public final class HttpURLConnectionFactory {
     private boolean isProxyEnabled(ProxyConfiguration proxyConfiguration, URL url) {
       return !options.isIgnoreProxySettings()
         && proxyConfiguration.isEnabled()
-        && !isHostExcluded(proxyConfiguration, url);
+        && isHostIncluded(proxyConfiguration, url);
     }
 
-    private boolean isHostExcluded(ProxyConfiguration proxyConfiguration, URL url) {
-      Collection<String> excludes = proxyConfiguration.getExcludes();
-      if (excludes == null) {
-        return false;
-      }
-      return excludes.contains(url.getHost());
+    private boolean isHostIncluded(ProxyConfiguration proxyConfiguration, URL url) {
+      return Proxies.isEnabledForHost(proxyConfiguration.getExcludes(), url.getHost());
     }
 
     private HttpURLConnection openProxyConnection(ProxyConfiguration configuration, URL url) throws IOException {
