@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.11.3] - 2026-02-10
+
+### Fixed
+- IngressClassName to helm chart
+- Enhanced error message including filename of corrupt file
+- Internal server error for cat command on empty repository
+- Application of mercurial configration (thanks to harbison72)
+- Proxy exclusions with glob patterns
+- External logos in plugin overview
+
+### Changed
+- Update IntelliJ IDEA configuration documentation
+
 ## [3.11.2] - 2026-01-12
 ### Fixed
 - Update of Tika to mitigate CVE-2025-54988 and CVE-2025-66516
@@ -1837,3 +1850,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.10.3]: https://scm-manager.org/download/3.10.3
 [3.11.0]: https://scm-manager.org/download/3.11.0
 [3.11.2]: https://scm-manager.org/download/3.11.2
+[3.12.0]: https://scm-manager.org/download/3.12.0
