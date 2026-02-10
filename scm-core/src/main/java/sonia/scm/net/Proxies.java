@@ -24,6 +24,8 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.GlobUtil;
 
 import java.net.URL;
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * Util class for proxy settings.
@@ -48,54 +50,44 @@ public final class Proxies
    *
    * @return true if proxy settings should be used
    */
-  public static boolean isEnabled(ScmConfiguration configuration, String url)
-  {
-    boolean result = false;
-
-    if (configuration.isEnableProxy())
-    {
-      result = true;
-
+  public static boolean isEnabled(ScmConfiguration configuration, String url) {
+    if (configuration.isEnableProxy()) {
       int index = url.indexOf("://");
 
-      if (index > 0)
-      {
+      if (index > 0) {
         url = url.substring(index + 3);
       }
 
       index = url.indexOf('/');
 
-      if (index > 0)
-      {
+      if (index > 0) {
         url = url.substring(0, index);
       }
 
       index = url.indexOf(':');
 
-      if (index > 0)
-      {
+      if (index > 0) {
         url = url.substring(0, index);
       }
 
-      for (String exclude : configuration.getProxyExcludes())
-      {
-        if (GlobUtil.matches(exclude, url))
-        {
-          logger.debug(
-            "disable proxy settings for url {}, because exclude {} matches",
-            url, exclude);
-          result = false;
-
-          break;
-        }
-      }
-    }
-    else
-    {
+      Set<String> proxyExcludes = configuration.getProxyExcludes();
+      return isEnabledForHost(proxyExcludes, url);
+    } else {
       logger.trace("proxy settings are disabled");
     }
 
-    return result;
+    return false;
+  }
+
+  public static boolean isEnabledForHost(Collection<String> proxyExcludes, String host) {
+    for (String exclude : proxyExcludes) {
+      if (GlobUtil.matches(exclude, host)) {
+        logger.debug(
+          "disable proxy settings for host {}, because exclude {} matches", host, exclude);
+        return false;
+      }
+    }
+    return true;
   }
 
   /**

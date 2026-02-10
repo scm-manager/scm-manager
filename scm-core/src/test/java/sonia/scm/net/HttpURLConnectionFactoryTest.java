@@ -211,6 +211,18 @@ class HttpURLConnectionFactoryTest {
     }
 
     @Test
+    void shouldNotCreateProxyConnectionIfHostIsOnTheExcludeListWithGlobPattern() throws IOException {
+      configuration.setEnableProxy(true);
+      configuration.setProxyServer("proxy.hitchhiker.com");
+      configuration.setProxyPort(3128);
+      configuration.setProxyExcludes(ImmutableSet.of("localhost", "*.hitchhiker.org", "127.0.0.1"));
+
+      connectionFactory.create(new URL("https://scm.hitchhiker.org"));
+
+      assertThat(usedProxy).isNull();
+    }
+
+    @Test
     void shouldNotCreateProxyConnectionWithIgnoreOption() throws IOException {
       configuration.setEnableProxy(true);
       configuration.setProxyServer("proxy.hitchhiker.com");

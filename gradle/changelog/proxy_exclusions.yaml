@@ -1,0 +1,2 @@
+- type: fixed
+  description: Proxy exclusions with glob patterns
