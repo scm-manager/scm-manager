@@ -15,7 +15,7 @@
 #
 
 # Create minimal java version
-FROM eclipse-temurin:17.0.7_7-jdk-focal as jre-build
+FROM eclipse-temurin:17.0.15_6-jdk-focal as jre-build
 
 RUN jlink \
     --add-modules ALL-MODULE-PATH \
@@ -28,7 +28,7 @@ RUN jlink \
 # ---
 
 # SCM-Manager runtime
-FROM --platform=linux/amd64 debian:11.11-slim as runtime
+FROM --platform=linux/amd64 debian:13.3-slim as runtime
 
 ENV SCM_HOME /var/lib/scm
 ENV CACHE_DIR /var/cache/scm/work
