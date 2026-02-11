@@ -5,8 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.11.3] - 2026-02-10
+## [3.11.4] - 2026-02-11
+### Fixed
+- Import of repository exports without queryable store data
 
+## [3.11.3] - 2026-02-10
 ### Fixed
 - IngressClassName to helm chart
 - Enhanced error message including filename of corrupt file
@@ -1851,3 +1854,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.11.0]: https://scm-manager.org/download/3.11.0
 [3.11.2]: https://scm-manager.org/download/3.11.2
 [3.12.0]: https://scm-manager.org/download/3.12.0
+[3.11.4]: https://scm-manager.org/download/3.11.4

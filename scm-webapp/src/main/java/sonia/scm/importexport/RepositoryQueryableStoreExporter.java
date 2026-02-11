@@ -101,7 +101,8 @@ public class RepositoryQueryableStoreExporter {
     try {
       File dataDir = new File(workdir, "queryable-store-data");
       if (!dataDir.exists() || !dataDir.isDirectory()) {
-        throw new RuntimeException("Directory 'queryable-store-data' not found in workdir: " + workdir.getAbsolutePath());
+        log.trace("missing directory {} - skipping import of queryable data", dataDir.getAbsolutePath());
+        return;
       }
 
       JAXBContext jaxbContext = JAXBContext.newInstance(StoreExport.class);

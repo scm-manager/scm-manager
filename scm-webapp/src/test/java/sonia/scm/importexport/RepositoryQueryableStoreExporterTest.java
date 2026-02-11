@@ -175,5 +175,14 @@ class RepositoryQueryableStoreExporterTest {
       }
     }
   }
+
+  @Test
+  void shouldSkipImportIfDirectoryIsMissing(SimpleTypeStoreFactory simpleTypeStoreFactory, @TempDir File tempDir) throws IOException {
+    exporter.importStores("42", tempDir);
+
+    try (QueryableMutableStore<SimpleType> store = simpleTypeStoreFactory.getMutable("42")) {
+      assertThat(store.getAll()).hasSize(0);
+    }
+  }
 }
 
