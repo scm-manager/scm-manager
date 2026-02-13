@@ -8,11 +8,11 @@ The following document describes the installation process for SCM-Manager on Win
 
 ## Install Java
 
-SCM-Manager requires at least Java 11.
+SCM-Manager requires at least Java 17.
 We support Oracle JRE or OpenJDK, choose one of them:
 
-* [Oracle JRE](https://www.oracle.com/java/technologies/javase-downloads.html#JDK11)
-* [OpenJDK](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot)
+* [Oracle JRE](https://www.oracle.com/java/technologies/downloads/#java17)
+* [OpenJDK](https://adoptium.net/temurin/releases?version=17&os=windows&arch=x64)
 
 Download Java and follow the installation instructions.
 

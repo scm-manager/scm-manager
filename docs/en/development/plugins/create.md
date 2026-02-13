@@ -8,7 +8,7 @@ displayToc: false
 
 Be sure you have installed the following software:
 
-* [Java 11](https://java.com/de/download/)
+* [Java 17](https://java.com/de/download/)
 
 # Create the plugin structure
 
