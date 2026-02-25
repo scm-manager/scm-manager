@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.11.5] - 2026-02-25
+### Fixed
+- Subversion/Lucene exception when opening an empty repository without a revision 1
+- NPE when using 'binary' macro in .gitattributes
+- Server freeze during random token generation on startup
+
 ## [3.11.4] - 2026-02-11
 ### Fixed
 - Import of repository exports without queryable store data
@@ -1860,3 +1866,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.11.2]: https://scm-manager.org/download/3.11.2
 [3.12.0]: https://scm-manager.org/download/3.12.0
 [3.11.4]: https://scm-manager.org/download/3.11.4
+[3.11.5]: https://scm-manager.org/download/3.11.5
