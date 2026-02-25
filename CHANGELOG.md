@@ -127,6 +127,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disabling hg repositories is now the first setting within the configuration form
 - Disabling svn repositories is now the first setting within the configuration form
 
+## [3.7.8] - 2026-02-25
+### Fixed
+- NPE when using 'binary' macro in .gitattributes
+
 ## [3.7.7] - 2025-11-28
 ### Fixed
 - Significantly improved repository load times for large numbers of repositories
@@ -1845,6 +1849,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.7.5]: https://scm-manager.org/download/3.7.5
 [3.7.6]: https://scm-manager.org/download/3.7.6
 [3.7.7]: https://scm-manager.org/download/3.7.7
+[3.7.8]: https://scm-manager.org/download/3.7.8
 [3.8.0]: https://scm-manager.org/download/3.8.0
 [3.9.0]: https://scm-manager.org/download/3.9.0
 [3.10.0]: https://scm-manager.org/download/3.10.0

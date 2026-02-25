@@ -1,5 +1,7 @@
 ---
 title: Release process
+subtitle: This is all about how to release the core and plugins
+displayToc: true
 ---
 
 ## How to release SCM-Manager core (Script)
