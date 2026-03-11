@@ -27,7 +27,6 @@ RUN set -x \
     --compress=2 \
     --output /javaruntime
 
-
 # ---
 
 # SCM-Manager runtime
@@ -45,6 +44,7 @@ COPY build/docker/opt /opt
 RUN set -x \
  # ttf-dejavu graphviz are required for the plantuml plugin
  && apk add --no-cache ttf-dejavu graphviz mercurial bash ca-certificates \
+ && apk add --no-cache --upgrade zlib \
  && adduser -S -s /bin/false -h ${SCM_HOME} -D -H -u 1000 -G root scm \
  && mkdir -p ${SCM_HOME} ${CACHE_DIR} \
  && chmod +x /opt/scm-server/bin/scm-server \
