@@ -1,2 +1,0 @@
-- type: fixed
-  description: Update zlib library in alpine base image for docker to avoid CVE-2026-22184
