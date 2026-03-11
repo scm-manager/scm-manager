@@ -157,6 +157,12 @@ dependencies {
   // plugin transformer
   implementation 'org.eclipse.transformer:org.eclipse.transformer:1.0.0'
   implementation 'org.eclipse.transformer:org.eclipse.transformer.jakarta:1.0.0'
+
+  constraints {
+    implementation("commons-beanutils:commons-beanutils:1.11.0") {
+      because "previous versions have a CVE-2025-48734"
+    }
+  }
 }
 
 war {

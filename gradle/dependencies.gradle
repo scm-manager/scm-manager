@@ -3,7 +3,7 @@ ext {
   guiceVersion = '7.0.0'
   resteasyVersion = '6.2.15.Final'
 
-  jacksonVersion = '2.21.0'
+  jacksonVersion = '2.21.1'
   jacksonAnnotationsVersion = '2.21'
 
   legmanVersion = '2.0.3'
