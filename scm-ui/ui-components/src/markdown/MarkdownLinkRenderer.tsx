@@ -17,39 +17,25 @@
 import React, { FC } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ExternalLink from "../navigation/ExternalLink";
-import { urls } from "@scm-manager/ui-api";
+import { urls, useRepositoryContext, useRepositoryRevisionContext } from "@scm-manager/ui-api";
+import { Repository } from "@scm-manager/ui-types";
 import { ProtocolLinkRendererExtensionMap } from "./markdownExtensions";
 import {
-  isAbsolute, isAnchorLink,
+  isAnchorLink,
   isExternalLink,
   isInternalScmRepoLink,
   isLinkWithProtocol,
-  isSubDirectoryOf,
   join,
-  normalizePath
+  resolveInternalPath,
 } from "./paths";
 
-export const createLocalLink = (basePath: string, currentPath: string, link: string) => {
+export const createLocalLink = (repository: Repository, revision: string, currentPath: string, link: string) => {
   if (isInternalScmRepoLink(link)) {
     return link;
   }
-  if (isAbsolute(link)) {
-    return join(basePath, link);
-  }
-  if (!isSubDirectoryOf(basePath, currentPath)) {
-    return join(basePath, link);
-  }
-  let path = currentPath;
-  if (currentPath.endsWith("/")) {
-    path = currentPath.substring(0, currentPath.length - 2);
-  }
-  const lastSlash = path.lastIndexOf("/");
-  if (lastSlash < 0) {
-    path = "";
-  } else {
-    path = path.substring(0, lastSlash);
-  }
-  return "/" + normalizePath(join(path, link));
+  const basePath = `/repo/${repository.namespace}/${repository.name}/code/sources/${revision}/`;
+  const internalPath = resolveInternalPath(currentPath, revision, link);
+  return join(basePath, internalPath);
 };
 
 type LinkProps = {
@@ -58,18 +44,23 @@ type LinkProps = {
 
 type Props = LinkProps & {
   base?: string;
+  permalink?: string;
 };
 
-const MarkdownLinkRenderer: FC<Props> = ({ href = "", base, children, ...props }) => {
+const MarkdownLinkRenderer: FC<Props> = ({ href = "", base, children, permalink, ...props }) => {
   const location = useLocation();
+  const repository = useRepositoryContext();
+  const revision = useRepositoryRevisionContext();
+  const pathname = permalink || location.pathname;
+
   if (isExternalLink(href)) {
     return <ExternalLink to={href}>{children}</ExternalLink>;
   } else if (isLinkWithProtocol(href)) {
     return <a href={href}>{children}</a>;
   } else if (isAnchorLink(href)) {
     return <a href={urls.withContextPath(location.pathname) + href}>{children}</a>;
-  } else if (base) {
-    const localLink = createLocalLink(base, location.pathname, href);
+  } else if (base && repository && revision) {
+    const localLink = createLocalLink(repository, revision, pathname, href);
     return <Link to={localLink}>{children}</Link>;
   } else if (href) {
     return (

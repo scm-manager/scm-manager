@@ -171,7 +171,7 @@ class LazyMarkdownView extends React.Component<Props, State> {
       remarkRendererList.heading = createMarkdownHeadingRenderer(permalink);
     }
 
-    remarkRendererList.image = createMarkdownImageRenderer(basePath);
+    remarkRendererList.image = createMarkdownImageRenderer(basePath, permalink);
 
     let protocolLinkRendererExtensions: ProtocolLinkRendererExtensionMap = {};
     if (!remarkRendererList.link) {

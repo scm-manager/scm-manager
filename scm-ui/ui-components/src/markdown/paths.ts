@@ -27,8 +27,8 @@ export const isInternalScmRepoLink = (link: string) => {
   return link.startsWith("/repo/");
 };
 
-const linkWithProtocolRegex = new RegExp("^([a-z]+):(.+)");
 export const isLinkWithProtocol = (link: string) => {
+  const linkWithProtocolRegex = new RegExp("^([a-z]+):(.+)");
   const match = link.match(linkWithProtocolRegex);
   return match && { protocol: match[1], link: match[2] };
 };
@@ -47,8 +47,10 @@ export const normalizePath = (path: string) => {
   const parts = path.split("/");
   for (const part of parts) {
     if (part === "..") {
+      // Go up
       stack.pop();
-    } else if (part !== ".") {
+    } else if (part !== "." && part !== "") {
+      // Skip current dir and empty parts
       stack.push(part);
     }
   }
@@ -65,4 +67,29 @@ export const isAbsolute = (link: string) => {
 
 export const isSubDirectoryOf = (basePath: string, currentPath: string) => {
   return currentPath.startsWith(basePath);
+};
+
+export const resolveInternalPath = (currentPath: string, revision: string, link: string) => {
+  // Extract path relative to revision
+  const pathForMatching = currentPath.replace(encodeURIComponent(revision), revision);
+  const revisionWithSlashes = `/${revision}/`;
+  const revIndex = pathForMatching.indexOf(revisionWithSlashes);
+  let internalPath = "";
+  if (revIndex !== -1) {
+    internalPath = pathForMatching.substring(revIndex + revisionWithSlashes.length);
+  }
+
+  // Determine if path is file or directory
+  let directoryPath = internalPath.endsWith("/") ? internalPath.slice(0, -1) : internalPath;
+  if (directoryPath.toLowerCase().endsWith(".md")) {
+    const parts = directoryPath.split("/");
+    parts.pop(); // Removes filename
+    directoryPath = parts.join("/");
+  }
+
+  // Normalize path
+  if (isAbsolute(link)) {
+    return normalizePath(link);
+  }
+  return normalizePath(join(directoryPath, link));
 };

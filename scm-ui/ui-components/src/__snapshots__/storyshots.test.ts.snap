@@ -14392,7 +14392,7 @@ the story is mostly for checking if the src links are rendered correct.
       <p>
         <img
           alt="path starting with a '.'"
-          src="https://my.scm/scm/api/v2/some/repository/content/42/./some_image.jpg"
+          src="https://my.scm/scm/api/v2/some/repository/content/42/some_image.jpg"
         />
       </p>
       
@@ -14868,8 +14868,7 @@ the story is mostly for checking if the links are rendered correct.
       <p>
         Internal links should be rendered by react-router: 
         <a
-          href="/scm/buttons"
-          onClick={[Function]}
+          href="/buttons"
         >
           internal link
         </a>

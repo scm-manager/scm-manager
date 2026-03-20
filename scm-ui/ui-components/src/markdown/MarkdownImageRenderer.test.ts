@@ -14,36 +14,33 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
 import { createLocalLink } from "./MarkdownImageRenderer";
 
-describe("createLocalLink tests", () => {
-  const revision = "revision";
-  const basePath = `/repo/namespace/name/code/sources/${revision}/`;
-  const contentLink = "http://localhost:8081/scm/api/v2/repositories/namespace/name/content/{revision}/{path}";
-  const currentPath = basePath + "README.md/";
-  const link = "image.png";
+describe("MarkdownImageRenderer createLocalLink tests", () => {
+  const contentLinkBase = "http://localhost:8081/scm/api/v2/repositories/ns/name/content/";
+  const contentLink = contentLinkBase + "{revision}/{path}";
+  const revision = "main";
+  const currentPath = "/repo/ns/name/code/sources/main/folder/README.md/";
 
-  it("should return link for internal scm repo link", () => {
-    const internalScmLink = "/repo/namespace/name/code/sources/develop/myImg.png";
-    expect(createLocalLink(basePath, contentLink, revision, currentPath, internalScmLink)).toBe(internalScmLink);
+  it("should return link unchanged for internal scm repo links", () => {
+    const internalScmLink = "/repo/ns/name/code/sources/develop/myImg.png";
+    expect(createLocalLink(contentLink, revision, currentPath, internalScmLink)).toBe(internalScmLink);
   });
 
-  it("should return modified contentLink for absolute link", () => {
-    expect(createLocalLink(basePath, contentLink, revision, currentPath, "/path/anotherImg.jpg")).toBe(
-      "http://localhost:8081/scm/api/v2/repositories/namespace/name/content/revision/path/anotherImg.jpg"
+  it("should return normalized absolute path starting with slash", () => {
+    const absoluteLink = "/path/anotherImg.jpg";
+    expect(createLocalLink(contentLink, revision, currentPath, absoluteLink)).toBe(
+      `${contentLinkBase}${revision}${absoluteLink}`
     );
   });
 
-  it("should URI encode branch", () => {
-    expect(
-      createLocalLink(
-        "/repo/namespace/name/code/sources/feature/awesome/",
-        contentLink,
-        "feature/awesome",
-        currentPath,
-        link
-      )
-    ).toContain("feature%2Fawesome");
+  it("should URI encode revision", () => {
+    expect(createLocalLink(contentLink, "feature/awesome", currentPath, "image.png")).toContain("feature%2Fawesome");
+  });
+
+  it("should inject the resolved path into {path} placeholder", () => {
+    const link = "image.png";
+    const result = createLocalLink(contentLink, revision, currentPath, link);
+    expect(result).toBe(`${contentLinkBase}${revision}/folder/image.png`);
   });
 });

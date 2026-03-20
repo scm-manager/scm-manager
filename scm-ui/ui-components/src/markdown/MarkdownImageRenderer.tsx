@@ -17,47 +17,16 @@
 import React, { FC } from "react";
 import { useLocation } from "react-router-dom";
 import { Link } from "@scm-manager/ui-types";
-import {
-  isAbsolute,
-  isExternalLink,
-  isInternalScmRepoLink,
-  isLinkWithProtocol,
-  isSubDirectoryOf,
-  join,
-  normalizePath,
-} from "./paths";
+import { isExternalLink, isInternalScmRepoLink, isLinkWithProtocol, resolveInternalPath } from "./paths";
 import { useRepositoryContext, useRepositoryRevisionContext } from "@scm-manager/ui-api";
 
-export const createLocalLink = (
-  basePath: string,
-  contentLink: string,
-  revision: string,
-  currentPath: string,
-  link: string
-) => {
-  const apiBasePath = contentLink.replace("{revision}", encodeURIComponent(revision));
+export const createLocalLink = (contentLink: string, revision: string, currentPath: string, link: string) => {
   if (isInternalScmRepoLink(link)) {
     return link;
   }
-  if (isAbsolute(link)) {
-    return apiBasePath.replace("{path}", link.substring(1));
-  }
-  const decodedCurrentPath = currentPath.replace(encodeURIComponent(revision), revision);
-  if (!isSubDirectoryOf(basePath, decodedCurrentPath)) {
-    return apiBasePath.replace("{path}", link);
-  }
-  const relativePath = decodedCurrentPath.substring(basePath.length);
-  let path = relativePath;
-  if (decodedCurrentPath.endsWith("/")) {
-    path = relativePath.substring(0, relativePath.length - 1);
-  }
-  const lastSlash = path.lastIndexOf("/");
-  if (lastSlash < 0) {
-    path = "";
-  } else {
-    path = path.substring(0, lastSlash);
-  }
-  return apiBasePath.replace("{path}", normalizePath(join(path, link)));
+  const apiBasePath = contentLink.replace("{revision}", encodeURIComponent(revision));
+  const path = resolveInternalPath(currentPath, revision, link);
+  return apiBasePath.replace("{path}", path);
 };
 
 type LinkProps = {
@@ -67,13 +36,15 @@ type LinkProps = {
 
 type Props = LinkProps & {
   base?: string;
+  permalink?: string;
   contentLink?: string;
 };
 
-const MarkdownImageRenderer: FC<Props> = ({ src = "", alt = "", base, contentLink, children, ...props }) => {
+const MarkdownImageRenderer: FC<Props> = ({ src = "", alt = "", base, contentLink, children, permalink, ...props }) => {
   const location = useLocation();
   const repository = useRepositoryContext();
   const revision = useRepositoryRevisionContext();
+  const pathname = permalink || location.pathname;
 
   if (isExternalLink(src) || isLinkWithProtocol(src)) {
     return (
@@ -82,7 +53,7 @@ const MarkdownImageRenderer: FC<Props> = ({ src = "", alt = "", base, contentLin
       </img>
     );
   } else if (base && repository && revision) {
-    const localLink = createLocalLink(base, (repository._links.content as Link).href, revision, location.pathname, src);
+    const localLink = createLocalLink((repository._links.content as Link).href, revision, pathname, src);
     return (
       <img src={localLink} alt={alt}>
         {children}
@@ -101,9 +72,9 @@ const MarkdownImageRenderer: FC<Props> = ({ src = "", alt = "", base, contentLin
 
 // we use a factory method, because react-markdown does not pass
 // base as prop down to our link component.
-export const create = (base: string | undefined): FC<LinkProps> => {
+export const create = (base: string | undefined, permalink?: string): FC<LinkProps> => {
   return (props) => {
-    return <MarkdownImageRenderer base={base} {...props} />;
+    return <MarkdownImageRenderer base={base} permalink={permalink} {...props} />;
   };
 };
 

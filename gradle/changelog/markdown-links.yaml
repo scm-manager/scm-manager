@@ -1,0 +1,2 @@
+- type: fixed
+  description: Broken relative paths for images or links within Markdown files
