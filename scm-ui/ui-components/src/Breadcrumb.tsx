@@ -268,7 +268,8 @@ const Breadcrumb: FC<Props> = ({
   const renderExtensionPoints = () => {
     if (
       binder.hasExtension<extensionPoints.ReposSourcesEmptyActionbar>("repos.sources.empty.actionbar", extProps) &&
-      sources?._embedded?.children?.length === 0
+      sources?._embedded?.children?.length === 0 &&
+      (repository.type !== "git" || sources.revision === "HEAD")
     ) {
       return (
         <ExtensionPoint<extensionPoints.ReposSourcesEmptyActionbar>
