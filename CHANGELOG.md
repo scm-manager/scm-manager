@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.11.8] - 2026-04-07
+### Fixed
+- Creation and Upload of a file for an empty branch with no sources
+
 ## [3.11.7] - 2026-03-20
 ### Fixed
 - Broken relative paths for images or links within Markdown files
@@ -1878,3 +1882,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.11.5]: https://scm-manager.org/download/3.11.5
 [3.11.6]: https://scm-manager.org/download/3.11.6
 [3.11.7]: https://scm-manager.org/download/3.11.7
+[3.11.8]: https://scm-manager.org/download/3.11.8
