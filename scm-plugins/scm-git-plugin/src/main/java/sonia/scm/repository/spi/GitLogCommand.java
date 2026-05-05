@@ -25,6 +25,7 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Changeset;
@@ -118,11 +119,13 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand {
 
   @Override
   @SuppressWarnings("java:S2093")
-  public ChangesetPagingResult getChangesets(LogCommandRequest request) {
-    if (Strings.isNullOrEmpty(request.getBranch())) {
-      request.setBranch(context.getConfig().getDefaultBranch());
+  public ChangesetPagingResult getChangesets(@NonNull LogCommandRequest request) {
+    LogCommandRequest workingClone = request.clone();
+    if (Strings.isNullOrEmpty(workingClone.getBranch())) {
+      workingClone.setBranch(context.getConfig().getDefaultBranch());
     }
-    return new GitLogComputer(this.repository.getId(), open(), converterFactory).compute(request);
+
+    return new GitLogComputer(this.repository.getId(), open(), converterFactory).compute(workingClone);
   }
 
   public interface Factory {

@@ -35,6 +35,10 @@ import sonia.scm.repository.spi.LogCommandRequest;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Set;
 
 /**
@@ -52,14 +56,14 @@ import java.util.Set;
  * LogCommandBuilder log = repositoryService.getLogCommand();
  * Changeset changeset = log.getChangeset("id-of-the-commit");
  * </code></pre>
- *
+ * <p>
  * Retrieve changesets of a {@link Repository} with paging:<br />
  * <pre><code>
  * LogCommandBuilder log = repositoryService.getLogCommand();
  * ChangesetPagingResult changesetPagingResult =
  *          log.setPagingStart(25).setPagingLimit(25).getChangesets();
  * </code></pre>
- *
+ * <p>
  * Retrieve all changesets of a file in a {@link Repository}:<br />
  * <pre><code>
  * LogCommandBuilder log = repositoryService.getLogCommand();
@@ -69,42 +73,39 @@ import java.util.Set;
  *
  * @since 1.17
  */
-public final class LogCommandBuilder
-{
+public final class LogCommandBuilder {
 
   static final String CACHE_NAME = "sonia.cache.cmd.log";
 
   private static final Logger logger =
     LoggerFactory.getLogger(LogCommandBuilder.class);
 
-  /** cache for changesets */
+  /**
+   * cache for changesets
+   */
   private final Cache<CacheKey, ChangesetPagingResult> cache;
 
   private final LogCommand logCommand;
 
   private final PreProcessorUtil preProcessorUtil;
-  private Set<Feature> supportedFeatures;
-
   private final Repository repository;
-
-  private boolean disableCache = false;
-
-  private boolean disablePreProcessors = false;
-
   private final LogCommandRequest request = new LogCommandRequest();
+  private Set<Feature> supportedFeatures;
+  private boolean disableCache = false;
+  private boolean disablePreProcessors = false;
 
   /**
    * Constructs a new {@link LogCommandBuilder}, this constructor should
    * only be called from the {@link RepositoryService}.
-   *  @param cacheManager cache manager
-   * @param logCommand implementation of the {@link LogCommand}
-   * @param repository repository to query
+   *
+   * @param cacheManager      cache manager
+   * @param logCommand        implementation of the {@link LogCommand}
+   * @param repository        repository to query
    * @param preProcessorUtil
    * @param supportedFeatures The supported features of the provider
    */
   LogCommandBuilder(CacheManager cacheManager, LogCommand logCommand,
-                    Repository repository, PreProcessorUtil preProcessorUtil, Set<Feature> supportedFeatures)
-  {
+                    Repository repository, PreProcessorUtil preProcessorUtil, Set<Feature> supportedFeatures) {
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.logCommand = logCommand;
     this.repository = repository;
@@ -118,11 +119,9 @@ public final class LogCommandBuilder
    * This method does the same as {@link #setPagingLimit(int)}
    * with a value of -1.
    *
-   *
    * @return {@code this}
    */
-  public LogCommandBuilder disablePagingLimit()
-  {
+  public LogCommandBuilder disablePagingLimit() {
     request.setPagingLimit(-1);
 
     return this;
@@ -131,11 +130,9 @@ public final class LogCommandBuilder
   /**
    * Reset each parameter to its default value.
    *
-   *
    * @return {@code this}
    */
-  public LogCommandBuilder reset()
-  {
+  public LogCommandBuilder reset() {
     request.reset();
     this.disableCache = false;
     this.disablePreProcessors = false;
@@ -148,49 +145,36 @@ public final class LogCommandBuilder
    * Returns the {@link Changeset} with the given id or null if the
    * {@link Changeset} could not be found in the {@link Repository}.
    *
-   *
    * @param id id of the {@link Changeset}
-   *
    * @return the {@link Changeset} with the given id or null
-   *
    * @throws IOException
    */
   public Changeset getChangeset(String id) throws IOException {
     Changeset changeset;
 
-    if (disableCache)
-    {
-      if (logger.isDebugEnabled())
-      {
+    if (disableCache) {
+      if (logger.isDebugEnabled()) {
         logger.debug("get changeset for {} with disabled cache", id);
       }
 
       changeset = logCommand.getChangeset(id, request);
-    }
-    else
-    {
+    } else {
       CacheKey key = new CacheKey(repository, id);
       ChangesetPagingResult cpr = cache.get(key);
 
-      if (cpr == null)
-      {
-        if (logger.isDebugEnabled())
-        {
+      if (cpr == null) {
+        if (logger.isDebugEnabled()) {
           logger.debug("get changeset for {}", id);
         }
 
         changeset = logCommand.getChangeset(id, request);
 
-        if (changeset != null)
-        {
+        if (changeset != null) {
           cpr = new ChangesetPagingResult(1, ImmutableList.of(changeset));
           cache.put(key, cpr);
         }
-      }
-      else
-      {
-        if (logger.isDebugEnabled())
-        {
+      } else {
+        if (logger.isDebugEnabled()) {
           logger.debug("get changeset {} from cache", id);
         }
 
@@ -198,8 +182,7 @@ public final class LogCommandBuilder
       }
     }
 
-    if (!disablePreProcessors && (changeset != null))
-    {
+    if (!disablePreProcessors && (changeset != null)) {
       preProcessorUtil.prepareForReturn(repository, changeset);
     }
 
@@ -209,51 +192,39 @@ public final class LogCommandBuilder
   /**
    * Return all changesets with the given parameters.
    *
-   *
    * @return all changesets with the given parameters
-   *
    * @throws IOException
    */
   public ChangesetPagingResult getChangesets() throws IOException {
     ChangesetPagingResult cpr;
 
-    if (disableCache)
-    {
-      if (logger.isDebugEnabled())
-      {
+    if (disableCache) {
+      if (logger.isDebugEnabled()) {
         logger.debug("get changesets for {} with disabled cache", request);
       }
 
       cpr = logCommand.getChangesets(request);
-    }
-    else
-    {
+    } else {
       CacheKey key = new CacheKey(repository, request);
 
       cpr = cache.get(key);
 
-      if (cpr == null)
-      {
-        if (logger.isDebugEnabled())
-        {
+      if (cpr == null) {
+        if (logger.isDebugEnabled()) {
           logger.debug("get changesets for {}", request);
         }
 
         cpr = logCommand.getChangesets(request);
 
-        if (cpr != null)
-        {
+        if (cpr != null) {
           cache.put(key, cpr);
         }
-      }
-      else if (logger.isDebugEnabled())
-      {
+      } else if (logger.isDebugEnabled()) {
         logger.debug("get changesets from cache for {}", request);
       }
     }
 
-    if (!disablePreProcessors && (cpr != null))
-    {
+    if (!disablePreProcessors && (cpr != null)) {
       preProcessorUtil.prepareForReturn(repository, cpr);
     }
 
@@ -266,13 +237,10 @@ public final class LogCommandBuilder
    * <b>Note:</b> This option is ignored if the underlying
    * {@link RepositoryService} does not support the {@link Command#BRANCHES}.
    *
-   *
    * @param branch brnach to retrieve changesets from
-   *
    * @return retrieves only changesets of the given branch
    */
-  public LogCommandBuilder setBranch(String branch)
-  {
+  public LogCommandBuilder setBranch(String branch) {
     request.setBranch(branch);
 
     return this;
@@ -283,13 +251,10 @@ public final class LogCommandBuilder
    * is directly retrieved from the {@link Repository}. <b>Note: </b> Disabling
    * the cache cost a lot of performance and could be much more slower.
    *
-   *
    * @param disableCache true to disable the cache
-   *
    * @return {@code this}
    */
-  public LogCommandBuilder setDisableCache(boolean disableCache)
-  {
+  public LogCommandBuilder setDisableCache(boolean disableCache) {
     this.disableCache = disableCache;
 
     return this;
@@ -298,8 +263,7 @@ public final class LogCommandBuilder
   /**
    * Disable the execution of pre processors if set to <code>true</code>.
    */
-  public LogCommandBuilder setDisablePreProcessors(boolean disablePreProcessors)
-  {
+  public LogCommandBuilder setDisablePreProcessors(boolean disablePreProcessors) {
     this.disablePreProcessors = disablePreProcessors;
 
     return this;
@@ -309,13 +273,10 @@ public final class LogCommandBuilder
    * Retrieve changesets until the given the {@link Changeset}
    * with the given id.
    *
-   *
    * @param endChangeset id of the end {@link Changeset}
-   *
    * @return {@code this}
    */
-  public LogCommandBuilder setEndChangeset(String endChangeset)
-  {
+  public LogCommandBuilder setEndChangeset(String endChangeset) {
     request.setEndChangeset(endChangeset);
 
     return this;
@@ -325,28 +286,23 @@ public final class LogCommandBuilder
    * Set the limit for the returned changesets. The default value is 20.
    * Setting the value to -1 means to disable the limit.
    *
-   *
    * @param pagingLimit limit for returned changesets
-   *
    * @return {@code this}
    */
-  public LogCommandBuilder setPagingLimit(int pagingLimit)
-  {
+  public LogCommandBuilder setPagingLimit(int pagingLimit) {
     request.setPagingLimit(pagingLimit);
 
     return this;
   }
 
   /**
-   * Sets the start value for paging. The value is 0.
-   *
+   * Sets the start value for paging. The default value is 0.
+   * Setting the value to -1 means that you want to access the last page.
    *
    * @param pagingStart start value for paging
-   *
    * @return {@code this}
    */
-  public LogCommandBuilder setPagingStart(int pagingStart)
-  {
+  public LogCommandBuilder setPagingStart(int pagingStart) {
     request.setPagingStart(pagingStart);
 
     return this;
@@ -355,13 +311,10 @@ public final class LogCommandBuilder
   /**
    * Retrieve only changesets which are affect the given path.
    *
-   *
    * @param path file path in the {@link Repository}.
-   *
    * @return {@code this}
    */
-  public LogCommandBuilder setPath(String path)
-  {
+  public LogCommandBuilder setPath(String path) {
     request.setPath(path);
 
     return this;
@@ -370,13 +323,10 @@ public final class LogCommandBuilder
   /**
    * Start at the given {@link Changeset}.
    *
-   *
    * @param startChangeset changeset id to start with
-   *
    * @return {@code this}
    */
-  public LogCommandBuilder setStartChangeset(String startChangeset)
-  {
+  public LogCommandBuilder setStartChangeset(String startChangeset) {
     request.setStartChangeset(startChangeset);
 
     return this;
@@ -398,24 +348,99 @@ public final class LogCommandBuilder
   }
 
   /**
-   * Filter changesets by a search string (e.g. commit message or revision hash).
+   * Filter changesets by checking, if a case-insensitive string is contained within the changeset message.
    *
-   * @param searchString search string to filter changesets
+   * @param partOfMessage Search string to filter changesets by their message.
    * @return {@code this}
-   *
    * @since 4.0.0
    */
-  public LogCommandBuilder setSearchString(String searchString)
-  {
-    request.setSearchString(searchString);
+  public LogCommandBuilder setPartOfMessage(String partOfMessage) {
+    request.setPartOfMessage(partOfMessage);
 
     return this;
   }
 
-  static class CacheKey implements RepositoryCacheKey, Serializable
-  {
+  /**
+   * Filter changesets by checking the namen and mail address of the author and commiter.
+   *
+   * @param person Case-insensitive search string to filter by author or commiter.
+   * @return {@code this}
+   * @since 4.0.0
+   */
+  public LogCommandBuilder setPerson(String person) {
+    request.setPerson(person);
 
-      private static final long serialVersionUID = 5701675009949268863L;
+    return this;
+  }
+
+  /**
+   * Filter changesets by checking if they were created before a certain time.
+   *
+   * @param before Filter changesets by their creation time.
+   * @return {@code this}
+   * @since 4.0.0
+   */
+  public LogCommandBuilder setBefore(Instant before) {
+    request.setBefore(before);
+
+    return this;
+  }
+
+  /**
+   * Filter changesets by checking if they were created before a certain time.
+   * The local date that gets passed get converted to an instant with the system default time zone at the next midnight.
+   *
+   * @param before Filter changesets by their creation time.
+   * @return {@code this}
+   * @since 4.0.0
+   */
+  public LogCommandBuilder setBefore(LocalDate before) {
+    Instant convertedBefore = null;
+    if (before != null) {
+      convertedBefore = before.atStartOfDay(ZoneId.systemDefault()).toInstant().plus(1, ChronoUnit.DAYS);
+    }
+
+    request.setBefore(convertedBefore);
+
+
+    return this;
+  }
+
+  /**
+   * Filter changesets by checking if they were created after a certain time.
+   *
+   * @param after Filter changesets by their creation time.
+   * @return {@code this}
+   * @since 4.0.0
+   */
+  public LogCommandBuilder setAfter(Instant after) {
+    request.setAfter(after);
+
+    return this;
+  }
+
+  /**
+   * Filter changesets by checking if they were created after a certain time.
+   * The local date that gets passed get converted to an instant with the system default time zone at the start of the day.
+   *
+   * @param after Filter changesets by their creation time.
+   * @return {@code this}
+   * @since 4.0.0
+   */
+  public LogCommandBuilder setAfter(LocalDate after) {
+    Instant convertedAfter = null;
+    if (after != null) {
+      convertedAfter = after.atStartOfDay(ZoneId.systemDefault()).toInstant();
+    }
+
+    request.setAfter(convertedAfter);
+
+    return this;
+  }
+
+  static class CacheKey implements RepositoryCacheKey, Serializable {
+
+    private static final long serialVersionUID = 5701675009949268863L;
 
     private final String changesetId;
 
@@ -424,33 +449,26 @@ public final class LogCommandBuilder
     private final LogCommandRequest request;
 
 
-    public CacheKey(Repository repository, LogCommandRequest request)
-    {
+    public CacheKey(Repository repository, LogCommandRequest request) {
       this.repositoryId = repository.getId();
       this.request = request;
       this.changesetId = null;
     }
 
-    public CacheKey(Repository repository, String changesetId)
-    {
+    public CacheKey(Repository repository, String changesetId) {
       this.repositoryId = repository.getId();
       this.changesetId = changesetId;
       this.request = null;
     }
 
 
-
-
     @Override
-    public boolean equals(Object obj)
-    {
-      if (obj == null)
-      {
+    public boolean equals(Object obj) {
+      if (obj == null) {
         return false;
       }
 
-      if (getClass() != obj.getClass())
-      {
+      if (getClass() != obj.getClass()) {
         return false;
       }
 
@@ -463,15 +481,13 @@ public final class LogCommandBuilder
 
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
       return Objects.hashCode(repositoryId, changesetId, request);
     }
 
 
     @Override
-    public String getRepositoryId()
-    {
+    public String getRepositoryId() {
       return repositoryId;
     }
 

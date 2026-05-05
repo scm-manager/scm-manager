@@ -737,6 +737,10 @@ class ResourceLinks {
       return changesetLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("changesets").parameters().method("get").parameters(revision).href();
     }
 
+    String lookup(String namespace, String name) {
+      return changesetLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("changesets").parameters().method("lookup").parameters().href();
+    }
+
     String revert(String namespace, String name, String revision) {
       return changesetLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("changesets").parameters().method("revert").parameters(revision).href();
     }

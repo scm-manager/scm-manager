@@ -535,6 +535,20 @@ public final class RepositoryService implements Closeable {
       repository);
   }
 
+  /**
+   * Creates a {@link LookupRevisionCommandBuilder} to lookup revisions independent of the starting revision.
+   *
+   * @return instance of {@link LookupRevisionCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 4.0.0
+   */
+  public LookupRevisionCommandBuilder getLookupRevisionCommand() {
+    LOG.debug("create lookup revision command for repository {}", repository);
+
+    return new LookupRevisionCommandBuilder(repository, provider.getLookupRevisionCommand());
+  }
+
   public Stream<ScmProtocol> getSupportedProtocols() {
     return protocolProviders.stream()
       .filter(protocolProvider -> protocolProvider.getType().equals(getRepository().getType()))

@@ -22,6 +22,7 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.OptionalInt;
 
 /**
  * The changeset paging result is used to do a paging over the
@@ -35,8 +36,18 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable 
   private static final long serialVersionUID = -8678755403658841733L;
 
   private List<Changeset> changesets;
-  private int total;
+  private Integer total;
   private String branchName;
+  private boolean hasMore;
+
+  /**
+   * Constructs a new changeset paging result.
+   *
+   * @param changesets current list of fetched changesets
+   */
+  public ChangesetPagingResult(List<Changeset> changesets) {
+    this(null, changesets, null, false);
+  }
 
   /**
    * Constructs a new changeset paging result.
@@ -45,9 +56,7 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable 
    * @param changesets current list of fetched changesets
    */
   public ChangesetPagingResult(int total, List<Changeset> changesets) {
-    this.total = total;
-    this.changesets = changesets;
-    this.branchName = null;
+    this(total, changesets, null, false);
   }
 
   /**
@@ -58,9 +67,14 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable 
    * @param branchName branch name this result was created for
    */
   public ChangesetPagingResult(int total, List<Changeset> changesets, String branchName) {
+    this(total, changesets, branchName, false);
+  }
+
+  public ChangesetPagingResult(Integer total, List<Changeset> changesets, String branchName, boolean hasMore) {
     this.total = total;
     this.changesets = changesets;
     this.branchName = branchName;
+    this.hasMore = hasMore;
   }
 
   /**
@@ -86,11 +100,37 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable 
     return changesets;
   }
 
+  void setChangesets(List<Changeset> changesets) {
+    this.changesets = changesets;
+  }
+
   /**
-   * Returns the total number of changesets.
+   * Returns the total number of changesets, if information is available.
    */
-  public int getTotal() {
+  public OptionalInt getTotal() {
+    return total == null ? OptionalInt.empty() : OptionalInt.of(total);
+  }
+
+  /**
+   * Returns the total number of changesets, value might be null.
+   */
+  public Integer getRawTotal() {
     return total;
+  }
+
+  public void setTotal(int total) {
+    this.total = total;
+  }
+
+  /**
+   * Returns whether there is another page of changesets available.
+   */
+  public boolean isHasMore() {
+    return hasMore;
+  }
+
+  public void setHasMore(boolean hasMore) {
+    this.hasMore = hasMore;
   }
 
   /**
@@ -101,18 +141,7 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable 
     return branchName;
   }
 
-  void setChangesets(List<Changeset> changesets)
-  {
-    this.changesets = changesets;
-  }
-
-  void setTotal(int total)
-  {
-    this.total = total;
-  }
-
-  void setBranchName(String branchName) {
+  public void setBranchName(String branchName) {
     this.branchName = branchName;
   }
-
 }

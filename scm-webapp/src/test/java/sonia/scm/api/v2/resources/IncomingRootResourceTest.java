@@ -59,6 +59,7 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.OptionalInt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -139,7 +140,7 @@ class IncomingRootResourceTest extends RepositoryTestBase {
     ChangesetPagingResult changesetPagingResult = mock(ChangesetPagingResult.class);
     List<Changeset> changesetList = Lists.newArrayList(new Changeset(id, Date.from(creationDate).getTime(), new Person(authorName, authorEmail), commit));
     when(changesetPagingResult.getChangesets()).thenReturn(changesetList);
-    when(changesetPagingResult.getTotal()).thenReturn(1);
+    when(changesetPagingResult.getTotal()).thenReturn(OptionalInt.of(1));
     when(logCommandBuilder.setPagingStart(0)).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setPagingLimit(10)).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setStartChangeset(anyString())).thenReturn(logCommandBuilder);
@@ -170,7 +171,7 @@ class IncomingRootResourceTest extends RepositoryTestBase {
     ChangesetPagingResult changesetPagingResult = mock(ChangesetPagingResult.class);
     List<Changeset> changesetList = Lists.newArrayList(new Changeset(id, Date.from(creationDate).getTime(), new Person(authorName, authorEmail), commit));
     when(changesetPagingResult.getChangesets()).thenReturn(changesetList);
-    when(changesetPagingResult.getTotal()).thenReturn(1);
+    when(changesetPagingResult.getTotal()).thenReturn(OptionalInt.of(1));
     when(logCommandBuilder.setPagingStart(20)).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setPagingLimit(10)).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setStartChangeset(anyString())).thenReturn(logCommandBuilder);

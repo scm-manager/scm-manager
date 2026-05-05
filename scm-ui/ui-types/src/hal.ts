@@ -44,8 +44,12 @@ export type PagedCollection<T extends Embedded = Embedded> = HalRepresentationWi
   pageTotal: number;
 };
 
+export type UnknownTotalCollection<T extends Embedded = Embedded> = HalRepresentationWithEmbedded<T> & {
+  page: number;
+  pageTotal: number | null;
+};
+
 /**
  * @deprecated use HalRepresentation instead
  */
 export type Collection = HalRepresentation;
-

@@ -53,6 +53,9 @@ public abstract class ZippedRepositoryTestBase extends AbstractTestBase {
   @TempDir
   public File tempDir;
 
+  @TempDir
+  public File secondTempDir;
+
   protected Repository repository = createRepository();
 
   protected File repositoryDirectory;

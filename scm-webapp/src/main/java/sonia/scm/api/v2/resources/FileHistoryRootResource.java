@@ -114,7 +114,7 @@ public class FileHistoryRootResource {
         .setStartChangeset(revision)
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null) {
-        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
+        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getRawTotal(), changesets.isHasMore());
         return Response.ok(fileHistoryCollectionToDtoMapper.map(page, pageSize, pageResult, repository, revision, path)).build();
       } else {
         String message = String.format("for the revision %s and the file %s there are no changesets", revision, path);

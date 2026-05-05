@@ -184,7 +184,8 @@
     "title": "Vergleiche Änderungen",
     "linkTitle": "Vergleichen mit...",
     "selector": {
-      "title": "Branch, Tag oder Revision auswählen",
+      "title": "Branch, Tag oder Commit auswählen",
+      "title_hg": "Branch oder Tag auswählen",
       "source": "Source",
       "target": "Target",
       "with": "Vergleiche Änderungen mit...",
@@ -192,18 +193,18 @@
       "typeTitle": {
         "branch": "Branch",
         "tag": "Tag",
-        "revision": "Revision"
+        "revision": "Commit"
       },
       "type": {
         "branch": "Branch",
         "tag": "Tag",
-        "revision": "Revision"
+        "revision": "Commit"
       },
       "emptyResult": "Es wurden keine dem Filter entsprechenden Ergebnisse gefunden.",
       "tabs": {
         "branch": "Branches",
         "tags": "Tags",
-        "revision": "Revision"
+        "revision": "Commit"
       },
       "revision": {
         "input": "Revision mit mindestens 3 Zeichen eingeben"
@@ -275,6 +276,12 @@
     "noBranches": "Keine Sources für das Repository gefunden."
   },
   "changesets": {
+    "filters": {
+      "message": "Commit-Nachricht",
+      "person": "Person",
+      "before": "Vor",
+      "after": "Nach"
+    },
     "commitsWithNamespaceName": "Commits in {{namespace}}/{{name}}",
     "commitsWithPageAndNamespaceName": "Commits Seite {{page}} von {{total}} in {{namespace}}/{{name}}",
     "commitsWithPageRevisionAndNamespaceName": "Commits Seite {{page}} von {{total}} auf {{revision}} in {{namespace}}/{{name}}",

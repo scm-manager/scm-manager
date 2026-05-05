@@ -14,6 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+export { default as useDebounce } from "./useDebounce";
 export { default as useAriaId } from "./useAriaId";
 export { default as useDocumentTitle, useDocumentTitleForRepository } from "./useDocumentTitle";
 export { createAttributesForTesting, isDevBuild } from "./devbuild";

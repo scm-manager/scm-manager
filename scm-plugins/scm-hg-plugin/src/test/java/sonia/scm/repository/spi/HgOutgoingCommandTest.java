@@ -30,6 +30,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class HgOutgoingCommandTest extends IncomingOutgoingTestBase
 {
 
@@ -53,7 +54,7 @@ public class HgOutgoingCommandTest extends IncomingOutgoingTestBase
     ChangesetPagingResult cpr = cmd.getOutgoingChangesets(request);
 
     assertNotNull(cpr);
-    assertEquals(2, cpr.getTotal());
+    assertEquals(2, cpr.getTotal().getAsInt());
     assertChangesetsEqual(c1, cpr.getChangesets().get(0));
     assertChangesetsEqual(c2, cpr.getChangesets().get(1));
   }
@@ -68,7 +69,7 @@ public class HgOutgoingCommandTest extends IncomingOutgoingTestBase
     ChangesetPagingResult cpr = cmd.getOutgoingChangesets(request);
 
     assertNotNull(cpr);
-    assertEquals(0, cpr.getTotal());
+    assertEquals(0, cpr.getTotal().getAsInt());
   }
 
   @Test(expected = InternalRepositoryException.class)

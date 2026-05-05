@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.inject.Inject;
+import jakarta.validation.constraints.Pattern;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
@@ -32,6 +33,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.Length;
 import sonia.scm.ConflictException;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Changeset;
@@ -47,7 +49,11 @@ import sonia.scm.web.VndMediaType;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDate;
+import java.util.List;
 
+import static de.otto.edison.hal.Embedded.embeddedBuilder;
+import static de.otto.edison.hal.Links.linkingTo;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
@@ -64,7 +70,10 @@ public class ChangesetRootResource {
   private final ResourceLinks resourceLinks;
 
   @Inject
-  ChangesetRootResource(RepositoryServiceFactory serviceFactory, ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper, ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper, ResourceLinks resourceLinks) {
+  ChangesetRootResource(RepositoryServiceFactory serviceFactory,
+                        ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper,
+                        ChangesetToChangesetDtoMapper changesetToChangesetDtoMapper,
+                        ResourceLinks resourceLinks) {
     this.serviceFactory = serviceFactory;
     this.changesetCollectionToDtoMapper = changesetCollectionToDtoMapper;
     this.changesetToChangesetDtoMapper = changesetToChangesetDtoMapper;
@@ -104,7 +113,10 @@ public class ChangesetRootResource {
                          @DefaultValue("0") @QueryParam("page") int page,
                          @DefaultValue("10") @QueryParam("pageSize") int pageSize,
                          @QueryParam("revision") String revision,
-                         @QueryParam("q") String query) throws IOException {
+                         @QueryParam("message") String message,
+                         @QueryParam("before") LocalDate before,
+                         @QueryParam("after") LocalDate after,
+                         @QueryParam("person") String person) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
@@ -112,11 +124,14 @@ public class ChangesetRootResource {
         .page(page)
         .pageSize(pageSize)
         .create()
-        .setSearchString(query)
+        .setPartOfMessage(message)
+        .setPerson(person)
+        .setBefore(before)
+        .setAfter(after)
         .setStartChangeset(revision)
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null) {
-        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
+        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getRawTotal(), changesets.isHasMore());
         if (changesets.getBranchName() != null) {
           return Response.ok(changesetCollectionToDtoMapper.map(page, pageSize, pageResult, repository, changesets.getBranchName())).build();
         } else {
@@ -165,6 +180,58 @@ public class ChangesetRootResource {
         throw notFound(entity(Changeset.class, id).in(repository));
       }
       return changesetToChangesetDtoMapper.map(changeset, repository);
+    }
+  }
+
+  @GET
+  @Path("lookup")
+  @Produces(VndMediaType.CHANGESET_LOOKUP)
+  @Operation(summary = "Lookup changesets", description = "Returns changesets that match given filters regardless of where they are located.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.CHANGESET_COLLECTION,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the repository")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, the repository does not exist",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public ChangesetSearchResultDto lookup(@PathParam("namespace") String namespace,
+                                         @PathParam("name") String name,
+                                         @QueryParam("revisionPrefix") @Length(min = 3) @Pattern(regexp = "[0-9a-f]+") String revisionPrefix) {
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      Repository repository = repositoryService.getRepository();
+      RepositoryPermissions.read(repository).check();
+      List<ChangesetDto> dtos = repositoryService
+        .getLookupRevisionCommand()
+        .setRevisionPrefix(revisionPrefix)
+        .getChangesets()
+        .stream()
+        .map(changeset -> changesetToChangesetDtoMapper.map(
+          changeset,
+          repository
+        ))
+        .toList();
+      return new ChangesetSearchResultDto(
+        linkingTo().self(resourceLinks.changeset().lookup(namespace, name)).build(),
+        embeddedBuilder().with("changesets", dtos).build()
+      );
     }
   }
 

@@ -16,15 +16,13 @@
 
 package sonia.scm.repository.spi;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Person;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
 import static sonia.scm.repository.Branch.defaultBranch;
 import static sonia.scm.repository.Branch.normalBranch;
 

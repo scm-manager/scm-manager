@@ -1,0 +1,2 @@
+- type: added
+  description: Command to lookup revisions by the prefix of the hashes

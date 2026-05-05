@@ -19,15 +19,21 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.SneakyThrows;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.Locale;
 
 /**
  *
  * @since 1.17
  */
-public final class LogCommandRequest implements Serializable, Resetable
-{
+@Getter
+@Setter
+public final class LogCommandRequest implements Serializable, Resetable, Cloneable {
 
   private static final long serialVersionUID = 8759598040394428649L;
 
@@ -45,18 +51,21 @@ public final class LogCommandRequest implements Serializable, Resetable
 
   private String ancestorChangeset;
 
-  private String searchString;
+  private String partOfMessage;
+
+  private String person;
+
+  private Instant before;
+
+  private Instant after;
 
   @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
+  public boolean equals(Object obj) {
+    if (obj == null) {
       return false;
     }
 
-    if (getClass() != obj.getClass())
-    {
+    if (getClass() != obj.getClass()) {
       return false;
     }
 
@@ -67,23 +76,32 @@ public final class LogCommandRequest implements Serializable, Resetable
       && Objects.equal(endChangeset, other.endChangeset)
       && Objects.equal(pagingStart, other.pagingStart)
       && Objects.equal(pagingLimit, other.pagingLimit)
-      && Objects.equal(path, other.path) 
+      && Objects.equal(path, other.path)
       && Objects.equal(branch, other.branch)
       && Objects.equal(ancestorChangeset, other.ancestorChangeset)
-      && Objects.equal(searchString, other.searchString);
+      && Objects.equal(partOfMessage, other.partOfMessage)
+      && Objects.equal(person, other.person)
+      && Objects.equal(before, other.before)
+      && Objects.equal(after, other.after);
     //J+
   }
-  
+
   @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(startChangeset, endChangeset, pagingStart,
-      pagingLimit, searchString, path, branch, ancestorChangeset);
+  public int hashCode() {
+    return Objects.hashCode(
+      startChangeset, endChangeset, pagingStart, pagingLimit,
+      path, branch, ancestorChangeset, partOfMessage, person,
+      before, after
+    );
   }
 
-   @Override
-  public void reset()
-  {
+  @SneakyThrows
+  public LogCommandRequest clone() {
+    return (LogCommandRequest) super.clone();
+  }
+
+  @Override
+  public void reset() {
     startChangeset = null;
     endChangeset = null;
     pagingStart = 0;
@@ -91,98 +109,48 @@ public final class LogCommandRequest implements Serializable, Resetable
     path = null;
     branch = null;
     ancestorChangeset = null;
+    partOfMessage = null;
+    person = null;
+    before = null;
+    after = null;
   }
 
   @Override
-  public String toString()
-  {
+  public String toString() {
     //J-
     return MoreObjects.toStringHelper(this)
-                  .add("startChangeset", startChangeset)
-                  .add("endChangeset", endChangeset)
-                  .add("pagingStart", pagingStart)
-                  .add("pagingLimit", pagingLimit)
-                  .add("path", path)
-                  .add("branch", branch)
-                  .add("ancestorChangeset", ancestorChangeset)
-                  .toString();
+      .add("startChangeset", startChangeset)
+      .add("endChangeset", endChangeset)
+      .add("pagingStart", pagingStart)
+      .add("pagingLimit", pagingLimit)
+      .add("path", path)
+      .add("branch", branch)
+      .add("ancestorChangeset", ancestorChangeset)
+      .add("partOfMessage", partOfMessage)
+      .add("person", person)
+      .add("before", before)
+      .add("after", after)
+      .toString();
     //J+
   }
 
-  public void setBranch(String branch)
-  {
-    this.branch = branch;
-  }
-
-  public void setEndChangeset(String endChangeset)
-  {
-    this.endChangeset = endChangeset;
-  }
-
-  public void setPagingLimit(int pagingLimit)
-  {
-    this.pagingLimit = pagingLimit;
-  }
-
-  public void setPagingStart(int pagingStart)
-  {
-    this.pagingStart = pagingStart;
-  }
-
-  public void setPath(String path)
-  {
-    this.path = path;
-  }
-
-  public void setStartChangeset(String startChangeset)
-  {
-    this.startChangeset = startChangeset;
-  }
-
-  public void setAncestorChangeset(String ancestorChangeset) {
-    this.ancestorChangeset = ancestorChangeset;
-  }
-
-  public String getBranch()
-  {
-    return branch;
-  }
-
-  public String getEndChangeset()
-  {
-    return endChangeset;
-  }
-
-  public int getPagingLimit()
-  {
-    return pagingLimit;
-  }
-
-  public int getPagingStart()
-  {
-    return pagingStart;
-  }
-
-  public String getPath()
-  {
-    return path;
-  }
-
-  public String getStartChangeset()
-  {
-    return startChangeset;
-  }
-
-  public boolean isPagingUnlimited()
-  {
+  public boolean isPagingUnlimited() {
     return pagingLimit < 0;
   }
 
-  public String getAncestorChangeset() {
-    return ancestorChangeset;
+  public void setPartOfMessage(String partOfMessage) {
+    if (partOfMessage != null) {
+      partOfMessage = partOfMessage.toLowerCase(Locale.ENGLISH);
+    }
+
+    this.partOfMessage = partOfMessage;
   }
 
-  public String getSearchString() { return searchString; }
+  public void setPerson(String person) {
+    if (person != null) {
+      person = person.toLowerCase(Locale.ENGLISH);
+    }
 
-  public void setSearchString(String searchString) { this.searchString = searchString; }
+    this.person = person;
+  }
 }

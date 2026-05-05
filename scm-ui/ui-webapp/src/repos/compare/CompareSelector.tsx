@@ -123,7 +123,9 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
           <StyledDropdownMenu className={classNames("dropdown-menu", { "is-hidden": !showDropdown })} role="menu">
             <BorderedMenu className="dropdown-content">
               <div className="dropdown-item">
-                <h3 className="has-text-weight-bold">{t("compare.selector.title")}</h3>
+                <h3 className="has-text-weight-bold">
+                  {t(repository.type === "hg" ? "compare.selector.title_hg" : "compare.selector.title")}
+                </h3>
               </div>
               <hr className="dropdown-divider my-1" />
               <div className="dropdown-item px-2">
@@ -137,7 +139,9 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
                   <Tabs.List className="is-small mt-3 mb-0" aria-label={t("compare.selector.title")}>
                     <Tabs.List.Trigger value="branch">{t("compare.selector.tabs.branch")}</Tabs.List.Trigger>
                     <Tabs.List.Trigger value="tag">{t("compare.selector.tabs.tags")}</Tabs.List.Trigger>
-                    <Tabs.List.Trigger value="revision">{t("compare.selector.tabs.revision")}</Tabs.List.Trigger>
+                    {repository._links.lookupRevision && (
+                      <Tabs.List.Trigger value="revision">{t("compare.selector.tabs.revision")}</Tabs.List.Trigger>
+                    )}
                   </Tabs.List>
                   <Tabs.Content value="branch">
                     <BranchTab
@@ -159,14 +163,16 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
                       filter={filter}
                     />
                   </Tabs.Content>
-                  <Tabs.Content value="revision">
-                    <RevisionTab
-                      onSelect={onSelectEntry}
-                      selected={selection}
-                      repository={repository}
-                      filter={filter}
-                    />
-                  </Tabs.Content>
+                  {repository._links.lookupRevision && (
+                    <Tabs.Content value="revision">
+                      <RevisionTab
+                        onSelect={onSelectEntry}
+                        selected={selection}
+                        repository={repository}
+                        filter={filter}
+                      />
+                    </Tabs.Content>
+                  )}
                 </Tabs>
               </div>
             </BorderedMenu>

@@ -160,4 +160,8 @@ public abstract class RepositoryServiceProvider implements Closeable {
   public UnbundleCommand getUnbundleCommand() {
     throw new CommandNotSupportedException(Command.UNBUNDLE);
   }
+
+  public LookupRevisionCommand getLookupRevisionCommand() {
+    throw new CommandNotSupportedException(Command.LOOKUP_REVISION);
+  }
 }

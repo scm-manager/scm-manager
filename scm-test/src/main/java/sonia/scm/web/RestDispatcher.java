@@ -23,6 +23,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.ParamConverter;
+import jakarta.ws.rs.ext.ParamConverterProvider;
 import jakarta.ws.rs.ext.Provider;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.AuthorizationException;
@@ -39,7 +41,11 @@ import sonia.scm.ConcurrentModificationException;
 import sonia.scm.ConflictException;
 import sonia.scm.NotFoundException;
 import sonia.scm.ScmConstraintViolationException;
+import sonia.scm.api.v2.resources.LocalDateParamConverter;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +58,7 @@ public class RestDispatcher {
     dispatcher = MockDispatcherFactory.createDispatcher();
     exceptionMapper = new EnhanceableExceptionMapper();
     dispatcher.getProviderFactory().register(exceptionMapper);
+    dispatcher.getProviderFactory().registerProviderInstance(new LocalDateParamProvider());
     dispatcher.getProviderFactory().registerProviderInstance(new JacksonProducer());
   }
 
@@ -135,5 +142,17 @@ public class RestDispatcher {
     }
 
     private final ObjectMapper json;
+  }
+}
+
+class LocalDateParamProvider implements ParamConverterProvider {
+
+  @Override
+  public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
+    if (rawType.equals(LocalDate.class)) {
+      //noinspection unchecked
+      return (ParamConverter<T>) new LocalDateParamConverter();
+    }
+    return null;
   }
 }

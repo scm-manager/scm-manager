@@ -437,6 +437,14 @@ public class RepositoryToRepositoryDtoMapperTest {
     assertThat(dto.getLinks().getLinkBy("reindex")).isEmpty();
   }
 
+  @Test
+  public void shouldAppendLookupLinkIfSupported() {
+    Repository testRepository = createTestRepository();
+    when(repositoryService.isSupported(Command.LOOKUP_REVISION)).thenReturn(true);
+    RepositoryDto dto = mapper.map(testRepository);
+    assertTrue(dto.getLinks().getLinkBy("lookupRevision").isPresent());
+  }
+
   private ScmProtocol mockProtocol(String type, String protocol) {
     return new MockScmProtocol(type, protocol);
   }

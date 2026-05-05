@@ -34,6 +34,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class GitIncomingCommandTest
   extends AbstractRemoteCommandTestBase {
 
@@ -63,7 +64,7 @@ public class GitIncomingCommandTest
 
     assertNotNull(cpr);
 
-    assertEquals(2, cpr.getTotal());
+    assertEquals(2, cpr.getTotal().getAsInt());
     assertCommitsEquals(c1, cpr.getChangesets().get(0));
     assertCommitsEquals(c2, cpr.getChangesets().get(1));
   }
@@ -109,7 +110,7 @@ public class GitIncomingCommandTest
 
     assertNotNull(cpr);
 
-    assertEquals(1, cpr.getTotal());
+    assertEquals(1, cpr.getTotal().getAsInt());
     assertCommitsEquals(c2, cpr.getChangesets().get(0));
   }
 
@@ -130,7 +131,7 @@ public class GitIncomingCommandTest
 
     assertNotNull(cpr);
 
-    assertEquals(0, cpr.getTotal());
+    assertEquals(0, cpr.getTotal().getAsInt());
   }
 
   /**
@@ -160,7 +161,7 @@ public class GitIncomingCommandTest
 
     assertNotNull(cpr);
 
-    assertEquals(0, cpr.getTotal());
+    assertEquals(0, cpr.getTotal().getAsInt());
   }
 
   private GitIncomingCommand createCommand() {

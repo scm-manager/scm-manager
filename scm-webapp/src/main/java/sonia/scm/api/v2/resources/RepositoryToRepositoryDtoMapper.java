@@ -162,6 +162,9 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
           linksBuilder.single(link("incomingDiffParsed", resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName())));
         }
       }
+      if (repositoryService.isSupported(Command.LOOKUP_REVISION)) {
+        linksBuilder.single(link("lookupRevision", resourceLinks.changeset().lookup(repository.getNamespace(), repository.getName())));
+      }
     } catch (RepositoryLocationResolver.LocationNotFoundException e) {
       // This might happen, when the repository has been deleted in the meantime
       // There is nothing we can do here, so we just log this

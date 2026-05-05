@@ -16,7 +16,7 @@
 
 package sonia.scm;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.util.Collection;
@@ -25,7 +25,8 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ManagerTest {
 
@@ -37,50 +38,52 @@ public class ManagerTest {
   private Comparator comparator;
   private Predicate predicate = x -> true;
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void validatesPageNumber() {
-    manager.getPage(predicate, comparator, -1, 5);
+    assertThatThrownBy(() -> manager.getPage(predicate, comparator, -1, 5))
+      .isInstanceOf(IllegalArgumentException.class);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void validatesPageSize() {
-    manager.getPage(predicate, comparator, 2, 0);
+    assertThatThrownBy(() -> manager.getPage(predicate, comparator, 2, 0))
+      .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   public void getsNoPage() {
     givenItemCount = 0;
     PageResult singlePage = manager.getPage(predicate, comparator, 0, 5);
-    assertEquals(0, singlePage.getEntities().size());
-    assertEquals(givenItemCount, singlePage.getOverallCount());
+    assertThat(singlePage.getEntities()).hasSize(0);
+    assertThat(singlePage.getOverallCount()).hasValue(givenItemCount);
   }
 
   @Test
   public void getsSinglePageWithoutEnoughItems() {
     givenItemCount = 3;
     PageResult singlePage = manager.getPage(predicate, comparator, 0, 4);
-    assertEquals(3, singlePage.getEntities().size() );
-    assertEquals(givenItemCount, singlePage.getOverallCount());
+    assertThat(singlePage.getEntities()).hasSize(3);
+    assertThat(singlePage.getOverallCount()).hasValue(givenItemCount);
   }
 
   @Test
   public void getsSinglePageWithExactCountOfItems() {
     givenItemCount = 3;
     PageResult singlePage = manager.getPage(predicate, comparator, 0, 3);
-    assertEquals(3, singlePage.getEntities().size() );
-    assertEquals(givenItemCount, singlePage.getOverallCount());
+    assertThat(singlePage.getEntities()).hasSize(3);
+    assertThat(singlePage.getOverallCount()).hasValue(givenItemCount);
   }
 
   @Test
   public void getsTwoPages() {
     givenItemCount = 3;
     PageResult page1 = manager.getPage(predicate, comparator, 0, 2);
-    assertEquals(2, page1.getEntities().size());
-    assertEquals(givenItemCount, page1.getOverallCount());
+    assertThat(page1.getEntities()).hasSize(2);
+    assertThat(page1.getOverallCount()).hasValue(givenItemCount);
 
     PageResult page2 = manager.getPage(predicate, comparator, 1, 2);
-    assertEquals(1, page2.getEntities().size());
-    assertEquals(givenItemCount, page2.getOverallCount());
+    assertThat(page2.getEntities()).hasSize(1);
+    assertThat(page2.getOverallCount()).hasValue(givenItemCount);
   }
 
   private class ManagerForTesting implements Manager {

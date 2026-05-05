@@ -18,6 +18,7 @@ package sonia.scm;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.OptionalInt;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static sonia.scm.util.Util.createSubCollection;
@@ -29,7 +30,8 @@ import static sonia.scm.util.Util.createSubCollection;
 public class PageResult<T extends ModelObject> {
 
   private final Collection<T> entities;
-  private final int overallCount;
+  private final Integer overallCount;
+  private final boolean hasMore;
 
   public static <T extends ModelObject> PageResult<T> createPage(Collection<T> allEntities, int pageNumber, int pageSize) {
     checkArgument(pageSize > 0, "pageSize must be at least 1");
@@ -41,8 +43,13 @@ public class PageResult<T extends ModelObject> {
   }
 
   public PageResult(Collection<T> entities, int overallCount) {
+    this(entities, Integer.valueOf(overallCount), false);
+  }
+
+  public PageResult(Collection<T> entities, Integer overallCount, boolean hasMore) {
     this.entities = entities;
     this.overallCount = overallCount;
+    this.hasMore = hasMore;
   }
 
   /**
@@ -55,7 +62,14 @@ public class PageResult<T extends ModelObject> {
   /**
    * The overall count of all available elements.
    */
-  public int getOverallCount() {
-    return overallCount;
+  public OptionalInt getOverallCount() {
+    return overallCount == null ? OptionalInt.empty() : OptionalInt.of(overallCount);
+  }
+
+  /**
+   * Whether if there is another page or not.
+   */
+  public boolean isHasMore() {
+    return hasMore;
   }
 }

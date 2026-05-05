@@ -16,13 +16,13 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { PagedCollection } from "@scm-manager/ui-types";
+import { UnknownTotalCollection } from "@scm-manager/ui-types";
 import { Button } from "./buttons";
 
 type Props = {
-  collection: PagedCollection;
+  collection: UnknownTotalCollection;
   page: number;
-  filter?: string;
+  filter?: string | URLSearchParams;
   baseUrl: string;
 };
 
@@ -31,14 +31,16 @@ const LinkPaginator: FC<Props> = ({ collection, page, filter, baseUrl }) => {
 
   const createLink = (pageNumber: string | number) => {
     const link = `/${baseUrl}/${pageNumber}`;
-    if (filter) {
+    if (typeof filter === "string") {
       return `${link}?q=${filter}`;
+    } else if (typeof filter === "object") {
+      return `${link}?${(filter as URLSearchParams).toString()}`;
     }
     return link;
   };
 
   const renderFirstButton = () => {
-    return <Button className="pagination-link" label="1" disabled={false} link={createLink("1")} />;
+    return <Button className="pagination-link" label={"1"} disabled={false} link={createLink("1")} />;
   };
 
   const renderPreviousButton = (className: string, label?: string) => {
@@ -60,12 +62,13 @@ const LinkPaginator: FC<Props> = ({ collection, page, filter, baseUrl }) => {
 
   const renderNextButton = (className: string, label?: string) => {
     const nextPage = page + 1;
+    const link = createLink(`${nextPage}`);
     return (
       <Button
         className={className}
         label={label ? label : nextPage.toString()}
         disabled={!hasLink("next")}
-        link={createLink(`${nextPage}`)}
+        link={link}
       />
     );
   };
@@ -78,6 +81,12 @@ const LinkPaginator: FC<Props> = ({ collection, page, filter, baseUrl }) => {
         disabled={false}
         link={createLink(`${collection.pageTotal}`)}
       />
+    );
+  };
+
+  const renderGenericLastButton = () => {
+    return (
+      <Button className="pagination-link" label={t("paginator.last")} disabled={false} link={createLink("last")} />
     );
   };
 
@@ -105,13 +114,17 @@ const LinkPaginator: FC<Props> = ({ collection, page, filter, baseUrl }) => {
 
     links.push(currentPage(page));
 
-    if (page + 1 < pageTotal) {
+    if (typeof pageTotal !== "number" || page + 1 < pageTotal) {
       links.push(renderNextButton("pagination-link"));
     }
-    if (page + 2 < pageTotal) links.push(separator());
+    if (typeof pageTotal === "number" && page + 2 < pageTotal) links.push(separator());
     //if there exists pages between next and last
-    if (page < pageTotal) {
+    if (typeof pageTotal === "number" && page < pageTotal) {
       links.push(renderLastButton());
+    }
+    if (typeof pageTotal !== "number") {
+      links.push(separator());
+      links.push(renderGenericLastButton());
     }
     return links;
   };

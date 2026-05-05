@@ -35,6 +35,7 @@ import static org.junit.Assert.assertNotNull;
  * Unit tests for {@link OutgoingCommand}.
  *
  */
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
 {
 
@@ -66,7 +67,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
 
     assertNotNull(cpr);
 
-    assertEquals(2, cpr.getTotal());
+    assertEquals(2, cpr.getTotal().getAsInt());
     assertCommitsEquals(c1, cpr.getChangesets().get(0));
     assertCommitsEquals(c2, cpr.getChangesets().get(1));
   }
@@ -107,7 +108,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
 
     assertNotNull(cpr);
 
-    assertEquals(1, cpr.getTotal());
+    assertEquals(1, cpr.getTotal().getAsInt());
     assertCommitsEquals(c2, cpr.getChangesets().get(0));
   }
 
@@ -125,7 +126,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
 
     assertNotNull(cpr);
 
-    assertEquals(0, cpr.getTotal());
+    assertEquals(0, cpr.getTotal().getAsInt());
   }
 
   

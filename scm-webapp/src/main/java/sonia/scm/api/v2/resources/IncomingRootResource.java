@@ -144,7 +144,7 @@ public class IncomingRootResource {
         .setAncestorChangeset(target)
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null) {
-        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
+        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getRawTotal(), changesets.isHasMore());
         return Response.ok(changesetMapper.map(page, pageSize, pageResult, repository, source, target)).build();
       } else {
         return Response.ok().build();

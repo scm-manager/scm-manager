@@ -19,9 +19,9 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { Loading, ErrorNotification, Notification } from "@scm-manager/ui-core";
 import { Repository, Changeset } from "@scm-manager/ui-types";
-import { useChangesets } from "@scm-manager/ui-api";
 import CompareSelectorListEntry from "./CompareSelectorListEntry";
 import { CompareProps, CompareFunction } from "./CompareSelectBar";
+import { useLookupRevision } from "@scm-manager/ui-api";
 
 type Props = {
   selected: CompareProps;
@@ -50,7 +50,7 @@ const ScrollableUl = styled.ul`
 const RevisionTab: FC<Props> = ({ selected, onSelect, repository, filter }) => {
   const [t] = useTranslation("repos");
 
-  const { isLoading, error, data } = useChangesets(repository, { query: filter });
+  const { isLoading, error, data } = useLookupRevision(repository, { prefix: filter });
 
   const changesets: Changeset[] = (data?._embedded?.changesets as Changeset[]) || [];
 

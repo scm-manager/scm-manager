@@ -133,7 +133,7 @@ public class UserCollectionToDtoMapperTest {
     PageResult<User> pageResult = createPage(createUsers("Hannes", "Karl", "Piet"), 0, 1);
 
     CollectionDto collectionDto = mapper.map(0, 2, pageResult);
-    assertEquals(2, collectionDto.getPageTotal());
+    assertEquals(2, collectionDto.getPageTotal().intValue());
   }
 
   @Test
@@ -141,7 +141,7 @@ public class UserCollectionToDtoMapperTest {
     PageResult<User> pageResult = createPage(createUsers("Hannes", "Karl", "Piet", "Hein"), 0, 1);
 
     CollectionDto collectionDto = mapper.map(0, 2, pageResult);
-    assertEquals(2, collectionDto.getPageTotal());
+    assertEquals(2, collectionDto.getPageTotal().intValue());
   }
 
   @Test
@@ -149,7 +149,7 @@ public class UserCollectionToDtoMapperTest {
     PageResult<User> pageResult = createPage(createUsers(), 0, 1);
 
     CollectionDto collectionDto = mapper.map(0, 1, pageResult);
-    assertEquals(0, collectionDto.getPageTotal());
+    assertEquals(0, collectionDto.getPageTotal().intValue());
   }
 
   private PageResult<User> mockPageResult(String... userNames) {

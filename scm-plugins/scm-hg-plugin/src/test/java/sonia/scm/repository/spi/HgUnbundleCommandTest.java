@@ -20,8 +20,8 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
@@ -44,7 +44,7 @@ public class HgUnbundleCommandTest extends AbstractHgCommandTestBase {
   private HgUnbundleCommand unbundleCommand;
   private HgRepositoryHookEventFactory eventFactory;
 
-  @Before
+  @BeforeEach
   public void initUnbundleCommand() {
     eventFactory = mock(HgRepositoryHookEventFactory.class);
     unbundleCommand = new HgUnbundleCommand(cmdContext, new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), cmdContext), eventFactory);

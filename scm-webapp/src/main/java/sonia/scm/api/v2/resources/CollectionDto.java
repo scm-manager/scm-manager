@@ -27,7 +27,7 @@ import lombok.Setter;
 class CollectionDto extends HalRepresentation {
 
   private int page;
-  private int pageTotal;
+  private Integer pageTotal;
 
   CollectionDto(Links links, Embedded embedded) {
     super(links, embedded);

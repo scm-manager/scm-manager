@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useChangesets } from "@scm-manager/ui-api";
@@ -30,10 +30,26 @@ import {
   REPOSITORY_CODE_SUB_ROUTES,
   REPOSITORY_SUB_ROUTES,
   useSourceNameFromParams,
+  InputField,
+  useDebounce,
 } from "@scm-manager/ui-core";
+import { useSearchParams } from "react-router";
+
+type ChangesetFilters = {
+  message?: string;
+  person?: string;
+  before?: string;
+  after?: string;
+};
+type ChangesetFilterKeys = keyof ChangesetFilters;
 
 export const usePage = () => {
   const { page } = useParams<{ page?: string }>();
+
+  if (page === "last") {
+    return page;
+  }
+
   // Parse the string from the URL to a number, defaulting to 1.
   return parseInt(page || "1", 10);
 };
@@ -43,7 +59,29 @@ const Changesets: FC = ({ ...props }) => {
   const repository = useRepositoryFromParams();
   const sourceName = useSourceNameFromParams();
 
-  const { isLoading, error, data } = useChangesets(repository, { revision: sourceName, page: page - 1 });
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [messageFilter, setMessageFilter] = useState(searchParams.get("message") || "");
+  const debouncedMessageFilter = useDebounce(messageFilter, 500);
+
+  const [personFilter, setPersonFilter] = useState(searchParams.get("person") || "");
+  const debouncedPersonFilter = useDebounce(personFilter, 500);
+
+  const [beforeFilter, setBeforeFilter] = useState(searchParams.get("before") || "");
+  const debouncedBeforeFilter = useDebounce(beforeFilter, 500);
+
+  const [afterFilter, setAfterFilter] = useState(searchParams.get("after") || "");
+  const debouncedAfterFilter = useDebounce(afterFilter, 500);
+
+  const { isLoading, error, data } = useChangesets(repository, {
+    revision: sourceName,
+    page: typeof page === "number" ? page - 1 : -1,
+    messageFilter: debouncedMessageFilter,
+    personFilter: debouncedPersonFilter,
+    beforeFilter: debouncedBeforeFilter,
+    afterFilter: debouncedAfterFilter,
+  });
+
   const [t] = useTranslation("repos");
   const getDocumentTitle = () => {
     if (data?.pageTotal && data.pageTotal > 1 && page) {
@@ -78,15 +116,81 @@ const Changesets: FC = ({ ...props }) => {
   };
   useDocumentTitle(getDocumentTitle());
 
+  const updateFilters = (updatedParams: ChangesetFilters) => {
+    const filters: ChangesetFilters = {
+      message: messageFilter,
+      person: personFilter,
+      before: beforeFilter,
+      after: afterFilter,
+      ...updatedParams,
+    };
+
+    for (const [key, value] of Object.entries(filters)) {
+      if (!value) {
+        delete filters[key as ChangesetFilterKeys];
+      }
+    }
+
+    setSearchParams(filters);
+  };
+
   return (
-    <ChangesetsPanel
-      isLoading={isLoading}
-      error={error}
-      data={data}
-      repository={repository}
-      sourceName={sourceName}
-      {...props}
-    />
+    <>
+      <div className="columns">
+        <InputField
+          className="column"
+          label={t("changesets.filters.message")}
+          value={messageFilter}
+          type="search"
+          onChange={(e) => {
+            setMessageFilter(e.target.value);
+            updateFilters({ message: e.target.value });
+          }}
+        />
+        <InputField
+          className="column"
+          label={t("changesets.filters.person")}
+          value={personFilter}
+          type="search"
+          onChange={(e) => {
+            setPersonFilter(e.target.value);
+            updateFilters({ person: e.target.value });
+          }}
+        />
+        <div className="column columns">
+          <InputField
+            className="column"
+            label={t("changesets.filters.before")}
+            value={beforeFilter}
+            type="date"
+            onChange={(e) => {
+              setBeforeFilter(e.target.value);
+              updateFilters({ before: e.target.value });
+            }}
+            min={afterFilter}
+          />
+          <InputField
+            className="column"
+            label={t("changesets.filters.after")}
+            value={afterFilter}
+            type="date"
+            onChange={(e) => {
+              setAfterFilter(e.target.value);
+              updateFilters({ after: e.target.value });
+            }}
+            max={beforeFilter}
+          />
+        </div>
+      </div>
+      <ChangesetsPanel
+        isLoading={isLoading}
+        error={error}
+        data={data}
+        repository={repository}
+        sourceName={sourceName}
+        {...props}
+      />
+    </>
   );
 };
 
@@ -103,6 +207,7 @@ export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({ repository, error, i
   const [t] = useTranslation("repos");
   const changesets = data?._embedded?.changesets;
   const baseUrl = useCurrentRepositoryBaseUrl();
+  const [searchParams] = useSearchParams();
 
   if (error) {
     return <ErrorNotification error={error} />;
@@ -112,8 +217,9 @@ export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({ repository, error, i
     return <Loading />;
   }
 
-  if (data && data.pageTotal < page && page > 1) {
-    return <Navigate to={`../${data.pageTotal}`} />;
+  //Checking whether user navigated to the last page or if provided page is outside of the results
+  if (data && data.pageTotal && (page === "last" || (data.pageTotal < page && page > 1))) {
+    return <Navigate to={{ pathname: `../${data.pageTotal}`, search: searchParams.toString() }} />;
   }
 
   if (!data || !changesets || changesets.length === 0) {
@@ -121,7 +227,7 @@ export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({ repository, error, i
   }
 
   const baseUrl1 = sourceName
-    ? `${baseUrl.substring(1)}/${REPOSITORY_SUB_ROUTES.CODE}/${REPOSITORY_SUB_ROUTES.BRANCH}/${sourceName}/${REPOSITORY_CODE_SUB_ROUTES.CHANGESETS}`
+    ? `${baseUrl.substring(1)}/${REPOSITORY_SUB_ROUTES.CODE}/${REPOSITORY_SUB_ROUTES.BRANCH}/${encodeURIComponent(sourceName)}/${REPOSITORY_CODE_SUB_ROUTES.CHANGESETS}`
     : `${baseUrl.substring(1)}/${REPOSITORY_SUB_ROUTES.CODE}/${REPOSITORY_CODE_SUB_ROUTES.CHANGESETS}`;
   return (
     <div className="panel">
@@ -129,7 +235,8 @@ export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({ repository, error, i
         <ChangesetList repository={repository} changesets={changesets} sourceName={sourceName} />
       </div>
       <div className="panel-footer">
-        <LinkPaginator collection={data} page={page} baseUrl={baseUrl1} />
+        {/* As soon as this renders, page should always already be a number (The last possible page) */}
+        <LinkPaginator collection={data} filter={searchParams} page={page as number} baseUrl={baseUrl1} />
       </div>
     </div>
   );

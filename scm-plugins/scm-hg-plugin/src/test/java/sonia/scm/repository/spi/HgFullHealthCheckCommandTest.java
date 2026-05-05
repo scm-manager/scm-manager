@@ -16,8 +16,7 @@
 
 package sonia.scm.repository.spi;
 
-import org.javahg.commands.ExecutionException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import sonia.scm.repository.HealthCheckResult;
 
 import java.io.File;

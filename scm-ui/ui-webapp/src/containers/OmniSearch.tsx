@@ -21,7 +21,7 @@ import classNames from "classnames";
 import queryString from "query-string";
 import { useNamespaceAndNameContext, useOmniSearch, useSearchTypes } from "@scm-manager/ui-api";
 import { RepositoryAvatar } from "@scm-manager/ui-components";
-import { Icon, useShortcut } from "@scm-manager/ui-core";
+import { Icon, useShortcut, useDebounce } from "@scm-manager/ui-core";
 import { Hit, Links, Repository, ValueHitField } from "@scm-manager/ui-types";
 import { orderTypes } from "../search/Search";
 import SearchBox from "../search/search-box/SearchBox";
@@ -69,19 +69,6 @@ const HitEntry: FC<{
       </div>
     </SearchBox.Options.Option>
   );
-};
-
-const useDebounce = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-  return debouncedValue;
 };
 
 const useSearchParams = () => {

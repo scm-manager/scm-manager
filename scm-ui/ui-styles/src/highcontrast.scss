@@ -353,3 +353,7 @@ input[type="date"].input::-webkit-calendar-picker-indicator {
 .icon-color-secondary {
   color: $white;
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  color-scheme: none;
+}

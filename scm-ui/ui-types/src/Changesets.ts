@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Embedded, HalRepresentationWithEmbedded, Links, PagedCollection } from "./hal";
+import { Embedded, HalRepresentationWithEmbedded, Links, UnknownTotalCollection } from "./hal";
 import { Tag } from "./Tags";
 import { Branch } from "./Branches";
 import { Person } from "./Person";
@@ -50,4 +50,4 @@ type EmbeddedChangesets = {
   changesets: Changeset[];
 } & Embedded;
 
-export type ChangesetCollection = PagedCollection<EmbeddedChangesets>;
+export type ChangesetCollection = UnknownTotalCollection<EmbeddedChangesets>;

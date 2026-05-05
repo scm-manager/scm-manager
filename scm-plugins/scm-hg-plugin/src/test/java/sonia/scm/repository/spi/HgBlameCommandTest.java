@@ -17,15 +17,13 @@
 package sonia.scm.repository.spi;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class HgBlameCommandTest extends AbstractHgCommandTestBase
 {
@@ -38,21 +36,21 @@ public class HgBlameCommandTest extends AbstractHgCommandTestBase
 
     BlameResult result = createCommand().getBlameResult(request);
 
-    assertNotNull(result);
-    assertEquals(2, result.getTotal());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).isEqualTo(2);
 
     BlameLine line = result.getLine(0);
 
     checkFirstLine(line);
     line = result.getLine(1);
-    assertEquals(2, line.getLineNumber());
-    assertEquals("2baab8e80280ef05a9aa76c49c76feca2872afb7", line.getRevision());
+
+    assertThat(line.getLineNumber()).isEqualTo(2);
+    assertThat(line.getRevision()).isEqualTo("2baab8e80280ef05a9aa76c49c76feca2872afb7");
     checkDate(line.getWhen());
-    assertEquals("line for blame", line.getCode());
-    assertEquals("added new line for blame", line.getDescription());
-    assertEquals("Zaphod Beeblebrox", line.getAuthor().getName());
-    assertEquals("zaphod.beeblebrox@hitchhiker.com",
-                 line.getAuthor().getMail());
+    assertThat(line.getCode()).isEqualTo("line for blame");
+    assertThat(line.getDescription()).isEqualTo("added new line for blame");
+    assertThat(line.getAuthor().getName()).isEqualTo("Zaphod Beeblebrox");
+    assertThat(line.getAuthor().getMail()).isEqualTo("zaphod.beeblebrox@hitchhiker.com");
   }
 
   @Test
@@ -64,8 +62,8 @@ public class HgBlameCommandTest extends AbstractHgCommandTestBase
 
     BlameResult result = createCommand().getBlameResult(request);
 
-    assertNotNull(result);
-    assertEquals(1, result.getTotal());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).isEqualTo(1);
 
     BlameLine line = result.getLine(0);
 
@@ -75,13 +73,13 @@ public class HgBlameCommandTest extends AbstractHgCommandTestBase
 
   private void checkFirstLine(BlameLine line)
   {
-    assertEquals(1, line.getLineNumber());
-    assertEquals("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427", line.getRevision());
+    assertThat(line.getLineNumber()).isEqualTo(1);
+    assertThat(line.getRevision()).isEqualTo("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427");
     checkDate(line.getWhen());
-    assertEquals("a", line.getCode());
-    assertEquals("added a and b files", line.getDescription());
-    assertEquals("Douglas Adams", line.getAuthor().getName());
-    assertEquals("douglas.adams@hitchhiker.com", line.getAuthor().getMail());
+    assertThat(line.getCode()).isEqualTo("a");
+    assertThat(line.getDescription()).isEqualTo("added a and b files");
+    assertThat(line.getAuthor().getName()).isEqualTo("Douglas Adams");
+    assertThat(line.getAuthor().getMail()).isEqualTo("douglas.adams@hitchhiker.com");
   }
 
 

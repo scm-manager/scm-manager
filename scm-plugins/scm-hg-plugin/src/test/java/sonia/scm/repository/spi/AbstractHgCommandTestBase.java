@@ -17,9 +17,8 @@
 package sonia.scm.repository.spi;
 
 
-import org.junit.After;
-import org.junit.Before;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.HgRepositoryHandler;
@@ -27,23 +26,21 @@ import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.util.MockUtil;
 
-import java.io.IOException;
+public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase {
 
+  protected HgCommandContext cmdContext;
+  protected HgRepositoryHandler handler;
 
-public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
-{
-
-   @After
+  @AfterEach
   public void close() {
-    if (cmdContext != null)
-    {
+    if (cmdContext != null) {
       cmdContext.close();
     }
   }
 
-  @Before
-  public void initHgHandler() throws IOException {
-    this.handler = HgTestUtil.createHandler(tempFolder.newFolder());
+  @BeforeEach
+  public void initHgHandler() {
+    this.handler = HgTestUtil.createHandler(secondTempDir);
     HgTestUtil.checkForSkip(handler);
 
     HgConfigResolver resolver = new HgConfigResolver(handler);
@@ -52,31 +49,18 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
     cmdContext = new HgCommandContext(resolver, factory, RepositoryTestData.createHeartOfGold());
   }
 
-
-   @Before
-  public void setUp()
-  {
+  @BeforeEach
+  public void setUp() {
     setSubject(MockUtil.createAdminSubject());
   }
 
-
-  
   @Override
-  protected String getType()
-  {
+  protected String getType() {
     return "hg";
   }
 
-  
   @Override
-  protected String getZippedRepositoryResource()
-  {
+  protected String getZippedRepositoryResource() {
     return "sonia/scm/repository/spi/scm-hg-spi-test.zip";
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  protected HgCommandContext cmdContext;
-
-  protected HgRepositoryHandler handler;
 }

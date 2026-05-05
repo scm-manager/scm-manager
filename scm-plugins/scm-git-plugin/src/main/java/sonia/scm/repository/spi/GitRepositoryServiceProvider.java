@@ -50,7 +50,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.FILE_LOCK,
     Command.BRANCH_DETAILS,
     Command.CHANGESETS,
-    Command.REVERT
+    Command.REVERT,
+    Command.LOOKUP_REVISION
   );
 
   protected static final Set<Feature> FEATURES = EnumSet.of(
@@ -198,6 +199,11 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
   @Override
   public Set<Feature> getSupportedFeatures() {
     return FEATURES;
+  }
+
+  @Override
+  public LookupRevisionCommand getLookupRevisionCommand() {
+    return injector.getInstance(GitLookupRevisionCommand.Factory.class).create(context);
   }
 
   @Override

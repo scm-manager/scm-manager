@@ -16,11 +16,12 @@
 
 package sonia.scm.repository.spi;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.BranchDetails;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
 
@@ -57,12 +58,13 @@ public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
     assertThat(result.getChangesetsBehind()).get().isEqualTo(0);
   }
 
-  @Test(expected = NotFoundException.class)
+  @Test
   public void shouldThrowNotFoundExceptionForUnknownBranch() {
     BranchDetailsCommandRequest branchRequest = new BranchDetailsCommandRequest();
     branchRequest.setBranchName("no-such-branch");
 
-    new HgBranchDetailsCommand(cmdContext).execute(branchRequest);
+    assertThatThrownBy(() -> new HgBranchDetailsCommand(cmdContext).execute(branchRequest))
+      .isInstanceOf(NotFoundException.class);
   }
 
   @Override

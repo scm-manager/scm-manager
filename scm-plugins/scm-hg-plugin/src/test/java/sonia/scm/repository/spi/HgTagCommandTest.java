@@ -18,8 +18,8 @@ package sonia.scm.repository.spi;
 
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.javahg.commands.PullCommand;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.repository.api.TagDeleteRequest;
@@ -34,7 +34,7 @@ public class HgTagCommandTest extends AbstractHgCommandTestBase {
 
   private SimpleHgWorkingCopyFactory workingCopyFactory;
 
-  @Before
+  @BeforeEach
   public void initWorkingCopyFactory() {
 
     workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)), new SimpleMeterRegistry()) {

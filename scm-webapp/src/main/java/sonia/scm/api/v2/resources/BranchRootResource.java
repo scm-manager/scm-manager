@@ -52,6 +52,7 @@ import sonia.scm.web.VndMediaType;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static sonia.scm.BranchAlreadyExistsException.branchAlreadyExists;
@@ -69,7 +70,11 @@ public class BranchRootResource {
   private final ResourceLinks resourceLinks;
 
   @Inject
-  public BranchRootResource(RepositoryServiceFactory serviceFactory, BranchToBranchDtoMapper branchToDtoMapper, BranchCollectionToDtoMapper branchCollectionToDtoMapper, BranchChangesetCollectionToDtoMapper changesetCollectionToDtoMapper, ResourceLinks resourceLinks) {
+  public BranchRootResource(RepositoryServiceFactory serviceFactory,
+                            BranchToBranchDtoMapper branchToDtoMapper,
+                            BranchCollectionToDtoMapper branchCollectionToDtoMapper,
+                            BranchChangesetCollectionToDtoMapper changesetCollectionToDtoMapper,
+                            ResourceLinks resourceLinks) {
     this.serviceFactory = serviceFactory;
     this.branchToDtoMapper = branchToDtoMapper;
     this.branchCollectionToDtoMapper = branchCollectionToDtoMapper;
@@ -170,7 +175,11 @@ public class BranchRootResource {
                           @PathParam("name") String name,
                           @PathParam("branch") String branchName,
                           @DefaultValue("0") @QueryParam("page") int page,
-                          @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException {
+                          @DefaultValue("10") @QueryParam("pageSize") int pageSize,
+                          @QueryParam("message") String message,
+                          @QueryParam("before") LocalDate before,
+                          @QueryParam("after") LocalDate after,
+                          @QueryParam("person") String person) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       if (!branchExists(branchName, repositoryService)) {
         throw notFound(entity(Branch.class, branchName).in(Repository.class, namespace + "/" + name));
@@ -182,9 +191,13 @@ public class BranchRootResource {
         .pageSize(pageSize)
         .create()
         .setBranch(branchName)
+        .setPartOfMessage(message)
+        .setPerson(person)
+        .setBefore(before)
+        .setAfter(after)
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null) {
-        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
+        PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getRawTotal(), changesets.isHasMore());
         return Response.ok(branchChangesetCollectionToDtoMapper.map(page, pageSize, pageResult, repository, branchName)).build();
       } else {
         return Response.ok().build();

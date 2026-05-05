@@ -19,7 +19,6 @@ package sonia.scm.repository.spi;
 import org.junit.Test;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitTestHelper;
 
 import static org.junit.Assert.assertEquals;
@@ -48,6 +47,7 @@ import static org.junit.Assert.assertNotNull;
  * * c2190a9 a
  * </pre>
  */
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class GitLogCommandAncestorTest extends AbstractGitCommandTestBase
 {
   @Override
@@ -67,7 +67,7 @@ public class GitLogCommandAncestorTest extends AbstractGitCommandTestBase
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
-    assertEquals(7, result.getTotal());
+    assertEquals(7, result.getTotal().getAsInt());
     assertEquals(7, result.getChangesets().size());
 
     assertEquals("86e9ca012202b36865373a63c12ef4f4353506cd", result.getChangesets().get(0).getId());

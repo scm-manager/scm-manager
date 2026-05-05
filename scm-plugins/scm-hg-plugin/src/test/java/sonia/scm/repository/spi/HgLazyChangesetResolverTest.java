@@ -16,7 +16,7 @@
 
 package sonia.scm.repository.spi;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.Person;

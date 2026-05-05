@@ -37,15 +37,34 @@ In der Codeübersicht werden Submodules (Git), Subrepositories (Hg) und External
 ![Beispiel für ein Subrepository in der Code-Ansicht](assets/repository-code-subrepository.png)
 
 ### Commits
-Die Übersicht der Commits zeigt die Änderungshistorie je Branch an. Jeder Listeneintrag stellt einen Commit dar. 
-
-Über den Details-Button kann man sich den Inhalt / die Änderungen dieses Commits ansehen. 
-
-Der Schlüssel Icon zeigt an, ob ein Commit signiert wurde. Um die Signatur zu validieren, können die Benutzer ihre öffentlichen Schlüssel (Public Keys) im SCM-Manager hinterlegen. Ein grüner Schlüssel bedeutet die Signatur konnte erfolgreich gegen einen hinterlegten öffentlichen Schlüssel im SCM-Manager verifiziert werden. Ein grauer Schlüssel heißt, dass die Signatur zu keinem Schlüssel im SCM-Manager passt. Und ein roter Schlüssel warnt vor einer ungültigen (möglicherweise gefälschten) Signatur.
-
-Über den Sources-Button gelangt man zur Sources-Übersicht und es wird der Datenstand zum Zeitpunkt nach diesem Commit angezeigt.
+Die Übersicht der Commits zeigt die Änderungshistorie je nach ausgewähltem Branch, Tag oder Commit an.
+Jeder Listeneintrag stellt einen Commit der Historie dar. 
 
 ![Beispiel der Commit-Übersicht](assets/repository-code-changesetsView.png)
+
+Zu jedem Commit wird die erste Zeile der Nachricht, der Autor, die Commit ID und der Zeitpunkt der Erstellung angezeigt.
+Falls zu einem Commit auch ein Tag erstellt wurde, wird dieser ebenfalls angezeigt.
+Sollte ein Commit signiert sein, dann wird dies mit einem Schlüssel-Icon markiert.
+
+- Falls das Schlüssel-Icon grün ist, dann konnte die Signatur erfolgreich mit einem im SCM-Manager hinterlegten Public Key verifiziert werden.
+- Falls das Schlüssel-Icon grau ist, dann konnte die Signatur zu keinem bekannten Public Key zugeordnet werden.
+- Falls das Schlüssel-Icon rot ist, dann ist die Signatur ungültig und könnte gefälscht sein.
+
+Zu jedem Commit gibt es ein Details- und Sources-Button.
+Der Details-Button öffnet die Commit-Details-Ansicht mit weiteren Informationen zu dem jeweiligen Commit.
+Über den Sources-Button gelangt man zur Sources-Übersicht und es wird der Quellcode zum Zeitpunkt nach diesem Commit angezeigt.
+
+Die Änderungshistorie kann gefiltert werden, um gezielt nach bestimmten Commits zu suchen. Folgende Filter stehen zur Verfügung:
+
+- **Textsuche:** Abgleich von Teilzeichenfolgen (ohne Berücksichtigung der Groß- und Kleinschreibung) in
+    Commit-Nachrichten, Namen von Mitwirkenden und E-Mail-Adressen.
+- **Datumsbereiche:** Auswahl von „Vor“- und „Nach“-Daten zur Eingrenzung spezifischer Zeiträume
+    (die ausgewählten Daten sind jeweils eingeschlossen).
+
+Jede Filteroption ist optional und kann beliebig kombiniert werden.
+
+**Hinweis:** Die angewendeten Filter werden in der URL gespeichert. Die URL kann einfach kopiert werden, um die gefilterte
+Ansicht mit anderen zu teilen.
 
 ### Commit Details
 Auf der Detailseite eines Commits sieht man zusätzlich zu den Metadaten (z. B. Mitwirkende und Parent-Commit) des Commits sämtliche Änderungen (Diffs), die in diesem Commit enthalten sind.

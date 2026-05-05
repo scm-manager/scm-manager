@@ -45,9 +45,9 @@ abstract class PagedCollectionToDtoMapper<E extends ModelObject, D extends HalRe
   }
 
   CollectionDto map(int pageNumber, int pageSize, PageResult<E> pageResult, String selfLink, Optional<String> createLink, Function<E, ? extends HalRepresentation> mapper) {
-    NumberedPaging paging = zeroBasedNumberedPaging(pageNumber, pageSize, pageResult.getOverallCount());
+    NumberedPaging paging = computeNumberedPaging(pageNumber, pageSize, pageResult);
     List<HalRepresentation> dtos = pageResult.getEntities().stream().map(mapper).collect(toList());
-    Links links = createLinks(paging, selfLink, createLink);
+    Links links = createLinks(paging, selfLink, createLink, pageResult.isHasMore());
     Embedded embedded = embedDtos(dtos);
     CollectionDto collectionDto = createCollectionDto(links, embedded);
     collectionDto.setPage(pageNumber);
@@ -59,19 +59,44 @@ abstract class PagedCollectionToDtoMapper<E extends ModelObject, D extends HalRe
     return new CollectionDto(links, embedded);
   }
 
-  private int computePageTotal(int pageSize, PageResult<E> pageResult) {
-    if (pageResult.getOverallCount() % pageSize > 0) {
-      return pageResult.getOverallCount() / pageSize + 1;
+  private NumberedPaging computeNumberedPaging(int pageNumber, int pageSize, PageResult<E> pageResult) {
+    //If the pageNumber is negative, than the last page was requested
+    //And since the last page was requested, the overall count should be always present anyway
+    if (pageNumber < 0 && pageResult.getOverallCount().isPresent()) {
+      int total = pageResult.getOverallCount().getAsInt();
+      pageNumber = total % pageSize == 0 ? total / pageSize - 1 : total / pageSize;
+    }
+
+    if (pageResult.getOverallCount().isPresent()) {
+      return zeroBasedNumberedPaging(pageNumber, pageSize, pageResult.getOverallCount().getAsInt());
+    }
+
+    return zeroBasedNumberedPaging(pageNumber, pageSize, pageResult.isHasMore());
+  }
+
+  private Integer computePageTotal(int pageSize, PageResult<E> pageResult) {
+    if (pageResult.getOverallCount().isEmpty()) {
+      return null;
+    }
+
+    int overallCount = pageResult.getOverallCount().getAsInt();
+    if (overallCount % pageSize > 0) {
+      return overallCount / pageSize + 1;
     } else {
-      return pageResult.getOverallCount() / pageSize;
+      return overallCount / pageSize;
     }
   }
 
-  private Links createLinks(NumberedPaging page, String selfLink, Optional<String> createLink) {
+  private Links createLinks(NumberedPaging page, String selfLink, Optional<String> createLink, boolean hasMore) {
     Links.Builder linksBuilder = linkingTo()
       .with(page.links(
         fromTemplate(selfLink + "{?page,pageSize}"),
         EnumSet.allOf(PagingRel.class)));
+
+    if (hasMore) {
+      linksBuilder.single(link("last", String.format("%s?page=-1&pageSize=%d", selfLink, page.getPageSize())));
+    }
+
     createLink.ifPresent(link -> linksBuilder.single(link("create", link)));
     return linksBuilder.build();
   }

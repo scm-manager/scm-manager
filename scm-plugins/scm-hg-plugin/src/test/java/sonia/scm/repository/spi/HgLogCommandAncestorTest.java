@@ -16,12 +16,13 @@
 
 package sonia.scm.repository.spi;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class HgLogCommandAncestorTest extends AbstractHgCommandTestBase {
 
@@ -34,21 +35,14 @@ public class HgLogCommandAncestorTest extends AbstractHgCommandTestBase {
 
     ChangesetPagingResult result = new HgLogCommand(cmdContext).getChangesets(request);
 
-    assertNotNull(result);
-    assertEquals(3, result.getTotal());
-    assertEquals(3, result.getChangesets().size());
-
-    Changeset c1 = result.getChangesets().get(0);
-    Changeset c2 = result.getChangesets().get(1);
-    Changeset c3 = result.getChangesets().get(2);
-
-    assertNotNull(c1);
-    assertEquals("94dd2a4ebc27d30f811d7ac02fbd1cc382386bf3", c1.getId());
-    assertNotNull(c2);
-    assertEquals("aed7afe001a4d5d3111a5916a5656b3032eb4dc2", c2.getId());
-    assertNotNull(c3);
-    assertEquals("03a757fea8b21879d33944b710347c46aa4cfde1", c3.getId());
-
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(3);
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "94dd2a4ebc27d30f811d7ac02fbd1cc382386bf3",
+        "aed7afe001a4d5d3111a5916a5656b3032eb4dc2",
+        "03a757fea8b21879d33944b710347c46aa4cfde1"
+      ));
   }
 
   @Test
@@ -60,14 +54,12 @@ public class HgLogCommandAncestorTest extends AbstractHgCommandTestBase {
 
     ChangesetPagingResult result = new HgLogCommand(cmdContext).getChangesets(request);
 
-    assertNotNull(result);
-    assertEquals(1, result.getTotal());
-    assertEquals(1, result.getChangesets().size());
-
-    Changeset c1 = result.getChangesets().get(0);
-
-    assertNotNull(c1);
-    assertEquals("d2bb8ada6ae68405627d2c757d9d656a4c21799f", c1.getId());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(1);
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "d2bb8ada6ae68405627d2c757d9d656a4c21799f"
+      ));
   }
 
   @Test
@@ -81,17 +73,13 @@ public class HgLogCommandAncestorTest extends AbstractHgCommandTestBase {
 
     ChangesetPagingResult result = new HgLogCommand(cmdContext).getChangesets(request);
 
-    assertNotNull(result);
-    assertEquals(3, result.getTotal());
-    assertEquals(2, result.getChangesets().size());
-
-    Changeset c1 = result.getChangesets().get(0);
-    Changeset c2 = result.getChangesets().get(1);
-
-    assertNotNull(c1);
-    assertEquals("aed7afe001a4d5d3111a5916a5656b3032eb4dc2", c1.getId());
-    assertNotNull(c2);
-    assertEquals("03a757fea8b21879d33944b710347c46aa4cfde1", c2.getId());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(3);
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "aed7afe001a4d5d3111a5916a5656b3032eb4dc2",
+        "03a757fea8b21879d33944b710347c46aa4cfde1"
+      ));
   }
 
   @Test
@@ -105,14 +93,12 @@ public class HgLogCommandAncestorTest extends AbstractHgCommandTestBase {
 
     ChangesetPagingResult result = new HgLogCommand(cmdContext).getChangesets(request);
 
-    assertNotNull(result);
-    assertEquals(1, result.getTotal());
-    assertEquals(1, result.getChangesets().size());
-
-    Changeset c1 = result.getChangesets().get(0);
-
-    assertNotNull(c1);
-    assertEquals("d2bb8ada6ae68405627d2c757d9d656a4c21799f", c1.getId());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(1);
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "d2bb8ada6ae68405627d2c757d9d656a4c21799f"
+      ));
   }
 
   @Override

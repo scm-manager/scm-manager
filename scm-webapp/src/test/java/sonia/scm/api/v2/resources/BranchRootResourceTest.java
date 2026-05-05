@@ -30,6 +30,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -54,12 +55,12 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.OptionalInt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -89,7 +90,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
   @Mock
   private BranchCommandBuilder branchCommandBuilder;
 
-  @Mock
+  @Mock(answer = Answers.RETURNS_SELF)
   private LogCommandBuilder logCommandBuilder;
 
   @InjectMocks
@@ -117,7 +118,15 @@ public class BranchRootResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() {
     changesetCollectionToDtoMapper = new BranchChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     BranchCollectionToDtoMapper branchCollectionToDtoMapper = new BranchCollectionToDtoMapper(branchToDtoMapper, resourceLinks);
-    branchRootResource = new BranchRootResource(serviceFactory, branchToDtoMapper, branchCollectionToDtoMapper, changesetCollectionToDtoMapper, resourceLinks);
+
+    branchRootResource = new BranchRootResource(
+      serviceFactory,
+      branchToDtoMapper,
+      branchCollectionToDtoMapper,
+      changesetCollectionToDtoMapper,
+      resourceLinks
+    );
+
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
@@ -173,10 +182,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     ChangesetPagingResult changesetPagingResult = mock(ChangesetPagingResult.class);
     List<Changeset> changesetList = Lists.newArrayList(new Changeset(REVISION, Date.from(creationDate).getTime(), new Person(authorName, authorEmail), commit));
     when(changesetPagingResult.getChangesets()).thenReturn(changesetList);
-    when(changesetPagingResult.getTotal()).thenReturn(1);
-    when(logCommandBuilder.setPagingStart(anyInt())).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setPagingLimit(anyInt())).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setBranch(anyString())).thenReturn(logCommandBuilder);
+    when(changesetPagingResult.getTotal()).thenReturn(OptionalInt.of(1));
     when(logCommandBuilder.getChangesets()).thenReturn(changesetPagingResult);
     Branches branches = mock(Branches.class);
     List<Branch> branchList = Lists.newArrayList(createBranch("master"));

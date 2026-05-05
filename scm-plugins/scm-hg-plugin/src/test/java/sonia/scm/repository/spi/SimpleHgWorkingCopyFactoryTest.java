@@ -24,10 +24,9 @@ import org.javahg.commands.BranchCommand;
 import org.javahg.commands.RemoveCommand;
 import org.javahg.commands.StatusCommand;
 import org.javahg.commands.results.StatusResult;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.SimpleCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
@@ -44,17 +43,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
 
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
-  private MeterRegistry meterRegistry = new SimpleMeterRegistry();
+  @TempDir
+  public File temporaryFolder;
+  private final MeterRegistry meterRegistry = new SimpleMeterRegistry();
 
   private WorkdirProvider workdirProvider;
 
   private SimpleHgWorkingCopyFactory workingCopyFactory;
 
-  @Before
-  public void bindScmProtocol() throws IOException {
-    workdirProvider = new WorkdirProvider(temporaryFolder.newFolder(), repositoryLocationResolver, false);
+  @BeforeEach
+  public void bindScmProtocol() {
+    temporaryFolder.mkdir();
+    workdirProvider = new WorkdirProvider(temporaryFolder, repositoryLocationResolver, false);
     workingCopyFactory = new SimpleHgWorkingCopyFactory(new SimpleCachingWorkingCopyPool(5, workdirProvider, meterRegistry), new SimpleMeterRegistry()) {
       @Override
       public void configure(org.javahg.commands.PullCommand pullCommand) {
@@ -141,7 +141,7 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldReclaimCleanDirectoryWithSameBranch() throws Exception {
     SimpleHgWorkingCopyFactory factory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
-    File workdir = createExistingClone(factory);
+    File workdir = createExistingClone();
 
     factory.reclaim(cmdContext, workdir, "default");
 
@@ -151,7 +151,7 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldReclaimCleanDirectoryWithDefaultBranch() throws Exception {
     SimpleHgWorkingCopyFactory factory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
-    File workdir = createExistingClone(factory);
+    File workdir = createExistingClone();
 
     factory.reclaim(cmdContext, workdir, null);
 
@@ -161,7 +161,7 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldReclaimCleanDirectoryWithOtherBranch() throws Exception {
     SimpleHgWorkingCopyFactory factory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
-    File workdir = createExistingClone(factory);
+    File workdir = createExistingClone();
 
     factory.reclaim(cmdContext, workdir, "test-branch");
 
@@ -171,7 +171,7 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldReclaimDirectoryWithDeletedFileInIndex() throws Exception {
     SimpleHgWorkingCopyFactory factory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
-    File workdir = createExistingClone(factory);
+    File workdir = createExistingClone();
 
     RemoveCommand.on(Repository.open(workdir)).execute("a.txt");
 
@@ -183,7 +183,7 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldReclaimDirectoryWithDeletedFileInDirectory() throws Exception {
     SimpleHgWorkingCopyFactory factory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
-    File workdir = createExistingClone(factory);
+    File workdir = createExistingClone();
 
     RemoveCommand.on(Repository.open(workdir)).execute("c");
 
@@ -195,7 +195,7 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldReclaimDirectoryWithAdditionalFileInDirectory() throws Exception {
     SimpleHgWorkingCopyFactory factory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
-    File workdir = createExistingClone(factory);
+    File workdir = createExistingClone();
 
     Path newDirectory = workdir.toPath().resolve("new");
     Files.createDirectories(newDirectory);
@@ -220,8 +220,9 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
     assertThat(BranchCommand.on(repository).get()).isEqualTo(expectedBranch);
   }
 
-  public File createExistingClone(SimpleHgWorkingCopyFactory factory) throws Exception {
-    File workdir = temporaryFolder.newFolder();
+  public File createExistingClone() throws Exception {
+    File workdir = new File(temporaryFolder, "workdir");
+    workdir.mkdir();
     extract(workdir, "sonia/scm/repository/spi/scm-hg-spi-workdir-test.zip");
     Files.write(workdir.toPath().resolve(".hg").resolve("hgrc"), Arrays.asList("[paths]", "default = " + repositoryDirectory.getAbsolutePath()));
     return workdir;

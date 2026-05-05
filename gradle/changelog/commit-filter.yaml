@@ -1,0 +1,2 @@
+- type: added
+  description: Query parameters to filter commits by message, contributor and commit creation date

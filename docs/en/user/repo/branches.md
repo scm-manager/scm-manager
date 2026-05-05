@@ -9,8 +9,8 @@ branch are listed in "Active Branches". The older ones can be found in "Stale Br
 Besides the date of the last change and the author of this change, you will also find the ahead/behind commits related to the default branch.
 With this information you can see how far this branch has diverged from the default branch.
 
-The tag "Default" shows which branch is currently set as the default branch of the repository in SCM-Manager. The default branch is always shown first when opening the repository in SCM-Manager.
-All branches except the default branch of the repository can be deleted by clicking on the trash bin icon.
+The default branch is always shown first in this overview.
+All branches except the default branch of the repository can be deleted by using the delete button within the menu opened by the three dots icon.
 
 The button "Create Branch" opens the form to create a new branch.
 

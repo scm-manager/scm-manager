@@ -87,5 +87,10 @@ public enum Command
   /**
    * @since 3.8
    */
-  REVERT
+  REVERT,
+
+  /**
+   * @since 4.0.0
+   */
+  LOOKUP_REVISION,
 }

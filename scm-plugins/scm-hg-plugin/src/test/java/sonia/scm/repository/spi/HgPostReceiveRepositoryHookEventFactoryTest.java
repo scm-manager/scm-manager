@@ -17,10 +17,9 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableList;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookContext;
@@ -38,7 +37,7 @@ public class HgPostReceiveRepositoryHookEventFactoryTest extends AbstractHgComma
 
   private HgRepositoryHookEventFactory eventFactory;
 
-  @Before
+  @BeforeEach
   public void init() {
     HookContextFactory hookContextFactory = mock(HookContextFactory.class);
     hookContext = mock(HookContext.class, RETURNS_DEEP_STUBS);

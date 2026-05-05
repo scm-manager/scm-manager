@@ -133,6 +133,8 @@
     "loading": "suche..."
   },
   "paginator": {
+    "first": "Erste",
+    "last": "Letzte",
     "next": "Weiter",
     "previous": "Zurück"
   },

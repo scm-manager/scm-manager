@@ -30,7 +30,8 @@ type UseChangesetsRequest = {
   limit?: number;
   messageFilter?: string;
   personFilter?: string;
-  fromFilter?: Date;
+  beforeFilter?: string;
+  afterFilter?: string;
   query?: string;
 };
 
@@ -76,13 +77,16 @@ export const useChangesets = (
     }
   }
   if (request?.messageFilter) {
-    filter = appendFilter(filter, "message", request.messageFilter);
+    filter = appendFilter(filter, "message", encodeURIComponent(request.messageFilter));
   }
   if (request?.personFilter) {
-    filter = appendFilter(filter, "person", request.personFilter);
+    filter = appendFilter(filter, "person", encodeURIComponent(request.personFilter));
   }
-  if (request?.fromFilter) {
-    filter = appendFilter(filter, "from", request.fromFilter.toISOString());
+  if (request?.beforeFilter) {
+    filter = appendFilter(filter, "before", request.beforeFilter);
+  }
+  if (request?.afterFilter) {
+    filter = appendFilter(filter, "after", request.afterFilter);
   }
   const isSearchMode = request?.query !== undefined;
   const isEnabled = isSearchMode ? request.query!.length >= 3 : true;
@@ -113,6 +117,22 @@ export const useChangesets = (
     }
   }, [queryClient, repository, result.data]);
   return result;
+};
+
+export type FindChangesetsRequest = {
+  prefix: string;
+};
+
+export const useLookupRevision = (
+  repository: Repository,
+  request: FindChangesetsRequest,
+): ApiResultWithFetching<ChangesetCollection> => {
+  const link = requiredLink(repository, "lookupRevision") + "?revisionPrefix=" + encodeURIComponent(request.prefix);
+  const queryKey = [...repoQueryKey(repository), "lookupRevision", request.prefix];
+  return useQuery<ChangesetCollection, Error>({
+    queryKey,
+    queryFn: () => apiClient.get(link).then((response) => response.json()),
+  });
 };
 
 export const useChangeset = (repository: Repository, id: string): ApiResult<Changeset> => {

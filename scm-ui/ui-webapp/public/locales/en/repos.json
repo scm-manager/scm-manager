@@ -182,7 +182,8 @@
     "title": "Compare Changes",
     "linkTitle": "Compare with...",
     "selector": {
-      "title": "Select branch, tag or revision",
+      "title": "Select branch, tag or commit",
+      "title_hg": "Select branch or tag",
       "source": "Source",
       "target": "Target",
       "with": "Compare changes with...",
@@ -190,18 +191,18 @@
       "typeTitle": {
         "branch": "Branch",
         "tag": "Tag",
-        "revision": "Revision"
+        "revision": "Commit"
       },
       "type": {
         "branch": "branch",
         "tag": "tag",
-        "revision": "revision"
+        "revision": "Commit"
       },
       "emptyResult": "No results matching the filter were found.",
       "tabs": {
         "branch": "Branches",
         "tags": "Tags",
-        "revision": "Revision"
+        "revision": "Commit"
       },
       "revision": {
         "input": "Enter revision with at least 3 character"
@@ -273,6 +274,12 @@
     "noBranches": "No sources found for this repository."
   },
   "changesets": {
+    "filters": {
+      "message": "Commit Message",
+      "person": "Person",
+      "before": "Before",
+      "after": "After"
+    },
     "commitsWithNamespaceName": "Commits in {{namespace}}/{{name}}",
     "commitsWithPageAndNamespaceName": "Commits page {{page}} of {{total}} in {{namespace}}/{{name}}",
     "commitsWithPageRevisionAndNamespaceName": "Commits page {{page}} of {{total}} on {{revision}} in {{namespace}}/{{name}}",

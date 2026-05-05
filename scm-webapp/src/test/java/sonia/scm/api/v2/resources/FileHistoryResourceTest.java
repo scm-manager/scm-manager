@@ -51,6 +51,7 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.OptionalInt;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -120,7 +121,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
     ChangesetPagingResult changesetPagingResult = mock(ChangesetPagingResult.class);
     List<Changeset> changesetList = Lists.newArrayList(new Changeset(id, Date.from(creationDate).getTime(), new Person(authorName, authorEmail), commit));
     when(changesetPagingResult.getChangesets()).thenReturn(changesetList);
-    when(changesetPagingResult.getTotal()).thenReturn(1);
+    when(changesetPagingResult.getTotal()).thenReturn(OptionalInt.of(1));
     when(logCommandBuilder.setPagingStart(anyInt())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setPagingLimit(anyInt())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setStartChangeset(eq(id))).thenReturn(logCommandBuilder);

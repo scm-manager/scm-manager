@@ -134,6 +134,8 @@
     "loading": "Loading..."
   },
   "paginator": {
+    "first": "First",
+    "last": "Last",
     "next": "Next",
     "previous": "Previous"
   },

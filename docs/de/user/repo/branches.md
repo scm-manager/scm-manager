@@ -9,8 +9,8 @@ nicht 30 Tage älter als der Stand des Default-Branches ist. Alle älteren Branc
 Neben dem Datum der letzten Änderung und dem Autor dieser Änderung werden auch die Anzahl der Commits vor bzw. nach dem Default Branch angezeigt. 
 Mit diesen zwei Zahlen wird ersichtlich, wie weit sich dieser Branch vom Default Branch entfernt hat.
 
-Der Tag "Default" gibt an, welcher Branch aktuell als Standard-Branch dieses Repository im SCM-Manager markiert ist. Der Standard-Branch wird immer zuerst angezeigt, sobald das Repository im SCM-Manager geöffnet wird.
-Alle Branches mit Ausnahme des Default Branches können über das Mülleimer-Icon unwiderruflich gelöscht werden.
+Der Standard-Branch wird in dieser Übersicht immer zuerst angezeigt.
+Alle Branches mit Ausnahme des Default Branches können über den Lösch-Button im Dreipunktmenü gelöscht werden.
 
 Über den "Branch erstellen"-Button gelangt man zum Formular, um neue Branches anzulegen.
 

@@ -18,11 +18,12 @@ package sonia.scm.repository.spi;
 
 import com.google.common.io.Files;
 import org.eclipse.jgit.lib.Repository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.Added;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitRepositoryConfig;
@@ -32,13 +33,11 @@ import sonia.scm.repository.Person;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
+import java.util.List;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -48,9 +47,9 @@ import static org.mockito.Mockito.when;
  * Unit tests for {@link GitLogCommand}.
  *
  */
-@RunWith(MockitoJUnitRunner.class)
-public class GitLogCommandTest extends AbstractGitCommandTestBase
-{
+@ExtendWith(MockitoExtension.class)
+public class GitLogCommandTest extends AbstractGitCommandTestBase {
+
   @Mock
   LogCommandRequest request;
 
@@ -62,27 +61,36 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     // without default branch, the repository head should be used
     ChangesetPagingResult result = createCommand().getChangesets(new LogCommandRequest());
 
-    assertNotNull(result);
-    assertEquals(4, result.getTotal());
-    assertEquals("fcd0ef1831e4002ac43ea539f4094334c79ea9ec", result.getChangesets().get(0).getId());
-    assertEquals("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1", result.getChangesets().get(1).getId());
-    assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(2).getId());
-    assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(3).getId());
-    assertEquals("main", result.getBranchName());
-    assertTrue(result.getChangesets().stream().allMatch(r -> r.getBranches().isEmpty()));
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(4);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "fcd0ef1831e4002ac43ea539f4094334c79ea9ec",
+        "86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1",
+        "592d797cd36432e591416e8b2b98154f4f163411",
+        "435df2f061add3589cb326cc64be9b9c3897ceca"
+      ));
+    assertThat(result.getBranchName()).isEqualTo("main");
+    assertThat(result.getChangesets().stream().allMatch(r -> r.getBranches().isEmpty())).isTrue();
 
     // set default branch and fetch again
     createContext().setConfig(new GitRepositoryConfig("test-branch"));
 
     result = createCommand().getChangesets(new LogCommandRequest());
 
-    assertNotNull(result);
-    assertEquals("test-branch", result.getBranchName());
-    assertEquals(3, result.getTotal());
-    assertEquals("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", result.getChangesets().get(0).getId());
-    assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(1).getId());
-    assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(2).getId());
-    assertTrue(result.getChangesets().stream().allMatch(r -> r.getBranches().isEmpty()));
+    assertThat(result).isNotNull();
+    assertThat(result.getBranchName()).isEqualTo("test-branch");
+    assertThat(result.getTotal()).hasValue(3);
+    assertThat(result.isHasMore()).isFalse();
+
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4",
+        "592d797cd36432e591416e8b2b98154f4f163411",
+        "435df2f061add3589cb326cc64be9b9c3897ceca"
+      ));
+    assertThat(result.getChangesets().stream().allMatch(r -> r.getBranches().isEmpty())).isTrue();
   }
 
   @Test
@@ -108,59 +116,54 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void testGetAll()
-  {
+  public void testGetAll() {
     ChangesetPagingResult result =
       createCommand().getChangesets(new LogCommandRequest());
 
-    assertNotNull(result);
-    assertEquals(4, result.getTotal());
-    assertEquals(4, result.getChangesets().size());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(4);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets()).hasSize(4);
   }
 
   @Test
-  public void testGetAllByPath()
-  {
+  public void testGetAllByPath() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPath("a.txt");
 
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
-    assertNotNull(result);
-    assertEquals(2, result.getTotal());
-    assertEquals(2, result.getChangesets().size());
-    assertEquals("fcd0ef1831e4002ac43ea539f4094334c79ea9ec", result.getChangesets().get(0).getId());
-    assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(1).getId());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(2);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "fcd0ef1831e4002ac43ea539f4094334c79ea9ec",
+        "435df2f061add3589cb326cc64be9b9c3897ceca"
+      ));
   }
 
   @Test
-  public void testGetAllWithLimit()
-  {
+  public void testGetAllWithLimit() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPagingLimit(2);
 
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
-    assertNotNull(result);
-    assertEquals(4, result.getTotal());
-    assertEquals(2, result.getChangesets().size());
-
-    Changeset c1 = result.getChangesets().get(0);
-
-    assertNotNull(c1);
-    assertEquals("fcd0ef1831e4002ac43ea539f4094334c79ea9ec", c1.getId());
-
-    Changeset c2 = result.getChangesets().get(1);
-
-    assertNotNull(c2);
-    assertEquals("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1", c2.getId());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).isEmpty();
+    assertThat(result.isHasMore()).isTrue();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "fcd0ef1831e4002ac43ea539f4094334c79ea9ec",
+        "86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1"
+      ));
   }
 
   @Test
-  public void testGetAllWithPaging()
-  {
+  public void testGetAllWithPaging() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPagingStart(1);
@@ -168,52 +171,40 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
 
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
-    assertNotNull(result);
-    assertEquals(4, result.getTotal());
-    assertEquals(2, result.getChangesets().size());
-
-    Changeset c1 = result.getChangesets().get(0);
-
-    assertNotNull(c1);
-    assertEquals("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1", c1.getId());
-
-    Changeset c2 = result.getChangesets().get(1);
-
-    assertNotNull(c2);
-    assertEquals("592d797cd36432e591416e8b2b98154f4f163411", c2.getId());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).isEmpty();
+    assertThat(result.isHasMore()).isTrue();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1",
+        "592d797cd36432e591416e8b2b98154f4f163411"
+      ));
   }
 
   @Test
-  public void testGetCommit()
-  {
+  public void testGetCommit() {
     GitLogCommand command = createCommand();
+    String revision = "435df2f061add3589cb326cc64be9b9c3897ceca";
     Changeset c = command.getChangeset("435df2f061add3589cb3", null);
 
-    assertNotNull(c);
-    String revision = "435df2f061add3589cb326cc64be9b9c3897ceca";
-    assertEquals(revision, c.getId());
-    assertEquals("added a and b files", c.getDescription());
+    assertThat(c).isNotNull();
+    assertThat(c.getId()).isEqualTo(revision);
+    assertThat(c.getDescription()).isEqualTo("added a and b files");
     checkDate(c.getDate());
-    assertEquals("Douglas Adams", c.getAuthor().getName());
-    assertEquals("douglas.adams@hitchhiker.com", c.getAuthor().getMail());
-    assertEquals("added a and b files", c.getDescription());
+    assertThat(c.getAuthor().getName()).isEqualTo("Douglas Adams");
+    assertThat(c.getAuthor().getMail()).isEqualTo("douglas.adams@hitchhiker.com");
 
     GitModificationsCommand gitModificationsCommand = new GitModificationsCommand(createContext());
     Modifications modifications = gitModificationsCommand.getModifications(revision);
 
-    assertNotNull(modifications);
-    assertTrue("modified list should be empty", modifications.getModified().isEmpty());
-    assertTrue("removed list should be empty", modifications.getRemoved().isEmpty());
-    assertFalse("added list should not be empty", modifications.getAdded().isEmpty());
-    assertEquals(2, modifications.getAdded().size());
-    assertThat(modifications.getAdded())
-      .extracting("path")
-      .containsExactly("a.txt", "b.txt");
+    assertThat(modifications).isNotNull();
+    assertThat(modifications.getModified()).isEmpty();
+    assertThat(modifications.getRemoved()).isEmpty();
+    assertThat(modifications.getAdded().stream().map(Added::getPath)).isEqualTo(List.of("a.txt", "b.txt"));
   }
 
   @Test
-  public void commitShouldContainBranchIfLogCommandRequestHasBranch()
-  {
+  public void commitShouldContainBranchIfLogCommandRequestHasBranch() {
     when(request.getBranch()).thenReturn("master");
     GitLogCommand command = createCommand();
     Changeset c = command.getChangeset("435df2f061add3589cb3", request);
@@ -229,8 +220,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void testGetRange()
-  {
+  public void testGetRange() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setStartChangeset("592d797cd36432e59141");
@@ -238,22 +228,18 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
 
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
-    assertNotNull(result);
-    assertEquals(2, result.getTotal());
-    assertEquals(2, result.getChangesets().size());
-
-    Changeset c1 = result.getChangesets().get(0);
-    Changeset c2 = result.getChangesets().get(1);
-
-    assertNotNull(c1);
-    assertEquals("592d797cd36432e591416e8b2b98154f4f163411", c1.getId());
-    assertNotNull(c2);
-    assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", c2.getId());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(2);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "592d797cd36432e591416e8b2b98154f4f163411",
+        "435df2f061add3589cb326cc64be9b9c3897ceca"
+      ));
   }
 
   @Test
-  public void testGetAncestor()
-  {
+  public void testGetAncestor() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setBranch("test-branch");
@@ -261,14 +247,13 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
 
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
-    assertNotNull(result);
-    assertEquals(1, result.getTotal());
-    assertEquals(1, result.getChangesets().size());
-
-    Changeset c = result.getChangesets().get(0);
-
-    assertNotNull(c);
-    assertEquals("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", c.getId());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(1);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4"
+      ));
   }
 
   @Test
@@ -277,7 +262,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
 
     ChangesetPagingResult changesets = createCommand().getChangesets(new LogCommandRequest());
 
-    assertEquals("main", changesets.getBranchName());
+    assertThat(changesets.getBranchName()).isEqualTo("main");
   }
 
   @Test
@@ -311,43 +296,305 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void testGetBySearchStringKeyword() {
+  public void shouldFindChangesetsContainingMessage() {
     LogCommandRequest request = new LogCommandRequest();
 
-    request.setSearchString("Added a AND b");
+    request.setPartOfMessage("FiLE");
 
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
-    assertNotNull(result);
-    assertEquals(1, result.getTotal());
-    assertEquals(1, result.getChangesets().size());
-    assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(0).getId());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(3);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1",
+        "592d797cd36432e591416e8b2b98154f4f163411",
+        "435df2f061add3589cb326cc64be9b9c3897ceca"
+      ));
   }
 
   @Test
-  public void testGetBySearchStringHash() {
+  public void shouldFindChangesetsByAuthorEmail() {
     LogCommandRequest request = new LogCommandRequest();
 
-    request.setSearchString("592d797cd");
+    request.setPerson("BEEblebrox@hitchhiker");
 
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
-    assertNotNull(result);
-    assertEquals(1, result.getTotal());
-    assertEquals(1, result.getChangesets().size());
-    assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(0).getId());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(1);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "fcd0ef1831e4002ac43ea539f4094334c79ea9ec"
+      ));
   }
 
   @Test
-  public void testGetBySearchStringNoResult() {
+  public void shouldFindChangesetsByAuthorName() {
     LogCommandRequest request = new LogCommandRequest();
 
-    request.setSearchString("this-string-does-not-exist");
+    request.setPerson("phod bee");
 
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
-    assertNotNull(result);
-    assertEquals(0, result.getTotal());
-    assertTrue(result.getChangesets().isEmpty());
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(1);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "fcd0ef1831e4002ac43ea539f4094334c79ea9ec"
+      ));
+  }
+
+  @Test
+  public void shouldFindCommiterByName() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPerson("sebastian SDORRA");
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(4);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "fcd0ef1831e4002ac43ea539f4094334c79ea9ec",
+        "86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1",
+        "592d797cd36432e591416e8b2b98154f4f163411",
+        "435df2f061add3589cb326cc64be9b9c3897ceca"
+      ));
+  }
+
+  @Test
+  public void shouldFindCommiterByMail() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPerson("SDORRA@ostfalia");
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(4);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "fcd0ef1831e4002ac43ea539f4094334c79ea9ec",
+        "86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1",
+        "592d797cd36432e591416e8b2b98154f4f163411",
+        "435df2f061add3589cb326cc64be9b9c3897ceca"
+      ));
+  }
+
+  @Test
+  public void shouldFindChangesetsBeforeInstant() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    //11.06.2012 11:57:00Z
+    request.setBefore(Instant.ofEpochMilli(1339415820000L));
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(1);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "435df2f061add3589cb326cc64be9b9c3897ceca"
+      ));
+  }
+
+  @Test
+  public void shouldFindChangesetsAfterInstant() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    //11.06.2012 11:57:00Z
+    request.setAfter(Instant.ofEpochMilli(1339415820000L));
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(3);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "fcd0ef1831e4002ac43ea539f4094334c79ea9ec",
+        "86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1",
+        "592d797cd36432e591416e8b2b98154f4f163411"
+      ));
+  }
+
+  @Test
+  public void shouldReturnTotalCountBecauseUserIsAtLastPageWithoutProvidingEndChangeset() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPagingStart(3);
+    request.setPagingLimit(3);
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(4);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "435df2f061add3589cb326cc64be9b9c3897ceca"
+      ));
+  }
+
+  @Test
+  public void shouldReturnTotalCountBecauseUserIsAtLastPageWithProvidingEndChangeset() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setEndChangeset("592d797cd36432e591416e8b2b98154f4f163411");
+    request.setPagingStart(1);
+    request.setPagingLimit(3);
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(3);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1",
+        "592d797cd36432e591416e8b2b98154f4f163411"
+      ));
+  }
+
+  @Test
+  public void shouldReturnTotalCountBecauseUserIsAfterLastPageWithoutProvidingEndChangeset() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPagingStart(4);
+    request.setPagingLimit(3);
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(4);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+      ));
+  }
+
+  @Test
+  public void shouldReturnTotalCountBecauseUserIsAfterLastPageWithProvidingEndChangeset() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setEndChangeset("592d797cd36432e591416e8b2b98154f4f163411");
+    request.setPagingStart(3);
+    request.setPagingLimit(3);
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(3);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+      ));
+  }
+
+  @Test
+  public void shouldReturnWithoutTotalCountBecauseUserIsBeforeLastPage() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPagingStart(0);
+    request.setPagingLimit(3);
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).isEmpty();
+    assertThat(result.isHasMore()).isTrue();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "fcd0ef1831e4002ac43ea539f4094334c79ea9ec",
+        "86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1",
+        "592d797cd36432e591416e8b2b98154f4f163411"
+      ));
+  }
+
+  @Test
+  public void shouldReturnLastPageBecauseStartIsNegative() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPagingStart(-1);
+    request.setPagingLimit(2);
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(4);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "592d797cd36432e591416e8b2b98154f4f163411",
+        "435df2f061add3589cb326cc64be9b9c3897ceca"
+      ));
+  }
+
+  @Test
+  public void shouldReturnLastPageWithNegativeStartAndIncompleteLastPage() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPagingStart(-1);
+    request.setPagingLimit(3);
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(4);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "435df2f061add3589cb326cc64be9b9c3897ceca"
+      ));
+  }
+
+  @Test
+  public void shouldReturnLastPageWithHigherLimitThanTotal() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPagingStart(-1);
+    request.setPagingLimit(100);
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(4);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "fcd0ef1831e4002ac43ea539f4094334c79ea9ec",
+        "86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1",
+        "592d797cd36432e591416e8b2b98154f4f163411",
+        "435df2f061add3589cb326cc64be9b9c3897ceca"
+      ));
+  }
+
+  @Test
+  public void shouldReturnLastPageWithEveryCommitBecauseLimitIsNegative() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPagingStart(-1);
+    request.setPagingLimit(-1);
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTotal()).hasValue(4);
+    assertThat(result.isHasMore()).isFalse();
+    assertThat(result.getChangesets().stream().map(Changeset::getId).toList())
+      .isEqualTo(List.of(
+        "fcd0ef1831e4002ac43ea539f4094334c79ea9ec",
+        "86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1",
+        "592d797cd36432e591416e8b2b98154f4f163411",
+        "435df2f061add3589cb326cc64be9b9c3897ceca"
+      ));
   }
 }

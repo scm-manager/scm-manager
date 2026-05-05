@@ -16,14 +16,12 @@
 
 package sonia.scm.repository.spi;
 
-import org.junit.After;
 import org.junit.jupiter.api.AfterEach;
 
 public class AbstractSvnCommandTestBase extends ZippedRepositoryTestBase {
 
   private SvnContext context;
 
-  @After
   @AfterEach
   public void close() {
     if (context != null) {

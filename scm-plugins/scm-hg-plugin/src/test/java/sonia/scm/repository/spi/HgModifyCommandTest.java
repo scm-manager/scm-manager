@@ -17,10 +17,9 @@
 package sonia.scm.repository.spi;
 
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
@@ -35,20 +34,21 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   private HgModifyCommand hgModifyCommand;
 
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
+  @TempDir
+  public File temporaryFolder;
 
   @Override
   protected String getZippedRepositoryResource() {
     return "sonia/scm/repository/spi/scm-hg-spi-modify-test.zip";
   }
 
-  @Before
+  @BeforeEach
   public void initHgModifyCommand() {
     SimpleHgWorkingCopyFactory workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(null, repositoryLocationResolver)), new SimpleMeterRegistry()) {
       @Override
@@ -83,7 +83,8 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   @Test
   public void shouldCreateFilesWithoutOverwrite() throws IOException {
-    File testFile = temporaryFolder.newFile();
+    File testFile = new File(temporaryFolder, "temporaryFile");
+    testFile.createNewFile();
 
     ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("Answer.txt", testFile, false));
@@ -96,7 +97,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   @Test
   public void shouldOverwriteExistingFiles() throws IOException {
-    File testFile = temporaryFolder.newFile();
+    File testFile = new File(temporaryFolder, "temporaryFile");
 
     try (FileOutputStream fos = new FileOutputStream(testFile)) {
       fos.write(42);
@@ -111,10 +112,10 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     assertThat(cmdContext.open().tip().getModifiedFiles().get(0)).isEqualTo("a.txt");
   }
 
-  @Test(expected = AlreadyExistsException.class)
+  @Test
   public void shouldThrowFileAlreadyExistsException() throws IOException {
 
-    File testFile = temporaryFolder.newFile();
+    File testFile = new File(temporaryFolder, "temporaryFile");
     try (FileOutputStream fos = new FileOutputStream(testFile)) {
       fos.write(21);
     }
@@ -132,12 +133,12 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
     request2.addRequest(new ModifyCommandRequest.CreateFileRequest("Answer.txt", testFile, false));
 
-    hgModifyCommand.execute(request2);
+    assertThatThrownBy(() -> hgModifyCommand.execute(request2)).isInstanceOf(AlreadyExistsException.class);
   }
 
   @Test
   public void shouldModifyExistingFile() throws IOException {
-    File testFile = temporaryFolder.newFile("a.txt");
+    File testFile = new File(temporaryFolder, "a.txt");
 
     try (FileOutputStream fos = new FileOutputStream(testFile)) {
       fos.write(42);
@@ -152,9 +153,9 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     assertThat(cmdContext.open().tip().getModifiedFiles().get(0)).isEqualTo(testFile.getName());
   }
 
-  @Test(expected = NotFoundException.class)
+  @Test
   public void shouldThrowNotFoundExceptionIfFileDoesNotExist() throws IOException {
-    File testFile = temporaryFolder.newFile("Answer.txt");
+    File testFile = new File(temporaryFolder, "Answer.txt");
 
     try (FileOutputStream fos = new FileOutputStream(testFile)) {
       fos.write(42);
@@ -162,32 +163,34 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.ModifyFileRequest("Answer.txt", testFile));
 
-    hgModifyCommand.execute(request);
+    assertThatThrownBy(() ->hgModifyCommand.execute(request)).isInstanceOf(NotFoundException.class);
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void shouldThrowNPEIfAuthorIsMissing() throws IOException {
-    File testFile = temporaryFolder.newFile();
+    File testFile = new File(temporaryFolder, "temporaryFile");
+    testFile.createNewFile();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("Answer.txt", testFile, false));
     request.setCommitMessage("I found the answer");
-    hgModifyCommand.execute(request);
+    assertThatThrownBy(() -> hgModifyCommand.execute(request)).isInstanceOf(NullPointerException.class);
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void shouldThrowNPEIfCommitMessageIsMissing() throws IOException {
-    File testFile = temporaryFolder.newFile();
+    File testFile = new File(temporaryFolder, "temporaryFile");
+    testFile.createNewFile();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("Answer.txt", testFile, false));
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
-    hgModifyCommand.execute(request);
+    assertThatThrownBy(() -> hgModifyCommand.execute(request)).isInstanceOf(NullPointerException.class);
   }
 
-  @Test(expected = NoChangesMadeException.class)
+  @Test
   public void shouldThrowNoChangesMadeExceptionIfEmptyLocalChangesetAfterRequest() {
-    hgModifyCommand.execute(new ModifyCommandRequest());
+    assertThatThrownBy(() -> hgModifyCommand.execute(new ModifyCommandRequest())).isInstanceOf(NoChangesMadeException.class);
   }
 
   @Test
@@ -204,9 +207,9 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     assertThat(matcher.group(1)).isEqualTo("This is an error message");
   }
 
-  @Test(expected = ScmConstraintViolationException.class)
+  @Test
   public void shouldFailIfPathInHgMetadata() throws IOException {
-    File testFile = temporaryFolder.newFile("a.txt");
+    File testFile = new File(temporaryFolder, "a.txt");
 
     try (FileOutputStream fos = new FileOutputStream(testFile)) {
       fos.write(42);
@@ -214,15 +217,15 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.CreateFileRequest(".hg/some.txt", testFile, true));
 
-    hgModifyCommand.execute(request);
+    assertThatThrownBy(() -> hgModifyCommand.execute(request)).isInstanceOf(ScmConstraintViolationException.class);
   }
 
-  @Test(expected = ScmConstraintViolationException.class)
+  @Test
   public void shouldThrowErrorIfRelativePathIsOutsideOfWorkdir() {
     ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/../../../../g.txt", false));
 
-    hgModifyCommand.execute(request);
+    assertThatThrownBy(() -> hgModifyCommand.execute(request)).isInstanceOf(ScmConstraintViolationException.class);
   }
 
   @Test
@@ -235,12 +238,12 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     assertThat(cmdContext.open().tip().getAddedFiles()).contains(new File("g.txt").toString());
   }
 
-  @Test(expected = AlreadyExistsException.class)
+  @Test
   public void shouldThrowAlreadyExistsException() {
     ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c", false));
 
-    hgModifyCommand.execute(request);
+    assertThatThrownBy(() -> hgModifyCommand.execute(request)).isInstanceOf(AlreadyExistsException.class);
   }
 
   @Test
@@ -309,12 +312,12 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     assertThat(cmdContext.open().tip().getModifiedFiles()).contains(new File("b.txt").toString());
   }
 
-  @Test(expected = AlreadyExistsException.class)
+  @Test
   public void shouldFailMoveAndKeepFilesWhenSourceAndTargetAreTheSame() {
     ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("c", "c", false));
 
-    hgModifyCommand.execute(request);
+    assertThatThrownBy(() -> hgModifyCommand.execute(request)).isInstanceOf(AlreadyExistsException.class);
   }
 
   private ModifyCommandRequest prepareModifyCommandRequest() {

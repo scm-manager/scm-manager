@@ -17,7 +17,7 @@
 package sonia.scm.repository.spi;
 
 import org.javahg.commands.LogCommand;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 
@@ -25,12 +25,8 @@ import java.io.IOException;
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
-
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
   @Test
@@ -38,9 +34,10 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     BrowseCommandRequest request = new BrowseCommandRequest();
     request.setPath("a.txt");
     FileObject file = new HgBrowseCommand(cmdContext).getBrowserResult(request).getFile();
-    assertEquals("a.txt", file.getName());
-    assertFalse(file.isDirectory());
-    assertTrue(file.getChildren() == null || file.getChildren().isEmpty());
+
+    assertThat(file.getName()).isEqualTo("a.txt");
+    assertThat(file.isDirectory()).isFalse();
+    assertThat(file.getChildren()).isNullOrEmpty();
   }
 
   @Test
@@ -54,15 +51,16 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     FileObject a = getFileObject(foList, "a.txt");
     FileObject c = getFileObject(foList, "c");
 
-    assertFalse(a.isDirectory());
-    assertEquals("a.txt", a.getName());
-    assertEquals("a.txt", a.getPath());
-    assertEquals("added new line for blame", a.getDescription().get());
-    assertTrue(a.getLength().getAsLong() > 0);
+    assertThat(a.getName()).isEqualTo("a.txt");
+    assertThat(a.getPath()).isEqualTo("a.txt");
+    assertThat(a.isDirectory()).isFalse();
+    assertThat(a.getDescription()).hasValue("added new line for blame");
+    assertThat(a.getLength().getAsLong()).isGreaterThan(0);
     checkDate(a.getCommitDate().getAsLong());
-    assertTrue(c.isDirectory());
-    assertEquals("c", c.getName());
-    assertEquals("c", c.getPath());
+
+    assertThat(c.getName()).isEqualTo("c");
+    assertThat(c.getPath()).isEqualTo("c");
+    assertThat(c.isDirectory()).isTrue();
   }
 
   @Test
@@ -72,7 +70,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     BrowserResult result = new HgBrowseCommand(cmdContext).getBrowserResult(request);
 
-    assertFalse(result.isModifiable());
+    assertThat(result.isModifiable()).isFalse();
   }
 
   @Test
@@ -84,7 +82,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     BrowserResult result = new HgBrowseCommand(cmdContext).getBrowserResult(browseCommandRequest);
 
-    assertTrue(result.isModifiable());
+    assertThat(result.isModifiable()).isTrue();
     assertThat(result.getRevision()).isEqualTo(defaultBranchRevision);
   }
 
@@ -96,19 +94,18 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     BrowserResult result = new HgBrowseCommand(cmdContext).getBrowserResult(request);
 
-    assertNotNull(result);
+    assertThat(result).isNotNull();
 
     FileObject c = result.getFile();
-    assertEquals("c", c.getName());
+    assertThat(c.getName()).isEqualTo("c");
     Collection<FileObject> foList = c.getChildren();
 
     assertThat(foList)
       .extracting("name")
       .containsExactly("d.txt", "e.txt");
 
-    assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(2, foList.size());
+    assertThat(foList).isNotNull();
+    assertThat(foList).hasSize(2);
 
     FileObject d = null;
     FileObject e = null;
@@ -125,19 +122,20 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
       }
     }
 
-    assertNotNull(d);
-    assertFalse(d.isDirectory());
-    assertEquals("d.txt", d.getName());
-    assertEquals("c/d.txt", d.getPath());
-    assertEquals("added file d and e in folder c", d.getDescription().get());
-    assertTrue(d.getLength().getAsLong() > 0);
+    assertThat(d).isNotNull();
+    assertThat(d.isDirectory()).isFalse();
+    assertThat(d.getName()).isEqualTo("d.txt");
+    assertThat(d.getPath()).isEqualTo("c/d.txt");
+    assertThat(d.getDescription()).hasValue("added file d and e in folder c");
+    assertThat(d.getLength().getAsLong()).isGreaterThan(0);
     checkDate(d.getCommitDate().getAsLong());
-    assertNotNull(e);
-    assertFalse(e.isDirectory());
-    assertEquals("e.txt", e.getName());
-    assertEquals("c/e.txt", e.getPath());
-    assertEquals("added file d and e in folder c", e.getDescription().get());
-    assertTrue(e.getLength().getAsLong() > 0);
+
+    assertThat(e).isNotNull();
+    assertThat(e.isDirectory()).isFalse();
+    assertThat(e.getName()).isEqualTo("e.txt");
+    assertThat(e.getPath()).isEqualTo("c/e.txt");
+    assertThat(e.getDescription()).hasValue("added file d and e in folder c");
+    assertThat(e.getLength().getAsLong()).isGreaterThan(0);
     checkDate(e.getCommitDate().getAsLong());
   }
 
@@ -151,8 +149,8 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     FileObject a = getFileObject(foList, "a.txt");
 
-    assertFalse(a.getDescription().isPresent());
-    assertFalse(a.getCommitDate().isPresent());
+    assertThat(a.getDescription()).isEmpty();
+    assertThat(a.getCommitDate()).isEmpty();
   }
 
   @Test
@@ -163,18 +161,17 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     BrowserResult result = new HgBrowseCommand(cmdContext).getBrowserResult(request);
 
-    assertNotNull(result);
+    assertThat(result).isNotNull();
 
     FileObject root = result.getFile();
     Collection<FileObject> foList = root.getChildren();
 
-    assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(4, foList.size());
+    assertThat(foList).isNotNull();
+    assertThat(foList).hasSize(4);
 
     FileObject c = getFileObject(foList, "c");
-    assertTrue(c.isDirectory());
-    assertEquals(2, c.getChildren().size());
+    assertThat(c.isDirectory()).isTrue();
+    assertThat(c.getChildren()).hasSize(2);
   }
 
   @Test
@@ -306,12 +303,12 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   private Collection<FileObject> getRootFromTip(BrowseCommandRequest request) throws IOException {
     BrowserResult result = new HgBrowseCommand(cmdContext).getBrowserResult(request);
 
-    assertNotNull(result);
+    assertThat(result).isNotNull();
 
     FileObject root = result.getFile();
     Collection<FileObject> foList = root.getChildren();
 
-    assertNotNull(foList);
+    assertThat(foList).isNotNull();
     assertThat(foList).extracting("name").containsExactly("c", "a.txt", "b.txt", "f.txt");
 
     return foList;

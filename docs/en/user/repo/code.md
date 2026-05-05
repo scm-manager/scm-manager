@@ -38,15 +38,31 @@ In the code overview, submodules (Git), subrepositories (Hg) and externals (Svn)
 ![Example for a subrepository in the source view](assets/repository-code-subrepository.png)
 
 ### Commits
-The commits overview shows the change history of the branch. Each entry represents a commit. 
-
-The Details button leads to the content/changes of a commit.
-
-The key icon shows if the commit was signed. The users can add their public keys to SCM-Manager for signature verification. The green key means that the signature could be verified successfully against an existing public key. The grey key shows that no matching key could be found for the signature. The red key warns you about an invalid (possible faked) signature.
-
-The Sources button leads to the sources overview that shows the state from after this commit.
+The commit overview displays the change history of the selected branch, tag or commit.
+Each list entry represents a commit in the history.
 
 ![Example of the commit overview](assets/repository-code-changesetsView.png)
+
+For each commit, the first line of the message, the author, the commit ID, and the creation time are displayed.
+If a tag was also created for a commit, it is displayed as well.
+If a commit is signed, this is indicated by a key icon:
+
+- If the key icon is green, the signature was successfully verified using a public key stored in the SCM-Manager.
+- If the key icon is gray, the signature could not be matched to any known public key.
+- If the key icon is red, the signature is invalid and may be forged.
+
+Each commit has a details and sources button.
+The details button opens the commit details view with further information about the respective commit.
+The sources button takes you to the sources overview and displays the source files at the time of this commit.
+
+The change history can be filtered to locate specific commits. The available filters include:
+
+- **Text search:** Case-insensitive substring matching for commit messages, contributor names, and email addresses.
+- **Date ranges:** "Before" and "after" date selection to isolate specific timeframes (inclusive of the selected dates).
+
+Each filter option is optional and can be combined as desired.
+
+**Note:** Applied filters are stored in the URL, allowing the filtered view to be easily shared by copying the link.
 
 ### Commit Details
 The details page of a commit shows the metadata (like contributors and the parent commit) and all changes that are part of the commit (diffs). 

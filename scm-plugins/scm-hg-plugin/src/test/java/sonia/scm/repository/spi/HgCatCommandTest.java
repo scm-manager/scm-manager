@@ -16,8 +16,8 @@
 
 package sonia.scm.repository.spi;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.InternalRepositoryException;
 
@@ -25,7 +25,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class HgCatCommandTest extends AbstractHgCommandTestBase {
 
@@ -35,7 +36,7 @@ public class HgCatCommandTest extends AbstractHgCommandTestBase {
 
     request.setPath("a.txt");
     request.setRevision("a9bacaf1b7fa");
-    assertEquals("a", execute(request));
+    assertThat(execute(request)).isEqualTo("a");
   }
 
   @Test
@@ -43,25 +44,26 @@ public class HgCatCommandTest extends AbstractHgCommandTestBase {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("b.txt");
-    assertEquals("b", execute(request));
+    assertThat(execute(request)).isEqualTo("b");
   }
 
-  @Test(expected = InternalRepositoryException.class)
-  public void testUnknownFile() throws IOException {
+  @Test
+  public void testUnknownFile() {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("unknown");
-    execute(request);
+    assertThatThrownBy(() -> execute(request)).isInstanceOf(InternalRepositoryException.class);
   }
 
-  @Test(expected = NotFoundException.class)
-  @Ignore("detection of unknown revision in hg not yet implemented")
+  @Test
+  @Disabled("detection of unknown revision in hg not yet implemented")
   public void testUnknownRevision() throws IOException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setRevision("abc");
     request.setPath("a.txt");
     execute(request);
+    assertThatThrownBy(() -> execute(request)).isInstanceOf(NotFoundException.class);
   }
 
   @Test
@@ -71,9 +73,9 @@ public class HgCatCommandTest extends AbstractHgCommandTestBase {
 
     InputStream catResultStream = new HgCatCommand(cmdContext).getCatResultStream(request);
 
-    assertEquals('b', catResultStream.read());
-    assertEquals('\n', catResultStream.read());
-    assertEquals(-1, catResultStream.read());
+    assertThat(catResultStream.read()).isEqualTo('b');
+    assertThat(catResultStream.read()).isEqualTo('\n');
+    assertThat(catResultStream.read()).isEqualTo(-1);
 
     catResultStream.close();
   }

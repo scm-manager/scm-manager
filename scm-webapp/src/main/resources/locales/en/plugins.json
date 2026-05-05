@@ -205,6 +205,10 @@
       "displayName": "Push failed",
       "description": "Pushing the repository has failed"
     },
+    "pFV4DjjWc": {
+      "displayName": "Invalid date format",
+      "description": "The format of the provided date is invalid. Expected format ist YYYY-MM-DD."
+    },
     "AGR7UzkhA1": {
       "displayName": "Not found",
       "description": "The requested entity could not be found. It may have been deleted in another session."

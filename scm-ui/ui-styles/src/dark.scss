@@ -331,4 +331,6 @@ input[type="date"].input::-webkit-calendar-picker-indicator {
   color: $grey;
 }
 
-
+input[type="date"]::-webkit-calendar-picker-indicator {
+  color-scheme: none;
+}

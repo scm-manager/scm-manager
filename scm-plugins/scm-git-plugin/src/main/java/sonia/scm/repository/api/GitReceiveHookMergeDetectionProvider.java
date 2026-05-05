@@ -48,7 +48,7 @@ public class GitReceiveHookMergeDetectionProvider implements HookMergeDetectionP
     request.setAncestorChangeset(findRelevantRevisionForBranchIfToBeUpdated(target));
     request.setPagingLimit(1);
 
-    return new GitLogComputer(repositoryId, repository, converterFactory).compute(request).getTotal() == 0;
+    return new GitLogComputer(repositoryId, repository, converterFactory).compute(request).getChangesets().isEmpty();
   }
 
   private String findRelevantRevisionForBranchIfToBeUpdated(String branch) {

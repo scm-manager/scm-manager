@@ -42,6 +42,7 @@ import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.LogCommandBuilder;
+import sonia.scm.repository.api.LookupRevisionCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.RevertCommandBuilder;
@@ -86,7 +87,7 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
   @Mock(strictness = LENIENT)
   private RepositoryService repositoryService;
 
-  @Mock(strictness = LENIENT)
+  @Mock(strictness = LENIENT, answer = Answers.RETURNS_SELF)
   private LogCommandBuilder logCommandBuilder;
 
   @Mock(strictness = LENIENT, answer = Answers.RETURNS_DEEP_STUBS)
@@ -108,7 +109,14 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
   @BeforeEach
   void prepareEnvironment() {
     changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
-    changesetRootResource = new ChangesetRootResource(serviceFactory, changesetCollectionToDtoMapper, changesetToChangesetDtoMapper, resourceLinks);
+
+    changesetRootResource = new ChangesetRootResource(
+      serviceFactory,
+      changesetCollectionToDtoMapper,
+      changesetToChangesetDtoMapper,
+      resourceLinks
+    );
+
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
@@ -134,12 +142,7 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
     ChangesetPagingResult changesetPagingResult = mock(ChangesetPagingResult.class);
     List<Changeset> changesetList = Lists.newArrayList(new Changeset(id, Date.from(creationDate).getTime(), new Person(authorName, authorEmail), commit));
     when(changesetPagingResult.getChangesets()).thenReturn(changesetList);
-    when(changesetPagingResult.getTotal()).thenReturn(1);
-    when(logCommandBuilder.setPagingStart(0)).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setPagingLimit(10)).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setBranch(anyString())).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setSearchString(any())).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setStartChangeset(any())).thenReturn(logCommandBuilder);
+    when(changesetPagingResult.getRawTotal()).thenReturn(1);
     when(logCommandBuilder.getChangesets()).thenReturn(changesetPagingResult);
     MockHttpRequest request = MockHttpRequest
       .get(CHANGESET_URL)
@@ -148,6 +151,8 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
     assertThat(response.getStatus()).isEqualTo(200);
     log.info("Response :{}", response.getContentAsString());
+    verify(logCommandBuilder).setPagingStart(0);
+    verify(logCommandBuilder).setPagingLimit(10);
     assertThat(response.getContentAsString()).contains(String.format("\"id\":\"%s\"", id));
     assertThat(response.getContentAsString()).contains(String.format("\"name\":\"%s\"", authorName));
     assertThat(response.getContentAsString()).contains(String.format("\"mail\":\"%s\"", authorEmail));
@@ -164,12 +169,7 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
     ChangesetPagingResult changesetPagingResult = mock(ChangesetPagingResult.class);
     List<Changeset> changesetList = Lists.newArrayList(new Changeset(id, Date.from(creationDate).getTime(), new Person(authorName, authorEmail), commit));
     when(changesetPagingResult.getChangesets()).thenReturn(changesetList);
-    when(changesetPagingResult.getTotal()).thenReturn(1);
-    when(logCommandBuilder.setPagingStart(20)).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setPagingLimit(10)).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setBranch(anyString())).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setSearchString(any())).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.setStartChangeset(any())).thenReturn(logCommandBuilder);
+    when(changesetPagingResult.getRawTotal()).thenReturn(1);
     when(logCommandBuilder.getChangesets()).thenReturn(changesetPagingResult);
     MockHttpRequest request = MockHttpRequest
       .get(CHANGESET_URL + "?page=2")
@@ -178,6 +178,8 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
     assertThat(response.getStatus()).isEqualTo(200);
     log.info("Response :{}", response.getContentAsString());
+    verify(logCommandBuilder).setPagingStart(20);
+    verify(logCommandBuilder).setPagingLimit(10);
     assertThat(response.getContentAsString()).contains(String.format("\"id\":\"%s\"", id));
     assertThat(response.getContentAsString()).contains(String.format("\"name\":\"%s\"", authorName));
     assertThat(response.getContentAsString()).contains(String.format("\"mail\":\"%s\"", authorEmail));
@@ -357,6 +359,86 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
       dispatcher.invoke(request, response);
 
       assertThat(response.getStatus()).isEqualTo(409);
+    }
+  }
+
+  @Nested
+  class Lookup {
+
+    @Mock(answer = Answers.RETURNS_SELF)
+    private LookupRevisionCommandBuilder lookupRevisionCommand;
+
+    @BeforeEach
+    void prepareLookupRevisionCommand() {
+      when(repositoryService.getLookupRevisionCommand()).thenReturn(lookupRevisionCommand);
+    }
+
+    @Test
+    void shouldReturnChangesetsForValidRevisionPrefix() throws URISyntaxException {
+      String revisionPrefix = "123";
+      String id = "1234567890abcdef";
+      Instant creationDate = Instant.now();
+      String authorName = "name";
+      String authorEmail = "em@i.l";
+      String commit = "my commit message";
+      Changeset changeset = new Changeset(id, Date.from(creationDate).getTime(), new Person(authorName, authorEmail), commit);
+
+      when(lookupRevisionCommand.setRevisionPrefix(revisionPrefix)).thenReturn(lookupRevisionCommand);
+      when(lookupRevisionCommand.getChangesets()).thenReturn(List.of(changeset));
+
+      MockHttpRequest request = MockHttpRequest
+        .get(CHANGESET_URL + "lookup?revisionPrefix=" + revisionPrefix)
+        .accept(VndMediaType.CHANGESET_LOOKUP);
+      JsonMockHttpResponse response = new JsonMockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(200);
+      assertThat(response.getContentAsJson().get("_embedded").get("changesets")).isNotNull();
+      assertThat(response.getContentAsJson().get("_embedded").get("changesets").get(0).get("id").asText()).isEqualTo(id);
+    }
+
+    @Test
+    void shouldReturnEmptyResultForNonExistingRevisionPrefix() throws URISyntaxException {
+      String revisionPrefix = "000";
+
+      when(lookupRevisionCommand.setRevisionPrefix(revisionPrefix)).thenReturn(lookupRevisionCommand);
+      when(lookupRevisionCommand.getChangesets()).thenReturn(List.of());
+
+      MockHttpRequest request = MockHttpRequest
+        .get(CHANGESET_URL + "lookup?revisionPrefix=" + revisionPrefix)
+        .accept(VndMediaType.CHANGESET_LOOKUP);
+      JsonMockHttpResponse response = new JsonMockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(200);
+      assertThat(response.getContentAsJson().get("_embedded").get("changesets")).isNotNull();
+      assertThat(response.getContentAsJson().get("_embedded").get("changesets").size()).isEqualTo(0);
+    }
+
+    @Test
+    void shouldFailForTooShortRevisionPrefix() throws URISyntaxException {
+      String revisionPrefix = "12";
+
+      MockHttpRequest request = MockHttpRequest
+        .get(CHANGESET_URL + "lookup?revisionPrefix=" + revisionPrefix)
+        .accept(VndMediaType.CHANGESET_LOOKUP);
+      MockHttpResponse response = new MockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    void shouldFailForInvalidCharactersInRevisionPrefix() throws URISyntaxException {
+      String revisionPrefix = "123GHI";
+
+      MockHttpRequest request = MockHttpRequest
+        .get(CHANGESET_URL + "lookup?revisionPrefix=" + revisionPrefix)
+        .accept(VndMediaType.CHANGESET_LOOKUP);
+      MockHttpResponse response = new MockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(400);
     }
   }
 }
