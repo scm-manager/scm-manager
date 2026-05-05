@@ -15,23 +15,18 @@
  */
 
 import React, { FC } from "react";
-import { Link, useLocation, useRouteMatch } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { CompareBranchesParams } from "./CompareView";
 
-type Props = {
-  baseUrl: string;
-};
-
-const CompareTabs: FC<Props> = ({ baseUrl }) => {
+const CompareTabs: FC<{ baseUrl: string }> = ({ baseUrl }) => {
   const [t] = useTranslation("repos");
+  const { sourceType, sourceName, targetType, targetName } = useParams<CompareBranchesParams>();
+  const url = `${baseUrl}/${sourceType}/${encodeURIComponent(sourceName!)}/${targetType}/${encodeURIComponent(targetName!)}/`;
   const location = useLocation();
-  const match = useRouteMatch<CompareBranchesParams>();
-
-  const url = `${baseUrl}/${match.params.sourceType}/${match.params.sourceName}/${match.params.targetType}/${match.params.targetName}`;
 
   const setIsActiveClassName = (path: string) => {
-    const regex = new RegExp(url + path);
+    const regex = new RegExp(path);
     return location.pathname.match(regex) ? "is-active" : "";
   };
 
@@ -39,10 +34,10 @@ const CompareTabs: FC<Props> = ({ baseUrl }) => {
     <div className="tabs mt-5">
       <ul>
         <li className={setIsActiveClassName("/diff/")}>
-          <Link to={`${url}/diff/`}>{t("compare.tabs.diff")}</Link>
+          <Link to={url + "diff/"}>{t("compare.tabs.diff")}</Link>
         </li>
         <li className={setIsActiveClassName("/changesets/")}>
-          <Link to={`${url}/changesets/`}>{t("compare.tabs.commits")}</Link>
+          <Link to={url + "changesets/"}>{t("compare.tabs.commits")}</Link>
         </li>
       </ul>
     </div>

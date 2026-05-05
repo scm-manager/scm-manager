@@ -149,26 +149,26 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
   const authorLine = [];
   if (changeset.author) {
     authorLine.push(
-      <Contributors persons={[changeset.author]} label={"changeset.contributors.authoredBy"} displayTextOnly={true} />
+      <Contributors persons={[changeset.author]} label="changeset.contributors.authoredBy" displayTextOnly={true} />,
     );
   }
 
   const commiters = getCommitters();
   if (commiters.length > 0) {
-    authorLine.push(<Contributors persons={commiters} label={"changeset.contributors.committedBy"} />);
+    authorLine.push(<Contributors persons={commiters} label="changeset.contributors.committedBy" />);
   }
 
   const coAuthors = getCoAuthors();
   if (coAuthors.length > 0) {
-    authorLine.push(<Contributors persons={coAuthors} label={"changeset.contributors.coAuthoredBy"} />);
+    authorLine.push(<Contributors persons={coAuthors} label="changeset.contributors.coAuthoredBy" />);
   }
 
   // extensions
   const extensions = binder.getExtensions<extensionPoints.ChangesetsAuthorSuffix>("changesets.author.suffix", {
-    changeset
+    changeset,
   });
   if (extensions) {
-    authorLine.push(...extensions);
+    authorLine.push(...(extensions as React.ReactNode[]));
   }
 
   return (

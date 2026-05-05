@@ -14,21 +14,23 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { renderHook } from "@testing-library/react-hooks";
-import React, { FC } from "react";
+import { renderHook } from "@testing-library/react";
+import React, { FC, ReactNode } from "react";
 import ActiveModalCountContext, { ModalStateContextType } from "./activeModalCountContext";
 import useRegisterModal from "./useRegisterModal";
 
-const createWrapper =
-  (context: ModalStateContextType): FC =>
-  ({ children }) => {
-    return <ActiveModalCountContext.Provider value={context}>{children}</ActiveModalCountContext.Provider>;
-  };
+const createWrapper = (context: ModalStateContextType): FC<{ children: ReactNode }> => {
+  const Wrapper: FC<{ children: ReactNode }> = ({ children }) => (
+    <ActiveModalCountContext.Provider value={context}>{children}</ActiveModalCountContext.Provider>
+  );
+  Wrapper.displayName = "ActiveModalCountContextWrapper";
+  return Wrapper;
+};
 
 describe("useRegisterModal", () => {
   it("should increment and not decrement on active registration", () => {
-    const increment = jest.fn();
-    const decrement = jest.fn();
+    const increment = vi.fn();
+    const decrement = vi.fn();
 
     renderHook(() => useRegisterModal(true), {
       wrapper: createWrapper({ value: 0, increment, decrement }),
@@ -39,8 +41,8 @@ describe("useRegisterModal", () => {
   });
 
   it("should not decrement on inactive registration", () => {
-    const increment = jest.fn();
-    const decrement = jest.fn();
+    const increment = vi.fn();
+    const decrement = vi.fn();
 
     renderHook(() => useRegisterModal(false), {
       wrapper: createWrapper({ value: 0, increment, decrement }),
@@ -51,8 +53,8 @@ describe("useRegisterModal", () => {
   });
 
   it("should not decrement on inactive de-registration", () => {
-    const increment = jest.fn();
-    const decrement = jest.fn();
+    const increment = vi.fn();
+    const decrement = vi.fn();
 
     const result = renderHook(() => useRegisterModal(false), {
       wrapper: createWrapper({ value: 0, increment, decrement }),
@@ -65,8 +67,8 @@ describe("useRegisterModal", () => {
   });
 
   it("should decrement once on active de-registration", () => {
-    const increment = jest.fn();
-    const decrement = jest.fn();
+    const increment = vi.fn();
+    const decrement = vi.fn();
 
     const result = renderHook(() => useRegisterModal(false, true), {
       wrapper: createWrapper({ value: 0, increment, decrement }),
@@ -79,8 +81,8 @@ describe("useRegisterModal", () => {
   });
 
   it("should decrement once when switching from active to inactive", () => {
-    const increment = jest.fn();
-    const decrement = jest.fn();
+    const increment = vi.fn();
+    const decrement = vi.fn();
 
     const result = renderHook(({ active }: { active: boolean }) => useRegisterModal(active), {
       wrapper: createWrapper({ value: 0, increment, decrement }),

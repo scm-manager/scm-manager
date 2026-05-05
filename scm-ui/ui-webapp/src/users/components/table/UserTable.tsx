@@ -16,9 +16,9 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
+import { KeyboardIterator } from "@scm-manager/ui-core";
 import { User } from "@scm-manager/ui-types";
 import UserRow from "./UserRow";
-import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   users: User[];

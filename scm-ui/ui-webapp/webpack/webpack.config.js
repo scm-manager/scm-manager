@@ -113,10 +113,10 @@ module.exports = [
             "sass-loader",
           ],
         },
-        {
-          test: /\.(png|svg|jpg|gif|woff2?|eot|ttf)$/,
-          use: ["file-loader"],
-        },
+        // {
+        //  test: /\.(png|svg|jpg|gif|woff2?|eot|ttf)$/,
+        //   use: ["file-loader"],
+        // },
       ],
     },
     resolve: {
@@ -130,7 +130,7 @@ module.exports = [
         "decode-named-character-reference": require.resolve("decode-named-character-reference"),
         // force cjs instead of esm
         // https://github.com/tannerlinsley/react-query/issues/3513
-        "react-query/devtools": require.resolve("react-query/devtools"),
+        "react-query/devtools": require.resolve("@tanstack/react-query-devtools"),
       },
     },
     output: {
@@ -198,22 +198,24 @@ module.exports = [
     entry: themes,
     module: {
       rules: [
-        {
-          test: /\.(ttf|eot|svg|png|jpg|gif|ico)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-          use: [
-            {
-              loader: "file-loader",
-            },
-          ],
-        },
-        {
-          test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-          use: [
-            {
-              loader: "file-loader",
-            },
-          ],
-        },
+        // {
+        //  test: /\.(ttf|eot|svg|png|jpg|gif|ico)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        //  use: [
+        //    {
+        //      loader: "file-loader",
+        //    },
+        //  ],
+        // },
+        // removed because it breaks font-awesome icons
+        // see https://stackoverflow.com/questions/70149253/why-is-webpack-emitting-font-files-that-are-actually-javascript
+        // {
+        //   test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        //   use: [
+        //     {
+        //       loader: "file-loader",
+        //     },
+        //   ],
+        // },
         {
           test: /\.(css|scss|sass)$/i,
           use: [

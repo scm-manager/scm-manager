@@ -15,7 +15,7 @@
  */
 
 import React, { FC, ReactNode } from "react";
-import { CardList, Collapsible } from "@scm-manager/ui-layout";
+import { CardList, Collapsible } from "@scm-manager/ui-core";
 
 type Props = {
   namespaceHeader: ReactNode;

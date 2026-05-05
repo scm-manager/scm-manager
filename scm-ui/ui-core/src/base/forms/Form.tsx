@@ -15,7 +15,7 @@
  */
 
 import React, { FC, useCallback, useEffect, useState } from "react";
-import { DeepPartial, SubmitHandler, useForm, UseFormReturn } from "react-hook-form";
+import { DefaultValues, SubmitHandler, useForm, UseFormReturn } from "react-hook-form";
 import { ErrorNotification } from "../notifications";
 import { Level } from "../misc";
 import { ScmFormContextProvider } from "./ScmFormContext";
@@ -47,11 +47,11 @@ const SuccessNotification: FC<{ label?: string; hide: () => void }> = ({ label, 
   );
 };
 
-type Props<FormType extends Record<string, unknown>, DefaultValues extends FormType> = {
+type Props<FormType extends Record<string, unknown>> = {
   children: ((renderProps: RenderProps<FormType>) => React.ReactNode | React.ReactNode[]) | React.ReactNode;
   translationPath: [namespace: string, prefix: string];
   onSubmit: SubmitHandler<FormType>;
-  defaultValues: DefaultValues;
+  defaultValues: DefaultValues<FormType>;
   readOnly?: boolean;
   submitButtonTestId?: string;
   /**
@@ -73,7 +73,7 @@ type Props<FormType extends Record<string, unknown>, DefaultValues extends FormT
    *
    * @since 2.43.0
    */
-  withResetTo?: DefaultValues;
+  withResetTo?: DefaultValues<FormType>;
   /**
    * Message to display after a successful submit if no translation key is defined.
    *
@@ -89,7 +89,7 @@ type Props<FormType extends Record<string, unknown>, DefaultValues extends FormT
  * @beta
  * @since 2.41.0
  */
-function Form<FormType extends Record<string, unknown>, DefaultValues extends FormType = FormType>({
+function Form<FormType extends Record<string, unknown>>({
   children,
   onSubmit,
   defaultValues,
@@ -99,10 +99,10 @@ function Form<FormType extends Record<string, unknown>, DefaultValues extends Fo
   withDiscardChanges,
   successMessageFallback,
   submitButtonTestId,
-}: Props<FormType, DefaultValues>) {
+}: Props<FormType>) {
   const form = useForm<FormType>({
     mode: "onChange",
-    defaultValues: defaultValues as DeepPartial<FormType>,
+    defaultValues: defaultValues,
   });
   const { formState, handleSubmit, reset, setValue } = form;
   const [ns, prefix] = translationPath;
@@ -149,7 +149,7 @@ function Form<FormType extends Record<string, unknown>, DefaultValues extends Fo
   }, [isDirty]);
 
   const submit = useCallback(
-    async (data) => {
+    async (data: any) => {
       setError(null);
       try {
         return await onSubmit(data);

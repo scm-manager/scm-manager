@@ -25,6 +25,7 @@
     <version>1.0.0</version>
     <name>scm-i-plugin</name>
     <description>Plugin i depends on h in version 1.2.0</description>
+    <is-scm4-compatible>true</is-scm4-compatible>
   </information>
 
   <packages>

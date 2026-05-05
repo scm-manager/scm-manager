@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
+import React, { FC, Ref } from "react";
 import Field from "../base/Field";
 import Control from "../base/Control";
 import Label from "../base/label/Label";
@@ -27,6 +27,7 @@ type Props = {
   label: string;
   helpText?: string;
   error?: string;
+  ref?: Ref<HTMLSelectElement>;
 } & React.ComponentProps<typeof Select>;
 
 /**
@@ -34,22 +35,21 @@ type Props = {
  * @beta
  * @since 2.44.0
  */
-const SelectField = React.forwardRef<HTMLSelectElement, Props>(
-  ({ label, helpText, error, className, id, ...props }, ref) => {
-    const selectId = useAriaId(id ?? props.testId);
-    const variant = error ? "danger" : undefined;
-    return (
-      <Field className={className}>
-        <Label htmlFor={selectId}>
-          {label}
-          {helpText ? <Help className="ml-1" text={helpText} /> : null}
-        </Label>
-        <Control>
-          <Select id={selectId} variant={variant} ref={ref} className="is-full-width" {...props}></Select>
-        </Control>
-        {error ? <FieldMessage variant={variant}>{error}</FieldMessage> : null}
-      </Field>
-    );
-  }
-);
+const SelectField: FC<Props> = ({ label, helpText, error, className, id, ref, ...props }) => {
+  const selectId = useAriaId(id ?? props.testId);
+  const variant = error ? "danger" : undefined;
+  return (
+    <Field className={className}>
+      <Label htmlFor={selectId}>
+        {label}
+        {helpText ? <Help className="ml-1" text={helpText} /> : null}
+      </Label>
+      <Control>
+        <Select id={selectId} variant={variant} ref={ref} className="is-full-width" {...props}></Select>
+      </Control>
+      {error ? <FieldMessage variant={variant}>{error}</FieldMessage> : null}
+    </Field>
+  );
+};
+
 export default SelectField;

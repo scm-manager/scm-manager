@@ -39,7 +39,7 @@ export function makeCancelable<T>(promise: Promise<T>): CancelablePromise<T> {
 }
 
 export function useCancellablePromise() {
-  const promises = useRef<Array<CancelablePromise<unknown>>>();
+  const promises = useRef<Array<CancelablePromise<unknown>>>([]);
 
   useEffect(() => {
     promises.current = promises.current || [];

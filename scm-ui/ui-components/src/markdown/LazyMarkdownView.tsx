@@ -15,7 +15,7 @@
  */
 
 import React, { FC } from "react";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { useLocation, Location } from "react-router-dom";
 import unified from "unified";
 import parseMarkdown from "remark-parse";
 import sanitize from "rehype-sanitize";
@@ -23,7 +23,6 @@ import remark2rehype from "remark-rehype";
 import rehype2react from "rehype-react";
 import gfm from "remark-gfm";
 import { BinderContext } from "@scm-manager/ui-extensions";
-import ErrorBoundary from "../ErrorBoundary";
 import { create as createMarkdownHeadingRenderer } from "./MarkdownHeadingRenderer";
 import { create as createMarkdownLinkRenderer } from "./MarkdownLinkRenderer";
 import { create as createMarkdownImageRenderer } from "./MarkdownImageRenderer";
@@ -34,7 +33,7 @@ import { createTransformer as createValuelessTextAdapter } from "./remarkValuele
 import MarkdownCodeRenderer from "./MarkdownCodeRenderer";
 import { AstPlugin } from "./PluginApi";
 import createMdastPlugin from "./createMdastPlugin";
-// @ts-ignore
+// @ts-ignore cant find module
 import gh from "hast-util-sanitize/lib/github";
 import raw from "rehype-raw";
 import slug from "rehype-slug";
@@ -51,13 +50,16 @@ export type MarkdownProps = {
   renderers?: any;
   skipHtml?: boolean;
   enableAnchorHeadings?: boolean;
-  // basePath for markdown links
+  // basePath for Markdown links
   basePath?: string;
   permalink?: string;
   mdastPlugins?: AstPlugin[];
 };
 
-type Props = RouteComponentProps & WithTranslation & MarkdownProps;
+type Props = WithTranslation &
+  MarkdownProps & {
+    location: Location;
+  };
 
 type State = {
   contentRef: HTMLDivElement | null | undefined;
@@ -71,7 +73,7 @@ const xmlMarkupSample = `\`\`\`xml
 </your>
 \`\`\``;
 
-const MarkdownErrorNotification: FC = () => {
+export const MarkdownErrorNotification: FC = () => {
   const [t] = useTranslation("commons");
   return (
     <Notification type="danger">
@@ -118,6 +120,7 @@ class LazyMarkdownView extends React.Component<Props, State> {
     // We also have to check if props have changed, because we also want to rerender if one of our props has changed
     const propsChanged = Object.entries(nextProps).some(([key, val]) => {
       if (key === "match") {
+        // @ts-ignore
         return JSON.stringify(this.props[key]) !== JSON.stringify(nextProps[key]);
       }
       return this.props[key as keyof Props] !== val;
@@ -156,6 +159,7 @@ class LazyMarkdownView extends React.Component<Props, State> {
       mdastPlugins = [],
     } = this.props;
 
+    // @ts-ignore
     const rendererFactory = this.context.getExtension("markdown-renderer-factory");
     let remarkRendererList = renderers;
 
@@ -175,15 +179,16 @@ class LazyMarkdownView extends React.Component<Props, State> {
 
     let protocolLinkRendererExtensions: ProtocolLinkRendererExtensionMap = {};
     if (!remarkRendererList.link) {
+      // @ts-ignore
       const extensionPoints = this.context.getExtensions(
-        "markdown-renderer.link.protocol"
+        "markdown-renderer.link.protocol",
       ) as ProtocolLinkRendererExtension[];
       protocolLinkRendererExtensions = extensionPoints.reduce<ProtocolLinkRendererExtensionMap>(
         (prev, { protocol, renderer }) => {
           prev[protocol] = renderer;
           return prev;
         },
-        {}
+        {},
       );
       remarkRendererList.link = createMarkdownLinkRenderer(basePath, protocolLinkRendererExtensions);
     }
@@ -193,7 +198,7 @@ class LazyMarkdownView extends React.Component<Props, State> {
     }
 
     const remarkPlugins = [...mdastPlugins, createChangesetShortlinkParser(t), createValuelessTextAdapter()].map(
-      createMdastPlugin
+      createMdastPlugin,
     );
 
     let processor = unified()
@@ -218,7 +223,7 @@ class LazyMarkdownView extends React.Component<Props, State> {
           protocols: {
             href: Object.keys(protocolLinkRendererExtensions),
           },
-        })
+        }),
       )
       .use(rehype2react, {
         createElement: React.createElement,
@@ -229,16 +234,16 @@ class LazyMarkdownView extends React.Component<Props, State> {
     const renderedMarkdown: any = processor.processSync(content).result;
 
     return (
-      <ErrorBoundary fallback={MarkdownErrorNotification}>
-        <HorizontalScrollDiv
-          ref={(el) => this.setState({ contentRef: el })}
-          className={classNames("content", className)}
-        >
-          {renderedMarkdown}
-        </HorizontalScrollDiv>
-      </ErrorBoundary>
+      <HorizontalScrollDiv ref={(el) => this.setState({ contentRef: el })} className={classNames("content", className)}>
+        {renderedMarkdown}
+      </HorizontalScrollDiv>
     );
   }
 }
 
-export default withTranslation("repos")(withRouter(LazyMarkdownView));
+const MarkdownViewWithRouter: FC<MarkdownProps & WithTranslation> = (props) => {
+  const location = useLocation();
+  return <LazyMarkdownView {...props} location={location} />;
+};
+
+export default withTranslation("repos")(MarkdownViewWithRouter);

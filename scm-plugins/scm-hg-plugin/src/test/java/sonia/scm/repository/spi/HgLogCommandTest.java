@@ -179,4 +179,29 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
   {
     return new HgLogCommand(cmdContext);
   }
+
+  @Test
+  public void testGetBySearchStringHash() {
+    LogCommandRequest request = new LogCommandRequest();
+    request.setSearchString("2baab8e8028");
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertNotNull(result);
+    assertEquals(1, result.getTotal());
+    assertEquals(1, result.getChangesets().size());
+    assertEquals("2baab8e80280ef05a9aa76c49c76feca2872afb7", result.getChangesets().get(0).getId());
+  }
+
+  @Test
+  public void testGetBySearchStringNoResult() {
+    LogCommandRequest request = new LogCommandRequest();
+    request.setSearchString("55tt");
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertNotNull(result);
+    assertEquals(0, result.getTotal());
+    assertTrue(result.getChangesets().isEmpty());
+  }
 }

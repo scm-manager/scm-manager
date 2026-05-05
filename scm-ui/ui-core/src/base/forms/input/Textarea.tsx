@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { InputHTMLAttributes } from "react";
+import React, { FC, InputHTMLAttributes, Ref } from "react";
 import classNames from "classnames";
 import { createVariantClass, Variant } from "../variants";
 import { createAttributesForTesting } from "../../helpers";
@@ -22,9 +22,10 @@ import { createAttributesForTesting } from "../../helpers";
 type Props = {
   variant?: Variant;
   testId?: string;
+  ref?: Ref<HTMLTextAreaElement>;
 } & InputHTMLAttributes<HTMLTextAreaElement>;
 
-const Textarea = React.forwardRef<HTMLTextAreaElement, Props>(({ variant, className, testId, ...props }, ref) => {
+const Textarea: FC<Props> = ({ variant, className, testId, ref, ...props }) => {
   return (
     <textarea
       ref={ref}
@@ -33,6 +34,6 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, Props>(({ variant, classN
       {...createAttributesForTesting(testId)}
     />
   );
-});
+};
 
 export default Textarea;

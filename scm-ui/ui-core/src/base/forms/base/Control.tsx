@@ -14,13 +14,17 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { HTMLProps } from "react";
+import React, { HTMLProps, Ref, FC } from "react";
 import classNames from "classnames";
 
-const Control = React.forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(({ className, children, ...rest }, ref) => (
+type ControlProps = HTMLProps<HTMLDivElement> & {
+  ref?: Ref<HTMLDivElement>;
+};
+
+const Control: FC<ControlProps> = ({ className, children, ref, ...rest }) => (
   <div className={classNames("control", className)} {...rest} ref={ref}>
     {children}
   </div>
-));
+);
 
 export default Control;

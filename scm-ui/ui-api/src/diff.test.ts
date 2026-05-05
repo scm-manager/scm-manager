@@ -14,9 +14,9 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import fetchMock from "fetch-mock-jest";
+import fetchMock from "fetch-mock";
 import { Diff } from "@scm-manager/ui-types";
-import { act, renderHook } from "@testing-library/react-hooks";
+import { renderHook, act, waitFor } from "@testing-library/react";
 import { useDiff } from "./diff";
 import createWrapper from "./tests/createWrapper";
 
@@ -159,11 +159,10 @@ describe("Test diff", () => {
       body: simpleDiff,
       headers: { "Content-Type": "application/vnd.scmm-diffparsed+json;v=2" },
     });
-    const { result, waitFor } = renderHook(() => useDiff("/diff"), {
+    const { result } = renderHook(() => useDiff("/diff"), {
       wrapper: createWrapper(),
     });
-    await waitFor(() => !!result.current.data);
-    expect(result.current.data).toEqual(simpleDiff);
+    await waitFor(() => expect(result.current.data).toEqual(simpleDiff));
   });
 
   it("should parse and return textual diff", async () => {
@@ -179,11 +178,10 @@ describe("Test diff", () => {
 `,
       headers: { "Content-Type": "text/plain" },
     });
-    const { result, waitFor } = renderHook(() => useDiff("/diff"), {
+    const { result } = renderHook(() => useDiff("/diff"), {
       wrapper: createWrapper(),
     });
-    await waitFor(() => !!result.current.data);
-    expect(result.current.data?.files).toHaveLength(1);
+    await waitFor(() => expect(result.current.data?.files).toHaveLength(1));
   });
 
   it("should return parsed diff in multiple chunks", async () => {
@@ -195,21 +193,25 @@ describe("Test diff", () => {
       body: partialDiff2,
       headers: { "Content-Type": "application/vnd.scmm-diffparsed+json;v=2" },
     });
-    const { result, waitFor, waitForNextUpdate } = renderHook(() => useDiff("/diff?limit=1"), {
+    const { result } = renderHook(() => useDiff("/diff?limit=1"), {
       wrapper: createWrapper(),
     });
-    await waitFor(() => !!result.current.data);
-    expect(result.current.data).toEqual(partialDiff1);
-
-    await act(() => {
-      const { fetchNextPage } = result.current;
-      fetchNextPage();
-      return waitForNextUpdate();
+    await waitFor(() => {
+      expect(result.current.data).toEqual(partialDiff1);
     });
 
-    await waitFor(() => !result.current.isFetchingNextPage);
+    await act(async () => {
+      await result.current.fetchNextPage();
+    });
 
-    expect(result.current.data).toEqual({ ...partialDiff2, files: [partialDiff1.files[0], partialDiff2.files[0]] });
+    await waitFor(() => {
+      expect(result.current.data?.files.length).toBe(2);
+    });
+
+    expect(result.current.data).toEqual({
+      ...partialDiff2,
+      files: [partialDiff1.files[0], partialDiff2.files[0]],
+    });
   });
 
   it("should append query parameters to url which has already query params", async () => {
@@ -217,10 +219,9 @@ describe("Test diff", () => {
       body: simpleDiff,
       headers: { "Content-Type": "application/vnd.scmm-diffparsed+json;v=2" },
     });
-    const { result, waitFor } = renderHook(() => useDiff("/diff?format=GIT", { limit: 25, ignoreWhitespace: "NONE" }), {
+    const { result } = renderHook(() => useDiff("/diff?format=GIT", { limit: 25, ignoreWhitespace: "NONE" }), {
       wrapper: createWrapper(),
     });
-    await waitFor(() => !!result.current.data);
-    expect(result.current.data).toEqual(simpleDiff);
+    await waitFor(() => expect(result.current.data).toEqual(simpleDiff));
   });
 });

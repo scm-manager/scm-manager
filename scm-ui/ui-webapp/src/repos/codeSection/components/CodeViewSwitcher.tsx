@@ -44,7 +44,12 @@ const CodeViewSwitcher: FC<Props> = ({ currentUrl, switchViewLink }) => {
   const { t } = useTranslation("repos");
 
   let location = "";
-  if (currentUrl.includes("/code/branch") || currentUrl.includes("/code/changesets")) {
+  if (
+    currentUrl.includes("/code/branch") ||
+    currentUrl.includes("/code/tag") ||
+    currentUrl.includes("/code/revision") ||
+    currentUrl.includes("/code/changesets")
+  ) {
     location = "changesets";
   } else if (currentUrl.includes("/code/sources")) {
     location = "sources";

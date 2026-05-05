@@ -14,59 +14,86 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { CompareFunction, CompareProps } from "./CompareSelectBar";
 import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { Button } from "@scm-manager/ui-core";
-import { Input } from "@scm-manager/ui-forms";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { Loading, ErrorNotification, Notification } from "@scm-manager/ui-core";
+import { Repository, Changeset } from "@scm-manager/ui-types";
+import { useChangesets } from "@scm-manager/ui-api";
+import CompareSelectorListEntry from "./CompareSelectorListEntry";
+import { CompareProps, CompareFunction } from "./CompareSelectBar";
 
 type Props = {
   selected: CompareProps;
   onSelect: CompareFunction;
+  repository: Repository;
+  filter: string;
 };
 
-type FormProps = {
-  revision: string;
-};
-
-const SizedForm = styled.form`
-  width: 18.5rem;
+const Container = styled.div`
+  width: 100%;
 `;
 
-const SmallButton = styled(Button)`
-  height: 1.875rem;
+const FixedWidthNotification = styled(Notification)`
+  width: 100%;
+  margin-top: 0.5rem;
 `;
 
-const RevisionTab: FC<Props> = ({ selected, onSelect }) => {
+const ScrollableUl = styled.ul`
+  max-height: 15.65rem;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+`;
+
+const RevisionTab: FC<Props> = ({ selected, onSelect, repository, filter }) => {
   const [t] = useTranslation("repos");
-  const defaultValue = selected.type === "r" ? selected.name : "";
-  const { register, handleSubmit, watch } = useForm<FormProps>({
-    defaultValues: {
-      revision: defaultValue,
-    },
-  });
-  const onSubmit: SubmitHandler<FormProps> = (data) => onSelect("r", data.revision);
 
-  return (
-    <SizedForm className="mt-2" onSubmit={handleSubmit(onSubmit)}>
-      <div className="field has-addons is-justify-content-center">
-        <div className="control">
-          <Input
-            className="is-small"
-            placeholder={t("compare.selector.revision.input")}
-            {...register("revision", { required: true })}
-          />
-        </div>
-        <div className="control">
-          <SmallButton className="is-info is-small" type="submit" disabled={!watch("revision")}>
-            {t("compare.selector.revision.submit")}
-          </SmallButton>
-        </div>
-      </div>
-    </SizedForm>
-  );
+  const { isLoading, error, data } = useChangesets(repository, { query: filter });
+
+  const changesets: Changeset[] = (data?._embedded?.changesets as Changeset[]) || [];
+
+  const onSelectEntry = (name: string) => {
+    onSelect("revision", name);
+  };
+
+  const renderContent = () => {
+    if (filter.length < 3) {
+      return <FixedWidthNotification type="info">{t("compare.selector.revision.input")}</FixedWidthNotification>;
+    }
+
+    if (isLoading) {
+      return <Loading />;
+    }
+
+    if (error) {
+      return <ErrorNotification error={error} />;
+    }
+
+    if (changesets.length === 0) {
+      return <FixedWidthNotification type="info">{t("compare.selector.emptyResult")}</FixedWidthNotification>;
+    }
+
+    return (
+      <ScrollableUl className="py-2 pr-2" role="listbox">
+        {changesets.map((changeset) => (
+          <CompareSelectorListEntry
+            isSelected={selected.type === "revision" && selected.name === changeset.id}
+            onClick={() => onSelectEntry(changeset.id)}
+            key={changeset.id}
+          >
+            <div className="is-flex is-flex-direction-column is-overflow-hidden">
+              <span className="has-text-weight-bold is-family-monospace">{changeset.id}</span>
+              <span className="is-ellipsis-overflow is-size-7">{changeset.description}</span>
+            </div>
+          </CompareSelectorListEntry>
+        ))}
+      </ScrollableUl>
+    );
+  };
+
+  return <Container className="mt-2">{renderContent()}</Container>;
 };
 
 export default RevisionTab;

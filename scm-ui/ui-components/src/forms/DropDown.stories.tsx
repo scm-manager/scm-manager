@@ -14,41 +14,87 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+// import React from "react";
+// import { storiesOf } from "@storybook/react";
+// import DropDown from "./DropDown";
+//
+// storiesOf("Forms/DropDown", module)
+//   .add("Default", () => (
+//     <DropDown
+//       options={["en", "de", "es"]}
+//       preselectedOption="de"
+//       optionSelected={() => {
+//         // nothing to do
+//       }}
+//     />
+//   ))
+//   .add("With Translation", () => (
+//     <DropDown
+//       optionValues={["hg2g", "dirk", "liff"]}
+//       options={[
+//         "The Hitchhiker's Guide to the Galaxy",
+//         "Dirk Gently’s Holistic Detective Agency",
+//         "The Meaning Of Liff",
+//       ]}
+//       preselectedOption="dirk"
+//       optionSelected={(selection) => {
+//         // nothing to do
+//       }}
+//     />
+//   ))
+//   .add("Add preselect if missing in options", () => (
+//     <DropDown
+//       optionValues={["alpha", "beta", "gamma"]}
+//       options={["A", "B", "C"]}
+//       preselectedOption="D"
+//       optionSelected={(selection) => {
+//         // nothing to do
+//       }}
+//     />
+//   ));
+
 import React from "react";
-import { storiesOf } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import DropDown from "./DropDown";
 
-storiesOf("Forms/DropDown", module)
-  .add("Default", () => (
-    <DropDown
-      options={["en", "de", "es"]}
-      preselectedOption={"de"}
-      optionSelected={() => {
-        // nothing to do
-      }}
-    />
-  ))
-  .add("With Translation", () => (
-    <DropDown
-      optionValues={["hg2g", "dirk", "liff"]}
-      options={[
-        "The Hitchhiker's Guide to the Galaxy",
-        "Dirk Gently’s Holistic Detective Agency",
-        "The Meaning Of Liff",
-      ]}
-      preselectedOption={"dirk"}
-      optionSelected={(selection) => {
-        // nothing to do
-      }}
-    />
-  ))
-  .add("Add preselect if missing in options", () => (
-    <DropDown
-      optionValues={["alpha", "beta", "gamma"]}
-      options={["A", "B", "C"]}
-      preselectedOption={"D"}
-      optionSelected={(selection) => {
-        // nothing to do
-      }}
-    />
-  ));
+const meta: Meta<typeof DropDown> = {
+  title: "Forms/DropDown",
+  component: DropDown,
+  parameters: {
+    layout: "centered",
+  },
+  argTypes: {
+    optionSelected: { action: "optionSelected" },
+  },
+  tags: ["autodocs"],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    options: ["en", "de", "es"],
+    preselectedOption: "de",
+  },
+};
+
+export const WithDisplayValues: Story = {
+  name: "With Custom Display Values",
+  args: {
+    optionValues: ["hg2g", "dirk", "liff"],
+    options: ["The Hitchhiker's Guide to the Galaxy", "Dirk Gently’s Holistic Detective Agency", "The Meaning Of Liff"],
+    preselectedOption: "dirk",
+  },
+};
+
+export const PreselectedOptionNotInList: Story = {
+  name: "Preselected Value Not In Options",
+  args: {
+    optionValues: ["alpha", "beta", "gamma"],
+    options: ["A", "B", "C"],
+    preselectedOption: "D",
+  },
+};

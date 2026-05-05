@@ -21,7 +21,7 @@ import { Button, ButtonVariants } from "@scm-manager/ui-core";
 import { useInvalidateAllCaches } from "@scm-manager/ui-api";
 
 const InvalidateCaches: FC = () => {
-  const { invalidate, isLoading, error, isSuccess } = useInvalidateAllCaches();
+  const { invalidate, isPending, error, isSuccess } = useInvalidateAllCaches();
   const [t] = useTranslation("config");
 
   return (
@@ -32,7 +32,7 @@ const InvalidateCaches: FC = () => {
       <p className="mb-4">{t("invalidateCaches.description")}</p>
       <Level
         right={
-          <Button variant={ButtonVariants.SIGNAL} isLoading={isLoading} onClick={invalidate}>
+          <Button variant={ButtonVariants.SIGNAL} isLoading={isPending} onClick={invalidate}>
             {t("invalidateCaches.button")}
           </Button>
         }

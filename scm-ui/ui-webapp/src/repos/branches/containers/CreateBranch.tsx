@@ -15,22 +15,17 @@
  */
 
 import React, { FC } from "react";
-import { Redirect, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import queryString from "query-string";
-import { Repository } from "@scm-manager/ui-types";
 import { useBranches, useCreateBranch } from "@scm-manager/ui-api";
 import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
-import { useDocumentTitleForRepository } from "@scm-manager/ui-core";
-import { encodePart } from "../../sources/components/content/FileLink";
+import { useDocumentTitleForRepository, useRepositoryFromParams } from "@scm-manager/ui-core";
 import BranchForm from "../components/BranchForm";
 
-type Props = {
-  repository: Repository;
-};
-
-const CreateBranch: FC<Props> = ({ repository }) => {
-  const { isLoading: isLoadingCreate, error: errorCreate, create, branch: createdBranch } = useCreateBranch(repository);
+const CreateBranch: FC = () => {
+  const repository = useRepositoryFromParams();
+  const { isPending: isLoadingCreate, error: errorCreate, create, branch: createdBranch } = useCreateBranch(repository);
   const { isLoading: isLoadingList, error: errorList, data: branches } = useBranches(repository);
   const location = useLocation();
   const [t] = useTranslation("repos");
@@ -49,10 +44,8 @@ const CreateBranch: FC<Props> = ({ repository }) => {
 
   if (createdBranch) {
     return (
-      <Redirect
-        to={`/repo/${repository.namespace}/${repository.name}/branch/${encodeURIComponent(
-          encodePart(createdBranch.name)
-        )}/info`}
+      <Navigate
+        to={`/repo/${repository.namespace}/${repository.name}/branch/${encodeURIComponent(createdBranch.name)}/info`}
       />
     );
   }

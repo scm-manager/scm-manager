@@ -24,7 +24,7 @@ import { Icon } from "@scm-manager/ui-core";
 
 type Props = {
   repository: Repository;
-  revision: string;
+  sourceName: string;
   baseUrl: string;
   currentSource: File;
 };
@@ -33,11 +33,11 @@ const SearchIcon = styled(Icon)`
   line-height: 1.5rem;
 `;
 
-const FileSearchButton: FC<Props> = ({ baseUrl, revision, currentSource, repository }) => {
+const FileSearchButton: FC<Props> = ({ baseUrl, sourceName, currentSource, repository }) => {
   const [t] = useTranslation("repos");
   return (
     <Link
-      to={getFileSearchLink(repository, revision, baseUrl, currentSource)}
+      to={getFileSearchLink(repository, sourceName, baseUrl, currentSource)}
       aria-label={t("fileSearch.button.title")}
       data-testid="file_search_button"
     >

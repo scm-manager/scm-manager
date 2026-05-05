@@ -18,11 +18,11 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { KeyboardIterator } from "@scm-manager/ui-core";
 import { File, Repository } from "@scm-manager/ui-types";
+import { isRootPath } from "../utils/files";
 import FileTreeLeaf from "./FileTreeLeaf";
 import TruncatedNotification from "./TruncatedNotification";
-import { isRootPath } from "../utils/files";
-import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   repository: Repository;
@@ -71,7 +71,7 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
 
   const baseUrlWithRevision = baseUrl + "/" + encodeURIComponent(revision);
 
-  const extProps: extensionPoints.ReposSourcesTreeWrapperProps = {
+  const extProps: extensionPoints.ReposSourcesTreeWrapper["props"] = {
     repository,
     directory,
     baseUrl,

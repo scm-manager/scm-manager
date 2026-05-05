@@ -18,43 +18,60 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { Repository } from "@scm-manager/ui-types";
 import { devices } from "@scm-manager/ui-components";
-import { Tabs } from "@scm-manager/ui-layout";
-import { Icon } from "@scm-manager/ui-core";
-import { CompareFunction, CompareProps, CompareTypes } from "./CompareSelectBar";
+import { Icon, Tabs } from "@scm-manager/ui-core";
+import { Branch, Repository, Tag } from "@scm-manager/ui-types";
 import BranchTab from "./BranchTab";
-import TagTab from "./TagTab";
+import { CompareFunction, CompareProps, CompareTypes } from "./CompareSelectBar";
 import RevisionTab from "./RevisionTab";
+import TagTab from "./TagTab";
+import { useBranches, useTags } from "@scm-manager/ui-api";
 
 type Props = {
   onSelect: CompareFunction;
-  selected: CompareProps;
-  label: string;
+  selected: string;
+  label?: string;
   repository: Repository;
 };
 
-const ResponsiveWrapper = styled.div`
+const BorderedMenu = styled.div`
+  border: var(--scm-border);
   width: 100%;
-  justify-content: flex-start;
-  @media screen and (min-width: ${devices.tablet.width}px) {
-    justify-content: space-between;
+`;
+
+const StyledDropdownMenu = styled.div`
+  width: 650px;
+
+  @media screen and (max-width: ${devices.tablet.width}px) {
+    width: 100%;
   }
 `;
 
-const BorderedMenu = styled.div`
-  border: var(--scm-border);
-`;
-
-const MaxWidthDiv = styled.div`
-  width: 100%;
-`;
+const determineType = (branches: Branch[], tags: Tag[], selected: string) => {
+  if (branches.find((b) => b.name === selected)) {
+    return "branch";
+  }
+  if (tags.find((b) => b.name === selected)) {
+    return "tag";
+  }
+  return "revision";
+};
 
 const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) => {
   const [t] = useTranslation("repos");
   const [showDropdown, setShowDropdown] = useState(false);
   const [filter, setFilter] = useState("");
-  const [selection, setSelection] = useState<CompareProps>(selected);
+
+  const { isLoading: branchesIsLoading, error: branchesError, data: branchesData } = useBranches(repository);
+  const branches: Branch[] = (branchesData?._embedded?.branches as Branch[]) || [];
+
+  const { isLoading: tagsIsLoading, error: tagsError, data: tagsData } = useTags(repository);
+  const tags: Tag[] = (tagsData?._embedded?.tags as Tag[]) || [];
+
+  const [selection, setSelection] = useState<CompareProps>({
+    type: determineType(branches, tags, selected),
+    name: selected,
+  });
   const ref = useRef<HTMLInputElement>(null);
 
   const onSelectEntry = (type: CompareTypes, name: string) => {
@@ -83,14 +100,14 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
       window.removeEventListener("mousedown", onMousedown);
       window.removeEventListener("keyup", onKeyUp);
     };
-  });
+  }, []);
 
   return (
-    <ResponsiveWrapper className="field mb-0 is-flex is-flex-direction-column is-fullwidth">
-      <label className="label">{label}</label>
-      <MaxWidthDiv className="control">
-        <MaxWidthDiv className="dropdown is-active" ref={ref}>
-          <MaxWidthDiv className="dropdown-trigger">
+    <div className="field mb-0 is-flex is-align-items-center has-gap-3">
+      {label && <label className="label mb-0">{label}</label>}
+      <div className="control">
+        <div className="dropdown is-active" ref={ref}>
+          <div className="dropdown-trigger">
             <button
               className="button has-text-weight-normal has-text-secondary-more px-4 is-flex is-justify-content-space-between is-fullwidth"
               onClick={() => setShowDropdown(!showDropdown)}
@@ -102,8 +119,8 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
                 <Icon>angle-down</Icon>
               </span>
             </button>
-          </MaxWidthDiv>
-          <div className={classNames("dropdown-menu", { "is-hidden": !showDropdown })} role="menu">
+          </div>
+          <StyledDropdownMenu className={classNames("dropdown-menu", { "is-hidden": !showDropdown })} role="menu">
             <BorderedMenu className="dropdown-content">
               <div className="dropdown-item">
                 <h3 className="has-text-weight-bold">{t("compare.selector.title")}</h3>
@@ -116,28 +133,47 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
                   onChange={(e) => setFilter(e.target.value)}
                   type="search"
                 />
-                <Tabs className="is-small mt-3 mb-0" defaultValue="branch">
-                  <Tabs.List aria-label={t("compare.selector.title")}>
-                    <Tabs.List.Trigger value="branch">{t("compare.selector.tabs.b")}</Tabs.List.Trigger>
-                    <Tabs.List.Trigger value="tag">{t("compare.selector.tabs.t")}</Tabs.List.Trigger>
-                    <Tabs.List.Trigger value="revision">{t("compare.selector.tabs.r")}</Tabs.List.Trigger>
+                <Tabs defaultValue="branch">
+                  <Tabs.List className="is-small mt-3 mb-0" aria-label={t("compare.selector.title")}>
+                    <Tabs.List.Trigger value="branch">{t("compare.selector.tabs.branch")}</Tabs.List.Trigger>
+                    <Tabs.List.Trigger value="tag">{t("compare.selector.tabs.tags")}</Tabs.List.Trigger>
+                    <Tabs.List.Trigger value="revision">{t("compare.selector.tabs.revision")}</Tabs.List.Trigger>
                   </Tabs.List>
                   <Tabs.Content value="branch">
-                    <BranchTab onSelect={onSelectEntry} selected={selected} repository={repository} filter={filter} />
+                    <BranchTab
+                      branches={branches}
+                      branchesIsLoading={branchesIsLoading}
+                      branchesError={branchesError}
+                      onSelect={onSelectEntry}
+                      selected={selection}
+                      filter={filter}
+                    />
                   </Tabs.Content>
                   <Tabs.Content value="tag">
-                    <TagTab onSelect={onSelectEntry} selected={selected} repository={repository} filter={filter} />
+                    <TagTab
+                      tags={tags}
+                      tagsError={tagsError}
+                      tagsIsLoading={tagsIsLoading}
+                      onSelect={onSelectEntry}
+                      selected={selection}
+                      filter={filter}
+                    />
                   </Tabs.Content>
                   <Tabs.Content value="revision">
-                    <RevisionTab onSelect={onSelectEntry} selected={selected} />
+                    <RevisionTab
+                      onSelect={onSelectEntry}
+                      selected={selection}
+                      repository={repository}
+                      filter={filter}
+                    />
                   </Tabs.Content>
                 </Tabs>
               </div>
             </BorderedMenu>
-          </div>
-        </MaxWidthDiv>
-      </MaxWidthDiv>
-    </ResponsiveWrapper>
+          </StyledDropdownMenu>
+        </div>
+      </div>
+    </div>
   );
 };
 

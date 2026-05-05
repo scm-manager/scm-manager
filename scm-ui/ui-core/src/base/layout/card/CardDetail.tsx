@@ -14,13 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, {
-  ButtonHTMLAttributes,
-  ComponentProps,
-  ComponentPropsWithoutRef,
-  HTMLAttributes,
-  ReactNode
-} from "react";
+import React, { ButtonHTMLAttributes, ComponentProps, FC, HTMLAttributes, ReactNode, Ref } from "react";
 import classNames from "classnames";
 import { useAriaId } from "../../helpers";
 import styled from "styled-components";
@@ -35,7 +29,7 @@ export const CardVariants = {
   WARNING: "warning",
 } as const;
 
-export type CardVariant = typeof CardVariants[keyof typeof CardVariants];
+export type CardVariant = (typeof CardVariants)[keyof typeof CardVariants];
 
 const createCardVariantClasses = (variant?: string | undefined) =>
   classNames({
@@ -46,8 +40,9 @@ const createCardVariantClasses = (variant?: string | undefined) =>
     "is-warning": variant === "warning",
   });
 
-type CardDetailProps = HTMLAttributes<HTMLSpanElement> & {
+type CardDetailProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & {
   children: ReactNode | ((props: { labelId: string }) => ReactNode);
+  ref?: Ref<HTMLSpanElement>;
 };
 
 type CardVariantProps = {
@@ -58,16 +53,14 @@ type CardVariantProps = {
  * @beta
  * @since 2.46.0
  */
-export const CardDetail = React.forwardRef<HTMLSpanElement, CardDetailProps>(
-  ({ children, className, ...props }, ref) => {
-    const labelId = useAriaId();
-    return (
-      <span {...props} className={classNames("is-flex is-align-items-center has-gap-1 p-1", className)} ref={ref}>
-        {typeof children === "function" ? children({ labelId }) : children}
-      </span>
-    );
-  }
-);
+export const CardDetail: FC<CardDetailProps> = ({ children, className, ref, ...props }) => {
+  const labelId = useAriaId();
+  return (
+    <span {...props} className={classNames("is-flex is-align-items-center has-gap-1 p-1", className)} ref={ref}>
+      {typeof children === "function" ? children({ labelId }) : children}
+    </span>
+  );
+};
 
 const InteractiveDetailStyles = `
   &:focus {
@@ -78,30 +71,29 @@ const InteractiveDetailStyles = `
 
 const StyledCardButtonDetail = styled.button`
   ${InteractiveDetailStyles}
-
   &[aria-expanded="true"] {
     outline: var(--scm-border-color) solid 0.125rem;
     outline-offset: -0.125rem;
   }
 `;
 
+type CardButtonDetailProps = ButtonHTMLAttributes<HTMLButtonElement> & { ref?: Ref<HTMLButtonElement> };
+
 /**
  * @beta
  * @since 2.47.0
  */
-export const CardButtonDetail = React.forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement>>(
-  ({ children, className, ...props }, ref) => (
-    <StyledCardButtonDetail
-      {...props}
-      className={classNames(
-        "is-flex is-align-items-center has-gap-1 p-1 is-borderless has-background-transparent is-relative has-hover-background-blue has-rounded-border is-clickable",
-        className
-      )}
-      ref={ref}
-    >
-      {children}
-    </StyledCardButtonDetail>
-  )
+export const CardButtonDetail: FC<CardButtonDetailProps> = ({ children, className, ref, ...props }) => (
+  <StyledCardButtonDetail
+    {...props}
+    className={classNames(
+      "is-flex is-align-items-center has-gap-1 p-1 is-borderless has-background-transparent is-relative has-hover-background-blue has-rounded-border is-clickable",
+      className,
+    )}
+    ref={ref}
+  >
+    {children}
+  </StyledCardButtonDetail>
 );
 
 const StyledCardLinkDetail = styled(Link)`
@@ -114,59 +106,55 @@ const StyledCardLinkDetail = styled(Link)`
  * @beta
  * @since 2.47.0
  */
-export const CardLinkDetail = React.forwardRef<HTMLAnchorElement, ComponentPropsWithoutRef<typeof Link>>(
-  ({ children, className, ...props }, ref) => (
-    <StyledCardLinkDetail
-      {...props}
-      className={classNames(
-        "is-flex is-align-items-center has-gap-1 p-1 is-borderless has-background-transparent is-relative has-hover-background-blue has-rounded-border is-clickable",
-        className
-      )}
-      ref={ref}
-    >
-      {children}
-    </StyledCardLinkDetail>
-  )
+export const CardLinkDetail: FC<ComponentProps<typeof Link>> = ({ children, className, ref, ...props }) => (
+  <StyledCardLinkDetail
+    {...props}
+    className={classNames(
+      "is-flex is-align-items-center has-gap-1 p-1 is-borderless has-background-transparent is-relative has-hover-background-blue has-rounded-border is-clickable",
+      className,
+    )}
+    ref={ref}
+  >
+    {children}
+  </StyledCardLinkDetail>
 );
+
+type CardDetailsLabelProps = HTMLAttributes<HTMLSpanElement> & { ref?: Ref<HTMLSpanElement> };
 
 /**
  * @beta
  * @since 2.46.0
  */
-export const CardDetailLabel = React.forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
-  ({ children, className, ...props }, ref) => (
-    <span {...props} className={classNames("has-text-secondary is-size-7", className)} ref={ref}>
-      {children}
-    </span>
-  )
+export const CardDetailLabel: FC<CardDetailsLabelProps> = ({ children, className, ref, ...props }) => (
+  <span {...props} className={classNames("has-text-secondary is-size-7", className)} ref={ref}>
+    {children}
+  </span>
 );
+
+type CardDetailTagProps = HTMLAttributes<HTMLSpanElement> & CardVariantProps & { ref?: Ref<HTMLSpanElement> };
 
 /**
  * @beta
  * @since 2.46.0
  */
-export const CardDetailTag = React.forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement> & CardVariantProps>(
-  ({ children, className, ...props }, ref) => (
-    <span
-      {...props}
-      className={classNames("tag is-rounded", createCardVariantClasses(props.cardVariant), className)}
-      ref={ref}
-    >
-      {children}
-    </span>
-  )
+export const CardDetailTag: FC<CardDetailTagProps> = ({ children, className, ref, ...props }) => (
+  <span
+    {...props}
+    className={classNames("tag is-rounded", createCardVariantClasses(props.cardVariant), className)}
+    ref={ref}
+  >
+    {children}
+  </span>
 );
 
 /**
  * @beta
  * @since 2.47.0
  */
-export const CardDetailIcon = React.forwardRef<HTMLElement, ComponentProps<typeof Icon>>(
-  ({ children, className, ...props }, ref) => (
-    <Icon {...props} className={classNames("is-size-5", className)} ref={ref}>
-      {children}
-    </Icon>
-  )
+export const CardDetailIcon: FC<ComponentProps<typeof Icon>> = ({ children, className, ref, ...props }) => (
+  <Icon {...props} className={classNames("is-size-5", className)} ref={ref}>
+    {children}
+  </Icon>
 );
 
 const CardDetailsRowContainer = styled.div`
@@ -177,18 +165,18 @@ const CardDetailsRowContainer = styled.div`
   }
 `;
 
+type CardDetailsProps = HTMLAttributes<HTMLDivElement> & { ref?: Ref<HTMLDivElement> };
+
 /**
  * @beta
  * @since 2.46.0
  */
-export const CardDetails = React.forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
-  ({ children, className, ...props }, ref) => (
-    <CardDetailsRowContainer
-      {...props}
-      className={classNames("is-flex is-flex-wrap-wrap is-align-items-center", className)}
-      ref={ref}
-    >
-      {children}
-    </CardDetailsRowContainer>
-  )
+export const CardDetails: FC<CardDetailsProps> = ({ children, className, ref, ...props }) => (
+  <CardDetailsRowContainer
+    {...props}
+    className={classNames("is-flex is-flex-wrap-wrap is-align-items-center", className)}
+    ref={ref}
+  >
+    {children}
+  </CardDetailsRowContainer>
 );

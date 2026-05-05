@@ -72,7 +72,7 @@ pipeline {
         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
           gradle 'check'
         }
-        junit allowEmptyResults: true, testResults: '**/build/test-results/test/TEST-*.xml,**/build/test-results/tests/test/TEST-*.xml,**/build/jest-reports/TEST-*.xml'
+        junit allowEmptyResults: true, testResults: '**/build/test-results/test/TEST-*.xml,**/build/test-results/tests/test/TEST-*.xml,**/build/vitest-reports/TEST-*.xml'
       }
     }
 
@@ -124,6 +124,18 @@ pipeline {
       steps {
         withPublishEnvironment {
           gradle "-PenablePackaging publish -PisHotfix=${isHotfixBuild()}"
+        }
+      }
+    }
+
+    stage('React 19 Deployment') {
+      when {
+        branch 'feature/react-19-upgrade'
+        expression { return isBuildSuccess() }
+      }
+      steps {
+        withPublishEnvironment {
+          gradle "-PenablePackaging publish -x :scm-packaging:rpm:rpm -x :scm-packaging:rpm:publish -x :scm-packaging:deb:deb -x :scm-packaging:deb:publish -PisHotfix=false"
         }
       }
     }

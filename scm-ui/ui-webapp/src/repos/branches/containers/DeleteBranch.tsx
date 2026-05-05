@@ -15,7 +15,7 @@
  */
 
 import React, { FC, useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
@@ -29,10 +29,10 @@ type Props = {
 const DeleteBranch: FC<Props> = ({ repository, branch }: Props) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("repos");
-  const { isLoading, error, remove, isDeleted } = useDeleteBranch(repository);
+  const { isPending, error, remove, isDeleted } = useDeleteBranch(repository);
 
   if (isDeleted) {
-    return <Redirect to={`/repo/${repository.namespace}/${repository.name}/branches/`} />;
+    return <Navigate to={`/repo/${repository.namespace}/${repository.name}/branches/`} />;
   }
 
   if (!branch._links.delete) {
@@ -49,14 +49,14 @@ const DeleteBranch: FC<Props> = ({ repository, branch }: Props) => {
           {
             label: t("branch.delete.confirmAlert.submit"),
             onClick: () => remove(branch),
-            isLoading
+            isLoading: isPending,
           },
           {
             className: "is-info",
             label: t("branch.delete.confirmAlert.cancel"),
             onClick: () => null,
-            autofocus: true
-          }
+            autofocus: true,
+          },
         ]}
         close={() => setShowConfirmAlert(false)}
       />

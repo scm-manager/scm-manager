@@ -14,14 +14,133 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+// import React, { FC, useRef, useState } from "react";
+// import { storiesOf } from "@storybook/react";
+// import Radio from "./Radio";
+// import styled from "styled-components";
+// import Button from "../buttons/Button";
+// import { useForm } from "react-hook-form";
+// import { SubmitButton } from "../buttons";
+// import { MemoryRouter } from "react-router-dom";
+//
+// const Spacing = styled.div`
+//   padding: 2em;
+// `;
+//
+// const RadioList = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   > label:not(:last-child) {
+//     margin-bottom: 0.75rem;
+//   }
+//   padding: 2em;
+// `;
+//
+// const Ref: FC = () => {
+//   const ref = useRef<HTMLInputElement>(null);
+//   return (
+//     <>
+//       <Radio label="Ref Radio Button" checked={false} ref={ref} />
+//       <Button
+//         action={() => {
+//           if (ref.current) {
+//             ref.current.checked = true;
+//           }
+//         }}
+//         color="primary"
+//       >
+//         Check InputField
+//       </Button>
+//     </>
+//   );
+// };
+//
+// type Settings = {
+//   rememberMe: string;
+//   scramblePassword: string;
+//   readonly: string;
+//   disabled: string;
+// };
+//
+// const ReactHookForm: FC = () => {
+//   const { register, handleSubmit } = useForm<Settings>();
+//   const [stored, setStored] = useState<Settings>();
+//
+//   const onSubmit = (settings: Settings) => {
+//     setStored(settings);
+//   };
+//
+//   return (
+//     <>
+//       <form onSubmit={handleSubmit(onSubmit)}>
+//         <RadioList>
+//           <Radio defaultChecked={true} value="true" label="Remember Me" {...register("rememberMe")} />
+//           <Radio value="false" label="Dont Remember Me" {...register("rememberMe")} />
+//         </RadioList>
+//         <Radio className="ml-2" value="false" label="Scramble Password" {...register("scramblePassword")} />
+//         <Radio value="false" label="Disabled wont be submitted" disabled={true} {...register("disabled")} />
+//         <Radio value="false" label="Readonly will be submitted" {...register("readonly")} />
+//         <div className="pt-2">
+//           <SubmitButton>Submit</SubmitButton>
+//         </div>
+//       </form>
+//       {stored ? (
+//         <div className="mt-5">
+//           <pre>
+//             <code>{JSON.stringify(stored, null, 2)}</code>
+//           </pre>
+//         </div>
+//       ) : null}
+//     </>
+//   );
+// };
+//
+// const LegacyEvents: FC = () => {
+//   const [value, setValue] = useState<boolean>(false);
+//   return (
+//     <>
+//       <Radio checked={value} onChange={setValue} />
+//       <div className="mt-3">{JSON.stringify(value)}</div>
+//     </>
+//   );
+// };
+//
+// storiesOf("Forms/Radio", module)
+//   .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
+//   .add("Default", () => (
+//     <Spacing>
+//       <Radio label="Not checked" checked={false} />
+//       <Radio label="Checked" checked={true} />
+//     </Spacing>
+//   ))
+//   .add("Disabled", () => (
+//     <Spacing>
+//       <Radio label="Checked but disabled" checked={true} disabled={true} />
+//     </Spacing>
+//   ))
+//   .add("With HelpText", () => (
+//     <RadioList>
+//       <Radio label="Classic helpText" checked={false} helpText="This is a classic help text." />
+//       <Radio
+//         label="Long helpText"
+//         checked={true}
+//         helpText="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+//       />
+//     </RadioList>
+//   ))
+//   .add("Ref", () => <Ref />)
+//   .add("Legacy Events", () => <LegacyEvents />)
+//   .add("ReactHookForm", () => <ReactHookForm />);
+
 import React, { FC, useRef, useState } from "react";
-import { storiesOf } from "@storybook/react";
-import Radio from "./Radio";
-import styled from "styled-components";
-import Button from "../buttons/Button";
-import { useForm } from "react-hook-form";
-import { SubmitButton } from "../buttons";
 import { MemoryRouter } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import styled from "styled-components";
+import type { Meta, StoryObj } from "@storybook/react";
+
+import Radio from "./Radio";
+import Button from "../buttons/Button";
+import { SubmitButton } from "../buttons";
 
 const Spacing = styled.div`
   padding: 2em;
@@ -36,11 +155,11 @@ const RadioList = styled.div`
   padding: 2em;
 `;
 
-const Ref: FC = () => {
+const RefExample: FC = () => {
   const ref = useRef<HTMLInputElement>(null);
   return (
-    <>
-      <Radio label={"Ref Radio Button"} checked={false} ref={ref} />
+    <Spacing>
+      <Radio label="Ref Radio Button" name="ref-example" ref={ref} />
       <Button
         action={() => {
           if (ref.current) {
@@ -48,10 +167,11 @@ const Ref: FC = () => {
           }
         }}
         color="primary"
+        className="ml-2"
       >
-        Check InputField
+        Check Radio Button
       </Button>
-    </>
+    </Spacing>
   );
 };
 
@@ -62,7 +182,7 @@ type Settings = {
   disabled: string;
 };
 
-const ReactHookForm: FC = () => {
+const ReactHookFormExample: FC = () => {
   const { register, handleSubmit } = useForm<Settings>();
   const [stored, setStored] = useState<Settings>();
 
@@ -71,63 +191,90 @@ const ReactHookForm: FC = () => {
   };
 
   return (
-    <>
+    <Spacing>
       <form onSubmit={handleSubmit(onSubmit)}>
         <RadioList>
-          <Radio defaultChecked={true} value={"true"} label="Remember Me" {...register("rememberMe")} />
-          <Radio value={"false"} label="Dont Remember Me" {...register("rememberMe")} />
+          <Radio defaultChecked={true} value="true" label="Remember Me" {...register("rememberMe")} />
+          <Radio value="false" label="Dont Remember Me" {...register("rememberMe")} />
         </RadioList>
-        <Radio className="ml-2" value={"false"} label="Scramble Password" {...register("scramblePassword")} />
-        <Radio value={"false"} label="Disabled wont be submitted" disabled={true} {...register("disabled")} />
-        <Radio value={"false"} label="Readonly will be submitted" {...register("readonly")} />
+        <Radio className="ml-2" value="false" label="Scramble Password" {...register("scramblePassword")} />
+        <Radio value="false" label="Disabled wont be submitted" disabled={true} {...register("disabled")} />
+        <Radio value="false" label="Readonly will be submitted" {...register("readonly")} />
         <div className="pt-2">
           <SubmitButton>Submit</SubmitButton>
         </div>
       </form>
-      {stored ? (
+      {stored && (
         <div className="mt-5">
           <pre>
             <code>{JSON.stringify(stored, null, 2)}</code>
           </pre>
         </div>
-      ) : null}
-    </>
+      )}
+    </Spacing>
   );
 };
 
-const LegacyEvents: FC = () => {
-  const [value, setValue] = useState<boolean>(false);
+const OnChangeExample: FC = () => {
+  const [value, setValue] = useState(false);
   return (
-    <>
-      <Radio checked={value} onChange={setValue} />
+    <Spacing>
+      <Radio checked={value} onChange={setValue} name="onchange-example" />
       <div className="mt-3">{JSON.stringify(value)}</div>
-    </>
+    </Spacing>
   );
 };
 
-storiesOf("Forms/Radio", module)
-  .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
-  .add("Default", () => (
+const meta: Meta<typeof Radio> = {
+  title: "Forms/Radio",
+  component: Radio,
+  decorators: [(Story) => <MemoryRouter>{Story()}</MemoryRouter>],
+  tags: ["autodocs"],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  render: () => (
     <Spacing>
-      <Radio label="Not checked" checked={false} />
-      <Radio label="Checked" checked={true} />
+      <Radio label="Not checked" name="default-group" />
+      <Radio label="Checked" name="default-group" checked={true} />
     </Spacing>
-  ))
-  .add("Disabled", () => (
+  ),
+};
+
+export const Disabled: Story = {
+  render: () => (
     <Spacing>
-      <Radio label="Checked but disabled" checked={true} disabled={true} />
+      <Radio label="Checked but disabled" checked={true} disabled={true} name="disabled-group" />
     </Spacing>
-  ))
-  .add("With HelpText", () => (
+  ),
+};
+
+export const WithHelpText: Story = {
+  render: () => (
     <RadioList>
-      <Radio label="Classic helpText" checked={false} helpText="This is a classic help text." />
+      <Radio label="Classic helpText" checked={false} helpText="This is a classic help text." name="help-group" />
       <Radio
         label="Long helpText"
         checked={true}
+        name="help-group"
         helpText="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
       />
     </RadioList>
-  ))
-  .add("Ref", () => <Ref />)
-  .add("Legacy Events", () => <LegacyEvents />)
-  .add("ReactHookForm", () => <ReactHookForm />);
+  ),
+};
+
+export const UsingRefs: Story = {
+  render: () => <RefExample />,
+};
+
+export const HandlingOnChange: Story = {
+  render: () => <OnChangeExample />,
+};
+
+export const WithReactHookForm: Story = {
+  render: () => <ReactHookFormExample />,
+};

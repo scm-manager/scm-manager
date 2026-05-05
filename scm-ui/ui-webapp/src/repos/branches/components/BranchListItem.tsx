@@ -14,18 +14,13 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Card, CardList } from "@scm-manager/ui-layout";
-import { Link } from "react-router-dom";
-import { encodePart } from "../../sources/components/content/FileLink";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
-import { Trans, useTranslation } from "react-i18next";
-import { DateFromNow } from "@scm-manager/ui-components";
-import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import React, { FC } from "react";
+import { Trans, useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { Card, CardList, DateFromNow, Dialog, Icon, Menu, useKeyboardIteratorTarget } from "@scm-manager/ui-core";
+import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import { Branch, BranchDetails, Repository } from "@scm-manager/ui-types";
 import AheadBehindTag from "./AheadBehindTag";
-import { Dialog, Menu } from "@scm-manager/ui-overlays";
-import { Icon } from "@scm-manager/ui-core";
 
 type Props = {
   branch: Branch;
@@ -91,7 +86,7 @@ const BranchListItem: FC<Props> = ({ branch, remove, isLoading, branchesDetails,
     >
       <Card.Row className="is-flex">
         <Card.Title>
-          <Link to={`${baseUrl}/${encodePart(branch.name)}/info`} ref={useKeyboardIteratorTarget()}>
+          <Link to={`${baseUrl}/${encodeURIComponent(branch.name)}/info`} ref={useKeyboardIteratorTarget()}>
             {branch.name}
           </Link>
         </Card.Title>

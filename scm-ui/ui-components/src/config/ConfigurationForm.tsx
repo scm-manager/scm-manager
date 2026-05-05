@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, FormEvent, useEffect, useState } from "react";
+import React, { FC, FormEvent, ReactNode, useEffect, useState } from "react";
 import { ErrorNotification, Level, SubmitButton } from "../index";
 import { useTranslation } from "react-i18next";
 import Loading from "../Loading";
@@ -27,6 +27,7 @@ type Props = {
   isValid: boolean;
   error?: Error | null;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  children?: ReactNode;
 };
 
 const ConfigurationChangedNotification: FC<{ configChanged: boolean }> = ({ configChanged }) => {

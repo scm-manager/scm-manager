@@ -15,7 +15,7 @@
  */
 
 import { useMe } from "./login";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, Notification, NotificationCollection } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { useCallback, useEffect, useState } from "react";
@@ -25,13 +25,11 @@ import { useCancellablePromise } from "./utils";
 export const useNotifications = () => {
   const { data: me } = useMe();
   const link = (me?._links["notifications"] as Link)?.href;
-  const { data, error, isLoading, refetch } = useQuery<NotificationCollection, Error>(
-    "notifications",
-    () => apiClient.get(link).then((response) => response.json()),
-    {
-      enabled: !!link,
-    }
-  );
+  const { data, error, isLoading, refetch } = useQuery<NotificationCollection, Error>({
+    queryKey: ["notifications"],
+    queryFn: () => apiClient.get(link).then((response) => response.json()),
+    enabled: !!link,
+  });
 
   const memoizedRefetch = useCallback(() => {
     return refetch().then((r) => r.data);
@@ -48,13 +46,14 @@ export const useNotifications = () => {
 export const useDismissNotification = (notification: Notification) => {
   const queryClient = useQueryClient();
   const link = requiredLink(notification, "dismiss");
-  const { data, isLoading, error, mutate } = useMutation<Response, Error>(() => apiClient.delete(link), {
+  const { data, isPending, error, mutate } = useMutation<Response, Error>({
+    mutationFn: () => apiClient.delete(link),
     onSuccess: () => {
-      queryClient.invalidateQueries("notifications");
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
   return {
-    isLoading,
+    isPending,
     error,
     dismiss: () => mutate(),
     isCleared: !!data,
@@ -64,13 +63,14 @@ export const useDismissNotification = (notification: Notification) => {
 export const useClearNotifications = (notificationCollection: NotificationCollection) => {
   const queryClient = useQueryClient();
   const link = requiredLink(notificationCollection, "clear");
-  const { data, isLoading, error, mutate } = useMutation<Response, Error>(() => apiClient.delete(link), {
+  const { data, isPending, error, mutate } = useMutation<Response, Error>({
+    mutationFn: () => apiClient.delete(link),
     onSuccess: () => {
-      queryClient.invalidateQueries("notifications");
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
   return {
-    isLoading,
+    isPending,
     error,
     clear: () => mutate(),
     isCleared: !!data,
@@ -83,7 +83,7 @@ const isEqual = (left: Notification, right: Notification) => {
 
 export const useNotificationSubscription = (
   refetch: () => Promise<NotificationCollection | undefined>,
-  notificationCollection?: NotificationCollection
+  notificationCollection?: NotificationCollection,
 ) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [disconnectedAt, setDisconnectedAt] = useState<Date>();
@@ -109,7 +109,7 @@ export const useNotificationSubscription = (
         if (!reason.isCanceled) {
           throw reason;
         }
-      }
+      },
     );
   }, [cancelOnUnmount, disconnectedAt, refetch]);
 
@@ -122,7 +122,7 @@ export const useNotificationSubscription = (
       setNotifications((previous) => [...previous, notification]);
       refetch();
     },
-    [refetch]
+    [refetch],
   );
 
   useEffect(() => {
@@ -169,7 +169,7 @@ export const useNotificationSubscription = (
     (notification: Notification) => {
       setNotifications((oldNotifications) => [...oldNotifications.filter((n) => !isEqual(n, notification))]);
     },
-    [setNotifications]
+    [setNotifications],
   );
 
   const clear = useCallback(() => {

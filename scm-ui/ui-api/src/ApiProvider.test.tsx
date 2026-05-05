@@ -14,39 +14,21 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { LegacyContext, useLegacyContext } from "./LegacyContext";
 import * as React from "react";
-import { FC } from "react";
-import { renderHook } from "@testing-library/react-hooks";
+import { FC, ReactNode } from "react";
+import { renderHook } from "@testing-library/react";
 import ApiProvider from "./ApiProvider";
-import { useQueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 describe("ApiProvider tests", () => {
-  const createWrapper = (context: LegacyContext): FC => {
-    return ({ children }) => <ApiProvider {...context}>{children}</ApiProvider>;
+  const createWrapper = (): FC<{ children: ReactNode }> => {
+    return ({ children }: { children: ReactNode }) => <ApiProvider>{children}</ApiProvider>;
   };
 
   it("should register QueryClient", () => {
     const { result } = renderHook(() => useQueryClient(), {
-      wrapper: createWrapper({ initialize: () => null })
+      wrapper: createWrapper(),
     });
     expect(result.current).toBeDefined();
-  });
-
-  it("should pass legacy context QueryClient", () => {
-    let msg: string;
-    const onIndexFetched = () => {
-      msg = "hello";
-    };
-
-    const { result } = renderHook(() => useLegacyContext(), {
-      wrapper: createWrapper({ onIndexFetched, initialize: () => null })
-    });
-
-    if (result.current?.onIndexFetched) {
-      result.current.onIndexFetched({ version: "a.b.c", _links: {}, instanceId: "123" });
-    }
-
-    expect(msg!).toEqual("hello");
   });
 });

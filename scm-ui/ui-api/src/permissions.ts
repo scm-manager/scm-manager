@@ -15,7 +15,7 @@
  */
 
 import { ApiResult, useIndexJsonResource, useJsonResource } from "./base";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   GlobalPermissionsCollection,
   Group,
@@ -72,7 +72,10 @@ const createQueryKey = (namespaceOrRepository: Namespace | Repository) => {
 export const usePermissions = (namespaceOrRepository: Namespace | Repository): ApiResult<PermissionCollection> => {
   const link = requiredLink(namespaceOrRepository, "permissions");
   const queryKey = createQueryKey(namespaceOrRepository);
-  return useQuery<PermissionCollection, Error>(queryKey, () => apiClient.get(link).then((response) => response.json()));
+  return useQuery<PermissionCollection, Error>({
+    queryKey: queryKey,
+    queryFn: () => apiClient.get(link).then((response) => response.json()),
+  });
 };
 
 const createPermission = (link: string) => {
@@ -93,17 +96,15 @@ const createPermission = (link: string) => {
 export const useCreatePermission = (namespaceOrRepository: Namespace | Repository) => {
   const queryClient = useQueryClient();
   const link = requiredLink(namespaceOrRepository, "permissions");
-  const { isLoading, error, mutate, data } = useMutation<Permission, Error, PermissionCreateEntry>(
-    createPermission(link),
-    {
-      onSuccess: () => {
-        const queryKey = createQueryKey(namespaceOrRepository);
-        return queryClient.invalidateQueries(queryKey);
-      },
-    }
-  );
+  const { isPending, error, mutate, data } = useMutation<Permission, Error, PermissionCreateEntry>({
+    mutationFn: createPermission(link),
+    onSuccess: () => {
+      const queryKey = createQueryKey(namespaceOrRepository);
+      return queryClient.invalidateQueries({ queryKey });
+    },
+  });
   return {
-    isLoading,
+    isPending,
     error,
     create: (permission: PermissionCreateEntry) => mutate(permission),
     permission: data,
@@ -112,20 +113,18 @@ export const useCreatePermission = (namespaceOrRepository: Namespace | Repositor
 
 export const useUpdatePermission = (namespaceOrRepository: Namespace | Repository) => {
   const queryClient = useQueryClient();
-  const { isLoading, error, mutate, data } = useMutation<unknown, Error, Permission>(
-    (permission) => {
+  const { isPending, error, mutate, data } = useMutation<unknown, Error, Permission>({
+    mutationFn: (permission) => {
       const link = requiredLink(permission, "update");
       return apiClient.put(link, permission, "application/vnd.scmm-repositoryPermission+json");
     },
-    {
-      onSuccess: () => {
-        const queryKey = createQueryKey(namespaceOrRepository);
-        return queryClient.invalidateQueries(queryKey);
-      },
-    }
-  );
+    onSuccess: () => {
+      const queryKey = createQueryKey(namespaceOrRepository);
+      return queryClient.invalidateQueries({ queryKey });
+    },
+  });
   return {
-    isLoading,
+    isPending,
     error,
     update: (permission: Permission) => mutate(permission),
     isUpdated: !!data,
@@ -134,20 +133,18 @@ export const useUpdatePermission = (namespaceOrRepository: Namespace | Repositor
 
 export const useDeletePermission = (namespaceOrRepository: Namespace | Repository) => {
   const queryClient = useQueryClient();
-  const { isLoading, error, mutate, data } = useMutation<unknown, Error, Permission>(
-    (permission) => {
+  const { isPending, error, mutate, data } = useMutation<unknown, Error, Permission>({
+    mutationFn: (permission) => {
       const link = requiredLink(permission, "delete");
       return apiClient.delete(link);
     },
-    {
-      onSuccess: () => {
-        const queryKey = createQueryKey(namespaceOrRepository);
-        return queryClient.invalidateQueries(queryKey);
-      },
-    }
-  );
+    onSuccess: () => {
+      const queryKey = createQueryKey(namespaceOrRepository);
+      return queryClient.invalidateQueries({ queryKey });
+    },
+  });
   return {
-    isLoading,
+    isPending,
     error,
     remove: (permission: Permission) => mutate(permission),
     isDeleted: !!data,
@@ -167,22 +164,20 @@ export const useAvailableGlobalPermissions = () =>
 const useSetEntityPermissions = (permissionCollection?: GlobalPermissionsCollection, key?: string[]) => {
   const queryClient = useQueryClient();
   const url = permissionCollection ? objectLink(permissionCollection, "overwrite") : null;
-  const { isLoading, error, mutate, data } = useMutation<unknown, Error, string[]>(
-    (permissions) =>
+  const { isPending, error, mutate, data } = useMutation<unknown, Error, string[]>({
+    mutationFn: (permissions) =>
       apiClient.put(
         url!,
         {
           permissions,
         },
-        "application/vnd.scmm-permissionCollection+json;v=2"
+        "application/vnd.scmm-permissionCollection+json;v=2",
       ),
-    {
-      onSuccess: () => queryClient.invalidateQueries(key),
-    }
-  );
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: key }),
+  });
   const setPermissions = (permissions: string[]) => mutate(permissions);
   return {
-    isLoading,
+    isPending,
     error,
     setPermissions: url ? setPermissions : undefined,
     isUpdated: !!data,

@@ -16,11 +16,11 @@
 
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AutocompleteObject, Group, Member, Option } from "@scm-manager/ui-types";
-import { Checkbox, InputField, Level, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
-import * as validator from "./groupValidation";
-import { ChipInputField, Combobox } from "@scm-manager/ui-forms";
 import { useUserOptions } from "@scm-manager/ui-api";
+import { Checkbox, InputField, Level, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
+import { ChipInputField, Combobox } from "@scm-manager/ui-core";
+import { AutocompleteObject, Group, Member, Option } from "@scm-manager/ui-types";
+import * as validator from "./groupValidation";
 
 type Props = {
   submitForm: (p: Group) => void;

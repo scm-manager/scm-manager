@@ -19,10 +19,7 @@ import { useTranslation } from "react-i18next";
 import { ConfigurationForm, Form, Title, useDocumentTitle } from "@scm-manager/ui-core";
 import { HalRepresentation } from "@scm-manager/ui-types";
 import { validation } from "@scm-manager/ui-components";
-
-type Props = {
-  link: string;
-};
+import { useRequiredIndexLink } from "@scm-manager/ui-api";
 
 type Configuration = HalRepresentation & {
   disabled: boolean;
@@ -34,7 +31,8 @@ type Configuration = HalRepresentation & {
   lfsWriteAuthorizationExpirationInMinutes: number;
 };
 
-const GitGlobalConfiguration: FC<Props> = ({ link }) => {
+const GitGlobalConfiguration: FC = () => {
+  const link = useRequiredIndexLink("gitConfig");
   const [t] = useTranslation("plugins");
   useDocumentTitle(t("scm-git-plugin.config.title"));
 

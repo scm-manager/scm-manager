@@ -14,35 +14,31 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { urls } from "@scm-manager/ui-api";
-import { useLocation, useRouteMatch } from "react-router-dom";
+import { useLocation, useResolvedPath } from "react-router-dom";
 import { RoutingProps } from "./RoutingProps";
 
-const useActiveMatch = ({ to, activeOnlyWhenExact, activeWhenMatch }: RoutingProps) => {
-  let path = to;
-  const index = to.indexOf("?");
-  if (index > 0) {
-    path = to.substr(0, index);
+const useActiveMatch = ({ to, activeWhenMatch, matchWhenExact = false }: RoutingProps) => {
+  const location = useLocation();
+  const resolved = useResolvedPath(to);
+
+  const currentPath = location.pathname;
+  const targetPath = resolved.pathname;
+
+  let isPathActive: boolean;
+
+  if (matchWhenExact) {
+    isPathActive = currentPath === targetPath;
+  } else {
+    isPathActive = currentPath === targetPath || currentPath.startsWith(`${targetPath}/`);
   }
 
-  const match = useRouteMatch({
-    path: urls.escapeUrlForRoute(path),
-    exact: activeOnlyWhenExact,
-  });
+  const isActive = !resolved.hash && isPathActive;
 
-  const location = useLocation();
+  const match =
+    activeWhenMatch &&
+    (typeof activeWhenMatch === "string" ? new RegExp(activeWhenMatch) : activeWhenMatch).test(currentPath || "");
 
-  const isActiveWhenMatch = () => {
-    if (activeWhenMatch) {
-      // noinspection PointlessBooleanExpressionJS could be a truthy value if a function is passed in
-      return !!activeWhenMatch({
-        location,
-      });
-    }
-    return false;
-  };
-
-  return !!match || isActiveWhenMatch();
+  return isActive || !!match;
 };
 
 export default useActiveMatch;

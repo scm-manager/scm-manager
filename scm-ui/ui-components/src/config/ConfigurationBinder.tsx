@@ -17,24 +17,20 @@
 import React, { ComponentProps, ComponentType, FC } from "react";
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import { NavLink } from "../navigation";
-import { Route } from "react-router-dom";
-import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
-import { Link, Links, Namespace, Repository } from "@scm-manager/ui-types";
-import { urls } from "@scm-manager/ui-api";
+import { type RouteObject } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { Link, Links, Repository } from "@scm-manager/ui-types";
 import {
   TitledGlobalSettingComponent,
   TitledNamespaceSettingComponent,
   TitledRepositorySettingComponent,
 } from "./TitledSettings";
+import { NAMESPACE_SUB_ROUTES, REPOSITORY_SUB_ROUTES } from "@scm-manager/ui-core";
+import { useIndexLinks } from "@scm-manager/ui-api";
 
 type GlobalRouteProps = {
   url: string;
   links: Links;
-};
-
-type NamespaceRouteProps = {
-  url: string;
-  namespace: Namespace;
 };
 
 type RepositoryRouteProps = {
@@ -42,9 +38,34 @@ type RepositoryRouteProps = {
   repository: Repository;
 };
 
-type RepositoryNavProps = WithTranslation & { url: string };
+type RepositoryNavProps = WithTranslation & { absoluteRepoUrl: string };
 
-type NamespaceNavProps = WithTranslation & { url: string };
+type NamespaceNavProps = WithTranslation & { absoluteNamespaceUrl: string };
+
+type GlobalSettingsWrapperProps = {
+  ConfigurationComponent: any;
+  linkName: string;
+  i18nNamespace: string;
+  labelI18nKey: string;
+  additionalProps?: GlobalRouteProps;
+};
+
+const GlobalSettingsWrapper: FC<GlobalSettingsWrapperProps> = ({
+  ConfigurationComponent,
+  linkName,
+  i18nNamespace,
+  labelI18nKey,
+  additionalProps,
+}) => {
+  const links = useIndexLinks();
+  const link = links[linkName];
+
+  return (
+    <TitledGlobalSettingComponent i18nNamespace={i18nNamespace} label={labelI18nKey}>
+      <ConfigurationComponent link={(link as Link)?.href} {...additionalProps} />
+    </TitledGlobalSettingComponent>
+  );
+};
 
 class ConfigurationBinder {
   i18nNamespace = "plugins";
@@ -53,16 +74,16 @@ class ConfigurationBinder {
     to: string,
     labelI18nKey: string,
     t: any,
-    options: Omit<ComponentProps<typeof NavLink>, "label" | "to"> = {}
+    options: Omit<ComponentProps<typeof NavLink>, "label" | "to"> = {},
   ) {
     return <NavLink to={to} label={t(labelI18nKey)} {...options} />;
   }
 
-  route(path: string, Component: any) {
-    return <Route path={urls.escapeUrlForRoute(path)}>{Component}</Route>;
+  route(path: string, Component: any): RouteObject {
+    return { path, element: Component };
   }
 
-  bindGlobal(to: string, labelI18nKey: string, linkName: string, ConfigurationComponent: any, sortKey?: string) {
+  bindAdminSetting(to: string, labelI18nKey: string, linkName: string, ConfigurationComponent: any, sortKey?: string) {
     // create predicate based on the link name of the index resource
     // if the linkname is not available, the navigation link and the route are not bound to the extension points
     const configPredicate = (props: any) => {
@@ -70,50 +91,42 @@ class ConfigurationBinder {
     };
 
     // create NavigationLink with translated label
+    const sanitizedTo = to.startsWith("/") ? to.substring(1) : to;
     const ConfigNavLink = withTranslation(this.i18nNamespace)(({ t }) => {
-      return this.navLink("/admin/settings" + to, labelI18nKey, t, { activeOnlyWhenExact: false });
+      return this.navLink(`/admin/settings/${sanitizedTo}`, labelI18nKey, t, {});
     });
 
     // bind navigation link to extension point
     binder.bind("admin.setting", ConfigNavLink, configPredicate, sortKey ?? linkName);
 
     // route for global configuration, passes the link from the index resource to component
-    const ConfigRoute = ({ url, links, ...additionalProps }: GlobalRouteProps) => {
-      const link = links[linkName];
-
-      if (link) {
-        return this.route(
-          url + "/settings" + to,
-          <TitledGlobalSettingComponent i18nNamespace={this.i18nNamespace} label={labelI18nKey}>
-            <ConfigurationComponent link={(link as Link).href} {...additionalProps} />
-          </TitledGlobalSettingComponent>
-        );
-      }
+    const ConfigRoute = ({ ...additionalProps }: GlobalRouteProps = {} as GlobalRouteProps) => {
+      return this.route(
+        sanitizedTo,
+        <GlobalSettingsWrapper
+          ConfigurationComponent={ConfigurationComponent}
+          linkName={linkName}
+          i18nNamespace={this.i18nNamespace}
+          labelI18nKey={labelI18nKey}
+          {...additionalProps}
+        />,
+      );
     };
 
     // bind config route to extension point
-    binder.bind("admin.route", ConfigRoute, configPredicate);
+    binder.bind("admin.settings.route", ConfigRoute);
   }
 
-  bindAdmin(
-    to: string,
-    labelI18nKey: string,
-    icon: string,
-    linkName: string,
-    Component: React.ComponentType<{ link: string }>
-  ) {
-    const predicate = ({ links }: extensionPoints.AdminRoute["props"]) => links[linkName];
-
+  bindAdmin(to: string, labelI18nKey: string, icon: string, Component: React.ComponentType) {
     const AdminNavLink = withTranslation(this.i18nNamespace)(
-      ({ t, url }: WithTranslation & extensionPoints.AdminNavigation["props"]) =>
-        this.navLink(url + to, labelI18nKey, t, { icon })
+      ({ t }: WithTranslation & extensionPoints.AdminNavigation["props"]) =>
+        this.navLink("/admin/" + to, labelI18nKey, t, { icon }),
     );
+    binder.bind("admin.navigation", AdminNavLink);
 
-    const AdminRoute: extensionPoints.AdminRoute["type"] = ({ links, url }) =>
-      this.route(url + to, <Component link={(links[linkName] as Link).href} />);
+    const AdminRoute: extensionPoints.AdminRoute["type"] = () => this.route(to, <Component />);
 
-    binder.bind<extensionPoints.AdminRoute>("admin.route", AdminRoute, predicate);
-    binder.bind<extensionPoints.AdminNavigation>("admin.navigation", AdminNavLink, predicate);
+    binder.bind<extensionPoints.AdminRoute>("admin.route", AdminRoute);
   }
 
   bindRepository(to: string, labelI18nKey: string, linkName: string, RepositoryComponent: any) {
@@ -124,25 +137,24 @@ class ConfigurationBinder {
     };
 
     // create NavigationLink with translated label
-    const RepoNavLink = withTranslation(this.i18nNamespace)(({ t, url }: RepositoryNavProps) => {
-      return this.navLink(url + to, labelI18nKey, t);
+    const RepoNavLink = withTranslation(this.i18nNamespace)(({ t, absoluteRepoUrl }: RepositoryNavProps) => {
+      return this.navLink(absoluteRepoUrl + to, labelI18nKey, t);
     });
 
     // bind navigation link to extension point
     binder.bind("repository.navigation", RepoNavLink, repoPredicate);
 
     // route for global configuration, passes the current repository to component
-    const RepoRoute = ({ url, repository, ...additionalProps }: RepositoryRouteProps) => {
+    const RepoRoute = ({ repository, ...additionalProps }: RepositoryRouteProps = {} as RepositoryRouteProps) => {
       const link = repository._links[linkName];
       if (link) {
         return this.route(
-          url + to,
-          <RepositoryComponent repository={repository} link={(link as Link).href} {...additionalProps} />
+          to,
+          <RepositoryComponent repository={repository} link={(link as Link).href} {...additionalProps} />,
         );
       }
     };
-
-    // bind config route to extension point
+    // // bind config route to extension point
     binder.bind("repository.route", RepoRoute, repoPredicate);
   }
 
@@ -150,80 +162,71 @@ class ConfigurationBinder {
     to: string,
     labelI18nKey: string,
     linkName: string,
-    RepositoryComponent: any,
-    sortKey?: string
+    RepositoryComponent: ComponentType<object>,
+    sortKey?: string,
   ) {
     // create predicate based on the link name of the current repository route
     // if the linkname is not available, the navigation link and the route are not bound to the extension points
-    const repoPredicate = (props: any) => {
+    const repoPredicate = (props: extensionPoints.RepositorySetting["props"]) => {
       return props.repository && props.repository._links && props.repository._links[linkName];
     };
 
+    const sanitizedTo = to.startsWith("/") ? to.substring(1) : to;
+
     // create NavigationLink with translated label
-    const RepoNavLink = withTranslation(this.i18nNamespace)(({ t, url }: RepositoryNavProps) => {
-      return this.navLink(url + "/settings" + to, labelI18nKey, t, { activeOnlyWhenExact: false });
+    const RepoNavLink = withTranslation(this.i18nNamespace)(({ t, absoluteRepoUrl }: RepositoryNavProps) => {
+      return this.navLink(`${absoluteRepoUrl}/${REPOSITORY_SUB_ROUTES.SETTINGS}/${sanitizedTo}`, labelI18nKey, t, {});
     });
 
     // bind navigation link to extension point
     binder.bind("repository.setting", RepoNavLink, repoPredicate, sortKey ?? linkName);
 
     // route for global configuration, passes the current repository to component
-    const RepoRoute = ({ url, repository, ...additionalProps }: RepositoryRouteProps) => {
-      const link = repository._links[linkName];
-
-      if (link) {
-        return this.route(
-          urls.unescapeUrlForRoute(url) + "/settings" + to,
-          <TitledRepositorySettingComponent
-            i18nNamespace={this.i18nNamespace}
-            label={labelI18nKey}
-            repository={repository}
-          >
-            <RepositoryComponent repository={repository} link={(link as Link).href} {...additionalProps} />
-          </TitledRepositorySettingComponent>
-        );
-      }
+    const RepoRoute = ({ ...additionalProps }: RepositoryRouteProps = {} as RepositoryRouteProps) => {
+      return this.route(
+        `settings/${sanitizedTo}`,
+        <TitledRepositorySettingComponent i18nNamespace={this.i18nNamespace} label={labelI18nKey}>
+          <RepositoryComponent {...additionalProps} />
+        </TitledRepositorySettingComponent>,
+      );
     };
 
     // bind config route to extension point
-    binder.bind("repository.route", RepoRoute, repoPredicate);
+    binder.bind("repository.route", RepoRoute);
   }
 
   bindNamespaceSetting(
     to: string,
     labelI18nKey: string,
     linkName: string,
-    ConfigurationComponent: ComponentType<{ link: string; namespace: Namespace }>
+    ConfigurationComponent: ComponentType<object>,
   ) {
-    const namespacePredicate = (props: (extensionPoints.NamespaceSetting | extensionPoints.NamespaceRoute)["props"]) =>
+    const namespacePredicate = (props: extensionPoints.NamespaceSetting["props"]) =>
       props.namespace && props.namespace._links && props.namespace._links[linkName];
 
-    const NamespaceNavLink: FC<extensionPoints.NamespaceRoute["props"]> = ({ url }) => {
-      const [t] = useTranslation(this.i18nNamespace);
-      return this.navLink(url + "/settings" + to, labelI18nKey, t, { activeOnlyWhenExact: false });
+    const sanitizedTo = to.startsWith("/") ? to.substring(1) : to;
+
+    const NamespaceNavLink = withTranslation(this.i18nNamespace)(({ t, absoluteNamespaceUrl }: NamespaceNavProps) => {
+      return this.navLink(
+        `${absoluteNamespaceUrl}/${NAMESPACE_SUB_ROUTES.SETTINGS}/${sanitizedTo}`,
+        labelI18nKey,
+        t,
+        {},
+      );
+    });
+
+    binder.bind("namespace.setting", NamespaceNavLink, namespacePredicate);
+
+    const NamespaceRoute = ({ ...additionalProps }: NamespaceNavProps = {} as NamespaceNavProps) => {
+      return this.route(
+        NAMESPACE_SUB_ROUTES.SETTINGS + to,
+        <TitledNamespaceSettingComponent i18nNamespace={this.i18nNamespace} label={labelI18nKey}>
+          <ConfigurationComponent {...additionalProps} />
+        </TitledNamespaceSettingComponent>,
+      );
     };
 
-    binder.bind<extensionPoints.NamespaceSetting>("namespace.setting", NamespaceNavLink, namespacePredicate);
-
-    const NamespaceRoute: FC<extensionPoints.NamespaceRoute["props"]> = ({ url, namespace, ...additionalProps }) => {
-      const link = namespace._links[linkName];
-
-      if (link) {
-        return this.route(
-          urls.unescapeUrlForRoute(url) + "/settings" + to,
-          <TitledNamespaceSettingComponent
-            i18nNamespace={this.i18nNamespace}
-            label={labelI18nKey}
-            namespace={namespace}
-          >
-            <ConfigurationComponent namespace={namespace} link={(link as Link).href} {...additionalProps} />
-          </TitledNamespaceSettingComponent>
-        );
-      }
-      return null;
-    };
-
-    binder.bind<extensionPoints.NamespaceRoute>("namespace.route", NamespaceRoute, namespacePredicate);
+    binder.bind("namespace.route", NamespaceRoute);
   }
 }
 

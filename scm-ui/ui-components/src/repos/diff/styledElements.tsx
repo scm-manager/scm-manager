@@ -138,9 +138,10 @@ export const StackedSpan = styled.span`
   font-size: 0.5em;
 `;
 
-export const StyledIcon = styled(Icon)<{ isSmaller?: boolean }>`
-  ${({ isSmaller }) =>
-    isSmaller &&
+// Intentionally written as "issmaller" in order to count as a custom DOM attribute.
+export const StyledIcon = styled(Icon)<{ issmaller?: string }>`
+  ${({ issmaller: issmaller }) =>
+    issmaller == "true" &&
     `
       font-size: 0.5em;
       margin-top: 0.05rem;

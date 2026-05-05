@@ -25,6 +25,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.revwalk.filter.RevFilter;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
@@ -58,6 +59,28 @@ public class GitLogComputer {
     this.repositoryId = repositoryId;
     this.gitRepository = repository;
     this.converterFactory = converterFactory;
+  }
+
+  private RevFilter createSearchFilter(String searchString) {
+    final String query = searchString.toLowerCase();
+
+    return new RevFilter() {
+      @Override
+      public boolean include(RevWalk walker, RevCommit cmit) {
+        String hash = cmit.getId().name();
+        if (hash.toLowerCase().startsWith(query)) {
+          return true;
+        }
+
+        String message = cmit.getFullMessage();
+        return message != null && message.toLowerCase().startsWith(query);
+      }
+
+      @Override
+      public RevFilter clone() {
+        return this;
+      }
+    };
   }
 
   public ChangesetPagingResult compute(LogCommandRequest request) {
@@ -117,6 +140,10 @@ public class GitLogComputer {
         }
 
         revWalk = new RevWalk(gitRepository);
+
+        if (!Strings.isNullOrEmpty(request.getSearchString())) {
+          revWalk.setRevFilter(createSearchFilter(request.getSearchString()));
+        }
 
         converter = converterFactory.create(gitRepository, revWalk);
 

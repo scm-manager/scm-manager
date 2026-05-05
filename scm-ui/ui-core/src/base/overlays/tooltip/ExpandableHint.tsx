@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { useState } from "react";
+import React, { FC, Ref, useState } from "react";
 import Icon from "../../buttons/Icon";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -23,11 +23,12 @@ type Props = {
   message: string;
   summary: string;
   className?: string;
-}
+  ref?: Ref<HTMLButtonElement>;
+};
 
 const StyledButton = styled.button`
   border-radius: 4px !important;
-  min-width: 2.5rem;  
+  min-width: 2.5rem;
   min-height: 24px;
   border: none;
   padding: 6px;
@@ -42,8 +43,6 @@ const StyledButton = styled.button`
   }
 `;
 
-
-
 /**
  * An a11y-friendly tooltip replacement that is an expandable hint
  *
@@ -51,7 +50,7 @@ const StyledButton = styled.button`
  * @since 3.2.0
  */
 
-const ExpandableHint = React.forwardRef<HTMLButtonElement, Props>(({ message, summary, className }, ref) => {
+const ExpandableHint: FC<Props> = ({ message, summary, className, ref }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   return (
     <>
@@ -63,12 +62,12 @@ const ExpandableHint = React.forwardRef<HTMLButtonElement, Props>(({ message, su
         className={classNames(className, "is-flex")}
         ref={ref}
       >
-          {isOpen ? <Icon className="is-small">chevron-down</Icon> : <Icon className="is-small">chevron-right</Icon>}
+        {isOpen ? <Icon className="is-small">chevron-down</Icon> : <Icon className="is-small">chevron-right</Icon>}
         {summary}
       </StyledButton>
       {isOpen ? <p className="mt-2 is-size-7">{message}</p> : undefined}
     </>
   );
-});
+};
 
 export default ExpandableHint;

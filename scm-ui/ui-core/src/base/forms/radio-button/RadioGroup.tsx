@@ -14,20 +14,21 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, FC, Ref } from "react";
 import Control from "../base/Control";
 import * as RadixRadio from "@radix-ui/react-radio-group";
 import RadioButton from "./RadioButton";
 
 type Props = {
   options?: { value: string; label?: string; helpText?: string }[];
+  ref?: Ref<HTMLDivElement>;
 } & ComponentProps<typeof RadixRadio.Root>;
 
 /**
  * @beta
  * @since 2.48.0
  */
-const RadioGroup = React.forwardRef<HTMLDivElement, Props>(({ options, children, className, ...props }, ref) => (
+const RadioGroup: FC<Props> = ({ options, children, className, ref, ...props }) => (
   <RadixRadio.Root {...props} asChild>
     <Control ref={ref} className={className}>
       {children ??
@@ -36,6 +37,6 @@ const RadioGroup = React.forwardRef<HTMLDivElement, Props>(({ options, children,
         ))}
     </Control>
   </RadixRadio.Root>
-));
+);
 
 export default RadioGroup;

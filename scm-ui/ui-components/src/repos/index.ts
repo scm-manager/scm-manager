@@ -35,9 +35,9 @@ export * from "./changesets";
 export { default as Diff } from "./Diff";
 export { default as DiffFile } from "./DiffFile";
 export { default as DiffButton } from "./DiffButton";
-export { FileControlFactory } from "./DiffTypes";
-export { default as LoadingDiff, WhitespaceMode } from "./LoadingDiff";
-export { DefaultCollapsed, DefaultCollapsedFunction } from "./defaultCollapsed";
+export { type FileControlFactory } from "./DiffTypes";
+export { default as LoadingDiff, type WhitespaceMode } from "./LoadingDiff";
+export { type DefaultCollapsed, type DefaultCollapsedFunction } from "./defaultCollapsed";
 export { default as RepositoryAvatar } from "./RepositoryAvatar";
 export { default as RepositoryEntry } from "./RepositoryEntry";
 export { default as RepositoryFlag } from "./RepositoryFlag";
@@ -48,18 +48,18 @@ export { default as RepositoryFlags } from "./RepositoryFlags";
 export { default as DiffDropDown } from "./DiffDropDown";
 export { default as DiffStatistics } from "./DiffStatistics";
 export { default as LayoutRadioButtons } from "./LayoutRadioButtons";
-export { LayoutMode, useLayoutState } from "./diffLayout";
+export { type LayoutMode, useLayoutState } from "./diffLayout";
 
 export {
-  File,
-  FileChangeType,
-  Hunk,
-  Change,
-  ChangeType,
-  BaseContext,
-  AnnotationFactory,
-  AnnotationFactoryContext,
-  DiffEventHandler,
-  DiffEventContext,
-  DiffObjectProps,
+  type File,
+  type FileChangeType,
+  type Hunk,
+  type Change,
+  type ChangeType,
+  type BaseContext,
+  type AnnotationFactory,
+  type AnnotationFactoryContext,
+  type DiffEventHandler,
+  type DiffEventContext,
+  type DiffObjectProps,
 };

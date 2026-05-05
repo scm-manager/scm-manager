@@ -14,6 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+// @ts-ignore
 import type { RefractorElement, Text } from "refractor/lib/core";
 
 export type Message<T> = { data: T };

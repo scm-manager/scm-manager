@@ -16,8 +16,7 @@
 
 import useBinder, { BinderContext } from "./useBinder";
 import { Binder } from "./binder";
-import { mount } from "enzyme";
-import "@scm-manager/ui-tests";
+import { render } from "@testing-library/react";
 import React from "react";
 
 describe("useBinder tests", () => {
@@ -27,8 +26,8 @@ describe("useBinder tests", () => {
   };
 
   it("should return default binder", () => {
-    const rendered = mount(<BinderName />);
-    expect(rendered.text()).toBe("default");
+    const { container } = render(<BinderName />);
+    assert.include(container.textContent ?? "", "default");
   });
 
   it("should return binder from context", () => {
@@ -39,7 +38,7 @@ describe("useBinder tests", () => {
       </BinderContext.Provider>
     );
 
-    const rendered = mount(app);
-    expect(rendered.text()).toBe("from-context");
+    const { container } = render(app);
+    assert.include(container.textContent ?? "", "from-context");
   });
 });

@@ -26,7 +26,7 @@ type Props = {
 };
 
 const ArchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
-  const { isLoading, error, archive } = useArchiveRepository();
+  const { isPending, error, archive } = useArchiveRepository();
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("repos");
 
@@ -47,14 +47,14 @@ const ArchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
       buttons={[
         {
           label: t("archiveRepo.confirmAlert.submit"),
-          onClick: () => archiveRepoCallback()
+          onClick: () => archiveRepoCallback(),
         },
         {
           className: "is-info",
           label: t("archiveRepo.confirmAlert.cancel"),
           onClick: () => null,
-          autofocus: true
-        }
+          autofocus: true,
+        },
       ]}
       close={() => setShowConfirmAlert(false)}
     />
@@ -72,7 +72,7 @@ const ArchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
           </div>
         }
         right={
-          <Button color="warning" icon="archive" label={t("archiveRepo.button")} action={action} loading={isLoading} />
+          <Button color="warning" icon="archive" label={t("archiveRepo.button")} action={action} loading={isPending} />
         }
       />
     </>

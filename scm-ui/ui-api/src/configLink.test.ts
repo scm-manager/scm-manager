@@ -14,13 +14,12 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import fetchMock from "fetch-mock-jest";
+import fetchMock from "fetch-mock";
 import { HalRepresentation } from "@scm-manager/ui-types";
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook, act, waitFor } from "@testing-library/react";
 import createWrapper from "./tests/createWrapper";
 import { useConfigLink } from "./configLink";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
-import { act } from "react-test-renderer";
 
 describe("useConfigLink tests", () => {
   type MyConfig = HalRepresentation & {
@@ -50,11 +49,11 @@ describe("useConfigLink tests", () => {
 
     const queryClient = createInfiniteCachingClient();
 
-    const { result, waitFor } = renderHook(() => useConfigLink<MyConfig>("/my/config"), {
-      wrapper: createWrapper(undefined, queryClient),
+    const { result } = renderHook(() => useConfigLink<MyConfig>("/my/config"), {
+      wrapper: createWrapper(queryClient),
     });
     await waitFor(() => {
-      return !!result.current.initialConfiguration;
+      expect(result.current.initialConfiguration).toEqual(config);
     });
 
     return result.current;
@@ -77,40 +76,37 @@ describe("useConfigLink tests", () => {
 
     fetchMock.get("/api/v2/my/config", myConfig);
 
-    const { result, waitFor, waitForNextUpdate } = renderHook(() => useConfigLink<MyConfig>("/my/config"), {
-      wrapper: createWrapper(undefined, queryClient),
+    const { result } = renderHook(() => useConfigLink<MyConfig>("/my/config"), {
+      wrapper: createWrapper(queryClient),
     });
 
     await waitFor(() => {
-      return !!result.current.initialConfiguration;
+      expect(result.current.initialConfiguration).toBeDefined();
     });
 
     const { update } = result.current;
-
-    const lukesConfig = {
-      ...myConfig,
-      name: "Luke",
-    };
+    const lukesConfig = { ...myConfig, name: "Luke" };
 
     fetchMock.putOnce(
+      "/api/v2/my/config-write",
       {
-        url: "/api/v2/my/config-write",
+        status: 204,
+      },
+      {
         headers: {
           "Content-Type": "application/json",
         },
         body: lukesConfig,
       },
-      {
-        status: 204,
-      }
     );
 
-    await act(() => {
-      update(lukesConfig);
-      return waitForNextUpdate();
+    await act(async () => {
+      await update(lukesConfig);
     });
 
-    expect(result.current.isUpdated).toBe(true);
+    await waitFor(() => {
+      expect(result.current.isUpdated).toBe(true);
+    });
   });
 
   it("should capture content type update url", async () => {
@@ -123,12 +119,12 @@ describe("useConfigLink tests", () => {
       body: myConfig,
     });
 
-    const { result, waitFor, waitForNextUpdate } = renderHook(() => useConfigLink<MyConfig>("/my/config"), {
-      wrapper: createWrapper(undefined, queryClient),
+    const { result } = renderHook(() => useConfigLink<MyConfig>("/my/config"), {
+      wrapper: createWrapper(queryClient),
     });
 
     await waitFor(() => {
-      return !!result.current.initialConfiguration;
+      expect(result.current.initialConfiguration).toBeDefined();
     });
 
     const { update } = result.current;
@@ -139,23 +135,24 @@ describe("useConfigLink tests", () => {
     };
 
     fetchMock.putOnce(
+      "/api/v2/my/config-write",
       {
-        url: "/api/v2/my/config-write",
+        status: 204,
+      },
+      {
         headers: {
           "Content-Type": "application/myconfig+json",
         },
         body: lukesConfig,
       },
-      {
-        status: 204,
-      }
     );
 
-    await act(() => {
-      update(lukesConfig);
-      return waitForNextUpdate();
+    await act(async () => {
+      await update(lukesConfig);
     });
 
-    expect(result.current.isUpdated).toBe(true);
+    await waitFor(() => {
+      expect(result.current.isUpdated).toBe(true);
+    });
   });
 });

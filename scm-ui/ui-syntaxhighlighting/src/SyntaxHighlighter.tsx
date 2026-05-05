@@ -14,18 +14,18 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentType, FC, ReactChild, ReactNode, useMemo } from "react";
-import useSyntaxHighlighting from "./useSyntaxHighlighting";
-import type { RefractorElement } from "refractor";
+import React, { ComponentType, FC, ReactNode, useMemo } from "react";
 import type { Element } from "hast";
+import type { RefractorElement } from "refractor";
+import { SplitAndReplace } from "@scm-manager/ui-core";
 import type { MarkerBounds, RefractorNode } from "./types";
-import { SplitAndReplace } from "@scm-manager/ui-text";
+import useSyntaxHighlighting from "./useSyntaxHighlighting";
 
-type LineWrapperType = ComponentType<{ lineNumber: number }>;
+type LineWrapperType = ComponentType<{ lineNumber: number; children?: ReactNode }>;
 type MarkerConfig = MarkerBounds & {
-  wrapper: ComponentType;
+  wrapper: ComponentType<{ children?: ReactNode }>;
 };
-type RendererType = ComponentType<{ children: ReactChild[] }>;
+type RendererType = ComponentType<{ children?: ReactNode }>;
 
 type Replacement = {
   textToReplace: string;
@@ -34,6 +34,7 @@ type Replacement = {
 };
 
 const DEFAULT_RENDERER = React.Fragment;
+// eslint-disable-next-line react/prop-types
 const DEFAULT_LINE_WRAPPER: LineWrapperType = ({ children }) => <>{children}</>;
 
 export type Props = {
@@ -59,8 +60,8 @@ function mapChild(
   i: number,
   depth: number,
   LineWrapper?: LineWrapperType,
-  MarkerReplacement?: ComponentType
-): ReactChild {
+  MarkerReplacement?: ComponentType<{ children?: ReactNode }>,
+): ReactNode {
   if (isRefractorElement(childNode)) {
     const child = childNode as Element;
     const className =
@@ -93,7 +94,7 @@ function mapChild(
     return React.createElement(
       child.tagName,
       Object.assign({ key: `fract-${depth}-${i}` }, child.properties, { className }),
-      childNode.children && childNode.children.map(mapWithDepth(depth + 1, LineWrapper, MarkerReplacement))
+      childNode.children && childNode.children.map(mapWithDepth(depth + 1, LineWrapper, MarkerReplacement)),
     );
   }
 
@@ -142,7 +143,7 @@ const createFallbackContent = (
   value: string,
   lineWrapper?: LineWrapperType,
   renderer?: RendererType,
-  replacements: Replacement[] = []
+  replacements: Replacement[] = [],
 ): ReactNode => {
   if (lineWrapper || renderer) {
     const Renderer = renderer ?? DEFAULT_RENDERER;
@@ -180,17 +181,18 @@ const useFallbackContent = (
   strippedValue: string,
   replacements: Replacement[],
   lineWrapper?: LineWrapperType,
-  renderer?: RendererType
+  renderer?: RendererType,
 ) => {
   return useMemo(
     () => createFallbackContent(strippedValue, lineWrapper, renderer, replacements),
-    [strippedValue, lineWrapper, renderer, replacements]
+    [strippedValue, lineWrapper, renderer, replacements],
   );
 };
 
 type RootWrapperProps = {
   language: string;
-  as?: ComponentType;
+  as?: ComponentType<{ children?: ReactNode }>;
+  children?: ReactNode;
 };
 
 const RootWrapper: FC<RootWrapperProps> = ({ language, children, as: AsComponent }) => {

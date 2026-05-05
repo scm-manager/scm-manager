@@ -16,37 +16,37 @@
 
 import { ApiResult, useIndexLink } from "./base";
 import { Config } from "@scm-manager/ui-types";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
 import { requiredLink } from "./links";
 
 export const useConfig = (): ApiResult<Config> => {
   const indexLink = useIndexLink("config");
-  return useQuery<Config, Error>("config", () => apiClient.get(indexLink!).then(response => response.json()), {
-    enabled: !!indexLink
+  return useQuery<Config, Error>({
+    queryKey: ["config"],
+    queryFn: () => apiClient.get(indexLink!).then((response) => response.json()),
+    enabled: !!indexLink,
   });
 };
 
 export const useUpdateConfig = () => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data, reset } = useMutation<unknown, Error, Config>(
-    config => {
+  const { mutate, isPending, error, data, reset } = useMutation<unknown, Error, Config>({
+    mutationFn: (config) => {
       const updateUrl = requiredLink(config, "update");
       return apiClient.put(updateUrl, config, "application/vnd.scmm-config+json;v=2");
     },
-    {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries("config");
-        await queryClient.invalidateQueries("index");
-        await queryClient.invalidateQueries("pluginCenterAuth");
-      }
-    }
-  );
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["config"] });
+      await queryClient.invalidateQueries({ queryKey: ["index"] });
+      await queryClient.invalidateQueries({ queryKey: ["pluginCenterAuth"] });
+    },
+  });
   return {
     update: (config: Config) => mutate(config),
-    isLoading,
+    isPending,
     error,
     isUpdated: !!data,
-    reset
+    reset,
   };
 };

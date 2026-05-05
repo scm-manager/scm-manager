@@ -15,19 +15,48 @@
  */
 
 import React, { FC } from "react";
-import { Route, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { ErrorPage, Loading, urls } from "@scm-manager/ui-components";
+import { Navigate, RouteObject, useParams, useRoutes } from "react-router-dom";
+import { useRepositoryRole } from "@scm-manager/ui-api";
+import { ErrorPage } from "@scm-manager/ui-components";
+import { ADMIN_SINGLE_ROLE_SUB_ROUTES, Loading } from "@scm-manager/ui-core";
+import { extensionPoints, useRouteExtensions } from "@scm-manager/ui-extensions";
 import PermissionRoleDetail from "../components/PermissionRoleDetails";
 import EditRepositoryRole from "./EditRepositoryRole";
-import { useRepositoryRole } from "@scm-manager/ui-api";
 
 const SingleRepositoryRole: FC = () => {
   const [t] = useTranslation("admin");
-  const match = useRouteMatch();
   const { role: roleName } = useParams<{ role: string }>();
-  const { data: role, error, isLoading: loading } = useRepositoryRole(roleName);
+  const { data: role, error, isLoading: loading } = useRepositoryRole(roleName!);
+
+  const extensionProps = {
+    role: role!,
+  };
+
+  const rolesExtensionRoutes = useRouteExtensions<extensionPoints.RolesRoute>({
+    name: "roles.route",
+    props: extensionProps,
+  });
+
+  const singleRepositoryRoleRoutes: RouteObject[] = role
+    ? [
+        {
+          index: true,
+          element: <Navigate to={ADMIN_SINGLE_ROLE_SUB_ROUTES.INFO} replace />,
+        },
+        {
+          path: ADMIN_SINGLE_ROLE_SUB_ROUTES.INFO,
+          element: <PermissionRoleDetail role={role} />,
+        },
+        {
+          path: ADMIN_SINGLE_ROLE_SUB_ROUTES.EDIT,
+          element: <EditRepositoryRole role={role} />,
+        },
+        ...rolesExtensionRoutes,
+      ]
+    : [];
+
+  const element = useRoutes(singleRepositoryRoleRoutes);
 
   if (error) {
     return (
@@ -39,25 +68,7 @@ const SingleRepositoryRole: FC = () => {
     return <Loading />;
   }
 
-  const url = urls.matchedUrlFromMatch(match);
-  const escapedUrl = urls.escapeUrlForRoute(url);
-
-  const extensionProps = {
-    role,
-    url: escapedUrl,
-  };
-
-  return (
-    <>
-      <Route path={`${escapedUrl}/info`}>
-        <PermissionRoleDetail role={role} url={url} />
-      </Route>
-      <Route path={`${escapedUrl}/edit`} exact>
-        <EditRepositoryRole role={role} />
-      </Route>
-      <ExtensionPoint<extensionPoints.RolesRoute> name="roles.route" props={extensionProps} renderAll={true} />
-    </>
-  );
+  return <>{element}</>;
 };
 
 export default SingleRepositoryRole;

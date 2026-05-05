@@ -15,11 +15,11 @@
  */
 
 import { HalRepresentation, IndexResources, Link } from "@scm-manager/ui-types";
-import { useQuery } from "react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
-import { useLegacyContext } from "./LegacyContext";
 import { MissingLinkError, UnauthorizedError } from "./errors";
 import { requiredLink } from "./links";
+import { queryClient } from "./ApiProvider";
 
 export type ApiResult<T> = {
   isLoading: boolean;
@@ -33,16 +33,26 @@ export type ApiResultWithFetching<T> = ApiResult<T> & {
 
 export type DeleteFunction<T> = (entity: T) => void;
 
-export const useIndex = (): ApiResult<IndexResources> => {
-  const legacy = useLegacyContext();
-  return useQuery<IndexResources, Error>("index", () => apiClient.get("/").then((response) => response.json()), {
-    onSuccess: (index) => {
-      // ensure legacy code is notified
-      if (legacy.onIndexFetched) {
-        legacy.onIndexFetched(index);
-      }
+const fetchIndex = () => apiClient.get("/").then((response) => response.json() as Promise<IndexResources>);
+
+export const indexLoader = async () => {
+  const queryData = queryClient.getQueryData(["index"]);
+  if (queryData) {
+    return queryData;
+  }
+  return await queryClient.fetchQuery({
+    queryKey: ["index"],
+    queryFn: fetchIndex,
+    retry: (failureCount, error) => {
+      return error instanceof UnauthorizedError && failureCount === 0;
     },
-    refetchOnMount: false,
+  });
+};
+
+export const useIndex = (): IndexResources => {
+  const { data: index } = useSuspenseQuery<IndexResources, Error>({
+    queryKey: ["index"],
+    queryFn: fetchIndex,
     retry: (failureCount, error) => {
       // The index resource returns a 401 if the access token expired.
       // This only happens once because the error response automatically invalidates the cookie.
@@ -50,25 +60,16 @@ export const useIndex = (): ApiResult<IndexResources> => {
       return error instanceof UnauthorizedError && failureCount === 0;
     },
   });
+  return index!;
 };
 
 export const useIndexLink = (name: string): string | undefined => {
-  const { data } = useIndex();
-  if (!data) {
-    throw new Error("could not find index data");
-  }
-  const linkObject = data._links[name] as Link;
-  if (linkObject && linkObject.href) {
-    return linkObject.href;
-  }
+  const data = useIndex();
+  return (data?._links[name] as Link)?.href;
 };
 
 export const useIndexLinks = () => {
-  const { data } = useIndex();
-  if (!data) {
-    throw new Error("could not find index data");
-  }
-  return data._links;
+  return useIndex()._links;
 };
 
 export const useRequiredIndexLink = (name: string): string => {
@@ -80,10 +81,7 @@ export const useRequiredIndexLink = (name: string): string => {
 };
 
 export const useVersion = (): string => {
-  const { data } = useIndex();
-  if (!data) {
-    throw new Error("could not find index data");
-  }
+  const data = useIndex();
   const { version } = data;
   if (!version) {
     throw new Error("could not find version in index data");
@@ -93,13 +91,18 @@ export const useVersion = (): string => {
 
 export const useIndexJsonResource = <T>(name: string): ApiResult<T> => {
   const link = useIndexLink(name);
-  return useQuery<T, Error>(name, () => apiClient.get(link!).then((response) => response.json()), {
+  return useQuery<T, Error>({
+    queryKey: [name],
+    queryFn: () => apiClient.get(link!).then((response) => response.json()),
     enabled: !!link,
   });
 };
 
 export const useJsonResource = <T>(entity: HalRepresentation, name: string, key: string[]): ApiResult<T> =>
-  useQuery<T, Error>(key, () => apiClient.get(requiredLink(entity, name)).then((response) => response.json()));
+  useQuery<T, Error>({
+    queryKey: key,
+    queryFn: () => apiClient.get(requiredLink(entity, name)).then((response) => response.json()),
+  });
 
 export function fetchResourceFromLocationHeader(response: Response) {
   const location = response.headers.get("Location");

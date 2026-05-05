@@ -55,7 +55,7 @@ const ImportFromBundleForm: FC<Props> = ({
         <div className="column is-half is-vcentered">
           <Checkbox
             checked={compressed}
-            onChange={(value, name) => setCompressed(value)}
+            onChange={(value) => setCompressed(value)}
             label={t("import.compressed.label")}
             disabled={disabled}
             helpText={t("import.compressed.helpText")}

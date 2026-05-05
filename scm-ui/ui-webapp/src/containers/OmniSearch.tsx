@@ -15,18 +15,17 @@
  */
 
 import React, { FC, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Hit, Links, Repository, ValueHitField } from "@scm-manager/ui-types";
-import { useNamespaceAndNameContext, useOmniSearch, useSearchTypes } from "@scm-manager/ui-api";
-import classNames from "classnames";
-import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { RepositoryAvatar } from "@scm-manager/ui-components";
-import SyntaxModal from "../search/SyntaxModal";
+import { useLocation } from "react-router-dom";
+import classNames from "classnames";
 import queryString from "query-string";
+import { useNamespaceAndNameContext, useOmniSearch, useSearchTypes } from "@scm-manager/ui-api";
+import { RepositoryAvatar } from "@scm-manager/ui-components";
+import { Icon, useShortcut } from "@scm-manager/ui-core";
+import { Hit, Links, Repository, ValueHitField } from "@scm-manager/ui-types";
 import { orderTypes } from "../search/Search";
-import { useShortcut } from "@scm-manager/ui-shortcuts";
 import SearchBox from "../search/search-box/SearchBox";
-import { Icon } from "@scm-manager/ui-core";
+import SyntaxModal from "../search/SyntaxModal";
 
 type Props = {
   shouldClear: boolean;
@@ -135,7 +134,7 @@ const OmniSearch: FC<Props> = ({ shouldClear, selectedType = "repository" }) => 
 
   const closeHelp = () => setShowHelp(false);
 
-  const hits = data?._embedded?.hits || [];
+  const hits = useMemo(() => data?._embedded?.hits || [], [data]);
   const searchTypes = useSearchTypes({
     type: "",
     namespaceContext: context.namespace || "",
@@ -159,7 +158,7 @@ const OmniSearch: FC<Props> = ({ shouldClear, selectedType = "repository" }) => 
           link={`/search/${searchTypes[0]}/?q=${encodeURIComponent(query)}&namespace=${context.namespace}&name=${
             context.name
           }`}
-        />
+        />,
       );
     }
     if (context.namespace) {
@@ -168,7 +167,7 @@ const OmniSearch: FC<Props> = ({ shouldClear, selectedType = "repository" }) => 
           key="search.quickSearch.searchNamespace"
           label={t("search.quickSearch.searchNamespace")}
           link={`/search/${selectedType}/?q=${encodeURIComponent(query)}&namespace=${context.namespace}`}
-        />
+        />,
       );
     }
     newEntries.push(
@@ -176,7 +175,7 @@ const OmniSearch: FC<Props> = ({ shouldClear, selectedType = "repository" }) => 
         key="search.quickSearch.searchEverywhere"
         label={t("search.quickSearch.searchEverywhere")}
         link={`/search/${selectedType}/?q=${encodeURIComponent(query)}`}
-      />
+      />,
     );
     hits?.forEach((hit, idx) => {
       newEntries.push(
@@ -185,7 +184,7 @@ const OmniSearch: FC<Props> = ({ shouldClear, selectedType = "repository" }) => 
           label={id(hit)}
           link={`/repo/${id(hit)}`}
           repository={hit._embedded?.repository}
-        />
+        />,
       );
     });
     return newEntries;

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, Ref } from "react";
 import { useTranslation } from "react-i18next";
 import { Checkbox } from "@scm-manager/ui-components";
 
@@ -25,13 +25,10 @@ type Props = {
   onChange?: (value: boolean, name?: string) => void;
   disabled: boolean;
   role?: boolean;
+  ref?: Ref<HTMLInputElement>;
 };
 
-type InnerProps = Props & {
-  innerRef: React.Ref<HTMLInputElement>;
-};
-
-const PermissionCheckbox: FC<InnerProps> = ({ name, entityType, checked, onChange, disabled, role, innerRef }) => {
+const DefaultPermissionCheckbox: FC<Props> = ({ name, entityType, checked, onChange, disabled, role, ref }) => {
   const [t] = useTranslation("plugins");
   const key = name.split(":").join(".");
 
@@ -66,22 +63,22 @@ const PermissionCheckbox: FC<InnerProps> = ({ name, entityType, checked, onChang
     helpText,
     checked,
     disabled,
-    testId: label
+    testId: label,
   };
 
-  if (innerRef) {
+  if (ref) {
     return (
       <Checkbox
         {...commonCheckboxProps}
-        onChange={onChange ? event => onChange(event.target.checked, name) : undefined}
-        ref={innerRef}
+        onChange={onChange ? (event) => onChange(event.target.checked, name) : undefined}
+        ref={ref}
       />
     );
   }
 
-  return <Checkbox {...commonCheckboxProps} onChange={onChange ? newValue => onChange(newValue, name) : undefined} />;
+  return <Checkbox {...commonCheckboxProps} onChange={onChange ? (newValue) => onChange(newValue, name) : undefined} />;
 };
 
-export default React.forwardRef<HTMLInputElement, Props>((props, ref) => (
-  <PermissionCheckbox {...props} innerRef={ref} />
-));
+const PermissionCheckbox: FC<Props> = ({ ref, ...props }) => <DefaultPermissionCheckbox {...props} ref={ref} />;
+
+export default PermissionCheckbox;

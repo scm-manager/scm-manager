@@ -14,11 +14,11 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import { extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import { EXTENSION_POINT } from "./Avatar";
 
-const AvatarWrapper: FC = ({ children }) => {
+const AvatarWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   const binder = useBinder();
   if (binder.hasExtension<extensionPoints.AvatarFactory>(EXTENSION_POINT)) {
     return <>{children}</>;

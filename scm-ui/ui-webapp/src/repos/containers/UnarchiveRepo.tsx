@@ -26,7 +26,7 @@ type Props = {
 };
 
 const UnarchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
-  const { isLoading, error, unarchive } = useUnarchiveRepository();
+  const { isPending, error, unarchive } = useUnarchiveRepository();
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("repos");
 
@@ -47,15 +47,15 @@ const UnarchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
       buttons={[
         {
           label: t("unarchiveRepo.confirmAlert.submit"),
-          isLoading,
+          isPending,
           onClick: () => unarchiveRepoCallback(),
-          autofocus: true
+          autofocus: true,
         },
         {
           className: "is-info",
           label: t("unarchiveRepo.confirmAlert.cancel"),
-          onClick: () => null
-        }
+          onClick: () => null,
+        },
       ]}
       close={() => setShowConfirmAlert(false)}
     />
@@ -78,7 +78,7 @@ const UnarchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
             icon="box-open"
             label={t("unarchiveRepo.button")}
             action={action}
-            loading={isLoading}
+            loading={isPending}
           />
         }
       />

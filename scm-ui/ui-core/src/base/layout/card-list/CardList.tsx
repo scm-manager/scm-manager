@@ -14,19 +14,19 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentProps, HTMLAttributes } from "react";
+import React, { ComponentProps, FC, HTMLAttributes, Ref } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import Card from "../card/Card";
+
+type CardListCardProps = Omit<ComponentProps<typeof Card>, "as">;
 
 /**
  * @beta
  * @since 2.44.0
  * @see Card
  */
-export const CardListCard = React.forwardRef<HTMLElement, Omit<ComponentProps<typeof Card>, "as">>((props, ref) => (
-  <Card ref={ref} {...props} as="li" />
-));
+export const CardListCard: FC<CardListCardProps> = ({ ref, ...props }) => <Card ref={ref} {...props} as="li" />;
 
 const CardListElement = styled.ul`
   > * + * {
@@ -43,26 +43,26 @@ const CardListElement = styled.ul`
   }
 `;
 
-type Props = HTMLAttributes<HTMLUListElement>;
+type Props = HTMLAttributes<HTMLUListElement> & { ref?: Ref<HTMLUListElement> };
 
 /**
  * @beta
  * @since 2.44.0
  */
-const CardList = React.forwardRef<HTMLUListElement, Props>(({ children, className, ...props }, ref) => (
+const CardList: FC<Props> = ({ children, className, ref, ...props }) => (
   <CardListElement ref={ref} {...props} className={classNames(className, "is-flex", "is-flex-direction-column")}>
     {children}
   </CardListElement>
-));
+);
 
 /**
  * @beta
  * @since 2.44.0
  */
-export const CardListBox = React.forwardRef<HTMLUListElement, Props>(({ className, children, ...props }, ref) => (
+export const CardListBox: FC<Props> = ({ className, children, ref, ...props }) => (
   <CardList className={classNames(className, "p-2 box")} ref={ref} {...props}>
     {children}
   </CardList>
-));
+);
 
 export default CardList;

@@ -14,20 +14,63 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentProps } from "react";
+// import React, { ComponentProps } from "react";
+//
+// import StoryRouter from "storybook-react-router";
+// import { StoryFn } from "@storybook/react";
+// import { StatusIcon } from "./index";
+// import { StatusIconSizeVariantList, StatusVariantList, StatusVariants } from "./StatusIcon";
+//
+// // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
+// export default {
+//   title: "Status",
+//   component: null,
+//   subcomponents: {
+//     Button: StatusIcon,
+//   },
+//   argTypes: {
+//     variant: {
+//       options: StatusVariantList,
+//       control: { type: "select" },
+//     },
+//     iconSize: {
+//       options: StatusIconSizeVariantList,
+//       control: { type: "select" },
+//     },
+//   },
+//   decorators: [StoryRouter()],
+//   parameters: {
+//     storyshots: { disable: true },
+//   },
+// };
+//
+// // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
+// const StatusIconTemplate: StoryFn<ComponentProps<typeof StatusIcon>> = (args) => <StatusIcon {...args} />;
+//
+// export const Icon = StatusIconTemplate.bind({});
+// Icon.args = {
+//   variant: StatusVariants.SUCCESS,
+//   invert: false,
+//   iconSize: "lg",
+// };
+//
+// export const IconWithTitle = StatusIconTemplate.bind({});
+// IconWithTitle.args = {
+//   variant: StatusVariants.SUCCESS,
+//   invert: false,
+//   iconSize: "lg",
+//   children: "Lorem Ipsum",
+// };
 
-import StoryRouter from "storybook-react-router";
-import { StoryFn } from "@storybook/react";
+import React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import { StatusIcon } from "./index";
 import { StatusIconSizeVariantList, StatusVariantList, StatusVariants } from "./StatusIcon";
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
-  title: "Status",
-  component: null,
-  subcomponents: {
-    Button: StatusIcon,
-  },
+const meta: Meta<typeof StatusIcon> = {
+  title: "Components/StatusIcon",
+  component: StatusIcon,
   argTypes: {
     variant: {
       options: StatusVariantList,
@@ -38,26 +81,32 @@ export default {
       control: { type: "select" },
     },
   },
-  decorators: [StoryRouter()],
-  parameters: {
-    storyshots: { disable: true },
+  decorators: [
+    (Story) => (
+      <div style={{ margin: "2rem" }}>
+        <Story />
+      </div>
+    ),
+  ],
+  tags: ["autodocs"],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Icon: Story = {
+  args: {
+    variant: StatusVariants.SUCCESS,
+    invert: false,
+    iconSize: "lg",
   },
 };
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const StatusIconTemplate: StoryFn<ComponentProps<typeof StatusIcon>> = (args) => <StatusIcon {...args} />;
-
-export const Icon = StatusIconTemplate.bind({});
-Icon.args = {
-  variant: StatusVariants.SUCCESS,
-  invert: false,
-  iconSize: "lg",
-};
-
-export const IconWithTitle = StatusIconTemplate.bind({});
-IconWithTitle.args = {
-  variant: StatusVariants.SUCCESS,
-  invert: false,
-  iconSize: "lg",
-  children: "Lorem Ipsum",
+export const WithTitle: Story = {
+  name: "Icon With Title",
+  args: {
+    ...Icon.args, // Wiederverwendet die Argumente der "Icon"-Story
+    children: "Lorem Ipsum",
+  },
 };

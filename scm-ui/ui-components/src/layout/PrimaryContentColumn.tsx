@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
 import { useSecondaryNavigation } from "../useSecondaryNavigation";
 
@@ -26,7 +26,7 @@ const PrimaryColumn = styled.div<{ collapsed: boolean }>`
   }
 `;
 
-const PrimaryContentColumn: FC = ({ children }) => {
+const PrimaryContentColumn: FC<{ children: ReactNode }> = ({ children }) => {
   const { collapsed } = useSecondaryNavigation();
 
   return (

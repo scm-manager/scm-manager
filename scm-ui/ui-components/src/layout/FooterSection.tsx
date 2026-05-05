@@ -20,6 +20,7 @@ import styled from "styled-components";
 
 type Props = {
   title: ReactNode;
+  children: ReactNode;
 };
 
 const Menu = styled.ul`

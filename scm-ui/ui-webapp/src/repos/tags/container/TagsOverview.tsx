@@ -15,21 +15,22 @@
  */
 
 import React, { FC, useMemo, useState } from "react";
-import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, Notification, Subtitle } from "@scm-manager/ui-components";
-import { useDocumentTitleForRepository } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
-import orderTags, { SORT_OPTIONS, SortOption } from "../orderTags";
-import TagTable from "../components/TagTable";
 import { useTags } from "@scm-manager/ui-api";
-import { Select } from "@scm-manager/ui-forms";
+import { ErrorNotification, Loading, Notification, Subtitle } from "@scm-manager/ui-components";
+import {
+  Select,
+  useDocumentTitleForRepository,
+  useRepositoryFromParams,
+  useCurrentRepositoryBaseUrl,
+  REPOSITORY_SUB_ROUTES,
+} from "@scm-manager/ui-core";
+import TagTable from "../components/TagTable";
+import orderTags, { SORT_OPTIONS, SortOption } from "../orderTags";
 
-type Props = {
-  repository: Repository;
-  baseUrl: string;
-};
-
-const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
+const TagsOverview: FC = () => {
+  const repository = useRepositoryFromParams();
+  const baseUrl = useCurrentRepositoryBaseUrl();
   const { isLoading, error, data } = useTags(repository);
   const [t] = useTranslation("repos");
   useDocumentTitleForRepository(repository, t("tags.overview.title"));
@@ -53,12 +54,14 @@ const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
         </label>
         <Select id="tags-overview-sort" onChange={(e) => setSort(e.target.value as SortOption)}>
           {SORT_OPTIONS.map((sortOption) => (
-            <option value={sortOption}>{t(`tags.overview.sort.option.${sortOption}`)}</option>
+            <option value={sortOption} key={sortOption}>
+              {t(`tags.overview.sort.option.${sortOption}`)}
+            </option>
           ))}
         </Select>
       </div>
       {tags.length > 0 ? (
-        <TagTable repository={repository} baseUrl={baseUrl} tags={tags} />
+        <TagTable repository={repository} baseUrl={`${baseUrl}/${REPOSITORY_SUB_ROUTES.TAG}`} tags={tags} />
       ) : (
         <Notification type="info">{t("tags.overview.noTags")}</Notification>
       )}

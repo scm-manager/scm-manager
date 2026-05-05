@@ -15,29 +15,35 @@
  */
 
 import React, { FC } from "react";
-import { useRouteMatch, Link } from "react-router-dom";
+import { matchPath, useLocation, NavLink } from "react-router-dom";
 import { createAttributesForTesting } from "../devBuild";
 import classNames from "classnames";
 
 type Props = {
   to: string;
-  match: string;
+  match: string | string[];
   label: string;
   testId?: string;
   className?: string;
 };
 
 const PrimaryNavigationLink: FC<Props> = ({ to, match, testId, label, className }) => {
-  const routeMatch = useRouteMatch({ path: match });
+  const { pathname } = useLocation();
+  let isMatch: boolean;
+  if (Array.isArray(match)) {
+    isMatch = match.some((m) => !!matchPath(m + "/*", pathname));
+  } else {
+    isMatch = !!matchPath((match as string) + "/*", pathname);
+  }
 
   return (
-    <Link
+    <NavLink
       to={to}
-      className={classNames(className, "navbar-item", { "is-active": routeMatch })}
+      className={() => classNames(className, "navbar-item", { "is-active": isMatch })}
       {...createAttributesForTesting(testId)}
     >
       {label}
-    </Link>
+    </NavLink>
   );
 };
 

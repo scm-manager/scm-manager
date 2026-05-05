@@ -17,25 +17,24 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { ButtonGroup } from "../../buttons";
-import { Icon } from "@scm-manager/ui-buttons";
-import { Hunk as HunkType, Link } from "@scm-manager/ui-types";
-import TokenizedDiffView from "../TokenizedDiffView";
-import DiffButton from "../DiffButton";
-import { MenuContext } from "../../navigation/MenuContext";
-import OpenInFullscreenButton from "../../buttons/OpenInFullscreenButton";
-import DiffExpander from "../DiffExpander";
-import { Modal } from "../../modals";
-import { ErrorNotification } from "@scm-manager/ui-core";
-import FileTitle from "./FileTitle";
-import { DiffFilePanel, FullWidthTitleHeader, MarginlessModalContent, PanelHeading } from "./styledElements";
-import ChangeTag from "./ChangeTag";
-import { getAnchorId, hasContent as determineHasContent, hoverFileTitle } from "./helpers";
-import DiffFileHunk from "./DiffFileHunk";
-import { DiffFileProps } from "./types";
-import { useContentType } from "@scm-manager/ui-api";
-import BinaryDiffFileContent, { canDisplayBinaryFile } from "./BinaryDiffFileContent";
 import styled from "styled-components";
+import { useContentType } from "@scm-manager/ui-api";
+import { ErrorNotification, Icon } from "@scm-manager/ui-core";
+import { Hunk as HunkType, Link } from "@scm-manager/ui-types";
+import { ButtonGroup } from "../../buttons";
+import OpenInFullscreenButton from "../../buttons/OpenInFullscreenButton";
+import { Modal } from "../../modals";
+import { MenuContext } from "../../navigation";
+import DiffButton from "../DiffButton";
+import BinaryDiffFileContent, { canDisplayBinaryFile } from "./BinaryDiffFileContent";
+import DiffExpander from "../DiffExpander";
+import TokenizedDiffView from "../TokenizedDiffView";
+import ChangeTag from "./ChangeTag";
+import DiffFileHunk from "./DiffFileHunk";
+import FileTitle from "./FileTitle";
+import { getAnchorId, hasContent as determineHasContent, hoverFileTitle } from "./helpers";
+import { DiffFilePanel, FullWidthTitleHeader, MarginlessModalContent, PanelHeading } from "./styledElements";
+import { DiffFileProps } from "./types";
 
 type Props = DiffFileProps;
 
@@ -77,7 +76,7 @@ const DiffFile: FC<Props> = ({
     () =>
       hasContent ||
       (["add", "modify", "delete"].includes(file.type) && canDisplayBinaryFile(oldContentType, newContentType)),
-    [file, hasContent, newContentType, oldContentType]
+    [file, hasContent, newContentType, oldContentType],
   );
   const canRenderSideBySide = useMemo(() => hasContent && file.type === "modify", [file, hasContent]);
 
@@ -126,7 +125,7 @@ const DiffFile: FC<Props> = ({
         }
       }
     },
-    [collapsed, file, canRenderContent, isCollapsedProp, onCollapseStateChange, stickyHeader]
+    [collapsed, file, canRenderContent, isCollapsedProp, onCollapseStateChange, stickyHeader],
   );
 
   const toggleSideBySide = useCallback((callback: () => void) => {
@@ -139,7 +138,7 @@ const DiffFile: FC<Props> = ({
       setWhitespace(!whitespace);
       callback();
     },
-    [whitespace]
+    [whitespace],
   );
 
   const sideBySideToggle = useMemo(
@@ -161,7 +160,7 @@ const DiffFile: FC<Props> = ({
           )}
         </MenuContext.Consumer>
       ),
-    [canRenderSideBySide, sideBySide, t, toggleSideBySide]
+    [canRenderSideBySide, sideBySide, t, toggleSideBySide],
   );
 
   const whitespaceToggle = useMemo(
@@ -183,7 +182,7 @@ const DiffFile: FC<Props> = ({
           )}
         </MenuContext.Consumer>
       ),
-    [hasContent, t, toggleWhiteSpace, whitespace]
+    [hasContent, t, toggleWhiteSpace, whitespace],
   );
 
   const errorModal = useMemo(
@@ -196,7 +195,7 @@ const DiffFile: FC<Props> = ({
           active={true}
         />
       ) : null,
-    [expansionError, t]
+    [expansionError, t],
   );
 
   const innerContent = useMemo(
@@ -253,7 +252,7 @@ const DiffFile: FC<Props> = ({
       sideBySide,
       whitespace,
       viewType,
-    ]
+    ],
   );
 
   const body = useMemo(() => (!isCollapsed ? innerContent : null), [innerContent, isCollapsed]);
@@ -266,7 +265,7 @@ const DiffFile: FC<Props> = ({
           modalBody={<MarginlessModalContent>{innerContent}</MarginlessModalContent>}
         />
       ) : null,
-    [canRenderContent, file, innerContent]
+    [canRenderContent, file, innerContent],
   );
 
   const collapseIcon = useMemo(
@@ -276,7 +275,7 @@ const DiffFile: FC<Props> = ({
       ) : (
         <Icon alt={t("diff.hideContent")}>angle-down</Icon>
       ),
-    [isCollapsed, t]
+    [isCollapsed, t],
   );
 
   return (

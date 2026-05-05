@@ -15,13 +15,12 @@
  */
 
 import { Config } from "@scm-manager/ui-types";
-import fetchMock from "fetch-mock-jest";
+import fetchMock from "fetch-mock";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import { setIndexLink } from "./tests/indexLinks";
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook, act, waitFor } from "@testing-library/react";
 import createWrapper from "./tests/createWrapper";
 import { useConfig, useUpdateConfig } from "./config";
-import { act } from "react-test-renderer";
 
 describe("Test config hooks", () => {
   const config: Config = {
@@ -70,11 +69,10 @@ describe("Test config hooks", () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "config", "/config");
       fetchMock.get("/api/v2/config", config);
-      const { result, waitFor } = renderHook(() => useConfig(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useConfig(), {
+        wrapper: createWrapper(queryClient),
       });
-      await waitFor(() => !!result.current.data);
-      expect(result.current.data).toEqual(config);
+      await waitFor(() => expect(result.current.data).toEqual(config));
     });
   });
 
@@ -92,19 +90,21 @@ describe("Test config hooks", () => {
         status: 200,
       });
 
-      const { result, waitForNextUpdate } = renderHook(() => useUpdateConfig(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useUpdateConfig(), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { update } = result.current;
-        update(newConfig);
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.update(newConfig);
       });
 
       expect(result.current.error).toBeFalsy();
-      expect(result.current.isUpdated).toBe(true);
-      expect(result.current.isLoading).toBe(false);
+
+      await waitFor(() => {
+        expect(result.current.isUpdated).toBe(true);
+        expect(result.current.isPending).toBe(false);
+      });
+
       expect(queryClient.getQueryData(["config"])).toBeUndefined();
     });
   });

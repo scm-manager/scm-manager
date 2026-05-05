@@ -14,13 +14,11 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import parser from "ua-parser-js";
+import { UAParser } from "ua-parser-js";
 
 export default function splitKeyCombination(key: string, userAgent = window.navigator.userAgent) {
-  const {
-    os: { name: osName },
-  } = parser(userAgent);
-  const isMacOS = osName === "Mac OS";
+  const osName = new UAParser(userAgent).getOS().name;
+  const isMacOS = osName && /Mac OS|macOS/i.test(osName);
   return key
     .replace(/(option|alt)/g, isMacOS ? "⌥" : "alt")
     .replace(/(command|meta)/g, isMacOS ? "⌘" : "meta")

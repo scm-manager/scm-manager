@@ -15,38 +15,48 @@
  */
 
 import React from "react";
-import "@scm-manager/ui-tests";
+import { MemoryRouter } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
 import SetPermissionsNavLink from "./SetPermissionsNavLink";
-import { shallow } from "enzyme";
 
-it("should render nothing, if the permissions link is missing", () => {
-  const user = {
-    displayName: "User",
-    name: "User",
-    password: "hitchhiker",
-    external: true,
-    active: true,
-    _links: {}
-  };
+describe("SetPermissionsNavLink", () => {
+  it("should render nothing, if the permissions link is missing", () => {
+    const user = {
+      displayName: "User",
+      name: "User",
+      password: "hitchhiker",
+      external: true,
+      active: true,
+      _links: {},
+    };
 
-  const navLink = shallow(<SetPermissionsNavLink user={user} permissionsUrl="/user/permissions" />);
-  expect(navLink.text()).toBe("");
-});
+    render(
+      <MemoryRouter>
+        <SetPermissionsNavLink user={user} permissionsUrl="/user/permissions" />
+      </MemoryRouter>,
+    );
+    assert.notExists(screen.queryByTestId("user-permissions-link"));
+  });
 
-it("should render the navLink", () => {
-  const user = {
-    displayName: "User",
-    name: "User",
-    password: "hitchhiker",
-    external: true,
-    active: true,
-    _links: {
-      permissions: {
-        href: "/permissions"
-      }
-    }
-  };
+  it("should render the navLink", () => {
+    const user = {
+      displayName: "User",
+      name: "User",
+      password: "hitchhiker",
+      external: true,
+      active: true,
+      _links: {
+        permissions: {
+          href: "/permissions",
+        },
+      },
+    };
 
-  const navLink = shallow(<SetPermissionsNavLink user={user} permissionsUrl="/user/permissions" />);
-  expect(navLink.text()).not.toBe("");
+    render(
+      <MemoryRouter>
+        <SetPermissionsNavLink user={user} permissionsUrl="/user/permissions" />
+      </MemoryRouter>,
+    );
+    assert.exists(screen.queryByTestId("user-permissions-link"));
+  });
 });

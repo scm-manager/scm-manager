@@ -18,7 +18,7 @@ import React from "react";
 import Button, { ButtonProps } from "./Button";
 
 /**
- * @deprecated Use {@link ui-buttons/src/Button.tsx} instead
+ * @deprecated Use Button from ui-core instead
  */
 class DeleteButton extends React.Component<ButtonProps> {
   render() {

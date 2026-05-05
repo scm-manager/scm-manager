@@ -14,20 +14,10 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, {
-  ForwardedRef,
-  Fragment,
-  KeyboardEventHandler,
-  ReactElement,
-  Ref,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Fragment, KeyboardEventHandler, ReactElement, Ref, useEffect, useRef, useState } from "react";
 import { Combobox as HeadlessCombobox } from "@headlessui/react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { withForwardRef } from "../helpers";
 import { createAttributesForTesting } from "../../helpers";
 import { Option } from "@scm-manager/ui-types";
 
@@ -104,7 +94,7 @@ export type ComboboxProps<T> =
  * @beta
  * @since 2.45.0
  */
-function ComboboxComponent<T>(props: ComboboxProps<T>, ref: ForwardedRef<HTMLInputElement>) {
+function ComboboxComponent<T>({ ref, ...props }: ComboboxProps<T>) {
   const [query, setQuery] = useState("");
   const { onQueryChange } = props;
 
@@ -124,7 +114,7 @@ function ComboboxComponent<T>(props: ComboboxProps<T>, ref: ForwardedRef<HTMLInp
         <HeadlessCombobox.Option value={o} key={o.label} as={Fragment}>
           {({ active }) => <StyledComboboxOption isActive={active}>{o.displayValue ?? o.label}</StyledComboboxOption>}
         </HeadlessCombobox.Option>
-      )
+      ),
     );
   }
 
@@ -132,6 +122,7 @@ function ComboboxComponent<T>(props: ComboboxProps<T>, ref: ForwardedRef<HTMLInp
     <HeadlessCombobox
       as="div"
       value={props.value}
+      // @ts-ignore
       onChange={(e?: Option<T>) => props.onChange && props.onChange(e)}
       disabled={props.disabled || props.readOnly}
       name={props.name}
@@ -173,6 +164,7 @@ type ComboboxOptionsProps<T> = {
 
 function ComboboxOptions<T>({ query, options, children }: ComboboxOptionsProps<T>) {
   const [optionsData, setOptionsData] = useState<Array<Option<T>>>([]);
+  // @ts-ignore
   const activePromise = useRef<Promise<Array<Option<T>>>>();
 
   useEffect(() => {
@@ -204,13 +196,13 @@ function ComboboxOptions<T>({ query, options, children }: ComboboxOptionsProps<T
           <HeadlessCombobox.Option value={o} key={o.label} as={Fragment}>
             {({ active }) => <StyledComboboxOption isActive={active}>{o.displayValue ?? o.label}</StyledComboboxOption>}
           </HeadlessCombobox.Option>
-        )
+        ),
       )}
     </>
   );
 }
 
-const Combobox = Object.assign(withForwardRef(ComboboxComponent), {
+const Combobox = Object.assign(ComboboxComponent, {
   Option: StyledComboboxOption,
 });
 

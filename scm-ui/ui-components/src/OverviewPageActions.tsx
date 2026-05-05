@@ -15,18 +15,18 @@
  */
 
 import React, { FC, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import classNames from "classnames";
 import { Button, urls } from "./index";
 import { FilterInput, Select } from "./forms";
 
 type Props = {
   showCreateButton: boolean;
-  currentGroup: string;
+  currentGroup?: string;
   groups?: string[];
   link: string;
   createLink?: string;
-  groupSelected: (namespace: string) => void;
+  groupSelected?: (namespace: string) => void;
   label?: string;
   testId?: string;
   searchPlaceholder?: string;
@@ -49,7 +49,7 @@ const OverviewPageActions: FC<Props> = ({
   searchPlaceholder,
   groupAriaLabelledby,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const [filterValue, setFilterValue] = useState(urls.getQueryStringFromLocation(location) || "");
   const link = createAbsoluteLink(inputLink);
@@ -80,7 +80,7 @@ const OverviewPageActions: FC<Props> = ({
   const filter = (q: string) => {
     if (q !== filterValue) {
       setFilterValue(q);
-      history.push(`${link}?q=${q}`);
+      navigate(`${link}?q=${q}`);
     }
   };
 

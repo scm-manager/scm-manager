@@ -20,10 +20,12 @@ import React, {
   ComponentType,
   Context,
   createContext,
+  FC,
   HTMLAttributes,
   KeyboardEventHandler,
   LiHTMLAttributes,
   ReactElement,
+  Ref,
   RefObject,
   useCallback,
   useContext,
@@ -32,13 +34,13 @@ import React, {
 } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { Option } from "@scm-manager/ui-types";
-import { mergeRefs, withForwardRef } from "../helpers";
+import { mergeRefs } from "../helpers";
 import { Button } from "../../buttons";
 
 type ChipInputContextType<T> = {
   add(newValue: Option<T>): void;
   remove(index: number): void;
-  inputRef: RefObject<HTMLInputElement>;
+  inputRef: RefObject<HTMLInputElement | null>;
   disabled?: boolean;
   readOnly?: boolean;
 };
@@ -54,46 +56,45 @@ type CustomNewChipInputProps<T> = {
   value?: Option<T> | null;
   readOnly?: boolean;
   disabled?: boolean;
-  ref?: React.Ref<HTMLInputElement>;
+  ref?: Ref<HTMLInputElement>;
   className?: string;
   placeholder?: string;
   id?: string;
   "aria-describedby"?: string;
 };
 
-const DefaultNewChipInput = React.forwardRef<HTMLInputElement, CustomNewChipInputProps<string>>(
-  ({ onChange, value, ...props }, ref) => {
-    const handleKeyDown = useCallback<KeyboardEventHandler<HTMLInputElement>>(
-      (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          if (e.currentTarget.value) {
-            onChange({ label: e.currentTarget.value, value: e.currentTarget.value });
-          }
-          return false;
+const DefaultNewChipInput: FC<CustomNewChipInputProps<string>> = ({ onChange, value, ref, ...props }) => {
+  const handleKeyDown = useCallback<KeyboardEventHandler<HTMLInputElement>>(
+    (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (e.currentTarget.value) {
+          onChange({ label: e.currentTarget.value, value: e.currentTarget.value });
         }
-      },
-      [onChange]
-    );
+        return false;
+      }
+    },
+    [onChange],
+  );
 
-    return (
-      <div className="is-flex-grow-1">
-        <input onKeyDown={handleKeyDown} {...props} ref={ref} />
-      </div>
-    );
-  }
-);
+  return (
+    <div className="is-flex-grow-1">
+      <input onKeyDown={handleKeyDown} {...props} ref={ref} />
+    </div>
+  );
+};
 
 type ChipDeleteProps = {
   asChild?: boolean;
   index: number;
+  ref?: Ref<HTMLButtonElement>;
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type" | "onClick">;
 
 /**
  * @beta
  * @since 2.44.0
  */
-export const ChipDelete = React.forwardRef<HTMLButtonElement, ChipDeleteProps>(({ asChild, index, ...props }, ref) => {
+export const ChipDelete: FC<ChipDeleteProps> = ({ asChild, index, ref, ...props }) => {
   const { remove, disabled } = useContext(ChipInputContext);
   const Comp = asChild ? Slot : "button";
 
@@ -102,11 +103,11 @@ export const ChipDelete = React.forwardRef<HTMLButtonElement, ChipDeleteProps>((
   }
 
   return <Comp {...props} ref={ref} type="button" onClick={() => remove(index)} />;
-});
+};
 
 type NewChipInputProps = {
   children?: ReactElement | null;
-  ref?: React.Ref<HTMLInputElement>;
+  ref: Ref<HTMLInputElement>;
   className?: string;
   placeholder?: string;
   id?: string;
@@ -117,10 +118,7 @@ type NewChipInputProps = {
  * @beta
  * @since 2.44.0
  */
-export const NewChipInput = withForwardRef(function NewChipInput<T>(
-  props: NewChipInputProps,
-  ref: React.ForwardedRef<HTMLInputElement>
-) {
+export const NewChipInput = function NewChipInput<T>(props: NewChipInputProps) {
   const { add, disabled, readOnly, inputRef } = useContext(getChipInputContext<T>());
 
   const Comp = props.children ? Slot : DefaultNewChipInput;
@@ -130,21 +128,20 @@ export const NewChipInput = withForwardRef(function NewChipInput<T>(
     readOnly,
     disabled,
     value: null,
-    ref: mergeRefs(ref, inputRef),
+    ref: mergeRefs(props.ref, inputRef),
   });
-});
+};
 
-type ChipProps = { asChild?: boolean } & LiHTMLAttributes<HTMLLIElement>;
-
+type ChipProps = { asChild?: boolean; ref?: Ref<HTMLLIElement> } & LiHTMLAttributes<HTMLLIElement>;
 /**
  * @beta
  * @since 2.44.0
  */
-export const Chip = React.forwardRef<HTMLLIElement, ChipProps>(({ asChild, ...props }, ref) => {
+export const Chip: FC<ChipProps> = ({ asChild, ref, ...props }) => {
   const Comp = asChild ? Slot : "li";
 
   return <Comp {...props} ref={ref} />;
-});
+};
 
 type Props<T> = {
   value?: Option<T>[] | null;
@@ -152,16 +149,23 @@ type Props<T> = {
   readOnly?: boolean;
   disabled?: boolean;
   isNewItemDuplicate?: (existingItem: Option<T>, newItem: Option<T>) => boolean;
+  ref?: Ref<HTMLUListElement>;
 } & Omit<HTMLAttributes<HTMLUListElement>, "onChange">;
 
 /**
  * @beta
  * @since 2.44.0
  */
-const ChipInput = withForwardRef(function ChipInput<T>(
-  { children, value = [], disabled, readOnly, onChange, isNewItemDuplicate, ...props }: Props<T>,
-  ref: React.ForwardedRef<HTMLUListElement>
-) {
+const ChipInput = function ChipInput<T>({
+  children,
+  value = [],
+  disabled,
+  readOnly,
+  onChange,
+  isNewItemDuplicate,
+  ref,
+  ...props
+}: Props<T>) {
   const inputRef = useRef<HTMLInputElement>(null);
   const isInactive = useMemo(() => disabled || readOnly, [disabled, readOnly]);
   const add = useCallback<(newValue: Option<T>) => void>(
@@ -171,7 +175,7 @@ const ChipInput = withForwardRef(function ChipInput<T>(
         !value?.some((item) =>
           isNewItemDuplicate
             ? isNewItemDuplicate(item, newItem)
-            : item.label === newItem.label || item.value === newItem.value
+            : item.label === newItem.label || item.value === newItem.value,
         )
       ) {
         if (onChange) {
@@ -182,11 +186,11 @@ const ChipInput = withForwardRef(function ChipInput<T>(
         }
       }
     },
-    [isInactive, isNewItemDuplicate, onChange, value]
+    [isInactive, isNewItemDuplicate, onChange, value],
   );
   const remove = useCallback(
     (index: number) => !isInactive && onChange && onChange(value?.filter((_, itdx) => itdx !== index)),
-    [isInactive, onChange, value]
+    [isInactive, onChange, value],
   );
   const Context = getChipInputContext<T>();
   return (
@@ -199,7 +203,7 @@ const ChipInput = withForwardRef(function ChipInput<T>(
           remove,
           inputRef,
         }),
-        [add, disabled, readOnly, remove]
+        [add, disabled, readOnly, remove],
       )}
     >
       <ul {...props} ref={ref}>
@@ -207,19 +211,18 @@ const ChipInput = withForwardRef(function ChipInput<T>(
       </ul>
     </Context.Provider>
   );
-});
+};
 
-const AddButton = React.forwardRef<
-  HTMLButtonElement,
-  Omit<ComponentProps<typeof Button>, "onClick"> & { inputRef: RefObject<HTMLInputElement | null> }
->(({ inputRef, children, ...props }, ref) => (
+type AddButtonProps = Omit<ComponentProps<typeof Button>, "onClick"> & { inputRef: RefObject<HTMLInputElement | null> };
+
+const AddButton: FC<AddButtonProps> = ({ inputRef, children, ...props }) => (
   <Button
     {...props}
     onClick={() => inputRef.current?.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }))}
   >
     {children}
   </Button>
-));
+);
 
 export default Object.assign(ChipInput, {
   Chip: Object.assign(Chip, {

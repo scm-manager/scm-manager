@@ -125,6 +125,7 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
       >
         <StyledDiv>{signatureElements}</StyledDiv>
       </Popover>
+      {/* @ts-ignore */}
       <div {...triggerProps}>
         <StyledIcon name="key" className={className} color={getColor(signatures)} />
       </div>

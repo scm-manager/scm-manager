@@ -16,8 +16,6 @@
 
 package sonia.scm.plugin;
 
-
-import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Resources;
 import jakarta.xml.bind.JAXB;
@@ -36,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,8 +46,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-
 
 @ExtendWith(MockitoExtension.class)
 class PluginProcessorTest {
@@ -119,18 +116,17 @@ class PluginProcessorTest {
 
   @Test
   void shouldNotContainDuplicatesOnUpdate() throws IOException {
-    createInstalledPlugin("scm-mail-plugin-2-0-0");
-    createInstalledPlugin("scm-review-plugin-2-0-0");
-    createPendingPluginInstallation("scm-mail-plugin-2-1-0");
-    createPendingPluginInstallation("scm-review-plugin-2-1-0");
+    createInstalledPlugin("scm-mail-plugin-4-0-0");
+    createInstalledPlugin("scm-review-plugin-4-0-0");
+    createPendingPluginInstallation("scm-mail-plugin-4-1-0");
+    createPendingPluginInstallation("scm-review-plugin-4-1-0");
 
     Set<String> plugins = collectPlugins().stream()
       .map(p -> p.getDescriptor().getInformation().getName(true))
       .collect(Collectors.toSet());
-    assertThat(plugins).containsOnly("scm-mail-plugin:2.1.0", "scm-review-plugin:2.1.0");
+    assertThat(plugins).containsOnly("scm-mail-plugin:4.1.0", "scm-review-plugin:4.1.0");
   }
 
-  @SuppressWarnings("UnstableApiUsage")
   private void createPendingPluginInstallation(String descriptorResource) throws IOException {
     URL resource = resource(descriptorResource);
     InstalledPluginDescriptor descriptor = JAXB.unmarshal(resource, InstalledPluginDescriptor.class);
@@ -143,7 +139,6 @@ class PluginProcessorTest {
     }
   }
 
-  @SuppressWarnings("UnstableApiUsage")
   private void createInstalledPlugin(String descriptorResource) throws IOException {
     URL resource = resource(descriptorResource);
     InstalledPluginDescriptor descriptor = JAXB.unmarshal(resource, InstalledPluginDescriptor.class);
@@ -157,7 +152,6 @@ class PluginProcessorTest {
     }
   }
 
-  @SuppressWarnings("UnstableApiUsage")
   private URL resource(String descriptorResource) {
     return Resources.getResource("sonia/scm/plugin/" + descriptorResource + ".xml");
   }
@@ -224,7 +218,7 @@ class PluginProcessorTest {
     clazz = cl.loadClass("sonia.scm.plugins.HelloService");
     assertThat(clazz).isNotNull();
 
-    Object instance = clazz.newInstance();
+    Object instance = clazz.getDeclaredConstructor().newInstance();
     Object result = clazz.getMethod("sayHello").invoke(instance);
 
     assertThat(result).isEqualTo("hello");
@@ -248,7 +242,7 @@ class PluginProcessorTest {
     clazz = cl.loadClass("sonia.scm.plugins.HelloAgainService");
     assertThat(clazz).isNotNull();
 
-    Object instance = clazz.newInstance();
+    Object instance = clazz.getDeclaredConstructor().newInstance();
     Object result = clazz.getMethod("sayHelloAgain").invoke(instance);
 
     assertThat(result).isEqualTo("hello again");
@@ -286,7 +280,6 @@ class PluginProcessorTest {
   }
 
   @Test
-  @SuppressWarnings("UnstableApiUsage")
   void shouldCreatePluginWebResourceLoader() throws IOException {
     copySmp(PLUGIN_A);
 
@@ -297,7 +290,7 @@ class PluginProcessorTest {
     URL url = wrl.getResource("hello");
     assertThat(url).isNotNull();
 
-    assertThat(Resources.toString(url, Charsets.UTF_8)).isEqualTo("hello");
+    assertThat(Resources.toString(url, StandardCharsets.UTF_8)).isEqualTo("hello");
   }
 
   @Test
@@ -323,7 +316,6 @@ class PluginProcessorTest {
     return processor.collectPlugins(PluginProcessorTest.class.getClassLoader());
   }
 
-  @SuppressWarnings("UnstableApiUsage")
   private void copySmp(PluginResource plugin) throws IOException {
     URL resource = Resources.getResource(plugin.path);
     File file = new File(pluginDirectory, plugin.name);
@@ -354,7 +346,5 @@ class PluginProcessorTest {
       this.name = name;
       this.id = id;
     }
-
   }
-
 }

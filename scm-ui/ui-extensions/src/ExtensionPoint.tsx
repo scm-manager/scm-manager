@@ -14,15 +14,16 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { PropsWithChildren, ReactNode } from "react";
+import React, {JSX, PropsWithChildren, ReactNode} from "react";
 import { Binder, ExtensionPointDefinition } from "./binder";
 import useBinder from "./useBinder";
 
 export type Renderable<P> = React.ReactElement | React.ComponentType<P>;
-export type RenderableExtensionPointDefinition<
-  Name extends string = string,
-  P = undefined
-> = ExtensionPointDefinition<Name, Renderable<P>, P>;
+export type RenderableExtensionPointDefinition<Name extends string = string, P = undefined> = ExtensionPointDefinition<
+  Name,
+  Renderable<P>,
+  P
+>;
 
 export type SimpleRenderableDynamicExtensionPointDefinition<
   Prefix extends string,
@@ -54,7 +55,7 @@ type Props<E extends RenderableExtensionPointDefinition> = BaseProps<E> &
 
 function createInstance<P>(Component: Renderable<P>, props: P, key?: number) {
   if (React.isValidElement(Component)) {
-
+    // @ts-ignore
     return React.cloneElement(Component, {
       ...props,
       // @ts-ignore
@@ -63,7 +64,7 @@ function createInstance<P>(Component: Renderable<P>, props: P, key?: number) {
     });
   }
   // @ts-ignore
-    return <Component {...props} key={key} />;
+  return <Component {...props} />;
 }
 
 const renderAllExtensions = <E extends RenderableExtensionPointDefinition<string, unknown>>(

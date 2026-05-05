@@ -432,30 +432,57 @@ summary {
   @include button-variant("warning", $warning, $warning-invert);
   @include button-variant("danger", $danger, $danger-invert);
 
-  &.is-inverted.is-primary {
-    &:hover,
-    &.is-hovered {
-      background-color: transparent;
-      border-color: $primary;
+  &.is-inverted {
+    @mixin _button-inverted-variant($name, $color, $color-invert) {
+      &.is-#{$name} {
+        &:hover,
+        &.is-hovered {
+          background-color: transparent;
+          border-color: $color;
+        }
+
+        &:focus,
+        &.is-focused {
+          border-color: $color;
+        }
+
+        &:active,
+        &.is-active {
+          color: $color-invert;
+          background-color: $color;
+        }
+
+        &[disabled] {
+          color: $color;
+          background-color: transparent;
+          border-color: transparent;
+        }
+
+        &.is-loading::after {
+          border-color: transparent transparent #{$color} #{$color} !important;
+        }
+
+        background-color: transparent;
+      }
     }
-    &:focus,
-    &.is-focused {
-      border-color: $primary;
+
+    // List of variants: (name color color-invert)
+    $__button-inverted-variants: (
+      (primary $primary $primary-invert),
+      (info $info $info-invert),
+      (link $link $link-invert),
+      (success $success $success-invert),
+      (warning $warning $warning-invert),
+      (danger $danger $danger-invert)
+    );
+
+    // Generate inverted styles for each variant
+    @each $variant in $__button-inverted-variants {
+      $name: nth($variant, 1);
+      $col: nth($variant, 2);
+      $col-inv: nth($variant, 3);
+      @include _button-inverted-variant($name, $col, $col-inv);
     }
-    &:active,
-    &.is-active {
-      color: $primary-invert;
-      background-color: $primary;
-    }
-    &[disabled] {
-      color: $primary;
-      background-color: transparent;
-      border-color: transparent;
-    }
-    &.is-loading::after {
-      border-color: transparent transparent $primary $primary !important;
-    }
-    background-color: transparent;
   }
 }
 
@@ -479,13 +506,13 @@ summary {
   }
 }
 
-@import "~@fortawesome/fontawesome-free/scss/fontawesome";
-$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
-@import "~@fortawesome/fontawesome-free/scss/solid";
-@import "~@fortawesome/fontawesome-free/scss/regular";
-@import "~@fortawesome/fontawesome-free/scss/brands";
+@import "@fortawesome/fontawesome-free/scss/fontawesome";
+$fa-font-path: "../../../node_modules/@fortawesome/fontawesome-free/webfonts";
+@import "@fortawesome/fontawesome-free/scss/solid";
+@import "@fortawesome/fontawesome-free/scss/regular";
+@import "@fortawesome/fontawesome-free/scss/brands";
 
-@import "~react-diff-view/style/index";
+@import "react-diff-view/style/index";
 
 // NEW STYLES
 
@@ -1080,4 +1107,12 @@ form .field:not(.is-grouped) {
   @media screen and (max-width: 768px) {
     padding-bottom: 0.25rem;
   }
+}
+
+.container {
+  max-width: 1344px;
+}
+
+.layout-wide .container {
+  max-width: calc(100% - 48px) !important;
 }

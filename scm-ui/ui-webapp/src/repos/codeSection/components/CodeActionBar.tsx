@@ -16,11 +16,12 @@
 
 import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
-import { useLocation } from "react-router-dom";
-import { BranchSelector, devices, Level, urls } from "@scm-manager/ui-components";
+import { useLocation, useParams } from "react-router-dom";
+import { devices, urls } from "@scm-manager/ui-components";
 import CodeViewSwitcher, { SwitchViewLink } from "./CodeViewSwitcher";
-import { useTranslation } from "react-i18next";
-import { Branch } from "@scm-manager/ui-types";
+import CompareSelector from "../../compare/CompareSelector";
+import { useRepositoryFromParams } from "@scm-manager/ui-core";
+import { CompareTypes } from "../../compare/CompareSelectBar";
 
 const ActionBar = styled.div`
   border: 1px solid var(--scm-border-color);
@@ -35,55 +36,32 @@ const ActionBar = styled.div`
   }
 `;
 
-const FlexShrinkLevel = styled(Level)`
-  .level-left {
-    flex-shrink: 1;
-    margin-right: 0.75rem;
-  }
-  .level-item {
-    justify-content: flex-end;
-  }
-  @media screen and (max-width: ${devices.tablet.width}-1px) {
-    .level-left {
-      margin-right: 0;
-    }
-    .level-item {
-      margin-top: 0.5rem;
-    }
-  }
-`;
-
 type Props = {
-  selectedBranch?: string;
-  branches?: Branch[];
-  onSelectBranch: () => void;
+  onSelect: (type: CompareTypes, name: string) => void;
   switchViewLink: SwitchViewLink;
   actions?: ReactNode;
+  hasContent?: boolean;
 };
 
-const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, switchViewLink, actions }) => {
-  const { t } = useTranslation("repos");
+const CodeActionBar: FC<Props> = ({ onSelect, switchViewLink, actions, hasContent }) => {
   const location = useLocation();
+  const repository = useRepositoryFromParams();
+  const params = useParams<{
+    sourceName: string;
+    "*": string;
+  }>();
 
   return (
     <ActionBar className="has-background-secondary-less">
-      <FlexShrinkLevel
-        left={
-          branches &&
-          branches?.length > 0 && (
-            <BranchSelector
-              label={t("code.branchSelector")}
-              branches={branches}
-              selectedBranch={selectedBranch}
-              onSelectBranch={onSelectBranch}
-            />
-          )
-        }
-        children={actions}
-        right={
+      <div className="is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap has-gap-2">
+        {hasContent && repository.type !== "svn" && (
+          <CompareSelector onSelect={onSelect} selected={params?.sourceName} label={null} repository={repository} />
+        )}
+        <div className="is-flex is-align-items-center ml-auto">
+          {actions}
           <CodeViewSwitcher currentUrl={urls.escapeUrlForRoute(location.pathname)} switchViewLink={switchViewLink} />
-        }
-      />
+        </div>
+      </div>
     </ActionBar>
   );
 };

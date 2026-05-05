@@ -15,7 +15,7 @@
  */
 
 import React, { FC, ReactNode, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router";
 import { urls } from "@scm-manager/ui-api";
 import styled from "styled-components";
 import Icon from "../Icon";
@@ -69,7 +69,7 @@ const MarkdownHeadingRenderer: FC<Props> = ({ children, level, permalink, id }) 
   const [copying, setCopying] = useState(false);
   const [t] = useTranslation("repos");
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const reactChildren = React.Children.toArray(children);
   const heading = reactChildren.reduce(flatten, "");
   const anchorId = id || headingToAnchorId(heading);
@@ -77,7 +77,7 @@ const MarkdownHeadingRenderer: FC<Props> = ({ children, level, permalink, id }) 
     event.preventDefault();
     setCopying(true);
     copyToClipboard(permalinkHref)
-      .then(() => history.replace("#" + anchorId))
+      .then(() => navigate("#" + anchorId, { replace: true }))
       .finally(() => setCopying(false));
   };
   const CopyButton = copying ? (

@@ -15,7 +15,7 @@
  */
 
 import React, { FC, useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
@@ -27,12 +27,12 @@ type Props = {
 };
 
 const DeleteRepositoryRole: FC<Props> = ({ confirmDialog = true, role }: Props) => {
-  const { isLoading: loading, error, remove, isDeleted } = useDeleteRepositoryRole();
+  const { isPending: loading, error, remove, isDeleted } = useDeleteRepositoryRole();
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("admin");
 
   if (isDeleted) {
-    return <Redirect to="/admin/roles" />;
+    return <Navigate to="/admin/roles" />;
   }
 
   const deleteRoleCallback = () => remove(role);
@@ -59,14 +59,14 @@ const DeleteRepositoryRole: FC<Props> = ({ confirmDialog = true, role }: Props) 
         buttons={[
           {
             label: t("repositoryRole.delete.confirmAlert.submit"),
-            onClick: deleteRoleCallback
+            onClick: deleteRoleCallback,
           },
           {
             className: "is-info",
             label: t("repositoryRole.delete.confirmAlert.cancel"),
             onClick: () => null,
-            autofocus: true
-          }
+            autofocus: true,
+          },
         ]}
         close={() => setShowConfirmAlert(false)}
       />

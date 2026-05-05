@@ -14,16 +14,16 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentProps, useCallback, useState } from "react";
+import React, { ComponentProps, FC, Ref, useCallback, useState } from "react";
 import * as HeadlessTabs from "@radix-ui/react-tabs";
 
-type Props = Omit<ComponentProps<typeof HeadlessTabs.Root>, "value">;
+type Props = Omit<ComponentProps<typeof HeadlessTabs.Root>, "value"> & { ref?: Ref<HTMLDivElement> };
 
 /**
  * @beta
  * @since 2.47.0
  */
-const Tabs = React.forwardRef<HTMLDivElement, Props>(({ defaultValue, onValueChange, children, ...props }, ref) => {
+const Tabs: FC<Props> = ({ defaultValue, onValueChange, children, ref, ...props }) => {
   const [value, setValue] = useState(defaultValue);
   const handleValueChange = useCallback(
     (newValue: string) => {
@@ -39,6 +39,6 @@ const Tabs = React.forwardRef<HTMLDivElement, Props>(({ defaultValue, onValueCha
       {children}
     </HeadlessTabs.Root>
   );
-});
+};
 
 export default Tabs;

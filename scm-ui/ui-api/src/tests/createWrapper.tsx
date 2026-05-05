@@ -14,14 +14,32 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
-import { LegacyContext, LegacyContextProvider } from "../LegacyContext";
-import { QueryClient, QueryClientProvider } from "react-query";
+import React, { FC, ReactNode, Suspense } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const createWrapper = (context?: LegacyContext, queryClient?: QueryClient): FC => {
-  return ({ children }) => (
+class SimpleErrorBoundary extends React.Component<{ children: ReactNode }, { hasError: boolean }> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h1>ERROR</h1>;
+    }
+    return this.props.children;
+  }
+}
+
+const createWrapper = (queryClient?: QueryClient): FC<{ children: ReactNode }> => {
+  return ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient ? queryClient : new QueryClient()}>
-      <LegacyContextProvider {...context}>{children}</LegacyContextProvider>
+      <SimpleErrorBoundary>
+        <Suspense>{children}</Suspense>
+      </SimpleErrorBoundary>
     </QueryClientProvider>
   );
 };

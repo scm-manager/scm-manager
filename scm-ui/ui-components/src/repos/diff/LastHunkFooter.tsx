@@ -29,19 +29,19 @@ const LastHunkFooter: FC<Props> = ({ expandableHunk, diffExpanded, diffExpansion
   const expandBottom = useCallback(
     (expandableHunk: ExpandableHunk, count: number) => () =>
       expandableHunk.expandBottom(count).then(diffExpanded).catch(diffExpansionFailed),
-    [diffExpanded, diffExpansionFailed]
+    [diffExpanded, diffExpansionFailed],
   );
 
   if (expandableHunk.maxExpandBottomRange !== 0) {
     return (
       <HunkExpandDivider>
         <HunkExpandLink
-          icon={"angle-down"}
+          icon="angle-down"
           onClick={expandBottom(expandableHunk, 10)}
           text={t("diff.expandLastBottomByLines", { count: 10 })}
         />{" "}
         <HunkExpandLink
-          icon={"angle-double-down"}
+          icon="angle-double-down"
           onClick={expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
           text={t("diff.expandLastBottomComplete")}
         />

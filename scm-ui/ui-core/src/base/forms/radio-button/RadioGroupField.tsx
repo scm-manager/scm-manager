@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, FC, Ref } from "react";
 import Field from "../base/Field";
 import Label from "../base/label/Label";
 import Help from "../base/help/Help";
@@ -25,26 +25,25 @@ type Props = {
   labelClassName?: string;
   label: string;
   helpText?: string;
+  ref?: Ref<HTMLDivElement>;
 } & ComponentProps<typeof RadioGroup>;
 
 /**
  * @beta
  * @since 2.48.0
  */
-const RadioGroupField = React.forwardRef<HTMLDivElement, Props>(
-  ({ fieldClassName, labelClassName, label, helpText, children, ...props }, ref) => {
-    return (
-      <Field className={fieldClassName} as="fieldset">
-        <Label className={labelClassName} as="legend">
-          {label}
-          {helpText ? <Help className="ml-1" text={helpText} /> : null}
-        </Label>
-        <RadioGroup ref={ref} {...props}>
-          {children}
-        </RadioGroup>
-      </Field>
-    );
-  }
-);
+const RadioGroupField: FC<Props> = ({ fieldClassName, labelClassName, label, helpText, children, ref, ...props }) => {
+  return (
+    <Field className={fieldClassName} as="fieldset">
+      <Label className={labelClassName} as="legend">
+        {label}
+        {helpText ? <Help className="ml-1" text={helpText} /> : null}
+      </Label>
+      <RadioGroup ref={ref} {...props}>
+        {children}
+      </RadioGroup>
+    </Field>
+  );
+};
 
 export default RadioGroupField;

@@ -16,7 +16,7 @@
 
 import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
 import { Namespace, NamespaceCollection, NamespaceStrategies } from "@scm-manager/ui-types";
-import { useQuery } from "react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
 import { concat } from "./urls";
 
@@ -26,9 +26,10 @@ export const useNamespaces = () => {
 
 export const useNamespace = (name: string): ApiResult<Namespace> => {
   const namespacesLink = useRequiredIndexLink("namespaces");
-  return useQuery<Namespace, Error>(["namespace", name], () =>
-    apiClient.get(concat(namespacesLink, name)).then((response) => response.json())
-  );
+  return useSuspenseQuery<Namespace, Error>({
+    queryFn: () => apiClient.get(concat(namespacesLink, name)).then((response) => response.json()),
+    queryKey: ["namespace", name],
+  });
 };
 
 export const useNamespaceStrategies = () => {

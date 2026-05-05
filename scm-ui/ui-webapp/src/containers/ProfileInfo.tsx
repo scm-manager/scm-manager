@@ -16,7 +16,6 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Me } from "@scm-manager/ui-types";
 import {
   AvatarImage,
   AvatarWrapper,
@@ -25,13 +24,11 @@ import {
   MailLink,
 } from "@scm-manager/ui-components";
 import { useDocumentTitle } from "@scm-manager/ui-core";
+import { useRequiredMe } from "@scm-manager/ui-api";
 
-type Props = {
-  me: Me;
-};
-
-const ProfileInfo: FC<Props> = ({ me }) => {
+const ProfileInfo: FC = () => {
   const [t] = useTranslation("commons");
+  const me = useRequiredMe();
   useDocumentTitle(t("profile.subtitle"), me.displayName);
   const renderGroups = () => {
     let groups = null;
@@ -42,7 +39,7 @@ const ProfileInfo: FC<Props> = ({ me }) => {
           <td className="p-0">
             <ul>
               {me.groups.map((group) => {
-                return <li>{group}</li>;
+                return <li key={group}>{group}</li>;
               })}
             </ul>
           </td>

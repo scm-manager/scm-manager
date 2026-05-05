@@ -14,12 +14,13 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { HTMLAttributes } from "react";
+import React, { HTMLAttributes, FC, Ref } from "react";
 
 interface Props extends HTMLAttributes<HTMLParagraphElement> {
   descriptionText: string;
   extendedDescriptionText: string;
   id?: string;
+  ref?: Ref<HTMLDetailsElement>;
 }
 
 /**
@@ -29,22 +30,20 @@ interface Props extends HTMLAttributes<HTMLParagraphElement> {
  * with an icon to toggle the visibility of the extended text.
  *
  * @param desription - The text content that will always be displayed.
- * @param extended - The text content that will be displayed after you toggle details.
+ * @param extendedDescriptionText - The text content that will be displayed after you toggle details.
  * @param id - Additional props to pass to the `<details>` element.
  * @param ref - A ref to the `<details>` element.
  *
  * @beta
  * @since 3.9.0
  */
-const ExpandableText = React.forwardRef<HTMLDetailsElement, Props>(
-  ({ descriptionText, extendedDescriptionText, id }, ref) => {
-    return (
-      <details className="mb-2" id={id} ref={ref}>
-        <summary>{descriptionText}</summary>
-        <span>{extendedDescriptionText}</span>
-      </details>
-    );
-  }
-);
+const ExpandableText: FC<Props> = ({ descriptionText, extendedDescriptionText, id, ref }) => {
+  return (
+    <details className="mb-2" id={id} ref={ref}>
+      <summary>{descriptionText}</summary>
+      <span>{extendedDescriptionText}</span>
+    </details>
+  );
+};
 
 export default ExpandableText;

@@ -138,6 +138,8 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
     when(logCommandBuilder.setPagingStart(0)).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setPagingLimit(10)).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setBranch(anyString())).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setSearchString(any())).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setStartChangeset(any())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.getChangesets()).thenReturn(changesetPagingResult);
     MockHttpRequest request = MockHttpRequest
       .get(CHANGESET_URL)
@@ -166,6 +168,8 @@ class ChangesetRootResourceTest extends RepositoryTestBase {
     when(logCommandBuilder.setPagingStart(20)).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setPagingLimit(10)).thenReturn(logCommandBuilder);
     when(logCommandBuilder.setBranch(anyString())).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setSearchString(any())).thenReturn(logCommandBuilder);
+    when(logCommandBuilder.setStartChangeset(any())).thenReturn(logCommandBuilder);
     when(logCommandBuilder.getChangesets()).thenReturn(changesetPagingResult);
     MockHttpRequest request = MockHttpRequest
       .get(CHANGESET_URL + "?page=2")

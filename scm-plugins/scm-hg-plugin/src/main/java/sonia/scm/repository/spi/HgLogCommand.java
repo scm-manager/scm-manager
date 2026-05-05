@@ -51,7 +51,8 @@ public class HgLogCommand extends AbstractCommand implements LogCommand {
 
     if (!Strings.isNullOrEmpty(request.getPath())
       || !Strings.isNullOrEmpty(request.getBranch())
-      || !Strings.isNullOrEmpty(request.getAncestorChangeset())) {
+      || !Strings.isNullOrEmpty(request.getAncestorChangeset())
+      || !Strings.isNullOrEmpty(request.getSearchString())) {
       result = collectSafely(repository, request);
     } else {
 
@@ -112,16 +113,35 @@ public class HgLogCommand extends AbstractCommand implements LogCommand {
     String endChangeset = request.getEndChangeset();
     String ancestorChangeset = request.getAncestorChangeset();
 
+    String revset = null;
+
     if (!Strings.isNullOrEmpty(startChangeset) && !Strings.isNullOrEmpty(endChangeset)) {
-      cmd.rev(startChangeset.concat(":").concat(endChangeset));
+      revset = startChangeset.concat(":").concat(endChangeset);
     } else if (!Strings.isNullOrEmpty(startChangeset) && !Strings.isNullOrEmpty(ancestorChangeset)) {
       int start = on(repository).rev(startChangeset).singleRevision();
       int ancestor = on(repository).rev(ancestorChangeset).singleRevision();
-      cmd.rev(String.format("only(%s,%s)", start, ancestor));
+      revset = String.format("only(%s,%s)", start, ancestor);
     } else if (!Strings.isNullOrEmpty(endChangeset)) {
-      cmd.rev("tip:".concat(endChangeset));
+      revset = "tip:".concat(endChangeset);
     } else if (!Strings.isNullOrEmpty(startChangeset)) {
-      cmd.rev(startChangeset.concat(":0"));
+      revset = startChangeset.concat(":0");
+    }
+
+    String searchString = request.getSearchString();
+    if (!Strings.isNullOrEmpty(searchString)) {
+      String safeSearch = searchString.replace("'", "''");
+
+      String searchRevset = String.format("(keyword('%s') or id('%s'))", safeSearch, safeSearch);
+
+      if (revset != null) {
+        revset = String.format("(%s) and %s", revset, searchRevset);
+      } else {
+        revset = searchRevset;
+      }
+    }
+
+    if (revset != null) {
+      cmd.rev(revset);
     }
 
     if (!Strings.isNullOrEmpty(request.getBranch())) {

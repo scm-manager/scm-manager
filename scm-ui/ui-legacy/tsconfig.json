@@ -1,6 +1,0 @@
-{
-  "extends": "@scm-manager/tsconfig",
-  "include": [
-    "./src"
-  ]
-}

@@ -3,12 +3,15 @@ title: Repository
 subtitle: Code
 displayToc: true
 ---
-The "Code" section contains all information that refers to the code respectively the content of the repository. At the top of the page is the action bar, which can be used to navigate within the code section.
+The "Code" section contains all information that refers to the code respectively the content of the repository. At the
+top of the page is the action bar, which can be used to navigate within the code section.
 
 ### Sources
-The sources overview shows the files and folders within the repository. If branches exist, it shows the sources for the selected branch.
+The sources overview shows the files and folders within the repository.
+For Git and Mercurial repositories, you can select the branch, tag, or concrete revision to show the sources for.
 
-Below the action bar is a breadcrumb navigation that shows the path of the files that are displayed. By clicking on the different sections of the path it is possible to navigate (back) through the file structure of the repository.
+Below the action bar is a breadcrumb navigation that shows the path of the files that are displayed.
+By clicking on the different sections of the path it is possible to navigate (back) through the file structure of the repository.
 
 ![Example of the source view](assets/repository-code-sourcesView.png)
 

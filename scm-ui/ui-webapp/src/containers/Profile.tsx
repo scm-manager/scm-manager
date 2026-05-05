@@ -15,8 +15,9 @@
  */
 
 import React, { FC } from "react";
-import { Route, useRouteMatch } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useMe } from "@scm-manager/ui-api";
 import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
@@ -26,28 +27,19 @@ import {
   SecondaryNavigation,
   SecondaryNavigationColumn,
   SubNavigation,
-  urls,
 } from "@scm-manager/ui-components";
-import ChangeUserPassword from "./ChangeUserPassword";
-import ProfileInfo from "./ProfileInfo";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import SetPublicKeys from "../users/components/publicKeys/SetPublicKeys";
+import { ME_BASE_ROUTE, ME_SETTINGS_SUB_ROUTES, ME_SUB_ROUTES } from "@scm-manager/ui-core";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import SetPublicKeysNavLink from "../users/components/navLinks/SetPublicKeysNavLink";
-import SetApiKeys from "../users/components/apiKeys/SetApiKeys";
 import SetApiKeysNavLink from "../users/components/navLinks/SetApiKeysNavLink";
-import { useRequiredMe } from "@scm-manager/ui-api";
-import Theme from "./Theme";
-import Accessibility from "./Accessibility";
 
 const Profile: FC = () => {
-  const match = useRouteMatch();
-  const url = urls.matchedUrlFromMatch(match);
   const [t] = useTranslation("commons");
-  const me = useRequiredMe();
+  const { data: me, isLoading } = useMe();
 
-  const mayChangePassword = !!me._links.password;
-  const canManagePublicKeys = !!me._links.publicKeys;
-  const canManageApiKeys = !!me._links.apiKeys;
+  if (isLoading) {
+    return <></>;
+  }
 
   if (!me) {
     return (
@@ -62,62 +54,50 @@ const Profile: FC = () => {
     );
   }
 
-  const extensionProps = {
-    me,
-    url,
-  };
+  const mayChangePassword = !!me._links.password;
 
   return (
     <Page title={me.displayName}>
       <CustomQueryFlexWrappedColumns>
         <PrimaryContentColumn>
-          <Route path={url} exact>
-            <ProfileInfo me={me} />
-          </Route>
-          <Route path={`${url}/settings/theme`} exact>
-            <Theme me={me} />
-          </Route>
-          <Route path={`${url}/settings/accessibility`} exact>
-            <Accessibility me={me} />
-          </Route>
-          {mayChangePassword && (
-            <Route path={`${url}/settings/password`}>
-              <ChangeUserPassword me={me} />
-            </Route>
-          )}
-          {canManagePublicKeys && (
-            <Route path={`${url}/settings/publicKeys`}>
-              <SetPublicKeys user={me} />
-            </Route>
-          )}
-          {canManageApiKeys && (
-            <Route path={`${url}/settings/apiKeys`}>
-              <SetApiKeys user={me} />
-            </Route>
-          )}
-          <ExtensionPoint<extensionPoints.ProfileRoute> name="profile.route" props={extensionProps} renderAll={true} />
+          <Outlet />
         </PrimaryContentColumn>
         <SecondaryNavigationColumn>
           <SecondaryNavigation label={t("profile.navigationLabel")}>
             <NavLink
-              to={url}
+              to={`/${ME_BASE_ROUTE}/${ME_SUB_ROUTES.INFO}`}
               icon="fas fa-info-circle"
               label={t("profile.informationNavLink")}
               title={t("profile.informationNavLink")}
             />
             <SubNavigation
-              to={`${url}/settings/theme`}
+              to={`/${ME_BASE_ROUTE}/${ME_SUB_ROUTES.SETTINGS}/${ME_SETTINGS_SUB_ROUTES.THEME}`}
               label={t("profile.settingsNavLink")}
               title={t("profile.settingsNavLink")}
             >
-              <NavLink to={`${url}/settings/theme`} label={t("profile.theme.navLink")} />
-              <NavLink to={`${url}/settings/accessibility`} label={t("profile.accessibility.navLink")} />
+              <NavLink
+                to={`/${ME_BASE_ROUTE}/${ME_SUB_ROUTES.SETTINGS}/${ME_SETTINGS_SUB_ROUTES.THEME}`}
+                label={t("profile.theme.navLink")}
+              />
+              <NavLink
+                to={`/${ME_BASE_ROUTE}/${ME_SUB_ROUTES.SETTINGS}/${ME_SETTINGS_SUB_ROUTES.ACCESSIBILITY}`}
+                label={t("profile.accessibility.navLink")}
+              />
               {mayChangePassword && (
-                <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
+                <NavLink
+                  to={`/${ME_BASE_ROUTE}/${ME_SUB_ROUTES.SETTINGS}/${ME_SETTINGS_SUB_ROUTES.PASSWORD}`}
+                  label={t("profile.changePasswordNavLink")}
+                />
               )}
-              <SetPublicKeysNavLink user={me} publicKeyUrl={`${url}/settings/publicKeys`} />
-              <SetApiKeysNavLink user={me} apiKeyUrl={`${url}/settings/apiKeys`} />
-              <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
+              <SetPublicKeysNavLink
+                user={me}
+                publicKeyUrl={`/${ME_BASE_ROUTE}/${ME_SUB_ROUTES.SETTINGS}/${ME_SETTINGS_SUB_ROUTES.PUBLIC_KEYS}`}
+              />
+              <SetApiKeysNavLink
+                user={me}
+                apiKeyUrl={`/${ME_BASE_ROUTE}/${ME_SUB_ROUTES.SETTINGS}/${ME_SETTINGS_SUB_ROUTES.API_KEYS}`}
+              />
+              <ExtensionPoint name="profile.setting" props={{ me }} renderAll />
             </SubNavigation>
           </SecondaryNavigation>
         </SecondaryNavigationColumn>

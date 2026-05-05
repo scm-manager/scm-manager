@@ -17,8 +17,8 @@
 import React, { FC, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { Icon } from "@scm-manager/ui-components";
+import { Menu } from "@scm-manager/ui-core";
 import { extensionPoints } from "@scm-manager/ui-extensions";
-import { Menu } from "@scm-manager/ui-overlays";
 
 const ModalMenuItem: FC<
   extensionPoints.ModalMenuProps & {

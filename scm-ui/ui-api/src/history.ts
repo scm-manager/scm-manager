@@ -16,11 +16,12 @@
 
 import { ApiResult } from "./base";
 import { Changeset, ChangesetCollection, File, Link, Repository } from "@scm-manager/ui-types";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
 import { changesetQueryKey } from "./changesets";
 import { repoQueryKey } from "./keys";
+import { useEffect } from "react";
 
 export type UseHistoryRequest = {
   page?: number | string;
@@ -30,7 +31,7 @@ export const useHistory = (
   repository: Repository,
   revision: string,
   file: File,
-  request?: UseHistoryRequest
+  request?: UseHistoryRequest,
 ): ApiResult<ChangesetCollection> => {
   const queryClient = useQueryClient();
   const link = (file._links.history as Link).href;
@@ -40,16 +41,17 @@ export const useHistory = (
     queryParams.page = request.page.toString();
   }
 
-  return useQuery<ChangesetCollection, Error>(
-    repoQueryKey(repository, "history", revision, file.path, request?.page || 0),
-    () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
-    {
-      keepPreviousData: true,
-      onSuccess: (changesets: ChangesetCollection) => {
-        changesets._embedded?.changesets.forEach((changeset: Changeset) =>
-          queryClient.setQueryData(changesetQueryKey(repository, changeset.id), changeset)
-        );
-      },
+  const result = useQuery<ChangesetCollection, Error>({
+    queryKey: repoQueryKey(repository, "history", revision, file.path, request?.page || 0),
+    queryFn: () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
+    // keepPreviousData: true,
+  });
+  useEffect(() => {
+    if (result.data) {
+      result.data._embedded?.changesets.forEach((changeset: Changeset) =>
+        queryClient.setQueryData(changesetQueryKey(repository, changeset.id), changeset),
+      );
     }
-  );
+  }, [queryClient, repository, result.data]);
+  return result;
 };

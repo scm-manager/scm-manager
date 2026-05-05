@@ -14,18 +14,18 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
 import { useRequiredIndexLink } from "./base";
 
 const useInvalidation = (link: string) => {
-  const { mutate, isLoading, error, isSuccess } = useMutation<unknown, Error, string>((link) =>
-    apiClient.post(link, {})
-  );
+  const { mutate, isPending, error, isSuccess } = useMutation<unknown, Error, string>({
+    mutationFn: (link) => apiClient.post(link, {}),
+  });
 
   return {
     invalidate: () => mutate(link),
-    isLoading,
+    isPending,
     isSuccess,
     error,
   };

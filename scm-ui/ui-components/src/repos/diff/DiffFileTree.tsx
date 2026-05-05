@@ -81,8 +81,8 @@ const TreeNode: FC<NodeProps> = ({ node, parentPath, currentFile, setCurrentFile
               isFile={false}
               isCurrentFile={false}
               name={node.nodeName}
-              iconName={"folder"}
-              iconColor={"grey"}
+              iconName="folder"
+              iconColor="grey"
               originalIcon={icon}
               originalLabel={label}
             >
@@ -179,7 +179,7 @@ const TreeFile: FC<FileProps> = ({
       </StyledIcon>
       <StyledIcon
         className={classNames("fa-stack-1x", "is-relative", "has-text-secondary-least")}
-        isSmaller={iconName === "circle"}
+        issmaller={iconName === "circle" ? "true" : "false"}
         key={changeType}
         alt={t(`diff.changes.${changeType}`)}
       >

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ReactElement, ReactNode } from "react";
+import React, { FC, ReactElement, ReactNode, Ref } from "react";
 import * as RadixTooltip from "@radix-ui/react-tooltip";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -49,6 +49,7 @@ type Props = {
    * Class to be applied to the content container.
    */
   className?: string;
+  ref?: Ref<HTMLDivElement>;
 } & Pick<RadixTooltip.TooltipContentProps, "side">;
 
 /**
@@ -57,7 +58,7 @@ type Props = {
  * @since 2.41.0
  * @beta
  */
-const Tooltip = React.forwardRef<HTMLDivElement, Props>(({ children, className, message, side }, ref) => (
+const Tooltip: FC<Props> = ({ children, className, message, side, ref }) => (
   <RadixTooltip.Provider>
     <RadixTooltip.Root>
       <RadixTooltip.Trigger asChild>{children}</RadixTooltip.Trigger>
@@ -84,5 +85,6 @@ const Tooltip = React.forwardRef<HTMLDivElement, Props>(({ children, className, 
       </RadixTooltip.Portal>
     </RadixTooltip.Root>
   </RadixTooltip.Provider>
-));
+);
+
 export default Tooltip;

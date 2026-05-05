@@ -25,7 +25,9 @@ type RunHookEnv = {
 };
 
 export type RefractorAdapter = typeof refractor & {
+  // eslint-disable-next-line no-unused-vars
   isLanguageRegistered: (lang: string) => boolean;
+  // eslint-disable-next-line no-unused-vars
   loadLanguage: (lang: string, callback: () => void) => void;
 };
 

@@ -15,13 +15,12 @@
  */
 
 import React, { FC, useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import queryString from "query-string";
 import { useBranches, useRevert } from "@scm-manager/ui-api";
-import { Select, Textarea } from "@scm-manager/ui-forms";
 import { Modal } from "@scm-manager/ui-components";
-import { Button, ErrorNotification, Label, Loading, RequiredMarker } from "@scm-manager/ui-core";
+import { Button, ErrorNotification, Label, Loading, RequiredMarker, Select, Textarea } from "@scm-manager/ui-core";
 import { Changeset, Repository } from "@scm-manager/ui-types";
 
 type Props = {
@@ -32,9 +31,9 @@ type Props = {
 
 const RevertModal: FC<Props> = ({ repository, changeset, onClose }) => {
   const [t] = useTranslation("repos");
-  const history = useHistory();
+  const navigate = useNavigate();
   const { isLoading: isBranchesLoading, error: branchesError, data: branchData } = useBranches(repository);
-  const { revert, isLoading: isRevertLoading, error: revertError } = useRevert(changeset);
+  const { revert, isPending: isRevertLoading, error: revertError } = useRevert(changeset);
   const ref = useRef<HTMLSelectElement | null>(null);
   const queryParams = queryString.parse(window.location.search);
   const [selectedBranch, setSelectedBranch] = useState<string>(getSelectedBranch(queryParams));
@@ -44,7 +43,7 @@ const RevertModal: FC<Props> = ({ repository, changeset, onClose }) => {
           description: changeset.description.split("\n")[0],
           id: changeset.id,
         })
-      : ""
+      : "",
   );
 
   const mappedBranches = [
@@ -80,7 +79,10 @@ const RevertModal: FC<Props> = ({ repository, changeset, onClose }) => {
             })}
           </p>
           <Label className="is-flex is-align-items-baseline">
-            <span className="mr-2">{t("changeset.revert.modal.branch")}<RequiredMarker /></span>
+            <span className="mr-2">
+              {t("changeset.revert.modal.branch")}
+              <RequiredMarker />
+            </span>
             <Select
               className="is-fullwidth"
               options={mappedBranches}
@@ -119,11 +121,9 @@ const RevertModal: FC<Props> = ({ repository, changeset, onClose }) => {
                 {
                   onSuccess: (response) => {
                     onClose();
-                    history.push(
-                      `/repo/${repository.namespace}/${repository.name}/code/changeset/${response.revision}`
-                    );
+                    navigate(`/repo/${repository.namespace}/${repository.name}/code/changeset/${response.revision}`);
                   },
-                }
+                },
               )
             }
             isLoading={isRevertLoading || isBranchesLoading}

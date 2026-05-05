@@ -14,11 +14,12 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+import { Permission } from "@scm-manager/ui-types";
 import * as validator from "./permissionValidation";
 
 describe("permission validation", () => {
   it("should return true if permission is valid and does not exist", () => {
-    const permissions = [];
+    const permissions: Permission[] = [];
     const name = "PermissionName";
     const groupPermission = false;
 
@@ -32,8 +33,8 @@ describe("permission validation", () => {
         groupPermission: true,
         type: "READ",
         _links: {},
-        verbs: []
-      }
+        verbs: [],
+      },
     ];
     const name = "PermissionName";
     const groupPermission = false;
@@ -48,8 +49,8 @@ describe("permission validation", () => {
         groupPermission: false,
         type: "READ",
         _links: {},
-        verbs: []
-      }
+        verbs: [],
+      },
     ];
     const name = "PermissionName";
     const groupPermission = false;
@@ -58,7 +59,7 @@ describe("permission validation", () => {
   });
 
   it("should return false if permission does not exist but is invalid", () => {
-    const permissions = [];
+    const permissions: Permission[] = [];
     const name = "@PermissionName";
     const groupPermission = false;
 
@@ -66,7 +67,7 @@ describe("permission validation", () => {
   });
 
   it("should return false if permission is not valid and does not exist", () => {
-    const permissions = [];
+    const permissions: Permission[] = [];
     const name = "@PermissionName";
     const groupPermission = false;
 

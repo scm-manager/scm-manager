@@ -14,10 +14,10 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, MutableRefObject, useRef } from "react";
+import React, { FC, MutableRefObject, ReactNode, useRef } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { Dialog } from "@headlessui/react";
+import { Dialog, DialogTitle } from "@headlessui/react";
 import { devices } from "../devices";
 import useRegisterModal from "./useRegisterModal";
 
@@ -37,13 +37,14 @@ type Props = {
   size?: ModalSize;
   initialFocusRef?: MutableRefObject<HTMLElement | null>;
   overflowVisible?: boolean;
+  children?: ReactNode;
 };
 
 const SizedModal = styled.div<{ size?: ModalSize; overflow: string }>`
-  width: ${props => (props.size ? `${modalSizes[props.size]}%` : "640px")};
-  overflow: ${props => props.overflow};
+  width: ${(props) => (props.size ? `${modalSizes[props.size]}%` : "640px")};
+  overflow: ${(props) => props.overflow};
   @media screen and (max-width: ${devices.mobile.width}px) {
-    width: ${props => (props.size ? `${modalSizes[props.size]}%` : "320px")};
+    width: ${(props) => (props.size ? `${modalSizes[props.size]}%` : "320px")};
   }
 `;
 
@@ -59,7 +60,7 @@ export const Modal: FC<Props> = ({
   headTextColor = "secondary-most",
   size,
   initialFocusRef,
-  overflowVisible
+  overflowVisible,
 }) => {
   useRegisterModal(active);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -81,13 +82,13 @@ export const Modal: FC<Props> = ({
         { "is-active": active },
         `is-overflow-${overflowAttribute}`,
         `is-border-bottom-radius-${borderBottomRadiusAttribute}`,
-        className
+        "modal-background",
+        className,
       )}
       initialFocus={initialFocusRef ?? closeButtonRef}
     >
-      <Dialog.Overlay className="modal-background" />
       <SizedModal className="modal-card" size={size} overflow={overflowAttribute}>
-        <Dialog.Title as="header" className={classNames("modal-card-head", `has-background-${headColor}`)}>
+        <DialogTitle as="header" className={classNames("modal-card-head", `has-background-${headColor}`)}>
           <h2 className={`modal-card-title m-0 has-text-${headTextColor}`}>{title}</h2>
           <button
             className="delete"
@@ -95,12 +96,12 @@ export const Modal: FC<Props> = ({
             onClick={closeFunction}
             ref={!initialFocusRef ? closeButtonRef : undefined}
           />
-        </Dialog.Title>
+        </DialogTitle>
         <section
           className={classNames(
             "modal-card-body",
             `is-overflow-${overflowAttribute}`,
-            `is-border-bottom-radius-${borderBottomRadiusAttribute}`
+            `is-border-bottom-radius-${borderBottomRadiusAttribute}`,
           )}
         >
           {body || children}

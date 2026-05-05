@@ -34,9 +34,6 @@ import {
 
 export { validation, repositories };
 
-export { default as DateFromNow } from "./DateFromNow";
-export { default as DateShort } from "./DateShort";
-export { default as useDateFormatter } from "./useDateFormatter";
 export { default as Duration } from "./Duration";
 export { default as ErrorNotification } from "./ErrorNotification";
 export { default as ErrorPage } from "./ErrorPage";
@@ -50,7 +47,7 @@ export { default as Notification } from "./Notification";
 export { default as Paginator } from "./Paginator";
 export { default as LinkPaginator } from "./LinkPaginator";
 export { default as StatePaginator } from "./StatePaginator";
-
+export { default as Autocomplete, type SuggestionsType } from "./Autocomplete";
 export { default as DangerZone } from "./DangerZone";
 export { default as FileSize } from "./FileSize";
 export { default as ProtectedRoute } from "./ProtectedRoute";
@@ -58,9 +55,6 @@ export { default as Help } from "./Help";
 export { default as HelpIcon } from "./HelpIcon";
 export { default as Tag } from "./Tag";
 export { default as Tooltip } from "./Tooltip";
-export { default as Autocomplete } from "./Autocomplete";
-export { default as GroupAutocomplete } from "./GroupAutocomplete";
-export { default as UserAutocomplete } from "./UserAutocomplete";
 export { default as BranchSelector } from "./BranchSelector";
 export { default as Breadcrumb } from "./Breadcrumb";
 export { default as MarkdownView } from "./markdown/MarkdownView";
@@ -74,8 +68,7 @@ export { default as CardColumn } from "./CardColumn";
 export { default as CardColumnSmall } from "./CardColumnSmall";
 export { default as CommaSeparatedList } from "./CommaSeparatedList";
 export { default as PreformattedCodeBlock } from "./PreformattedCodeBlock";
-export { SplitAndReplace, Replacement } from "@scm-manager/ui-text";
-export { useShortcut } from "@scm-manager/ui-shortcuts";
+export { SplitAndReplace, useShortcut, type Replacement } from "@scm-manager/ui-core";
 export { regExpPattern as changesetShortLinkRegex } from "./markdown/remarkChangesetShortLinkParser";
 export * from "./markdown/PluginApi";
 export * from "./devices";
@@ -102,7 +95,7 @@ export * from "./popover";
 export * from "./search";
 export * from "./markdown/markdownExtensions";
 
-export {
+export type {
   File,
   FileChangeType,
   Hunk,
@@ -117,9 +110,9 @@ export {
 // Re-export from ui-api
 export { apiClient } from "@scm-manager/ui-api";
 export {
-  Violation,
-  AdditionalMessage,
-  BackendErrorContent,
+  type Violation,
+  type AdditionalMessage,
+  type BackendErrorContent,
   BackendError,
   UnauthorizedError,
   ForbiddenError,

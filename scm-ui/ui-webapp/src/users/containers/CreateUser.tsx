@@ -15,14 +15,20 @@
  */
 
 import React, { FC, useRef } from "react";
-import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Page } from "@scm-manager/ui-components";
-import { Form, useCreateResource } from "@scm-manager/ui-forms";
-import * as userValidator from "../components/userValidation";
-import { Link, User, UserCollection, UserCreation } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, Notification, useDocumentTitle } from "@scm-manager/ui-core";
+import { Navigate } from "react-router-dom";
 import { useUsers } from "@scm-manager/ui-api";
+import { Page } from "@scm-manager/ui-components";
+import {
+  ErrorNotification,
+  Form,
+  Loading,
+  Notification,
+  useCreateResource,
+  useDocumentTitle,
+} from "@scm-manager/ui-core";
+import { Link, User, UserCollection, UserCreation } from "@scm-manager/ui-types";
+import * as userValidator from "../components/userValidation";
 
 type UserCreationForm = Pick<UserCreation, "password" | "name" | "displayName" | "active" | "external" | "mail"> & {
   passwordConfirmation: string;
@@ -37,7 +43,7 @@ const CreateUserForm: FC<{ users: UserCollection }> = ({ users }) => {
     (user) => user.name,
     {
       contentType: "application/vnd.scmm-user+json;v=2",
-    }
+    },
   );
   const defaultValuesRef = useRef({
     name: "",
@@ -49,8 +55,8 @@ const CreateUserForm: FC<{ users: UserCollection }> = ({ users }) => {
     mail: "",
   });
 
-  if (!!createdUser) {
-    return <Redirect to={`/user/${createdUser.name}`} />;
+  if (createdUser) {
+    return <Navigate to={`/user/${createdUser.name}`} />;
   }
 
   return (

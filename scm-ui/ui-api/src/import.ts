@@ -15,36 +15,40 @@
  */
 
 import { ApiResult, fetchResourceFromLocationHeader, getResponseJson, useRequiredIndexLink } from "./base";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
 import { Repository, RepositoryCreation, RepositoryType, RepositoryUrlImport } from "@scm-manager/ui-types";
 import { requiredLink } from "./links";
 
 export const useImportLog = (logId: string): ApiResult<string> => {
   const link = useRequiredIndexLink("importLog").replace("{logId}", logId);
-  return useQuery<string, Error>(["importLog", logId], () => apiClient.get(link).then(response => response.text()));
+  return useQuery<string, Error>({
+    queryKey: ["importLog", logId],
+    queryFn: () => apiClient.get(link).then((response) => response.text()),
+  });
 };
 
 export const useImportRepositoryFromUrl = (repositoryType: RepositoryType) => {
   const url = requiredLink(repositoryType, "import", "url");
-  const { isLoading, error, data, mutate } = useMutation<Repository, Error, RepositoryUrlImport>(repo =>
-    apiClient
-      .post(url, repo, "application/vnd.scmm-repository+json;v=2")
-      .then(fetchResourceFromLocationHeader)
-      .then(getResponseJson)
-  );
+  const { isPending, error, data, mutate } = useMutation<Repository, Error, RepositoryUrlImport>({
+    mutationFn: (repo) =>
+      apiClient
+        .post(url, repo, "application/vnd.scmm-repository+json;v=2")
+        .then(fetchResourceFromLocationHeader)
+        .then(getResponseJson),
+  });
 
   return {
-    isLoading,
+    isPending,
     error,
     importRepositoryFromUrl: (repository: RepositoryUrlImport) => mutate(repository),
-    importedRepository: data
+    importedRepository: data,
   };
 };
 
 const importRepository = (url: string, repository: RepositoryCreation, file: File, password?: string) => {
   return apiClient
-    .postBinary(url, formData => {
+    .postBinary(url, (formData) => {
       formData.append("bundle", file, file.name);
       formData.append("repository", JSON.stringify({ ...repository, password }));
     })
@@ -61,22 +65,22 @@ type ImportRepositoryFromBundleRequest = {
 
 export const useImportRepositoryFromBundle = (repositoryType: RepositoryType) => {
   const url = requiredLink(repositoryType, "import", "bundle");
-  const { isLoading, error, data, mutate } = useMutation<Repository, Error, ImportRepositoryFromBundleRequest>(
-    ({ repository, file, compressed, password }) =>
-      importRepository(compressed ? url + "?compressed=true" : url, repository, file, password)
-  );
+  const { isPending, error, data, mutate } = useMutation<Repository, Error, ImportRepositoryFromBundleRequest>({
+    mutationFn: ({ repository, file, compressed, password }) =>
+      importRepository(compressed ? url + "?compressed=true" : url, repository, file, password),
+  });
 
   return {
-    isLoading,
+    isPending,
     error,
     importRepositoryFromBundle: (repository: RepositoryCreation, file: File, compressed?: boolean, password?: string) =>
       mutate({
         repository,
         file,
         compressed,
-        password
+        password,
       }),
-    importedRepository: data
+    importedRepository: data,
   };
 };
 
@@ -87,20 +91,20 @@ type ImportFullRepositoryRequest = {
 };
 
 export const useImportFullRepository = (repositoryType: RepositoryType) => {
-  const { isLoading, error, data, mutate } = useMutation<Repository, Error, ImportFullRepositoryRequest>(
-    ({ repository, file, password }) =>
-      importRepository(requiredLink(repositoryType, "import", "fullImport"), repository, file, password)
-  );
+  const { isPending, error, data, mutate } = useMutation<Repository, Error, ImportFullRepositoryRequest>({
+    mutationFn: ({ repository, file, password }) =>
+      importRepository(requiredLink(repositoryType, "import", "fullImport"), repository, file, password),
+  });
 
   return {
-    isLoading,
+    isPending,
     error,
     importFullRepository: (repository: RepositoryCreation, file: File, password?: string) =>
       mutate({
         repository,
         file,
-        password
+        password,
       }),
-    importedRepository: data
+    importedRepository: data,
   };
 };

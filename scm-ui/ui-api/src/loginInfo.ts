@@ -14,23 +14,20 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { ApiResult, useIndexLink } from "./base";
-import { useQuery } from "react-query";
+import { ApiResult } from "./base";
+import { useQuery } from "@tanstack/react-query";
 import { LoginInfo } from "@scm-manager/ui-types";
 
-export const useLoginInfo = (disabled = false): ApiResult<LoginInfo> => {
-  const loginInfoLink = useIndexLink("loginInfo");
-  const { error, isLoading, data } = useQuery<LoginInfo, Error>(
-    ["loginInfo"],
-    () => fetch(loginInfoLink!).then(response => response.json()),
-    {
-      enabled: !disabled && !!loginInfoLink,
-      refetchOnWindowFocus: false
-    }
-  );
+export const useLoginInfo = (loginInfoLink?: string, disabled = false): ApiResult<LoginInfo> => {
+  const { error, isLoading, data } = useQuery<LoginInfo, Error>({
+    queryKey: ["loginInfo"],
+    queryFn: () => fetch(loginInfoLink!).then((response) => response.json()),
+    enabled: !disabled && !!loginInfoLink,
+    refetchOnWindowFocus: false,
+  });
   return {
     data,
     error,
-    isLoading
+    isLoading,
   };
 };

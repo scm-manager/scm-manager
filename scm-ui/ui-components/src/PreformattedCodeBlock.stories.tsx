@@ -14,39 +14,109 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import * as React from "react";
-import { storiesOf } from "@storybook/react";
+// import * as React from "react";
+// import { storiesOf } from "@storybook/react";
+// import styled from "styled-components";
+// import PreformattedCodeBlock from "./PreformattedCodeBlock";
+// import { SubSubtitle } from "./layout";
+//
+// const Wrapper = styled.div``;
+//
+// const longContent =
+//   "#!/bin/bash\n" +
+//   "\n" +
+//   "### For this hook to work you need the SCM CLI client (https://scm-manager.org/cli/)\n" +
+//   "### installed and connected to your SCM Server.\n" +
+//   "\n" +
+//   "BRANCH_NAME=$(git symbolic-ref --short HEAD)\n" +
+//   "COMMIT_MSG_FILE=`cat $1`\n" +
+//   "\n" +
+//   'scm repo commit-message-check aaa/ultimate-repo $BRANCH_NAME "$COMMIT_MSG_FILE"';
+//
+// storiesOf("PreformattedCodeBlock", module)
+//   .addDecorator((storyFn) => <Wrapper className="m-6">{storyFn()}</Wrapper>)
+//   .add("Default", () => <PreformattedCodeBlock>git checkout main</PreformattedCodeBlock>)
+//   .add("With scrollbar", () => (
+//     <PreformattedCodeBlock>
+//       git remote add origin
+//       https://scm-manager-instance4.example.org:8081/scm/repo/my-new-namespace/LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlaboreetdoloremagnaaliquyameratseddiamvoluptuaAtveroeosetaccusametjustoduodoloresetearebumStetclitakasdgubergrennoseatakimatasanctusestLoremipsumdolorsitametLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlaboreetdoloremagnaaliquyameratseddiamvoluptuaAtveroeosetaccusametjustoduodoloresetearebumStetclitakasdgubergrennoseatakimatasanctusestLoremipsumdolorsitamet
+//     </PreformattedCodeBlock>
+//   ))
+//   .add("Long content", () => <PreformattedCodeBlock>{longContent}</PreformattedCodeBlock>)
+//   .add("Combination", () => (
+//     <div className="content">
+//       <SubSubtitle>Clone the Repository</SubSubtitle>
+//       <PreformattedCodeBlock>git clone https://fancy-scm.url/scm/repo/test/scmm\n cd scmm</PreformattedCodeBlock>
+//       <SubSubtitle>Git hook for commit message validation</SubSubtitle>
+//       <PreformattedCodeBlock>{longContent}</PreformattedCodeBlock>
+//       <SubSubtitle>Get Remote Changes</SubSubtitle>
+//       <PreformattedCodeBlock>git fetch</PreformattedCodeBlock>
+//       <SubSubtitle>Switch Branch</SubSubtitle>
+//       <PreformattedCodeBlock>git checkout feature/something</PreformattedCodeBlock>
+//     </div>
+//   ));
+
+import React from "react";
 import styled from "styled-components";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import PreformattedCodeBlock from "./PreformattedCodeBlock";
 import { SubSubtitle } from "./layout";
 
+// --- Helper Components & Mock Data (preserved from your original story) ---
+
 const Wrapper = styled.div``;
 
-const longContent =
-  "#!/bin/bash\n" +
-  "\n" +
-  "### For this hook to work you need the SCM CLI client (https://scm-manager.org/cli/)\n" +
-  "### installed and connected to your SCM Server.\n" +
-  "\n" +
-  "BRANCH_NAME=$(git symbolic-ref --short HEAD)\n" +
-  "COMMIT_MSG_FILE=`cat $1`\n" +
-  "\n" +
-  'scm repo commit-message-check aaa/ultimate-repo $BRANCH_NAME "$COMMIT_MSG_FILE"';
+const longContent = `#!/bin/bash
 
-storiesOf("PreformattedCodeBlock", module)
-  .addDecorator((storyFn) => <Wrapper className="m-6">{storyFn()}</Wrapper>)
-  .add("Default", () => <PreformattedCodeBlock>git checkout main</PreformattedCodeBlock>)
-  .add("With scrollbar", () => (
-    <PreformattedCodeBlock>
-      git remote add origin
-      https://scm-manager-instance4.example.org:8081/scm/repo/my-new-namespace/LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlaboreetdoloremagnaaliquyameratseddiamvoluptuaAtveroeosetaccusametjustoduodoloresetearebumStetclitakasdgubergrennoseatakimatasanctusestLoremipsumdolorsitametLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlaboreetdoloremagnaaliquyameratseddiamvoluptuaAtveroeosetaccusametjustoduodoloresetearebumStetclitakasdgubergrennoseatakimatasanctusestLoremipsumdolorsitamet
-    </PreformattedCodeBlock>
-  ))
-  .add("Long content", () => <PreformattedCodeBlock>{longContent}</PreformattedCodeBlock>)
-  .add("Combination", () => (
+### For this hook to work you need the SCM CLI client (https://scm-manager.org/cli/)
+### installed and connected to your SCM Server.
+
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+COMMIT_MSG_FILE=$(cat $1)
+
+scm repo commit-message-check aaa/ultimate-repo $BRANCH_NAME "$COMMIT_MSG_FILE"`;
+
+// --- Storybook Metadata ---
+
+const meta: Meta<typeof PreformattedCodeBlock> = {
+  title: "Components/PreformattedCodeBlock",
+  component: PreformattedCodeBlock,
+  decorators: [(Story) => <Wrapper className="m-6">{Story()}</Wrapper>],
+  tags: ["autodocs"],
+};
+
+export default meta;
+
+// --- Story Definitions ---
+
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    children: "git checkout main",
+  },
+};
+
+export const WithScrollbar: Story = {
+  args: {
+    children:
+      "git remote add origin https://scm-manager-instance4.example.org:8081/scm/repo/my-new-namespace/LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlaboreetdoloremagnaaliquyameratseddiamvoluptuaAtveroeosetaccusametjustoduodoloresetearebumStetclitakasdgubergrennoseatakimatasanctusestLoremipsumdolorsitametLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlaboreetdoloremagnaaliquyameratseddiamvoluptuaAtveroeosetaccusametjustoduodoloresetearebumStetclitakasdgubergrennoseatakimatasanctusestLoremipsumdolorsitamet",
+  },
+};
+
+export const LongContent: Story = {
+  args: {
+    children: longContent,
+  },
+};
+
+export const Combination: Story = {
+  // A custom `render` function is used for stories with a complex layout.
+  render: () => (
     <div className="content">
       <SubSubtitle>Clone the Repository</SubSubtitle>
-      <PreformattedCodeBlock>git clone https://fancy-scm.url/scm/repo/test/scmm\n cd scmm</PreformattedCodeBlock>
+      <PreformattedCodeBlock>git clone https://fancy-scm.url/scm/repo/test/scmm cd scmm</PreformattedCodeBlock>
       <SubSubtitle>Git hook for commit message validation</SubSubtitle>
       <PreformattedCodeBlock>{longContent}</PreformattedCodeBlock>
       <SubSubtitle>Get Remote Changes</SubSubtitle>
@@ -54,4 +124,5 @@ storiesOf("PreformattedCodeBlock", module)
       <SubSubtitle>Switch Branch</SubSubtitle>
       <PreformattedCodeBlock>git checkout feature/something</PreformattedCodeBlock>
     </div>
-  ));
+  ),
+};

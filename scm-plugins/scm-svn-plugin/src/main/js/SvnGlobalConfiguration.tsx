@@ -19,10 +19,7 @@ import { useTranslation } from "react-i18next";
 import { Configuration } from "@scm-manager/ui-components";
 import { ConfigurationForm, Title, useDocumentTitle, Form } from "@scm-manager/ui-core";
 import { HalRepresentation } from "@scm-manager/ui-types";
-
-type Props = {
-  link: string;
-};
+import { useRequiredIndexLink } from "@scm-manager/ui-api";
 
 type Configuration = {
   disabled: boolean;
@@ -31,7 +28,8 @@ type Configuration = {
   enabledGZip: boolean;
 } & HalRepresentation;
 
-const SvnGlobalConfiguration: FC<Props> = ({ link }) => {
+const SvnGlobalConfiguration: FC = () => {
+  const link = useRequiredIndexLink("svnConfig");
   const [t] = useTranslation("plugins");
   useDocumentTitle(t("scm-svn-plugin.config.title"));
 

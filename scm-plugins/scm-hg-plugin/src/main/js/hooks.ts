@@ -17,7 +17,7 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "@scm-manager/ui-components";
 import { HalRepresentation, Link, Repository } from "@scm-manager/ui-types";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export type HgRepositoryConfiguration = HalRepresentation & {
   encoding?: string;
@@ -34,15 +34,13 @@ export type HgGlobalConfigurationDto = HalRepresentation & {
 
 export const useHgAutoConfiguration = (configLink: string) => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading } = useMutation<unknown, Error, HgGlobalConfigurationDto>(
-    (config) => apiClient.put(requiredLink(config, "autoConfiguration"), config),
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(["configLink", configLink]);
-      },
-    }
-  );
-  return { mutate, isLoading };
+  const { mutate, isPending } = useMutation<unknown, Error, HgGlobalConfigurationDto>({
+    mutationFn: (config) => apiClient.put(requiredLink(config, "autoConfiguration"), config),
+    onSuccess: () => {
+      return queryClient.invalidateQueries({ queryKey: ["configLink", configLink] });
+    },
+  });
+  return { mutate, isLoading: isPending };
 };
 
 const requiredLink = (halObject: HalRepresentation, linkName: string): string => {

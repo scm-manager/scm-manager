@@ -15,12 +15,12 @@
  */
 
 import React, { useState } from "react";
-import { useShortcutDocs, useShortcut } from "@scm-manager/ui-shortcuts";
-import { Column, Modal, Table } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import splitKeyCombination from "./splitKeyCombination";
 import styled from "styled-components";
+import { Column, Modal, Table } from "@scm-manager/ui-components";
+import { useShortcutDocs, useShortcut } from "@scm-manager/ui-core";
+import splitKeyCombination from "./splitKeyCombination";
 
 const keyComparator = ([a]: [string, string], [b]: [string, string]) => (a > b ? 1 : -1);
 
@@ -42,11 +42,12 @@ const ShortcutDocsModal = () => {
           {([key]: [string, string]) =>
             splitKeyCombination(key).map((k, i) => (
               <KeyDisplay
+                key={k}
                 className={classNames(
                   "has-background-secondary-less has-text-secondary-most py-1 px-2 has-rounded-border",
                   {
                     "ml-1": i > 0,
-                  }
+                  },
                 )}
               >
                 {k}

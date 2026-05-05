@@ -14,22 +14,21 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useEffect, useState } from "react";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import React, { FC } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Repository } from "@scm-manager/ui-types";
 import { devices, Icon } from "@scm-manager/ui-components";
 import { useDocumentTitle } from "@scm-manager/ui-core";
 import CompareSelector from "./CompareSelector";
-import { CompareBranchesParams } from "./CompareView";
 
 type Props = {
   repository: Repository;
   baseUrl: string;
 };
 
-export type CompareTypes = "b" | "t" | "r";
+export type CompareTypes = "branch" | "tag" | "revision";
 
 export type CompareFunction = (type: CompareTypes, name: string) => void;
 export type CompareProps = {
@@ -37,10 +36,8 @@ export type CompareProps = {
   name: string;
 };
 const ResponsiveIcon = styled(Icon)`
-  margin: 1rem 0.5rem;
   transform: rotate(90deg);
   @media screen and (min-width: ${devices.tablet.width}px) {
-    margin: 1.5rem 1rem 0;
     transform: rotate(0);
   }
 `;
@@ -55,17 +52,26 @@ const ResponsiveBar = styled.div`
 
 const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
   const [t] = useTranslation("repos");
-  const params = useParams<CompareBranchesParams>();
-  const location = useLocation();
-  const history = useHistory();
-  const [source, setSource] = useState<CompareProps>({
+  const navigate = useNavigate();
+
+  const params = useParams<{
+    sourceType: CompareTypes;
+    sourceName: string;
+    targetType: CompareTypes;
+    targetName: string;
+    "*": string;
+  }>();
+  const source: CompareProps = {
     type: params?.sourceType,
-    name: decodeURIComponent(params?.sourceName),
-  });
-  const [target, setTarget] = useState<CompareProps>({
-    type: params?.targetType,
-    name: decodeURIComponent(params?.targetName),
-  });
+    name: params?.sourceName,
+  };
+  const target: CompareProps = {
+    type: params.targetType,
+    name: params.targetName || "",
+  };
+
+  const trailingPath = params["*"] || "diff/";
+
   useDocumentTitle(
     t("compare.compareSourceAndTargetWithNamespaceName", {
       sourceType: t(`compare.selector.type.${source.type}`),
@@ -74,44 +80,41 @@ const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
       target: target.name,
       namespace: repository.namespace,
       name: repository.name,
-    })
+    }),
   );
 
-  useEffect(() => {
-    const tabUriComponent = location.pathname.split("/")[9];
-    if (source && target && tabUriComponent) {
-      history.push(
-        baseUrl +
-          "/" +
-          source.type +
-          "/" +
-          encodeURIComponent(source.name) +
-          "/" +
-          target.type +
-          "/" +
-          encodeURIComponent(target.name) +
-          "/" +
-          tabUriComponent +
-          "/" +
-          location.pathname.split("/")[10] || ""
-      );
+  const handleSourceSelect = (type: CompareTypes, name: string) => {
+    if (target.type && target.name) {
+      const newPath = `/${baseUrl}/${type}/${encodeURIComponent(name)}/${target.type}/${encodeURIComponent(
+        target.name,
+      )}/${trailingPath}`;
+      navigate(newPath);
     }
-  }, [history, baseUrl, source, target, location.pathname]);
+  };
+
+  const handleTargetSelect = (type: CompareTypes, name: string) => {
+    if (source.type && source.name) {
+      const newPath = `/${baseUrl}/${source.type}/${encodeURIComponent(source.name)}/${type}/${encodeURIComponent(
+        name,
+      )}/${trailingPath}`;
+      navigate(newPath);
+    }
+  };
 
   return (
-    <ResponsiveBar className="is-align-items-center">
+    <ResponsiveBar className="is-align-items-center has-gap-2">
       <CompareSelector
         repository={repository}
         label={t("compare.selector.source")}
-        onSelect={(type, name) => setSource({ type, name })}
-        selected={source}
+        onSelect={handleSourceSelect}
+        selected={source.name}
       />
       <ResponsiveIcon name="arrow-right" className="fa-lg" title={t("compare.selector.with")} />
       <CompareSelector
         repository={repository}
         label={t("compare.selector.target")}
-        onSelect={(type, name) => setTarget({ type, name })}
-        selected={target}
+        onSelect={handleTargetSelect}
+        selected={target.name}
       />
     </ResponsiveBar>
   );

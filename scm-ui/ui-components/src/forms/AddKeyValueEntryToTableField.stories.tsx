@@ -14,31 +14,66 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+// import React from "react";
+// import { MemoryRouter } from "react-router-dom";
+// import { storiesOf } from "@storybook/react";
+// import AddKeyValueEntryToTableField from "./AddKeyValueEntryToTableField";
+//
+// storiesOf("Forms/AddKeyValueEntryToTableField", module)
+//   .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+//   .add("Default", () => (
+//     <div className="m-6">
+//       <AddKeyValueEntryToTableField
+//         keyFieldLabel="Key"
+//         valueFieldLabel="Value"
+//         buttonLabel="Add to Table"
+//         addEntry={() => null}
+//       />
+//     </div>
+//   ))
+//   .add("Disabled", () => (
+//     <div className="m-6">
+//       <AddKeyValueEntryToTableField
+//         keyFieldLabel="Key"
+//         valueFieldLabel="Value"
+//         buttonLabel="Add to Table"
+//         addEntry={() => null}
+//         disabled={true}
+//       />
+//     </div>
+//   ));
+
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import { storiesOf } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import AddKeyValueEntryToTableField from "./AddKeyValueEntryToTableField";
 
-storiesOf("Forms/AddKeyValueEntryToTableField", module)
-  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .add("Default", () => (
-    <div className="m-6">
-      <AddKeyValueEntryToTableField
-        keyFieldLabel="Key"
-        valueFieldLabel="Value"
-        buttonLabel="Add to Table"
-        addEntry={() => null}
-      />
-    </div>
-  ))
-  .add("Disabled", () => (
-    <div className="m-6">
-      <AddKeyValueEntryToTableField
-        keyFieldLabel="Key"
-        valueFieldLabel="Value"
-        buttonLabel="Add to Table"
-        addEntry={() => null}
-        disabled={true}
-      />
-    </div>
-  ));
+const meta: Meta<typeof AddKeyValueEntryToTableField> = {
+  title: "Forms/AddKeyValueEntryToTableField",
+  component: AddKeyValueEntryToTableField,
+  decorators: [(Story) => Story(), (Story) => <div className="m-6">{Story()}</div>],
+  argTypes: {
+    addEntry: { action: "entryAdded" },
+  },
+  tags: ["autodocs"],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    keyFieldLabel: "Key",
+    valueFieldLabel: "Value",
+    buttonLabel: "Add to Table",
+    disabled: false,
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    ...Default.args,
+    disabled: true,
+  },
+};

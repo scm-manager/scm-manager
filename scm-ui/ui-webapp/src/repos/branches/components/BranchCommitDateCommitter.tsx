@@ -16,15 +16,15 @@
 
 import React, { FC } from "react";
 import { Branch } from "@scm-manager/ui-types";
-import { DateFromNow } from "@scm-manager/ui-components";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
+import { AbsoluteDate } from "@scm-manager/ui-core";
 
 const BranchCommitDateCommitter: FC<{ branch: Branch }> = ({ branch }) => {
   const [t] = useTranslation("repos");
 
   const committedAt = (
-    <DateFromNow className={classNames("is-size-7", "has-text-secondary")} date={branch.lastCommitDate} />
+    <AbsoluteDate className={classNames("is-size-7", "has-text-secondary")} date={branch.lastCommitDate} />
   );
   if (branch.lastCommitter?.name) {
     return (

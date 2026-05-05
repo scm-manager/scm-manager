@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentType, HTMLAttributes, ReactHTML, Ref } from "react";
+import React, { ComponentType, FC, HTMLAttributes, JSX, Ref } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 
@@ -30,13 +30,13 @@ type Props = HTMLAttributes<HTMLElement> & {
   /**
    * @default "div"
    */
-  as?: keyof ReactHTML | ComponentType<HTMLAttributes<HTMLElement> & { ref?: Ref<HTMLElement> }>;
-
+  as?: keyof JSX.IntrinsicElements | ComponentType<HTMLAttributes<HTMLElement> & { ref?: Ref<HTMLElement> }>;
   /**
    * @default "0.5rem"
    * @since 2.46.0
    */
   rowGap?: Gap;
+  ref?: Ref<HTMLElement>;
 };
 
 /**
@@ -46,24 +46,31 @@ type Props = HTMLAttributes<HTMLElement> & {
  * @beta
  * @since 2.44.0
  */
-const Card = React.forwardRef<HTMLElement, Props>(
-  ({ className, avatar, rowGap = "0.25rem", children, as: Comp = "div", action, ...props }, ref) =>
-    React.createElement(
-      Comp,
-      {
-        className: classNames(className, "is-relative", "is-flex", "scmm-card"),
-        ref,
-        ...props,
-      },
-      avatar ? avatar : null,
-      <RowsContainer
-        className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
-        style={{ gap: rowGap }}
-      >
-        {children}
-      </RowsContainer>,
-      action ? action : null
-    )
-);
+const Card: FC<Props> = ({
+  className,
+  avatar,
+  rowGap = "0.25rem",
+  children,
+  as: Comp = "div",
+  action,
+  ref,
+  ...props
+}) =>
+  React.createElement(
+    Comp,
+    {
+      className: classNames(className, "is-relative", "is-flex", "scmm-card"),
+      ref,
+      ...props,
+    },
+    avatar ? avatar : null,
+    <RowsContainer
+      className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+      style={{ gap: rowGap }}
+    >
+      {children}
+    </RowsContainer>,
+    action ? action : null,
+  );
 
 export default Card;

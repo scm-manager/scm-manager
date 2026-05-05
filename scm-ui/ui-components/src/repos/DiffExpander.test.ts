@@ -295,7 +295,7 @@ describe("with hunks the diff expander", () => {
     const preceedingHunk = diffExpander.getHunk(0).hunk;
     fetchMock.get(
       "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=8&end=13",
-      "new line 9\nnew line 10\nnew line 11\nnew line 12\nnew line 13"
+      "new line 9\nnew line 10\nnew line 11\nnew line 12\nnew line 13",
     );
     let newFile: FileDiff;
     await diffExpander
@@ -324,7 +324,7 @@ describe("with hunks the diff expander", () => {
     const oldHunkCount = diffExpander.hunkCount();
     fetchMock.get(
       "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=40&end=50",
-      "new line 40\nnew line 41\nnew line 42"
+      "new line 40\nnew line 41\nnew line 42",
     );
     let newFile: FileDiff;
     await diffExpander
@@ -337,7 +337,7 @@ describe("with hunks the diff expander", () => {
   it("should set end to -1 if requested to expand to the end", async () => {
     fetchMock.get(
       "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=40&end=-1",
-      "new line 40\nnew line 41\nnew line 42"
+      "new line 40\nnew line 41\nnew line 42",
     );
     let newFile: FileDiff;
     await diffExpander

@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import { BackendError, ForbiddenError, UnauthorizedError, urls } from "@scm-manager/ui-api";
 import Notification from "./Notification";
 import BackendErrorNotification from "./BackendErrorNotification";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 
 type Props = ComponentProps<typeof BasicErrorMessage> & {
   error?: Error | null;

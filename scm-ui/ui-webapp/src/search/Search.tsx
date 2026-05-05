@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import {
   CustomQueryFlexWrappedColumns,
   NavLink,
@@ -131,7 +131,7 @@ type Props = {
   links: Links;
 };
 
-const SyntaxHelpLink: FC = ({ children }) => <Link to="/help/search-syntax">{children}</Link>;
+const SyntaxHelpLink: FC<{ children: ReactNode }> = ({ children }) => <Link to="/help/search-syntax">{children}</Link>;
 
 const SearchSubTitle: FC<Props> = ({ selectedType, queryResult, links }) => {
   const [t] = useTranslation("commons");
@@ -149,8 +149,8 @@ const SearchSubTitle: FC<Props> = ({ selectedType, queryResult, links }) => {
       {queryResult && t("search.withQueryType", { queryType: t(`search.queryTypes.${queryResult.queryType}`) })}
       <br />
       <Trans i18nKey="search.syntaxHelp" components={[<SyntaxHelpLink key="syntaxHelpLink" />]} />
-      <OmniSearchWrapper className={"mt-4 mb-2"}>
-        <OmniSearch links={links} shouldClear={false} ariaId={"searchPage"} selectedType={selectedType} />
+      <OmniSearchWrapper className="mt-4 mb-2">
+        <OmniSearch links={links} shouldClear={false} ariaId="searchPage" selectedType={selectedType} />
       </OmniSearchWrapper>
     </>
   );
@@ -162,7 +162,7 @@ const InvalidSearch: FC = () => {
 };
 
 const Search: FC = () => {
-  const { data: index } = useIndex();
+  const index = useIndex();
   const { query, selectedType, page, namespace, name } = usePageParams();
   const searchOptions = {
     type: selectedType,
@@ -176,7 +176,7 @@ const Search: FC = () => {
   useDocumentTitle(
     data?.pageTotal && data.pageTotal > 1 && page
       ? t("search.titleWithPage", { page, total: data.pageTotal })
-      : t("search.title")
+      : t("search.title"),
   );
   const [showHelp, setShowHelp] = useState(false);
   const context = useNamespaceAndNameContext();
@@ -195,7 +195,7 @@ const Search: FC = () => {
   const searchCounts = useSearchCounts(
     types.filter((type) => type !== selectedType),
     query,
-    searchOptions
+    searchOptions,
   );
   const counts = {
     [selectedType]: {
@@ -241,7 +241,7 @@ const Search: FC = () => {
                   </DisabledNavLink>
                 </li>
               ) : (
-                <NavLink key={type} to={`/search/${type}/?q=${contextQuery}`} label={type} activeOnlyWhenExact={false}>
+                <NavLink key={type} to={`/search/${type}/?q=${contextQuery}`} label={type}>
                   <Level
                     left={t(`plugins:search.types.${type}.navItem`, type)}
                     right={
@@ -253,7 +253,7 @@ const Search: FC = () => {
                     }
                   />
                 </NavLink>
-              )
+              ),
             )}
           </SecondaryNavigation>
         </CustomQueryFlexWrappedColumns>

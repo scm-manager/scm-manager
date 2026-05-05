@@ -17,23 +17,18 @@
 import * as React from "react";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Plugin } from "@scm-manager/ui-types";
+import styled from "styled-components";
+import { useAvailablePlugins, useInstalledPlugins, usePendingPlugins } from "@scm-manager/ui-api";
 import { ErrorNotification, Loading, Notification, Subtitle, Title } from "@scm-manager/ui-components";
+import { Button, useDocumentTitle } from "@scm-manager/ui-core";
+import { Plugin } from "@scm-manager/ui-types";
 import PluginsList from "../components/PluginList";
 import PluginTopActions from "../components/PluginTopActions";
 import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
 import ShowPendingModal from "../components/ShowPendingModal";
-import {
-  useAvailablePlugins,
-  useInstalledPlugins,
-  usePendingPlugins,
-} from "@scm-manager/ui-api";
 import PluginModal from "../components/PluginModal";
-import styled from "styled-components";
-import { Button } from "@scm-manager/ui-buttons";
-import { useDocumentTitle } from "@scm-manager/ui-core";
 
 export enum PluginAction {
   INSTALL = "install",
@@ -106,34 +101,34 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     if (pendingPlugins && pendingPlugins._links) {
       if (pendingPlugins._links.execute) {
         buttons.push(
-          <Button variant="primary" key={"executePending"} onClick={() => setShowExecutePendingModal(true)}>
+          <Button variant="primary" key="executePending" onClick={() => setShowExecutePendingModal(true)}>
             {t("plugins.executePending")}
-          </Button>
+          </Button>,
         );
       }
 
       if (pendingPlugins._links.cancel && !pendingPlugins._links.execute) {
         buttons.push(
-          <Button variant="primary" key={"showPending"} onClick={() => setShowPendingModal(true)}>
+          <Button variant="primary" key="showPending" onClick={() => setShowPendingModal(true)}>
             {t("plugins.showPending")}
-          </Button>
+          </Button>,
         );
       }
     }
 
     if (collection && collection._links && collection._links.update) {
       buttons.push(
-        <Button variant="secondary" key={"updateAll"} onClick={() => setShowUpdateAllModal(true)}>
+        <Button variant="secondary" key="updateAll" onClick={() => setShowUpdateAllModal(true)}>
           {computeUpdateAllSize()}
-        </Button>
+        </Button>,
       );
     }
 
     if (pendingPlugins && pendingPlugins._links && pendingPlugins._links.cancel) {
       buttons.push(
-        <Button key={"cancelPending"} onClick={() => setShowCancelModal(true)}>
+        <Button key="cancelPending" onClick={() => setShowCancelModal(true)}>
           {t("plugins.cancelPending")}
-        </Button>
+        </Button>,
       );
     }
 

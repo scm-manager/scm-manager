@@ -14,13 +14,91 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+// import React from "react";
+// import PdfViewer from "./PdfViewer";
+// // @ts-ignore no need to declare module for a single import
+// import pdf from "./__resources__/doc.pdf";
+// import { storiesOf } from "@storybook/react";
+//
+// storiesOf("PdfViewer", module)
+//   .add("Simple", () => <PdfViewer src={pdf} />)
+//   .add("Error", () => <PdfViewer src="/does/not/exists" />)
+//   .add("Error with download URL", () => <PdfViewer src="/does/not/exists" download={pdf} />);import React from "react";
+// import type { Meta, StoryObj } from "@storybook/react";
+//
+// import PdfViewer from "./PdfViewer";
+// // @ts-ignore no need to declare module for a single import
+// import pdf from "./__resources__/doc.pdf";
+//
+// const meta: Meta<typeof PdfViewer> = {
+//   title: "Components/PdfViewer",
+//   component: PdfViewer,
+//   parameters: {
+//     layout: "fullscreen",
+//   },
+//   tags: ["autodocs"],
+// };
+//
+// export default meta;
+//
+// type Story = StoryObj<typeof meta>;
+//
+// export const Simple: Story = {
+//   args: {
+//     src: pdf,
+//   },
+// };
+//
+// export const Error: Story = {
+//   args: {
+//     src: "/does/not/exist.pdf",
+//   },
+// };
+//
+// export const ErrorWithDownloadUrl: Story = {
+//   name: "Error With Download URL",
+//   args: {
+//     src: "/does/not/exist.pdf",
+//     download: pdf,
+//   },
+// };
+
 import React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import PdfViewer from "./PdfViewer";
 // @ts-ignore no need to declare module for a single import
 import pdf from "./__resources__/doc.pdf";
-import { storiesOf } from "@storybook/react";
 
-storiesOf("PdfViewer", module)
-  .add("Simple", () => <PdfViewer src={pdf} />)
-  .add("Error", () => <PdfViewer src="/does/not/exists" />)
-  .add("Error with download URL", () => <PdfViewer src="/does/not/exists" download={pdf} />);
+const meta: Meta<typeof PdfViewer> = {
+  title: "Components/PdfViewer",
+  component: PdfViewer,
+  parameters: {
+    layout: "fullscreen",
+  },
+  tags: ["autodocs"],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Simple: Story = {
+  args: {
+    src: pdf,
+  },
+};
+
+export const Error: Story = {
+  args: {
+    src: "/does/not/exist.pdf",
+  },
+};
+
+export const ErrorWithDownloadUrl: Story = {
+  name: "Error With Download URL",
+  args: {
+    src: "/does/not/exist.pdf",
+    download: pdf,
+  },
+};

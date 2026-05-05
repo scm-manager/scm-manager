@@ -58,7 +58,7 @@ const ApiKeyCreatedModal: FC<Props> = ({ addedKey, close }) => {
       <div className="columns">
         <div className="column is-11">
           <KeyArea
-            wrap={"soft"}
+            wrap="soft"
             ref={keyRef}
             className="input"
             value={addedKey.token}

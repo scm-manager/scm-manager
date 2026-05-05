@@ -98,7 +98,7 @@ const countAndMarkNodes = (nodes: RefractorNode[], markedTexts?: string[]): numb
 
 const doHighlighting = (
   worker: Worker,
-  { id, payload: { value, language, nodeLimit, groupByLine, markedTexts } }: HighlightingRequest
+  { id, payload: { value, language, nodeLimit, groupByLine, markedTexts } }: HighlightingRequest,
 ) => {
   try {
     let tree = refractor.highlight(value, language).children;
@@ -155,7 +155,8 @@ const replaceSpaces = (node: RefractorNode): RefractorNode => {
       type: "element",
       tagName: "span",
       properties: {},
-      children: node.value.split("").flatMap((c) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      children: node.value.split("").flatMap((c: any) => {
         if (c === " ") {
           return [
             {

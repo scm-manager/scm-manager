@@ -20,12 +20,12 @@ import com.google.inject.Inject;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
-import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tag;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
@@ -51,7 +51,9 @@ public class TagCollectionToDtoMapper {
   }
 
   public List<TagDto> getTagDtoList(Collection<Tag> tags, Repository repository) {
-    return tags.stream().map(tag -> tagToTagDtoMapper.map(tag, repository)).collect(toList());
+    return tags.stream()
+      .filter(Objects::nonNull)
+      .map(tag -> tagToTagDtoMapper.map(tag, repository)).collect(toList());
   }
 
   public List<TagDto> getMinimalEmbeddedTagDtoList(String namespace, String name, Collection<String> tags) {

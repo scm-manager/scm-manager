@@ -15,8 +15,8 @@
  */
 
 import React from "react";
-import { mount, shallow } from "@scm-manager/ui-tests";
-import "@scm-manager/ui-tests";
+import { MemoryRouter } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
 import RepositoryNavLink from "./RepositoryNavLink";
 
 describe("RepositoryNavLink", () => {
@@ -28,16 +28,12 @@ describe("RepositoryNavLink", () => {
       _links: {},
     };
 
-    const navLink = shallow(
-      <RepositoryNavLink
-        repository={repository}
-        linkName="sources"
-        to="/sources"
-        label="Sources"
-        activeOnlyWhenExact={true}
-      />
+    render(
+      <MemoryRouter>
+        <RepositoryNavLink repository={repository} linkName="sources" to="/sources" label="Sources" />
+      </MemoryRouter>,
     );
-    expect(navLink.text()).toBe("");
+    assert.notExists(screen.queryByText("Sources"));
   });
 
   it("should render the navLink", () => {
@@ -52,15 +48,11 @@ describe("RepositoryNavLink", () => {
       },
     };
 
-    const navLink = mount(
-      <RepositoryNavLink
-        repository={repository}
-        linkName="sources"
-        to="/sources"
-        label="Sources"
-        activeOnlyWhenExact={true}
-      />
+    render(
+      <MemoryRouter>
+        <RepositoryNavLink repository={repository} linkName="sources" to="/sources" label="Sources" />
+      </MemoryRouter>,
     );
-    expect(navLink.text()).toBe("Sources");
+    assert.exists(screen.queryByText("Sources"));
   });
 });

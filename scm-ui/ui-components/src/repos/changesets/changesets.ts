@@ -25,12 +25,12 @@ export function createChangesetLink(repository: Repository, changeset: Changeset
   return `/repo/${repository.namespace}/${repository.name}/code/changeset/${changeset.id}`;
 }
 
-export function createChangesetLinkByBranch(repository: Repository, changeset: Changeset, branch: Branch) {
-  if (!branch.name) {
+export function createChangesetLinkByBranch(repository: Repository, changeset: Changeset, sourceName: string) {
+  if (!sourceName) {
     return `/repo/${repository.namespace}/${repository.name}/code/changeset/${changeset.id}`;
   } else {
     return `/repo/${repository.namespace}/${repository.name}/code/changeset/${changeset.id}?branch=${encodeURIComponent(
-      branch.name
+      sourceName,
     )}`;
   }
 }

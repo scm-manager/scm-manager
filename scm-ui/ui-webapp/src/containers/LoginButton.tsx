@@ -43,20 +43,20 @@ const LoginButton: FC<Props> = ({ burgerMode, links, className }) => {
 
   const content = <HeaderButtonContent burgerMode={burgerMode} label={label} icon="sign-in-alt" />;
 
-  const extensionProps: extensionPoints.PrimaryNavigationLoginButtonProps = {
+  const extensionProps: extensionPoints.PrimaryNavigationLoginButton["props"] = {
     links,
     label,
     loginUrl: urls.withContextPath(loginPath),
     from,
     to,
     className: headerButtonContentClassName,
-    content
+    content,
   };
 
   if (links?.login) {
     const shouldRenderExtension = binder.hasExtension<extensionPoints.PrimaryNavigationLoginButton>(
       "primary-navigation.login",
-      extensionProps
+      extensionProps,
     );
     return (
       <HeaderButton

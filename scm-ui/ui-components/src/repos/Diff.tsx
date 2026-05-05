@@ -19,7 +19,7 @@ import DiffFile from "./DiffFile";
 import { DiffObjectProps, FileControlFactory } from "./DiffTypes";
 import { FileDiff } from "@scm-manager/ui-types";
 import { getAnchorSelector, getFileNameFromHash } from "./diffs";
-import Notification from "../Notification";
+import { Notification } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { useScrollToElementWithCallback } from "../useScrollToElement";
@@ -117,10 +117,6 @@ const Diff: FC<Props> = ({
       )}
     </div>
   );
-};
-
-Diff.defaultProps = {
-  sideBySide: false,
 };
 
 export default Diff;

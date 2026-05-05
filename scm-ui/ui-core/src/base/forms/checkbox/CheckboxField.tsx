@@ -14,18 +14,18 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
+import React, { Ref, FC } from "react";
 import Field from "../base/Field";
 import Control from "../base/Control";
 import Checkbox from "./Checkbox";
 
-type Props = React.ComponentProps<typeof Checkbox>;
+type Props = React.ComponentProps<typeof Checkbox> & { ref?: Ref<HTMLInputElement> };
 
-const CheckboxField = React.forwardRef<HTMLInputElement, Props>(({ className, ...props }, ref) => (
+const CheckboxField: FC<Props> = ({ className, ref, ...props }) => (
   <Field className={className}>
     <Control>
       <Checkbox ref={ref} {...props} />
     </Control>
   </Field>
-));
+);
 export default CheckboxField;

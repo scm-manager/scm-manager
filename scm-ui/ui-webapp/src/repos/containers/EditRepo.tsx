@@ -15,12 +15,10 @@
  */
 
 import React, { FC } from "react";
-import { useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Repository } from "@scm-manager/ui-types";
 import { useUpdateRepository } from "@scm-manager/ui-api";
-import { ErrorNotification, Subtitle, urls } from "@scm-manager/ui-components";
-import { useDocumentTitleForRepository } from "@scm-manager/ui-core";
+import { ErrorNotification, Subtitle } from "@scm-manager/ui-components";
+import { useDocumentTitleForRepository, useRepositoryFromParams } from "@scm-manager/ui-core";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import UpdateNotification from "../../components/UpdateNotification";
 import RepositoryForm from "../components/form";
@@ -30,20 +28,14 @@ import ExportRepository from "./ExportRepository";
 import HealthCheckWarning from "./HealthCheckWarning";
 import RunHealthCheck from "./RunHealthCheck";
 
-type Props = {
-  repository: Repository;
-};
-
-const EditRepo: FC<Props> = ({ repository }) => {
-  const match = useRouteMatch();
-  const { isLoading, error, update, isUpdated } = useUpdateRepository();
+const EditRepo: FC = () => {
+  const repository = useRepositoryFromParams();
+  const { isPending, error, update, isUpdated } = useUpdateRepository();
   const [t] = useTranslation("repos");
   useDocumentTitleForRepository(repository, t("repositoryRoot.settingsTitle"));
 
-  const url = urls.matchedUrlFromMatch(match);
   const extensionProps = {
     repository,
-    url,
   };
 
   return (
@@ -52,18 +44,13 @@ const EditRepo: FC<Props> = ({ repository }) => {
       <Subtitle subtitle={t("repositoryForm.subtitle")} />
       <UpdateNotification isUpdated={isUpdated} />
       <ErrorNotification error={error} />
-      <RepositoryForm repository={repository} loading={isLoading} modifyRepository={update} />
+      <RepositoryForm repository={repository} loading={isPending} modifyRepository={update} />
       <ExtensionPoint<extensionPoints.RepoConfigDetails>
         name="repo-config.details"
         props={extensionProps}
         renderAll={true}
       />
       {repository._links.exportInfo && <ExportRepository repository={repository} />}
-      <ExtensionPoint<extensionPoints.RepoConfigRoute>
-        name="repo-config.route"
-        props={extensionProps}
-        renderAll={true}
-      />
       {(repository._links.runHealthCheck || repository.healthCheckRunning) && (
         <RunHealthCheck repository={repository} />
       )}

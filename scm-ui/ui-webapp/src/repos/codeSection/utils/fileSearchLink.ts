@@ -19,23 +19,23 @@ import { urls } from "@scm-manager/ui-api";
 
 export function getFileSearchLink(
   repository: Repository,
-  revision: string,
+  sourceName: string,
   baseUrl: string,
-  currentSource: File
+  currentSource: File,
 ): string {
   let currentSourcePath = null;
 
   if (repository.type === "svn" && currentSource.path) {
-    currentSourcePath = urls.createPrevSourcePathQuery(`${revision}/${currentSource.path}`);
+    currentSourcePath = urls.createPrevSourcePathQuery(`${sourceName}/${currentSource.path}`);
   } else if (repository.type === "svn") {
-    currentSourcePath = urls.createPrevSourcePathQuery(`${revision}`);
+    currentSourcePath = urls.createPrevSourcePathQuery(`${sourceName}`);
   } else {
     currentSourcePath = urls.createPrevSourcePathQuery(currentSource.path);
   }
 
   if (currentSourcePath) {
-    return `${baseUrl}/search/${encodeURIComponent(revision)}?${currentSourcePath}`;
+    return `${baseUrl}/search/${encodeURIComponent(sourceName)}?${currentSourcePath}`;
   } else {
-    return `${baseUrl}/search/${encodeURIComponent(revision)}`;
+    return `${baseUrl}/search/${encodeURIComponent(sourceName)}`;
   }
 }

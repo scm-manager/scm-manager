@@ -14,24 +14,62 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import StoryRouter from "storybook-react-router";
-import { ComponentMeta, StoryFn } from "@storybook/react";
-import React, { ComponentProps } from "react";
+// import StoryRouter from "storybook-react-router";
+// import { ComponentMeta, StoryFn } from "@storybook/react";
+// import React, { ComponentProps } from "react";
+// import Collapsible from "./Collapsible";
+//
+// export default {
+//   title: "Collapsible",
+//   component: Collapsible,
+//   decorators: [StoryRouter()],
+// } as ComponentMeta<typeof Collapsible>;
+//
+// const Template: StoryFn<ComponentProps<typeof Collapsible>> = (args) => <Collapsible {...args} />;
+//
+// export const Default = Template.bind({});
+// // More on args: https://storybook.js.org/docs/react/writing-stories/args
+// Default.args = {
+//   children: [
+//     "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+//   ],
+//   header: "This is a collapsible",
+// } as ComponentProps<typeof Collapsible>;
+
+import React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import Collapsible from "./Collapsible";
 
-export default {
-  title: "Collapsible",
+const meta: Meta<typeof Collapsible> = {
+  title: "Components/Collapsible",
   component: Collapsible,
-  decorators: [StoryRouter()],
-} as ComponentMeta<typeof Collapsible>;
-
-const Template: StoryFn<ComponentProps<typeof Collapsible>> = (args) => <Collapsible {...args} />;
-
-export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Default.args = {
-  children: [
-    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+  decorators: [
+    (Story) => (
+      <div style={{ margin: "2rem", maxWidth: "40rem" }}>
+        <Story />
+      </div>
+    ),
   ],
-  header: "This is a collapsible",
-} as ComponentProps<typeof Collapsible>;
+  tags: ["autodocs"],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    header: "This is a collapsible",
+    children:
+      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+  },
+};
+
+// export const InitiallyOpen: Story = {
+//   args: {
+//     ...Default.args,
+//     header: "This collapsible is open by default",
+//     initiallyCollapsed: false,
+//   },
+// };

@@ -20,6 +20,7 @@ import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import sonia.scm.Validateable;
@@ -48,6 +49,8 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
   private String author;
   private String category;
   private String avatarUrl;
+  @XmlElement(name = "is-scm4-compatible")
+  private boolean scm4Compatible;
 
   @Override
   public PluginInformation clone() {

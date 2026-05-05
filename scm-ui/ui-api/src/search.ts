@@ -18,7 +18,7 @@ import { ApiResult, ApiResultWithFetching, useIndexJsonResource, useIndexLinks }
 import { Link, QueryResult, SearchableType } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
-import { useQueries, useQuery } from "react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import SYNTAX from "./help/search/syntax";
 import MODAL from "./help/search/modal";
@@ -58,16 +58,16 @@ export const useSearchCounts = (types: string[], query: string, options?: Search
   const { links, isLoading } = useSearchLinks(options);
   const result: { [type: string]: ApiResultWithFetching<number> } = {};
 
-  const queries = useQueries(
-    types.map((type) => ({
+  const queries = useQueries({
+    queries: types.map((type) => ({
       queryKey: ["search", type, query, "count"],
       queryFn: () =>
         apiClient
           .get(`${findLink(links, type)}?q=${encodeURIComponent(query)}&countOnly=true`)
           .then((response) => response.json()),
       enabled: !isLoading,
-    }))
-  );
+    })),
+  });
 
   queries.forEach((q, i) => {
     result[types[i]] = {
@@ -94,7 +94,7 @@ const useSearchLinks = (options?: SearchOptions): SearchLinks => {
   const { data: namespace, isLoading: namespaceLoading } = useNamespace(options?.namespaceContext || "");
   const { data: repo, isLoading: repoLoading } = useRepository(
     options?.namespaceContext || "",
-    options?.repositoryNameContext || ""
+    options?.repositoryNameContext || "",
   );
 
   if (options?.repositoryNameContext) {
@@ -146,13 +146,11 @@ const useInternalSearch = (query: string, options: SearchOptions, link?: string)
   if (options.pageSize) {
     queryParams.pageSize = options.pageSize.toString();
   }
-  return useQuery<QueryResult, Error>(
-    ["search", options.type, queryParams],
-    () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
-    {
-      enabled: query?.length > 1 && !!link,
-    }
-  );
+  return useQuery<QueryResult, Error>({
+    queryKey: ["search", options.type, queryParams],
+    queryFn: () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
+    enabled: query?.length > 1 && !!link,
+  });
 };
 
 const useObserveAsync = <D extends unknown[], R, E = Error>(fn: (...args: D) => Promise<R>, deps: D) => {
@@ -168,7 +166,7 @@ const useObserveAsync = <D extends unknown[], R, E = Error>(fn: (...args: D) => 
         .finally(() => setLoading(false));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    deps
+    deps,
   );
   return { data, isLoading, error };
 };
@@ -189,11 +187,11 @@ const FALLBACK_LANGUAGE = "en";
 export const useSearchHelpContent = (language: string) =>
   useObserveAsync(
     (lang) => Promise.resolve(MODAL[pickLang(lang, SUPPORTED_MODAL_LANGUAGES, FALLBACK_LANGUAGE)]),
-    [language]
+    [language],
   );
 
 export const useSearchSyntaxContent = (language: string) =>
   useObserveAsync(
     (lang) => Promise.resolve(SYNTAX[pickLang(lang, SUPPORTED_SYNTAX_LANGUAGES, FALLBACK_LANGUAGE)]),
-    [language]
+    [language],
   );

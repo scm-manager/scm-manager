@@ -28,10 +28,7 @@ type Props = {
   className?: string;
 };
 
-/**
- * @deprecated
- */
-const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className }) => {
+const Table: FC<Props> = ({ data, sortable = true, children, emptyMessage, className }) => {
   const [tableData, setTableData] = useState(data);
   useEffect(() => {
     setTableData(data);
@@ -41,12 +38,14 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
   const [hoveredColumnIndex, setHoveredColumnIndex] = useState<number | undefined>();
 
   const isSortable = (child: ReactElement) => {
+    // @ts-ignore
     return sortable && child.props.createComparator;
   };
 
   const sortFunctions: Comparator | undefined[] = [];
   React.Children.forEach(children, (child, index) => {
     if (child && isSortable(child as ReactElement)) {
+      // @ts-ignore
       sortFunctions.push((child as ReactElement).props.createComparator((child as ReactElement).props, index));
     } else {
       sortFunctions.push(undefined);
@@ -57,6 +56,7 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
     return (
       <tr key={rowIndex}>
         {React.Children.map(children, (child, columnIndex) => {
+          // @ts-ignore
           const { className: columnClassName, ...childProperties } = (child as ReactElement).props;
           return (
             <td className={columnClassName}>
@@ -116,6 +116,7 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
               onMouseLeave={() => setHoveredColumnIndex(undefined)}
               key={index}
             >
+              {/* @ts-ignore */}
               {(child as ReactElement).props.header}
               {isSortable(child as ReactElement) &&
                 renderSortIcon(child as ReactElement, ascending, shouldShowIcon(index))}
@@ -128,12 +129,10 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
   );
 };
 
-Table.defaultProps = {
-  sortable: true,
-};
-
 const renderSortIcon = (child: ReactElement, ascending: boolean, showIcon: boolean) => {
+  // @ts-ignore
   if (child.props.ascendingIcon && child.props.descendingIcon) {
+    // @ts-ignore
     return <SortIcon name={ascending ? child.props.ascendingIcon : child.props.descendingIcon} isVisible={showIcon} />;
   } else {
     return <SortIcon name={ascending ? "sort-amount-down-alt" : "sort-amount-down"} isVisible={showIcon} />;

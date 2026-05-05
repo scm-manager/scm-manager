@@ -15,36 +15,43 @@
  */
 
 import React, { FC } from "react";
-import { Redirect, useRouteMatch } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useChangesets } from "@scm-manager/ui-api";
-import { Branch, ChangesetCollection, Repository } from "@scm-manager/ui-types";
-import { ChangesetList, LinkPaginator, urls } from "@scm-manager/ui-components";
-import { ErrorNotification, Notification, Loading, useDocumentTitle } from "@scm-manager/ui-core";
+import { ChangesetCollection, Repository } from "@scm-manager/ui-types";
+import { ChangesetList, LinkPaginator } from "@scm-manager/ui-components";
+import {
+  ErrorNotification,
+  Notification,
+  Loading,
+  useDocumentTitle,
+  useRepositoryFromParams,
+  useCurrentRepositoryBaseUrl,
+  REPOSITORY_CODE_SUB_ROUTES,
+  REPOSITORY_SUB_ROUTES,
+  useSourceNameFromParams,
+} from "@scm-manager/ui-core";
 
 export const usePage = () => {
-  const match = useRouteMatch();
-  return urls.getPageFromMatch(match);
+  const { page } = useParams<{ page?: string }>();
+  // Parse the string from the URL to a number, defaulting to 1.
+  return parseInt(page || "1", 10);
 };
 
-type Props = {
-  repository: Repository;
-  branch?: Branch;
-  url: string;
-};
-
-const Changesets: FC<Props> = ({ repository, branch, ...props }) => {
+const Changesets: FC = ({ ...props }) => {
   const page = usePage();
+  const repository = useRepositoryFromParams();
+  const sourceName = useSourceNameFromParams();
 
-  const { isLoading, error, data } = useChangesets(repository, { branch, page: page - 1 });
+  const { isLoading, error, data } = useChangesets(repository, { revision: sourceName, page: page - 1 });
   const [t] = useTranslation("repos");
   const getDocumentTitle = () => {
     if (data?.pageTotal && data.pageTotal > 1 && page) {
-      if (branch) {
+      if (sourceName) {
         return t("changesets.commitsWithPageRevisionAndNamespaceName", {
           page,
           total: data.pageTotal,
-          revision: branch.name,
+          revision: sourceName,
           namespace: repository.namespace,
           name: repository.name,
         });
@@ -56,9 +63,9 @@ const Changesets: FC<Props> = ({ repository, branch, ...props }) => {
           name: repository.name,
         });
       }
-    } else if (branch) {
+    } else if (sourceName) {
       return t("changesets.commitsWithRevisionAndNamespaceName", {
-        revision: branch.name,
+        revision: sourceName,
         namespace: repository.namespace,
         name: repository.name,
       });
@@ -77,22 +84,25 @@ const Changesets: FC<Props> = ({ repository, branch, ...props }) => {
       error={error}
       data={data}
       repository={repository}
-      branch={branch}
+      sourceName={sourceName}
       {...props}
     />
   );
 };
 
-type ChangesetsPanelProps = Props & {
+type ChangesetsPanelProps = {
+  repository: Repository;
+  sourceName?: string;
   error: Error | null;
   isLoading: boolean;
   data?: ChangesetCollection;
 };
 
-export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({ repository, error, isLoading, data, url, branch }) => {
+export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({ repository, error, isLoading, data, sourceName }) => {
   const page = usePage();
   const [t] = useTranslation("repos");
   const changesets = data?._embedded?.changesets;
+  const baseUrl = useCurrentRepositoryBaseUrl();
 
   if (error) {
     return <ErrorNotification error={error} />;
@@ -103,20 +113,23 @@ export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({ repository, error, i
   }
 
   if (data && data.pageTotal < page && page > 1) {
-    return <Redirect to={`${urls.unescapeUrlForRoute(url)}/${data.pageTotal}`} />;
+    return <Navigate to={`../${data.pageTotal}`} />;
   }
 
   if (!data || !changesets || changesets.length === 0) {
     return <Notification type="info">{t("changesets.noChangesets")}</Notification>;
   }
 
+  const baseUrl1 = sourceName
+    ? `${baseUrl.substring(1)}/${REPOSITORY_SUB_ROUTES.CODE}/${REPOSITORY_SUB_ROUTES.BRANCH}/${sourceName}/${REPOSITORY_CODE_SUB_ROUTES.CHANGESETS}`
+    : `${baseUrl.substring(1)}/${REPOSITORY_SUB_ROUTES.CODE}/${REPOSITORY_CODE_SUB_ROUTES.CHANGESETS}`;
   return (
     <div className="panel">
       <div className="panel-block">
-        <ChangesetList repository={repository} changesets={changesets} branch={branch} />
+        <ChangesetList repository={repository} changesets={changesets} sourceName={sourceName} />
       </div>
       <div className="panel-footer">
-        <LinkPaginator collection={data} page={page} />
+        <LinkPaginator collection={data} page={page} baseUrl={baseUrl1} />
       </div>
     </div>
   );

@@ -26,19 +26,13 @@ type Props = {
   id?: string;
 };
 
-const Help: FC<Props> = ({ message, multiline, className, id }) => (
-  <Tooltip
-    className={classNames("is-inline-block", "pl-1", className)}
-    message={message}
-    id={id}
-    multiline={multiline}
-  >
+/**
+ * @deprecated Please import the identical module from "@scm-manager/ui-core"
+ */
+const Help: FC<Props> = ({ message, multiline = true, className, id }) => (
+  <Tooltip className={classNames("is-inline-block", "pl-1", className)} message={message} id={id} multiline={multiline}>
     <HelpIcon />
   </Tooltip>
 );
-
-Help.defaultProps = {
-  multiline: true
-};
 
 export default Help;

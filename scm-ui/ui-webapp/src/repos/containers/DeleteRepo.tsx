@@ -15,7 +15,7 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
@@ -28,10 +28,10 @@ type Props = {
 };
 
 const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
-  const history = useHistory();
-  const { isLoading, error, remove, isDeleted } = useDeleteRepository({
+  const navigate = useNavigate();
+  const { isPending, error, remove, isDeleted } = useDeleteRepository({
     onSuccess: () => {
-      history.push("/repos/");
+      navigate("/repos/");
     },
   });
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
@@ -118,7 +118,7 @@ const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
             <p>{t("deleteRepo.description")}</p>
           </div>
         }
-        right={<DeleteButton label={t("deleteRepo.button")} action={action} loading={isLoading} />}
+        right={<DeleteButton label={t("deleteRepo.button")} action={action} loading={isPending} />}
       />
     </>
   );

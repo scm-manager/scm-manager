@@ -132,6 +132,7 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
   );
 };
 
+// @ts-ignore
 const InputField: FieldType<BaseProps, HTMLInputElement, string> = createFormFieldWrapper(InnerInputField);
 
 export default InputField;

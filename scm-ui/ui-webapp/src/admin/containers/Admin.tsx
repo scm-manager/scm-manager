@@ -16,7 +16,7 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Redirect, Route, RouteProps, Switch, useRouteMatch } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import {
   CustomQueryFlexWrappedColumns,
@@ -26,75 +26,35 @@ import {
   SecondaryNavigation,
   SecondaryNavigationColumn,
   SubNavigation,
-  urls,
 } from "@scm-manager/ui-components";
-import AdminDetails from "./AdminDetails";
-import PluginsOverview from "../plugins/containers/PluginsOverview";
-import GlobalConfig from "./GlobalConfig";
-import RepositoryRoles from "../roles/containers/RepositoryRoles";
-import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
-import CreateRepositoryRole from "../roles/containers/CreateRepositoryRole";
 import { useIndexLinks } from "@scm-manager/ui-api";
+import {
+  ADMIN_BASE_ROUTE,
+  ADMIN_PLUGINS_SUB_ROUTES,
+  ADMIN_SETTINGS_SUB_ROUTES,
+  ADMIN_SUB_ROUTES,
+} from "@scm-manager/ui-core";
 
 const Admin: FC = () => {
   const links = useIndexLinks();
-  const match = useRouteMatch();
   const [t] = useTranslation("admin");
   const availablePluginsLink = links.availablePlugins;
   const installedPluginsLink = links.installedPlugins;
 
-  const matchesRoles = (route: RouteProps) => {
-    const url = urls.matchedUrlFromMatch(match);
-    const regex = new RegExp(`${url}/role/`);
-    return !!route.location?.pathname.match(regex);
-  };
-
-  const url = urls.matchedUrlFromMatch(match);
   const extensionProps = {
     links,
-    url,
   };
 
   return (
     <Page>
       <CustomQueryFlexWrappedColumns>
         <PrimaryContentColumn>
-          <Switch>
-            <Redirect exact from={url} to={`${url}/info`} />
-            <Route path={`${url}/info`} exact component={AdminDetails} />
-            <Route path={`${url}/settings/general`} exact component={GlobalConfig} />
-            <Redirect exact from={`${url}/plugins`} to={`${url}/plugins/installed/`} />
-            <Route path={`${url}/plugins/installed`} exact>
-              <PluginsOverview installed={true} />
-            </Route>
-            <Route path={`${url}/plugins/installed/:page`} exact>
-              <PluginsOverview installed={true} />
-            </Route>
-            <Route path={`${url}/plugins/available`} exact>
-              <PluginsOverview installed={false} />
-            </Route>
-            <Route path={`${url}/plugins/available/:page`} exact>
-              <PluginsOverview installed={false} />
-            </Route>
-            <Route path={`${url}/role/:role`}>
-              <SingleRepositoryRole />
-            </Route>
-            <Route path={`${url}/roles`} exact>
-              <RepositoryRoles baseUrl={`${url}/roles`} />
-            </Route>
-            <Route path={`${url}/roles/create`}>
-              <CreateRepositoryRole />
-            </Route>
-            <Route path={`${url}/roles/:page`} exact>
-              <RepositoryRoles baseUrl={`${url}/roles`} />
-            </Route>
-            <ExtensionPoint<extensionPoints.AdminRoute> name="admin.route" props={extensionProps} renderAll={true} />
-          </Switch>
+          <Outlet />
         </PrimaryContentColumn>
         <SecondaryNavigationColumn>
           <SecondaryNavigation label={t("admin.menu.navigationLabel")}>
             <NavLink
-              to={`${url}/info`}
+              to={`/${ADMIN_BASE_ROUTE}/${ADMIN_SUB_ROUTES.INFO}`}
               icon="fas fa-info-circle"
               label={t("admin.menu.informationNavLink")}
               title={t("admin.menu.informationNavLink")}
@@ -102,7 +62,7 @@ const Admin: FC = () => {
             />
             {(availablePluginsLink || installedPluginsLink) && (
               <SubNavigation
-                to={`${url}/plugins/`}
+                to={`/${ADMIN_BASE_ROUTE}/${ADMIN_SUB_ROUTES.PLUGINS}/`}
                 icon="fas fa-puzzle-piece"
                 label={t("plugins.menu.pluginsNavLink")}
                 title={t("plugins.menu.pluginsNavLink")}
@@ -110,14 +70,14 @@ const Admin: FC = () => {
               >
                 {installedPluginsLink && (
                   <NavLink
-                    to={`${url}/plugins/installed/`}
+                    to={`/${ADMIN_BASE_ROUTE}/${ADMIN_SUB_ROUTES.PLUGINS}/${ADMIN_PLUGINS_SUB_ROUTES.INSTALLED}/`}
                     label={t("plugins.menu.installedNavLink")}
                     testId="admin-installed-plugins-link"
                   />
                 )}
                 {availablePluginsLink && (
                   <NavLink
-                    to={`${url}/plugins/available/`}
+                    to={`/${ADMIN_BASE_ROUTE}/${ADMIN_SUB_ROUTES.PLUGINS}/${ADMIN_PLUGINS_SUB_ROUTES.AVAILABLE}/`}
                     label={t("plugins.menu.availableNavLink")}
                     testId="admin-available-plugins-link"
                   />
@@ -125,13 +85,11 @@ const Admin: FC = () => {
               </SubNavigation>
             )}
             <NavLink
-              to={`${url}/roles/`}
+              to={`/${ADMIN_BASE_ROUTE}/${ADMIN_SUB_ROUTES.ROLES}/`}
               icon="fas fa-user-shield"
               label={t("repositoryRole.navLink")}
               title={t("repositoryRole.navLink")}
               testId="admin-repository-role-link"
-              activeWhenMatch={matchesRoles}
-              activeOnlyWhenExact={false}
             />
             <ExtensionPoint<extensionPoints.AdminNavigation>
               name="admin.navigation"
@@ -139,13 +97,14 @@ const Admin: FC = () => {
               renderAll={true}
             />
             <SubNavigation
-              to={`${url}/settings/general`}
+              to={`/${ADMIN_BASE_ROUTE}/${ADMIN_SUB_ROUTES.SETTINGS}/${ADMIN_SETTINGS_SUB_ROUTES.GENERAL}/`}
               label={t("admin.menu.settingsNavLink")}
               title={t("admin.menu.settingsNavLink")}
               testId="admin-settings-link"
+              activeWhenMatch={/settings\/.+/}
             >
               <NavLink
-                to={`${url}/settings/general`}
+                to={`/${ADMIN_BASE_ROUTE}/${ADMIN_SUB_ROUTES.SETTINGS}/${ADMIN_SETTINGS_SUB_ROUTES.GENERAL}/`}
                 label={t("admin.menu.generalNavLink")}
                 testId="admin-settings-general-link"
               />

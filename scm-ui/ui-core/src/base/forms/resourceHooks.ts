@@ -15,7 +15,7 @@
  */
 
 import { apiClient, requiredLink } from "@scm-manager/ui-api";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { HalRepresentation, Link } from "@scm-manager/ui-types";
 
 type QueryKeyPair = [singular: string, plural: string];
@@ -66,18 +66,19 @@ export const useCreateResource = <I, O>(
   link: string,
   [entityKey, collectionName]: QueryKeyPair,
   idFactory: (createdResource: O) => string,
-  { contentType = "application/json" }: CreateResourceOptions = {}
+  { contentType = "application/json" }: CreateResourceOptions = {},
 ): MutationResult<I, O> => {
   const queryClient = useQueryClient();
-  const { mutateAsync, data, isLoading, error } = useMutation<O, Error, I>(createResource<I, O>(link, contentType), {
+  const { mutateAsync, data, isPending, error } = useMutation<O, Error, I>({
+    mutationFn: createResource<I, O>(link, contentType),
     onSuccess: (result) => {
       queryClient.setQueryData([entityKey, idFactory(result)], result);
-      return queryClient.invalidateQueries(collectionName);
+      return queryClient.invalidateQueries({ queryKey: [collectionName] });
     },
   });
   return {
     submit: (payload: I) => mutateAsync(payload),
-    isLoading,
+    isLoading: isPending,
     error,
     submissionResult: data,
   };
@@ -97,23 +98,23 @@ export const useUpdateResource = <T>(
   {
     contentType = "application/json",
     collectionName: [entityQueryKey, collectionName] = ["", ""],
-  }: UpdateResourceOptions = {}
+  }: UpdateResourceOptions = {},
 ): MutationResult<T> => {
   const queryClient = useQueryClient();
-  const { mutateAsync, isLoading, error, data } = useMutation<unknown, Error, T>(
-    (resource) => apiClient.put(unwrapLink(link, "update"), resource, contentType),
-    {
-      onSuccess: async (_, payload) => {
-        await queryClient.invalidateQueries(entityQueryKey ? [entityQueryKey, idFactory(payload)] : idFactory(payload));
-        if (collectionName) {
-          await queryClient.invalidateQueries(collectionName);
-        }
-      },
-    }
-  );
+  const { mutateAsync, isPending, error, data } = useMutation<unknown, Error, T>({
+    mutationFn: (resource) => apiClient.put(unwrapLink(link, "update"), resource, contentType),
+    onSuccess: async (_, payload) => {
+      await queryClient.invalidateQueries({
+        queryKey: entityQueryKey ? [entityQueryKey, idFactory(payload)] : [idFactory(payload)],
+      });
+      if (collectionName) {
+        await queryClient.invalidateQueries({ queryKey: [collectionName] });
+      }
+    },
+  });
   return {
     submit: (resource: T) => mutateAsync(resource),
-    isLoading,
+    isLoading: isPending,
     error,
     submissionResult: data,
   };
@@ -129,27 +130,25 @@ type DeleteResourceOptions = {
  */
 export const useDeleteResource = <T extends HalRepresentation>(
   idFactory: (createdResource: T) => string,
-  { collectionName: [entityQueryKey, collectionName] = ["", ""] }: DeleteResourceOptions = {}
+  { collectionName: [entityQueryKey, collectionName] = ["", ""] }: DeleteResourceOptions = {},
 ): MutationResult<T> => {
   const queryClient = useQueryClient();
-  const { mutateAsync, isLoading, error, data } = useMutation<unknown, Error, T>(
-    (resource) => {
+  const { mutateAsync, isPending, error, data } = useMutation<unknown, Error, T>({
+    mutationFn: (resource) => {
       const deleteUrl = (resource._links.delete as Link).href;
       return apiClient.delete(deleteUrl);
     },
-    {
-      onSuccess: async (_, resource) => {
-        const id = idFactory(resource);
-        await queryClient.removeQueries(entityQueryKey ? [entityQueryKey, id] : id);
-        if (collectionName) {
-          await queryClient.invalidateQueries(collectionName);
-        }
-      },
-    }
-  );
+    onSuccess: async (_, resource) => {
+      const id = idFactory(resource);
+      await queryClient.removeQueries({ queryKey: entityQueryKey ? [entityQueryKey, id] : [id] });
+      if (collectionName) {
+        await queryClient.invalidateQueries({ queryKey: [collectionName] });
+      }
+    },
+  });
   return {
     submit: (resource: T) => mutateAsync(resource),
-    isLoading,
+    isLoading: isPending,
     error,
     submissionResult: data,
   };

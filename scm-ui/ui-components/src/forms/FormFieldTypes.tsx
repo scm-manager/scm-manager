@@ -54,7 +54,7 @@ export type InnerRefProps<Base extends MinimumBaseProps, ElementType extends HTM
  * @deprecated
  */
 export const isUsingRef = <Base extends MinimumBaseProps, ElementType extends HTMLElement, ValueType>(
-  props: Partial<FieldProps<Base, ElementType, ValueType>>
+  props: Partial<FieldProps<Base, ElementType, ValueType>>,
 ): props is InnerRefProps<Base, ElementType> => {
   return (props as Partial<InnerRefProps<Base, ElementType>>).innerRef !== undefined;
 };
@@ -63,7 +63,7 @@ export const isUsingRef = <Base extends MinimumBaseProps, ElementType extends HT
  * @deprecated
  */
 export const isLegacy = <Base extends MinimumBaseProps, ElementType extends HTMLElement, ValueType>(
-  props: FieldProps<Base, ElementType, ValueType>
+  props: FieldProps<Base, ElementType, ValueType>,
 ): props is LegacyProps<Base, ValueType> => {
   return (props as Partial<InnerRefProps<Base, ElementType>>).innerRef === undefined;
 };
@@ -93,12 +93,14 @@ export type FieldType<Base extends MinimumBaseProps, ElementType extends HTMLEle
 /**
  * @deprecated
  */
-export const createFormFieldWrapper = <Base extends MinimumBaseProps, ElementType extends HTMLElement, ValueType>(
-  InnerType: FC<FieldProps<Base, ElementType, ValueType>>
-) =>
-  React.forwardRef<ElementType, LegacyProps<Base, ValueType> | OuterProps<Base, ElementType>>((props, ref) => {
-    if (ref) {
-      return <InnerType innerRef={ref} {...(props as RefProps<Base, ElementType>)} />;
+export const createFormFieldWrapper =
+  <Base extends MinimumBaseProps, ElementType extends HTMLElement, ValueType>(
+    InnerType: FC<FieldProps<Base, ElementType, ValueType>>,
+  ) =>
+  (props: LegacyProps<Base, ValueType> | OuterProps<Base, ElementType>) => {
+    if ("ref" in props) {
+      const { ref, ...rest } = props as OuterProps<Base, ElementType>;
+      return <InnerType innerRef={ref} {...(rest as RefProps<Base, ElementType>)} />;
     }
     return <InnerType {...(props as LegacyProps<Base, ValueType>)} />;
-  });
+  };

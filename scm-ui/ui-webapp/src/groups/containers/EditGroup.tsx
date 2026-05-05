@@ -31,13 +31,13 @@ type Props = {
 const EditGroup: FC<Props> = ({ group }) => {
   const [t] = useTranslation("groups");
   useDocumentTitle(t("singleGroup.settingsTitle"), group.name);
-  const { error, isLoading, update, isUpdated } = useUpdateGroup();
+  const { error, isPending, update, isUpdated } = useUpdateGroup();
 
   return (
     <div>
       <UpdateNotification isUpdated={isUpdated} />
       <ErrorNotification error={error || undefined} />
-      <GroupForm group={group} submitForm={update} loading={isLoading} />
+      <GroupForm group={group} submitForm={update} loading={isPending} />
       <DeleteGroup group={group} />
     </div>
   );

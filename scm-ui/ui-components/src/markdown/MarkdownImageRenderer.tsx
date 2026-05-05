@@ -14,11 +14,12 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import { Link } from "@scm-manager/ui-types";
 import { isExternalLink, isInternalScmRepoLink, isLinkWithProtocol, resolveInternalPath } from "./paths";
-import { useRepositoryContext, useRepositoryRevisionContext } from "@scm-manager/ui-api";
+import { useRepositoryRevisionContext } from "@scm-manager/ui-api";
+import { useRepositoryFromParams } from "@scm-manager/ui-core";
 
 export const createLocalLink = (contentLink: string, revision: string, currentPath: string, link: string) => {
   if (isInternalScmRepoLink(link)) {
@@ -38,11 +39,12 @@ type Props = LinkProps & {
   base?: string;
   permalink?: string;
   contentLink?: string;
+  children?: ReactNode;
 };
 
-const MarkdownImageRenderer: FC<Props> = ({ src = "", alt = "", base, contentLink, children, permalink, ...props }) => {
+const MarkdownImageRenderer: FC<Props> = ({ src = "", alt = "", base, children, permalink, ...props }) => {
   const location = useLocation();
-  const repository = useRepositoryContext();
+  const repository = useRepositoryFromParams();
   const revision = useRepositoryRevisionContext();
   const pathname = permalink || location.pathname;
 

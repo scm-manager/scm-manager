@@ -28,7 +28,8 @@ type Props = WithTranslation & {
 
 class BaseUrlSettings extends React.Component<Props> {
   render() {
-    const { t, baseUrl, forceBaseUrl, hasUpdatePermission } = this.props;
+    const { t, forceBaseUrl, hasUpdatePermission } = this.props;
+    const baseUrl = this.props.baseUrl == null ? "" : this.props.baseUrl;
 
     return (
       <>

@@ -15,12 +15,13 @@
  */
 
 import { ApiResult, useRequiredIndexLink } from "./base";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, Me, PermissionOverview, User, UserCollection, UserCreation } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
 import { concat } from "./urls";
 import { requiredLink } from "./links";
+import { useEffect } from "react";
 
 export type UseUsersRequest = {
   page?: number | string;
@@ -39,29 +40,37 @@ export const useUsers = (request?: UseUsersRequest): ApiResult<UserCollection> =
     queryParams.page = request.page.toString();
   }
 
-  return useQuery<UserCollection, Error>(
-    ["users", request?.search || "", request?.page || 0],
-    () => apiClient.get(`${indexLink}?${createQueryString(queryParams)}`).then((response) => response.json()),
-    {
-      onSuccess: (users: UserCollection) => {
-        users._embedded?.users.forEach((user: User) => queryClient.setQueryData(["user", user.name], user));
-      },
+  const result = useQuery<UserCollection, Error>({
+    queryKey: ["users", request?.search || "", request?.page || 0],
+    queryFn: () => apiClient.get(`${indexLink}?${createQueryString(queryParams)}`).then((response) => response.json()),
+  });
+  useEffect(() => {
+    if (result.data) {
+      result.data._embedded?.users.forEach((user: User) => queryClient.setQueryData(["user", user.name], user));
     }
-  );
+  }, [queryClient, result.data]);
+  return result;
 };
 
 export const useUser = (name: string): ApiResult<User> => {
   const indexLink = useRequiredIndexLink("users");
-  return useQuery<User, Error>(["user", name], () =>
-    apiClient.get(concat(indexLink, name)).then((response) => response.json())
-  );
+  return useQuery<User, Error>({
+    queryKey: ["user", name],
+    queryFn: () => apiClient.get(concat(indexLink, name)).then((response) => response.json()),
+  });
+};
+
+export const useUserLink = (name: string, linkName: string): string | undefined => {
+  const { data } = useUser(name);
+  return (data?._links[linkName] as Link)?.href;
 };
 
 export const useUserPermissionOverview = (user: User): ApiResult<PermissionOverview> => {
   const overviewLink = user._links.permissionOverview as Link;
-  return useQuery<PermissionOverview, Error>(["user", user.name, "permissionOverview"], () =>
-    apiClient.get(overviewLink.href).then((response) => response.json())
-  );
+  return useQuery<PermissionOverview, Error>({
+    queryKey: ["user", user.name, "permissionOverview"],
+    queryFn: () => apiClient.get(overviewLink.href).then((response) => response.json()),
+  });
 };
 
 const createUser = (link: string) => {
@@ -82,15 +91,16 @@ const createUser = (link: string) => {
 export const useCreateUser = () => {
   const queryClient = useQueryClient();
   const link = useRequiredIndexLink("users");
-  const { mutate, data, isLoading, error } = useMutation<User, Error, UserCreation>(createUser(link), {
+  const { mutate, data, isPending, error } = useMutation<User, Error, UserCreation>({
+    mutationFn: createUser(link),
     onSuccess: (user) => {
       queryClient.setQueryData(["user", user.name], user);
-      return queryClient.invalidateQueries(["users"]);
+      return queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });
   return {
     create: (user: UserCreation) => mutate(user),
-    isLoading,
+    isPending,
     error,
     user: data,
   };
@@ -98,21 +108,19 @@ export const useCreateUser = () => {
 
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, User>(
-    (user) => {
+  const { mutate, isPending, error, data } = useMutation<unknown, Error, User>({
+    mutationFn: (user) => {
       const updateUrl = (user._links.update as Link).href;
       return apiClient.put(updateUrl, user, "application/vnd.scmm-user+json;v=2");
     },
-    {
-      onSuccess: async (_, user) => {
-        await queryClient.invalidateQueries(["user", user.name]);
-        await queryClient.invalidateQueries(["users"]);
-      },
-    }
-  );
+    onSuccess: async (_, user) => {
+      await queryClient.invalidateQueries({ queryKey: ["user", user.name] });
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
   return {
     update: (user: User) => mutate(user),
-    isLoading,
+    isPending,
     error,
     isUpdated: !!data,
   };
@@ -120,21 +128,19 @@ export const useUpdateUser = () => {
 
 export const useDeleteUser = () => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, User>(
-    (user) => {
+  const { mutate, isPending, error, data } = useMutation<unknown, Error, User>({
+    mutationFn: (user) => {
       const deleteUrl = (user._links.delete as Link).href;
       return apiClient.delete(deleteUrl);
     },
-    {
-      onSuccess: async (_, name) => {
-        await queryClient.removeQueries(["user", name]);
-        await queryClient.invalidateQueries(["users"]);
-      },
-    }
-  );
+    onSuccess: async (_, name) => {
+      await queryClient.removeQueries({ queryKey: ["user", name] });
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
   return {
     remove: (user: User) => mutate(user),
-    isLoading,
+    isPending,
     error,
     isDeleted: !!data,
   };
@@ -146,7 +152,7 @@ const convertToInternal = (url: string, newPassword: string) => {
     {
       newPassword,
     },
-    "application/vnd.scmm-user+json;v=2"
+    "application/vnd.scmm-user+json;v=2",
   );
 };
 
@@ -161,18 +167,16 @@ export type ConvertToInternalRequest = {
 
 export const useConvertToInternal = () => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, ConvertToInternalRequest>(
-    ({ user, password }) => convertToInternal((user._links.convertToInternal as Link).href, password),
-    {
-      onSuccess: async (_, { user }) => {
-        await queryClient.invalidateQueries(["user", user.name]);
-        await queryClient.invalidateQueries(["users"]);
-      },
-    }
-  );
+  const { mutate, isPending, error, data } = useMutation<unknown, Error, ConvertToInternalRequest>({
+    mutationFn: ({ user, password }) => convertToInternal((user._links.convertToInternal as Link).href, password),
+    onSuccess: async (_, { user }) => {
+      await queryClient.invalidateQueries({ queryKey: ["user", user.name] });
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
   return {
     convertToInternal: (user: User, password: string) => mutate({ user, password }),
-    isLoading,
+    isPending,
     error,
     isConverted: !!data,
   };
@@ -180,18 +184,16 @@ export const useConvertToInternal = () => {
 
 export const useConvertToExternal = () => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, User>(
-    (user) => convertToExternal((user._links.convertToExternal as Link).href),
-    {
-      onSuccess: async (_, user) => {
-        await queryClient.invalidateQueries(["user", user.name]);
-        await queryClient.invalidateQueries(["users"]);
-      },
-    }
-  );
+  const { mutate, isPending, error, data } = useMutation<unknown, Error, User>({
+    mutationFn: (user) => convertToExternal((user._links.convertToExternal as Link).href),
+    onSuccess: async (_, user) => {
+      await queryClient.invalidateQueries({ queryKey: ["user", user.name] });
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
   return {
     convertToExternal: (user: User) => mutate(user),
-    isLoading,
+    isPending,
     error,
     isConverted: !!data,
   };
@@ -200,19 +202,20 @@ export const useConvertToExternal = () => {
 const CONTENT_TYPE_PASSWORD_OVERWRITE = "application/vnd.scmm-passwordOverwrite+json;v=2";
 
 export const useSetUserPassword = (user: User) => {
-  const { data, isLoading, error, mutate, reset } = useMutation<unknown, Error, string>((password) =>
-    apiClient.put(
-      requiredLink(user, "password"),
-      {
-        newPassword: password,
-      },
-      CONTENT_TYPE_PASSWORD_OVERWRITE
-    )
-  );
+  const { data, isPending, error, mutate, reset } = useMutation<unknown, Error, string>({
+    mutationFn: (password) =>
+      apiClient.put(
+        requiredLink(user, "password"),
+        {
+          newPassword: password,
+        },
+        CONTENT_TYPE_PASSWORD_OVERWRITE,
+      ),
+  });
   return {
     setPassword: (newPassword: string) => mutate(newPassword),
     passwordOverwritten: !!data,
-    isLoading,
+    isPending,
     error,
     reset,
   };
@@ -226,13 +229,13 @@ type ChangeUserPasswordRequest = {
 };
 
 export const useChangeUserPassword = (user: User | Me) => {
-  const { data, isLoading, error, mutate, reset } = useMutation<unknown, Error, ChangeUserPasswordRequest>((request) =>
-    apiClient.put(requiredLink(user, "password"), request, CONTENT_TYPE_PASSWORD_CHANGE)
-  );
+  const { data, isPending, error, mutate, reset } = useMutation<unknown, Error, ChangeUserPasswordRequest>({
+    mutationFn: (request) => apiClient.put(requiredLink(user, "password"), request, CONTENT_TYPE_PASSWORD_CHANGE),
+  });
   return {
     changePassword: (oldPassword: string, newPassword: string) => mutate({ oldPassword, newPassword }),
     passwordChanged: !!data,
-    isLoading,
+    isPending,
     error,
     reset,
   };

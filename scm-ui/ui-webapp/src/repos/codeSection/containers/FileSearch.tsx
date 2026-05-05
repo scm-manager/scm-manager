@@ -15,29 +15,29 @@
  */
 
 import React, { FC, useState } from "react";
-import { Link, useHistory, useLocation, useParams } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { Branch, Repository } from "@scm-manager/ui-types";
-import { urls, usePaths } from "@scm-manager/ui-api";
+import { urls, useBranchesIfAvailable, usePaths } from "@scm-manager/ui-api";
 import { createA11yId } from "@scm-manager/ui-components";
-import { ErrorNotification, Icon, Loading, Notification, InputField, useDocumentTitle } from "@scm-manager/ui-core";
+import {
+  ErrorNotification,
+  Icon,
+  Loading,
+  Notification,
+  InputField,
+  useDocumentTitle,
+  useRepositoryFromParams,
+  useCurrentRepositoryBaseUrl,
+  useSourceNameFromParams,
+  REPOSITORY_SUB_ROUTES,
+  REPOSITORY_CODE_SUB_ROUTES,
+} from "@scm-manager/ui-core";
 import CodeActionBar from "../components/CodeActionBar";
 import FileSearchResults from "../components/FileSearchResults";
 import { filepathSearch } from "../utils/filepathSearch";
 import { encodeFilePath } from "../../sources/components/content/FileLink";
-
-type Props = {
-  repository: Repository;
-  baseUrl: string;
-  branches?: Branch[];
-  selectedBranch?: string;
-};
-
-type Params = {
-  revision: string;
-};
 
 const HomeLink = styled(Link)`
   border-right: 1px solid lightgray;
@@ -47,28 +47,30 @@ const HomeIcon = styled(Icon)`
   line-height: 1.5rem;
 `;
 
-const useRevision = () => {
-  const { revision } = useParams<Params>();
-  return revision;
-};
-
-const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }) => {
-  const revision = useRevision();
+const FileSearch: FC = () => {
+  const repository = useRepositoryFromParams();
+  const baseUrl = useCurrentRepositoryBaseUrl() + "/" + REPOSITORY_SUB_ROUTES.CODE;
+  const { data: branchesData } = useBranchesIfAvailable(repository);
+  const sourceName = useSourceNameFromParams();
   const location = useLocation();
-  const history = useHistory();
-  const { isLoading, error, data } = usePaths(repository, revision);
+  const navigate = useNavigate();
+  const { isLoading, error, data } = usePaths(repository, sourceName);
   const query = urls.getQueryStringFromLocation(location) || "";
   const prevSourcePath = urls.getPrevSourcePathFromLocation(location) || "";
   const [t] = useTranslation("repos");
 
+  if (!sourceName) {
+    throw new Error("Source type or name missing in URL");
+  }
+
   useDocumentTitle(
     t("fileSearch.searchWithRevisionAndNamespaceName", {
-      revision: decodeURIComponent(revision),
+      revision: decodeURIComponent(sourceName),
       namespace: repository.namespace,
       name: repository.name,
-    })
+    }),
   );
-  const [firstSelectedBranch] = useState<string | undefined>(selectedBranch);
+  const [firstSelectedBranch] = useState<string | undefined>(sourceName);
 
   let result: string[];
 
@@ -82,46 +84,46 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
     const query = e.currentTarget.value;
     const prevSourceQuery = urls.createPrevSourcePathQuery(prevSourcePath);
     if (prevSourceQuery) {
-      history.push(`${location.pathname}?q=${encodeURIComponent(query)}`);
+      navigate(`${location.pathname}?q=${encodeURIComponent(query)}`);
     } else {
-      history.push(`${location.pathname}?q=${encodeURIComponent(query)}&${prevSourceQuery}`);
+      navigate(`${location.pathname}?q=${encodeURIComponent(query)}&${prevSourceQuery}`);
     }
   };
 
-  const onSelectBranch = (branch?: Branch) => {
-    if (branch) {
+  const onSelect = (sourceType: string, sourceName: string) => {
+    if (sourceName) {
       const prevSourceQuery = urls.createPrevSourcePathQuery(prevSourcePath);
+      let searchString = `?q=${query}`;
       if (prevSourceQuery) {
-        history.push(`${baseUrl}/search/${encodeURIComponent(branch.name)}?q=${query}&${prevSourceQuery}`);
-      } else {
-        history.push(`${baseUrl}/search/${encodeURIComponent(branch.name)}?q=${query}`);
+        searchString += `&${prevSourceQuery}`;
       }
+      navigate(`${baseUrl}/${REPOSITORY_SUB_ROUTES.SEARCH}/${encodeURIComponent(sourceName)}${searchString}`);
     }
   };
 
-  const evaluateSwitchViewLink = (type: string) => {
-    if (type === "sources" && repository.type !== "svn") {
-      return `${baseUrl}/sources/${revision}/${encodeFilePath(prevSourcePath)}`;
+  const evaluateSwitchViewLink = (viewType: string) => {
+    if (viewType === "sources" && repository.type !== "svn") {
+      return `${baseUrl}/${REPOSITORY_CODE_SUB_ROUTES.SOURCES}/${encodeURIComponent(sourceName)}/${encodeFilePath(prevSourcePath)}`;
     }
 
-    if (type === "sources" && repository.type === "svn") {
-      return `${baseUrl}/sources/${encodeFilePath(prevSourcePath)}`;
+    if (viewType === "sources" && repository.type === "svn") {
+      return `${baseUrl}/${REPOSITORY_CODE_SUB_ROUTES.SOURCES}/${encodeFilePath(prevSourcePath)}`;
     }
 
     if (repository.type !== "svn") {
-      return `${baseUrl}/branch/${revision}/changesets/${
+      return `${baseUrl}/${encodeURIComponent(sourceName)}/${REPOSITORY_CODE_SUB_ROUTES.CHANGESETS}/${
         prevSourcePath ? `?${urls.createPrevSourcePathQuery(prevSourcePath)}` : ""
       }`;
     }
 
     if (prevSourcePath) {
-      return `${baseUrl}/changesets/${urls.createPrevSourcePathQuery(prevSourcePath)}`;
+      return `${baseUrl}/${REPOSITORY_CODE_SUB_ROUTES.CHANGESETS}/?${urls.createPrevSourcePathQuery(prevSourcePath)}`;
     } else {
-      return `${baseUrl}/changesets/${prevSourcePath}`;
+      return `${baseUrl}/${REPOSITORY_CODE_SUB_ROUTES.CHANGESETS}/`;
     }
   };
 
-  const contentBaseUrl = `${baseUrl}/sources/${revision}/`;
+  const contentBaseUrl = `${baseUrl}/${REPOSITORY_CODE_SUB_ROUTES.SOURCES}/${encodeURIComponent(sourceName)}/`;
 
   const fileSearchDescriptionId = createA11yId("fileSearchDescription");
   let body;
@@ -155,14 +157,11 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
     );
   }
 
+  const hasContent =
+    !repository._links.branches || (branchesData?._embedded?.branches && branchesData._embedded.branches.length > 0);
   return (
     <>
-      <CodeActionBar
-        branches={branches}
-        selectedBranch={selectedBranch}
-        onSelectBranch={onSelectBranch}
-        switchViewLink={evaluateSwitchViewLink}
-      />
+      <CodeActionBar hasContent={hasContent} onSelect={onSelect} switchViewLink={evaluateSwitchViewLink} />
       <div className="panel">
         <div
           className={classNames(
@@ -172,16 +171,16 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
             "pt-4",
             "mx-3",
             "px-4",
-            "pb-0"
+            "pb-0",
           )}
         >
           <HomeLink
             className={classNames("mr-3", "pr-3")}
             aria-label={t("fileSearch.home")}
-            to={firstSelectedBranch !== selectedBranch ? contentBaseUrl : () => evaluateSwitchViewLink("sources")}
+            to={firstSelectedBranch !== sourceName ? contentBaseUrl : evaluateSwitchViewLink("sources")}
           >
             <HomeIcon title={t("fileSearch.home")} color="inherit">
-              {firstSelectedBranch !== selectedBranch ? "home" : "arrow-left"}
+              {firstSelectedBranch !== sourceName ? "home" : "arrow-left"}
             </HomeIcon>
           </HomeLink>
           <InputField

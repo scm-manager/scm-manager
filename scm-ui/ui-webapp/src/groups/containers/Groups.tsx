@@ -15,11 +15,11 @@
  */
 
 import React, { FC } from "react";
-import { Redirect, useLocation, useParams } from "react-router-dom";
+import { Navigate, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Group, GroupCollection } from "@scm-manager/ui-types";
 import { useGroups } from "@scm-manager/ui-api";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { GROUP_COLLECTION_BASE_ROUTE, GROUP_COLLECTION_SUB_ROUTES, useDocumentTitle } from "@scm-manager/ui-core";
 import {
   CreateButton,
   LinkPaginator,
@@ -48,7 +48,7 @@ const GroupPage: FC<GroupPageProps> = ({ data, groups, page, search }) => {
   return (
     <>
       <GroupTable groups={groups} />
-      <LinkPaginator collection={data} page={page} filter={search} />
+      <LinkPaginator collection={data} page={page} filter={search} baseUrl={GROUP_COLLECTION_BASE_ROUTE} />
     </>
   );
 };
@@ -64,7 +64,7 @@ const Groups: FC = () => {
   const groups = data?._embedded?.groups;
   const canCreateGroups = !!data?._links.create;
   if (data && data.pageTotal < page && page > 1) {
-    return <Redirect to={`/groups/${data.pageTotal}`} />;
+    return <Navigate to={`/${GROUP_COLLECTION_BASE_ROUTE}/${data.pageTotal}`} />;
   }
 
   return (
@@ -75,7 +75,12 @@ const Groups: FC = () => {
       error={error || undefined}
     >
       <GroupPage data={data} groups={groups} page={page} search={search} />
-      {canCreateGroups ? <CreateButton link="/groups/create" label={t("groups.createButton")} /> : null}
+      {canCreateGroups ? (
+        <CreateButton
+          link={`/${GROUP_COLLECTION_BASE_ROUTE}/${GROUP_COLLECTION_SUB_ROUTES.CREATE}`}
+          label={t("groups.createButton")}
+        />
+      ) : null}
       <PageActions>
         <OverviewPageActions
           showCreateButton={canCreateGroups}

@@ -15,7 +15,7 @@
  */
 
 plugins {
-  id 'org.scm-manager.smp' version '0.17.0'
+  id 'org.scm-manager.smp' version '0.20.0-alpha6'
 }
 
 dependencies {
@@ -49,7 +49,6 @@ scmPlugin {
       'sonia.scm.api.v2.resources'
     ]
   }
-
 }
 
 task testJar(type: Jar) {

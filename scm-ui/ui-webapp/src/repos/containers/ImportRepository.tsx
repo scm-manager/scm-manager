@@ -25,9 +25,13 @@ import { Loading, Notification, useNavigationLock } from "@scm-manager/ui-compon
 
 import ImportRepositoryFromBundle from "../components/ImportRepositoryFromBundle";
 import ImportFullRepository from "../components/ImportFullRepository";
-import { Prompt, Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { extensionPoints } from "@scm-manager/ui-extensions";
 
+/* eslint-disable react/prop-types */
+/*
+ * To be honest, we do not know why the error is triggered here.
+ */
 const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => {
   const [t] = useTranslation("repos");
   if (!importPending) {
@@ -42,7 +46,7 @@ const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => 
   );
 };
 
-const ImportRepository: extensionPoints.RepositoryCreatorExtension["component"] = ({
+const ImportRepository: extensionPoints.RepositoryCreator["type"]["component"] = ({
   repositoryTypes,
   nameForm,
   informationForm,
@@ -50,10 +54,9 @@ const ImportRepository: extensionPoints.RepositoryCreatorExtension["component"] 
   const [importPending, setImportPending] = useState(false);
   const [importedRepository, setImportedRepository] = useState<Repository>();
   const [repositoryType, setRepositoryType] = useState<RepositoryType | undefined>(
-    repositoryTypes?._embedded?.repositoryTypes?.[0]
+    repositoryTypes?._embedded?.repositoryTypes?.[0],
   );
   const [importType, setImportType] = useState("");
-  const [t] = useTranslation("repos");
 
   useNavigationLock(importPending);
 
@@ -105,12 +108,11 @@ const ImportRepository: extensionPoints.RepositoryCreatorExtension["component"] 
   };
 
   if (importedRepository) {
-    return <Redirect to={`/repo/${importedRepository.namespace}/${importedRepository.name}/code/sources`} />;
+    return <Navigate to={`/repo/${importedRepository.namespace}/${importedRepository.name}/code/sources`} />;
   }
 
   return (
     <>
-      <Prompt when={importPending} message={t("import.navigationWarning")} />
       <ImportPendingLoading importPending={importPending} />
       <ImportRepositoryTypeSelect
         repositoryTypes={repositoryTypes?._embedded?.repositoryTypes || []}

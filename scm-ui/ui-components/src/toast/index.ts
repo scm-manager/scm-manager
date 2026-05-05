@@ -17,6 +17,6 @@
 export { default as Toast } from "./Toast";
 export { default as ToastArea } from "./ToastArea";
 export { default as ToastNotification } from "./ToastNotification";
-export { Type as ToastType } from "./themes";
+export { type Type as ToastType } from "./themes";
 export { default as ToastButton } from "./ToastButton";
 export { default as ToastButtons } from "./ToastButtons";

@@ -24,7 +24,7 @@ import ChangesetAuthor from "./ChangesetAuthor";
 import SignatureIcon from "./SignatureIcon";
 import ChangesetTags from "./ChangesetTags";
 import { parseDescription } from "./changesets";
-import DateFromNow from "../../DateFromNow";
+import { DateFromNow } from "@scm-manager/ui-core";
 import { Changeset, Repository } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import ChangesetId from "./ChangesetId";

@@ -16,35 +16,41 @@
 
 import React, { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import {
   CustomQueryFlexWrappedColumns,
-  ErrorPage,
-  Loading,
   NavLink,
   Page,
   PrimaryContentColumn,
   SecondaryNavigation,
   SecondaryNavigationColumn,
   SubNavigation,
-  urls,
 } from "@scm-manager/ui-components";
-import Permissions from "../../permissions/containers/Permissions";
 import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import PermissionsNavLink from "./PermissionsNavLink";
-import { useNamespace, useNamespaceAndNameContext } from "@scm-manager/ui-api";
-import NamespaceInformation from "./NamespaceInformation";
-
-type Params = {
-  namespaceName: string;
-};
+import { useIndexLinks, useNamespaceAndNameContext } from "@scm-manager/ui-api";
+import {
+  NAMESPACE_SETTINGS_SUB_ROUTES,
+  NAMESPACE_SUB_ROUTES,
+  SINGLE_NAMESPACE_BASE_ROUTE,
+  useCurrentNamespaceBaseUrl,
+  useNamespaceFromParams,
+} from "@scm-manager/ui-core";
 
 const NamespaceRoot: FC = () => {
-  const match = useRouteMatch<Params>();
-  const { isLoading, error, data: namespace } = useNamespace(match.params.namespaceName);
+  const namespace = useNamespaceFromParams();
   const [t] = useTranslation("namespaces");
-  const url = urls.matchedUrlFromMatch(match);
   const context = useNamespaceAndNameContext();
+  const indexLinks = useIndexLinks();
+  const absoluteNamespaceUrl = useCurrentNamespaceBaseUrl();
+
+  const basePath = `/${SINGLE_NAMESPACE_BASE_ROUTE}/${namespace.namespace}`;
+
+  const extensionProps = {
+    namespace,
+    indexLinks,
+    absoluteNamespaceUrl,
+  };
 
   useEffect(() => {
     if (namespace) {
@@ -55,43 +61,16 @@ const NamespaceRoot: FC = () => {
     };
   }, [namespace, context]);
 
-  if (error) {
-    return (
-      <ErrorPage title={t("namespaceRoot.errorTitle")} subtitle={t("namespaceRoot.errorSubtitle")} error={error} />
-    );
-  }
-
-  if (!namespace || isLoading) {
-    return <Loading />;
-  }
-
-  const extensionProps = {
-    namespace,
-    url,
-  };
-
   return (
     <Page title={namespace.namespace}>
       <CustomQueryFlexWrappedColumns>
         <PrimaryContentColumn>
-          <Switch>
-            <Route path={`${url}/info`}>
-              <NamespaceInformation namespace={namespace} />
-            </Route>
-            <Route path={`${url}/settings/permissions`}>
-              <Permissions namespaceOrRepository={namespace} />
-            </Route>
-            <ExtensionPoint<extensionPoints.NamespaceRoute>
-              name="namespace.route"
-              props={extensionProps}
-              renderAll={true}
-            />
-          </Switch>
+          <Outlet />
         </PrimaryContentColumn>
         <SecondaryNavigationColumn>
           <SecondaryNavigation label={t("namespaceRoot.menu.navigationLabel")}>
             <NavLink
-              to={`${url}/info`}
+              to={`${basePath}/${NAMESPACE_SUB_ROUTES.INFO}`}
               icon="fas fa-info-circle"
               label={t("namespaceRoot.menu.informationNavLink")}
               title={t("namespaceRoot.menu.informationNavLink")}
@@ -99,19 +78,22 @@ const NamespaceRoot: FC = () => {
             <ExtensionPoint<extensionPoints.NamespaceTopLevelNavigation>
               name="namespace.navigation.topLevel"
               props={extensionProps}
-              renderAll={true}
+              renderAll
             />
             {binder.hasExtension("namespace.setting", extensionProps) || namespace._links.permissions ? (
               <SubNavigation
-                to={`${url}/settings/`}
+                to={`${basePath}/${NAMESPACE_SUB_ROUTES.SETTINGS}/${NAMESPACE_SETTINGS_SUB_ROUTES.PERMISSIONS}`}
                 label={t("namespaceRoot.menu.settingsNavLink")}
                 title={t("namespaceRoot.menu.settingsNavLink")}
               >
-                <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} namespace={namespace} />
+                <PermissionsNavLink
+                  permissionUrl={`${basePath}/${NAMESPACE_SUB_ROUTES.SETTINGS}/${NAMESPACE_SETTINGS_SUB_ROUTES.PERMISSIONS}`}
+                  namespace={namespace}
+                />
                 <ExtensionPoint<extensionPoints.NamespaceSetting>
                   name="namespace.setting"
                   props={extensionProps}
-                  renderAll={true}
+                  renderAll
                 />
               </SubNavigation>
             ) : null}

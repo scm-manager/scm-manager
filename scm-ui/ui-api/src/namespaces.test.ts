@@ -16,8 +16,8 @@
 
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import { setIndexLink } from "./tests/indexLinks";
-import fetchMock from "fetch-mock-jest";
-import { renderHook } from "@testing-library/react-hooks";
+import fetchMock from "fetch-mock";
+import { renderHook, waitFor } from "@testing-library/react";
 import { useNamespace, useNamespaces, useNamespaceStrategies } from "./namespaces";
 import createWrapper from "./tests/createWrapper";
 
@@ -37,13 +37,12 @@ describe("Test namespace hooks", () => {
         },
       });
 
-      const { result, waitFor } = renderHook(() => useNamespaces(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useNamespaces(), {
+        wrapper: createWrapper(queryClient),
       });
       await waitFor(() => {
-        return !!result.current.data;
+        expect(result.current?.data?._embedded.namespaces[0].namespace).toBe("spaceships");
       });
-      expect(result.current?.data?._embedded.namespaces[0].namespace).toBe("spaceships");
     });
   });
 
@@ -57,13 +56,12 @@ describe("Test namespace hooks", () => {
         _links: {},
       });
 
-      const { result, waitFor } = renderHook(() => useNamespaceStrategies(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useNamespaceStrategies(), {
+        wrapper: createWrapper(queryClient),
       });
       await waitFor(() => {
-        return !!result.current.data;
+        expect(result.current?.data?.current).toEqual("awesome");
       });
-      expect(result.current?.data?.current).toEqual("awesome");
     });
   });
 
@@ -76,13 +74,12 @@ describe("Test namespace hooks", () => {
         _links: {},
       });
 
-      const { result, waitFor } = renderHook(() => useNamespace("awesome"), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useNamespace("awesome"), {
+        wrapper: createWrapper(queryClient),
       });
       await waitFor(() => {
-        return !!result.current.data;
+        expect(result.current?.data?.namespace).toEqual("awesome");
       });
-      expect(result.current?.data?.namespace).toEqual("awesome");
     });
   });
 });

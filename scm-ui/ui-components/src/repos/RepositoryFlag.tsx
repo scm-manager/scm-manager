@@ -14,11 +14,9 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
+import { Card, CardVariant, Tooltip } from "@scm-manager/ui-core";
 import { Color, Size } from "../styleConstants";
-import { Card } from "@scm-manager/ui-layout";
-import { CardVariant } from "@scm-manager/ui-core";
-import { Tooltip } from "@scm-manager/ui-overlays";
 import { TooltipLocation } from "../Tooltip";
 
 type Props = {
@@ -28,6 +26,7 @@ type Props = {
   size?: Size;
   tooltipLocation: TooltipLocation;
   variant?: CardVariant;
+  children?: ReactNode;
 };
 
 const RepositoryFlag: FC<Props> = ({

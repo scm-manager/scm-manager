@@ -275,7 +275,11 @@ public final class GitUtil {
     if (objectId != null) {
       final RevObject revObject = revWalk.parseAny(objectId);
       if (revObject instanceof RevTag) {
-        return ((RevTag) revObject).getTaggerIdent().getWhen().getTime();
+        try {
+          return ((RevTag) revObject).getTaggerIdent().getWhen().getTime();
+        } catch (NullPointerException e) {
+          logger.error("failed to compute time for tag {}", revObject, e);
+        }
       } else if (revObject instanceof RevCommit) {
         return getCommitTime((RevCommit) revObject);
       }

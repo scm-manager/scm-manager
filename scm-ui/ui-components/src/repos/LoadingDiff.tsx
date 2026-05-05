@@ -31,7 +31,7 @@ import { DiffContent, DiffTreeTitle, FileTreeContent, StickyFileDiffContainer } 
 import { useLocation } from "react-router-dom";
 import { getFileNameFromHash } from "./diffs";
 import LayoutRadioButtons from "./LayoutRadioButtons";
-import { useAriaId } from "@scm-manager/ui-core";
+import { useAriaId, useLayoutWide } from "@scm-manager/ui-core";
 import { useLayoutState } from "./diffLayout";
 
 export type WhitespaceMode = "ALL" | "NONE";
@@ -47,6 +47,9 @@ type NotificationProps = {
   isFetchingNextPage: boolean;
 };
 
+const DEFAULT_LIMIT = 25;
+const DEFAULT_REFETCH_ON_WINDOW_FOCUS = true;
+
 const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingNextPage }) => {
   const [t] = useTranslation("repos");
 
@@ -61,12 +64,20 @@ const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingN
 };
 
 const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) => {
+  if (limit == undefined) {
+    limit = DEFAULT_LIMIT;
+  }
+  if (refetchOnWindowFocus == undefined) {
+    refetchOnWindowFocus = DEFAULT_REFETCH_ON_WINDOW_FOCUS;
+  }
+
   const [ignoreWhitespace, setIgnoreWhitespace] = useState<WhitespaceMode>("NONE");
   const [layout, setLayout] = useLayoutState();
   const [collapsed, setCollapsed] = useState(false);
   const [prevHash, setPrevHash] = useState("");
   const diffContentId = useAriaId();
   const location = useLocation();
+  useLayoutWide();
 
   const { error, isLoading, data, fetchNextPage, isFetchingNextPage } = useDiff(url, {
     limit,
@@ -115,7 +126,7 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
               "column",
               "pt-0",
               layout === "Both" ? "is-one-quarter" : "is-full",
-              layout !== "Diff" ? "" : " is-hidden"
+              layout !== "Diff" ? "" : " is-hidden",
             )}
           >
             <FileTreeContent className="p-0" isBorder={layout !== "Diff"}>
@@ -150,12 +161,6 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
       </>
     );
   }
-};
-
-LoadingDiff.defaultProps = {
-  limit: 25,
-  sideBySide: false,
-  refetchOnWindowFocus: true,
 };
 
 export default LoadingDiff;

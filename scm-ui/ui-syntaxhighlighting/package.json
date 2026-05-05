@@ -1,48 +1,52 @@
 {
   "name": "@scm-manager/ui-syntaxhighlighting",
-  "version": "3.11.9-SNAPSHOT",
+  "version": "4.0.0-REACT19-SNAPSHOT",
   "private": true,
   "main": "src/index.ts",
   "scripts": {
-    "test": "jest --passWithNoTests",
+    "test": "vitest --passWithNoTests",
     "lint": "eslint src",
     "typecheck": "tsc",
-    "storybook": "start-storybook",
-    "build-storybook": "build-storybook",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
     "write-mapping": "node scripts/write-mapping.mjs",
     "depcheck": "depcheck"
   },
   "dependencies": {
-    "@scm-manager/ui-text": "3.11.9-SNAPSHOT",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "nanoid": "^3.3.2",
     "refractor": "^4.5.0"
   },
   "peerDependencies": {
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-diff-view": "^2.4.10"
+    "react": "^19.1.1",
+    "react-diff-view": "2.6.0",
+    "react-dom": "^19.1.1",
+    "@scm-manager/ui-core": "4.0.0-REACT19-SNAPSHOT"
   },
   "devDependencies": {
-    "decode-named-character-reference": "^1.0.1",
     "@scm-manager/babel-preset": "^2.13.1",
-    "@scm-manager/eslint-config": "^2.17.0",
-    "@scm-manager/jest-preset": "^2.14.1",
+    "@scm-manager/eslint-config": "^2.18.2",
     "@scm-manager/prettier-config": "^2.12.0",
-    "@scm-manager/tsconfig": "^2.13.0",
-    "@storybook/addon-essentials": "^6.5.10",
-    "@storybook/builder-webpack5": "^6.5.10",
-    "@storybook/manager-webpack5": "^6.5.10",
-    "@storybook/react": "^6.5.10",
+    "@scm-manager/tsconfig": "^3.0.0-alpha1",
+    "@storybook/addon-essentials": "^9.0.0-alpha.12",
+    "@storybook/addon-interactions": "^9.0.0-alpha.10",
+    "@storybook/addon-links": "^9.0.0-rc.5",
+    "@storybook/cli": "^9.1.5",
+    "@storybook/react": "^9.1.5",
+    "@storybook/react-vite": "^9.1.5",
+    "@storybook/test": "^9.0.0-alpha.2",
     "@types/hast": "^2.3.1",
-    "depcheck": "^1.4.3"
+    "@vitejs/plugin-react": "^5.0.2",
+    "decode-named-character-reference": "^1.0.1",
+    "depcheck": "^1.4.3",
+    "minimatch": "^10.0.3",
+    "vite": "^7.3.1"
   },
   "babel": {
     "presets": [
       "@scm-manager/babel-preset"
     ]
-  },
-  "jest": {
-    "preset": "@scm-manager/jest-preset"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {

@@ -16,7 +16,8 @@
 
 import { apiClient, createUrl, extractXsrfTokenFromCookie } from "./apiclient";
 import fetchMock from "fetch-mock";
-import { BackendError, BadGatewayError } from "./errors";
+import { BadGatewayError } from "./errors";
+import { expect } from "vitest";
 
 describe("create url", () => {
   it("should not change absolute urls", () => {
@@ -37,9 +38,9 @@ describe("error handling tests", () => {
     context: [
       {
         type: "planet",
-        id: "earth"
-      }
-    ]
+        id: "earth",
+      },
+    ],
   };
 
   afterEach(() => {
@@ -47,53 +48,42 @@ describe("error handling tests", () => {
     fetchMock.restore();
   });
 
-  it("should create a normal error, if the content type is not scmm-error", done => {
+  it("should create a normal error, if the content type is not scmm-error", async () => {
     fetchMock.getOnce("/api/v2/error", {
-      status: 404
+      status: 404,
     });
 
-    apiClient.get("/error").catch((err: Error) => {
-      expect(err.name).toEqual("Error");
-      expect(err.message).toContain("404");
-      done();
-    });
+    await expect(() => apiClient.get("/error")).rejects.toThrowError(/404/);
   });
 
-  it("should create a bad gateway error", done => {
+  it("should create a bad gateway error", async () => {
     fetchMock.getOnce("/api/v2/error", {
-      status: 502
+      status: 502,
     });
 
-    apiClient.get("/error").catch((err: Error) => {
-      expect(err).toBeInstanceOf(BadGatewayError);
-      done();
-    });
+    await expect(() => apiClient.get("/error")).rejects.toBeInstanceOf(BadGatewayError);
   });
 
-  it("should create an backend error, if the content type is scmm-error", done => {
+  it("should create an backend error, if the content type is scmm-error", async () => {
     fetchMock.getOnce("/api/v2/error", {
       status: 404,
       headers: {
-        "Content-Type": "application/vnd.scmm-error+json;v=2"
+        "Content-Type": "application/vnd.scmm-error+json;v=2",
       },
-      body: earthNotFoundError
+      body: earthNotFoundError,
     });
 
-    apiClient.get("/error").catch((err: BackendError) => {
-      expect(err).toBeInstanceOf(BackendError);
-
-      expect(err.message).toEqual("earth not found");
-      expect(err.statusCode).toBe(404);
-
-      expect(err.transactionId).toEqual("42t");
-      expect(err.errorCode).toEqual("42e");
-      expect(err.context).toEqual([
+    await expect(() => apiClient.get("/error")).rejects.toMatchObject({
+      message: "earth not found",
+      statusCode: 404,
+      transactionId: "42t",
+      errorCode: "42e",
+      context: [
         {
           type: "planet",
-          id: "earth"
-        }
-      ]);
-      done();
+          id: "earth",
+        },
+      ],
     });
   });
 });

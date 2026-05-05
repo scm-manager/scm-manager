@@ -99,8 +99,12 @@ public class ChangesetRootResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @DefaultValue("0") @QueryParam("page") int page,
-                         @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException {
+  public Response getAll(@PathParam("namespace") String namespace,
+                         @PathParam("name") String name,
+                         @DefaultValue("0") @QueryParam("page") int page,
+                         @DefaultValue("10") @QueryParam("pageSize") int pageSize,
+                         @QueryParam("revision") String revision,
+                         @QueryParam("q") String query) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
@@ -108,6 +112,8 @@ public class ChangesetRootResource {
         .page(page)
         .pageSize(pageSize)
         .create()
+        .setSearchString(query)
+        .setStartChangeset(revision)
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null) {
         PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());

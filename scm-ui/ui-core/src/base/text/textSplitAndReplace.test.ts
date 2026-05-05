@@ -35,7 +35,7 @@ describe("text split and replace", () => {
     const result = textSplitAndReplace<Wrapped>(
       "Don't Panic.",
       [{ textToReplace: "'", replacement: { text: "`" } }],
-      testWrapper
+      testWrapper,
     );
     expect(result).toHaveLength(3);
     expect(result[0]).toStrictEqual({ text: "Don" });
@@ -47,7 +47,7 @@ describe("text split and replace", () => {
     const result = textSplitAndReplace<Wrapped>(
       "'So this is it,' said Arthur, 'We are going to die.'",
       [{ textToReplace: "'", replacement: { text: "“" } }],
-      testWrapper
+      testWrapper,
     );
     expect(result).toHaveLength(2);
     expect(result[0]).toStrictEqual({ text: "“" });
@@ -58,7 +58,7 @@ describe("text split and replace", () => {
     const result = textSplitAndReplace<Wrapped>(
       "'So this is it,' said Arthur, 'We are going to die.'",
       [{ textToReplace: "'", replacement: { text: "“" }, replaceAll: true }],
-      testWrapper
+      testWrapper,
     );
     expect(result).toHaveLength(7);
     expect(result[0]).toStrictEqual({ text: "“" });
@@ -77,7 +77,7 @@ describe("text split and replace", () => {
         { textToReplace: "'", replacement: { text: "“" }, replaceAll: true },
         { textToReplace: "Arthur", replacement: { text: "Dent" }, replaceAll: true },
       ],
-      testWrapper
+      testWrapper,
     );
     expect(result).toHaveLength(9);
     expect(result[0]).toStrictEqual({ text: "“" });
@@ -100,7 +100,7 @@ describe("text split and replace", () => {
         { textToReplace: "d A", replacement: { text: "to be ignored 2" }, replaceAll: true },
         { textToReplace: "Arthur,", replacement: { text: "to be ignored 3" }, replaceAll: true },
       ],
-      testWrapper
+      testWrapper,
     );
     expect(result).toHaveLength(3);
     expect(result[0]).toStrictEqual({ text: "'So this is it,' " });
@@ -116,7 +116,7 @@ describe("text split and replace", () => {
         { textToReplace: " said Arthur, ", replacement: { text: "two" } },
         { textToReplace: "'We are going to die.'", replacement: { text: "three" } },
       ],
-      testWrapper
+      testWrapper,
     );
     expect(result).toHaveLength(3);
     expect(result[0]).toStrictEqual({ text: "one" });

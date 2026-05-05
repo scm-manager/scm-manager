@@ -14,14 +14,14 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
 
 const SizedTd = styled.td`
   width: 10rem;
 `;
 
-const ContributorRow: FC<{ label: string }> = ({ label, children }) => {
+const ContributorRow: FC<{ label: string; children?: ReactNode }> = ({ label, children }) => {
   return (
     <tr key={label}>
       <SizedTd>{label}:</SizedTd>

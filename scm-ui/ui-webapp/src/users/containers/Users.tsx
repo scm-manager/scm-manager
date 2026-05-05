@@ -15,12 +15,17 @@
  */
 
 import React, { FC } from "react";
-import { Redirect, useLocation, useParams } from "react-router-dom";
+import { Navigate, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useUsers } from "@scm-manager/ui-api";
 import { User, UserCollection } from "@scm-manager/ui-types";
 import { CreateButton, LinkPaginator, OverviewPageActions, Page, PageActions, urls } from "@scm-manager/ui-components";
-import { Notification, useDocumentTitle } from "@scm-manager/ui-core";
+import {
+  Notification,
+  useDocumentTitle,
+  USER_COLLECTION_BASE_ROUTE,
+  USER_COLLECTION_SUB_ROUTES,
+} from "@scm-manager/ui-core";
 import { UserTable } from "./../components/table";
 
 type UserPageProps = {
@@ -40,7 +45,7 @@ const UserPage: FC<UserPageProps> = ({ data, users, page, search }) => {
   return (
     <>
       <UserTable users={users} />
-      <LinkPaginator collection={data} page={page} filter={search} />
+      <LinkPaginator collection={data} page={page} filter={search} baseUrl={USER_COLLECTION_BASE_ROUTE} />
     </>
   );
 };
@@ -57,7 +62,7 @@ const Users: FC = () => {
   const canAddUsers = !!data?._links.create;
 
   if (data && data.pageTotal < page && page > 1) {
-    return <Redirect to={`/users/${data.pageTotal}`} />;
+    return <Navigate to={`/${USER_COLLECTION_BASE_ROUTE}/${data.pageTotal}`} />;
   }
 
   return (
@@ -68,7 +73,12 @@ const Users: FC = () => {
       error={error || undefined}
     >
       <UserPage data={data} users={users} page={page} search={search} />
-      {canAddUsers ? <CreateButton link="/users/create" label={t("users.createButton")} /> : null}
+      {canAddUsers ? (
+        <CreateButton
+          link={`/${USER_COLLECTION_BASE_ROUTE}/${USER_COLLECTION_SUB_ROUTES.CREATE}`}
+          label={t("users.createButton")}
+        />
+      ) : null}
       <PageActions>
         <OverviewPageActions
           showCreateButton={canAddUsers}

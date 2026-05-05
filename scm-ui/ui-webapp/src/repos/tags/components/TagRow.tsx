@@ -15,16 +15,11 @@
  */
 
 import React, { FC } from "react";
-import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Link as RouterLink } from "react-router-dom";
 import classNames from "classnames";
+import { CardList, DateFromNow, Icon, Menu, useKeyboardIteratorTarget } from "@scm-manager/ui-core";
 import { Link, Tag } from "@scm-manager/ui-types";
-import { DateFromNow } from "@scm-manager/ui-components";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
-import { encodePart } from "../../sources/components/content/FileLink";
-import { Menu } from "@scm-manager/ui-overlays";
-import { CardList } from "@scm-manager/ui-layout";
-import { Icon } from "@scm-manager/ui-core";
 
 type Props = {
   tag: Tag;
@@ -37,7 +32,7 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
   const [t] = useTranslation("repos");
   const ref = useKeyboardIteratorTarget();
 
-  const to = `${baseUrl}/${encodePart(tag.name)}/info`;
+  const to = `${baseUrl}/${encodeURIComponent(tag.name)}/info`;
   return (
     <CardList.Card
       key={tag.name}

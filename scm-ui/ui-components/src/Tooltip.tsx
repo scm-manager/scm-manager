@@ -144,7 +144,7 @@ type Props = {
 export type TooltipLocation = "bottom" | "right" | "top" | "left";
 
 /**
- * @deprecated use {@link ui-overlays/Tooltip} instead
+ * @deprecated Use Tooltip from ui-core instead
  */
 const Tooltip: FC<Props> = ({ className, message, location = "right", multiline, children, id }) => {
   const [open, setOpen] = useState(false);

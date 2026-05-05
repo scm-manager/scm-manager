@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useContext, MouseEvent } from "react";
+import React, { FC, useContext, MouseEvent, ReactNode } from "react";
 import { ToastThemeContext, Themeable } from "./themes";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -22,6 +22,7 @@ import styled from "styled-components";
 type Props = {
   icon?: string;
   onClick?: () => void;
+  children?: ReactNode;
 };
 
 const ThemedButton = styled.button.attrs((props) => ({

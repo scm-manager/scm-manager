@@ -16,12 +16,18 @@
 
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useUserOptions, Option } from "@scm-manager/ui-api";
-import { AnonymousMode, AutocompleteObject, ConfigChangeHandler, NamespaceStrategies } from "@scm-manager/ui-types";
-import { Checkbox, InputField, Select } from "@scm-manager/ui-components";
-import NamespaceStrategySelect from "./NamespaceStrategySelect";
-import { ChipInputField, Combobox } from "@scm-manager/ui-forms";
 import classNames from "classnames";
+import { useUserOptions } from "@scm-manager/ui-api";
+import { Checkbox, InputField, Select } from "@scm-manager/ui-components";
+import { ChipInputField, Combobox } from "@scm-manager/ui-core";
+import {
+  AnonymousMode,
+  AutocompleteObject,
+  ConfigChangeHandler,
+  NamespaceStrategies,
+  Option,
+} from "@scm-manager/ui-types";
+import NamespaceStrategySelect from "./NamespaceStrategySelect";
 
 type Props = {
   realmDescription: string;
@@ -164,12 +170,12 @@ const GeneralSettings: FC<Props> = ({
             disabled={!hasUpdatePermission}
             className="is-fullwidth"
             options={[
-              {label: t("general-settings.anonymousMode.full"), value: "FULL"},
-              {label: t("general-settings.anonymousMode.protocolOnly"), value: "PROTOCOL_ONLY"},
-              {label: t("general-settings.anonymousMode.off"), value: "OFF"},
+              { label: t("general-settings.anonymousMode.full"), value: "FULL" },
+              { label: t("general-settings.anonymousMode.protocolOnly"), value: "PROTOCOL_ONLY" },
+              { label: t("general-settings.anonymousMode.off"), value: "OFF" },
             ]}
             helpText={t("help.allowAnonymousAccessHelpText")}
-            testId={"anonymous-mode-select"}
+            testId="anonymous-mode-select"
           />
         </div>
       </div>
@@ -213,12 +219,12 @@ const GeneralSettings: FC<Props> = ({
             helpText={t("general-settings.emergencyContacts.helpText")}
             placeholder={t("general-settings.emergencyContacts.autocompletePlaceholder")}
             aria-label="general-settings.emergencyContacts.ariaLabel"
-            value={emergencyContacts.map((m) => ({label: m, value: {id: m, displayName: m}}))}
+            value={emergencyContacts.map((m) => ({ label: m, value: { id: m, displayName: m } }))}
             onChange={handleEmergencyContactsChange}
           >
             <Combobox<AutocompleteObject>
               options={userOptions || []}
-              className={classNames({"is-loading": userOptionsLoading})}
+              className={classNames({ "is-loading": userOptionsLoading })}
               onQueryChange={setQuery}
             />
           </ChipInputField>

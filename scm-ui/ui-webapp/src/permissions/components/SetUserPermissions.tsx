@@ -34,7 +34,7 @@ const SetUserPermissions: FC<Props> = ({ user }) => {
     error: permissionsLoadError,
   } = useUserPermissions(user);
   const {
-    isLoading: isUpdatingPermissions,
+    isPending: isUpdatingPermissions,
     isUpdated: permissionsUpdated,
     setPermissions,
     error: permissionsUpdateError,

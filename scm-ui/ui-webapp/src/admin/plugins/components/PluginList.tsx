@@ -15,11 +15,11 @@
  */
 
 import React, { FC } from "react";
+import { KeyboardIterator } from "@scm-manager/ui-core";
 import { Plugin } from "@scm-manager/ui-types";
 import PluginGroupEntry from "../components/PluginGroupEntry";
-import groupByCategory from "./groupByCategory";
 import { PluginModalContent } from "../containers/PluginsOverview";
-import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
+import groupByCategory from "./groupByCategory";
 
 type Props = {
   plugins: Plugin[];

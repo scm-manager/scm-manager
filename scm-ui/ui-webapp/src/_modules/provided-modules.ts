@@ -14,11 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { defineLazy, defineStatic } from "./define";
+import { defineStatic } from "./define";
 import { definePluginDependencies } from "@scm-manager/ui-plugins";
 
 definePluginDependencies(defineStatic);
-
-// redux is deprecated in favor of ui-api
-defineLazy("redux", () => import("@scm-manager/ui-legacy").then((legacy) => legacy.Redux));
-defineLazy("react-redux", () => import("@scm-manager/ui-legacy").then((legacy) => legacy.ReactRedux));

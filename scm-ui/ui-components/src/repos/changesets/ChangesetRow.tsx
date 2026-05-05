@@ -17,17 +17,17 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
+import { useKeyboardIteratorTarget } from "@scm-manager/ui-core";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { Branch, Changeset, File, Repository } from "@scm-manager/ui-types";
+import { Changeset, File, Repository } from "@scm-manager/ui-types";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 import SingleChangeset from "./SingleChangeset";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   repository: Repository;
   changeset: Changeset;
   file?: File;
-  branch?: Branch;
+  sourceName?: string;
 };
 
 const Wrapper = styled.div`
@@ -41,7 +41,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const ChangesetRow: FC<Props> = ({ repository, changeset, file, branch }) => {
+const ChangesetRow: FC<Props> = ({ repository, changeset, file, sourceName }) => {
   const ref = useKeyboardIteratorTarget();
   return (
     <Wrapper>
@@ -50,7 +50,13 @@ const ChangesetRow: FC<Props> = ({ repository, changeset, file, branch }) => {
           <SingleChangeset repository={repository} changeset={changeset} />
         </div>
         <div className={classNames("column", "is-flex", "is-justify-content-flex-end", "is-align-items-center")}>
-          <ChangesetButtonGroup ref={ref} repository={repository} changeset={changeset} file={file} branch={branch} />
+          <ChangesetButtonGroup
+            ref={ref}
+            repository={repository}
+            changeset={changeset}
+            file={file}
+            sourceName={sourceName}
+          />
           <ExtensionPoint<extensionPoints.ChangesetRight>
             name="changeset.right"
             props={{

@@ -28,7 +28,7 @@ type Props = {
 
 const DeletePermissionButton: FC<Props> = ({ namespaceOrRepository, permission, confirmDialog = true }) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
-  const { isLoading, error, remove, isDeleted } = useDeletePermission(namespaceOrRepository);
+  const { isPending, error, remove, isDeleted } = useDeletePermission(namespaceOrRepository);
   const [t] = useTranslation("repos");
   useEffect(() => {
     if (isDeleted) {
@@ -54,7 +54,7 @@ const DeletePermissionButton: FC<Props> = ({ namespaceOrRepository, permission, 
         buttons={[
           {
             label: t("permission.delete-permission-button.confirm-alert.submit"),
-            isLoading,
+            isLoading: isPending,
             onClick: () => deletePermission(),
           },
           {

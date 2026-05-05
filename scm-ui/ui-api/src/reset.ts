@@ -14,13 +14,13 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { QueryClient, useQueryClient } from "react-query";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 
 export const reset = (queryClient: QueryClient) => {
   queryClient.removeQueries({
-    predicate: ({ queryKey }) => queryKey !== "index",
+    predicate: () => true,
   });
-  return queryClient.invalidateQueries("index");
+  return queryClient.invalidateQueries({ queryKey: ["index"] });
 };
 
 export const useReset = () => {

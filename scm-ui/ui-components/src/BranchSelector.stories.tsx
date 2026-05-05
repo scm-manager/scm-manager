@@ -14,24 +14,73 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { storiesOf } from "@storybook/react";
+// import { storiesOf } from "@storybook/react";
+// import { BranchSelector } from "./index";
+// import { Branch } from "@scm-manager/ui-types";
+// import * as React from "react";
+// import styled from "styled-components";
+//
+// const master = { name: "master", revision: "1", defaultBranch: true, _links: {} };
+// const develop = { name: "develop", revision: "2", defaultBranch: false, _links: {} };
+//
+// const branchSelected = (branch?: Branch) => null;
+//
+// const branches = [master, develop];
+//
+// const Wrapper = styled.div`
+//   margin: 2rem;
+//   max-width: 400px;
+// `;
+//
+// storiesOf("BranchSelector", module)
+//   .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
+//   .add("Default", () => <BranchSelector branches={branches} onSelectBranch={branchSelected} label="Select Branch" />);
+
 import { BranchSelector } from "./index";
 import { Branch } from "@scm-manager/ui-types";
 import * as React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
 import styled from "styled-components";
-
-const master = { name: "master", revision: "1", defaultBranch: true, _links: {} };
-const develop = { name: "develop", revision: "2", defaultBranch: false, _links: {} };
-
-const branchSelected = (branch?: Branch) => null;
-
-const branches = [master, develop];
 
 const Wrapper = styled.div`
   margin: 2rem;
   max-width: 400px;
 `;
 
-storiesOf("BranchSelector", module)
-  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
-  .add("Default", () => <BranchSelector branches={branches} onSelectBranch={branchSelected} label="Select Branch" />);
+// This is the metadata for your component, replacing `storiesOf("BranchSelector", module)`
+const meta: Meta<typeof BranchSelector> = {
+  title: "Components/BranchSelector",
+  component: BranchSelector,
+  decorators: [
+    // The decorator is now an array in the meta object
+    (Story) => (
+      <Wrapper>
+        <Story />
+      </Wrapper>
+    ),
+  ],
+  argTypes: {
+    // This tells Storybook to automatically create an "action" for the onSelectBranch prop
+    // so you can see when it's called in the Actions panel.
+    onSelectBranch: { action: "branchSelected" },
+  },
+  tags: ["autodocs"], // This enables the automatic documentation page
+};
+
+export default meta;
+
+// Define the story type for better TypeScript support
+type Story = StoryObj<typeof meta>;
+
+// Mock data for the story
+const master: Branch = { name: "master", revision: "1", defaultBranch: true, _links: {} };
+const develop: Branch = { name: "develop", revision: "2", defaultBranch: false, _links: {} };
+
+// This is your "Default" story, replacing `.add("Default", ...)`
+export const Default: Story = {
+  args: {
+    // Props for the component go into the `args` object
+    branches: [master, develop],
+    label: "Select Branch",
+  },
+};

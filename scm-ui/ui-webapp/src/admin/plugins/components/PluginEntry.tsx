@@ -15,13 +15,13 @@
  */
 
 import React, { FC } from "react";
-import styled from "styled-components";
-import { Link, Plugin } from "@scm-manager/ui-types";
-import { CardColumn, Icon } from "@scm-manager/ui-components";
-import { PluginAction, PluginModalContent } from "../containers/PluginsOverview";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
+import { CardColumn, Icon } from "@scm-manager/ui-components";
+import { useKeyboardIteratorTarget } from "@scm-manager/ui-core";
+import { Link, Plugin } from "@scm-manager/ui-types";
+import { PluginAction, PluginModalContent } from "../containers/PluginsOverview";
 import PluginAvatar from "./PluginAvatar";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   plugin: Plugin;

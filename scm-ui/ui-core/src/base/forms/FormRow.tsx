@@ -14,16 +14,16 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { HTMLProps } from "react";
+import React, { FC, HTMLProps, Ref } from "react";
 import classNames from "classnames";
 
-const FormRow = React.forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
-  ({ className, children, hidden, ...rest }, ref) =>
-    hidden ? null : (
-      <div ref={ref} className={classNames("columns", className)} {...rest}>
-        {children}
-      </div>
-    )
-);
+type Props = HTMLProps<HTMLDivElement> & { ref?: Ref<HTMLDivElement> };
+
+const FormRow: FC<Props> = ({ className, children, hidden, ref, ...rest }) =>
+  hidden ? null : (
+    <div ref={ref} className={classNames("columns", className)} {...rest}>
+      {children}
+    </div>
+  );
 
 export default FormRow;

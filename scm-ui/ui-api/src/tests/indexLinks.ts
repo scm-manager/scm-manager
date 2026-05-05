@@ -14,10 +14,10 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { QueryClient } from "react-query";
+import { QueryClient } from "@tanstack/react-query";
 
 export const setIndexLink = (queryClient: QueryClient, name: string, href: string) => {
-  queryClient.setQueryData("index", {
+  queryClient.setQueryData(["index"], {
     version: "x.y.z",
     _links: {
       [name]: {
@@ -28,7 +28,7 @@ export const setIndexLink = (queryClient: QueryClient, name: string, href: strin
 };
 
 export const setEmptyIndex = (queryClient: QueryClient) => {
-  queryClient.setQueryData("index", {
+  queryClient.setQueryData(["index"], {
     version: "x.y.z",
     _links: {},
   });

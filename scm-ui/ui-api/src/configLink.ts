@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
 import { useCallback } from "react";
 import { HalRepresentation, Link } from "@scm-manager/ui-types";
@@ -33,26 +33,26 @@ type MutationVariables<C> = {
 export const useConfigLink = <C extends HalRepresentation>(link: string) => {
   const queryClient = useQueryClient();
   const queryKey = ["configLink", link];
-  const { isLoading, error, data } = useQuery<Result<C>, Error>(queryKey, () =>
-    apiClient.get(link).then((response) => {
-      const contentType = response.headers.get("Content-Type") || "application/json";
-      return response.json().then((configuration: C) => ({ configuration, contentType }));
-    })
-  );
+  const { isLoading, error, data } = useQuery<Result<C>, Error>({
+    queryKey,
+    queryFn: () =>
+      apiClient.get(link).then((response) => {
+        const contentType = response.headers.get("Content-Type") || "application/json";
+        return response.json().then((configuration: C) => ({ configuration, contentType }));
+      }),
+  });
 
   const {
-    isLoading: isUpdating,
+    isPending: isUpdating,
     error: mutationError,
     mutateAsync,
     data: updateResponse,
-  } = useMutation<Response, Error, MutationVariables<Omit<C, keyof HalRepresentation>>>(
-    (vars) => apiClient.put(vars.link, vars.configuration, vars.contentType),
-    {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(queryKey);
-      },
-    }
-  );
+  } = useMutation<Response, Error, MutationVariables<Omit<C, keyof HalRepresentation>>>({
+    mutationFn: (vars) => apiClient.put(vars.link, vars.configuration, vars.contentType),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey });
+    },
+  });
 
   const isReadOnly = !data?.configuration._links.update;
 
@@ -68,7 +68,7 @@ export const useConfigLink = <C extends HalRepresentation>(link: string) => {
     },
     // eslint means we should add C to the dependency array, but C is only a type
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [mutateAsync, data, isReadOnly]
+    [mutateAsync, data, isReadOnly],
   );
 
   return {

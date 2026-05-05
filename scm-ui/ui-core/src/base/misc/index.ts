@@ -14,6 +14,10 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+export { default as AbsoluteDate } from "./AbsoluteDate";
+export { default as DateFromNow } from "./DateFromNow";
+export { default as DateShort } from "./DateShort";
+export * from "./useDateFormatter";
 export { default as Image } from "./Image";
 export { default as Loading } from "./Loading";
 export { default as Subtitle } from "./Subtitle";

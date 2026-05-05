@@ -14,8 +14,8 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
-import { Link as ReactRouterLink, LinkProps as ReactRouterLinkProps } from "react-router-dom";
+import React, { AnchorHTMLAttributes, ButtonHTMLAttributes, FC, ReactNode, Ref } from "react";
+import { Link as ReactRouterLink, LinkProps as ReactRouterLinkProps } from "react-router";
 import classNames from "classnames";
 import { createAttributesForTesting } from "../helpers";
 import styled from "styled-components";
@@ -35,7 +35,7 @@ export const ButtonVariants = {
 
 export const ButtonVariantList = Object.values(ButtonVariants);
 
-type ButtonVariant = typeof ButtonVariants[keyof typeof ButtonVariants];
+type ButtonVariant = (typeof ButtonVariants)[keyof typeof ButtonVariants];
 
 const createButtonClasses = (variant?: ButtonVariant, isLoading?: boolean) =>
   classNames("button", {
@@ -54,7 +54,10 @@ type BaseButtonProps = {
   testId?: string;
 };
 
-type ButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
+type ButtonProps = BaseButtonProps &
+  ButtonHTMLAttributes<HTMLButtonElement> & {
+    ref?: Ref<HTMLButtonElement>;
+  };
 
 /**
  * Styled html button.
@@ -64,21 +67,19 @@ type ButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
  * @beta
  * @since 2.41.0
  */
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, isLoading, testId, type, children, ...props }, ref) => (
-    <button
-      type={type ?? "button"}
-      {...props}
-      className={classNames(createButtonClasses(variant, isLoading), className)}
-      ref={ref}
-      {...createAttributesForTesting(testId)}
-    >
-      {children}
-    </button>
-  )
+export const Button: FC<ButtonProps> = ({ className, variant, isLoading, testId, type, children, ref, ...props }) => (
+  <button
+    type={type ?? "button"}
+    {...props}
+    className={classNames(createButtonClasses(variant, isLoading), className)}
+    ref={ref}
+    {...createAttributesForTesting(testId)}
+  >
+    {children}
+  </button>
 );
 
-type LinkButtonProps = BaseButtonProps & ReactRouterLinkProps;
+type LinkButtonProps = BaseButtonProps & ReactRouterLinkProps & { ref?: Ref<HTMLAnchorElement> };
 
 /**
  * Styled react router link.
@@ -88,18 +89,18 @@ type LinkButtonProps = BaseButtonProps & ReactRouterLinkProps;
  * @beta
  * @since 2.41.0
  */
-export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
-  ({ className, variant, isLoading, testId, children, ...props }, ref) => (
-    <ReactRouterLink
-      {...props}
-      className={classNames(createButtonClasses(variant, isLoading), className)}
-      ref={ref}
-      {...createAttributesForTesting(testId)}
-    >
-      {children}
-    </ReactRouterLink>
-  )
+export const LinkButton: FC<LinkButtonProps> = ({ className, variant, isLoading, testId, children, ref, ...props }) => (
+  <ReactRouterLink
+    {...props}
+    className={classNames(createButtonClasses(variant, isLoading), className)}
+    ref={ref}
+    {...createAttributesForTesting(testId)}
+  >
+    {children}
+  </ReactRouterLink>
 );
+
+type ExternalLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & { ref?: Ref<HTMLAnchorElement> };
 
 /**
  * External links open in a new browser tab with rel flags "noopener" and "noreferrer" set by default.
@@ -107,15 +108,14 @@ export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
  * @beta
  * @since 2.44.0
  */
-export const ExternalLink = React.forwardRef<HTMLAnchorElement, AnchorHTMLAttributes<HTMLAnchorElement>>(
-  ({ children, ...props }, ref) => (
-    <a target="_blank" rel="noreferrer noopener" {...props} ref={ref}>
-      {children}
-    </a>
-  )
+export const ExternalLink: FC<ExternalLinkProps> = ({ children, ref, ...props }) => (
+  <a target="_blank" rel="noreferrer noopener" {...props} ref={ref}>
+    {children}
+  </a>
 );
 
-type ExternalLinkButtonProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchorElement>;
+type ExternalLinkButtonProps = BaseButtonProps &
+  AnchorHTMLAttributes<HTMLAnchorElement> & { ref?: Ref<HTMLAnchorElement> };
 
 /**
  * Styled {@link ExternalLink}.
@@ -126,17 +126,23 @@ type ExternalLinkButtonProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchor
  * @since 2.41.0
  * @see ExternalLink
  */
-export const ExternalLinkButton = React.forwardRef<HTMLAnchorElement, ExternalLinkButtonProps>(
-  ({ className, variant, isLoading, testId, children, ...props }, ref) => (
-    <ExternalLink
-      {...props}
-      className={classNames(createButtonClasses(variant, isLoading), className)}
-      ref={ref}
-      {...createAttributesForTesting(testId)}
-    >
-      {children}
-    </ExternalLink>
-  )
+export const ExternalLinkButton: FC<ExternalLinkButtonProps> = ({
+  className,
+  variant,
+  isLoading,
+  testId,
+  children,
+  ref,
+  ...props
+}) => (
+  <ExternalLink
+    {...props}
+    className={classNames(createButtonClasses(variant, isLoading), className)}
+    ref={ref}
+    {...createAttributesForTesting(testId)}
+  >
+    {children}
+  </ExternalLink>
 );
 
 const StyledIconButton = styled.button`
@@ -180,9 +186,9 @@ export const IconSizes = {
   MEDIUM: "medium",
 } as const;
 
-type IconButtonSize = typeof IconSizes[keyof typeof IconSizes];
+type IconButtonSize = (typeof IconSizes)[keyof typeof IconSizes];
 
-type IconButtonVariant = typeof IconButtonVariants[keyof typeof IconButtonVariants];
+type IconButtonVariant = (typeof IconButtonVariants)[keyof typeof IconButtonVariants];
 
 const createIconButtonClasses = (variant?: IconButtonVariant) =>
   classNames("button", {
@@ -194,6 +200,7 @@ type IconButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: IconButtonVariant;
   children: ReactNode;
   size?: IconButtonSize;
+  ref?: Ref<HTMLButtonElement>;
 };
 
 /**
@@ -204,19 +211,26 @@ type IconButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
  * @beta
  * @since 3.2.0
  */
-export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ className, variant = "default", size = "medium", testId, type, children, ...props }, ref) => {
-    const elementAttributes = {
-      type: type ?? "button",
-      ...props,
-      className: classNames(createIconButtonClasses(variant), "button", "has-background-transparent"),
-      ref: ref,
-      ...createAttributesForTesting(testId),
-    };
-    return size === "small" ? (
-      <StyledIconButtonCircle {...elementAttributes}>{children}</StyledIconButtonCircle>
-    ) : (
-      <StyledIconButton {...elementAttributes}>{children}</StyledIconButton>
-    );
-  }
-);
+export const IconButton: FC<IconButtonProps> = ({
+  className,
+  variant = "default",
+  size = "medium",
+  testId,
+  type,
+  ref,
+  children,
+  ...props
+}) => {
+  const elementAttributes = {
+    type: type ?? "button",
+    ...props,
+    className: classNames(createIconButtonClasses(variant), "button", "has-background-transparent"),
+    ref: ref,
+    ...createAttributesForTesting(testId),
+  };
+  return size === "small" ? (
+    <StyledIconButtonCircle {...elementAttributes}>{children}</StyledIconButtonCircle>
+  ) : (
+    <StyledIconButton {...elementAttributes}>{children}</StyledIconButton>
+  );
+};

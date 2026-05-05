@@ -59,7 +59,7 @@ const TriStateCheckbox: FC<Props> = ({ checked, indeterminate, disabled, label, 
   // https://github.com/KennethSundqvist/key-jump-chrome-extension/blob/master/src/content.js#L365
   return (
     <span tabIndex={0} className="gwt-Anchor">
-      <Icon iconStyle={"is-outlined"} name={icon} className={className} color={color} testId={testId} /> {label}
+      <Icon iconStyle="is-outlined" name={icon} className={className} color={color} testId={testId} /> {label}
     </span>
   );
 };

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { HTMLAttributes } from "react";
+import React, { FC, HTMLAttributes, Ref } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -29,29 +29,29 @@ const FixedSizedImage = styled(Image)`
   height: 128px;
 `;
 
-const Loading = React.forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & { message?: string }>(
-  ({ message, children, className, ...props }, ref) => {
-    const [t] = useTranslation("commons");
-    return (
-      <Wrapper
-        className={classNames(
-          "is-flex",
-          "is-flex-direction-column",
-          "is-justify-content-center",
-          "is-align-items-center",
-          className
-        )}
-        {...props}
-        ref={ref}
-      >
-        <FixedSizedImage className="mb-3" src="/images/loading.svg" alt={t("loading.alt")} />
-        <p className="has-text-centered">
-          {message}
-          {children}
-        </p>
-      </Wrapper>
-    );
-  }
-);
+type Props = HTMLAttributes<HTMLDivElement> & { message?: string; ref?: Ref<HTMLDivElement> };
+
+const Loading: FC<Props> = ({ message, children, className, ref, ...props }) => {
+  const [t] = useTranslation("commons");
+  return (
+    <Wrapper
+      className={classNames(
+        "is-flex",
+        "is-flex-direction-column",
+        "is-justify-content-center",
+        "is-align-items-center",
+        className
+      )}
+      {...props}
+      ref={ref}
+    >
+      <FixedSizedImage className="mb-3" src="/images/loading.svg" alt={t("loading.alt")} />
+      <p className="has-text-centered">
+        {message}
+        {children}
+      </p>
+    </Wrapper>
+  );
+};
 
 export default Loading;

@@ -27,7 +27,7 @@ type Props = {
 
 const UpdateAllActionModal: FC<Props> = ({ installedPlugins, onClose }) => {
   const [t] = useTranslation("admin");
-  const { update, isLoading, error, isUpdated } = useUpdatePlugins();
+  const { update, isPending, error, isUpdated } = useUpdatePlugins();
 
   useEffect(() => {
     if (isUpdated) {
@@ -42,7 +42,7 @@ const UpdateAllActionModal: FC<Props> = ({ installedPlugins, onClose }) => {
       onClose={onClose}
       installedPlugins={installedPlugins}
       error={error}
-      loading={isLoading}
+      loading={isPending}
       success={isUpdated}
       execute={() => update(installedPlugins)}
     />

@@ -18,7 +18,7 @@ import React, { FC, useRef, useState } from "react";
 import { Repository } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, ErrorNotification, InputField, Level, Loading, Modal } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import * as validator from "../components/form/repositoryValidation";
 import { useNamespaceStrategies, useRenameRepository } from "@scm-manager/ui-api";
 import NamespaceInput from "../components/NamespaceInput";
@@ -39,16 +39,16 @@ const RenameRepository: FC<Props> = ({ repository }) => {
   const [namespace, setNamespace] = useState(repository.namespace);
   const [nameValidationError, setNameValidationError] = useState(false);
   const [namespaceValidationError, setNamespaceValidationError] = useState(false);
-  const { isLoading: isRenaming, renameRepository, isRenamed, error: renamingError } = useRenameRepository(repository);
+  const { isPending: isRenaming, renameRepository, isRenamed, error: renamingError } = useRenameRepository(repository);
   const {
     isLoading: isLoadingNamespaceStrategies,
     error: namespaceStrategyLoadError,
-    data: namespaceStrategies
+    data: namespaceStrategies,
   } = useNamespaceStrategies();
   const initialFocusRef = useRef<HTMLInputElement>(null);
 
   if (isRenamed) {
-    return <Redirect to={`/repo/${namespace}/${name}`} />;
+    return <Navigate to={`/repo/${namespace}/${name}`} />;
   }
 
   if (namespaceStrategyLoadError) {
@@ -84,7 +84,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
         helpText={t("help.nameHelpText")}
         validationError={nameValidationError}
         value={name}
-        onChange={event => handleNameChange(event.target.value)}
+        onChange={(event) => handleNameChange(event.target.value)}
         onReturnPressed={() => isValid && renameRepository(namespace, name)}
         ref={initialFocusRef}
       />

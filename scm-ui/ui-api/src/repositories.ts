@@ -24,7 +24,7 @@ import {
   RepositoryCreation,
   RepositoryTypeCollection,
 } from "@scm-manager/ui-types";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
 import { ApiResult, ApiResultWithFetching, useIndexJsonResource, useRequiredIndexLink } from "./base";
 import { createQueryString } from "./utils";
@@ -62,19 +62,19 @@ export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<Rep
   if (request?.page) {
     queryParams.page = request.page.toString();
   }
-  return useQuery<RepositoryCollection, Error>(
-    ["repositories", request?.namespace?.namespace, request?.search || "", request?.page || 0],
-    () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
-    {
-      enabled: !request?.disabled,
-      onSuccess: (repositories: RepositoryCollection) => {
-        // prepare single repository cache
-        repositories._embedded?.repositories.forEach((repository: Repository) => {
-          queryClient.setQueryData(["repository", repository.namespace, repository.name], repository);
-        });
-      },
+  const result = useQuery<RepositoryCollection, Error>({
+    queryKey: ["repositories", request?.namespace?.namespace, request?.search || "", request?.page || 0],
+    queryFn: () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
+    enabled: !request?.disabled,
+  });
+  useEffect(() => {
+    if (result.data) {
+      result.data._embedded?.repositories.forEach((repository: Repository) => {
+        queryClient.setQueryData(["repository", repository.namespace, repository.name], repository);
+      });
     }
-  );
+  }, [queryClient, result.data]);
+  return result;
 };
 
 type CreateRepositoryRequest = {
@@ -106,20 +106,18 @@ export const useCreateRepository = () => {
   // not really the index link,
   // but a post to the collection is create by convention
   const link = useRequiredIndexLink("repositories");
-  const { mutate, data, isLoading, error } = useMutation<Repository, Error, CreateRepositoryRequest>(
-    createRepository(link),
-    {
-      onSuccess: (repository) => {
-        queryClient.setQueryData(["repository", repository.namespace, repository.name], repository);
-        return queryClient.invalidateQueries(["repositories"]);
-      },
-    }
-  );
+  const { mutate, data, isPending, error } = useMutation<Repository, Error, CreateRepositoryRequest>({
+    mutationFn: createRepository(link),
+    onSuccess: (repository) => {
+      queryClient.setQueryData(["repository", repository.namespace, repository.name], repository);
+      return queryClient.invalidateQueries({ queryKey: ["repositories"] });
+    },
+  });
   return {
     create: (repository: RepositoryCreation, initialize: boolean) => {
       mutate({ repository, initialize });
     },
-    isLoading,
+    isPending,
     error,
     repository: data,
   };
@@ -130,9 +128,10 @@ export const useRepositoryTypes = () => useIndexJsonResource<RepositoryTypeColle
 
 export const useRepository = (namespace: string, name: string): ApiResult<Repository> => {
   const link = useRequiredIndexLink("repositories");
-  return useQuery<Repository, Error>(["repository", namespace, name], () =>
-    apiClient.get(concat(link, namespace, name)).then((response) => response.json())
-  );
+  return useSuspenseQuery<Repository, Error>({
+    queryKey: ["repository", namespace, name],
+    queryFn: () => apiClient.get(concat(link, namespace, name)).then((response) => response.json()),
+  });
 };
 
 export type UseDeleteRepositoryOptions = {
@@ -141,24 +140,22 @@ export type UseDeleteRepositoryOptions = {
 
 export const useDeleteRepository = (options?: UseDeleteRepositoryOptions) => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
-    (repository) => {
+  const { mutate, isPending, error, data } = useMutation<unknown, Error, Repository>({
+    mutationFn: (repository) => {
       const link = requiredLink(repository, "delete");
       return apiClient.delete(link);
     },
-    {
-      onSuccess: async (_, repository) => {
-        if (options?.onSuccess) {
-          options.onSuccess(repository);
-        }
-        queryClient.removeQueries(repoQueryKey(repository));
-        await queryClient.invalidateQueries(["repositories"]);
-      },
-    }
-  );
+    onSuccess: async (_, repository) => {
+      if (options?.onSuccess) {
+        options.onSuccess(repository);
+      }
+      queryClient.removeQueries({ queryKey: repoQueryKey(repository) });
+      await queryClient.invalidateQueries({ queryKey: ["repositories"] });
+    },
+  });
   return {
     remove: (repository: Repository) => mutate(repository),
-    isLoading,
+    isPending,
     error,
     isDeleted: !!data,
   };
@@ -166,21 +163,19 @@ export const useDeleteRepository = (options?: UseDeleteRepositoryOptions) => {
 
 export const useUpdateRepository = () => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
-    (repository) => {
+  const { mutate, isPending, error, data } = useMutation<unknown, Error, Repository>({
+    mutationFn: (repository) => {
       const link = requiredLink(repository, "update");
       return apiClient.put(link, repository, "application/vnd.scmm-repository+json;v=2");
     },
-    {
-      onSuccess: async (_, repository) => {
-        await queryClient.invalidateQueries(repoQueryKey(repository));
-        await queryClient.invalidateQueries(["repositories"]);
-      },
-    }
-  );
+    onSuccess: async (_, repository) => {
+      await queryClient.invalidateQueries({ queryKey: repoQueryKey(repository) });
+      await queryClient.invalidateQueries({ queryKey: ["repositories"] });
+    },
+  });
   return {
     update: (repository: Repository) => mutate(repository),
-    isLoading,
+    isPending,
     error,
     isUpdated: !!data,
   };
@@ -188,21 +183,19 @@ export const useUpdateRepository = () => {
 
 export const useArchiveRepository = () => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
-    (repository) => {
+  const { mutate, isPending, error, data } = useMutation<unknown, Error, Repository>({
+    mutationFn: (repository) => {
       const link = requiredLink(repository, "archive");
       return apiClient.post(link);
     },
-    {
-      onSuccess: async (_, repository) => {
-        await queryClient.invalidateQueries(repoQueryKey(repository));
-        await queryClient.invalidateQueries(["repositories"]);
-      },
-    }
-  );
+    onSuccess: async (_, repository) => {
+      await queryClient.invalidateQueries({ queryKey: repoQueryKey(repository) });
+      await queryClient.invalidateQueries({ queryKey: ["repositories"] });
+    },
+  });
   return {
     archive: (repository: Repository) => mutate(repository),
-    isLoading,
+    isPending,
     error,
     isArchived: !!data,
   };
@@ -210,21 +203,19 @@ export const useArchiveRepository = () => {
 
 export const useUnarchiveRepository = () => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
-    (repository) => {
+  const { mutate, isPending, error, data } = useMutation<unknown, Error, Repository>({
+    mutationFn: (repository) => {
       const link = requiredLink(repository, "unarchive");
       return apiClient.post(link);
     },
-    {
-      onSuccess: async (_, repository) => {
-        await queryClient.invalidateQueries(repoQueryKey(repository));
-        await queryClient.invalidateQueries(["repositories"]);
-      },
-    }
-  );
+    onSuccess: async (_, repository) => {
+      await queryClient.invalidateQueries({ queryKey: repoQueryKey(repository) });
+      await queryClient.invalidateQueries({ queryKey: ["repositories"] });
+    },
+  });
   return {
     unarchive: (repository: Repository) => mutate(repository),
-    isLoading,
+    isPending,
     error,
     isUnarchived: !!data,
   };
@@ -232,20 +223,18 @@ export const useUnarchiveRepository = () => {
 
 export const useRunHealthCheck = () => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
-    (repository) => {
+  const { mutate, isPending, error, data } = useMutation<unknown, Error, Repository>({
+    mutationFn: (repository) => {
       const link = requiredLink(repository, "runHealthCheck");
       return apiClient.post(link);
     },
-    {
-      onSuccess: async (_, repository) => {
-        await queryClient.invalidateQueries(repoQueryKey(repository));
-      },
-    }
-  );
+    onSuccess: async (_, repository) => {
+      await queryClient.invalidateQueries({ queryKey: repoQueryKey(repository) });
+    },
+  });
   return {
     runHealthCheck: (repository: Repository) => mutate(repository),
-    isLoading,
+    isPending,
     error,
     isRunning: !!data,
   };
@@ -254,11 +243,10 @@ export const useRunHealthCheck = () => {
 export const useExportInfo = (repository: Repository): ApiResultWithFetching<ExportInfo> => {
   const link = requiredLink(repository, "exportInfo");
   //TODO Refetch while exporting to update the page
-  const { isLoading, isFetching, error, data } = useQuery<ExportInfo, Error>(
-    ["repository", repository.namespace, repository.name, "exportInfo"],
-    () => apiClient.get(link).then((response) => response.json()),
-    {}
-  );
+  const { isLoading, isFetching, error, data } = useQuery<ExportInfo, Error>({
+    queryKey: ["repository", repository.namespace, repository.name, "exportInfo"],
+    queryFn: () => apiClient.get(link).then((response) => response.json()),
+  });
 
   return {
     isLoading,
@@ -291,8 +279,8 @@ export const useExportRepository = () => {
       }
     };
   }, [intervalId]);
-  const { mutate, isLoading, error, data } = useMutation<ExportInfo, Error, ExportRepositoryMutateOptions>(
-    ({ repository, options }) => {
+  const { mutate, isPending, error, data } = useMutation<ExportInfo, Error, ExportRepositoryMutateOptions>({
+    mutationFn: ({ repository, options }) => {
       const infolink = requiredLink(repository, "exportInfo");
       let link = requiredLink(repository, options.withMetadata ? "fullExport" : "export");
       if (options.compressed) {
@@ -300,8 +288,8 @@ export const useExportRepository = () => {
       }
       return apiClient
         .post(link, { password: options.password, async: true }, EXPORT_MEDIA_TYPE)
-        .then(() => queryClient.invalidateQueries(repoQueryKey(repository)))
-        .then(() => queryClient.invalidateQueries(["repositories"]))
+        .then(() => queryClient.invalidateQueries({ queryKey: repoQueryKey(repository) }))
+        .then(() => queryClient.invalidateQueries({ queryKey: ["repositories"] }))
         .then(() => {
           return new Promise<ExportInfo>((resolve, reject) => {
             const id = setInterval(() => {
@@ -323,26 +311,25 @@ export const useExportRepository = () => {
           });
         });
     },
-    {
-      onSuccess: async (_, { repository }) => {
-        await queryClient.invalidateQueries(repoQueryKey(repository));
-        await queryClient.invalidateQueries(["repositories"]);
-      },
-    }
-  );
+    onSuccess: async (_, { repository }) => {
+      await queryClient.invalidateQueries({ queryKey: repoQueryKey(repository) });
+      await queryClient.invalidateQueries({ queryKey: ["repositories"] });
+    },
+  });
   return {
     exportRepository: (repository: Repository, options: ExportOptions) => mutate({ repository, options }),
-    isLoading,
+    isPending,
     error,
     data,
   };
 };
 
 export const usePaths = (repository: Repository, revision: string): ApiResult<Paths> => {
-  const link = requiredLink(repository, "paths").replace("{revision}", revision);
-  return useQuery<Paths, Error>(repoQueryKey(repository, "paths", revision), () =>
-    apiClient.get(link).then((response) => response.json())
-  );
+  const link = requiredLink(repository, "paths").replace("{revision}", encodeURIComponent(revision));
+  return useQuery<Paths, Error>({
+    queryKey: repoQueryKey(repository, "paths", revision),
+    queryFn: () => apiClient.get(link).then((response) => response.json()),
+  });
 };
 
 type RenameRepositoryRequest = {
@@ -359,16 +346,15 @@ export const useRenameRepository = (repository: Repository) => {
     throw new MissingLinkError(`could not find rename link on repository ${repository.namespace}/${repository.name}`);
   }
 
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, RenameRepositoryRequest>(
-    ({ name, namespace }) => apiClient.post(url, { namespace, name }, "application/vnd.scmm-repository+json;v=2"),
-    {
-      onSuccess: () => queryClient.removeQueries(repoQueryKey(repository)),
-    }
-  );
+  const { mutate, isPending, error, data } = useMutation<unknown, Error, RenameRepositoryRequest>({
+    mutationFn: ({ name, namespace }) =>
+      apiClient.post(url, { namespace, name }, "application/vnd.scmm-repository+json;v=2"),
+    onSuccess: () => queryClient.removeQueries({ queryKey: repoQueryKey(repository) }),
+  });
 
   return {
     renameRepository: (namespace: string, name: string) => mutate({ namespace, name }),
-    isLoading,
+    isPending,
     error,
     isRenamed: !!data,
   };
@@ -376,20 +362,18 @@ export const useRenameRepository = (repository: Repository) => {
 
 export const useReindexRepository = () => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
-    (repository) => {
+  const { mutate, isPending, error, data } = useMutation<unknown, Error, Repository>({
+    mutationFn: (repository) => {
       const link = requiredLink(repository, "reindex");
       return apiClient.post(link);
     },
-    {
-      onSuccess: async (_, repository) => {
-        await queryClient.invalidateQueries(repoQueryKey(repository));
-      },
-    }
-  );
+    onSuccess: async (_, repository) => {
+      await queryClient.invalidateQueries({ queryKey: repoQueryKey(repository) });
+    },
+  });
   return {
     reindex: (repository: Repository) => mutate(repository),
-    isLoading,
+    isPending,
     error,
     isRunning: !!data,
   };

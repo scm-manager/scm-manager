@@ -18,8 +18,8 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Repository, Tag } from "@scm-manager/ui-types";
-import { DateFromNow, SignatureIcon } from "@scm-manager/ui-components";
-import { Subtitle, useDocumentTitle } from "@scm-manager/ui-core";
+import { SignatureIcon } from "@scm-manager/ui-components";
+import { AbsoluteDate, Subtitle, useDocumentTitle } from "@scm-manager/ui-core";
 import TagButtonGroup from "./TagButtonGroup";
 import CompareLink from "../../compare/CompareLink";
 
@@ -35,7 +35,7 @@ const TagDetail: FC<Props> = ({ repository, tag }) => {
       tag: tag.name,
       namespace: repository.namespace,
       name: repository.name,
-    })
+    }),
   );
 
   const encodedTag = encodeURIComponent(tag.name);
@@ -49,14 +49,14 @@ const TagDetail: FC<Props> = ({ repository, tag }) => {
           "is-flex",
           "is-flex-wrap-wrap",
           "is-align-items-center",
-          "mb-0"
+          "mb-0",
         )}
       >
         <strong className="mr-1">{t("tag.name") + ": "}</strong> <Subtitle className="mb-0">{tag.name}</Subtitle>
         <SignatureIcon signatures={tag.signatures} className="ml-2 mb-5" />
         <div className={classNames("is-ellipsis-overflow", "is-size-7", "ml-2")}>
           {t("tags.overview.created")}{" "}
-          <DateFromNow className={classNames("is-size-7", "has-text-secondary")} date={tag.date} />
+          <AbsoluteDate className={classNames("is-size-7", "has-text-secondary")} date={tag.date} />
         </div>
       </div>
       <CompareLink repository={repository} source={encodedTag} sourceType="t" target={encodedTag} targetType="t" />

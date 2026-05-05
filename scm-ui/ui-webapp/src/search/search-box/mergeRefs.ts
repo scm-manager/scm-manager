@@ -14,9 +14,9 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { ForwardedRef, MutableRefObject, RefCallback } from "react";
+import { RefCallback, RefObject } from "react";
 
-export function mergeRefs<T>(...refs: Array<RefCallback<T> | MutableRefObject<T> | ForwardedRef<T>>) {
+export function mergeRefs<T>(...refs: Array<RefCallback<T> | RefObject<T> | null>) {
   return (el: T) =>
     refs.forEach((ref) => {
       if (ref) {

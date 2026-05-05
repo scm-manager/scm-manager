@@ -15,12 +15,11 @@
  */
 
 import React, { FC } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { LinkPaginator } from "@scm-manager/ui-components";
+import { CardListBox, KeyboardIterator } from "@scm-manager/ui-core";
 import { QueryResult } from "@scm-manager/ui-types";
 import Hits from "./Hits";
-import { LinkPaginator } from "@scm-manager/ui-components";
-import { Redirect, useLocation } from "react-router-dom";
-import { CardListBox } from "@scm-manager/ui-layout";
-import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   result: QueryResult;
@@ -39,7 +38,7 @@ const Results: FC<Props> = ({ result, type, page, query }) => {
   }
 
   if (result && result.pageTotal < page && page > 1) {
-    return <Redirect to={`${pathname}${result.pageTotal}${location.search}`} />;
+    return <Navigate to={`${pathname}${result.pageTotal}${location.search}`} />;
   }
 
   return (
@@ -49,7 +48,7 @@ const Results: FC<Props> = ({ result, type, page, query }) => {
           <Hits type={type} hits={hits} />
         </KeyboardIterator>
       </CardListBox>
-      <LinkPaginator collection={result} page={page} filter={query} />
+      <LinkPaginator collection={result} page={page} filter={query} baseUrl={`search/${type}`} />
     </>
   );
 };

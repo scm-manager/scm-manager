@@ -18,10 +18,7 @@ import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import Loading from "./../Loading";
-import ErrorNotification from "./../ErrorNotification";
-import ErrorBoundary from "../ErrorBoundary";
-import Title from "./Title";
-import Subtitle from "./Subtitle";
+import { ErrorNotification, Subtitle, Title } from "@scm-manager/ui-core";
 import PageActions from "./PageActions";
 
 type Props = {
@@ -64,7 +61,7 @@ const Page: FC<Props> = ({ title, afterTitle, subtitle, loading, error, showCont
                 "is-mobile-action-spacing",
                 "is-flex-tablet",
                 "is-justify-content-flex-end",
-                "is-align-items-center"
+                "is-align-items-center",
               )}
             >
               {child}
@@ -120,10 +117,8 @@ const Page: FC<Props> = ({ title, afterTitle, subtitle, loading, error, showCont
     <section className="section">
       <div className="container">
         {renderPageHeader()}
-        <ErrorBoundary>
-          <ErrorNotification error={error} />
-          {renderContent()}
-        </ErrorBoundary>
+        <ErrorNotification error={error} />
+        {renderContent()}
       </div>
     </section>
   );

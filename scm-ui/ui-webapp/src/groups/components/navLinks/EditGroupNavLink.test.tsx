@@ -15,9 +15,9 @@
  */
 
 import React from "react";
-import "@scm-manager/ui-tests";
+import { MemoryRouter } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
 import EditGroupNavLink from "./EditGroupNavLink";
-import { mount } from "@scm-manager/ui-tests";
 
 describe("EditGroupNavLink tests", () => {
   it("should render nothing, if the edit link is missing", () => {
@@ -25,8 +25,12 @@ describe("EditGroupNavLink tests", () => {
       _links: {},
     };
 
-    const navLink = mount(<EditGroupNavLink group={group} editUrl="/group/edit" />);
-    expect(navLink.text()).toBe("");
+    render(
+      <MemoryRouter>
+        <EditGroupNavLink group={group} editUrl="/group/edit" />
+      </MemoryRouter>,
+    );
+    assert.notExists(screen.queryByText("singleGroup.menu.generalNavLink"));
   });
 
   it("should render the navLink", () => {
@@ -38,7 +42,11 @@ describe("EditGroupNavLink tests", () => {
       },
     };
 
-    const navLink = mount(<EditGroupNavLink group={group} editUrl="/group/edit" />);
-    expect(navLink.text()).not.toBe("");
+    render(
+      <MemoryRouter>
+        <EditGroupNavLink group={group} editUrl="/group/edit" />
+      </MemoryRouter>,
+    );
+    assert.exists(screen.queryByText("singleGroup.menu.generalNavLink"));
   });
 });

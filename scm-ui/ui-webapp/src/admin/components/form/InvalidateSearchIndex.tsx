@@ -21,7 +21,7 @@ import { Button, ButtonVariants } from "@scm-manager/ui-core";
 import { useInvalidateSearchIndices } from "@scm-manager/ui-api";
 
 const InvalidateSearchIndex: FC = () => {
-  const { invalidate, isLoading, error, isSuccess } = useInvalidateSearchIndices();
+  const { invalidate, isPending, error, isSuccess } = useInvalidateSearchIndices();
   const [t] = useTranslation("config");
 
   return (
@@ -32,7 +32,7 @@ const InvalidateSearchIndex: FC = () => {
       <p className="mb-4">{t("invalidateSearchIndex.description")}</p>
       <Level
         right={
-          <Button variant={ButtonVariants.SIGNAL} isLoading={isLoading} onClick={invalidate}>
+          <Button variant={ButtonVariants.SIGNAL} isLoading={isPending} onClick={invalidate}>
             {t("invalidateSearchIndex.button")}
           </Button>
         }

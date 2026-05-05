@@ -15,8 +15,8 @@
  */
 
 import React from "react";
-import { mount, shallow } from "@scm-manager/ui-tests";
-import "@scm-manager/ui-tests";
+import { MemoryRouter } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
 import EditUserNavLink from "./EditUserNavLink";
 
 it("should render nothing, if the edit link is missing", () => {
@@ -24,8 +24,12 @@ it("should render nothing, if the edit link is missing", () => {
     _links: {},
   };
 
-  const navLink = mount(<EditUserNavLink user={user} editUrl="/user/edit" />);
-  expect(navLink.text()).toBe("");
+  render(
+    <MemoryRouter>
+      <EditUserNavLink user={user} editUrl="/user/edit" />
+    </MemoryRouter>,
+  );
+  assert.notExists(screen.queryByText("singleUser.menu.generalNavLink"));
 });
 
 it("should render the navLink", () => {
@@ -37,6 +41,10 @@ it("should render the navLink", () => {
     },
   };
 
-  const navLink = shallow(<EditUserNavLink user={user} editUrl="/user/edit" />);
-  expect(navLink.text()).not.toBe("");
+  render(
+    <MemoryRouter>
+      <EditUserNavLink user={user} editUrl="/user/edit" />
+    </MemoryRouter>,
+  );
+  assert.exists(screen.queryByText("singleUser.menu.generalNavLink"));
 });

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { InputHTMLAttributes, Key, OptionHTMLAttributes } from "react";
+import React, { FC, InputHTMLAttributes, Key, OptionHTMLAttributes, Ref } from "react";
 import classNames from "classnames";
 import { createVariantClass, Variant } from "../variants";
 import { createAttributesForTesting } from "../../helpers";
@@ -23,27 +23,26 @@ type Props = {
   variant?: Variant;
   options?: Array<OptionHTMLAttributes<HTMLOptionElement> & { label: string }>;
   testId?: string;
+  ref?: Ref<HTMLSelectElement>;
 } & InputHTMLAttributes<HTMLSelectElement>;
 
 /**
  * @beta
  * @since 2.44.0
  */
-const Select = React.forwardRef<HTMLSelectElement, Props>(
-  ({ variant, children, className, options, testId, ...props }, ref) => (
-    <div className={classNames("select", { "is-multiple": props.multiple }, createVariantClass(variant), className)}>
-      <select ref={ref} {...props} {...createAttributesForTesting(testId)} className={className}>
-        {options
-          ? options.map((opt) => (
-              <option {...opt} key={opt.value as Key}>
-                {opt.label}
-                {opt.children}
-              </option>
-            ))
-          : children}
-      </select>
-    </div>
-  )
+const Select: FC<Props> = ({ variant, children, className, options, testId, ref, ...props }) => (
+  <div className={classNames("select", { "is-multiple": props.multiple }, createVariantClass(variant), className)}>
+    <select ref={ref} {...props} {...createAttributesForTesting(testId)} className={className}>
+      {options
+        ? options.map((opt) => (
+            <option {...opt} key={opt.value as Key}>
+              {opt.label}
+              {opt.children}
+            </option>
+          ))
+        : children}
+    </select>
+  </div>
 );
 
 export default Select;

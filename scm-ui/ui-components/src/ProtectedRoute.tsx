@@ -14,47 +14,22 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { Component } from "react";
-import { Redirect, Route, RouteComponentProps, RouteProps, withRouter } from "react-router-dom";
+import React from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-type Props = RouteComponentProps &
-  RouteProps & {
-    authenticated?: boolean;
-  };
+type Props = {
+  authenticated?: boolean;
+};
 
-class ProtectedRoute extends Component<Props> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      error: undefined,
-    };
+const ProtectedRoute: React.FC<Props> = ({ authenticated }) => {
+  const location = useLocation();
+
+  if (authenticated === undefined) {
+    // Optional: Render a loading indicator while checking auth status
+    return null; // or <Loading />
   }
 
-  renderRoute = (Component: any) => {
-    const { authenticated } = this.props;
+  return authenticated ? <Outlet /> : <Navigate to="/login" replace state={{ from: location }} />;
+};
 
-    return (routeProps: any) => {
-      if (authenticated) {
-        return <Component {...routeProps} />;
-      } else {
-        return (
-          <Redirect
-            to={{
-              pathname: "/login",
-              state: {
-                from: routeProps.location,
-              },
-            }}
-          />
-        );
-      }
-    };
-  };
-
-  render() {
-    const { component, ...routeProps } = this.props;
-    return <Route {...routeProps} render={this.renderRoute(component)} />;
-  }
-}
-
-export default withRouter(ProtectedRoute);
+export default ProtectedRoute;

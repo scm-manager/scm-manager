@@ -14,12 +14,13 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { createContext, FC, useContext } from "react";
+import React, { createContext, FC, ReactNode, useContext } from "react";
 
 const Context = createContext<string | undefined>(undefined);
 
 export const useRepositoryRevisionContext = () => useContext(Context);
 
-export const RepositoryRevisionContextProvider: FC<{ revision?: string }> = ({ revision, children }) => (
-  <Context.Provider value={revision}>{children}</Context.Provider>
-);
+export const RepositoryRevisionContextProvider: FC<{ revision?: string; children: ReactNode }> = ({
+  revision,
+  children,
+}) => <Context.Provider value={revision}>{children}</Context.Provider>;

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useContext, useMemo } from "react";
+import React, { FC, ReactNode, useContext, useMemo } from "react";
 import { FieldValues, useFieldArray, UseFieldArrayReturn } from "react-hook-form";
 import { ScmFormPathContextProvider, useScmFormPathContext } from "./FormPathContext";
 import { useScmFormContext } from "./ScmFormContext";
@@ -25,6 +25,7 @@ const ScmFormListContext = React.createContext<ContextType>(null as unknown as C
 
 type Props = {
   name: string;
+  children?: ReactNode;
 };
 
 /**

@@ -123,7 +123,9 @@ const usePopover = () => {
     popoverProps: {
       dispatch,
       show: state.onPopover || state.onTrigger,
+      //@ts-ignore
       offsetTop: state.offsetTop,
+      //@ts-ignore
       offsetLeft: state.offsetLeft,
     },
   };

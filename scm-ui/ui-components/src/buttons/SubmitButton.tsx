@@ -23,7 +23,7 @@ type SubmitButtonProps = ButtonProps & {
 };
 
 /**
- * @deprecated Use {@link ui-buttons/src/Button.tsx} instead
+ * @deprecated Use Button from ui-core instead
  */
 class SubmitButton extends React.Component<SubmitButtonProps> {
   static defaultProps = {

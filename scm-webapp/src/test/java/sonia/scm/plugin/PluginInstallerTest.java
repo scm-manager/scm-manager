@@ -218,6 +218,7 @@ class PluginInstallerTest {
     lenient().when(installedPluginDescriptor.getInformation().getId()).thenReturn(name);
     lenient().when(installedPluginDescriptor.getInformation().getName()).thenReturn(name);
     lenient().when(installedPluginDescriptor.getInformation().getVersion()).thenReturn(version);
+    lenient().when(installedPluginDescriptor.getInformation().isScm4Compatible()).thenReturn(true);
     lenient().when(installedPluginDescriptor.getCondition()).thenReturn(condition);
     return installedPluginDescriptor;
   }

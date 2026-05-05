@@ -11,6 +11,45 @@
     "password-confirmation": "Confirm Password",
     "submit": "Submit"
   },
+  "scm4CompatibilityStep": {
+    "header": {
+      "title": "Update to SCM-Manager 4",
+      "description": "SCM-Manager has been updated to version 4. To complete the update, your intervention is needed."
+    },
+    "updated": {
+      "title": "Plugin updates installed successfully",
+      "description": "Each installed plugin has been successfully updated with a SCM-Manager 4 compatible version. To finish the updating process, please restart your SCM-Manager server.",
+      "submit": "Restart"
+    },
+    "conflictingPlugins": {
+      "title": "Plugin updates failed",
+      "description_one": "There is one conflicting plugin. It is not compatible with the SCM-Manager since version 4. There is also no compatible update for it available. You can either try setting a different plugin center URL, uninstall this plugin or rollback to your previous version of the SCM-Manager.",
+      "description_other": "There are {{count}} conflicting plugins. They are not compatible with the SCM-Manager since version 4. There are also no compatible updates for them available. You can either try setting a different plugin center URL, uninstall those plugins or rollback to your previous version of the SCM-Manager.",
+      "submit_one": "Uninstall conflicting plugin",
+      "submit_other": "Uninstall all conflicting plugins",
+      "list_one": "Conflicting Plugin",
+      "list_other": "Conflicting Plugins",
+      "nonDefaultPluginCenterUrl": "The currently configured plugin center URL differs from the default one. Unless using custom plugins, we would advice to use the default URL."
+    },
+    "pluginCenterDeactivated": {
+      "title": "Deactivated Plugin Center",
+      "description_one": "There is one conflicting plugin. It is not compatible with the SCM-Manager since version 4. The plugin center url is not set. Therefore it was not possible to search for a compatible update. Please set the plugin center url.",
+      "description_other": "There are {{count}} conflicting plugins. They are not compatible with the SCM-Manager since version 4. The plugin center url is not set. Therefore it was not possible to search for compatible updates. Please set the plugin center url.",
+      "pluginCenterUrl": {
+        "label": "Plugin Center URL",
+        "invalidUrl": "Invalid URL",
+        "submit": "Update Plugin Center URL"
+      }
+    },
+    "defaultPluginCenterUrl": "Default Plugin Center URL",
+    "restartNotSupported": "Your change was applied, but a server restart is required. Please restart your SCM-Manager server manually.",
+    "token": {
+      "description": "To continue on you need to authenticate yourself with a token. The token can be found within the logs of your SCM-Manager server.",
+      "label": "Token",
+      "isEmptyError": "Token cannot be empty",
+      "wrongToken": "The token is invalid. Make sure you have copied the token correctly from the SCM-Manager logs."
+    }
+  },
   "pluginWizardStep": {
     "title": "Plugin Sets",
     "description": "Out of the box SCM-Manager is a streamlined tool to manage Git, SVN and mercurial repositories. Plugins enhance your workflow and help you to get more out of your SCM-Manager. Select one or more of our plugin-sets to jump-start your journey!",
@@ -24,7 +63,6 @@
       "expand": "View included Plugins",
       "collapse": "Included Plugins"
     }
-
   },
   "error": {
     "forbidden": "Incorrect token"

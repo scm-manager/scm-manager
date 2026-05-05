@@ -14,31 +14,31 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, FC, Ref } from "react";
 import { Button, Icon } from "../../buttons";
 import * as RadixMenu from "@radix-ui/react-dropdown-menu";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 
-type Props = ComponentProps<typeof Button>;
+type Props = ComponentProps<typeof Button> & { ref?: Ref<HTMLButtonElement> };
 
 /**
  * @beta
  * @since 2.44.0
  */
-const MenuTrigger = React.forwardRef<HTMLButtonElement, Props>(({ children, ...props }, ref) => (
+const MenuTrigger: FC<Props> = ({ children, ref, ...props }) => (
   <RadixMenu.Trigger asChild>
     <Button ref={ref} {...props}>
       {children}
     </Button>
   </RadixMenu.Trigger>
-));
+);
 
 /**
  * @beta
  * @since 2.44.0
  */
-export const DefaultMenuTrigger = React.forwardRef<HTMLButtonElement, Props>(({ className, ...props }, ref) => {
+export const DefaultMenuTrigger: FC<Props> = ({ className, ref, ...props }) => {
   const [t] = useTranslation("commons");
   return (
     <MenuTrigger
@@ -50,6 +50,6 @@ export const DefaultMenuTrigger = React.forwardRef<HTMLButtonElement, Props>(({ 
       <Icon>ellipsis-v</Icon>
     </MenuTrigger>
   );
-});
+};
 
 export default MenuTrigger;

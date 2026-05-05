@@ -37,7 +37,7 @@ const HunkFooter: FC<Props> = ({ expandableHunk, diffExpanded, diffExpansionFail
       return (
         <HunkExpandDivider>
           <HunkExpandLink
-            icon={"angle-double-down"}
+            icon="angle-double-down"
             onClick={expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
             text={t("diff.expandComplete", { count: expandableHunk.maxExpandBottomRange })}
           />
@@ -47,12 +47,12 @@ const HunkFooter: FC<Props> = ({ expandableHunk, diffExpanded, diffExpansionFail
       return (
         <HunkExpandDivider>
           <HunkExpandLink
-            icon={"angle-down"}
+            icon="angle-down"
             onClick={expandBottom(expandableHunk, 10)}
             text={t("diff.expandByLines", { count: 10 })}
           />{" "}
           <HunkExpandLink
-            icon={"angle-double-down"}
+            icon="angle-double-down"
             onClick={expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
             text={t("diff.expandComplete", { count: expandableHunk.maxExpandBottomRange })}
           />

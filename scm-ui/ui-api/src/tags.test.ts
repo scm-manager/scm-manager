@@ -15,12 +15,11 @@
  */
 
 import { Changeset, Repository, Tag, TagCollection } from "@scm-manager/ui-types";
-import fetchMock from "fetch-mock-jest";
-import { renderHook } from "@testing-library/react-hooks";
+import fetchMock from "fetch-mock";
+import { renderHook, act, waitFor } from "@testing-library/react";
 import createWrapper from "./tests/createWrapper";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import { useCreateTag, useDeleteTag, useTag, useTags } from "./tags";
-import { act } from "react-test-renderer";
 
 describe("Test Tag hooks", () => {
   const repository: Repository = {
@@ -79,11 +78,11 @@ describe("Test Tag hooks", () => {
     const fetchTags = async () => {
       fetchMock.getOnce("/api/v2/hog/tags", tags);
 
-      const { result, waitFor } = renderHook(() => useTags(repository), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useTags(repository), {
+        wrapper: createWrapper(queryClient),
       });
       await waitFor(() => {
-        return !!result.current.data;
+        expect(result.current.data).toEqual(tags);
       });
 
       return result.current;
@@ -106,11 +105,11 @@ describe("Test Tag hooks", () => {
     const fetchTag = async () => {
       fetchMock.getOnce("/api/v2/hog/tags/1.0", tagOneDotZero);
 
-      const { result, waitFor } = renderHook(() => useTag(repository, "1.0"), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useTag(repository, "1.0"), {
+        wrapper: createWrapper(queryClient),
       });
       await waitFor(() => {
-        return !!result.current.data;
+        expect(result.current.data).toEqual(tagOneDotZero);
       });
 
       return result.current;
@@ -140,14 +139,16 @@ describe("Test Tag hooks", () => {
 
       fetchMock.getOnce("/api/v2/hog/tags/1.0", tagOneDotZero);
 
-      const { result, waitForNextUpdate } = renderHook(() => useCreateTag(repository, changeset), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useCreateTag(repository, changeset), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { create } = result.current;
-        create("1.0");
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.create("1.0");
+      });
+
+      await waitFor(() => {
+        expect(result.current.tag).toBeDefined();
       });
 
       return result.current;
@@ -191,14 +192,12 @@ describe("Test Tag hooks", () => {
         status: 201,
       });
 
-      const { result, waitForNextUpdate } = renderHook(() => useCreateTag(repository, changeset), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useCreateTag(repository, changeset), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { create } = result.current;
-        create("awesome-42");
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.create("awesome-42");
       });
 
       expect(result.current.error).toBeDefined();
@@ -211,14 +210,16 @@ describe("Test Tag hooks", () => {
         status: 204,
       });
 
-      const { result, waitForNextUpdate } = renderHook(() => useDeleteTag(repository), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useDeleteTag(repository), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { remove } = result.current;
-        remove(tagOneDotZero);
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.remove(tagOneDotZero);
+      });
+
+      await waitFor(() => {
+        expect(result.current.isDeleted).toBeTruthy();
       });
 
       return result.current;

@@ -36,14 +36,14 @@ binder.bind("repos.branch-details.information", HgBranchInformation, { priority:
 binder.bind<extensionPoints.RepositoryTagDetailsInformation>(
   "repos.tag-details.information",
   HgTagInformation,
-  hgPredicate
+  hgPredicate,
 );
 binder.bind("repos.repository-avatar", HgAvatar, hgPredicate);
 
 // bind repository specific configuration
 
-binder.bind<extensionPoints.RepoConfigRoute>("repo-config.route", HgRepositoryConfigurationForm, hgPredicate);
+binder.bind("repo-config.route", HgRepositoryConfigurationForm, hgPredicate);
 
 // bind global configuration
 
-cfgBinder.bindGlobal("/hg", "scm-hg-plugin.config.link", "hgConfig", HgGlobalConfiguration, "mercurial");
+cfgBinder.bindAdminSetting("hg", "scm-hg-plugin.config.link", "hgConfig", HgGlobalConfiguration, "mercurial");

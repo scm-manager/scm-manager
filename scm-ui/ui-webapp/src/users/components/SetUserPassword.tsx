@@ -35,7 +35,7 @@ type Props = {
 const SetUserPassword: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
   useDocumentTitle(t("singleUser.menu.setPasswordNavLink"), user.displayName);
-  const { passwordOverwritten, setPassword, error, isLoading, reset } = useSetUserPassword(user);
+  const { passwordOverwritten, setPassword, error, isPending, reset } = useSetUserPassword(user);
   const [newPassword, setNewPassword] = useState("");
   const [passwordValid, setPasswordValid] = useState(false);
 
@@ -62,7 +62,9 @@ const SetUserPassword: FC<Props> = ({ user }) => {
 
   if (passwordOverwritten) {
     message = (
-      <Notification type={"success"} children={t("singleUserPassword.setPasswordSuccessful")} onClose={reset} />
+      <Notification type="success" onClose={reset}>
+        {t("singleUserPassword.setPasswordSuccessful")}
+      </Notification>
     );
   } else if (error) {
     message = <ErrorNotification error={error} />;
@@ -74,7 +76,7 @@ const SetUserPassword: FC<Props> = ({ user }) => {
       {message}
       <PasswordConfirmation passwordChanged={onPasswordChange} key={passwordOverwritten ? "changed" : "unchanged"} />
       <Level
-        right={<SubmitButton disabled={!passwordValid} loading={isLoading} label={t("singleUserPassword.button")} />}
+        right={<SubmitButton disabled={!passwordValid} loading={isPending} label={t("singleUserPassword.button")} />}
       />
     </form>
   );

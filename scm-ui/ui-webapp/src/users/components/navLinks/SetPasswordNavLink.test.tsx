@@ -15,8 +15,8 @@
  */
 
 import React from "react";
-import { shallow } from "enzyme";
-import "@scm-manager/ui-tests";
+import { MemoryRouter } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
 import ChangePasswordNavLink from "./SetPasswordNavLink";
 
 it("should render nothing, if the password link is missing", () => {
@@ -26,11 +26,11 @@ it("should render nothing, if the password link is missing", () => {
     password: "hitchhiker",
     external: true,
     active: true,
-    _links: {}
+    _links: {},
   };
 
-  const navLink = shallow(<ChangePasswordNavLink user={user} passwordUrl="/user/password" />);
-  expect(navLink.text()).toBe("");
+  render(<ChangePasswordNavLink user={user} passwordUrl="/user/password" />);
+  assert.notExists(screen.queryByText("singleUser.menu.setPasswordNavLink"));
 });
 
 it("should render the navLink", () => {
@@ -42,11 +42,15 @@ it("should render the navLink", () => {
     active: true,
     _links: {
       password: {
-        href: "/password"
-      }
-    }
+        href: "/password",
+      },
+    },
   };
 
-  const navLink = shallow(<ChangePasswordNavLink user={user} passwordUrl="/user/password" />);
-  expect(navLink.text()).not.toBe("");
+  render(
+    <MemoryRouter>
+      <ChangePasswordNavLink user={user} passwordUrl="/user/password" />
+    </MemoryRouter>,
+  );
+  assert.exists(screen.queryByText("singleUser.menu.setPasswordNavLink"));
 });

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useContext, useEffect } from "react";
+import React, { FC, ReactNode, useContext, useEffect } from "react";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 import { createAttributesForTesting } from "@scm-manager/ui-core";
@@ -28,6 +28,7 @@ type Props = RoutingProps & {
   title?: string;
   icon?: string;
   testId?: string;
+  children?: ReactNode;
 };
 
 type NavLinkContentProp = {
@@ -47,8 +48,8 @@ const NavLinkContent: FC<NavLinkContentProp> = ({ label, icon, collapsed }) => (
   </>
 );
 
-const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, title, testId, children, ...contentProps }) => {
-  const active = useActiveMatch({ to, activeWhenMatch, activeOnlyWhenExact });
+const NavLink: FC<Props> = ({ to, activeWhenMatch, title, testId, children, ...contentProps }) => {
+  const active = useActiveMatch({ to, activeWhenMatch });
   const { collapsed, setCollapsible } = useSecondaryNavigation();
   const isSubNavigation = useContext(SubNavigationContext);
 
@@ -71,10 +72,6 @@ const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, title, t
       </Link>
     </li>
   );
-};
-
-NavLink.defaultProps = {
-  activeOnlyWhenExact: true,
 };
 
 export default NavLink;

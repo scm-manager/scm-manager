@@ -15,7 +15,7 @@
  */
 
 import ActiveModalCountContext from "./activeModalCountContext";
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, ReactNode, useCallback, useState } from "react";
 
 /**
  * A simple counter that allows developers to keep track of how many modals are currently open.
@@ -24,7 +24,7 @@ import React, { FC, useCallback, useState } from "react";
  *
  * Required by {@link useActiveModals}.
  */
-const ActiveModalCountContextProvider: FC = ({ children }) => {
+const ActiveModalCountContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [activeModalCount, setActiveModalCount] = useState(0);
   const incrementModalCount = useCallback(() => setActiveModalCount((prev) => prev + 1), []);
   const decrementModalCount = useCallback(() => setActiveModalCount((prev) => prev - 1), []);

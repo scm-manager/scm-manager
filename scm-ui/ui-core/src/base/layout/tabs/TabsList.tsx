@@ -14,20 +14,22 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { HTMLAttributes } from "react";
+import React, { FC, HTMLAttributes, Ref } from "react";
 import * as RadixTabs from "@radix-ui/react-tabs";
 import classNames from "classnames";
+
+type Props = HTMLAttributes<HTMLUListElement> & { ref?: Ref<HTMLUListElement> };
 
 /**
  * @beta
  * @since 2.47.0
  */
-const TabsList = React.forwardRef<HTMLUListElement, HTMLAttributes<HTMLUListElement>>(({ children, ...props }, ref) => (
-  <RadixTabs.List className={classNames("tabs", /* required for focus-outline */ "p-1")}>
+const TabsList: FC<Props> = ({ children, ref, className, ...props }) => (
+  <RadixTabs.List className={classNames(className, "tabs", /* required for focus-outline */ "p-1")}>
     <ul {...props} ref={ref}>
       {children}
     </ul>
   </RadixTabs.List>
-));
+);
 
 export default TabsList;

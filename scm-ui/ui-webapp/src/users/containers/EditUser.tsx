@@ -16,10 +16,8 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
+import { Form, Subtitle, useDocumentTitle, useUpdateResource } from "@scm-manager/ui-core";
 import { User } from "@scm-manager/ui-types";
-import { Subtitle } from "@scm-manager/ui-components";
-import { useDocumentTitle } from "@scm-manager/ui-core";
-import { Form, useUpdateResource } from "@scm-manager/ui-forms";
 import UserConverter from "../components/UserConverter";
 import * as userValidator from "../components/userValidation";
 import DeleteUser from "./DeleteUser";

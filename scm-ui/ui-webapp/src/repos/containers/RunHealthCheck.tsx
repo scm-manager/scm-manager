@@ -25,7 +25,7 @@ type Props = {
 };
 
 const RunHealthCheck: FC<Props> = ({ repository }) => {
-  const { isLoading, error, runHealthCheck } = useRunHealthCheck();
+  const { isPending, error, runHealthCheck } = useRunHealthCheck();
   const [t] = useTranslation("repos");
 
   const runHealthCheckCallback = () => {
@@ -50,7 +50,7 @@ const RunHealthCheck: FC<Props> = ({ repository }) => {
             icon="heartbeat"
             label={t("runHealthCheck.button")}
             action={runHealthCheckCallback}
-            loading={isLoading || repository.healthCheckRunning}
+            loading={isPending || repository.healthCheckRunning}
           />
         }
       />

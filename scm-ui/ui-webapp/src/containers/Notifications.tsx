@@ -14,8 +14,8 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
-import { Link, useHistory } from "react-router-dom";
+import React, { FC, ReactNode, Ref } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -28,7 +28,6 @@ import {
 import { Notification, NotificationCollection } from "@scm-manager/ui-types";
 import {
   Button,
-  DateFromNow,
   ErrorNotification,
   Icon,
   Notification as InfoNotification,
@@ -36,6 +35,7 @@ import {
   ToastNotification,
   ToastType,
 } from "@scm-manager/ui-components";
+import { DateFromNow } from "@scm-manager/ui-core";
 import HeaderDropDown, { Column, OnlyMobileWrappingColumn, Table } from "../components/HeaderDropDown";
 
 const DismissColumn = styled.td`
@@ -49,8 +49,8 @@ type EntryProps = {
 };
 
 const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
-  const history = useHistory();
-  const { isLoading, error, dismiss } = useDismissNotification(notification);
+  const navigate = useNavigate();
+  const { isPending, error, dismiss } = useDismissNotification(notification);
   const [t] = useTranslation("commons");
 
   const remove = () => {
@@ -63,14 +63,14 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
   }
   return (
     <tr className={`is-${color(notification)}`}>
-      <Column onClick={notification.link ? () => history.push(notification.link) : undefined} className="is-clickable">
+      <Column onClick={notification.link ? () => navigate(notification.link) : undefined} className="is-clickable">
         <NotificationMessage message={notification.message} parameters={notification.parameters} />
       </Column>
       <OnlyMobileWrappingColumn className="has-text-right">
         <DateFromNow date={notification.createdAt} />
       </OnlyMobileWrappingColumn>
       <DismissColumn>
-        {isLoading ? (
+        {isPending ? (
           <div className="small-loading-spinner" aria-label={t("notifications.loading")} />
         ) : (
           <Button color="text" icon="trash" action={remove} title={t("notifications.dismiss")} className="px-1" />
@@ -86,7 +86,7 @@ type ClearEntryProps = {
 };
 
 const ClearEntry: FC<ClearEntryProps> = ({ notifications, clearToasts }) => {
-  const { isLoading, error, clear: clearStore } = useClearNotifications(notifications);
+  const { isPending, error, clear: clearStore } = useClearNotifications(notifications);
   const [t] = useTranslation("commons");
   const clear = () => {
     clearToasts();
@@ -95,7 +95,7 @@ const ClearEntry: FC<ClearEntryProps> = ({ notifications, clearToasts }) => {
   return (
     <div className={classNames("dropdown-item", "has-text-centered")}>
       <ErrorNotification error={error} />
-      <Button className="is-outlined m-3" color="link" loading={isLoading} action={clear}>
+      <Button className="is-outlined m-3" color="link" loading={isPending} action={clear}>
         <Icon color="inherit" name="trash" className="mr-1" alt="" /> {t("notifications.dismissAll")}
       </Button>
     </div>
@@ -128,7 +128,7 @@ const NotificationList: FC<Props> = ({ data, clear, remove }) => {
   );
 };
 
-const DropdownMenuContainer: FC = ({ children }) => (
+const DropdownMenuContainer: FC<{ children?: ReactNode }> = ({ children }) => (
   <div className={classNames("dropdown-content", "p-4")}>{children}</div>
 );
 
@@ -181,7 +181,7 @@ type SubscriptionProps = {
   remove: (notification: Notification) => void;
 };
 
-const PotentialLink: FC<{ link?: string }> = ({ link, children }) => {
+const PotentialLink: FC<{ link?: string; children?: ReactNode }> = ({ link, children }) => {
   if (link) {
     return <Link to={link}>{children}</Link>;
   } else {
@@ -241,9 +241,10 @@ const count = (data?: NotificationCollection) => {
 
 type NotificationProps = React.PropsWithChildren<{
   className?: string;
+  ref?: Ref<HTMLButtonElement>;
 }>;
 
-const Notifications = React.forwardRef<HTMLButtonElement, NotificationProps>(({ className }, ref) => {
+const Notifications: FC<NotificationProps> = ({ className, ref }) => {
   const { data, isLoading, error, refetch } = useNotifications();
   const { notifications, remove, clear } = useNotificationSubscription(refetch, data);
 
@@ -256,13 +257,13 @@ const Notifications = React.forwardRef<HTMLButtonElement, NotificationProps>(({ 
         isLoading={isLoading}
         icon={<BellNotificationIcon data={data} />}
         count={count(data)}
-        mobilePosition="left"
+        mobileposition="left"
         ref={ref}
       >
         {data ? <NotificationDropDown data={data} remove={remove} clear={clear} /> : null}
       </HeaderDropDown>
     </>
   );
-});
+};
 
 export default Notifications;

@@ -17,7 +17,7 @@
 import React, { ReactNode } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { apiClient, ErrorBoundary, ErrorNotification, Icon, Loading } from "@scm-manager/ui-components";
+import { apiClient, ErrorNotification, Icon, Loading } from "@scm-manager/ui-components";
 import loadBundle from "../_modules/loadBundle";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
@@ -44,6 +44,11 @@ type Plugin = {
 const BigIcon = styled(Icon)`
   font-size: 10rem;
 `;
+
+const withTimeout = (millis: number, promise: Promise<any>) => {
+  const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error(`timeout after ${millis}ms`)), millis));
+  return Promise.race([promise, timeout]);
+};
 
 class PluginLoader extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -90,12 +95,19 @@ class PluginLoader extends React.Component<Props, State> {
   loadPlugin = (plugin: Plugin) => {
     const promises = [];
     for (const bundlePath of plugin.bundles) {
-      promises.push(
-        (isMainModuleBundle(bundlePath, plugin.name)
-          ? loadBundle(bundlePath, plugin.name)
-          : loadBundle(bundlePath)
-        ).catch((error) => this.setState({ error, errorMessage: `loading ${plugin.name} failed` }))
-      );
+      const loadAction = isMainModuleBundle(bundlePath, plugin.name)
+        ? loadBundle(bundlePath, plugin.name)
+        : loadBundle(bundlePath);
+
+      const safeLoadAction = withTimeout(10000, loadAction).catch((error) => {
+        this.setState({
+          error: error,
+          errorMessage: `error while loading ${plugin.name}: ${error.message}`,
+        });
+        return null;
+      });
+
+      promises.push(safeLoadAction);
     }
     return Promise.all(promises);
   };
@@ -108,20 +120,18 @@ class PluginLoader extends React.Component<Props, State> {
       return (
         <section className="section">
           <div className="container">
-            <ErrorBoundary>
-              <div
-                className={classNames(
-                  "is-flex",
-                  "is-flex-direction-column",
-                  "is-justify-content-space-between",
-                  "is-align-items-center"
-                )}
-              >
-                <BigIcon name="exclamation-triangle" color="danger" />
-                <div className={classNames("my-5", "is-size-5")}>{errorMessage}</div>
-              </div>
-              <ErrorNotification error={error} />
-            </ErrorBoundary>
+            <div
+              className={classNames(
+                "is-flex",
+                "is-flex-direction-column",
+                "is-justify-content-space-between",
+                "is-align-items-center",
+              )}
+            >
+              <BigIcon name="exclamation-triangle" color="danger" />
+              <div className={classNames("my-5", "is-size-5")}>{errorMessage}</div>
+            </div>
+            <ErrorNotification error={error} />
           </div>
         </section>
       );

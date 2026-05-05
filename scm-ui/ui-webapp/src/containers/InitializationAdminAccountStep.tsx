@@ -18,7 +18,7 @@ import React, { FC, useEffect } from "react";
 import { apiClient, validation, ErrorNotification, InputField, SubmitButton } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { isDisplayNameValid, isPasswordValid } from "../users/components/userValidation";
 import { Links, Link } from "@scm-manager/ui-types";
 import { useForm } from "react-hook-form";
@@ -43,12 +43,14 @@ type AdminAccountCreation = {
 const createAdmin = (link: string) => (data: AdminAccountCreation) => apiClient.post(link, data, "application/json");
 
 const useCreateAdmin = (link: string) => {
-  const { mutate, isLoading, error, isSuccess } = useMutation<unknown, Error, AdminAccountCreation>(createAdmin(link));
+  const { mutate, isPending, error, isSuccess } = useMutation<unknown, Error, AdminAccountCreation>({
+    mutationFn: createAdmin(link),
+  });
   return {
     create: mutate,
-    isLoading,
+    isPending,
     error,
-    isCreated: isSuccess
+    isCreated: isSuccess,
   };
 };
 
@@ -60,12 +62,12 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
       displayName: "SCM Administrator",
       email: "",
       password: "",
-      passwordConfirmation: ""
+      passwordConfirmation: "",
     },
-    mode: "onChange"
+    mode: "onChange",
   });
 
-  const { create, isLoading, error, isCreated } = useCreateAdmin((data._links.initialAdminUser as Link).href);
+  const { create, isPending, error, isCreated } = useCreateAdmin((data._links.initialAdminUser as Link).href);
 
   useEffect(() => {
     if (isCreated) {
@@ -175,7 +177,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
             <SubmitButton
               label={t("adminStep.submit")}
               fullWidth={true}
-              loading={isLoading}
+              loading={isPending}
               disabled={!formState.isValid}
             />
           </div>

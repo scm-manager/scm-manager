@@ -27,7 +27,7 @@ type Props = {
 
 const AddPublicKey: FC<Props> = ({ user, publicKeys }) => {
   const [t] = useTranslation("users");
-  const { isLoading, error, create } = useCreatePublicKey(user, publicKeys);
+  const { isPending, error, create } = useCreatePublicKey(user, publicKeys);
   const [displayName, setDisplayName] = useState("");
   const [raw, setRaw] = useState("");
 
@@ -56,8 +56,8 @@ const AddPublicKey: FC<Props> = ({ user, publicKeys }) => {
         right={
           <SubmitButton
             label={t("publicKey.addKey")}
-            loading={isLoading}
-            disabled={!isValid() || isLoading}
+            loading={isPending}
+            disabled={!isValid() || isPending}
             action={addKey}
           />
         }

@@ -18,7 +18,7 @@ import fs from "node:fs";
 
 const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf8"));
 
-const { lazyDependencies } = packageJson;
+const lazyDependencies = packageJson.lazyDependencies || [];
 
 let importStatements = "";
 let calls = "";
@@ -27,7 +27,7 @@ Object.keys(packageJson.dependencies)
   .filter((dependency) => !lazyDependencies.includes(dependency))
   .forEach((dependency, index) => {
     importStatements += `import * as DEP${index} from '${dependency}';\n`;
-    calls +=  `  defineStatic('${dependency}', DEP${index});\n`;
+    calls += `  defineStatic('${dependency}', DEP${index});\n`;
   });
 
 fs.mkdirSync("./build", { recursive: true });
@@ -38,7 +38,7 @@ type DefineStatic = (name: string, dependency: unknown) => void;
 
 declare function definePluginDependencies(defineStatic: DefineStatic): void;
 export {definePluginDependencies};
-`
+`,
 );
 fs.writeFileSync(
   "./build/provided-modules.js",
@@ -47,5 +47,5 @@ ${importStatements}
 
 export function definePluginDependencies(defineStatic) {
 ${calls}
-}`
+}`,
 );

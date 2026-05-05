@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 // @ts-ignore
 import { Decoration } from "react-diff-view";
 import styled from "styled-components";
@@ -26,7 +26,7 @@ const HunkDivider = styled.div`
   } ;
 `;
 
-const HunkExpandDivider: FC = ({ children }) => {
+const HunkExpandDivider: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <Decoration>
       <HunkDivider className="is-size-7 pl-5">{children}</HunkDivider>

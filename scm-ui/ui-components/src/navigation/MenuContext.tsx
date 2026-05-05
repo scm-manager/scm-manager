@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useContext, useState } from "react";
+import React, { FC, ReactNode, useContext, useState } from "react";
 
 export type MenuContext = {
   isCollapsed: () => boolean;
@@ -31,7 +31,7 @@ export const MenuContext = React.createContext<MenuContext>({
   setCollapsed() {},
 });
 
-export const StateMenuContextProvider: FC = ({ children }) => {
+export const StateMenuContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
 
   const context = {

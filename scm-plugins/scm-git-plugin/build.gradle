@@ -15,7 +15,7 @@
  */
 
 plugins {
-  id 'org.scm-manager.smp' version '0.17.0'
+  id 'org.scm-manager.smp' version '0.20.0-alpha6'
 }
 
 def jgitVersion = '7.5.0.202512021534-r-scm1'
@@ -48,7 +48,6 @@ scmPlugin {
       'sonia.scm.api.v2.resources'
     ]
   }
-
 }
 
 task testJar(type: Jar) {

@@ -19,6 +19,8 @@ package sonia.scm.plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -49,6 +51,7 @@ class PluginInstallationVerifierTest {
     PluginInformation information = new PluginInformation();
     information.setName(HOG_PLUGIN);
     information.setVersion("3.0.0");
+    information.setScm4Compatible(true);
     when(descriptor.getInformation()).thenReturn(information);
   }
 
@@ -156,6 +159,60 @@ class PluginInstallationVerifierTest {
 
     // mock dependency of iid 1.1.0
     mockOptionalDependingOf(IID_PLUGIN, "1.1.0");
+
+    PluginInstallationVerifier.verify(context, descriptor);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"3.2.1", "2.0.0"})
+  void shouldFailForOldPlugins(String version) {
+    matchConditions();
+    descriptor.getCondition().setMinVersion(version);
+    descriptor.getInformation().setScm4Compatible(false);
+
+    PluginInstallationContext context = PluginInstallationContext.empty();
+
+    assertThrows(
+      PluginException.class,
+      () -> PluginInstallationVerifier.verify(context, descriptor)
+    );
+  }
+
+  @Test
+  void shouldFailForOldPluginWithoutMinVersion() {
+    matchConditions();
+    descriptor.getInformation().setScm4Compatible(false);
+
+    PluginInstallationContext context = PluginInstallationContext.empty();
+
+    assertThrows(
+      PluginException.class,
+      () -> PluginInstallationVerifier.verify(context, descriptor)
+    );
+  }
+
+  @ParameterizedTest
+  @SuppressWarnings("squid:S2699") // we are happy if no exception is thrown
+  @ValueSource(strings = {"4.0.0-SNAPSHOT", "4.0.0", "4.3.7", "5.1.0"})
+  void shouldAcceptPluginForMin4x(String version) {
+    matchConditions();
+    descriptor.getCondition().setMinVersion(version);
+    descriptor.getInformation().setScm4Compatible(false);
+
+    PluginInstallationContext context = PluginInstallationContext.empty();
+
+    PluginInstallationVerifier.verify(context, descriptor);
+  }
+
+  @ParameterizedTest
+  @SuppressWarnings("squid:S2699") // we are happy if no exception is thrown
+  @ValueSource(strings = {"3.2.1", "2.0.0"})
+  void shouldAcceptOldPluginWithCompatabilityFlag(String version) {
+    descriptor.getCondition().setMinVersion(version);
+    descriptor.getInformation().setScm4Compatible(true);
+
+    matchConditions();
+    PluginInstallationContext context = PluginInstallationContext.empty();
 
     PluginInstallationVerifier.verify(context, descriptor);
   }

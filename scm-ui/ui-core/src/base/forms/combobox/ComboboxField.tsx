@@ -19,7 +19,6 @@ import Label from "../base/label/Label";
 import Help from "../base/help/Help";
 import React from "react";
 import { useAriaId } from "../../helpers";
-import { withForwardRef } from "../helpers";
 import Combobox, { ComboboxProps } from "./Combobox";
 import classNames from "classnames";
 import RequiredMarker from "../misc/RequiredMarker";
@@ -28,18 +27,16 @@ import RequiredMarker from "../misc/RequiredMarker";
  * @beta
  * @since 2.45.0
  */
-const ComboboxField = function ComboboxField<T>(
-  {
-    label,
-    helpText,
-    error,
-    className,
-    isLoading,
-    required,
-    ...props
-  }: ComboboxProps<T> & { label: string; helpText?: string; error?: string; isLoading?: boolean; required?: boolean },
-  ref: React.ForwardedRef<HTMLInputElement>
-) {
+const ComboboxField = function ComboboxField<T>({
+  label,
+  helpText,
+  error,
+  className,
+  isLoading,
+  required,
+  ref,
+  ...props
+}: ComboboxProps<T> & { label: string; helpText?: string; error?: string; isLoading?: boolean; required?: boolean }) {
   const labelId = useAriaId();
   return (
     <Field className={className}>
@@ -49,9 +46,10 @@ const ComboboxField = function ComboboxField<T>(
         {helpText ? <Help className="ml-1" text={helpText} /> : null}
       </Label>
       <div className={classNames("control", { "is-loading": isLoading })}>
+        {/* @ts-ignore */}
         <Combobox {...props} ref={ref} aria-labelledby={labelId} />
       </div>
     </Field>
   );
 };
-export default withForwardRef(ComboboxField);
+export default ComboboxField;

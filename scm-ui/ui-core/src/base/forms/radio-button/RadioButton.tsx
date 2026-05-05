@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentProps } from "react";
+import React, { FC, Ref } from "react";
 import classNames from "classnames";
 import Help from "../base/help/Help";
 import * as RadioGroup from "@radix-ui/react-radio-group";
@@ -65,6 +65,9 @@ const StyledIndicator = styled(RadioGroup.Indicator)`
   }
 `;
 
+type RadioGroupItemElement = React.ComponentRef<typeof RadioGroup.Item>;
+type RadioGroupItemProps = React.ComponentPropsWithoutRef<typeof RadioGroup.Item>;
+
 type Props = {
   value: string;
   id?: string;
@@ -73,36 +76,47 @@ type Props = {
   label?: string;
   labelClassName?: string;
   helpText?: string;
-} & ComponentProps<typeof RadioGroup.Item>;
+  ref?: Ref<RadioGroupItemElement>;
+} & RadioGroupItemProps;
 
 /**
  * @beta
  * @since 2.48.0
  */
-const RadioButton = React.forwardRef<HTMLButtonElement, Props>(
-  ({ id, testId, indicatorClassName, label, labelClassName, className, helpText, value, ...props }, ref) => {
-    const context = useRadioButtonContext();
-    const inputId = useAriaId(id);
-    const labelKey = `${context?.prefix}.radio.${value}`;
+const RadioButton: FC<Props> = ({
+  id,
+  testId,
+  indicatorClassName,
+  label,
+  labelClassName,
+  className,
+  helpText,
+  value,
+  ref,
+  ...props
+}) => {
+  const context = useRadioButtonContext();
+  const inputId = useAriaId(id);
+  const labelKey = `${context?.prefix}.radio.${value}`;
+  const displayLabel = label ?? context?.t(labelKey) ?? value ?? "";
 
-    return (
-      <div className={classNames("radio is-flex is-align-items-center", labelClassName)}>
-        <StyledRadioButton
-          form={context?.formId}
-          id={inputId}
-          value={value}
-          ref={ref}
-          className={classNames("mr-3 mt-3 mb-3", className)}
-          {...props}
-          {...createAttributesForTesting(testId)}
-        >
-          <StyledIndicator className={indicatorClassName} />
-        </StyledRadioButton>
-        <label htmlFor={inputId}>{label ?? context?.t(labelKey) ?? value}</label>
-        {helpText ? <Help className="ml-3" text={helpText} /> : null}
-      </div>
-    );
-  }
-);
+  return (
+    <div className={classNames("radio is-flex is-align-items-center", labelClassName)}>
+      <StyledRadioButton
+        form={context?.formId}
+        id={inputId}
+        value={value}
+        ref={ref}
+        className={classNames("mr-3 mt-3 mb-3", className)}
+        {...props}
+        {...createAttributesForTesting(testId)}
+      >
+        <StyledIndicator className={indicatorClassName} />
+      </StyledRadioButton>
+      <label htmlFor={inputId}>{displayLabel}</label>
+      {helpText ? <Help className="ml-3" text={helpText} /> : null}
+    </div>
+  );
+};
 
 export default RadioButton;

@@ -309,4 +309,45 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   private GitLogCommand createCommandWithContextSpy() {
     return new GitLogCommand(Mockito.spy(createContext()), GitTestHelper.createConverterFactory());
   }
+
+  @Test
+  public void testGetBySearchStringKeyword() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setSearchString("Added a AND b");
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertNotNull(result);
+    assertEquals(1, result.getTotal());
+    assertEquals(1, result.getChangesets().size());
+    assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(0).getId());
+  }
+
+  @Test
+  public void testGetBySearchStringHash() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setSearchString("592d797cd");
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertNotNull(result);
+    assertEquals(1, result.getTotal());
+    assertEquals(1, result.getChangesets().size());
+    assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(0).getId());
+  }
+
+  @Test
+  public void testGetBySearchStringNoResult() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setSearchString("this-string-does-not-exist");
+
+    ChangesetPagingResult result = createCommand().getChangesets(request);
+
+    assertNotNull(result);
+    assertEquals(0, result.getTotal());
+    assertTrue(result.getChangesets().isEmpty());
+  }
 }

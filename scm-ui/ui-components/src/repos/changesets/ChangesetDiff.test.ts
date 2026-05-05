@@ -94,7 +94,7 @@ describe("createUrl tests", () => {
     expect(() =>
       createUrl({
         _links: {},
-      })
+      }),
     ).toThrow();
   });
 });

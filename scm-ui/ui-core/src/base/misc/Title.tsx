@@ -14,26 +14,34 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { HTMLAttributes } from "react";
+import React, { FC, HTMLAttributes, Ref } from "react";
 import classNames from "classnames";
 
 type Props = {
   title?: string;
   customPageTitle?: string;
   preventRefreshingPageTitle?: boolean;
-};
-const Title = React.forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement> & Props>(
-  ({ title, customPageTitle, preventRefreshingPageTitle, children, className, ...props }, ref) => {
-    if (children || title) {
-      return (
-        <h1 className={classNames("title", className)} {...props} ref={ref}>
-          {title}
-          {children}
-        </h1>
-      );
-    }
-    return null;
+  ref?: Ref<HTMLHeadingElement>;
+} & HTMLAttributes<HTMLHeadingElement>;
+
+const Title: FC<Props> = ({
+  title,
+  customPageTitle,
+  preventRefreshingPageTitle,
+  children,
+  className,
+  ref,
+  ...props
+}) => {
+  if (children || title) {
+    return (
+      <h1 className={classNames("title", className)} {...props} ref={ref}>
+        {title}
+        {children}
+      </h1>
+    );
   }
-);
+  return null;
+};
 
 export default Title;

@@ -14,9 +14,9 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import fetchMock from "fetch-mock-jest";
+import fetchMock from "fetch-mock";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook, waitFor } from "@testing-library/react";
 import createWrapper from "./tests/createWrapper";
 import { useUpdateInfo } from "./admin";
 import { UpdateInfo } from "@scm-manager/ui-types";
@@ -34,14 +34,12 @@ describe("Test admin hooks", () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "updateInfo", "/updateInfo");
 
-      const { result, waitFor } = renderHook(() => useUpdateInfo(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useUpdateInfo(), {
+        wrapper: createWrapper(queryClient),
       });
       await waitFor(() => {
-        return !!result.current.data;
+        expect(result.current.data).toEqual(updateInfo);
       });
-
-      expect(result.current.data).toEqual(updateInfo);
     });
   });
 });

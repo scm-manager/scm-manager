@@ -15,17 +15,23 @@
  */
 
 import { Branch, Changeset, ChangesetCollection, NamespaceAndName, Repository } from "@scm-manager/ui-types";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { requiredLink } from "./links";
 import { apiClient } from "./apiclient";
 import { ApiResult, ApiResultWithFetching } from "./base";
 import { branchQueryKey, repoQueryKey } from "./keys";
 import { concat } from "./urls";
+import { useEffect } from "react";
 
 type UseChangesetsRequest = {
+  revision?: string;
   branch?: Branch;
   page?: string | number;
   limit?: number;
+  messageFilter?: string;
+  personFilter?: string;
+  fromFilter?: Date;
+  query?: string;
 };
 
 export const changesetQueryKey = (repository: NamespaceAndName, id: string) => {
@@ -34,17 +40,30 @@ export const changesetQueryKey = (repository: NamespaceAndName, id: string) => {
 
 export const useChangesets = (
   repository: Repository,
-  request?: UseChangesetsRequest
+  request?: UseChangesetsRequest,
 ): ApiResultWithFetching<ChangesetCollection> => {
   const queryClient = useQueryClient();
 
   let link: string;
-  let branch = "_";
+  let revision = "_";
+  const appendFilter = (f: string, p: string, v: string) => {
+    if (f) {
+      return `${f}&${p}=${v}`;
+    } else {
+      return `${p}=${v}`;
+    }
+  };
+  let filter = "";
+
   if (request?.branch) {
     link = requiredLink(request.branch, "history");
-    branch = request.branch.name;
+    revision = request.branch.name;
   } else {
     link = requiredLink(repository, "changesets");
+    if (request?.revision) {
+      filter = appendFilter(filter, "revision", request.revision);
+      revision = request.revision;
+    }
   }
 
   if (request?.page || request?.limit) {
@@ -56,20 +75,50 @@ export const useChangesets = (
       link = `${link}?pageSize=${request.limit}`;
     }
   }
+  if (request?.messageFilter) {
+    filter = appendFilter(filter, "message", request.messageFilter);
+  }
+  if (request?.personFilter) {
+    filter = appendFilter(filter, "person", request.personFilter);
+  }
+  if (request?.fromFilter) {
+    filter = appendFilter(filter, "from", request.fromFilter.toISOString());
+  }
+  const isSearchMode = request?.query !== undefined;
+  const isEnabled = isSearchMode ? request.query!.length >= 3 : true;
 
-  const key = branchQueryKey(repository, branch, "changesets", request?.page || 0);
-  return useQuery<ChangesetCollection, Error>(key, () => apiClient.get(link).then((response) => response.json()), {
-    onSuccess: (changesetCollection) => {
-      changesetCollection._embedded?.changesets.forEach((changeset) => {
+  if (isSearchMode && request.query!.length >= 3) {
+    filter = appendFilter(filter, "q", request.query!);
+  }
+  if (filter) {
+    if (link.indexOf("?") > 0) {
+      link = link + "&" + filter;
+    } else {
+      link = link + "?" + filter;
+    }
+  }
+  const key = branchQueryKey(repository, revision, "changesets", request?.page || 0);
+  key.push(filter || "");
+
+  const result = useQuery<ChangesetCollection, Error>({
+    queryKey: key,
+    queryFn: () => apiClient.get(link).then((response) => response.json()),
+    enabled: isEnabled,
+  });
+  useEffect(() => {
+    if (result.data) {
+      result.data._embedded?.changesets.forEach((changeset) => {
         queryClient.setQueryData(changesetQueryKey(repository, changeset.id), changeset);
       });
-    },
-  });
+    }
+  }, [queryClient, repository, result.data]);
+  return result;
 };
 
 export const useChangeset = (repository: Repository, id: string): ApiResult<Changeset> => {
   const changesetsLink = requiredLink(repository, "changesets");
-  return useQuery<Changeset, Error>(changesetQueryKey(repository, id), () =>
-    apiClient.get(concat(changesetsLink, id)).then((response) => response.json())
-  );
+  return useQuery<Changeset, Error>({
+    queryKey: changesetQueryKey(repository, id),
+    queryFn: () => apiClient.get(concat(changesetsLink, id)).then((response) => response.json()),
+  });
 };

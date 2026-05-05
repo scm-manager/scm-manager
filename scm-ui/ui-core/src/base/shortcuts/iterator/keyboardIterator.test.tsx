@@ -14,24 +14,23 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { renderHook } from "@testing-library/react-hooks";
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
+import { render } from "@testing-library/react";
+import Mousetrap from "mousetrap";
+import { renderTestHook } from "../../helpers/devbuild";
+import { ShortcutDocsContextProvider } from "../useShortcutDocs";
 import {
   KeyboardIteratorContextProvider,
   KeyboardSubIterator,
   KeyboardSubIteratorContextProvider,
   useKeyboardIteratorItem,
 } from "./keyboardIterator";
-import { render } from "@testing-library/react";
-import { ShortcutDocsContextProvider } from "../useShortcutDocs";
-import Mousetrap from "mousetrap";
-import "jest-extended";
 
-jest.mock("react-i18next", () => ({
-  useTranslation: () => [jest.fn()],
+vi.mock("react-i18next", () => ({
+  useTranslation: () => [vi.fn()],
 }));
 
-const Wrapper: FC<{ initialIndex?: number }> = ({ children, initialIndex }) => {
+const Wrapper: FC<{ initialIndex?: number; children?: ReactNode }> = ({ children, initialIndex }) => {
   return (
     <ShortcutDocsContextProvider>
       <KeyboardIteratorContextProvider initialIndex={initialIndex}>{children}</KeyboardIteratorContextProvider>
@@ -39,12 +38,17 @@ const Wrapper: FC<{ initialIndex?: number }> = ({ children, initialIndex }) => {
   );
 };
 
-const DocsWrapper: FC = ({ children }) => <ShortcutDocsContextProvider>{children}</ShortcutDocsContextProvider>;
+const DocsWrapper: FC<{ children?: ReactNode }> = ({ children }) => (
+  <ShortcutDocsContextProvider>{children}</ShortcutDocsContextProvider>
+);
 
-const createWrapper =
-  (initialIndex?: number): FC =>
-  ({ children }) =>
-    <Wrapper initialIndex={initialIndex}>{children}</Wrapper>;
+const createWrapper = (initialIndex?: number): FC<{ children?: ReactNode }> => {
+  const Component: FC<{ children?: ReactNode }> = ({ children }) => (
+    <Wrapper initialIndex={initialIndex}>{children}</Wrapper>
+  );
+  Component.displayName = "CreateWrapper";
+  return Component;
+};
 
 const Item: FC<{ callback: () => void }> = ({ callback }) => {
   useKeyboardIteratorItem(callback);
@@ -65,36 +69,33 @@ describe("shortcutIterator", () => {
   beforeEach(() => Mousetrap.reset());
 
   it("should not call callback upon registration", () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
 
-    renderHook(() => useKeyboardIteratorItem(callback), {
-      wrapper: Wrapper,
-    });
+    renderTestHook(() => useKeyboardIteratorItem(callback), Wrapper);
 
     expect(callback).not.toHaveBeenCalled();
   });
 
   it("should not throw if not inside keyboard iterator context", () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
 
-    const { result, unmount } = renderHook(() => useKeyboardIteratorItem(callback), {
-      wrapper: DocsWrapper,
-    });
+    const callHook = () => {
+      const { unmount } = renderTestHook(() => useKeyboardIteratorItem(callback), DocsWrapper);
+      unmount();
+    };
 
-    unmount();
-
-    expect(result.error).toBeUndefined();
+    expect(callHook).not.toThrow();
   });
 
   it("should call first callback upon pressing forward in initial state", async () => {
-    const callback = jest.fn();
-    const callback2 = jest.fn();
-    const callback3 = jest.fn();
+    const callback = vi.fn();
+    const callback2 = vi.fn();
+    const callback3 = vi.fn();
 
     render(
       <Wrapper>
         <List callbacks={[callback, callback2, callback3]} />
-      </Wrapper>
+      </Wrapper>,
     );
 
     Mousetrap.trigger("j");
@@ -105,14 +106,14 @@ describe("shortcutIterator", () => {
   });
 
   it("should call last callback once upon pressing backward in initial state", async () => {
-    const callback = jest.fn();
-    const callback2 = jest.fn();
-    const callback3 = jest.fn();
+    const callback = vi.fn();
+    const callback2 = vi.fn();
+    const callback3 = vi.fn();
 
     render(
       <Wrapper>
         <List callbacks={[callback, callback2, callback3]} />
-      </Wrapper>
+      </Wrapper>,
     );
 
     Mousetrap.trigger("k");
@@ -123,14 +124,14 @@ describe("shortcutIterator", () => {
   });
 
   it("should not allow moving past the end of the callback array", async () => {
-    const callback = jest.fn();
-    const callback2 = jest.fn();
-    const callback3 = jest.fn();
+    const callback = vi.fn();
+    const callback2 = vi.fn();
+    const callback3 = vi.fn();
 
     render(
       <Wrapper initialIndex={1}>
         <List callbacks={[callback, callback2, callback3]} />
-      </Wrapper>
+      </Wrapper>,
     );
 
     Mousetrap.trigger("j");
@@ -142,9 +143,9 @@ describe("shortcutIterator", () => {
   });
 
   it("should move to existing index when active index is at the end and last callback is deregistered", async () => {
-    const callback = jest.fn();
-    const callback2 = jest.fn();
-    const callback3 = jest.fn();
+    const callback = vi.fn();
+    const callback2 = vi.fn();
+    const callback3 = vi.fn();
 
     const { rerender } = render(<List callbacks={[callback, callback2, callback3]} />, {
       wrapper: createWrapper(2),
@@ -162,9 +163,9 @@ describe("shortcutIterator", () => {
   });
 
   it("should move to existing index when active index is at the beginning and first callback is deregistered", async () => {
-    const callback = jest.fn();
-    const callback2 = jest.fn();
-    const callback3 = jest.fn();
+    const callback = vi.fn();
+    const callback2 = vi.fn();
+    const callback3 = vi.fn();
 
     const { rerender } = render(<List callbacks={[callback, callback2, callback3]} />, {
       wrapper: createWrapper(0),
@@ -182,9 +183,9 @@ describe("shortcutIterator", () => {
   });
 
   it("should move to existing index when active index is at the end and first callback is deregistered", async () => {
-    const callback = jest.fn();
-    const callback2 = jest.fn();
-    const callback3 = jest.fn();
+    const callback = vi.fn();
+    const callback2 = vi.fn();
+    const callback3 = vi.fn();
 
     const { rerender } = render(<List callbacks={[callback, callback2, callback3]} />, {
       wrapper: createWrapper(2),
@@ -202,9 +203,9 @@ describe("shortcutIterator", () => {
   });
 
   it("should move to existing index when active index in the middle is deregistered", async () => {
-    const callback = jest.fn();
-    const callback2 = jest.fn();
-    const callback3 = jest.fn();
+    const callback = vi.fn();
+    const callback2 = vi.fn();
+    const callback3 = vi.fn();
 
     const { rerender } = render(<List callbacks={[callback, callback2, callback3]} />, {
       wrapper: createWrapper(1),
@@ -222,9 +223,9 @@ describe("shortcutIterator", () => {
   });
 
   it("should not move on deregistration if iterator is not active", async () => {
-    const callback = jest.fn();
-    const callback2 = jest.fn();
-    const callback3 = jest.fn();
+    const callback = vi.fn();
+    const callback2 = vi.fn();
+    const callback3 = vi.fn();
 
     const { rerender } = render(<List callbacks={[callback, callback2, callback3]} />, {
       wrapper: createWrapper(),
@@ -242,7 +243,7 @@ describe("shortcutIterator", () => {
   });
 
   it("should not explode if the last item in the list is removed", async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
 
     const { rerender } = render(<List callbacks={[callback]} />, {
       wrapper: createWrapper(),
@@ -257,9 +258,9 @@ describe("shortcutIterator", () => {
 
   describe("With Subiterator", () => {
     it("should call in correct order", () => {
-      const callback = jest.fn();
-      const callback2 = jest.fn();
-      const callback3 = jest.fn();
+      const callback = vi.fn();
+      const callback2 = vi.fn();
+      const callback3 = vi.fn();
 
       render(
         <Wrapper>
@@ -267,7 +268,7 @@ describe("shortcutIterator", () => {
             <List callbacks={[callback, callback2]} />
           </KeyboardSubIterator>
           <List callbacks={[callback3]} />
-        </Wrapper>
+        </Wrapper>,
       );
 
       Mousetrap.trigger("j");
@@ -280,9 +281,9 @@ describe("shortcutIterator", () => {
     });
 
     it("should call first target that is not an empty subiterator", () => {
-      const callback = jest.fn();
-      const callback2 = jest.fn();
-      const callback3 = jest.fn();
+      const callback = vi.fn();
+      const callback2 = vi.fn();
+      const callback3 = vi.fn();
 
       render(
         <Wrapper>
@@ -293,7 +294,7 @@ describe("shortcutIterator", () => {
             <List callbacks={[]} />
           </KeyboardSubIterator>
           <List callbacks={[callback, callback2, callback3]} />
-        </Wrapper>
+        </Wrapper>,
       );
 
       Mousetrap.trigger("j");
@@ -304,9 +305,9 @@ describe("shortcutIterator", () => {
     });
 
     it("should skip empty sub-iterators during navigation", () => {
-      const callback = jest.fn();
-      const callback2 = jest.fn();
-      const callback3 = jest.fn();
+      const callback = vi.fn();
+      const callback2 = vi.fn();
+      const callback3 = vi.fn();
 
       render(
         <Wrapper>
@@ -318,7 +319,7 @@ describe("shortcutIterator", () => {
             <List callbacks={[]} />
           </KeyboardSubIterator>
           <List callbacks={[callback2, callback3]} />
-        </Wrapper>
+        </Wrapper>,
       );
 
       Mousetrap.trigger("j");
@@ -331,9 +332,9 @@ describe("shortcutIterator", () => {
     });
 
     it("should not enter subiterator if its empty", () => {
-      const callback = jest.fn();
-      const callback2 = jest.fn();
-      const callback3 = jest.fn();
+      const callback = vi.fn();
+      const callback2 = vi.fn();
+      const callback3 = vi.fn();
 
       render(
         <Wrapper initialIndex={1}>
@@ -341,7 +342,7 @@ describe("shortcutIterator", () => {
             <List callbacks={[]} />
           </KeyboardSubIterator>
           <List callbacks={[callback, callback2, callback3]} />
-        </Wrapper>
+        </Wrapper>,
       );
 
       Mousetrap.trigger("k");
@@ -352,9 +353,9 @@ describe("shortcutIterator", () => {
     });
 
     it("should not loop", () => {
-      const callback = jest.fn();
-      const callback2 = jest.fn();
-      const callback3 = jest.fn();
+      const callback = vi.fn();
+      const callback2 = vi.fn();
+      const callback3 = vi.fn();
 
       render(
         <Wrapper initialIndex={1}>
@@ -362,7 +363,7 @@ describe("shortcutIterator", () => {
             <List callbacks={[callback, callback2]} />
           </KeyboardSubIterator>
           <List callbacks={[callback3]} />
-        </Wrapper>
+        </Wrapper>,
       );
 
       Mousetrap.trigger("k");
@@ -378,10 +379,10 @@ describe("shortcutIterator", () => {
     });
 
     it("should move subiterator if its active callback is de-registered", () => {
-      const callback = jest.fn();
-      const callback2 = jest.fn();
-      const callback3 = jest.fn();
-      const callback4 = jest.fn();
+      const callback = vi.fn();
+      const callback2 = vi.fn();
+      const callback3 = vi.fn();
+      const callback4 = vi.fn();
 
       const { rerender } = render(
         <>
@@ -392,7 +393,7 @@ describe("shortcutIterator", () => {
         </>,
         {
           wrapper: createWrapper(0),
-        }
+        },
       );
 
       expect(callback).not.toHaveBeenCalled();
@@ -406,7 +407,7 @@ describe("shortcutIterator", () => {
             <List callbacks={[callback, callback3]} />
           </KeyboardSubIteratorContextProvider>
           <List callbacks={[callback4]} />
-        </>
+        </>,
       );
 
       expect(callback).toHaveBeenCalledTimes(1);

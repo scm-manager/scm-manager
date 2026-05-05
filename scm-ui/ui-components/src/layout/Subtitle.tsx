@@ -14,12 +14,13 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 
 type Props = {
   subtitle?: string;
   className?: string;
+  children?: ReactNode;
 };
 
 /**

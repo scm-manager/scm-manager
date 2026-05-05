@@ -14,10 +14,10 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, FormEvent, useEffect, useState } from "react";
 import { CUSTOM_NAMESPACE_STRATEGY, RepositoryCreation } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
-import { InputField } from "@scm-manager/ui-components";
+import { InputField } from "@scm-manager/ui-core";
 import * as validator from "./form/repositoryValidation";
 import { useNamespaceStrategies } from "@scm-manager/ui-api";
 import NamespaceInput from "./NamespaceInput";
@@ -68,7 +68,11 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
     onChange({ ...repository, namespace });
   };
 
-  const handleNameChange = (name: string) => {
+  const handleNameChange = (event: FormEvent<HTMLInputElement>) => {
+    let name = event.currentTarget.value;
+    if(name == null) {
+      name = "";
+    }
     const valid = validator.isNameValid(name);
     setNameValidationError(!valid);
     onChange({ ...repository, name });
@@ -90,14 +94,13 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
       />
       <InputField
         label={t("repository.name")}
-        onChange={handleNameChange}
+        onInput={handleNameChange}
         value={repository ? repository.name : ""}
-        validationError={nameValidationError}
-        errorMessage={t("validation.name-invalid")}
-        helpText={t("help.nameHelpText")}
+        error={nameValidationError ? t("validation.name-invalid") : undefined}
+        descriptionText={t("help.nameHelpText")}
         disabled={disabled}
         required={true}
-        autofocus={namespaceStrategy !== CUSTOM_NAMESPACE_STRATEGY}
+        autoFocus={namespaceStrategy !== CUSTOM_NAMESPACE_STRATEGY}
       />
     </>
   );

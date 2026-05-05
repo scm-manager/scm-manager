@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Person } from "@scm-manager/ui-types";
+import type { Person } from "@scm-manager/ui-types";
 import { extensionPoints } from "@scm-manager/ui-extensions";
 
 // re export type to avoid breaking changes,

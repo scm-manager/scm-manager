@@ -14,14 +14,19 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { useDocumentTitle, useDocumentTitleForRepository } from "@scm-manager/ui-core";
-import { Namespace, Repository } from "@scm-manager/ui-types";
+import {
+  useDocumentTitle,
+  useDocumentTitleForRepository,
+  useNamespaceFromParams,
+  useRepositoryFromParams,
+} from "@scm-manager/ui-core";
 
 type GlobalProps = {
   i18nNamespace: string;
   label: string;
+  children?: ReactNode;
 };
 
 export const TitledGlobalSettingComponent: FC<GlobalProps> = ({ children, i18nNamespace, label }) => {
@@ -34,15 +39,11 @@ export const TitledGlobalSettingComponent: FC<GlobalProps> = ({ children, i18nNa
 type RepositoryProps = {
   i18nNamespace: string;
   label: string;
-  repository: Repository;
+  children?: ReactNode;
 };
 
-export const TitledRepositorySettingComponent: FC<RepositoryProps> = ({
-  children,
-  i18nNamespace,
-  label,
-  repository,
-}) => {
+export const TitledRepositorySettingComponent: FC<RepositoryProps> = ({ children, i18nNamespace, label }) => {
+  const repository = useRepositoryFromParams();
   const [t] = useTranslation(i18nNamespace);
   const [commonTranslation] = useTranslation("commons");
   useDocumentTitleForRepository(repository, t(label), commonTranslation("documentTitle.repositoryConfiguration"));
@@ -52,11 +53,12 @@ export const TitledRepositorySettingComponent: FC<RepositoryProps> = ({
 type NamespaceProps = {
   i18nNamespace: string;
   label: string;
-  namespace: Namespace;
+  children?: ReactNode;
 };
 
-export const TitledNamespaceSettingComponent: FC<NamespaceProps> = ({ children, i18nNamespace, label, namespace }) => {
+export const TitledNamespaceSettingComponent: FC<NamespaceProps> = ({ children, i18nNamespace, label }) => {
   const [t] = useTranslation(i18nNamespace);
+  const namespace = useNamespaceFromParams();
   const [commonTranslation] = useTranslation("commons");
   useDocumentTitle(t(label), commonTranslation("documentTitle.namespaceConfiguration"), namespace.namespace);
   return <>{children}</>;

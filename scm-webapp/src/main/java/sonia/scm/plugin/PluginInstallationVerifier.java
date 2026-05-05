@@ -40,18 +40,28 @@ public final class PluginInstallationVerifier {
   }
 
   private void doVerification() {
+    verifyVersionCompatability();
     verifyConditions();
     verifyDependencies();
     verifyOptionalDependencies();
   }
 
   private void verifyConditions() {
-    // TODO we should provide more details here, which condition has failed
-
-    PluginCondition pluginCondition =descriptor.getCondition();
+    PluginCondition pluginCondition = descriptor.getCondition();
     PluginCondition.CheckResult pluginConditionCheckResult = pluginCondition.getConditionCheckResult();
     if (!pluginConditionCheckResult.equals(PluginCondition.CheckResult.OK)) {
       throw new PluginConditionFailedException(descriptor.getInformation().getName(), pluginCondition);
+    }
+  }
+
+  private void verifyVersionCompatability() {
+    PluginInformation information = descriptor.getInformation();
+    PluginCondition condition = descriptor.getCondition();
+    if (
+      !information.isScm4Compatible()
+      && (condition.getMinVersion() == null || Version.parse("4.0.0-SNAPSHOT-REACT").isNewer(condition.getMinVersion()))
+    ) {
+      throw new PluginException(String.format("could not load plugin %s, the plugin is not compatible with version 4 of SCM-Manager", information.getName()));
     }
   }
 

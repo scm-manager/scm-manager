@@ -14,10 +14,8 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { RouteProps } from "react-router-dom";
-
 export type RoutingProps = {
   to: string;
-  activeOnlyWhenExact?: boolean;
-  activeWhenMatch?: (route: RouteProps) => boolean;
+  activeWhenMatch?: RegExp | string;
+  matchWhenExact?: boolean;
 };

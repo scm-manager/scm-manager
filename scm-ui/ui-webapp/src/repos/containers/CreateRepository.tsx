@@ -17,15 +17,20 @@
 import React, { FC } from "react";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import RepositoryForm from "../components/form";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useCreateRepository } from "@scm-manager/ui-api";
-import { CreatorComponentProps } from "../types";
+
+type CreatorComponentProps = {
+  repositoryTypes: any;
+  namespaceStrategies: any;
+  index: any;
+};
 
 const CreateRepository: FC<CreatorComponentProps> = ({ repositoryTypes, namespaceStrategies, index }) => {
-  const { isLoading, error, repository, create } = useCreateRepository();
+  const { isPending, error, repository, create } = useCreateRepository();
 
   if (repository) {
-    return <Redirect to={`/repo/${repository.namespace}/${repository.name}/info`} />;
+    return <Navigate to={`/repo/${repository.namespace}/${repository.name}/info`} />;
   }
 
   return (
@@ -33,7 +38,7 @@ const CreateRepository: FC<CreatorComponentProps> = ({ repositoryTypes, namespac
       <ErrorNotification error={error} />
       <RepositoryForm
         repositoryTypes={repositoryTypes._embedded.repositoryTypes}
-        loading={isLoading}
+        loading={isPending}
         namespaceStrategy={namespaceStrategies.current}
         createRepository={create}
         indexResources={index}

@@ -22,30 +22,40 @@ import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useBranch, useChangesets, useSources } from "@scm-manager/ui-api";
+import {
+  REPOSITORY_CODE_SUB_ROUTES,
+  useRepositoryFromParams,
+  useCurrentRepositoryBaseUrl,
+  useLayoutWide,
+} from "@scm-manager/ui-core";
 
 const extensionPointName = "repos.sources.extensions";
 
 type Props = {
-  repository: Repository;
-  baseUrl?: string;
+  // If true, the path is considered to be empty (used for root route).
+  // This is needed as a workaround, because we use nested routes with splats (*), so that we cannot rely
+  // on the path parameter taken from useParams to be empty for the root route with '*'.
+  isRoot?: boolean;
 };
 
 type Params = {
   revision: string;
-  path: string;
   extension: string;
+  "*": string;
 };
 
 const useUrlParams = () => {
-  const { revision, path, extension } = useParams<Params>();
+  const { revision, extension, "*": path } = useParams<Params>();
   return {
     revision: revision ? decodeURIComponent(revision) : undefined,
-    path: path,
-    extension
+    path,
+    extension,
   };
 };
 
 type PropsWithoutBranches = Props & {
+  repository: Repository;
+  baseUrl?: string;
   revision?: string;
   extension: string;
   path: string;
@@ -74,7 +84,7 @@ const SourceExtensionsWithBranches: FC<PropsWithBranches> = ({
   revision,
   extension,
   sources,
-  path
+  path,
 }) => {
   const { isFetching, data: branch } = useBranch(repository, revision);
   const [t] = useTranslation("repos");
@@ -94,7 +104,7 @@ const SourceExtensionsWithBranches: FC<PropsWithBranches> = ({
     resolvedRevision,
     path,
     sources,
-    baseUrl
+    baseUrl,
   };
 
   if (!binder.hasExtension(extensionPointName, extprops)) {
@@ -110,7 +120,7 @@ const SourceExtensionsWithoutBranches: FC<PropsWithoutBranches> = ({
   revision,
   extension,
   sources,
-  path
+  path,
 }) => {
   const [t] = useTranslation("repos");
 
@@ -130,7 +140,7 @@ const SourceExtensionsWithoutBranches: FC<PropsWithoutBranches> = ({
     resolvedRevision,
     path,
     sources,
-    baseUrl
+    baseUrl,
   };
 
   if (!binder.hasExtension(extensionPointName, extprops)) {
@@ -140,9 +150,12 @@ const SourceExtensionsWithoutBranches: FC<PropsWithoutBranches> = ({
   return <ExtensionPoint name={extensionPointName} props={extprops} />;
 };
 
-const SourceExtensions: FC<Props> = ({ repository, baseUrl }) => {
+const SourceExtensions: FC<Props> = ({ isRoot }) => {
+  const repository = useRepositoryFromParams();
+  const baseUrl = useCurrentRepositoryBaseUrl();
   const { revision, path, extension } = useUrlParams();
   const { error, isLoading, data: sources } = useSources(repository, { revision, path });
+  useLayoutWide();
 
   if (error) {
     return <ErrorNotification error={error} />;
@@ -150,27 +163,30 @@ const SourceExtensions: FC<Props> = ({ repository, baseUrl }) => {
   if (isLoading) {
     return <Loading />;
   }
+  if (!extension) {
+    throw new Error("Extension is missing in url");
+  }
 
   if (revision && repository._links.branches) {
     return (
       <SourceExtensionsWithBranches
         repository={repository}
-        baseUrl={baseUrl}
+        baseUrl={baseUrl + "/" + REPOSITORY_CODE_SUB_ROUTES.SOURCES}
         revision={revision}
         extension={extension}
         sources={sources}
-        path={path}
+        path={isRoot ? "" : path || ""}
       />
     );
   } else {
     return (
       <SourceExtensionsWithoutBranches
         repository={repository}
-        baseUrl={baseUrl}
+        baseUrl={baseUrl + "/" + REPOSITORY_CODE_SUB_ROUTES.SOURCES}
         revision={revision}
         extension={extension}
         sources={sources}
-        path={path}
+        path={isRoot ? "" : path || ""}
       />
     );
   }

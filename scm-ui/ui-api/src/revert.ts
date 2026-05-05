@@ -17,7 +17,7 @@
 import { requiredLink } from "./links";
 import { Changeset } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 export type RevertRequest = {
   branch: string;
@@ -30,7 +30,7 @@ export type RevertResponse = {
 
 export const useRevert = (changeset: Changeset) => {
   const link = requiredLink(changeset, "revert");
-  const { isLoading, error, mutate, data } = useMutation<RevertResponse, Error, RevertRequest>({
+  const { isPending, error, mutate, data } = useMutation<RevertResponse, Error, RevertRequest>({
     mutationFn: async (request: RevertRequest) => {
       const response = await apiClient.post(link, request, "application/vnd.scmm-revert+json;v=2");
       return await response.json();
@@ -38,7 +38,7 @@ export const useRevert = (changeset: Changeset) => {
   });
   return {
     revert: mutate,
-    isLoading,
+    isPending,
     error,
     revision: data,
   };

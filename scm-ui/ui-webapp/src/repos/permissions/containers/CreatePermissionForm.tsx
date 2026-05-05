@@ -16,15 +16,8 @@
 
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  AutocompleteObject,
-  Link,
-  Namespace,
-  PermissionCollection,
-  PermissionCreateEntry,
-  Repository,
-  RepositoryRole,
-} from "@scm-manager/ui-types";
+import classNames from "classnames";
+import { useCreatePermission, useGroupOptions, useIndexLinks, useUserOptions } from "@scm-manager/ui-api";
 import {
   Button,
   ErrorNotification,
@@ -34,13 +27,21 @@ import {
   SubmitButton,
   Subtitle,
 } from "@scm-manager/ui-components";
-import * as validator from "../utils/permissionValidation";
+import { ComboboxField } from "@scm-manager/ui-core";
+import {
+  AutocompleteObject,
+  Link,
+  Namespace,
+  Option,
+  PermissionCollection,
+  PermissionCreateEntry,
+  Repository,
+  RepositoryRole,
+} from "@scm-manager/ui-types";
 import RoleSelector from "../components/RoleSelector";
-import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
-import { useCreatePermission, useGroupOptions, useIndexLinks, useUserOptions, Option } from "@scm-manager/ui-api";
 import findVerbsForRole from "../utils/findVerbsForRole";
-import { ComboboxField } from "@scm-manager/ui-forms";
-import classNames from "classnames";
+import * as validator from "../utils/permissionValidation";
+import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 
 type Props = {
   availableRoles: RepositoryRole[];
@@ -80,7 +81,7 @@ const CreatePermissionForm: FC<Props> = ({
     valid: false,
   };
   const links = useAutoCompleteLinks();
-  const { isLoading, error, create, permission: createdPermission } = useCreatePermission(namespaceOrRepository);
+  const { isPending, error, create, permission: createdPermission } = useCreatePermission(namespaceOrRepository);
   const [showAdvancedDialog, setShowAdvancedDialog] = useState(false);
   const [permission, setPermission] = useState<PermissionState>(initialPermissionState);
   const [t] = useTranslation("repos");
@@ -108,7 +109,7 @@ const CreatePermissionForm: FC<Props> = ({
         valid: validator.isPermissionValid(
           value.value.id,
           permission.groupPermission,
-          currentPermissions._embedded?.permissions || []
+          currentPermissions._embedded?.permissions || [],
         ),
       }));
     }
@@ -248,7 +249,7 @@ const CreatePermissionForm: FC<Props> = ({
           right={
             <SubmitButton
               label={t("permission.add-permission.submit-button")}
-              loading={isLoading}
+              loading={isPending}
               disabled={!permission.valid || permission.name === ""}
             />
           }

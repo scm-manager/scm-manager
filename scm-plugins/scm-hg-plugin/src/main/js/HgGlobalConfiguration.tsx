@@ -19,12 +19,10 @@ import { useTranslation } from "react-i18next";
 import { Button, ConfigurationForm, Form, Title, useDocumentTitle } from "@scm-manager/ui-core";
 import { SmallLoadingSpinner, validation } from "@scm-manager/ui-components";
 import { HgGlobalConfigurationDto, useHgAutoConfiguration } from "./hooks";
+import { useRequiredIndexLink } from "@scm-manager/ui-api";
 
-type Props = {
-  link: string;
-};
-
-const HgGlobalConfiguration: FC<Props> = ({ link }) => {
+const HgGlobalConfiguration: FC = () => {
+  const link = useRequiredIndexLink("hgConfig");
   const { mutate: triggerAutoConfiguration, isLoading: isAutoConfigLoading } = useHgAutoConfiguration(link);
   const [t] = useTranslation("plugins");
   useDocumentTitle(t("scm-hg-plugin.config.title"));

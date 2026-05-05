@@ -14,25 +14,25 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentProps, HTMLAttributes } from "react";
+import React, { ComponentProps, FC, HTMLAttributes, Ref } from "react";
 import classNames from "classnames";
+
+type CardRowProps = HTMLAttributes<HTMLDivElement> & { ref?: Ref<HTMLDivElement> };
 
 /**
  * @beta
  * @since 2.44.0
  */
-const CardRow = React.forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
+const CardRow: FC<CardRowProps> = ({ className, ref, ...props }) => (
   <div className={classNames(className, "ml-1")} {...props} ref={ref} />
-));
+);
 
 export default CardRow;
 
-export const SecondaryRow = React.forwardRef<HTMLDivElement, ComponentProps<typeof CardRow>>(
-  ({ className, ...props }, ref) => <CardRow className={classNames(className, "is-size-7")} {...props} ref={ref} />
+export const SecondaryRow: FC<ComponentProps<typeof CardRow>> = ({ className, ref, ...props }) => (
+  <CardRow className={classNames(className, "is-size-7")} {...props} ref={ref} />
 );
 
-export const TertiaryRow = React.forwardRef<HTMLDivElement, ComponentProps<typeof CardRow>>(
-  ({ className, ...props }, ref) => (
-    <CardRow className={classNames(className, "is-size-7", "has-text-secondary")} {...props} ref={ref} />
-  )
+export const TertiaryRow: FC<ComponentProps<typeof CardRow>> = ({ className, ref, ...props }) => (
+  <CardRow className={classNames(className, "is-size-7", "has-text-secondary")} {...props} ref={ref} />
 );

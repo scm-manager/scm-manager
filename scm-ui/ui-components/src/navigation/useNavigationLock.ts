@@ -16,6 +16,7 @@
 
 import { useEffect } from "react";
 
+// TODO: Navigation
 // This hook can be used to warn the user on reloading or closing the current page if the navigation lock is enabled.
 const useNavigationLock = (enabled: boolean) => {
   useEffect(() => {

@@ -16,19 +16,19 @@
 
 import { ApiResult, useIndexLink } from "./base";
 import { UpdateInfo } from "@scm-manager/ui-types";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
 
 export const useUpdateInfo = (): ApiResult<UpdateInfo | null> => {
   const indexLink = useIndexLink("updateInfo");
-  return useQuery<UpdateInfo | null, Error>(
-    "updateInfo",
-    () => {
+  return useQuery<UpdateInfo | null, Error>({
+    queryKey: ["updateInfo"],
+    queryFn: () => {
       if (!indexLink) {
         throw new Error("could not find index data");
       }
       return apiClient.get(indexLink).then((response) => (response.status === 204 ? null : response.json()));
     },
-    { enabled: !!indexLink }
-  );
+    enabled: !!indexLink,
+  });
 };

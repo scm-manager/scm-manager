@@ -17,8 +17,8 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
-import { useDocumentTitle } from "@scm-manager/ui-core";
-import { Checkbox, DateFromNow, InfoTable } from "@scm-manager/ui-components";
+import { useDocumentTitle, DateFromNow } from "@scm-manager/ui-core";
+import { Checkbox, InfoTable } from "@scm-manager/ui-components";
 import GroupMember from "./GroupMember";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 

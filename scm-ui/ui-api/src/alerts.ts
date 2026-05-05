@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
 import { ApiResult, useIndexLink } from "./base";
 import { AlertsResponse, HalRepresentation, Link } from "@scm-manager/ui-types";
@@ -43,21 +43,21 @@ const fetchAlerts = (request: AlertRequest) => {
   return fetch(url, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(request.body)
+    body: JSON.stringify(request.body),
   })
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
         throw new Error("Failed to fetch alerts");
       }
       return response;
     })
-    .then(response => response.json())
+    .then((response) => response.json())
     .then((data: AlertsResponse) => {
       const storageItem: LocalStorageAlerts = {
         ...data,
-        checksum: request.checksum
+        checksum: request.checksum,
       };
       localStorage.setItem("alerts", JSON.stringify(storageItem));
       return data;
@@ -74,26 +74,24 @@ const restoreOrFetch = (request: AlertRequest): Promise<AlertsResponse> => {
 
 export const useAlerts = (): ApiResult<AlertsResponse> => {
   const link = useIndexLink("alerts");
-  const { data, error, isLoading } = useQuery<AlertsResponse, Error>(
-    "alerts",
-    () => {
+  const { data, error, isLoading } = useQuery<AlertsResponse, Error>({
+    queryKey: ["alerts"],
+    queryFn: () => {
       if (!link) {
         throw new Error("Could not find alert link");
       }
       return apiClient
         .get(link)
-        .then(response => response.json())
+        .then((response) => response.json())
         .then(restoreOrFetch);
     },
-    {
-      enabled: !!link,
-      staleTime: Infinity
-    }
-  );
+    enabled: !!link,
+    staleTime: Infinity,
+  });
 
   return {
     data,
     error,
-    isLoading
+    isLoading,
   };
 };

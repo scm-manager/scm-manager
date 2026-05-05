@@ -14,18 +14,25 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FocusEventHandler, InputHTMLAttributes, KeyboardEventHandler, useCallback, useContext } from "react";
+import React, {
+  FC,
+  FocusEventHandler,
+  InputHTMLAttributes,
+  KeyboardEventHandler,
+  Ref,
+  useCallback,
+  useContext,
+} from "react";
 import { SearchBoxContext } from "./SearchBoxContext";
 import { mergeRefs } from "./mergeRefs";
 import classNames from "classnames";
 
-export const SearchBoxInput = React.forwardRef<
-  HTMLInputElement,
-  Omit<
-    InputHTMLAttributes<HTMLInputElement>,
-    "type" | "tabIndex" | "aria-haspopup" | "autoComplete" | "aria-controls" | "aria-activedescendant"
-  >
->(({ className, onKeyDown, onBlur, onFocus, ...props }, ref) => {
+type SearchBoxInputProps = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "type" | "tabIndex" | "aria-haspopup" | "autoComplete" | "aria-controls" | "aria-activedescendant"
+> & { ref: Ref<HTMLInputElement> };
+
+export const SearchBoxInput: FC<SearchBoxInputProps> = ({ className, onKeyDown, onBlur, onFocus, ref, ...props }) => {
   const { onQueryChange, query, popupId, handleInputKeyDown, handleInputFocus, handleInputBlur, activeId, inputRef } =
     useContext(SearchBoxContext);
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = useCallback(
@@ -66,4 +73,4 @@ export const SearchBoxInput = React.forwardRef<
       className={classNames("input", className)}
     />
   );
-});
+};

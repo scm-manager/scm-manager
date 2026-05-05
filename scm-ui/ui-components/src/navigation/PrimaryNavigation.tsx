@@ -24,13 +24,13 @@ type Props = {
   links: Links;
 };
 
-type Appender = (to: string, match: string, label: string, linkName: string) => void;
+type Appender = (to: string, match: string | string[], label: string, linkName: string) => void;
 
 const PrimaryNavigation: FC<Props> = ({ links }) => {
   const [t] = useTranslation("commons");
 
   const createNavigationAppender = (navItems: ReactNode[]): Appender => {
-    return (to: string, match: string, label: string, linkName: string) => {
+    return (to: string, match: string | string[], label: string, linkName: string) => {
       const link = links[linkName];
       if (link) {
         const navigationItem = (
@@ -53,7 +53,7 @@ const PrimaryNavigation: FC<Props> = ({ links }) => {
 
     const extensionProps = {
       links,
-      label: t("primary-navigation.first-menu")
+      label: t("primary-navigation.first-menu"),
     };
 
     const append = createNavigationAppender(navItems);
@@ -65,12 +65,12 @@ const PrimaryNavigation: FC<Props> = ({ links }) => {
           key="primary-navigation.first-menu"
           name="primary-navigation.first-menu"
           props={extensionProps}
-        />
+        />,
       );
     }
-    append("/repos/", "/(repo|repos)", "primary-navigation.repositories", "repositories");
-    append("/users/", "/(user|users)", "primary-navigation.users", "users");
-    append("/groups/", "/(group|groups)", "primary-navigation.groups", "groups");
+    append("/repos/", ["/repo", "/repos"], "primary-navigation.repositories", "repositories");
+    append("/users/", ["/user", "/users"], "primary-navigation.users", "users");
+    append("/groups/", ["/group", "/groups"], "primary-navigation.groups", "groups");
     append("/admin", "/admin", "primary-navigation.admin", "config");
 
     navItems.push(
@@ -79,9 +79,9 @@ const PrimaryNavigation: FC<Props> = ({ links }) => {
         name="primary-navigation"
         renderAll={true}
         props={{
-          links
+          links,
         }}
-      />
+      />,
     );
 
     return navItems;

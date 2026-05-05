@@ -18,7 +18,8 @@ import React, { FC } from "react";
 import { Changeset } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { CommaSeparatedList, Contributor, ContributorRow, DateFromNow } from "@scm-manager/ui-components";
+import { CommaSeparatedList, Contributor, ContributorRow } from "@scm-manager/ui-components";
+import { AbsoluteDate } from "@scm-manager/ui-core";
 
 type Props = {
   changeset: Changeset;
@@ -26,12 +27,15 @@ type Props = {
 
 const getUnique = (items: string[]) =>
   Object.keys(
-    items.reduce((result, item) => {
-      if (!(item in result)) {
-        result[item] = true;
-      }
-      return result;
-    }, {} as { [type: string]: boolean })
+    items.reduce(
+      (result, item) => {
+        if (!(item in result)) {
+          result[item] = true;
+        }
+        return result;
+      },
+      {} as { [type: string]: boolean },
+    ),
   );
 
 const ContributorTable: FC<Props> = ({ changeset }) => {
@@ -67,28 +71,30 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
 
   return (
     <table>
-      <ContributorRow label={t("changeset.contributor.type.author")}>
-        <Contributor person={changeset.author} /> <DateFromNow date={changeset.date} />
-      </ContributorRow>
-
-      {getContributorsByType().map((contribution) => (
-        <ContributorRow key={contribution.type} label={t("changeset.contributor.type." + contribution.type)}>
-          <CommaSeparatedList>
-            {contribution.contributors?.map((contributor) => (
-              <>
-                <Contributor key={contributor.name} person={contributor} />
-                {contributor.time && (
-                  <>
-                    {" "}
-                    <DateFromNow date={contributor.time} />
-                  </>
-                )}
-              </>
-            ))}
-          </CommaSeparatedList>
+      <tbody>
+        <ContributorRow label={t("changeset.contributor.type.author")}>
+          <Contributor person={changeset.author} /> <AbsoluteDate date={changeset.date} />
         </ContributorRow>
-      ))}
-      <ExtensionPoint name="changesets.contributor.table.row" props={{ changeset }} renderAll={true} />
+
+        {getContributorsByType().map((contribution) => (
+          <ContributorRow key={contribution.type} label={t("changeset.contributor.type." + contribution.type)}>
+            <CommaSeparatedList>
+              {contribution.contributors?.map((contributor) => (
+                <>
+                  <Contributor key={contributor.name} person={contributor} />
+                  {contributor.time && (
+                    <>
+                      {" "}
+                      <AbsoluteDate date={contributor.time} />
+                    </>
+                  )}
+                </>
+              ))}
+            </CommaSeparatedList>
+          </ContributorRow>
+        ))}
+        <ExtensionPoint name="changesets.contributor.table.row" props={{ changeset }} renderAll={true} />
+      </tbody>
     </table>
   );
 };

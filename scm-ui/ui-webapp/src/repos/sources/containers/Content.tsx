@@ -20,14 +20,14 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { File, Link, Repository } from "@scm-manager/ui-types";
-import { DateFromNow, ErrorNotification, FileSize, Icon, OpenInFullscreenButton } from "@scm-manager/ui-components";
+import { ErrorNotification, FileSize, Icon, OpenInFullscreenButton } from "@scm-manager/ui-components";
 import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
 import AnnotateView from "./AnnotateView";
 import ContentActionMenu from "../components/content/overflowMenu/ContentActionMenu";
 import { useContentType } from "@scm-manager/ui-api";
-import { useAriaId } from "@scm-manager/ui-core";
+import { DateFromNow, useAriaId } from "@scm-manager/ui-core";
 
 type Props = {
   file: File;
@@ -244,7 +244,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
       {header}
       {moreInformation}
       {body}
-    </>
+    </>,
   );
 };
 

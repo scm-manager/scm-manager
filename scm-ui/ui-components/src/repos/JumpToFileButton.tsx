@@ -15,9 +15,9 @@
  */
 
 import React, { FC } from "react";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { Tooltip } from "@scm-manager/ui-overlays";
+import styled from "styled-components";
+import { Tooltip } from "@scm-manager/ui-core";
 import Icon from "../Icon";
 
 const Button = styled(Link)`

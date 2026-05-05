@@ -20,7 +20,7 @@ import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components
 import ApiKeyTable from "./ApiKeyTable";
 import AddApiKey from "./AddApiKey";
 import { useTranslation } from "react-i18next";
-import { useApiKeys, useDeleteApiKey } from "@scm-manager/ui-api";
+import { useApiKeys, useDeleteApiKey, useRequiredMe } from "@scm-manager/ui-api";
 import { Link as RouterLink } from "react-router-dom";
 import { useDocumentTitle } from "@scm-manager/ui-core";
 
@@ -49,7 +49,7 @@ const SetApiKeys: FC<Props> = ({ user }) => {
     <>
       <Subtitle subtitle={t("apiKey.subtitle")} />
       <p>
-        {t("apiKey.text1")} <RouterLink to={"/admin/roles/"}>{t("apiKey.manageRoles")}</RouterLink>
+        {t("apiKey.text1")} <RouterLink to="/admin/roles/">{t("apiKey.manageRoles")}</RouterLink>
       </p>
       <p>{t("apiKey.text2")}</p>
       <br />
@@ -57,6 +57,11 @@ const SetApiKeys: FC<Props> = ({ user }) => {
       {createLink && <AddApiKey user={user} apiKeys={apiKeys} />}
     </>
   );
+};
+
+export const SetMyApiKeys: FC = () => {
+  const me = useRequiredMe();
+  return <SetApiKeys user={me} />;
 };
 
 export default SetApiKeys;

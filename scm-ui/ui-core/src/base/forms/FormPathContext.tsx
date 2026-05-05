@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useContext, useMemo } from "react";
+import React, { FC, ReactNode, useContext, useMemo } from "react";
 
 const ScmFormPathContext = React.createContext<string>("");
 
@@ -22,7 +22,7 @@ export function useScmFormPathContext() {
   return useContext(ScmFormPathContext);
 }
 
-export const ScmFormPathContextProvider: FC<{ path: string }> = ({ children, path }) => (
+export const ScmFormPathContextProvider: FC<{ path: string; children?: ReactNode }> = ({ children, path }) => (
   <ScmFormPathContext.Provider value={path}>{children}</ScmFormPathContext.Provider>
 );
 
@@ -58,7 +58,7 @@ export const ScmFormPathContextProvider: FC<{ path: string }> = ({ children, pat
  * // This pattern becomes useful in complex or large forms.
  * ```
  */
-export const ScmNestedFormPathContextProvider: FC<{ path: string }> = ({ children, path }) => {
+export const ScmNestedFormPathContextProvider: FC<{ path: string; children?: ReactNode }> = ({ children, path }) => {
   const prefix = useScmFormPathContext();
   const pathWithPrefix = useMemo(() => (prefix ? `${prefix}.${path}` : path), [path, prefix]);
   return <ScmFormPathContext.Provider value={pathWithPrefix}>{children}</ScmFormPathContext.Provider>;

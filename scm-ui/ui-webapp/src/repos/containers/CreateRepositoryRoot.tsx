@@ -15,10 +15,10 @@
  */
 
 import React, { FC } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useIndex, useNamespaceStrategies, useRepositoryTypes } from "@scm-manager/ui-api";
-import { Page, urls } from "@scm-manager/ui-components";
+import { Page } from "@scm-manager/ui-components";
 import { Notification, useDocumentTitle } from "@scm-manager/ui-core";
 import { extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import NamespaceAndNameFields from "../components/NamespaceAndNameFields";
@@ -28,17 +28,17 @@ import CreateRepository from "./CreateRepository";
 import ImportRepository from "./ImportRepository";
 
 type CreatorRouteProps = {
-  creator: extensionPoints.RepositoryCreatorExtension;
-  creators: extensionPoints.RepositoryCreatorExtension[];
+  creator: extensionPoints.RepositoryCreator["type"];
+  creators: extensionPoints.RepositoryCreator["type"][];
 };
 
 const useCreateRepositoryData = () => {
   const { isLoading: isLoadingNS, error: errorNS, data: namespaceStrategies } = useNamespaceStrategies();
   const { isLoading: isLoadingRT, error: errorRT, data: repositoryTypes } = useRepositoryTypes();
-  const { isLoading: isLoadingIdx, error: errorIdx, data: index } = useIndex();
+  const index = useIndex();
   return {
-    isPageLoading: isLoadingNS || isLoadingRT || isLoadingIdx,
-    pageLoadingError: errorNS || errorRT || errorIdx || undefined,
+    isPageLoading: isLoadingNS || isLoadingRT,
+    pageLoadingError: errorNS || errorRT || undefined,
     namespaceStrategies,
     repositoryTypes,
     index,
@@ -63,8 +63,7 @@ const CreatorRoute: FC<CreatorRouteProps> = ({ creator, creators }) => {
       {namespaceStrategies &&
       repositoryTypes &&
       repositoryTypes?._embedded?.repositoryTypes &&
-      repositoryTypes._embedded.repositoryTypes.length > 0 &&
-      index ? (
+      repositoryTypes._embedded.repositoryTypes.length > 0 ? (
         <Component
           namespaceStrategies={namespaceStrategies}
           repositoryTypes={repositoryTypes}
@@ -83,7 +82,7 @@ const CreateRepositoryRoot: FC = () => {
   const [t] = useTranslation("repos");
   const binder = useBinder();
 
-  const creators: extensionPoints.RepositoryCreatorExtension[] = [
+  const creators: extensionPoints.RepositoryCreator["type"][] = [
     {
       subtitle: t("create.subtitle"),
       path: "",
@@ -106,13 +105,19 @@ const CreateRepositoryRoot: FC = () => {
   }
 
   return (
-    <Switch>
-      {creators.map((creator) => (
-        <Route key={creator.path} exact path={urls.concat("/repos/create", creator.path)}>
-          <CreatorRoute creator={creator} creators={creators} />
-        </Route>
-      ))}
-    </Switch>
+    <Routes>
+      {creators.map((creator) =>
+        creator.path ? (
+          <Route
+            key={creator.path}
+            path={creator.path}
+            element={<CreatorRoute creator={creator} creators={creators} />}
+          />
+        ) : (
+          <Route key="index" index element={<CreatorRoute creator={creator} creators={creators} />} />
+        ),
+      )}
+    </Routes>
   );
 };
 

@@ -41,7 +41,7 @@ public class PluginWizardStartupAction implements InitializationStep {
 
   @Override
   public int sequence() {
-    return 1;
+    return 300;
   }
 
   @Override

@@ -21,8 +21,7 @@ export {
   RenderableExtensionPointDefinition,
   SimpleRenderableDynamicExtensionPointDefinition,
 } from "./ExtensionPoint";
-export { default as ExtractProps } from "./extractProps";
-
+export { useRouteExtensions } from "./useRouteExtensions";
 // suppress eslint prettier warning,
 // because prettier does not understand "* as"
 // eslint-disable-next-line prettier/prettier

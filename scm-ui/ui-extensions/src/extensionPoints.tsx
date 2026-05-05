@@ -41,6 +41,7 @@ import {
 } from "@scm-manager/ui-types";
 import { ExtensionPointDefinition } from "./binder";
 import { RenderableExtensionPointDefinition, SimpleRenderableDynamicExtensionPointDefinition } from "./ExtensionPoint";
+import { RouteExtensionPointDefinition } from "./useRouteExtensions";
 
 type RepositoryCreatorSubFormProps = {
   repository: RepositoryCreation;
@@ -51,10 +52,6 @@ type RepositoryCreatorSubFormProps = {
 
 export type RepositoryCreatorComponentProps = ComponentProps<RepositoryCreator["type"]["component"]>;
 
-/**
- * @deprecated use {@link RepositoryCreator}`["type"]` instead
- */
-export type RepositoryCreatorExtension = RepositoryCreator["type"];
 export type RepositoryCreator = ExtensionPointDefinition<
   "repos.creator",
   {
@@ -78,14 +75,6 @@ export type RepositoryFlags = RenderableExtensionPointDefinition<
   { repository: Repository; tooltipLocation?: "bottom" | "right" | "top" | "left" }
 >;
 
-/**
- * @deprecated use {@link ReposSourcesActionbar}`["props"]` instead
- */
-export type ReposSourcesActionbarExtensionProps = ReposSourcesActionbar["props"];
-/**
- * @deprecated use {@link ReposSourcesActionbar} instead
- */
-export type ReposSourcesActionbarExtension = ReposSourcesActionbar;
 export type ReposSourcesActionbar = RenderableExtensionPointDefinition<
   "repos.sources.actionbar",
   {
@@ -98,14 +87,6 @@ export type ReposSourcesActionbar = RenderableExtensionPointDefinition<
   }
 >;
 
-/**
- * @deprecated use {@link ReposSourcesEmptyActionbar}`["props"]` instead
- */
-export type ReposSourcesEmptyActionbarExtensionProps = ReposSourcesEmptyActionbar["props"];
-/**
- * @deprecated use {@link ReposSourcesEmptyActionbar} instead
- */
-export type ReposSourcesEmptyActionbarExtension = ReposSourcesEmptyActionbar;
 export type ReposSourcesEmptyActionbar = RenderableExtensionPointDefinition<
   "repos.sources.empty.actionbar",
   {
@@ -114,15 +95,6 @@ export type ReposSourcesEmptyActionbar = RenderableExtensionPointDefinition<
   }
 >;
 
-/**
- * @deprecated use {@link ReposSourcesTreeWrapper}`["props"]` instead
- */
-export type ReposSourcesTreeWrapperProps = ReposSourcesTreeWrapper["props"];
-
-/**
- * @deprecated use {@link ReposSourcesTreeWrapper} instead
- */
-export type ReposSourcesTreeWrapperExtension = ReposSourcesTreeWrapper;
 export type ReposSourcesTreeWrapper = RenderableExtensionPointDefinition<
   "repos.source.tree.wrapper",
   {
@@ -138,33 +110,16 @@ export type ReposSourcesTreeRowProps = {
   file: File;
 };
 
-/**
- * @deprecated use {@link ReposSourcesTreeRowRight} instead
- */
-export type ReposSourcesTreeRowRightExtension = ReposSourcesTreeRowRight;
 export type ReposSourcesTreeRowRight = RenderableExtensionPointDefinition<
   "repos.sources.tree.row.right",
   ReposSourcesTreeRowProps
 >;
 
-/**
- * @deprecated use {@link ReposSourcesTreeRowAfter} instead
- */
-export type ReposSourcesTreeRowAfterExtension = ReposSourcesTreeRowAfter;
 export type ReposSourcesTreeRowAfter = RenderableExtensionPointDefinition<
   "repos.sources.tree.row.after",
   ReposSourcesTreeRowProps
 >;
 
-/**
- * @deprecated use {@link PrimaryNavigationLoginButton}`["props"]` instead
- */
-export type PrimaryNavigationLoginButtonProps = PrimaryNavigationLoginButton["props"];
-
-/**
- * use {@link PrimaryNavigationLoginButton} instead
- */
-export type PrimaryNavigationLoginButtonExtension = PrimaryNavigationLoginButton;
 export type PrimaryNavigationLoginButton = RenderableExtensionPointDefinition<
   "primary-navigation.login",
   {
@@ -178,15 +133,6 @@ export type PrimaryNavigationLoginButton = RenderableExtensionPointDefinition<
   }
 >;
 
-/**
- * @deprecated use {@link PrimaryNavigationLogoutButtonExtension}`["props"]` instead
- */
-export type PrimaryNavigationLogoutButtonProps = PrimaryNavigationLogoutButton["props"];
-
-/**
- * @deprecated use {@link PrimaryNavigationLogoutButton} instead
- */
-export type PrimaryNavigationLogoutButtonExtension = PrimaryNavigationLogoutButton;
 export type PrimaryNavigationLogoutButton = RenderableExtensionPointDefinition<
   "primary-navigation.logout",
   {
@@ -197,10 +143,6 @@ export type PrimaryNavigationLogoutButton = RenderableExtensionPointDefinition<
   }
 >;
 
-/**
- * @deprecated use {@link SourceExtension}`["props"]` instead
- */
-export type SourceExtensionProps = SourceExtension["props"];
 export type SourceExtension = RenderableExtensionPointDefinition<
   "repos.sources.extensions",
   {
@@ -213,15 +155,6 @@ export type SourceExtension = RenderableExtensionPointDefinition<
   }
 >;
 
-/**
- * @deprecated use {@link RepositoryOverviewTop}`["props"]` instead
- */
-export type RepositoryOverviewTopExtensionProps = RepositoryOverviewTop["props"];
-
-/**
- * @deprecated use {@link RepositoryOverviewTop} instead
- */
-export type RepositoryOverviewTopExtension = RepositoryOverviewTop;
 export type RepositoryOverviewTop = RenderableExtensionPointDefinition<
   "repository.overview.top",
   {
@@ -231,22 +164,10 @@ export type RepositoryOverviewTop = RenderableExtensionPointDefinition<
   }
 >;
 
-/**
- * @deprecated use {@link RepositoryOverviewLeft} instead
- */
-export type RepositoryOverviewLeftExtension = RepositoryOverviewLeft;
 export type RepositoryOverviewLeft = ExtensionPointDefinition<"repository.overview.left", React.ComponentType>;
 
-/**
- * @deprecated use {@link RepositoryOverviewTitle} instead
- */
-export type RepositoryOverviewTitleExtension = RepositoryOverviewTitle;
 export type RepositoryOverviewTitle = RenderableExtensionPointDefinition<"repository.overview.title">;
 
-/**
- * @deprecated use {@link RepositoryOverviewSubtitle} instead
- */
-export type RepositoryOverviewSubtitleExtension = RepositoryOverviewSubtitle;
 export type RepositoryOverviewSubtitle = RenderableExtensionPointDefinition<"repository.overview.subtitle">;
 
 /**
@@ -264,11 +185,11 @@ export type DocumentTitleExtensionPoint = ExtensionPointDefinition<
 
 // From docs
 
-export type AdminNavigation = RenderableExtensionPointDefinition<"admin.navigation", { links: Links; url: string }>;
+export type AdminNavigation = RenderableExtensionPointDefinition<"admin.navigation", { links: Links }>;
 
-export type AdminRoute = RenderableExtensionPointDefinition<"admin.route", { links: Links; url: string }>;
+export type AdminRoute = RouteExtensionPointDefinition<"admin.route">;
 
-export type AdminSetting = RenderableExtensionPointDefinition<"admin.setting", { links: Links; url: string }>;
+export type AdminSetting = RenderableExtensionPointDefinition<"admin.setting", { links?: Links }>;
 
 /**
  * - can be used to replace the whole description of a changeset
@@ -291,7 +212,7 @@ export type ChangesetDescriptionTokens = ExtensionPointDefinition<
   "changeset.description.tokens",
   (
     changeset: Changeset,
-    value: string
+    value: string,
   ) => Array<{
     textToReplace: string;
     replacement: ReactNode;
@@ -315,22 +236,16 @@ export type ChangesetsContributorTableRow = RenderableExtensionPointDefinition<
   { changeset: Changeset }
 >;
 
-export type GroupNavigation = RenderableExtensionPointDefinition<"group.navigation", { group: Group; url: string }>;
+export type GroupNavigation = RenderableExtensionPointDefinition<"group.navigation", { group: Group }>;
 
-export type GroupRoute = RenderableExtensionPointDefinition<"group.route", { group: Group; url: string }>;
-export type GroupSetting = RenderableExtensionPointDefinition<"group.setting", { group: Group; url: string }>;
+export type GroupRoute = RouteExtensionPointDefinition<"group.route", { group?: Group }>;
+export type GroupSetting = RenderableExtensionPointDefinition<"group.setting", { group?: Group }>;
 
 /**
  * - Add a new Route to the main Route (scm/)
  * - Props: authenticated?: boolean, links: Links
  */
-export type MainRoute = RenderableExtensionPointDefinition<
-  "main.route",
-  {
-    me: Me;
-    authenticated?: boolean;
-  }
->;
+export type MainRoute = RouteExtensionPointDefinition<"main.route">;
 
 export type PluginAvatar = RenderableExtensionPointDefinition<
   "plugins.plugin-avatar",
@@ -351,21 +266,12 @@ export type PrimaryNavigationFirstMenu = RenderableExtensionPointDefinition<
   { links: Links; label: string }
 >;
 
-export type ProfileRoute = RenderableExtensionPointDefinition<"profile.route", { me: Me; url: string }>;
-export type ProfileSetting = RenderableExtensionPointDefinition<
-  "profile.setting",
-  { me?: Me; url: string; links: Links }
->;
+export type ProfileRoute = RouteExtensionPointDefinition<"profile.route">;
+export type ProfileSetting = RenderableExtensionPointDefinition<"profile.setting", { me?: Me; links: Links }>;
 
-export type RepoConfigRoute = RenderableExtensionPointDefinition<
-  "repo-config.route",
-  { repository: Repository; url: string }
->;
+export type RepoConfigRoute = RouteExtensionPointDefinition<"repo-config.route">;
 
-export type RepoConfigDetails = RenderableExtensionPointDefinition<
-  "repo-config.details",
-  { repository: Repository; url: string }
->;
+export type RepoConfigDetails = RenderableExtensionPointDefinition<"repo-config.details", { repository?: Repository }>;
 
 export type ReposBranchDetailsInformation = RenderableExtensionPointDefinition<
   "repos.branch-details.information",
@@ -411,12 +317,12 @@ export type RepositoryCodeOverviewContent = RenderableExtensionPointDefinition<
 
 export type RepositoryNavigation = RenderableExtensionPointDefinition<
   "repository.navigation",
-  { repository: Repository; url: string; indexLinks: Links }
+  { repository: Repository; indexLinks: Links }
 >;
 
 export type RepositoryNavigationTopLevel = RenderableExtensionPointDefinition<
   "repository.navigation.topLevel",
-  { repository: Repository; url: string; indexLinks: Links }
+  { repository: Repository; indexLinks: Links }
 >;
 
 export type RepositoryRoleDetailsInformation = RenderableExtensionPointDefinition<
@@ -426,7 +332,7 @@ export type RepositoryRoleDetailsInformation = RenderableExtensionPointDefinitio
 
 export type RepositorySetting = RenderableExtensionPointDefinition<
   "repository.setting",
-  { repository: Repository; url: string; indexLinks: Links }
+  { repository: Repository; indexLinks: Links }
 >;
 
 export type RepositoryAvatar = RenderableExtensionPointDefinition<
@@ -461,13 +367,13 @@ export type RepositorySourcesView = RenderableExtensionPointDefinition<
   { file: File; contentType: string; revision: string; basePath: string }
 >;
 
-export type RolesRoute = RenderableExtensionPointDefinition<
+export type RolesRoute = RouteExtensionPointDefinition<
   "roles.route",
-  { role: HalRepresentation & RepositoryRoleBase & { creationDate?: string; lastModified?: string }; url: string }
+  { role?: HalRepresentation & RepositoryRoleBase & { creationDate?: string; lastModified?: string } }
 >;
 
-export type UserRoute = RenderableExtensionPointDefinition<"user.route", { user: User; url: string }>;
-export type UserSetting = RenderableExtensionPointDefinition<"user.setting", { user: User; url: string }>;
+export type UserRoute = RouteExtensionPointDefinition<"user.route", { user?: User }>;
+export type UserSetting = RenderableExtensionPointDefinition<"user.setting", { user?: User }>;
 
 /**
  * - Dynamic extension point for custom language-specific renderers
@@ -515,17 +421,6 @@ export type MarkdownLinkProtocolRenderer<Protocol extends string | undefined = u
  */
 export type AvatarFactory = ExtensionPointDefinition<"avatar.factory", (person: Person) => string | undefined>;
 
-/**
- * - Location: At every changeset (detailed view as well as changeset overview)
- * - can be used to add avatar (such as gravatar) for each changeset
- *
- * @deprecated Has no effect, use {@link AvatarFactory} instead
- */
-export type ChangesetAvatarFactory = ExtensionPointDefinition<
-  "changeset.avatar-factory",
-  (changeset: Changeset) => void
->;
-
 type MainRedirectProps = {
   me: Me;
   authenticated?: boolean;
@@ -539,17 +434,6 @@ export type MainRedirect = ExtensionPointDefinition<
   "main.redirect",
   (props: MainRedirectProps) => string,
   MainRedirectProps
->;
-
-/**
- * - A Factory function to create markdown [renderer](https://github.com/rexxars/react-markdown#node-types)
- * - The factory function will be called with a renderContext parameter of type Object. this parameter is given as a prop for the {@link MarkdownView} component.
- *
- * @deprecated Use {@link MarkdownCodeRenderer} or {@link MarkdownLinkProtocolRenderer} instead
- */
-export type MarkdownRendererFactory = ExtensionPointDefinition<
-  "markdown-renderer-factory",
-  (renderContext: unknown) => Record<string, React.ComponentType<any>>
 >;
 
 export type RepositoryCardBeforeTitle = RenderableExtensionPointDefinition<
@@ -572,17 +456,14 @@ export type RepositoryCreationInitialization = RenderableExtensionPointDefinitio
 
 export type NamespaceTopLevelNavigation = RenderableExtensionPointDefinition<
   "namespace.navigation.topLevel",
-  { namespace: Namespace; url: string }
+  { namespace: Namespace }
 >;
 
-export type NamespaceRoute = RenderableExtensionPointDefinition<
-  "namespace.route",
-  { namespace: Namespace; url: string }
->;
+export type NamespaceRoute = RenderableExtensionPointDefinition<"namespace.route">;
 
 export type NamespaceSetting = RenderableExtensionPointDefinition<
   "namespace.setting",
-  { namespace: Namespace; url: string }
+  { namespace: Namespace; indexLinks: Links }
 >;
 
 export type RepositoryTagDetailsInformation = RenderableExtensionPointDefinition<
@@ -600,10 +481,7 @@ export type RepositorySourcesContentDownloadButton = RenderableExtensionPointDef
   { repository: Repository; file: File }
 >;
 
-export type RepositoryRoute = RenderableExtensionPointDefinition<
-  "repository.route",
-  { repository: Repository; url: string; indexLinks: Links; urlForLinks: string }
->;
+export type RepositoryRoute = RouteExtensionPointDefinition<"repository.route">;
 
 type RepositoryRedirectProps = {
   namespace: string;
@@ -620,7 +498,6 @@ type RepositoryRedirectProps = {
     };
     isExact: boolean;
     path: string;
-    url: string;
   };
 };
 
@@ -684,10 +561,7 @@ export type RepositoryInformationTableBottom = RenderableExtensionPointDefinitio
   { repository: Repository }
 >;
 
-export type RepositoryBanner = RenderableExtensionPointDefinition<
-  "repository.banner",
-  { repository: Repository; url: string }
->;
+export type RepositoryBanner = RenderableExtensionPointDefinition<"repository.banner", { repository: Repository }>;
 
 export type UserInformationTableBottom = RenderableExtensionPointDefinition<
   "user.information.table.bottom",
@@ -705,12 +579,10 @@ type BranchMenuDetailProps = {
 };
 
 /**
- * @beta
  * @since 2.46.0
  * @example
  * ```typescript
- * import { Menu } from "@scm-manager/ui-overlays";
- * import { Icon } from "@scm-manager/ui-buttons";
+ * import { Icon, Menu } from "@scm-manager/ui-core";
  *
  * binder.bind<extensionPoints.BranchListMenu>(
  *  "branches.list.menu",
@@ -730,11 +602,10 @@ type BranchListDetailProps = {
 };
 
 /**
- * @beta
  * @since 2.46.0
  * @example
  * ```typescript
- * import { Card } from "@scm-manager/ui-layout";
+ * import { Card } from "@scm-manager/ui-core";
  * import { extensionPoints, binder } from "@scm-manager/ui-extensions";
  *
  * binder.bind<extensionPoints.BranchListDetail>(

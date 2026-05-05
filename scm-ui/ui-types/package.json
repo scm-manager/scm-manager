@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-types",
-  "version": "3.11.9-SNAPSHOT",
+  "version": "4.0.0-REACT19-SNAPSHOT",
   "description": "Typescript types for SCM-Manager related Objects",
   "main": "src/index.ts",
   "files": [
@@ -16,9 +16,10 @@
     "depcheck": "depcheck"
   },
   "devDependencies": {
-    "@scm-manager/eslint-config": "^2.17.0",
-    "@scm-manager/tsconfig": "^2.13.0",
-    "@scm-manager/prettier-config": "^2.12.0"
+    "@scm-manager/eslint-config": "^2.18.2",
+    "@scm-manager/prettier-config": "^2.12.0",
+    "@scm-manager/tsconfig": "^3.0.0-alpha1",
+    "minimatch": "^10.0.3"
   },
   "babel": {
     "presets": [

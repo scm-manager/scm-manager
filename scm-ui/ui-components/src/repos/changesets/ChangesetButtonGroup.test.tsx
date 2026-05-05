@@ -14,48 +14,61 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import * as changesets from "./changesets";
-import { render } from "@testing-library/react";
-import { Branch, Changeset, Repository } from "@scm-manager/ui-types";
-import ChangesetButtonGroup from "./ChangesetButtonGroup";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import { stubI18Next } from "@scm-manager/ui-tests";
+import { render } from "@testing-library/react";
+import { Changeset, Repository } from "@scm-manager/ui-types";
+import * as changesets from "./changesets";
+import ChangesetButtonGroup from "./ChangesetButtonGroup";
 
-const createChangesetLink = jest.spyOn(changesets, "createChangesetLink");
-const createChangesetLinkByBranch = jest.spyOn(changesets, "createChangesetLinkByBranch");
+vi.mock("react-router", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...(actual as Record<string, unknown>),
+    // Mock the 'Link' component to render an <a> tag directly, bypassing the broken router context (Fixes basename error)
+    Link: vi.fn(({ to, children, ...props }) => (
+      <a href={to} {...props}>
+        {children}
+      </a>
+    )),
+  };
+});
+
+const createChangesetLink = vi.spyOn(changesets, "createChangesetLink").mockReturnValue("/changeset");
+const createChangesetLinkByBranch = vi.spyOn(changesets, "createChangesetLinkByBranch").mockReturnValue("/branch");
 
 afterEach(() => {
-  jest.resetAllMocks();
+  vi.resetAllMocks();
 });
 
 describe("ChangesetButtonGroup", () => {
-  test("shouldCallCreateChangesetLinkWithoutBranch", async () => {
-    stubI18Next();
+  it("should call createChangesetLink without branch", () => {
     const { repository, changeset } = createTestData();
     render(
       <BrowserRouter>
         <ChangesetButtonGroup repository={repository} changeset={changeset}></ChangesetButtonGroup>
-      </BrowserRouter>
+      </BrowserRouter>,
     );
     expect(createChangesetLink).toHaveBeenCalled();
     expect(createChangesetLinkByBranch).toHaveBeenCalledTimes(0);
   });
 
-  test("shouldCallCreateChangesetLinkByBranchWithBranch", async () => {
-    stubI18Next();
-    const { repository, changeset, branch } = createTestData();
+  it("should call createChangesetLink by branch with branch", () => {
+    const { repository, changeset, sourceName } = createTestData();
     render(
       <BrowserRouter>
-        <ChangesetButtonGroup repository={repository} changeset={changeset} branch={branch}></ChangesetButtonGroup>
-      </BrowserRouter>
+        <ChangesetButtonGroup
+          repository={repository}
+          changeset={changeset}
+          sourceName={sourceName}
+        ></ChangesetButtonGroup>
+      </BrowserRouter>,
     );
     expect(createChangesetLinkByBranch).toHaveBeenCalled();
     expect(createChangesetLink).toHaveBeenCalledTimes(0);
   });
 });
 
-// TODO centralized test data
 function createTestData() {
   const repository: Repository = { _links: {}, name: "", namespace: "", type: "" };
   const changeset: Changeset = {
@@ -67,6 +80,5 @@ function createTestData() {
     description: "",
     id: "",
   };
-  const branch: Branch = { _links: {}, name: "", revision: "" };
-  return { repository, changeset, branch };
+  return { repository, changeset, sourceName: "develop" };
 }

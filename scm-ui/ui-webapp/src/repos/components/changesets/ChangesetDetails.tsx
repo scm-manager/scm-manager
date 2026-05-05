@@ -16,8 +16,10 @@
 
 import React, { FC, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
+import { Link, Link as ReactLink } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
+import { useContainedInTags } from "@scm-manager/ui-api";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Changeset, ParentChangeset, Repository } from "@scm-manager/ui-types";
 import {
@@ -29,16 +31,12 @@ import {
   ChangesetId,
   changesets,
   ChangesetTags,
-  DateFromNow,
   FileControlFactory,
   SignatureIcon,
 } from "@scm-manager/ui-components";
-import { SubSubtitle } from "@scm-manager/ui-core";
-import { Button, Icon } from "@scm-manager/ui-buttons";
+import { AbsoluteDate, Button, Icon, SubSubtitle } from "@scm-manager/ui-core";
 import ContributorTable from "./ContributorTable";
-import { Link, Link as ReactLink } from "react-router-dom";
 import CreateTagModal from "./CreateTagModal";
-import { useContainedInTags } from "@scm-manager/ui-api";
 import RevertModal from "./RevertModal";
 
 type Props = {
@@ -168,9 +166,9 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
 
   const description = changesets.parseDescription(changeset.description);
   const id = <ChangesetId repository={repository} changeset={changeset} link={false} />;
-  const date = <DateFromNow date={changeset.date} />;
+  const date = <AbsoluteDate date={changeset.date} />;
   const parents = changeset._embedded?.parents?.map((parent: ParentChangeset, index: number) => (
-    <ReactLink title={parent.id} to={parent.id} key={index}>
+    <ReactLink title={parent.id} to={"./../" + parent.id} key={index}>
       {parent.id.substring(0, 7)}
     </ReactLink>
   ));
@@ -211,11 +209,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
                 </SeparatedParents>
               ) : null}
               {showRevertButton && (
-                <Button
-                  className="tag ml-auto"
-                  variant="tertiary"
-                  onClick={() => setRevertModalVisible(true)}
-                >
+                <Button className="tag ml-auto" variant="tertiary" onClick={() => setRevertModalVisible(true)}>
                   {t("changeset.revert.button")}
                 </Button>
               )}

@@ -24,8 +24,6 @@ import {
   CardDetails,
   CardDetailTag,
   CardLinkDetail,
-  CardVariants,
-  CardVariant
 } from "./card/CardDetail";
 import CardComponent from "./card/Card";
 import {
@@ -34,7 +32,7 @@ import {
   DataPageHeaderSetting,
   DataPageHeaderSettingField,
   DataPageHeaderSettingLabel,
-  DataPageHeaderSettings
+  DataPageHeaderSettings,
 } from "./templates/data-page/DataPageHeader";
 import TabsComponent from "./tabs/Tabs";
 import TabsContent from "./tabs/TabsContent";
@@ -42,6 +40,7 @@ import TabsList from "./tabs/TabsList";
 import TabTrigger from "./tabs/TabTrigger";
 
 export { default as Collapsible } from "./collapsible/Collapsible";
+export { useLayoutWide } from "./_helpers/layout-wide";
 
 const CardDetailExports = {
   Label: CardDetailLabel,
@@ -87,5 +86,4 @@ export const Tabs = Object.assign(TabsComponent, {
 });
 
 export { CardVariants } from "./card/CardDetail";
-export { CardVariant } from "./card/CardDetail";
-
+export { type CardVariant } from "./card/CardDetail";

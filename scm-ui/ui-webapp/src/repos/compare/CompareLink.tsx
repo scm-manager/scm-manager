@@ -34,18 +34,12 @@ const CompareLink: FC<Props> = ({ repository, source, sourceType = "b", target, 
 
   const icon = <Icon name="retweet" title={t("compare.linkTitle")} color="inherit" className="mr-2" />;
 
-  if (!target) {
-    return (
-      <Link to={`/repo/${repository.namespace}/${repository.name}/compare/${sourceType}/${source}`} className="px-1">
-        {icon}
-      </Link>
-    );
-  }
+  const compareUrl =
+    `/repo/${repository.namespace}/${repository.name}/code/compare/${sourceType}/${source}` +
+    (target ? `/${targetType}/${target}` : "");
 
   return (
-    <Link
-      to={`/repo/${repository.namespace}/${repository.name}/compare/${sourceType}/${source}/${targetType}/${target}`}
-    >
+    <Link to={compareUrl} className="px-1">
       {icon}
     </Link>
   );

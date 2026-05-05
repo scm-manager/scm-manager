@@ -14,10 +14,10 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Branch, Changeset, ChangesetCollection, Repository } from "@scm-manager/ui-types";
-import fetchMock from "fetch-mock-jest";
+import { Changeset, ChangesetCollection, Repository } from "@scm-manager/ui-types";
+import fetchMock from "fetch-mock";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook, waitFor } from "@testing-library/react";
 import createWrapper from "./tests/createWrapper";
 import { useChangeset, useChangesets } from "./changesets";
 
@@ -28,20 +28,9 @@ describe("Test changeset hooks", () => {
     type: "hg",
     _links: {
       changesets: {
-        href: "/r/c"
-      }
-    }
-  };
-
-  const develop: Branch = {
-    name: "develop",
-    revision: "42",
-    lastCommitter: { name: "trillian" },
-    _links: {
-      history: {
-        href: "/r/b/c"
-      }
-    }
+        href: "/r/c",
+      },
+    },
   };
 
   const changeset: Changeset = {
@@ -49,19 +38,19 @@ describe("Test changeset hooks", () => {
     description: "Awesome change",
     date: new Date(),
     author: {
-      name: "Arthur Dent"
+      name: "Arthur Dent",
     },
     _embedded: {},
-    _links: {}
+    _links: {},
   };
 
   const changesets: ChangesetCollection = {
     page: 1,
     pageTotal: 1,
     _embedded: {
-      changesets: [changeset]
+      changesets: [changeset],
     },
-    _links: {}
+    _links: {},
   };
 
   const expectChangesetCollection = (result?: ChangesetCollection) => {
@@ -78,51 +67,41 @@ describe("Test changeset hooks", () => {
 
       const queryClient = createInfiniteCachingClient();
 
-      const { result, waitFor } = renderHook(() => useChangesets(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+      const { result } = renderHook(() => useChangesets(repository), {
+        wrapper: createWrapper(queryClient),
       });
 
       await waitFor(() => {
-        return !!result.current.data;
+        return expectChangesetCollection(result.current.data);
       });
-
-      expectChangesetCollection(result.current.data);
     });
 
     it("should return changesets for page", async () => {
-      fetchMock.getOnce("/api/v2/r/c", changesets, {
-        query: {
-          page: 42
-        }
-      });
+      fetchMock.getOnce("/api/v2/r/c?page=42", changesets);
 
       const queryClient = createInfiniteCachingClient();
 
-      const { result, waitFor } = renderHook(() => useChangesets(repository, { page: 42 }), {
-        wrapper: createWrapper(undefined, queryClient)
+      const { result } = renderHook(() => useChangesets(repository, { page: 42 }), {
+        wrapper: createWrapper(queryClient),
       });
 
       await waitFor(() => {
-        return !!result.current.data;
+        return expectChangesetCollection(result.current.data);
       });
-
-      expectChangesetCollection(result.current.data);
     });
 
     it("should use link from branch", async () => {
-      fetchMock.getOnce("/api/v2/r/b/c", changesets);
+      fetchMock.getOnce("/api/v2/r/c?revision=develop", changesets);
 
       const queryClient = createInfiniteCachingClient();
 
-      const { result, waitFor } = renderHook(() => useChangesets(repository, { branch: develop }), {
-        wrapper: createWrapper(undefined, queryClient)
+      const { result } = renderHook(() => useChangesets(repository, { revision: "develop" }), {
+        wrapper: createWrapper(queryClient),
       });
 
       await waitFor(() => {
-        return !!result.current.data;
+        return expectChangesetCollection(result.current.data);
       });
-
-      expectChangesetCollection(result.current.data);
     });
 
     it("should populate changeset cache", async () => {
@@ -130,23 +109,21 @@ describe("Test changeset hooks", () => {
 
       const queryClient = createInfiniteCachingClient();
 
-      const { result, waitFor } = renderHook(() => useChangesets(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+      renderHook(() => useChangesets(repository), {
+        wrapper: createWrapper(queryClient),
       });
 
       await waitFor(() => {
-        return !!result.current.data;
+        const changeset: Changeset | undefined = queryClient.getQueryData([
+          "repository",
+          "hitchhiker",
+          "heart-of-gold",
+          "changeset",
+          "42",
+        ]);
+
+        expect(changeset?.id).toBe("42");
       });
-
-      const changeset: Changeset | undefined = queryClient.getQueryData([
-        "repository",
-        "hitchhiker",
-        "heart-of-gold",
-        "changeset",
-        "42"
-      ]);
-
-      expect(changeset?.id).toBe("42");
     });
   });
 
@@ -156,16 +133,13 @@ describe("Test changeset hooks", () => {
 
       const queryClient = createInfiniteCachingClient();
 
-      const { result, waitFor } = renderHook(() => useChangeset(repository, "42"), {
-        wrapper: createWrapper(undefined, queryClient)
+      const { result } = renderHook(() => useChangeset(repository, "42"), {
+        wrapper: createWrapper(queryClient),
       });
 
       await waitFor(() => {
-        return !!result.current.data;
+        expect(result.current.data?.description).toBe("Awesome change");
       });
-
-      const c = result.current.data;
-      expect(c?.description).toBe("Awesome change");
     });
   });
 });

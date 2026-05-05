@@ -14,8 +14,8 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { UseFormReturn } from "react-hook-form";
-import { ForwardedRef, forwardRef, MutableRefObject, Ref, RefCallback } from "react";
+import { FieldValues, DefaultValues, UseFormReturn } from "react-hook-form";
+import { RefCallback, RefObject } from "react";
 
 export function prefixWithoutIndices(path: string): string {
   return path.replace(/(\.\d+)/g, "");
@@ -28,14 +28,17 @@ export function prefixWithoutIndices(path: string): string {
  * > but does **NOT** add or remove items to existing arrays.
  * > This can therefore not be used to clear lists.
  */
-export function setValues<T>(newValues: T, setValue: UseFormReturn<T>["setValue"], path = "") {
-  for (const [key, val] of Object.entries(newValues)) {
-    if (val !== null && typeof val === "object") {
-      if (Array.isArray(val)) {
-        val.forEach((subVal, idx) => setValues(subVal, setValue, path ? `${path}.${key}.${idx}` : `${key}.${idx}`));
-      } else {
-        setValues(val, setValue, path ? `${path}.${key}` : key);
-      }
+export function setValues<T extends FieldValues>(
+  newValues: DefaultValues<T>,
+  setValue: UseFormReturn<T>["setValue"],
+  path = "",
+) {
+  for (const key of Object.keys(newValues)) {
+    const val = newValues[key as keyof typeof newValues];
+    const fullPath = path ? `${path}.${key}` : key;
+
+    if (val !== null && typeof val === "object" && !Array.isArray(val)) {
+      setValues(val as DefaultValues<T>, setValue, fullPath);
     } else {
       const fullPath = path ? `${path}.${key}` : key;
       setValue(fullPath as any, val, { shouldValidate: !fullPath.endsWith("Confirmation"), shouldDirty: true });
@@ -43,16 +46,12 @@ export function setValues<T>(newValues: T, setValue: UseFormReturn<T>["setValue"
   }
 }
 
-export function withForwardRef<T extends { name: string }>(component: T): T {
-  return forwardRef(component as unknown as any) as any;
-}
-
 export const defaultOptionFactory = (item: any) =>
   typeof item === "object" && item !== null && "value" in item && typeof item["label"] === "string"
     ? item
     : { label: item as string, value: item };
 
-export function mergeRefs<T>(...refs: Array<RefCallback<T> | MutableRefObject<T> | ForwardedRef<T>>) {
+export function mergeRefs<T>(...refs: Array<RefCallback<T> | RefObject<T | null> | null>) {
   return (el: T) =>
     refs.forEach((ref) => {
       if (ref) {

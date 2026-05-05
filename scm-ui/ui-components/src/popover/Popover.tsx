@@ -26,6 +26,7 @@ type Props = {
   offsetLeft?: number;
   show: boolean;
   dispatch: Dispatch<Action>;
+  children?: ReactNode;
 };
 
 type ContainerProps = {
@@ -64,7 +65,7 @@ const PopoverHeading = styled.div`
 `;
 
 /**
- * @deprecated use {@link ui-overlays/popover} instead
+ * @deprecated Use Popover from ui-core instead
  */
 const Popover: FC<Props> = (props) => {
   if (!props.show) {
@@ -73,7 +74,7 @@ const Popover: FC<Props> = (props) => {
   return <InnerPopover {...props} />;
 };
 
-const InnerPopover: FC<Props> = ({ title, show, width, offsetTop, offsetLeft, dispatch, children }) => {
+const InnerPopover: FC<Props> = ({ title, show, width = 120, offsetTop, offsetLeft, dispatch, children }) => {
   const [height, setHeight] = useState(125);
   const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -110,10 +111,6 @@ const InnerPopover: FC<Props> = ({ title, show, width, offsetTop, offsetLeft, di
       {children}
     </PopoverContainer>
   );
-};
-
-Popover.defaultProps = {
-  width: 120,
 };
 
 export default Popover;

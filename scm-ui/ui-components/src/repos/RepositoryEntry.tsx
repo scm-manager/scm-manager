@@ -15,26 +15,17 @@
  */
 
 import React, { FC } from "react";
-import { Repository } from "@scm-manager/ui-types";
-import DateFromNow from "../DateFromNow";
-import RepositoryAvatar from "./RepositoryAvatar";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import RepositoryFlags from "./RepositoryFlags";
-import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { Card } from "@scm-manager/ui-layout";
 import { Link } from "react-router-dom";
-import { Menu } from "@scm-manager/ui-overlays";
-import { Icon } from "@scm-manager/ui-buttons";
-import { useKeyboardIteratorTargetV2 } from "@scm-manager/ui-core";
-
-type DateProp = Date | string;
+import styled from "styled-components";
+import { Card, Icon, Menu, useKeyboardIteratorTargetV2, DateFromNow } from "@scm-manager/ui-core";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { Repository } from "@scm-manager/ui-types";
+import RepositoryAvatar from "./RepositoryAvatar";
+import RepositoryFlags from "./RepositoryFlags";
 
 type Props = {
   repository: Repository;
-  // @VisibleForTesting
-  // the baseDate is only to avoid failing snapshot tests
-  baseDate?: DateProp;
   expectedIndex?: number;
 };
 
@@ -60,7 +51,7 @@ const DetailsRow = styled(Card.Row)`
   gap: 0.5rem;
 `;
 
-const RepositoryEntry: FC<Props> = ({ repository, baseDate, expectedIndex }) => {
+const RepositoryEntry: FC<Props> = ({ repository, expectedIndex }) => {
   const [t] = useTranslation("repos");
   const ref = useKeyboardIteratorTargetV2({ expectedIndex: expectedIndex ?? 0 });
 
@@ -123,8 +114,7 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate, expectedIndex }) => 
       <DescriptionRow className="is-size-7">{repository.description}</DescriptionRow>
       <DetailsRow className="is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap">
         <span className="is-size-7 has-text-secondary is-relative">
-          {t("overview.lastModified")}{" "}
-          <DateFromNow baseDate={baseDate} date={repository.lastModified ?? repository.creationDate} />
+          {t("overview.lastModified")} <DateFromNow date={repository.lastModified ?? repository.creationDate} />
         </span>
         <RepositoryFlags repository={repository} />
       </DetailsRow>

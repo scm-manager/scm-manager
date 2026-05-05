@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ReactElement, ReactNode } from "react";
+import React, { FC, ReactElement, ReactNode, Ref } from "react";
 import * as RadixPopover from "@radix-ui/react-popover";
 import styled from "styled-components";
 import classNames from "classnames";
@@ -38,28 +38,26 @@ type Props = {
    * Element to trigger the popover
    */
   trigger: ReactElement;
-
   /**
    * Element for the content of the popover
    */
   children: ReactElement;
-
   /**
    * Element for the title row of the popover
    */
   title: ReactNode;
-
   /**
    * Classnames for the content of the popover
    */
   className?: string;
+  ref?: Ref<HTMLDivElement>;
 };
 
 /**
  * @beta
  * @since 2.46.0
  */
-const Popover = React.forwardRef<HTMLDivElement, Props>(({ title, className, trigger, children }, ref) => {
+const Popover: FC<Props> = ({ title, className, trigger, children, ref }) => {
   const [t] = useTranslation("commons");
 
   return (
@@ -82,6 +80,6 @@ const Popover = React.forwardRef<HTMLDivElement, Props>(({ title, className, tri
       </RadixPopover.Portal>
     </RadixPopover.Root>
   );
-});
+};
 
 export default Popover;

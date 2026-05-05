@@ -25,6 +25,7 @@ import LogoutButton from "./LogoutButton";
 import LoginButton from "./LoginButton";
 import { useTranslation } from "react-i18next";
 import Alerts from "./Alerts";
+import { ExtensionPoint, useBinder } from "@scm-manager/ui-extensions";
 
 const StyledMenuBar = styled.div`
   background-color: transparent !important;
@@ -55,6 +56,7 @@ const StyledNavBar = styled.nav`
     display: flex;
     flex-grow: 2;
     justify-content: flex-end;
+
     .navbar-item {
       padding: 0.65rem 0.75rem;
     }
@@ -62,6 +64,7 @@ const StyledNavBar = styled.nav`
 
   .navbar-start .navbar-item {
     border-bottom: solid 5px transparent;
+
     &.is-active {
       border-bottom: solid 5px #28b1e8;
     }
@@ -70,6 +73,7 @@ const StyledNavBar = styled.nav`
   .navbar-menu.is-active .navbar-start .navbar-item {
     border-bottom: none;
     border-left: solid 5px transparent;
+
     &.is-active {
       border-left: solid 5px #28b1e8;
     }
@@ -97,9 +101,12 @@ type Props = {
 const NavigationBar: FC<Props> = ({ links }) => {
   const [burgerActive, setBurgerActive] = useState(false);
   const [t] = useTranslation("commons");
+  const binder = useBinder();
   const notificationsRef = useRef<HTMLButtonElement>(null);
+  const searchExtension = binder.hasExtension("navbar.search");
   useEffect(() => {
     const close = (event: MouseEvent) => {
+      //@ts-ignore
       const classList = event.target.classList.value;
       if (
         !classList.includes("navbar-burger") &&
@@ -137,7 +144,11 @@ const NavigationBar: FC<Props> = ({ links }) => {
           </div>
           <div className="is-active navbar-header-actions">
             <Alerts className="navbar-item" />
-            <OmniSearch links={links} shouldClear={true} ariaId="navbar" nextFocusRef={notificationsRef} />
+            {searchExtension ? (
+              <ExtensionPoint name="navbar.search" />
+            ) : (
+              <OmniSearch links={links} shouldClear={true} ariaId="navbar" nextFocusRef={notificationsRef} />
+            )}
             <Notifications ref={notificationsRef} className="navbar-item" />
           </div>
           <div className="navbar-end">

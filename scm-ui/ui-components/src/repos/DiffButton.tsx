@@ -16,7 +16,7 @@
 
 import React, { FC, MouseEvent } from "react";
 import styled from "styled-components";
-import { Tooltip } from "@scm-manager/ui-overlays";
+import { Tooltip } from "@scm-manager/ui-core";
 
 const Button = styled.button`
   width: 50px;

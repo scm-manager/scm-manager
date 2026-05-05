@@ -16,9 +16,9 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
+import { KeyboardIterator } from "@scm-manager/ui-core";
 import { Group } from "@scm-manager/ui-types";
 import GroupRow from "./GroupRow";
-import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   groups: Group[];

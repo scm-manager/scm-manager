@@ -14,12 +14,12 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ImgHTMLAttributes } from "react";
+import React, { FC, ImgHTMLAttributes, Ref } from "react";
 import { urls } from "@scm-manager/ui-api";
 
-const Image = React.forwardRef<HTMLImageElement, ImgHTMLAttributes<HTMLImageElement> & { src: string }>(
-  ({ src, alt, ...props }, ref) => (
-    <img src={src?.startsWith("http") ? src : urls.withContextPath(src)} {...props} ref={ref} alt={alt} />
-  )
+type Props = ImgHTMLAttributes<HTMLImageElement> & { src: string; ref?: Ref<HTMLImageElement> };
+
+const Image: FC<Props> = ({ src, alt, ref, ...props }) => (
+  <img src={src?.startsWith("http") ? src : urls.withContextPath(src)} {...props} ref={ref} alt={alt} />
 );
 export default Image;

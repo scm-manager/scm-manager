@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { InputHTMLAttributes } from "react";
+import React, { FC, InputHTMLAttributes, Ref } from "react";
 import classNames from "classnames";
 import { createVariantClass, Variant } from "../variants";
 import { createAttributesForTesting } from "../../helpers";
@@ -22,9 +22,10 @@ import { createAttributesForTesting } from "../../helpers";
 type Props = {
   variant?: Variant;
   testId?: string;
+  ref?: Ref<HTMLInputElement>;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-const Input = React.forwardRef<HTMLInputElement, Props>(({ variant, className, testId, ...props }, ref) => {
+const Input: FC<Props> = ({ variant, className, testId, ref, ...props }) => {
   return (
     <input
       ref={ref}
@@ -33,6 +34,6 @@ const Input = React.forwardRef<HTMLInputElement, Props>(({ variant, className, t
       {...createAttributesForTesting(testId)}
     />
   );
-});
+};
 
 export default Input;

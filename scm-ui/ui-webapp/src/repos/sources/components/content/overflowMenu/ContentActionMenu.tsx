@@ -14,15 +14,14 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import React, { FC, ReactElement, useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { Menu } from "@scm-manager/ui-overlays";
+import { SmallLoadingSpinner } from "@scm-manager/ui-components";
+import { Button, Icon, Menu } from "@scm-manager/ui-core";
+import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import FallbackMenuButton from "./FallbackMenuButton";
 import MenuItem from "./MenuItem";
-import { Button, Icon } from "@scm-manager/ui-core";
-import { useTranslation } from "react-i18next";
-import { SmallLoadingSpinner } from "@scm-manager/ui-components";
 
 const HR = styled.hr`
   margin: 0.25rem;

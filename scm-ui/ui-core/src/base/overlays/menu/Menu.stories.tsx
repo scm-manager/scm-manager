@@ -14,57 +14,125 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import StoryRouter from "storybook-react-router";
-import { ComponentMeta, StoryFn } from "@storybook/react";
-import React, { ComponentProps } from "react";
-import Menu, { MenuButton, MenuDialog, MenuExternalLink, MenuLink } from "./Menu";
+// import StoryRouter from "storybook-react-router";
+// import { ComponentMeta, StoryFn } from "@storybook/react";
+// import React, { ComponentProps } from "react";
+// import Menu, { MenuButton, MenuDialog, MenuExternalLink, MenuLink } from "./Menu";
+// import { Button, Icon } from "../../buttons";
+// import { CloseButton } from "../dialog/Dialog";
+//
+// export default {
+//   title: "Menu",
+//   component: Menu,
+//   decorators: [StoryRouter()],
+// } as ComponentMeta<typeof Menu>;
+//
+// const Template: StoryFn<ComponentProps<typeof Menu>> = (args) => <Menu {...args} />;
+//
+// export const Default = Template.bind({});
+// // More on args: https://storybook.js.org/docs/react/writing-stories/args
+// Default.args = {
+//   children: [
+//     // eslint-disable-next-line no-console
+//     <MenuButton onSelect={() => console.log("A button has been clicked")}>
+//       <Icon />A button
+//     </MenuButton>,
+//     <MenuLink to="/repos">
+//       <Icon />A link
+//     </MenuLink>,
+//     <MenuExternalLink href="https://scm-manager.org">
+//       <Icon>link</Icon>An external link
+//     </MenuExternalLink>,
+//     <MenuButton disabled>
+//       <Icon>trash</Icon>A disabled button
+//     </MenuButton>,
+//     <MenuDialog
+//       title="My Dialog"
+//       description="Do you really want to do this ?"
+//       footer={[<Button autoFocus>Do it</Button>, <CloseButton variant="primary">Cancel</CloseButton>]}
+//       dialogContent={
+//         <table>
+//           <tr>
+//             <th>Yes</th>
+//             <th>No</th>
+//           </tr>
+//           <tr>
+//             <td>42</td>
+//             <td>12</td>
+//           </tr>
+//         </table>
+//       }
+//     >
+//       <Icon />
+//       Open Dialog
+//     </MenuDialog>,
+//   ],
+// } as ComponentProps<typeof Menu>;
+
+import React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
+
+import Menu, { MenuButton, MenuDialog, MenuExternalLink } from "./Menu";
 import { Button, Icon } from "../../buttons";
 import { CloseButton } from "../dialog/Dialog";
 
-export default {
-  title: "Menu",
+const meta: Meta<typeof Menu> = {
+  title: "Overlays/Menu",
   component: Menu,
-  decorators: [StoryRouter()],
-} as ComponentMeta<typeof Menu>;
-
-const Template: StoryFn<ComponentProps<typeof Menu>> = (args) => <Menu {...args} />;
-
-export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Default.args = {
-  children: [
-    // eslint-disable-next-line no-console
-    <MenuButton onSelect={() => console.log("A button has been clicked")}>
-      <Icon />A button
-    </MenuButton>,
-    <MenuLink to="/repos">
-      <Icon />A link
-    </MenuLink>,
-    <MenuExternalLink href="https://scm-manager.org">
-      <Icon>link</Icon>An external link
-    </MenuExternalLink>,
-    <MenuButton disabled>
-      <Icon>trash</Icon>A disabled button
-    </MenuButton>,
-    <MenuDialog
-      title="My Dialog"
-      description="Do you really want to do this ?"
-      footer={[<Button autoFocus>Do it</Button>, <CloseButton variant="primary">Cancel</CloseButton>]}
-      dialogContent={
-        <table>
-          <tr>
-            <th>Yes</th>
-            <th>No</th>
-          </tr>
-          <tr>
-            <td>42</td>
-            <td>12</td>
-          </tr>
-        </table>
-      }
-    >
-      <Icon />
-      Open Dialog
-    </MenuDialog>,
+  decorators: [
+    (Story) => (
+      <div style={{ margin: "2rem", display: "flex", justifyContent: "flex-end" }}>
+        <Story />
+      </div>
+    ),
   ],
-} as ComponentProps<typeof Menu>;
+  tags: ["autodocs"],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof Menu>;
+
+export const Default: Story = {
+  render: () => (
+    <Menu>
+      {/* eslint-disable-next-line no-console */}
+      <MenuButton onSelect={() => console.log("A button has been clicked")}>
+        <Icon />A button
+      </MenuButton>
+      <MenuButton onSelect={() => alert("This would navigate to /repos")}>
+        <Icon />A link
+      </MenuButton>
+      <MenuExternalLink href="https://scm-manager.org">
+        <Icon>link</Icon>An external link
+      </MenuExternalLink>
+      <MenuButton disabled>
+        <Icon>trash</Icon>A disabled button
+      </MenuButton>
+      <MenuDialog
+        title="My Dialog"
+        description="Do you really want to do this ?"
+        footer={[<Button autoFocus>Do it</Button>, <CloseButton variant="primary">Cancel</CloseButton>]}
+        dialogContent={
+          <table>
+            <thead>
+              <tr>
+                <th>Yes</th>
+                <th>No</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>42</td>
+                <td>12</td>
+              </tr>
+            </tbody>
+          </table>
+        }
+      >
+        <Icon />
+        Open Dialog
+      </MenuDialog>
+    </Menu>
+  ),
+};

@@ -17,15 +17,15 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, Title } from "@scm-manager/ui-components";
+import { Loading } from "@scm-manager/ui-components";
 import ConfigForm from "../components/form/ConfigForm";
 import { useConfig, useIndexLinks, useNamespaceStrategies, useUpdateConfig } from "@scm-manager/ui-api";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { ErrorNotification, Title, useDocumentTitle } from "@scm-manager/ui-core";
 
 const GlobalConfig: FC = () => {
   const indexLinks = useIndexLinks();
   const { data: config, error: configLoadingError, isLoading: isLoadingConfig } = useConfig();
-  const { isLoading: isUpdating, error: updateError, isUpdated, update, reset } = useUpdateConfig();
+  const { isPending: isUpdating, error: updateError, isUpdated, update, reset } = useUpdateConfig();
   const {
     data: namespaceStrategies,
     error: namespaceStrategiesLoadingError,

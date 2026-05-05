@@ -14,9 +14,9 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { KeyboardEvent, MouseEvent, ReactNode, useCallback } from "react";
+import React, { ButtonHTMLAttributes, FC, KeyboardEvent, MouseEvent, ReactNode, Ref, useCallback } from "react";
 import classNames from "classnames";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import Icon from "../Icon";
 import { createAttributesForTesting } from "../devBuild";
 
@@ -35,103 +35,101 @@ export type ButtonProps = {
   testId?: string;
 };
 
-type Props = ButtonProps & {
-  type?: "button" | "submit" | "reset";
-  color?: string;
-};
+type Props = ButtonProps &
+  ButtonHTMLAttributes<HTMLButtonElement | HTMLAnchorElement> & {
+    type?: "button" | "submit" | "reset";
+    color?: string;
+    ref?: Ref<HTMLButtonElement | HTMLAnchorElement>;
+  };
 
 /**
  * @deprecated Use {@link ui-core/src/base/buttons/Button} instead
  */
-const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Props>(
-  (
-    {
-      link,
-      className,
-      icon,
-      fullWidth,
-      reducedMobile,
-      testId,
-      children,
-      label,
-      type = "button",
-      title,
-      loading,
-      disabled,
-      action,
-      color = "default",
-    },
-    ref
-  ) => {
-    const executeRef = useCallback(
-      (el: HTMLButtonElement | HTMLAnchorElement | null) => {
-        if (typeof ref === "function") {
-          ref(el);
-        } else if (ref) {
-          ref.current = el;
-        }
-      },
-      [ref]
-    );
-    const renderIcon = () => {
-      return (
-        <>
-          {icon ? (
-            <Icon name={icon} color="inherit" className={classNames("is-medium", { "pr-5": label || children })} />
-          ) : null}
-        </>
-      );
-    };
-
-    const classes = classNames(
-      "button",
-      "is-" + color,
-      { "is-loading": loading },
-      { "is-fullwidth": fullWidth },
-      { "is-reduced-mobile": reducedMobile },
-      className
-    );
-
-    const content = (
-      <span>
-        {renderIcon()}{" "}
-        {(label || children) && (
-          <>
-            {label} {children}
-          </>
-        )}
-      </span>
-    );
-
-    if (link && !disabled) {
-      if (link.includes("://")) {
-        return (
-          <a ref={executeRef} className={classes} href={link} aria-label={label}>
-            {content}
-          </a>
-        );
+const Button: FC<Props> = ({
+  link,
+  className,
+  icon,
+  fullWidth,
+  reducedMobile,
+  testId,
+  children,
+  label,
+  type = "button",
+  title,
+  loading,
+  disabled,
+  action,
+  color = "default",
+  ref,
+}) => {
+  const executeRef = useCallback(
+    (el: HTMLButtonElement | HTMLAnchorElement | null) => {
+      if (typeof ref === "function") {
+        ref(el);
+      } else if (ref) {
+        ref.current = el;
       }
+    },
+    [ref],
+  );
+  const renderIcon = () => {
+    return (
+      <>
+        {icon ? (
+          <Icon name={icon} color="inherit" className={classNames("is-medium", { "pr-5": label || children })} />
+        ) : null}
+      </>
+    );
+  };
+
+  const classes = classNames(
+    "button",
+    "is-" + color,
+    { "is-loading": loading },
+    { "is-fullwidth": fullWidth },
+    { "is-reduced-mobile": reducedMobile },
+    className,
+  );
+
+  const content = (
+    <span>
+      {renderIcon()}{" "}
+      {(label || children) && (
+        <>
+          {label} {children}
+        </>
+      )}
+    </span>
+  );
+
+  if (link && !disabled) {
+    if (link.includes("://")) {
       return (
-        <Link ref={executeRef} className={classes} to={link} aria-label={label}>
+        <a ref={executeRef} className={classes} href={link} aria-label={label}>
           {content}
-        </Link>
+        </a>
       );
     }
-
     return (
-      <button
-        type={type}
-        title={title}
-        disabled={disabled}
-        onClick={(event) => action && action(event)}
-        className={classes}
-        ref={executeRef}
-        {...createAttributesForTesting(testId)}
-      >
+      <Link ref={executeRef} className={classes} to={link} aria-label={label}>
         {content}
-      </button>
+      </Link>
     );
   }
-);
+
+  return (
+    <button
+      type={type}
+      title={title}
+      disabled={disabled}
+      onClick={(event) => action && action(event)}
+      className={classes}
+      ref={executeRef}
+      {...createAttributesForTesting(testId)}
+    >
+      {content}
+    </button>
+  );
+};
 
 export default Button;

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
+import React, { FC, Ref } from "react";
 import classNames from "classnames";
 import Field from "../base/Field";
 import Control from "../base/Control";
@@ -36,52 +36,64 @@ export type InputFieldProps = {
   extendedText?: string;
   error?: string;
   icon?: string;
+  ref?: Ref<HTMLInputElement>;
 } & React.ComponentProps<typeof Input>;
 
 /**
  * @see https://bulma.io/documentation/form/input/
  */
-const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ name, label, helpText, descriptionText, extendedText, error, icon, className, id, ...props }, ref) => {
-    const inputId = useAriaId(id ?? props.testId);
-    const helpTextId = helpText ? `input-helptext-${name}` : undefined;
-    const descriptionId = descriptionText ? `input-description-${name}` : undefined;
-    const errorId = error ? `input-error-${name}` : undefined;
-    const variant = error ? "danger" : undefined;
-    return (
-      <Field className={className}>
-        <Label htmlFor={inputId}>
-          {label}
-          {helpText ? <Help className="ml-1" text={helpText} /> : null}
-        </Label>
-        {extendedText && descriptionText ? (
-          <ExpandableText id={descriptionId} descriptionText={descriptionText} extendedDescriptionText={extendedText} />
-        ) : (
-          <p className="mb-2" id={descriptionId}>
-            {descriptionText}
-          </p>
-        )}
-        <Control className={classNames({ "has-icons-left": icon })}>
-          <Input
-            variant={variant}
-            ref={ref}
-            id={inputId}
-            aria-describedby={descriptionId || helpTextId}
-            {...props}
-          ></Input>
-          {icon ? (
-            <span className="icon is-small is-left">
-              <i className={icon} />
-            </span>
-          ) : null}
-        </Control>
-        {error ? (
-          <FieldMessage id={errorId} variant={variant}>
-            {error}
-          </FieldMessage>
+const InputField: FC<InputFieldProps> = ({
+  name,
+  label,
+  helpText,
+  descriptionText,
+  extendedText,
+  error,
+  icon,
+  className,
+  id,
+  ref,
+  ...props
+}) => {
+  const inputId = useAriaId(id ?? props.testId);
+  const helpTextId = helpText ? `input-helptext-${name}` : undefined;
+  const descriptionId = descriptionText ? `input-description-${name}` : undefined;
+  const errorId = error ? `input-error-${name}` : undefined;
+  const variant = error ? "danger" : undefined;
+  return (
+    <Field className={className}>
+      <Label htmlFor={inputId}>
+        {label}
+        {helpText ? <Help className="ml-1" text={helpText} /> : null}
+      </Label>
+      {extendedText && descriptionText ? (
+        <ExpandableText id={descriptionId} descriptionText={descriptionText} extendedDescriptionText={extendedText} />
+      ) : (
+        <p className="mb-2" id={descriptionId}>
+          {descriptionText}
+        </p>
+      )}
+      <Control className={classNames({ "has-icons-left": icon })}>
+        <Input
+          variant={variant}
+          ref={ref}
+          id={inputId}
+          aria-describedby={descriptionId || helpTextId}
+          {...props}
+        ></Input>
+        {icon ? (
+          <span className="icon is-small is-left">
+            <i className={icon} />
+          </span>
         ) : null}
-      </Field>
-    );
-  }
-);
+      </Control>
+      {error ? (
+        <FieldMessage id={errorId} variant={variant}>
+          {error}
+        </FieldMessage>
+      ) : null}
+    </Field>
+  );
+};
+
 export default InputField;

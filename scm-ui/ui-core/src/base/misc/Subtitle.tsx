@@ -14,17 +14,17 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { HTMLAttributes } from "react";
+import React, { FC, HTMLAttributes, Ref } from "react";
 import classNames from "classnames";
 
-const Subtitle = React.forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement> & { subtitle?: string }>(
-  ({ subtitle, className, children, ...props }, ref) =>
-    !(subtitle || children) ? null : (
-      <h2 className={classNames("subtitle", className)} {...props} ref={ref}>
-        {subtitle}
-        {children}
-      </h2>
-    )
-);
+type Props = HTMLAttributes<HTMLHeadingElement> & { subtitle?: string; ref?: Ref<HTMLHeadingElement> };
+
+const Subtitle: FC<Props> = ({ subtitle, className, children, ref, ...props }) =>
+  !(subtitle || children) ? null : (
+    <h2 className={classNames("subtitle", className)} {...props} ref={ref}>
+      {subtitle}
+      {children}
+    </h2>
+  );
 
 export default Subtitle;

@@ -14,4 +14,4 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-export { default as SplitAndReplace, Replacement } from "./SplitAndReplace";
+export { default as SplitAndReplace, type Replacement } from "./SplitAndReplace";

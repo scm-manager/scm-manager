@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { KeyboardEventHandler, PropsWithRef, ReactElement, Ref, useCallback } from "react";
+import React, { KeyboardEventHandler, ReactElement, Ref, useCallback, FC } from "react";
 import { createAttributesForTesting, useAriaId } from "../../helpers";
 import Field from "../base/Field";
 import Label from "../base/label/Label";
@@ -26,10 +26,19 @@ import { createVariantClass, Variant } from "../variants";
 import ChipInput, { NewChipInput } from "../headless-chip-input/ChipInput";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useTranslation } from "react-i18next";
-import { withForwardRef } from "../helpers";
 import { Option } from "@scm-manager/ui-types";
 
-const StyledChipInput: typeof ChipInput = styled(ChipInput)`
+const ChipInputWrapper: FC<any> = ({ ref, ...props }) => (
+  // @ts-ignore
+  <ChipInput ref={ref} {...props} />
+);
+
+const NewChipInputWrapper: FC<any> = ({ ref, ...props }) => (
+  // @ts-ignore
+  <NewChipInput ref={ref} {...props} />
+);
+
+const StyledChipInput = styled(ChipInputWrapper)`
   min-height: 40px;
   height: min-content;
   gap: 0.5rem;
@@ -39,7 +48,7 @@ const StyledChipInput: typeof ChipInput = styled(ChipInput)`
   }
 `;
 
-const StyledInput = styled(NewChipInput)`
+const StyledInput = styled(NewChipInputWrapper)`
   color: var(--scm-secondary-more-color);
   font-size: 1rem;
   height: initial;
@@ -48,7 +57,7 @@ const StyledInput = styled(NewChipInput)`
   &:focus {
     outline: none;
   }
-` as unknown as typeof NewChipInput;
+`;
 
 const StyledDelete = styled(ChipInput.Chip.Delete)`
   &:focus {
@@ -92,38 +101,37 @@ const determineVariant = (error: string | undefined, warning: string | undefined
  * @beta
  * @since 2.44.0
  */
-const ChipInputField = function ChipInputField<T>(
-  {
-    label,
-    helpText,
-    information,
-    readOnly,
-    disabled,
-    error,
-    warning,
-    createDeleteText,
-    onChange,
-    placeholder,
-    value,
-    className,
-    testId,
-    id,
-    children,
-    isLoading,
-    isNewItemDuplicate,
-    ...props
-  }: PropsWithRef<InputFieldProps<T>>,
-  ref: React.ForwardedRef<HTMLInputElement>
-) {
+const ChipInputField = function ChipInputField<T>({
+  label,
+  helpText,
+  information,
+  readOnly,
+  disabled,
+  error,
+  warning,
+  createDeleteText,
+  onChange,
+  placeholder,
+  value,
+  className,
+  testId,
+  id,
+  children,
+  isLoading,
+  isNewItemDuplicate,
+  ref,
+  ...props
+}: InputFieldProps<T>) {
   const [t] = useTranslation("commons", { keyPrefix: "form.chipList" });
   const deleteTextCallback = useCallback(
-    (item) => (createDeleteText ? createDeleteText(item) : t("delete", { item })),
-    [createDeleteText, t]
+    (item: any) => (createDeleteText ? createDeleteText(item) : t("delete", { item })),
+    [createDeleteText, t],
   );
   const inputId = useAriaId(id ?? testId);
   const labelId = useAriaId();
   const inputDescriptionId = useAriaId();
   const variant = determineVariant(error, warning);
+
   return (
     <Field className={className} aria-owns={inputId}>
       <Label id={labelId}>
@@ -134,7 +142,7 @@ const ChipInputField = function ChipInputField<T>(
       <div className={classNames("control", { "is-loading": isLoading })}>
         <StyledChipInput
           value={value}
-          onChange={(e) => onChange && onChange(e ?? [])}
+          onChange={(e: any) => onChange && onChange(e ?? [])}
           className="is-flex is-flex-wrap-wrap input"
           aria-labelledby={labelId}
           disabled={readOnly || disabled}
@@ -154,10 +162,11 @@ const ChipInputField = function ChipInputField<T>(
               "is-shadowless",
               "input",
               "is-ellipsis-overflow",
-              createVariantClass(variant)
+              createVariantClass(variant),
             )}
             placeholder={!readOnly && !disabled ? placeholder : ""}
             id={inputId}
+            // @ts-ignore
             ref={ref}
             aria-describedby={inputDescriptionId}
             {...createAttributesForTesting(testId)}
@@ -173,4 +182,5 @@ const ChipInputField = function ChipInputField<T>(
     </Field>
   );
 };
-export default withForwardRef(ChipInputField);
+
+export default ChipInputField;

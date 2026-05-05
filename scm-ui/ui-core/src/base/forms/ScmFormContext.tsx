@@ -15,18 +15,21 @@
  */
 
 import React, { PropsWithChildren, useContext } from "react";
-import { UseFormReturn } from "react-hook-form";
+import { FieldValues, UseFormReturn } from "react-hook-form";
 import type { TFunction } from "i18next";
 
-type ContextType<T = any> = UseFormReturn<T> & {
+type ContextType<T extends FieldValues> = UseFormReturn<T> & {
   t: TFunction;
   readOnly?: boolean;
   formId: string;
 };
 
-const ScmFormContext = React.createContext<ContextType>(null as unknown as ContextType);
+const ScmFormContext = React.createContext<ContextType<any>>(null as any);
 
-export function ScmFormContextProvider<T>({ children, ...props }: PropsWithChildren<ContextType<T>>) {
+export function ScmFormContextProvider<T extends FieldValues>({
+  children,
+  ...props
+}: PropsWithChildren<ContextType<T>>) {
   return <ScmFormContext.Provider value={props}>{children}</ScmFormContext.Provider>;
 }
 

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, HTMLProps } from "react";
+import React, { FC, HTMLProps, JSX } from "react";
 import classNames from "classnames";
 
 const Field: FC<HTMLProps<HTMLDivElement> | ({ as: keyof JSX.IntrinsicElements } & HTMLProps<HTMLElement>)> = ({

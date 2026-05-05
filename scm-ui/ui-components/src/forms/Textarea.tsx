@@ -129,6 +129,7 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
 /**
  * @deprecated
  */
+// @ts-ignore
 const Textarea: FieldType<BaseProps, HTMLTextAreaElement, string> = createFormFieldWrapper(InnerTextarea);
 
 export default Textarea;

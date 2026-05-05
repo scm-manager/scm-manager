@@ -15,41 +15,47 @@
  */
 
 import React, { FC } from "react";
-import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
-import { Repository } from "@scm-manager/ui-types";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import { Branch } from "@scm-manager/ui-types";
 import { useBranches } from "@scm-manager/ui-api";
-import { ErrorNotification, Loading, urls } from "@scm-manager/ui-components";
+import {
+  Loading,
+  REPOSITORY_SUB_ROUTES,
+  useCurrentRepositoryBaseUrl,
+  useRepositoryFromParams,
+} from "@scm-manager/ui-core";
 import CompareView, { CompareBranchesParams } from "./CompareView";
 
-type Props = {
-  repository: Repository;
-  baseUrl: string;
-};
-
-const CompareRoot: FC<Props> = ({ repository, baseUrl }) => {
-  const match = useRouteMatch<CompareBranchesParams>();
-  const { data, isLoading, error } = useBranches(repository);
-  const url = urls.matchedUrlFromMatch(match);
-
-  if (isLoading || !data) {
+const DefaultCompareRedirect: FC<{ branches?: Branch[]; baseUrl: string }> = ({ branches, baseUrl }) => {
+  const { sourceType, sourceName } = useParams<CompareBranchesParams>();
+  const defaultBranch = branches?.find((b) => b.defaultBranch);
+  if (!defaultBranch) {
     return <Loading />;
   }
-  if (error) {
-    return <ErrorNotification error={error} />;
-  }
+  const destination = `${baseUrl}/${sourceType}/${encodeURIComponent(sourceName!)}/b/${encodeURIComponent(
+    defaultBranch.name,
+  )}`;
+  return <Navigate to={destination} replace />;
+};
+
+const CompareRoot: FC = () => {
+  const repository = useRepositoryFromParams();
+  const baseUrl = useCurrentRepositoryBaseUrl() + `/${REPOSITORY_SUB_ROUTES.CODE}`;
+  const { data } = useBranches(repository);
 
   return (
-    <Switch>
-      <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName`}>
-        <CompareView repository={repository} baseUrl={baseUrl} />
-      </Route>
-      {data._embedded && (
-        <Redirect
-          from={url}
-          to={`${url}/b/${encodeURIComponent(data._embedded.branches.filter((b) => b.defaultBranch)[0].name)}`}
-        />
-      )}
-    </Switch>
+    <Routes>
+      <Route
+        index
+        element={
+          <DefaultCompareRedirect
+            branches={data?._embedded?.branches ?? []}
+            baseUrl={`${baseUrl}/${REPOSITORY_SUB_ROUTES.COMPARE}`}
+          />
+        }
+      />
+      <Route path=":targetType/:targetName/*" element={<CompareView />} />
+    </Routes>
   );
 };
 

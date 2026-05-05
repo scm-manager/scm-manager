@@ -14,15 +14,16 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
-import styled from "styled-components";
+import React, { FC, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
+import { Button } from "@scm-manager/ui-core";
 import { useSecondaryNavigation } from "../useSecondaryNavigation";
-import { Button } from "@scm-manager/ui-buttons";
 
 type Props = {
   label: string;
   collapsible?: boolean;
+  children?: ReactNode;
 };
 
 type CollapsedProps = {
@@ -51,29 +52,29 @@ const Icon = styled.i<CollapsedProps>`
   color: #e2e2e2;
 `;
 
-const MenuButton = styled(Button)<CollapsedProps>`
-  justify-content: ${(props: CollapsedProps) => (props.collapsed ? "center" : "inherit")};
-  width: 100%;
-  color: #e2e2e2;
-  &:hover {
-    color: #e2e2e2;
-  }
-  &:focus {
-    color: #e2e2e2;
-  }
-`;
-
-const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true }) => {
+const SecondaryNavigation: FC<Props> = ({ label, children }) => {
   const [t] = useTranslation("commons");
-  const { collapsible: isCollapsible, collapsed, toggleCollapse } = useSecondaryNavigation(collapsible);
+  const { collapsible: isCollapsible, collapsed, toggleCollapse } = useSecondaryNavigation();
 
   const arrowIcon = collapsed ? <i className="fas fa-caret-left" /> : <i className="fas fa-caret-down" />;
   const menuAriaLabel = collapsed ? t("secondaryNavigation.showContent") : t("secondaryNavigation.hideContent");
 
+  const MenuButton = styled(Button)`
+    justify-content: ${collapsed ? "center" : "inherit"};
+    width: 100%;
+    color: #e2e2e2;
+    &:hover {
+      color: #e2e2e2;
+    }
+    &:focus {
+      color: #e2e2e2;
+    }
+  `;
+
   return (
     <SectionContainer className="menu" collapsed={collapsed}>
       <div>
-        <MenuButton className="menu-label" collapsed={collapsed} onClick={toggleCollapse} aria-label={menuAriaLabel}>
+        <MenuButton className="menu-label" onClick={toggleCollapse} aria-label={menuAriaLabel}>
           {isCollapsible ? (
             <Icon className="is-medium" collapsed={collapsed}>
               {arrowIcon}

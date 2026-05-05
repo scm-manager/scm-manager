@@ -22,7 +22,7 @@ import { useWatch } from "react-hook-form";
 type Props = {
   name: string;
   children?: (value: unknown) => React.ReactNode | React.ReactNode[];
-} & HTMLAttributes<HTMLTableCellElement>;
+} & Omit<HTMLAttributes<HTMLTableCellElement>, "children">;
 
 /**
  * @beta

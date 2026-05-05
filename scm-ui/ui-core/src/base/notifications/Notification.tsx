@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { HTMLAttributes } from "react";
+import React, { FC, HTMLAttributes, Ref } from "react";
 import classNames from "classnames";
 
 type NotificationType = "primary" | "info" | "success" | "warning" | "danger" | "inherit";
@@ -23,19 +23,18 @@ type Props = {
   type?: NotificationType;
   onClose?: () => void;
   role?: string;
+  ref?: Ref<HTMLDivElement>;
+} & HTMLAttributes<HTMLDivElement>;
+
+const Notification: FC<Props> = ({ type = "info", onClose, className, children, role, ref, ...props }) => {
+  const color = type !== "inherit" ? "is-" + type : "";
+
+  return (
+    <div className={classNames("notification", color, className)} role={role} ref={ref} {...props}>
+      {onClose ? <button className="delete" onClick={onClose} /> : null}
+      {children}
+    </div>
+  );
 };
-
-const Notification = React.forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & Props>(
-  ({ type = "info", onClose, className, children, role, ...props }, ref) => {
-    const color = type !== "inherit" ? "is-" + type : "";
-
-    return (
-      <div className={classNames("notification", color, className)} role={role} ref={ref} {...props}>
-        {onClose ? <button className="delete" onClick={onClose} /> : null}
-        {children}
-      </div>
-    );
-  }
-);
 
 export default Notification;

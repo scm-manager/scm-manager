@@ -17,18 +17,10 @@
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import {
-  Checkbox,
-  createAttributesForTesting,
-  DateFromNow,
-  Help,
-  InfoTable,
-  MailLink,
-} from "@scm-manager/ui-components";
-import { Icon } from "@scm-manager/ui-components";
+import { Checkbox, Icon, createAttributesForTesting, Help, InfoTable, MailLink } from "@scm-manager/ui-components";
 import PermissionOverview from "../PermissionOverview";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { DateFromNow, useDocumentTitle } from "@scm-manager/ui-core";
 
 type Props = {
   user: User;

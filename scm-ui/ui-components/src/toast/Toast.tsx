@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
 import { getTheme, Themeable, ToastThemeContext, Type } from "./themes";
@@ -23,6 +23,7 @@ import usePortalRootElement from "../usePortalRootElement";
 type Props = {
   type: Type;
   title: string;
+  children?: ReactNode;
 };
 
 const Container = styled.div<Themeable>`

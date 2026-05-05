@@ -16,36 +16,35 @@
 
 import React, { FC, useState } from "react";
 import CompareSelectorListEntry from "./CompareSelectorListEntry";
-import { Repository, Tag } from "@scm-manager/ui-types";
+import { Tag } from "@scm-manager/ui-types";
 import { CompareFunction, CompareProps, CompareTypes } from "./CompareSelectBar";
-import { useTags } from "@scm-manager/ui-api";
 import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 
 type Props = {
+  tags: Tag[];
+  tagsIsLoading: boolean;
+  tagsError: Error | null;
   onSelect: CompareFunction;
   selected: CompareProps;
-  repository: Repository;
   filter: string;
 };
 
 const FixedWidthNotification = styled(Notification)`
-  width: 18.5rem;
+  width: 100%;
   margin-top: 0.5rem;
 `;
 
 const ScrollableUl = styled.ul`
   max-height: 15.65rem;
-  width: 18.5rem;
+  width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
 `;
 
-const TagTab: FC<Props> = ({ onSelect, selected, repository, filter }) => {
+const TagTab: FC<Props> = ({ tags, tagsIsLoading, tagsError, onSelect, selected, filter }) => {
   const [t] = useTranslation("repos");
-  const { isLoading: tagsIsLoading, error: tagsError, data: tagsData } = useTags(repository);
-  const tags: Tag[] = (tagsData?._embedded?.tags as Tag[]) || [];
 
   const [selection, setSelection] = useState(selected);
 
@@ -71,8 +70,8 @@ const TagTab: FC<Props> = ({ onSelect, selected, repository, filter }) => {
     <ScrollableUl className="py-2 pr-2" role="listbox">
       {elements.map((tag) => (
         <CompareSelectorListEntry
-          isSelected={selection.type === "t" && selection.name === tag.name}
-          onClick={() => onSelectEntry("t", tag.name)}
+          isSelected={selection.type === "tag" && selection.name === tag.name}
+          onClick={() => onSelectEntry("tag", tag.name)}
           key={tag.name}
         >
           <span className="is-ellipsis-overflow">{tag.name}</span>

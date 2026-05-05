@@ -14,12 +14,13 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
+import React, { Ref, FC } from "react";
 import classNames from "classnames";
 
 type Props = React.HTMLProps<HTMLElement> & {
   children?: string;
   type?: string;
+  ref?: Ref<HTMLElement>;
 };
 
 /**
@@ -34,7 +35,7 @@ type Props = React.HTMLProps<HTMLElement> & {
  * @see https://bulma.io/documentation/elements/icon/
  * @see https://fontawesome.com/search?o=r&m=free
  */
-const Icon = React.forwardRef<HTMLElement, Props>(({ children, className, type = "fas", ...props }, ref) => {
+const Icon: FC<Props> = ({ children, className, type = "fas", ref, ...props }) => {
   return (
     <span className={classNames(className, "icon")} aria-hidden="true" {...props} ref={ref}>
       <i
@@ -46,6 +47,6 @@ const Icon = React.forwardRef<HTMLElement, Props>(({ children, className, type =
       />
     </span>
   );
-});
+};
 
 export default Icon;

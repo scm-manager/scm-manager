@@ -47,14 +47,7 @@ class ChangesetDiff extends React.Component<Props> {
       return <Notification type="danger">{t("changeset.diffNotSupported")}</Notification>;
     } else {
       const url = createUrl(changeset);
-      return (
-          <LoadingDiff
-            url={url}
-            sideBySide={false}
-            fileControlFactory={fileControlFactory}
-            stickyHeader={true}
-          />
-      );
+      return <LoadingDiff url={url} sideBySide={false} fileControlFactory={fileControlFactory} stickyHeader={true} />;
     }
   }
 }

@@ -17,8 +17,8 @@
 import React, { FC, useState } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
+import { Button } from "@scm-manager/ui-core";
 import { Repository, Link } from "@scm-manager/ui-types";
-import { Button } from "@scm-manager/ui-buttons";
 import CloneInformation from "./CloneInformation";
 
 const TopRightContainer = styled.div`

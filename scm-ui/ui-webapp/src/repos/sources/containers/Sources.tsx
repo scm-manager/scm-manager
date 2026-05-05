@@ -16,11 +16,26 @@
 
 import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useLocation, useParams } from "react-router-dom";
-import { RepositoryRevisionContextProvider, urls, useSources } from "@scm-manager/ui-api";
-import { Branch, Repository } from "@scm-manager/ui-types";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  RepositoryRevisionContextProvider,
+  urls,
+  useBranchesIfAvailable,
+  useSources,
+  useTagsIfAvailable,
+} from "@scm-manager/ui-api";
+import { Repository, Tag } from "@scm-manager/ui-types";
 import { Breadcrumb, useScrollToElement, useShortcut } from "@scm-manager/ui-components";
-import { ErrorNotification, Loading, Notification, useDocumentTitle } from "@scm-manager/ui-core";
+import {
+  ErrorNotification,
+  Loading,
+  Notification,
+  useDocumentTitle,
+  useRepositoryFromParams,
+  useCurrentRepositoryBaseUrl,
+  REPOSITORY_SUB_ROUTES,
+  REPOSITORY_CODE_SUB_ROUTES,
+} from "@scm-manager/ui-core";
 import FileTree from "../components/FileTree";
 import Content from "./Content";
 import CodeActionBar from "../../codeSection/components/CodeActionBar";
@@ -28,39 +43,41 @@ import replaceBranchWithRevision from "../ReplaceBranchWithRevision";
 import FileSearchButton from "../../codeSection/components/FileSearchButton";
 import { isEmptyDirectory, isRootFile } from "../utils/files";
 import CompareLink from "../../compare/CompareLink";
-import { encodePart } from "../components/content/FileLink";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { getFileSearchLink } from "../../codeSection/utils/fileSearchLink";
-
-type Props = {
-  repository: Repository;
-  branches?: Branch[];
-  selectedBranch?: string;
-  baseUrl: string;
-};
+import { encodeFilePath } from "../components/content/FileLink";
+import { CompareTypes } from "../../compare/CompareSelectBar";
 
 type Params = {
-  revision?: string;
-  path: string;
+  sourceName?: string;
+  "*": string;
 };
 
 const useUrlParams = () => {
-  const { revision, path } = useParams<Params>();
+  const { sourceName, "*": path } = useParams<Params>();
   return {
-    revision: revision ? decodeURIComponent(revision) : undefined,
+    sourceName,
     path: path || "",
   };
 };
 
-const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) => {
-  const { revision, path } = useUrlParams();
-  const history = useHistory();
+const Sources: FC = () => {
+  const repository = useRepositoryFromParams();
+  const { data: branchesData } = useBranchesIfAvailable(repository);
+  const branches = branchesData?._embedded?.branches?.length === 0 ? undefined : branchesData?._embedded?.branches;
+  const { data: tagsData } = useTagsIfAvailable(repository);
+  const tags: Tag[] = (tagsData?._embedded?.tags as Tag[]) || undefined;
+  const baseUrl = `${useCurrentRepositoryBaseUrl()}/${REPOSITORY_SUB_ROUTES.CODE}`;
+
+  const { sourceName, path } = useUrlParams();
+
+  const navigate = useNavigate();
   const location = useLocation();
   const [t] = useTranslation("repos");
   const getDocumentTitle = () => {
-    if (revision) {
+    if (sourceName) {
       const getRevision = () => {
-        return branches?.some((branch) => branch.name === revision) ? revision : revision.slice(0, 7);
+        return branches?.some((branch) => branch.name === sourceName) ? sourceName : sourceName.slice(0, 7);
       };
       if (path) {
         return t("sources.pathWithRevisionAndNamespaceName", {
@@ -87,15 +104,15 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
 
   // redirect to default branch if no branch selected
   useEffect(() => {
-    if (branches && branches.length > 0 && !selectedBranch) {
-      const defaultBranch = branches?.filter((b) => b.defaultBranch === true)[0];
-      history.replace(
-        `${baseUrl}/sources/${defaultBranch ? encodePart(defaultBranch.name) : encodePart(branches[0].name)}/${
-          location.hash
-        }`
-      );
+    if (branches && branches.length > 0 && !sourceName) {
+      const defaultBranch = branches?.find((b) => b.defaultBranch === true);
+      const targetName = defaultBranch ? defaultBranch.name : branches[0].name;
+      navigate(`${baseUrl}/${REPOSITORY_CODE_SUB_ROUTES.SOURCES}/${encodeURIComponent(targetName)}/${location.hash}`, {
+        replace: true,
+      });
     }
-  }, [branches, selectedBranch, history, baseUrl, location.hash]);
+  }, [branches, sourceName, navigate, baseUrl, location.hash]);
+
   const {
     isLoading,
     error,
@@ -103,24 +120,24 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
     isFetchingNextPage,
     fetchNextPage,
   } = useSources(repository, {
-    revision,
+    revision: sourceName,
     path,
     // we have to wait until a branch is selected,
-    // expect if we have no branches (svn)
-    enabled: !branches || !!selectedBranch,
+    // except if we have no branches (svn)
+    enabled: !branches || !!sourceName,
   });
 
   useShortcut(
     "g f",
     () => {
       if (file) {
-        history.push(getFileSearchLink(repository, file.revision, baseUrl, file));
+        navigate(getFileSearchLink(repository, file.revision, baseUrl, file));
       }
     },
     {
       description: t("shortcuts.fileSearch"),
       active: !!(repository._links.paths && file),
-    }
+    },
   );
 
   if (error) {
@@ -135,33 +152,39 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
     return null;
   }
 
-  const onSelectBranch = (branch?: Branch) => {
-    let url;
-    if (branch) {
-      if (path) {
-        url = `${baseUrl}/sources/${encodePart(branch.name)}/${path}`;
-        url = !url.endsWith("/") ? url + "/" : url;
-      } else {
-        url = `${baseUrl}/sources/${encodePart(branch.name)}/`;
-      }
-    } else {
-      return;
+  const onSelect = (type: CompareTypes, name: string) => {
+    if (!type || !name) return;
+
+    let url = `${baseUrl}/${REPOSITORY_CODE_SUB_ROUTES.SOURCES}/${encodeURIComponent(name)}/`;
+    if (path) {
+      url += `${encodeFilePath(path)}`;
+      url = !url.endsWith("/") ? url + "/" : url;
     }
-    history.push(`${url}${location.hash}`);
+    navigate(`${url}${location.hash}`);
   };
 
   const evaluateSwitchViewLink = () => {
-    if (branches && selectedBranch && branches?.filter((b) => b.name === selectedBranch).length !== 0) {
-      return `${baseUrl}/branch/${encodeURIComponent(selectedBranch)}/changesets/?${urls.createPrevSourcePathQuery(
-        file.path
+    if (branches && sourceName && branches.find((b) => b.name === sourceName)) {
+      return `${baseUrl}/${REPOSITORY_SUB_ROUTES.BRANCH}/${encodeURIComponent(sourceName)}/${REPOSITORY_CODE_SUB_ROUTES.CHANGESETS}/?${urls.createPrevSourcePathQuery(
+        file.path,
+      )}`;
+    }
+    if (tags && sourceName && tags.find((t) => t.name === sourceName)) {
+      return `${baseUrl}/${REPOSITORY_SUB_ROUTES.TAG}/${encodeURIComponent(sourceName)}/${REPOSITORY_CODE_SUB_ROUTES.CHANGESETS}/?${urls.createPrevSourcePathQuery(
+        file.path,
+      )}`;
+    }
+    if (sourceName) {
+      return `${baseUrl}/${REPOSITORY_SUB_ROUTES.REVISION}/${encodeURIComponent(sourceName)}/${REPOSITORY_CODE_SUB_ROUTES.CHANGESETS}/?${urls.createPrevSourcePathQuery(
+        file.path,
       )}`;
     }
 
     if (repository.type === "svn") {
-      return `${baseUrl}/changesets/?${urls.createPrevSourcePathQuery(`${file.revision}/${file.path}`)}`;
+      return `${baseUrl}/${REPOSITORY_CODE_SUB_ROUTES.CHANGESETS}/?${urls.createPrevSourcePathQuery(`${file.revision}/${file.path}`)}`;
     }
 
-    return `${baseUrl}/changesets/`;
+    return `${baseUrl}/${REPOSITORY_CODE_SUB_ROUTES.CHANGESETS}/`;
   };
 
   const renderBreadcrumb = () => {
@@ -172,10 +195,11 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
       buttons.push(
         <FileSearchButton
           baseUrl={baseUrl}
-          revision={revision || file.revision}
+          sourceName={sourceName || file.revision}
           currentSource={file}
           repository={repository}
-        />
+          key={baseUrl}
+        />,
       );
     }
 
@@ -183,11 +207,11 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
       <Breadcrumb
         preButtons={buttons}
         repository={repository}
-        revision={revision || file.revision}
+        revision={sourceName || file.revision}
         path={path || ""}
-        baseUrl={baseUrl + "/sources"}
-        branch={branches?.filter((b) => b.name === selectedBranch)[0]}
-        defaultBranch={branches?.filter((b) => b.defaultBranch === true)[0]}
+        baseUrl={`${baseUrl}/${REPOSITORY_CODE_SUB_ROUTES.SOURCES}`}
+        branch={branches?.find((b) => b.name === sourceName)}
+        defaultBranch={branches?.find((b) => b.defaultBranch === true)}
         sources={file}
         permalink={permalink}
       />
@@ -208,8 +232,8 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
           <FileTree
             repository={repository}
             directory={file}
-            revision={revision || file.revision}
-            baseUrl={baseUrl + "/sources"}
+            revision={sourceName || file.revision}
+            baseUrl={`${baseUrl}/${REPOSITORY_CODE_SUB_ROUTES.SOURCES}`}
             isFetchingNextPage={isFetchingNextPage}
             fetchNextPage={fetchNextPage}
           />
@@ -228,7 +252,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
       <Content
         file={file}
         repository={repository}
-        revision={revision || file.revision}
+        revision={sourceName || file.revision}
         breadcrumb={renderBreadcrumb()}
         error={error || undefined}
       />
@@ -240,18 +264,15 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   };
 
   return (
-    <RepositoryRevisionContextProvider revision={revision}>
+    <RepositoryRevisionContextProvider revision={sourceName}>
       <div ref={setContentRef}>
         {hasBranchesWhenSupporting(repository) && (
           <CodeActionBar
-            selectedBranch={selectedBranch}
-            branches={branches}
-            onSelectBranch={onSelectBranch}
+            hasContent={hasBranchesWhenSupporting(repository)}
+            onSelect={onSelect}
             switchViewLink={evaluateSwitchViewLink()}
             actions={
-              branches && selectedBranch ? (
-                <CompareLink repository={repository} source={encodeURIComponent(selectedBranch)} />
-              ) : null
+              sourceName ? <CompareLink repository={repository} source={encodeURIComponent(sourceName)} /> : null
             }
           />
         )}

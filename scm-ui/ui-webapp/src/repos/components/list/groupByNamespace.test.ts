@@ -16,23 +16,21 @@
 
 import groupByNamespace from "./groupByNamespace";
 
+const namespaceLinks = { self: { href: "link" } };
 const base = {
   type: "git",
-  _links: {},
+  _links: namespaceLinks,
 };
-
 const slartiBlueprintsFjords = {
   ...base,
   namespace: "slarti",
   name: "fjords-blueprints",
 };
-
 const slartiFjords = {
   ...base,
   namespace: "slarti",
   name: "fjords",
 };
-
 const hitchhikerRestand = {
   ...base,
   namespace: "hitchhiker",
@@ -43,13 +41,11 @@ const hitchhikerPuzzle42 = {
   namespace: "hitchhiker",
   name: "puzzle42",
 };
-
 const hitchhikerHeartOfGold = {
   ...base,
   namespace: "hitchhiker",
   name: "heartOfGold",
 };
-
 const zaphodMarvinFirmware = {
   ...base,
   namespace: "zaphod",
@@ -67,26 +63,30 @@ it("should group the repositories by their namespace", () => {
   ];
   const namespaces = {
     _embedded: {
-      namespaces: [{ namespace: "hitchhiker" }, { namespace: "slarti" }, { namespace: "zaphod" }],
+      namespaces: [
+        { namespace: "hitchhiker", _links: namespaceLinks },
+        { namespace: "slarti", _links: namespaceLinks },
+        { namespace: "zaphod", _links: namespaceLinks },
+      ],
     },
   };
 
   const expected = [
     {
       name: "hitchhiker",
-      namespace: { namespace: "hitchhiker" },
+      namespace: { namespace: "hitchhiker", _links: namespaceLinks },
       repositories: [hitchhikerHeartOfGold, hitchhikerPuzzle42, hitchhikerRestand],
       currentPageOffset: 0,
     },
     {
       name: "slarti",
-      namespace: { namespace: "slarti" },
+      namespace: { namespace: "slarti", _links: namespaceLinks },
       repositories: [slartiFjords, slartiBlueprintsFjords],
       currentPageOffset: 3,
     },
     {
       name: "zaphod",
-      namespace: { namespace: "zaphod" },
+      namespace: { namespace: "zaphod", _links: namespaceLinks },
       repositories: [zaphodMarvinFirmware],
       currentPageOffset: 5,
     },

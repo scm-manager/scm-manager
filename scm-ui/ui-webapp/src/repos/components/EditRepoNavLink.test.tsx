@@ -15,8 +15,9 @@
  */
 
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
 import EditRepoNavLink from "./EditRepoNavLink";
-import { mount, shallow } from "@scm-manager/ui-tests";
 
 describe("GeneralNavLink", () => {
   it("should render nothing, if the modify link is missing", () => {
@@ -27,8 +28,12 @@ describe("GeneralNavLink", () => {
       _links: {},
     };
 
-    const navLink = shallow(<EditRepoNavLink repository={repository} editUrl="" />);
-    expect(navLink.text()).toBe("");
+    render(
+      <MemoryRouter>
+        <EditRepoNavLink repository={repository} editUrl="" />
+      </MemoryRouter>,
+    );
+    assert.notExists(screen.queryByText("repositoryRoot.menu.generalNavLink"));
   });
 
   it("should render the navLink", () => {
@@ -43,7 +48,12 @@ describe("GeneralNavLink", () => {
       },
     };
 
-    const navLink = mount(<EditRepoNavLink repository={repository} editUrl="" />);
-    expect(navLink.text()).toBe("repositoryRoot.menu.generalNavLink");
+    render(
+      <MemoryRouter>
+        <EditRepoNavLink repository={repository} editUrl="" />
+      </MemoryRouter>,
+    );
+
+    assert.exists(screen.queryByText("repositoryRoot.menu.generalNavLink"));
   });
 });

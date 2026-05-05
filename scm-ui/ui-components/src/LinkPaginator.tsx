@@ -23,11 +23,14 @@ type Props = {
   collection: PagedCollection;
   page: number;
   filter?: string;
+  baseUrl: string;
 };
 
-const LinkPaginator: FC<Props> = ({ collection, page, filter }) => {
+const LinkPaginator: FC<Props> = ({ collection, page, filter, baseUrl }) => {
   const [t] = useTranslation("commons");
-  const addFilterToLink = (link: string) => {
+
+  const createLink = (pageNumber: string | number) => {
+    const link = `/${baseUrl}/${pageNumber}`;
     if (filter) {
       return `${link}?q=${filter}`;
     }
@@ -35,7 +38,7 @@ const LinkPaginator: FC<Props> = ({ collection, page, filter }) => {
   };
 
   const renderFirstButton = () => {
-    return <Button className="pagination-link" label={"1"} disabled={false} link={addFilterToLink("1")} />;
+    return <Button className="pagination-link" label="1" disabled={false} link={createLink("1")} />;
   };
 
   const renderPreviousButton = (className: string, label?: string) => {
@@ -46,7 +49,7 @@ const LinkPaginator: FC<Props> = ({ collection, page, filter }) => {
         className={className}
         label={label ? label : previousPage.toString()}
         disabled={!hasLink("prev")}
-        link={addFilterToLink(`${previousPage}`)}
+        link={createLink(`${previousPage}`)}
       />
     );
   };
@@ -62,7 +65,7 @@ const LinkPaginator: FC<Props> = ({ collection, page, filter }) => {
         className={className}
         label={label ? label : nextPage.toString()}
         disabled={!hasLink("next")}
-        link={addFilterToLink(`${nextPage}`)}
+        link={createLink(`${nextPage}`)}
       />
     );
   };
@@ -73,7 +76,7 @@ const LinkPaginator: FC<Props> = ({ collection, page, filter }) => {
         className="pagination-link"
         label={`${collection.pageTotal}`}
         disabled={false}
-        link={addFilterToLink(`${collection.pageTotal}`)}
+        link={createLink(`${collection.pageTotal}`)}
       />
     );
   };

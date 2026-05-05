@@ -16,15 +16,8 @@
 
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
-import {
-  DateFromNow,
-  useDateHitFieldValue,
-  useStringHitFieldValue,
-  TextHitField,
-  HitProps,
-} from "@scm-manager/ui-components";
-import { CardList } from "@scm-manager/ui-layout";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
+import { useDateHitFieldValue, useStringHitFieldValue, TextHitField, HitProps } from "@scm-manager/ui-components";
+import { CardList, DateFromNow, useKeyboardIteratorTarget } from "@scm-manager/ui-core";
 
 const UserHit: FC<HitProps> = ({ hit }) => {
   const ref = useKeyboardIteratorTarget();

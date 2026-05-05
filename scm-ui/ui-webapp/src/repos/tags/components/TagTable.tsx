@@ -15,13 +15,12 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { Repository, Tag } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
-import TagRow from "./TagRow";
-import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { useDeleteTag } from "@scm-manager/ui-api";
-import { CardListBox } from "@scm-manager/ui-layout";
-import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
+import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { CardListBox, KeyboardIterator } from "@scm-manager/ui-core";
+import { Repository, Tag } from "@scm-manager/ui-types";
+import TagRow from "./TagRow";
 
 type Props = {
   repository: Repository;
@@ -30,7 +29,7 @@ type Props = {
 };
 
 const TagTable: FC<Props> = ({ repository, baseUrl, tags }) => {
-  const { isLoading, error, remove, isDeleted } = useDeleteTag(repository);
+  const { isPending, error, remove, isDeleted } = useDeleteTag(repository);
   const [t] = useTranslation("repos");
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [tagToBeDeleted, setTagToBeDeleted] = useState<Tag | undefined>();
@@ -69,7 +68,7 @@ const TagTable: FC<Props> = ({ repository, baseUrl, tags }) => {
           buttons={[
             {
               label: t("tag.delete.confirmAlert.submit"),
-              isLoading,
+              isLoading: isPending,
               onClick: () => deleteTag(),
             },
             {

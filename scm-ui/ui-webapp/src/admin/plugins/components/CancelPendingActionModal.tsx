@@ -27,7 +27,7 @@ type Props = {
 
 const CancelPendingActionModal: FC<Props> = ({ onClose, pendingPlugins }) => {
   const [t] = useTranslation("admin");
-  const { error, isLoading, update, isCancelled } = useCancelPendingPlugins();
+  const { error, isPending, update, isCancelled } = useCancelPendingPlugins();
 
   useEffect(() => {
     if (isCancelled) {
@@ -42,7 +42,7 @@ const CancelPendingActionModal: FC<Props> = ({ onClose, pendingPlugins }) => {
       onClose={onClose}
       pendingPlugins={pendingPlugins}
       success={isCancelled}
-      loading={isLoading}
+      loading={isPending}
       error={error}
       execute={() => update(pendingPlugins)}
     />

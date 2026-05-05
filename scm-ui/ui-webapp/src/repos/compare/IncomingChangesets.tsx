@@ -23,14 +23,13 @@ type Props = {
   repository: Repository;
   source: string;
   target: string;
-  url: string;
 };
 
-const IncomingChangesets: FC<Props> = ({ repository, source, target, url }) => {
+const IncomingChangesets: FC<Props> = ({ repository, source, target }) => {
   const page = usePage();
   const { data, error, isLoading } = useIncomingChangesets(repository, source, target, { page: page - 1, limit: 25 });
 
-  return <ChangesetsPanel repository={repository} error={error} isLoading={isLoading} data={data} url={url} />;
+  return <ChangesetsPanel repository={repository} error={error} isLoading={isLoading} data={data} />;
 };
 
 export default IncomingChangesets;

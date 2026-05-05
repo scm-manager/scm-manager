@@ -15,25 +15,21 @@
  */
 
 import React, { FC } from "react";
-import { Repository } from "@scm-manager/ui-types";
-import { Redirect, Switch, useRouteMatch, Route } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import TagView from "../components/TagView";
-import { urls } from "@scm-manager/ui-components";
 import { useTag } from "@scm-manager/ui-api";
-
-type Props = {
-  repository: Repository;
-  baseUrl: string;
-};
+import { useRepositoryFromParams } from "@scm-manager/ui-core";
 
 type Params = {
   tag: string;
 };
 
-const TagRoot: FC<Props> = ({ repository, baseUrl }) => {
-  const match = useRouteMatch<Params>();
-  const { isLoading, error, data: tag } = useTag(repository, match.params.tag);
+const TagRoot: FC = () => {
+  const repository = useRepositoryFromParams();
+  const { tag: tagName } = useParams<Params>();
+  const { isLoading, error, data: tag } = useTag(repository, tagName!);
+
   if (error) {
     return <ErrorNotification error={error} />;
   }
@@ -42,17 +38,6 @@ const TagRoot: FC<Props> = ({ repository, baseUrl }) => {
     return <Loading />;
   }
 
-  const url = urls.matchedUrlFromMatch(match);
-
-  const escapedUrl = urls.escapeUrlForRoute(url);
-
-  return (
-    <Switch>
-      <Redirect exact from={escapedUrl} to={`${url}/info`} />
-      <Route path={`${escapedUrl}/info`}>
-        <TagView repository={repository} tag={tag} />
-      </Route>
-    </Switch>
-  );
+  return <TagView repository={repository} tag={tag} />;
 };
 export default TagRoot;

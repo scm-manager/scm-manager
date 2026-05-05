@@ -21,6 +21,7 @@ import React, {
   createContext,
   FC,
   ReactNode,
+  Ref,
   useCallback,
   useContext,
   useMemo,
@@ -55,22 +56,23 @@ const MenuItem = styled(RadixMenu.Item).attrs({
   }
 `;
 
-type MenuLinkProps = Omit<ReactRouterLinkProps, "onSelect"> & Pick<RadixMenu.MenuItemProps, "disabled">;
+type MenuLinkProps = Omit<ReactRouterLinkProps, "onSelect"> &
+  Pick<RadixMenu.MenuItemProps, "disabled"> & { ref?: Ref<HTMLAnchorElement> };
 
 /**
  * @beta
  * @since 2.44.0
  */
-export const MenuLink = React.forwardRef<HTMLAnchorElement, MenuLinkProps>(({ children, disabled, ...props }, ref) => (
+export const MenuLink: FC<MenuLinkProps> = ({ children, disabled, ref, ...props }) => (
   <MenuItem asChild disabled={disabled}>
     <ReactRouterLink ref={ref} {...props}>
       {children}
     </ReactRouterLink>
   </MenuItem>
-));
+);
 
 type MenuExternalLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "onSelect"> &
-  Pick<RadixMenu.MenuItemProps, "disabled">;
+  Pick<RadixMenu.MenuItemProps, "disabled"> & { ref?: Ref<HTMLAnchorElement> };
 
 /**
  * External links open in a new browser tab with rel flags "noopener" and "noreferrer" set by default.
@@ -78,18 +80,16 @@ type MenuExternalLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "onSe
  * @beta
  * @since 2.44.0
  */
-export const MenuExternalLink = React.forwardRef<HTMLAnchorElement, MenuExternalLinkProps>(
-  ({ children, disabled, ...props }, ref) => (
-    <MenuItem asChild disabled={disabled}>
-      <a ref={ref} target="_blank" rel="noopener noreferrer" {...props}>
-        {children}
-      </a>
-    </MenuItem>
-  )
+export const MenuExternalLink: FC<MenuExternalLinkProps> = ({ children, disabled, ref, ...props }) => (
+  <MenuItem asChild disabled={disabled}>
+    <a ref={ref} target="_blank" rel="noopener noreferrer" {...props}>
+      {children}
+    </a>
+  </MenuItem>
 );
 
 type MenuButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick" | "onSelect"> &
-  Pick<RadixMenu.MenuItemProps, "onSelect">;
+  Pick<RadixMenu.MenuItemProps, "onSelect"> & { ref?: Ref<HTMLButtonElement> };
 
 /**
  * Use {@link MenuButtonProps#onSelect} to handle menu item selection.
@@ -98,14 +98,12 @@ type MenuButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick" |
  * @beta
  * @since 2.44.0
  */
-export const MenuButton = React.forwardRef<HTMLButtonElement, MenuButtonProps>(
-  ({ children, onSelect, disabled, ...props }, ref) => (
-    <MenuItem asChild disabled={disabled} onSelect={onSelect}>
-      <button ref={ref} {...props}>
-        {children}
-      </button>
-    </MenuItem>
-  )
+export const MenuButton: FC<MenuButtonProps> = ({ children, onSelect, disabled, ref, ...props }) => (
+  <MenuItem asChild disabled={disabled} onSelect={onSelect}>
+    <button ref={ref} {...props}>
+      {children}
+    </button>
+  </MenuItem>
 );
 
 type MenuContextType = {
@@ -116,6 +114,7 @@ const MenuContext = createContext<MenuContextType>(null as unknown as MenuContex
 type MenuDialogProps = Omit<MenuButtonProps, "onSelect"> &
   Omit<ComponentProps<typeof Dialog>, "trigger"> & {
     dialogContent?: ReactNode;
+    ref?: Ref<HTMLButtonElement>;
   };
 
 /**
@@ -123,41 +122,40 @@ type MenuDialogProps = Omit<MenuButtonProps, "onSelect"> &
  * @since 2.46.0
  * @see {@link Dialog}
  */
-export const MenuDialog = React.forwardRef<HTMLButtonElement, MenuDialogProps>(
-  ({ children, dialogContent, title, description, footer }, ref) => {
-    const { handleDialogItemOpenChange } = useContext(MenuContext);
-    const [open, setOpen] = useState(false);
-    const handleSelect = useCallback((event: Event) => event.preventDefault(), []);
-    const changeOpen = useCallback(
-      (newValue: boolean) => {
-        setOpen(newValue);
-        handleDialogItemOpenChange(newValue);
-      },
-      [handleDialogItemOpenChange]
-    );
+export const MenuDialog: FC<MenuDialogProps> = ({ children, dialogContent, title, description, footer, ref }) => {
+  const { handleDialogItemOpenChange } = useContext(MenuContext);
+  const [open, setOpen] = useState(false);
+  const handleSelect = useCallback((event: Event) => event.preventDefault(), []);
+  const changeOpen = useCallback(
+    (newValue: boolean) => {
+      setOpen(newValue);
+      handleDialogItemOpenChange(newValue);
+    },
+    [handleDialogItemOpenChange]
+  );
 
-    return (
-      <Dialog
-        trigger={
-          <MenuButton ref={ref} onSelect={handleSelect}>
-            {children}
-          </MenuButton>
-        }
-        title={title}
-        description={description}
-        footer={footer}
-        onOpenChange={changeOpen}
-        open={open}
-      >
-        {dialogContent}
-      </Dialog>
-    );
-  }
-);
+  return (
+    <Dialog
+      trigger={
+        <MenuButton ref={ref} onSelect={handleSelect}>
+          {children}
+        </MenuButton>
+      }
+      title={title}
+      description={description}
+      footer={footer}
+      onOpenChange={changeOpen}
+      open={open}
+    >
+      {dialogContent}
+    </Dialog>
+  );
+};
 
 type Props = {
   className?: string;
   trigger?: React.ReactElement;
+  children?: ReactNode;
 } & Pick<RadixMenu.DropdownMenuContentProps, "side">;
 
 /**

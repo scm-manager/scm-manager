@@ -15,13 +15,12 @@
  */
 
 import { Group } from "@scm-manager/ui-types";
-import fetchMock from "fetch-mock-jest";
+import fetchMock from "fetch-mock";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import { setIndexLink } from "./tests/indexLinks";
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook, act, waitFor } from "@testing-library/react";
 import { useCreateGroup, useDeleteGroup, useGroup, useGroups, useUpdateGroup } from "./groups";
 import createWrapper from "./tests/createWrapper";
-import { act } from "react-test-renderer";
 
 describe("Test group hooks", () => {
   const jedis: Group = {
@@ -58,11 +57,10 @@ describe("Test group hooks", () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "groups", "/groups");
       fetchMock.get("/api/v2/groups", jedisCollection);
-      const { result, waitFor } = renderHook(() => useGroups(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useGroups(), {
+        wrapper: createWrapper(queryClient),
       });
-      await waitFor(() => !!result.current.data);
-      expect(result.current.data).toEqual(jedisCollection);
+      await waitFor(() => expect(result.current.data).toEqual(jedisCollection));
     });
 
     it("should return paged groups", async () => {
@@ -73,11 +71,10 @@ describe("Test group hooks", () => {
           page: "42",
         },
       });
-      const { result, waitFor } = renderHook(() => useGroups({ page: 42 }), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useGroups({ page: 42 }), {
+        wrapper: createWrapper(queryClient),
       });
-      await waitFor(() => !!result.current.data);
-      expect(result.current.data).toEqual(jedisCollection);
+      await waitFor(() => expect(result.current.data).toEqual(jedisCollection));
     });
 
     it("should return searched groups", async () => {
@@ -88,22 +85,20 @@ describe("Test group hooks", () => {
           q: "jedis",
         },
       });
-      const { result, waitFor } = renderHook(() => useGroups({ search: "jedis" }), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useGroups({ search: "jedis" }), {
+        wrapper: createWrapper(queryClient),
       });
-      await waitFor(() => !!result.current.data);
-      expect(result.current.data).toEqual(jedisCollection);
+      await waitFor(() => expect(result.current.data).toEqual(jedisCollection));
     });
 
     it("should update group cache", async () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "groups", "/groups");
       fetchMock.get("/api/v2/groups", jedisCollection);
-      const { result, waitFor } = renderHook(() => useGroups(), {
-        wrapper: createWrapper(undefined, queryClient),
+      renderHook(() => useGroups(), {
+        wrapper: createWrapper(queryClient),
       });
-      await waitFor(() => !!result.current.data);
-      expect(queryClient.getQueryData(["group", "jedis"])).toEqual(jedis);
+      await waitFor(() => expect(queryClient.getQueryData(["group", "jedis"])).toEqual(jedis));
     });
   });
 
@@ -112,11 +107,10 @@ describe("Test group hooks", () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "groups", "/groups");
       fetchMock.get("/api/v2/groups/jedis", jedis);
-      const { result, waitFor } = renderHook(() => useGroup("jedis"), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useGroup("jedis"), {
+        wrapper: createWrapper(queryClient),
       });
-      await waitFor(() => !!result.current.data);
-      expect(result.current.data).toEqual(jedis);
+      await waitFor(() => expect(result.current.data).toEqual(jedis));
     });
   });
 
@@ -134,17 +128,17 @@ describe("Test group hooks", () => {
 
       fetchMock.getOnce("/api/v2/groups/jedis", jedis);
 
-      const { result, waitForNextUpdate } = renderHook(() => useCreateGroup(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useCreateGroup(), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { create } = result.current;
-        create(jedis);
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.create(jedis);
       });
 
-      expect(result.current.group).toEqual(jedis);
+      await waitFor(() => {
+        expect(result.current.group).toEqual(jedis);
+      });
     });
 
     it("should fail without location header", async () => {
@@ -157,14 +151,12 @@ describe("Test group hooks", () => {
 
       fetchMock.getOnce("/api/v2/groups/jedis", jedis);
 
-      const { result, waitForNextUpdate } = renderHook(() => useCreateGroup(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useCreateGroup(), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { create } = result.current;
-        create(jedis);
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.create(jedis);
       });
 
       expect(result.current.error).toBeDefined();
@@ -180,19 +172,17 @@ describe("Test group hooks", () => {
         status: 200,
       });
 
-      const { result, waitForNextUpdate } = renderHook(() => useDeleteGroup(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useDeleteGroup(), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { remove } = result.current;
-        remove(jedis);
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.remove(jedis);
       });
 
       expect(result.current.error).toBeFalsy();
       expect(result.current.isDeleted).toBe(true);
-      expect(result.current.isLoading).toBe(false);
+      expect(result.current.isPending).toBe(false);
       expect(queryClient.getQueryData(["group", "jedis"])).toBeUndefined();
     });
   });
@@ -213,19 +203,19 @@ describe("Test group hooks", () => {
 
       fetchMock.getOnce("/api/v2/groups/jedis", newJedis);
 
-      const { result, waitForNextUpdate } = renderHook(() => useUpdateGroup(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useUpdateGroup(), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { update } = result.current;
-        update(newJedis);
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.update(jedis);
       });
 
       expect(result.current.error).toBeFalsy();
-      expect(result.current.isUpdated).toBe(true);
-      expect(result.current.isLoading).toBe(false);
+      await waitFor(() => {
+        expect(result.current.isUpdated).toBe(true);
+        expect(result.current.isPending).toBe(false);
+      });
       expect(queryClient.getQueryData(["group", "jedis"])).toBeUndefined();
       expect(queryClient.getQueryData(["groups"])).toBeUndefined();
     });

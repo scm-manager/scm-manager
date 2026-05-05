@@ -15,7 +15,7 @@
  */
 
 import React, { FC } from "react";
-import { Redirect, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { RepositoryRoleCollection } from "@scm-manager/ui-types";
 import {
@@ -49,7 +49,7 @@ const RepositoryRolesPage: FC<RepositoryRolesPageProps> = ({ data, page, baseUrl
   return (
     <>
       <PermissionRoleTable baseUrl={baseUrl} roles={roles} />
-      <LinkPaginator collection={data} page={page} />
+      <LinkPaginator collection={data} page={page} baseUrl={baseUrl} />
     </>
   );
 };
@@ -63,6 +63,7 @@ const RepositoryRoles: FC<Props> = ({ baseUrl }) => {
   const page = urls.getPageFromMatch({ params });
   const { isLoading: loading, error, data } = useRepositoryRoles({ page: page - 1 });
   const [t] = useTranslation("admin");
+
   useDocumentTitle(
     data?.pageTotal && data.pageTotal > 1 && page
       ? t("repositoryRole.titleWithPage", { page, total: data.pageTotal })
@@ -79,7 +80,7 @@ const RepositoryRoles: FC<Props> = ({ baseUrl }) => {
   }
 
   if (data && data.pageTotal < page && page > 1) {
-    return <Redirect to={`${baseUrl}/${data.pageTotal}`} />;
+    return <Navigate to={`${baseUrl}/${data.pageTotal}`} />;
   }
 
   return (
@@ -87,9 +88,7 @@ const RepositoryRoles: FC<Props> = ({ baseUrl }) => {
       <Title title={t("repositoryRole.title")} />
       <Subtitle subtitle={t("repositoryRole.overview.subtitle")} />
       <RepositoryRolesPage data={data} page={page} baseUrl={baseUrl} />
-      {canAddRoles ? (
-        <CreateButton label={t("repositoryRole.overview.createButton")} link={`${baseUrl}/create`} />
-      ) : null}
+      {canAddRoles ? <CreateButton label={t("repositoryRole.overview.createButton")} link="create" /> : null}
     </>
   );
 };

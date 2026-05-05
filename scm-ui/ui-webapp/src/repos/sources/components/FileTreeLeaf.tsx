@@ -13,18 +13,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
-
-import * as React from "react";
-import { FC, ReactElement } from "react";
+import React, { FC, ReactElement } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
+import { devices, FileSize, Icon, Tooltip } from "@scm-manager/ui-components";
+import { DateFromNow, useKeyboardIteratorTarget } from "@scm-manager/ui-core";
 import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { File, Repository } from "@scm-manager/ui-types";
-import { DateFromNow, devices, FileSize, Icon, Tooltip } from "@scm-manager/ui-components";
-import FileIcon from "./FileIcon";
 import FileLink from "./content/FileLink";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
+import FileIcon from "./FileIcon";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -72,7 +70,7 @@ class FileTreeLeaf extends React.Component<Props> {
 
   contentIfPresent = (file: File, attribute: string, content: (file: File) => ReactElement | string | undefined) => {
     const { t } = this.props;
-    if (file.hasOwnProperty(attribute)) {
+    if (Object.prototype.hasOwnProperty.call(file, attribute)) {
       return content(file);
     } else if (file.computationAborted) {
       return (
@@ -120,11 +118,13 @@ class FileTreeLeaf extends React.Component<Props> {
           {binder.hasExtension<extensionPoints.ReposSourcesTreeRowRight>("repos.sources.tree.row.right", extProps) && (
             <ExtensionTd className="is-hidden-mobile">
               {!file.directory && (
-                <ExtensionPoint<extensionPoints.ReposSourcesTreeRowRight>
-                  name="repos.sources.tree.row.right"
-                  props={extProps}
-                  renderAll={true}
-                />
+                <div className="is-flex has-gap-1">
+                  <ExtensionPoint<extensionPoints.ReposSourcesTreeRowRight>
+                    name="repos.sources.tree.row.right"
+                    props={extProps}
+                    renderAll={true}
+                  />
+                </div>
               )}
             </ExtensionTd>
           )}

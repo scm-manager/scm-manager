@@ -43,43 +43,13 @@
 		"description": "React default component with props"
   },
   
-  "React container component": {
-		"prefix": "rcc",
-		"body": [
-			"//@flow",
-			"import React from \"react\";",
-      "import { connect } from \"react-redux\";",
-			"",
-			"type Props = {};",
-			"",
-			"class $1 extends React.Component<Props> {",
-			"  render() {",
-			"    return <div />;",
-			"  }",
-      "}",
-      "",
-      "const mapStateToProps = state => {",
-        "  return {};",
-        "};",
-      "",
-      "const mapDispatchToProps = (dispatch) => {",
-      "  return {};",
-      "};",
-			"",
-			"export default connect(",
-      "  mapStateToProps,",
-      "  mapDispatchToProps",
-      ")($1);"
-		],
-		"description": "React component which is connected to the store"
-  },
-  
   "React component test": {
 		"prefix": "rct",
 		"body": [
 			"//@flow",
 			"import React from \"react\";",
-      "import { configure, shallow } from \"enzyme\";",
+      "import { render, screen } from \"@testing-library/react\";",
+      "import { MemoryRouter } from \"react-router-dom\";",
       "import Adapter from \"enzyme-adapter-react-16\";",
       "",
       "import \"raf/polyfill\";",
@@ -88,10 +58,10 @@
       "",
       "it(\"should render the component\", () => {",
       "  $0",
-      "  //const label = shallow(<Label value=\"awesome\" />);",
-      "  //expect(label.text()).toBe(\"awesome\");",
+      "  //const { component } = render(<Label value=\"awesome\" />);",
+      "  //expect(component).toHaveTextContent(\"awesome\");",
       "});"
 		],
-		"description": "React component test with enzyme and jest"
+		"description": "React component test with react testing-library and jest"
   }
 }

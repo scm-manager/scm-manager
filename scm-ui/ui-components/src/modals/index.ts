@@ -16,7 +16,7 @@
 
 // @create-index
 
-export { default as ConfirmAlert, confirmAlert } from "./ConfirmAlert";
+export { default as ConfirmAlert } from "./ConfirmAlert";
 export { default as Modal } from "./Modal";
 export { default as FullscreenModal } from "./FullscreenModal";
 export { default as ActiveModalCountContextProvider } from "./ActiveModalCountContextProvider";

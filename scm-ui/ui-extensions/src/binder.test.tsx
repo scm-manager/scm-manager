@@ -118,14 +118,14 @@ describe("binder tests", () => {
     binder.bind<TestExtensionPointA>(
       "test.extension.a",
       () => <h1>Hello world</h1>,
-      () => true
+      () => true,
     );
     const binderExtensionA = binder.getExtension<TestExtensionPointA>("test.extension.a");
     expect(binderExtensionA).not.toBeNull();
     binder.bind<TestExtensionPointB>("test.extension.b", ({ testProp }) => (
       <h1>
         {testProp.map((b) => (
-          <span>{b}</span>
+          <span key={String(b)}>{b}</span>
         ))}
       </h1>
     ));
@@ -142,14 +142,14 @@ describe("binder tests", () => {
     binder.bind<TestExtensionPointA>(
       "test.extension.a",
       () => <h1>Hello world</h1>,
-      () => false
+      () => false,
     );
     const binderExtensionA = <ExtensionPoint<TestExtensionPointA> name="test.extension.a" />;
     expect(binderExtensionA).not.toBeNull();
     binder.bind<TestExtensionPointB>("test.extension.b", ({ testProp }) => (
       <h1>
         {testProp.map((b) => (
-          <span>{b}</span>
+          <span key={String(b)}>{b}</span>
         ))}
       </h1>
     ));

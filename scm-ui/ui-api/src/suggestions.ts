@@ -14,10 +14,10 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { AutocompleteObject, SelectValue } from "@scm-manager/ui-types";
+import { AutocompleteObject, Option } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 
-export const useSuggestions: (link?: string) => (query: string) => Promise<SelectValue[]> = (link) => {
+export const useSuggestions: (link?: string) => (query: string) => Promise<Option<AutocompleteObject>[]> = (link) => {
   if (!link) {
     return () => Promise.resolve([]);
   }
@@ -34,7 +34,7 @@ export const useSuggestions: (link?: string) => (query: string) => Promise<Selec
         json.map((element) => ({
           value: element,
           label: element.displayName ? `${element.displayName} (${element.id})` : element.id,
-        }))
+        })),
       );
   };
 };

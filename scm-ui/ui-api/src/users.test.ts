@@ -15,12 +15,11 @@
  */
 
 import { User, UserCollection } from "@scm-manager/ui-types";
-import fetchMock from "fetch-mock-jest";
+import { renderHook, act, waitFor } from "@testing-library/react";
+import fetchMock from "fetch-mock";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import { setIndexLink } from "./tests/indexLinks";
-import { renderHook } from "@testing-library/react-hooks";
 import createWrapper from "./tests/createWrapper";
-import { act } from "react-test-renderer";
 import {
   useConvertToExternal,
   useConvertToInternal,
@@ -28,6 +27,7 @@ import {
   useDeleteUser,
   useUpdateUser,
   useUser,
+  useUserLink,
   useUsers,
 } from "./users";
 
@@ -44,6 +44,9 @@ describe("Test user hooks", () => {
       },
       update: {
         href: "/users/yoda",
+      },
+      publicKeys: {
+        href: "/users/yoda/publicKeys",
       },
       convertToInternal: {
         href: "/users/yoda/convertToInternal",
@@ -76,11 +79,10 @@ describe("Test user hooks", () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "users", "/users");
       fetchMock.get("/api/v2/users", userCollection);
-      const { result, waitFor } = renderHook(() => useUsers(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useUsers(), {
+        wrapper: createWrapper(queryClient),
       });
-      await waitFor(() => !!result.current.data);
-      expect(result.current.data).toEqual(userCollection);
+      await waitFor(() => expect(result.current.data).toEqual(userCollection));
     });
 
     it("should return paged users", async () => {
@@ -91,11 +93,10 @@ describe("Test user hooks", () => {
           page: "42",
         },
       });
-      const { result, waitFor } = renderHook(() => useUsers({ page: 42 }), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useUsers({ page: 42 }), {
+        wrapper: createWrapper(queryClient),
       });
-      await waitFor(() => !!result.current.data);
-      expect(result.current.data).toEqual(userCollection);
+      await waitFor(() => expect(result.current.data).toEqual(userCollection));
     });
 
     it("should return searched users", async () => {
@@ -106,22 +107,20 @@ describe("Test user hooks", () => {
           q: "yoda",
         },
       });
-      const { result, waitFor } = renderHook(() => useUsers({ search: "yoda" }), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useUsers({ search: "yoda" }), {
+        wrapper: createWrapper(queryClient),
       });
-      await waitFor(() => !!result.current.data);
-      expect(result.current.data).toEqual(userCollection);
+      await waitFor(() => expect(result.current.data).toEqual(userCollection));
     });
 
     it("should update user cache", async () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "users", "/users");
       fetchMock.get("/api/v2/users", userCollection);
-      const { result, waitFor } = renderHook(() => useUsers(), {
-        wrapper: createWrapper(undefined, queryClient),
+      renderHook(() => useUsers(), {
+        wrapper: createWrapper(queryClient),
       });
-      await waitFor(() => !!result.current.data);
-      expect(queryClient.getQueryData(["user", "yoda"])).toEqual(yoda);
+      await waitFor(() => expect(queryClient.getQueryData(["user", "yoda"])).toEqual(yoda));
     });
   });
 
@@ -130,11 +129,42 @@ describe("Test user hooks", () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "users", "/users");
       fetchMock.get("/api/v2/users/yoda", yoda);
-      const { result, waitFor } = renderHook(() => useUser("yoda"), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useUser("yoda"), {
+        wrapper: createWrapper(queryClient),
       });
-      await waitFor(() => !!result.current.data);
-      expect(result.current.data).toEqual(yoda);
+      await waitFor(() => expect(result.current.data).toEqual(yoda));
+    });
+  });
+
+  describe("useUserLink tests", () => {
+    it("should return specific user link", async () => {
+      const queryClient = createInfiniteCachingClient();
+      setIndexLink(queryClient, "users", "/users");
+      fetchMock.get("/api/v2/users/yoda", yoda);
+      const { result } = renderHook(() => useUserLink("yoda", "publicKeys"), {
+        wrapper: createWrapper(queryClient),
+      });
+      await waitFor(() => expect(result.current).toBe("/users/yoda/publicKeys"));
+    });
+
+    it("should return undefined if link name does not exist", async () => {
+      const queryClient = createInfiniteCachingClient();
+      setIndexLink(queryClient, "users", "/users");
+      fetchMock.get("/api/v2/users/yoda", yoda);
+      const { result } = renderHook(() => useUserLink("yoda", "unknownLink"), {
+        wrapper: createWrapper(queryClient),
+      });
+      await waitFor(() => expect(result.current).toBeUndefined());
+    });
+
+    it("should return undefined if user does not exist", async () => {
+      const queryClient = createInfiniteCachingClient();
+      setIndexLink(queryClient, "users", "/users");
+      fetchMock.get("/api/v2/users/jinn", 404);
+      const { result } = renderHook(() => useUserLink("jinn", "publicKeys"), {
+        wrapper: createWrapper(queryClient),
+      });
+      await waitFor(() => expect(result.current).toBeUndefined());
     });
   });
 
@@ -152,17 +182,15 @@ describe("Test user hooks", () => {
 
       fetchMock.getOnce("/api/v2/users/yoda", yoda);
 
-      const { result, waitForNextUpdate } = renderHook(() => useCreateUser(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useCreateUser(), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { create } = result.current;
-        create(yoda);
-        return waitForNextUpdate();
+      await act(async () => {
+        result.current.create(yoda);
       });
 
-      expect(result.current.user).toEqual(yoda);
+      await waitFor(() => expect(result.current.user).toEqual(yoda));
     });
 
     it("should fail without location header", async () => {
@@ -175,14 +203,12 @@ describe("Test user hooks", () => {
 
       fetchMock.getOnce("/api/v2/users/yoda", yoda);
 
-      const { result, waitForNextUpdate } = renderHook(() => useCreateUser(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useCreateUser(), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { create } = result.current;
-        create(yoda);
-        return waitForNextUpdate();
+      await act(async () => {
+        result.current.create(yoda);
       });
 
       expect(result.current.error).toBeDefined();
@@ -196,21 +222,23 @@ describe("Test user hooks", () => {
 
       fetchMock.deleteOnce("/api/v2/users/yoda", {
         status: 200,
+        body: {},
       });
 
-      const { result, waitForNextUpdate } = renderHook(() => useDeleteUser(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useDeleteUser(), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { remove } = result.current;
-        remove(yoda);
-        return waitForNextUpdate();
+      await act(async () => {
+        result.current.remove(yoda);
+      });
+
+      await waitFor(() => {
+        expect(result.current.isDeleted).toBe(true);
       });
 
       expect(result.current.error).toBeFalsy();
-      expect(result.current.isDeleted).toBe(true);
-      expect(result.current.isLoading).toBe(false);
+      expect(result.current.isPending).toBe(false);
       expect(queryClient.getQueryData(["user", "yoda"])).toBeUndefined();
     });
   });
@@ -231,19 +259,20 @@ describe("Test user hooks", () => {
 
       fetchMock.getOnce("/api/v2/users/yoda", newJedis);
 
-      const { result, waitForNextUpdate } = renderHook(() => useUpdateUser(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useUpdateUser(), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { update } = result.current;
-        update(newJedis);
-        return waitForNextUpdate();
+      await act(async () => {
+        result.current.update(newJedis);
+      });
+
+      await waitFor(() => {
+        expect(result.current.isUpdated).toBe(true);
       });
 
       expect(result.current.error).toBeFalsy();
-      expect(result.current.isUpdated).toBe(true);
-      expect(result.current.isLoading).toBe(false);
+      expect(result.current.isPending).toBe(false);
       expect(queryClient.getQueryData(["user", "yoda"])).toBeUndefined();
       expect(queryClient.getQueryData(["users"])).toBeUndefined();
     });
@@ -257,19 +286,21 @@ describe("Test user hooks", () => {
         status: 200,
       });
 
-      const { result, waitForNextUpdate } = renderHook(() => useConvertToInternal(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useConvertToInternal(), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
+      await act(async () => {
         const { convertToInternal } = result.current;
         convertToInternal(yoda, "thisisaverystrongpassword");
-        return waitForNextUpdate();
       });
 
       expect(result.current.error).toBeFalsy();
-      expect(result.current.isConverted).toBe(true);
-      expect(result.current.isLoading).toBe(false);
+      await waitFor(() => {
+        expect(result.current.isConverted).toBe(true);
+        expect(result.current.isPending).toBe(false);
+      });
+
       expect(queryClient.getQueryData(["user", "yoda"])).toBeUndefined();
       expect(queryClient.getQueryData(["users"])).toBeUndefined();
     });
@@ -283,19 +314,18 @@ describe("Test user hooks", () => {
         status: 200,
       });
 
-      const { result, waitForNextUpdate } = renderHook(() => useConvertToExternal(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useConvertToExternal(), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
+      await act(async () => {
         const { convertToExternal } = result.current;
         convertToExternal(yoda);
-        return waitForNextUpdate();
       });
 
       expect(result.current.error).toBeFalsy();
-      expect(result.current.isConverted).toBe(true);
-      expect(result.current.isLoading).toBe(false);
+      await waitFor(() => expect(result.current.isConverted).toBe(true));
+      expect(result.current.isPending).toBe(false);
       expect(queryClient.getQueryData(["user", "yoda"])).toBeUndefined();
       expect(queryClient.getQueryData(["users"])).toBeUndefined();
     });

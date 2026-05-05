@@ -14,11 +14,11 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Branch, BranchDetails, Repository } from "@scm-manager/ui-types";
 import React, { FC } from "react";
-import { CardList } from "@scm-manager/ui-layout";
-import { ErrorNotification } from "@scm-manager/ui-components";
 import { useDeleteBranch } from "@scm-manager/ui-api";
+import { ErrorNotification } from "@scm-manager/ui-components";
+import { CardList } from "@scm-manager/ui-core";
+import { Branch, BranchDetails, Repository } from "@scm-manager/ui-types";
 import BranchListItem from "./BranchListItem";
 
 type Props = {
@@ -29,7 +29,7 @@ type Props = {
 };
 
 const BranchList: FC<Props> = ({ repository, baseUrl, branches, branchesDetails }) => {
-  const { isLoading, error, remove } = useDeleteBranch(repository);
+  const { isPending, error, remove } = useDeleteBranch(repository);
 
   return (
     <>
@@ -40,7 +40,7 @@ const BranchList: FC<Props> = ({ repository, baseUrl, branches, branchesDetails 
             key={branch.name}
             branch={branch}
             remove={remove}
-            isLoading={isLoading}
+            isLoading={isPending}
             baseUrl={baseUrl}
             repository={repository}
             branchesDetails={branchesDetails}

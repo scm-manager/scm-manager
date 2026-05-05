@@ -14,11 +14,11 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import React, { FC, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { HalRepresentationWithEmbedded, PluginSet } from "@scm-manager/ui-types";
 import { apiClient, requiredLink, waitForRestartAfter } from "@scm-manager/ui-api";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { Checkbox, ErrorNotification, Icon, SubmitButton } from "@scm-manager/ui-components";
 import styled from "styled-components";
@@ -51,10 +51,12 @@ const install = (link: string) => (data: PluginSetsInstallation) =>
   waitForRestartAfter(apiClient.post(link, data, "application/json"));
 
 const useInstallPluginSets = (link: string) => {
-  const { mutate, isLoading, error, isSuccess } = useMutation<unknown, Error, PluginSetsInstallation>(install(link));
+  const { mutate, isPending, error, isSuccess } = useMutation<unknown, Error, PluginSetsInstallation>({
+    mutationFn: install(link),
+  });
   return {
     installPluginSets: mutate,
-    isLoading,
+    isPending,
     error,
     isInstalled: isSuccess,
   };
@@ -62,6 +64,7 @@ const useInstallPluginSets = (link: string) => {
 
 type PluginSetCardProps = {
   pluginSet: PluginSet;
+  children: ReactNode;
 };
 const PluginSetCard: FC<PluginSetCardProps> = ({ pluginSet, children }) => {
   const [t] = useTranslation("initialization");
@@ -75,7 +78,7 @@ const PluginSetCard: FC<PluginSetCardProps> = ({ pluginSet, children }) => {
         <div className="content">
           <ul>
             {pluginSet.features.map((feature) => (
-              <li>{feature}</li>
+              <li key={feature}>{feature}</li>
             ))}
           </ul>
         </div>
@@ -93,7 +96,7 @@ const PluginSetCard: FC<PluginSetCardProps> = ({ pluginSet, children }) => {
                 <li key={idx} className="py-2">
                   <div className="is-size-6 has-text-weight-semibold">{plugin.displayName}</div>
                   <div className="is-size-6">
-                    <a href={`https://scm-manager.org/plugins/${plugin.name}`} target="_blank">
+                    <a href={`https://scm-manager.org/plugins/${plugin.name}`} target="_blank" rel="noreferrer">
                       {plugin.description}
                     </a>
                   </div>
@@ -116,7 +119,7 @@ type FormValue = { [id: string]: boolean };
 const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext }) => {
   const {
     installPluginSets,
-    isLoading: isInstalling,
+    isPending: isInstalling,
     isInstalled,
     error: installationError,
   } = useInstallPluginSets(requiredLink(initializationContext, "installPluginSets"));
@@ -134,14 +137,14 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
         }
         return p;
       }, []),
-    [values]
+    [values],
   );
   const submit = useCallback(
     () =>
       installPluginSets({
         pluginSetIds,
       }),
-    [installPluginSets, pluginSetIds]
+    [installPluginSets, pluginSetIds],
   );
   const isSelected = useCallback((pluginSetId: string) => pluginSetIds.includes(pluginSetId), [pluginSetIds]);
   const hasPluginSets = useMemo(() => pluginSetIds.length > 0, [pluginSetIds]);

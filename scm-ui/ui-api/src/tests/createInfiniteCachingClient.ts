@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { QueryClient } from "react-query";
+import { QueryClient } from "@tanstack/react-query";
 
 const createInfiniteCachingClient = () => {
   return new QueryClient({

@@ -14,9 +14,9 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import fetchMock from "fetch-mock-jest";
+import fetchMock from "fetch-mock";
 import { Changeset } from "@scm-manager/ui-types";
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook, waitFor, act } from "@testing-library/react";
 import createWrapper from "./tests/createWrapper";
 import { RevertRequest, RevertResponse, useRevert } from "./revert";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
@@ -56,23 +56,19 @@ afterEach(() => {
 describe("useRevert tests", () => {
   const fetchRevert = async (changeset: Changeset, request: RevertRequest) => {
     fetchMock.postOnce("api/v2/hitchhiker/heart-of-gold/changesets/0f3cdd/revert", expectedRevision);
-    const { result: useRevertResult, waitFor } = renderHook(() => useRevert(changeset), {
-      wrapper: createWrapper(undefined, queryClient),
+    const { result } = renderHook(() => useRevert(changeset), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    await act(async () => {
+      await result.current.revert(request);
     });
 
     await waitFor(() => {
-      return !!useRevertResult.current.revert || !!useRevertResult.current.error;
+      expect(result.current.revision).toBeDefined();
     });
 
-    const { waitFor: waitForRevert } = renderHook(() => useRevertResult.current.revert(request), {
-      wrapper: createWrapper(undefined, queryClient),
-    });
-
-    await waitForRevert(() => {
-      return !!useRevertResult.current.revision || !!useRevertResult.current.error;
-    });
-
-    return useRevertResult.current;
+    return result.current;
   };
 
   it("should return revision from revert", async () => {

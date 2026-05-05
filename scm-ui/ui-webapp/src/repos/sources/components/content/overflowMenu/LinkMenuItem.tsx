@@ -17,19 +17,8 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Icon } from "@scm-manager/ui-components";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Menu } from "@scm-manager/ui-core";
 import { extensionPoints } from "@scm-manager/ui-extensions";
-import { Menu } from "@scm-manager/ui-overlays";
-
-const MenuItemLinkContainer = styled(Link)<{ active: boolean }>`
-  border-radius: 5px;
-  padding: 0.5rem;
-  color: ${(props) => (props.active ? "var(--scm-white-color)" : "inherit")};
-  :hover {
-    color: var(--scm-white-color);
-  }
-`;
 
 const LinkMenuItem: FC<
   extensionPoints.LinkMenuProps & { extensionProps: extensionPoints.ContentActionExtensionProps }

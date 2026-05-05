@@ -14,13 +14,14 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { createContext, FC, useContext } from "react";
+import React, { createContext, FC, ReactNode, useContext } from "react";
 import { TFunction } from "i18next";
 
 type ContextType = {
   t: TFunction;
   prefix: string;
   formId?: string;
+  children?: ReactNode;
 };
 
 const RadioButtonContext = createContext<ContextType | null>(null);

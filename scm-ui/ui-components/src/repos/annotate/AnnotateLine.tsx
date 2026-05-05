@@ -14,10 +14,10 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, Dispatch, useRef } from "react";
+import React, { FC, Dispatch, useRef, ReactNode } from "react";
 import styled from "styled-components";
 import AuthorImage from "./AuthorImage";
-import DateShort from "../../DateShort";
+import { DateShort } from "@scm-manager/ui-core";
 import { Action } from "./actions";
 import { AnnotatedLine } from "@scm-manager/ui-types";
 
@@ -85,6 +85,7 @@ type Props = {
   showAnnotation: boolean;
   nr: number;
   dispatch: Dispatch<Action>;
+  children?: ReactNode;
 };
 
 const AnnotateLine: FC<Props> = ({ annotation, showAnnotation, dispatch, nr, children }) => {

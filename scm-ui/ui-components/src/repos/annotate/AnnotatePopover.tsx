@@ -17,9 +17,8 @@
 import React, { FC, useState, useRef, useLayoutEffect, Dispatch } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import DateFromNow from "../../DateFromNow";
+import { AbsoluteDate } from "@scm-manager/ui-core";
 import { SingleContributor } from "../changesets";
-import { DateInput } from "../../useDateFormatter";
 import { Repository, AnnotatedLine } from "@scm-manager/ui-types";
 import AuthorImage from "./AuthorImage";
 import { Action } from "./actions";
@@ -73,11 +72,10 @@ type PopoverProps = {
   annotation: AnnotatedLine;
   offsetTop?: number;
   repository: Repository;
-  baseDate?: DateInput;
   dispatch: Dispatch<Action>;
 };
 
-const AnnotatePopover: FC<PopoverProps> = ({ annotation, offsetTop, repository, baseDate, dispatch }) => {
+const AnnotatePopover: FC<PopoverProps> = ({ annotation, offsetTop, repository, dispatch }) => {
   const [t] = useTranslation("repos");
   const [height, setHeight] = useState(125);
   const ref = useRef<HTMLDivElement>(null);
@@ -113,7 +111,7 @@ const AnnotatePopover: FC<PopoverProps> = ({ annotation, offsetTop, repository, 
           <AuthorImage person={annotation.author} />
           <SingleContributor person={annotation.author} displayTextOnly={true} />
         </span>
-        <DateFromNow className="is-pulled-right" date={annotation.when} baseDate={baseDate} />
+        <AbsoluteDate className="is-pulled-right" date={annotation.when} />
       </PopoverHeading>
       <hr className="my-2" />
       <p>

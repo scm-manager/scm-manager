@@ -14,24 +14,30 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import ChangesetRow from "./ChangesetRow";
 import React, { FC } from "react";
-import { Branch, Changeset, File, Repository } from "@scm-manager/ui-types";
-import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
+import { KeyboardIterator } from "@scm-manager/ui-core";
+import { Changeset, File, Repository } from "@scm-manager/ui-types";
+import ChangesetRow from "./ChangesetRow";
 
 type Props = {
   repository: Repository;
   changesets: Changeset[];
   file?: File;
-  branch?: Branch;
+  sourceName?: string;
 };
 
-const ChangesetList: FC<Props> = ({ repository, changesets, file, branch }) => {
+const ChangesetList: FC<Props> = ({ repository, changesets, file, sourceName }) => {
   return (
     <KeyboardIterator>
       {changesets.map((changeset) => {
         return (
-          <ChangesetRow key={changeset.id} repository={repository} changeset={changeset} file={file} branch={branch} />
+          <ChangesetRow
+            key={changeset.id}
+            repository={repository}
+            changeset={changeset}
+            file={file}
+            sourceName={sourceName}
+          />
         );
       })}
     </KeyboardIterator>

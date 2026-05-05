@@ -15,7 +15,7 @@
  */
 
 import styled from "styled-components";
-import React, { HTMLAttributes, useContext, useRef } from "react";
+import React, { FC, HTMLAttributes, Ref, useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { SearchBoxContext } from "./SearchBoxContext";
 import { useOverlayPosition } from "@react-aria/overlays";
@@ -44,10 +44,11 @@ const SeachBoxOptionsContainer = styled.ul`
   }
 `;
 
-export const SearchBoxOptions = React.forwardRef<
-  HTMLUListElement,
-  Omit<HTMLAttributes<HTMLUListElement>, "role" | "tabIndex" | "id" | "hidden">
->(({ children, className, ...props }, ref) => {
+type SearchBoxOptionsProps = Omit<HTMLAttributes<HTMLUListElement>, "role" | "tabIndex" | "id" | "hidden"> & {
+  ref: Ref<HTMLUListElement>;
+};
+
+export const SearchBoxOptions: FC<SearchBoxOptionsProps> = ({ children, className, ref, ...props }) => {
   const [t] = useTranslation("commons");
   const { open, popupId, inputRef } = useContext(SearchBoxContext);
   const innerRef = useRef<HTMLUListElement>(null);
@@ -85,4 +86,4 @@ export const SearchBoxOptions = React.forwardRef<
       </SeachBoxOptionsContainer>
     </Portal>
   );
-});
+};

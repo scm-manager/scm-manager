@@ -15,10 +15,10 @@
  */
 
 import { apiClient } from "./apiclient";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { ApiResultWithFetching } from "./base";
 import type { ContentType } from "@scm-manager/ui-types";
-import { UseQueryOptions } from "react-query/types/react/types";
+import { UseQueryOptions } from "@tanstack/react-query";
 
 export type { ContentType } from "@scm-manager/ui-types";
 
@@ -36,13 +36,13 @@ function getContentType(url: string): Promise<ContentType> {
 
 export const useContentType = (
   url: string,
-  options: Pick<UseQueryOptions<ContentType, Error>, "enabled"> = {}
+  options: Pick<UseQueryOptions<ContentType, Error>, "enabled"> = {},
 ): ApiResultWithFetching<ContentType> => {
-  const { isLoading, isFetching, error, data } = useQuery<ContentType, Error>(
-    ["contentType", url],
-    () => getContentType(url),
-    options
-  );
+  const { isLoading, isFetching, error, data } = useQuery<ContentType, Error>({
+    queryKey: ["contentType", url],
+    queryFn: () => getContentType(url),
+    ...options,
+  });
   return {
     isLoading,
     isFetching,

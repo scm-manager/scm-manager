@@ -33,7 +33,7 @@ export type LineElement = {
   };
   children: FlatNodes;
 };
-export { FlatNodes, FlatNode, FlatElement, FlatText };
+export type { FlatNodes, FlatNode, FlatElement, FlatText };
 
 function group(nodes: FlatNodes): Array<LineElement> {
   const lineElements: Array<LineElement> = [];

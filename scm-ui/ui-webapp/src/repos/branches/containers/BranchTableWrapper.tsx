@@ -15,16 +15,14 @@
  */
 
 import React, { FC, useMemo, useState } from "react";
-import { Branch, HalRepresentation, Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Notification, Subtitle } from "@scm-manager/ui-components";
-import { orderBranches } from "../util/orderBranches";
 import { useTranslation } from "react-i18next";
 import { useBranchDetailsCollection } from "@scm-manager/ui-api";
-import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
-import BranchList from "../components/BranchList";
-import { Collapsible, DataPageHeader } from "@scm-manager/ui-layout";
-import { Select } from "@scm-manager/ui-forms";
+import { ErrorNotification, Notification, Subtitle } from "@scm-manager/ui-components";
+import { Collapsible, DataPageHeader, KeyboardIterator, Select } from "@scm-manager/ui-core";
+import { Branch, HalRepresentation, Repository } from "@scm-manager/ui-types";
 import { SORT_OPTIONS, SortOption } from "../../tags/orderTags";
+import BranchList from "../components/BranchList";
+import { orderBranches } from "../util/orderBranches";
 
 type Props = {
   repository: Repository;

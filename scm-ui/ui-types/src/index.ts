@@ -14,39 +14,39 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-export { Action } from "./Action";
+export type { Action } from "./Action";
 export * from "./hal";
 
-export { Me } from "./Me";
+export type { Me } from "./Me";
 export * from "./User";
 export * from "./Group";
 
 export * from "./Repositories";
-export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
+export type { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
 
 export * from "./Branches";
 
-export { Person } from "./Person";
+export type { Person } from "./Person";
 
 export * from "./Changesets";
 
-export { Signature } from "./Signature";
+export type { Signature } from "./Signature";
 
-export { AnnotatedSource, AnnotatedLine } from "./Annotate";
+export type { AnnotatedSource, AnnotatedLine } from "./Annotate";
 
 export * from "./Tags";
 
-export { Config, AnonymousMode } from "./Config";
+export type { Config, AnonymousMode } from "./Config";
 
-export { IndexResources } from "./IndexResources";
+export type { IndexResources } from "./IndexResources";
 
-export { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
+export type { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
 
 export * from "./Sources";
 
-export { SelectValue, AutocompleteObject } from "./Autocomplete";
+export type { SelectValue, AutocompleteObject } from "./Autocomplete";
 
-export { Option } from "./Option";
+export type { Option } from "./Option";
 
 export * from "./Plugin";
 

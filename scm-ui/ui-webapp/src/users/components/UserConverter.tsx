@@ -38,12 +38,12 @@ const UserConverter: FC<Props> = ({ user }) => {
   const [password, setPassword] = useState("");
   const [passwordValid, setPasswordValid] = useState(false);
   const {
-    isLoading: isConvertingToInternal,
+    isPending: isConvertingToInternal,
     error: convertingToInternalError,
     convertToInternal,
   } = useConvertToInternal();
   const {
-    isLoading: isConvertingToExternal,
+    isPending: isConvertingToExternal,
     error: convertingToExternalError,
     convertToExternal,
   } = useConvertToExternal();

@@ -45,6 +45,8 @@ public final class LogCommandRequest implements Serializable, Resetable
 
   private String ancestorChangeset;
 
+  private String searchString;
+
   @Override
   public boolean equals(Object obj)
   {
@@ -67,16 +69,16 @@ public final class LogCommandRequest implements Serializable, Resetable
       && Objects.equal(pagingLimit, other.pagingLimit)
       && Objects.equal(path, other.path) 
       && Objects.equal(branch, other.branch)
-      && Objects.equal(ancestorChangeset, other.ancestorChangeset);
+      && Objects.equal(ancestorChangeset, other.ancestorChangeset)
+      && Objects.equal(searchString, other.searchString);
     //J+
   }
-
   
   @Override
   public int hashCode()
   {
     return Objects.hashCode(startChangeset, endChangeset, pagingStart,
-      pagingLimit, path, branch, ancestorChangeset);
+      pagingLimit, searchString, path, branch, ancestorChangeset);
   }
 
    @Override
@@ -91,7 +93,6 @@ public final class LogCommandRequest implements Serializable, Resetable
     ancestorChangeset = null;
   }
 
-  
   @Override
   public String toString()
   {
@@ -108,37 +109,30 @@ public final class LogCommandRequest implements Serializable, Resetable
     //J+
   }
 
-
-
   public void setBranch(String branch)
   {
     this.branch = branch;
   }
-
 
   public void setEndChangeset(String endChangeset)
   {
     this.endChangeset = endChangeset;
   }
 
-
   public void setPagingLimit(int pagingLimit)
   {
     this.pagingLimit = pagingLimit;
   }
-
 
   public void setPagingStart(int pagingStart)
   {
     this.pagingStart = pagingStart;
   }
 
-
   public void setPath(String path)
   {
     this.path = path;
   }
-
 
   public void setStartChangeset(String startChangeset)
   {
@@ -149,44 +143,36 @@ public final class LogCommandRequest implements Serializable, Resetable
     this.ancestorChangeset = ancestorChangeset;
   }
 
-
-  
   public String getBranch()
   {
     return branch;
   }
 
-  
   public String getEndChangeset()
   {
     return endChangeset;
   }
 
-  
   public int getPagingLimit()
   {
     return pagingLimit;
   }
 
-  
   public int getPagingStart()
   {
     return pagingStart;
   }
 
-  
   public String getPath()
   {
     return path;
   }
 
-  
   public String getStartChangeset()
   {
     return startChangeset;
   }
 
-  
   public boolean isPagingUnlimited()
   {
     return pagingLimit < 0;
@@ -196,4 +182,7 @@ public final class LogCommandRequest implements Serializable, Resetable
     return ancestorChangeset;
   }
 
+  public String getSearchString() { return searchString; }
+
+  public void setSearchString(String searchString) { this.searchString = searchString; }
 }

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import usePortalRootElement from "../usePortalRootElement";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
@@ -37,7 +37,7 @@ const Container = styled.div`
   }
 `;
 
-const ToastArea: FC = ({ children }) => {
+const ToastArea: FC<{ children?: ReactNode }> = ({ children }) => {
   const rootElement = usePortalRootElement("toastRoot");
   if (!rootElement) {
     // portal not yet ready

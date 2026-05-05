@@ -14,11 +14,11 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, Ref } from "react";
 import { Controller, ControllerRenderProps, Path } from "react-hook-form";
 import { useScmFormContext } from "../ScmFormContext";
 import { useScmFormPathContext } from "../FormPathContext";
-import { defaultOptionFactory, prefixWithoutIndices, withForwardRef } from "../helpers";
+import { defaultOptionFactory, prefixWithoutIndices } from "../helpers";
 import classNames from "classnames";
 import ChipInputField from "./ChipInputField";
 import { Option } from "@scm-manager/ui-types";
@@ -33,31 +33,29 @@ type Props<T extends Record<string, unknown>> = Omit<
   defaultValue?: string[];
   createDeleteText?: (value: string) => string;
   optionFactory?: (val: any) => Option<unknown>;
-  ref?: React.ForwardedRef<HTMLInputElement>;
+  ref?: Ref<HTMLInputElement>;
 };
 
 /**
  * @beta
  * @since 2.44.0
  */
-function ControlledChipInputField<T extends Record<string, unknown>>(
-  {
-    name,
-    label,
-    helpText,
-    rules,
-    testId,
-    defaultValue,
-    readOnly,
-    placeholder,
-    className,
-    createDeleteText,
-    children,
-    optionFactory = defaultOptionFactory,
-    ...props
-  }: Props<T>,
-  ref: React.ForwardedRef<HTMLInputElement>
-) {
+function ControlledChipInputField<T extends Record<string, unknown>>({
+  name,
+  label,
+  helpText,
+  rules,
+  testId,
+  defaultValue,
+  readOnly,
+  placeholder,
+  className,
+  createDeleteText,
+  children,
+  optionFactory = defaultOptionFactory,
+  ref,
+  ...props
+}: Props<T>) {
   const { control, t, readOnly: formReadonly } = useScmFormContext();
   const formPathPrefix = useScmFormPathContext();
 
@@ -67,6 +65,7 @@ function ControlledChipInputField<T extends Record<string, unknown>>(
   const placeholderTranslation = placeholder || t(`${prefixedNameWithoutIndices}.placeholder`) || "";
   const ariaLabelTranslation = t(`${prefixedNameWithoutIndices}.ariaLabel`);
   const helpTextTranslation = helpText || t(`${prefixedNameWithoutIndices}.helpText`);
+
   return (
     <Controller
       control={control}
@@ -74,6 +73,7 @@ function ControlledChipInputField<T extends Record<string, unknown>>(
       rules={rules}
       defaultValue={defaultValue}
       render={({ field: { value, onChange, ...field }, fieldState }) => (
+        // @ts-ignore
         <ChipInputField
           label={labelTranslation}
           helpText={helpTextTranslation}
@@ -100,4 +100,4 @@ function ControlledChipInputField<T extends Record<string, unknown>>(
   );
 }
 
-export default withForwardRef(ControlledChipInputField);
+export default ControlledChipInputField;

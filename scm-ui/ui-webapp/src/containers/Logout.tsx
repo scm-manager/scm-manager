@@ -15,14 +15,16 @@
  */
 
 import React, { FC, useEffect } from "react";
-import { Redirect } from "react-router-dom";
+import { Navigate, useLoaderData } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLogout } from "@scm-manager/ui-api";
 import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import { useDocumentTitle } from "@scm-manager/ui-core";
+import { IndexResources, Link } from "@scm-manager/ui-types";
 
 const Logout: FC = () => {
-  const { error, logout } = useLogout();
+  const index = useLoaderData<IndexResources>();
+  const { error, logout } = useLogout((index._links.logout as Link)!.href);
   const [t] = useTranslation("commons");
   useDocumentTitle(t("logout.title"));
 
@@ -33,7 +35,7 @@ const Logout: FC = () => {
   }, [logout]);
 
   if (!logout) {
-    return <Redirect to={"/login"} />;
+    return <Navigate to="/login" />;
   }
 
   if (error) {

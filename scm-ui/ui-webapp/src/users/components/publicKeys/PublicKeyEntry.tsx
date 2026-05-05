@@ -14,7 +14,8 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Button, ConfirmAlert, DateFromNow } from "@scm-manager/ui-components";
+import { Button, ConfirmAlert } from "@scm-manager/ui-components";
+import { DateFromNow } from "@scm-manager/ui-core";
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, PublicKey } from "@scm-manager/ui-types";

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
 import { useSecondaryNavigation } from "../useSecondaryNavigation";
 import { SecondaryNavigationProvider } from "../navigation/SecondaryNavigationContext";
@@ -29,7 +29,7 @@ const SecondaryColumn = styled.div<{ collapsed: boolean }>`
   }
 `;
 
-const SecondaryNavigationColumnIntern: FC = ({ children }) => {
+const SecondaryNavigationColumnIntern: FC<{ children: ReactNode }> = ({ children }) => {
   const { collapsed } = useSecondaryNavigation();
 
   return (
@@ -39,7 +39,7 @@ const SecondaryNavigationColumnIntern: FC = ({ children }) => {
   );
 };
 
-const SecondaryNavigationColumn: FC = ({ children }) => {
+const SecondaryNavigationColumn: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <SecondaryNavigationProvider>
       <SecondaryNavigationColumnIntern>{children}</SecondaryNavigationColumnIntern>

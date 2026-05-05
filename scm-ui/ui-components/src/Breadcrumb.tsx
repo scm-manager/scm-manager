@@ -16,7 +16,7 @@
 
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
 import { urls } from "@scm-manager/ui-api";
@@ -139,15 +139,14 @@ const Breadcrumb: FC<Props> = ({
   clickable = true,
 }) => {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [copying, setCopying] = useState(false);
   const [t] = useTranslation("commons");
 
   const pathSection = () => {
     if (path) {
-      const paths = path.split("/");
+      const paths = path.split("/").filter((pathFragment) => pathFragment !== "");
       return paths.map((pathFragment, index) => {
-        const decodedPathFragment = decodeURIComponent(pathFragment);
         let currPath = paths
           .slice(0, index + 1)
           .map(encodeURIComponent)
@@ -158,7 +157,7 @@ const Breadcrumb: FC<Props> = ({
         if (paths.length - 1 === index) {
           return (
             <li className="is-active" key={index}>
-              <BreadcrumbNode clickable={clickable} text={decodedPathFragment} url="#" current={true} />
+              <BreadcrumbNode clickable={clickable} text={pathFragment} url="#" current={true} />
             </li>
           );
         }
@@ -166,7 +165,7 @@ const Breadcrumb: FC<Props> = ({
           <li key={index}>
             <BreadcrumbNode
               clickable={clickable}
-              text={decodedPathFragment}
+              text={pathFragment}
               url={baseUrl + "/" + encodeURIComponent(revision) + "/" + currPath}
             />
           </li>
@@ -177,10 +176,10 @@ const Breadcrumb: FC<Props> = ({
   };
 
   const copySource = () => {
-    history.push(location.pathname);
+    navigate(location.pathname);
     setCopying(true);
     copyToClipboard(
-      window.location.protocol + "//" + window.location.host + urls.withContextPath(permalink || location.pathname)
+      window.location.protocol + "//" + window.location.host + urls.withContextPath(permalink || location.pathname),
     ).finally(() => setCopying(false));
   };
 
@@ -206,7 +205,7 @@ const Breadcrumb: FC<Props> = ({
           "my-4",
           "is-flex",
           "is-align-items-center",
-          "is-full-width"
+          "is-full-width",
         )}
         aria-label="breadcrumbs"
       >
@@ -304,7 +303,7 @@ const Breadcrumb: FC<Props> = ({
               "is-justify-content-flex-start",
               "is-align-self-center",
               "m-2",
-              "is-flex-wrap-wrap"
+              "is-flex-wrap-wrap",
             )}
           >
             {renderExtensionPoints()}

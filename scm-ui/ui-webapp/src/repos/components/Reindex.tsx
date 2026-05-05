@@ -26,7 +26,7 @@ type Props = {
 
 const Reindex: FC<Props> = ({ repository }) => {
   const [t] = useTranslation("repos");
-  const { reindex, error, isLoading, isRunning } = useReindexRepository();
+  const { reindex, error, isPending, isRunning } = useReindexRepository();
 
   return (
     <>
@@ -42,8 +42,8 @@ const Reindex: FC<Props> = ({ repository }) => {
             icon="sync-alt"
             className="mt-4"
             action={() => reindex(repository)}
-            disabled={isLoading}
-            loading={isLoading}
+            disabled={isPending}
+            loading={isPending}
           >
             {t("reindex.button")}
           </Button>

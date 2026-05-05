@@ -15,8 +15,7 @@
  */
 
 import * as React from "react";
-import { FC, useRef, useState } from "react";
-import ReactDOM from "react-dom";
+import { FC, ReactNode, useRef, useState } from "react";
 import Modal from "./Modal";
 import classNames from "classnames";
 
@@ -34,9 +33,10 @@ type Props = {
   message?: string;
   buttons: Button[];
   close?: () => void;
+  children?: ReactNode;
 };
 
-export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close, children }) => {
+const ConfirmAlert: FC<Props> = ({ title, message, buttons, close, children }) => {
   const [showModal, setShowModal] = useState(true);
   const initialFocusButton = useRef<HTMLButtonElement>(null);
 
@@ -92,22 +92,5 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close, childr
     />
   );
 };
-
-/**
- * @deprecated Please use {@link ConfirmAlert} directly.
- */
-export function confirmAlert(properties: Props) {
-  const root = document.getElementById("modalRoot");
-  if (root) {
-    const close = () => {
-      const container = document.getElementById("modalRoot");
-      if (container) {
-        ReactDOM.unmountComponentAtNode(container);
-      }
-    };
-    const props = { ...properties, close };
-    ReactDOM.render(<ConfirmAlert {...props} />, root);
-  }
-}
 
 export default ConfirmAlert;

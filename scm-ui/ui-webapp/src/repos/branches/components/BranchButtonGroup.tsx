@@ -14,40 +14,39 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Branch, Repository } from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { ButtonAddons } from "@scm-manager/ui-components";
-import { encodePart } from "../../sources/components/content/FileLink";
 import { Icon, LinkButton } from "@scm-manager/ui-core";
+import { Branch, Repository } from "@scm-manager/ui-types";
 
-type Props = WithTranslation & {
+type Props = {
   repository: Repository;
   branch: Branch;
 };
 
-class BranchButtonGroup extends React.Component<Props> {
-  render() {
-    const { repository, branch, t } = this.props;
+const BranchButtonGroup: FC<Props> = ({ repository, branch }) => {
+  const [t] = useTranslation("repos");
 
-    const changesetLink = `/repo/${repository.namespace}/${repository.name}/branch/${encodePart(
-      branch.name
-    )}/changesets/`;
-    const sourcesLink = `/repo/${repository.namespace}/${repository.name}/sources/${encodePart(branch.name)}/`;
+  const changesetLink = `/repo/${repository.namespace}/${repository.name}/code/branch/${encodeURIComponent(
+    branch.name
+  )}/changesets/`;
+  const sourcesLink = `/repo/${repository.namespace}/${repository.name}/code/sources/${encodeURIComponent(
+    branch.name
+  )}/`;
 
-    return (
-      <ButtonAddons>
-        <LinkButton to={changesetLink}>
-          <Icon>exchange-alt</Icon>
-          <span>{t("branch.commits")}</span>
-        </LinkButton>
-        <LinkButton to={sourcesLink}>
-          <Icon>code</Icon>
-          <span>{t("branch.sources")}</span>
-        </LinkButton>
-      </ButtonAddons>
-    );
-  }
-}
+  return (
+    <ButtonAddons>
+      <LinkButton to={changesetLink}>
+        <Icon>exchange-alt</Icon>
+        <span>{t("branch.commits")}</span>
+      </LinkButton>
+      <LinkButton to={sourcesLink}>
+        <Icon>code</Icon>
+        <span>{t("branch.sources")}</span>
+      </LinkButton>
+    </ButtonAddons>
+  );
+};
 
-export default withTranslation("repos")(BranchButtonGroup);
+export default BranchButtonGroup;

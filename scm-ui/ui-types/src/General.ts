@@ -18,7 +18,10 @@ import { Config } from "./Config";
 import { HalRepresentation } from "./hal";
 
 export type ConfigChangeHandler = <Name extends Exclude<keyof Config, keyof HalRepresentation>>(
+  // eslint-disable-next-line no-unused-vars
   isValid: boolean,
+  // eslint-disable-next-line no-unused-vars
   changedValue: Config[Name],
-  name: Name
+  // eslint-disable-next-line no-unused-vars
+  name: Name,
 ) => void;

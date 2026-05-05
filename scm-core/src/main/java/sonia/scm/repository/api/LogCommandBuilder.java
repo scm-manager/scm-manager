@@ -397,8 +397,20 @@ public final class LogCommandBuilder
     return this;
   }
 
+  /**
+   * Filter changesets by a search string (e.g. commit message or revision hash).
+   *
+   * @param searchString search string to filter changesets
+   * @return {@code this}
+   *
+   * @since 4.0.0
+   */
+  public LogCommandBuilder setSearchString(String searchString)
+  {
+    request.setSearchString(searchString);
 
-
+    return this;
+  }
 
   static class CacheKey implements RepositoryCacheKey, Serializable
   {

@@ -24,7 +24,7 @@ const Wrapper = styled.div`
 `;
 
 /**
- * @deprecated Use {@link ui-buttons/src/Button.tsx} instead
+ * @deprecated Use Button from ui-core instead
  */
 export default class CreateButton extends React.Component<ButtonProps> {
   render() {

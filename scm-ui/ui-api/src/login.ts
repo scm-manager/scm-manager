@@ -14,24 +14,19 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Me } from "@scm-manager/ui-types";
-import { useMutation, useQuery } from "react-query";
+import { Link, Me } from "@scm-manager/ui-types";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
 import { ApiResult, useIndexLink } from "./base";
-import { useLegacyContext } from "./LegacyContext";
 import { useReset } from "./reset";
 import { useCallback } from "react";
 
 export const useMe = (): ApiResult<Me> => {
-  const legacy = useLegacyContext();
   const link = useIndexLink("me");
-  return useQuery<Me, Error>("me", () => apiClient.get(link!).then(response => response.json()), {
+  return useQuery<Me, Error>({
+    queryKey: ["me"],
+    queryFn: () => apiClient.get(link!).then((response) => response.json()),
     enabled: !!link,
-    onSuccess: me => {
-      if (legacy.onMeFetched) {
-        legacy.onMeFetched(me);
-      }
-    }
   });
 };
 
@@ -41,6 +36,11 @@ export const useRequiredMe = () => {
     throw new Error("Could not find 'me' in cache");
   }
   return data;
+};
+
+export const useMeLink = (linkName: string): string | undefined => {
+  const { data } = useMe();
+  return (data?._links[linkName] as Link)?.href;
 };
 
 export const useSubject = () => {
@@ -53,7 +53,7 @@ export const useSubject = () => {
     isAnonymous,
     isLoading,
     error,
-    me
+    me,
   };
 };
 
@@ -64,15 +64,22 @@ type Credentials = {
   grant_type: string;
 };
 
-export const useLogin = () => {
-  const link = useIndexLink("login");
+export const useLogin = (link: string, onSuccess: () => void) => {
   const reset = useReset();
-  const { mutate, isLoading, error } = useMutation<unknown, Error, Credentials>(
-    credentials => apiClient.post(link!, credentials),
-    {
-      onSuccess: reset
-    }
-  );
+  const { mutate, isPending, error } = useMutation<unknown, Error, Credentials>({
+    mutationFn: (credentials) => apiClient.post(link!, credentials),
+    onSuccess: () => {
+      reset();
+      onSuccess();
+    },
+  });
+  if (!link) {
+    return {
+      login: undefined,
+      isPending: false,
+      error: undefined,
+    };
+  }
 
   const login = (username: string, password: string) => {
     mutate({ cookie: true, grant_type: "password", username, password });
@@ -80,8 +87,8 @@ export const useLogin = () => {
 
   return {
     login: link ? login : undefined,
-    isLoading,
-    error
+    isPending,
+    error,
   };
 };
 
@@ -89,21 +96,20 @@ type LogoutResponse = {
   logoutRedirect?: string;
 };
 
-export const useLogout = () => {
-  const link = useIndexLink("logout");
+export const useLogout = (link: string) => {
   const reset = useReset();
 
-  const { mutate, isLoading, error, data } = useMutation<LogoutResponse, Error, unknown>(
-    () => apiClient.delete(link!).then(r => (r.status === 200 ? r.json() : {})),
-    {
-      onSuccess: response => {
-        if (response?.logoutRedirect) {
-          window.location.assign(response.logoutRedirect);
-        }
-        return reset();
+  const { mutate, isPending, error, data } = useMutation<LogoutResponse, Error, unknown>({
+    mutationFn: async () => {
+      return apiClient.delete(link!).then((r) => (r.status === 200 ? r.json() : {}));
+    },
+    onSuccess: (response) => {
+      if (response?.logoutRedirect) {
+        window.location.assign(response.logoutRedirect);
       }
-    }
-  );
+      return reset();
+    },
+  });
 
   const logout = useCallback(() => {
     mutate({});
@@ -111,7 +117,7 @@ export const useLogout = () => {
 
   return {
     logout: link && !data ? logout : undefined,
-    isLoading,
-    error
+    isPending,
+    error,
   };
 };

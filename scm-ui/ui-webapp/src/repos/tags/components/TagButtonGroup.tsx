@@ -15,10 +15,10 @@
  */
 
 import React, { FC } from "react";
-import { Tag, Repository } from "@scm-manager/ui-types";
-import { ButtonAddons } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
+import { ButtonAddons } from "@scm-manager/ui-components";
 import { Icon, LinkButton } from "@scm-manager/ui-core";
+import { Tag, Repository } from "@scm-manager/ui-types";
 
 type Props = {
   repository: Repository;
@@ -31,7 +31,9 @@ const TagButtonGroup: FC<Props> = ({ repository, tag }) => {
   const changesetLink = `/repo/${repository.namespace}/${repository.name}/code/changeset/${encodeURIComponent(
     tag.revision
   )}`;
-  const sourcesLink = `/repo/${repository.namespace}/${repository.name}/sources/${encodeURIComponent(tag.revision)}/`;
+  const sourcesLink = `/repo/${repository.namespace}/${repository.name}/code/sources/${encodeURIComponent(
+    tag.revision
+  )}/`;
 
   return (
     <>

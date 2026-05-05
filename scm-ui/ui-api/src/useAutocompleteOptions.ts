@@ -15,7 +15,7 @@
  */
 
 import { apiClient } from "./apiclient";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useIndexLinks } from "./base";
 import { AutocompleteObject, Link, Option } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
@@ -29,12 +29,12 @@ function useAutocompleteOptions(
   options: {
     labelFactory?: (element: AutocompleteObject) => string;
     allowArbitraryValues?: (query: string) => AutocompleteObject;
-  } = {}
+  } = {},
 ) {
   const [t] = useTranslation("commons");
-  return useQuery<Option<AutocompleteObject>[], Error>(
-    ["options", link, query],
-    () =>
+  return useQuery<Option<AutocompleteObject>[], Error>({
+    queryKey: ["options", link, query],
+    queryFn: () =>
       apiClient
         .get(link + "?q=" + query)
         .then((r) => r.json())
@@ -46,7 +46,7 @@ function useAutocompleteOptions(
           if (
             options.allowArbitraryValues &&
             !result.some(
-              (opt) => opt.value.id === query || opt.value.displayName?.toLowerCase() === query.toLowerCase()
+              (opt) => opt.value.id === query || opt.value.displayName?.toLowerCase() === query.toLowerCase(),
             )
           ) {
             result.unshift({
@@ -58,10 +58,8 @@ function useAutocompleteOptions(
           }
           return result;
         }),
-    {
-      enabled: query.length > 1 && !!link,
-    }
-  );
+    enabled: query.length > 1 && !!link,
+  });
 }
 
 export const useGroupOptions = (query?: string) => {

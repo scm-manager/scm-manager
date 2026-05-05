@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
 
 const FullWidthDiv = styled.div`
@@ -29,6 +29,8 @@ const FullWidthDiv = styled.div`
   }
 `;
 
-const ToastButtons: FC = ({ children }) => <FullWidthDiv className="is-flex pt-2">{children}</FullWidthDiv>;
+const ToastButtons: FC<{ children?: ReactNode }> = ({ children }) => (
+  <FullWidthDiv className="is-flex pt-2">{children}</FullWidthDiv>
+);
 
 export default ToastButtons;

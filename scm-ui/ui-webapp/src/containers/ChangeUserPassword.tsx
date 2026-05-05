@@ -26,17 +26,13 @@ import {
   Subtitle,
 } from "@scm-manager/ui-components";
 import { useDocumentTitle } from "@scm-manager/ui-core";
-import { Me } from "@scm-manager/ui-types";
-import { useChangeUserPassword } from "@scm-manager/ui-api";
+import { useChangeUserPassword, useRequiredMe } from "@scm-manager/ui-api";
 
-type Props = {
-  me: Me;
-};
-
-const ChangeUserPassword: FC<Props> = ({ me }) => {
+const ChangeUserPassword: FC = () => {
   const [t] = useTranslation("commons");
+  const me = useRequiredMe();
   useDocumentTitle(t("password.subtitle"), me.displayName);
-  const { isLoading, error, passwordChanged, changePassword, reset } = useChangeUserPassword(me);
+  const { isPending, error, passwordChanged, changePassword, reset } = useChangeUserPassword(me);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [passwordValid, setPasswordValid] = useState(false);
@@ -64,7 +60,11 @@ const ChangeUserPassword: FC<Props> = ({ me }) => {
   let message = null;
 
   if (passwordChanged) {
-    message = <Notification type={"success"} children={t("password.changedSuccessfully")} onClose={reset} />;
+    message = (
+      <Notification type="success" onClose={reset}>
+        {t("password.changedSuccessfully")}
+      </Notification>
+    );
   } else if (error) {
     message = <ErrorNotification error={error} />;
   }
@@ -87,7 +87,7 @@ const ChangeUserPassword: FC<Props> = ({ me }) => {
       <PasswordConfirmation passwordChanged={onPasswordChange} key={passwordChanged ? "changed" : "unchanged"} />
       <Level
         right={
-          <SubmitButton disabled={!passwordValid || !oldPassword} loading={isLoading} label={t("password.submit")} />
+          <SubmitButton disabled={!passwordValid || !oldPassword} loading={isPending} label={t("password.submit")} />
         }
       />
     </form>

@@ -14,17 +14,17 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, FC, Ref } from "react";
 import classNames from "classnames";
 import * as HeadlessTabs from "@radix-ui/react-tabs";
 
-type Props = ComponentProps<typeof HeadlessTabs.Trigger>;
+type Props = ComponentProps<typeof HeadlessTabs.Trigger> & { ref?: Ref<HTMLButtonElement> };
 
 /**
  * @beta
  * @since 2.47.0
  */
-const TabTrigger = React.forwardRef<HTMLButtonElement, Props>(({ children, className, ...props }, ref) => (
+const TabTrigger: FC<Props> = ({ children, className, ref, ...props }) => (
   <li>
     <HeadlessTabs.Trigger
       className={classNames("has-background-transparent is-borderless", className)}
@@ -34,5 +34,6 @@ const TabTrigger = React.forwardRef<HTMLButtonElement, Props>(({ children, class
       {children}
     </HeadlessTabs.Trigger>
   </li>
-));
+);
+
 export default TabTrigger;

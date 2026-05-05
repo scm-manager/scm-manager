@@ -15,10 +15,12 @@
  */
 
 import React, {
+  FC,
   FocusEventHandler,
   HTMLAttributes,
   KeyboardEvent,
   MouseEventHandler,
+  Ref,
   RefObject,
   useCallback,
   useEffect,
@@ -33,14 +35,14 @@ import { SearchBoxOption } from "./SearchBoxOption";
 import { SearchBoxOptions } from "./SearchBoxOptions";
 import { useLocation } from "react-router-dom";
 
-const SearchBox = React.forwardRef<
-  HTMLDivElement,
-  HTMLAttributes<HTMLDivElement> & {
-    onQueryChange: (newQuery: string) => void;
-    shouldClear?: boolean;
-    query: string;
-  }
->(({ children, query, onQueryChange, shouldClear, ...props }, ref) => {
+type SearchBoxProps = HTMLAttributes<HTMLDivElement> & {
+  onQueryChange: (newQuery: string) => void;
+  shouldClear?: boolean;
+  query: string;
+  ref?: Ref<HTMLDivElement>;
+};
+
+const SearchBox: FC<SearchBoxProps> = ({ children, query, onQueryChange, shouldClear, ref, ...props }) => {
   const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | undefined>();
   const [options, setOptions] = useState<RefObject<HTMLAnchorElement>[]>([]);
@@ -73,26 +75,29 @@ const SearchBox = React.forwardRef<
         result.splice(indexToInsert, 0, ref);
         return result;
       }),
-    []
+    [],
   );
   const deregisterOption = useCallback(
     (ref: RefObject<HTMLAnchorElement>) => setOptions((prev) => prev.filter((it) => it !== ref)),
-    []
+    [],
   );
-  const close = useCallback(() => {
-    if (open && shouldClear) {
-      onQueryChange?.("");
-    }
-    setOpen(false);
-    setActiveId(undefined);
-  }, [onQueryChange, open, shouldClear]);
+  const close = useCallback(
+    (clear = true) => {
+      if (shouldClear && clear) {
+        onQueryChange?.("");
+      }
+      setOpen(false);
+      setActiveId(undefined);
+    },
+    [onQueryChange, shouldClear],
+  );
   const handleInputBlur: FocusEventHandler<HTMLInputElement> = useCallback(
     (e) => {
       if (!activeId || e.relatedTarget?.id !== activeId) {
-        close();
+        close(false);
       }
     },
-    [activeId, close]
+    [activeId, close],
   );
   const handleInputKeyDown = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
@@ -146,7 +151,7 @@ const SearchBox = React.forwardRef<
           setOpen(true);
       }
     },
-    [activeId, onQueryChange, open, options, shouldClear]
+    [activeId, onQueryChange, open, options, shouldClear],
   );
   const handleInputFocus = useCallback(() => {
     if (query) {
@@ -170,7 +175,9 @@ const SearchBox = React.forwardRef<
       });
     }
   }, [activeId, options]);
-  useEffect(close, [location]);
+  useEffect(() => {
+    close();
+  }, [location, close]);
 
   return (
     <SearchBoxContext.Provider
@@ -201,7 +208,7 @@ const SearchBox = React.forwardRef<
           popupId,
           query,
           registerOption,
-        ]
+        ],
       )}
     >
       <div {...props} ref={ref}>
@@ -209,7 +216,7 @@ const SearchBox = React.forwardRef<
       </div>
     </SearchBoxContext.Provider>
   );
-});
+};
 
 export default Object.assign(SearchBox, {
   Input: SearchBoxInput,

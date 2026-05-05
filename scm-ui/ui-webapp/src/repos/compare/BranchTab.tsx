@@ -17,36 +17,35 @@
 import React, { FC, useState } from "react";
 import CompareSelectorListEntry from "./CompareSelectorListEntry";
 import DefaultBranchTag from "../branches/components/DefaultBranchTag";
-import { Branch, Repository } from "@scm-manager/ui-types";
+import { Branch } from "@scm-manager/ui-types";
 import { CompareFunction, CompareProps, CompareTypes } from "./CompareSelectBar";
-import { useBranches } from "@scm-manager/ui-api";
 import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 
 type Props = {
+  branches: Branch[];
+  branchesIsLoading: boolean;
+  branchesError: Error | null;
   onSelect: CompareFunction;
   selected: CompareProps;
-  repository: Repository;
   filter: string;
 };
 
 const FixedWidthNotification = styled(Notification)`
-  width: 18.5rem;
+  width: 100%;
   margin-top: 0.5rem;
 `;
 
 const ScrollableUl = styled.ul`
   max-height: 15.65rem;
-  width: 18.5rem;
+  width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
 `;
 
-const BranchTab: FC<Props> = ({ onSelect, selected, repository, filter }) => {
+const BranchTab: FC<Props> = ({ branches, branchesIsLoading, branchesError, onSelect, selected, filter }) => {
   const [t] = useTranslation("repos");
-  const { isLoading: branchesIsLoading, error: branchesError, data: branchesData } = useBranches(repository);
-  const branches: Branch[] = (branchesData?._embedded?.branches as Branch[]) || [];
 
   const [selection, setSelection] = useState(selected);
 
@@ -73,8 +72,8 @@ const BranchTab: FC<Props> = ({ onSelect, selected, repository, filter }) => {
       {elements.map((branch) => {
         return (
           <CompareSelectorListEntry
-            isSelected={selection.type === "b" && selection.name === branch.name}
-            onClick={() => onSelectEntry("b", branch.name)}
+            isSelected={selection.type === "branch" && selection.name === branch.name}
+            onClick={() => onSelectEntry("branch", branch.name)}
             key={branch.name}
           >
             <span className="is-ellipsis-overflow">{branch.name}</span>

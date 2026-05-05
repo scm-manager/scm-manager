@@ -16,11 +16,12 @@
 
 import { ApiResult, useRequiredIndexLink } from "./base";
 import { RepositoryRole, RepositoryRoleCollection, RepositoryRoleCreation } from "@scm-manager/ui-types";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
 import * as urls from "./urls";
 import { createQueryString } from "./utils";
 import { requiredLink } from "./links";
+import { useEffect } from "react";
 
 export type UseRepositoryRolesRequest = {
   page?: number | string;
@@ -35,24 +36,27 @@ export const useRepositoryRoles = (request?: UseRepositoryRolesRequest): ApiResu
     queryParams.page = request.page.toString();
   }
 
-  return useQuery<RepositoryRoleCollection, Error>(
-    ["repositoryRoles", request?.page || 0],
-    () => apiClient.get(`${indexLink}?${createQueryString(queryParams)}`).then((response) => response.json()),
-    {
-      onSuccess: (repositoryRoles: RepositoryRoleCollection) => {
-        repositoryRoles._embedded?.repositoryRoles.forEach((repositoryRole: RepositoryRole) =>
-          queryClient.setQueryData(["repositoryRole", repositoryRole.name], repositoryRole)
-        );
-      },
+  const result = useQuery<RepositoryRoleCollection, Error>({
+    queryKey: ["repositoryRoles", request?.page || 0],
+    queryFn: () => apiClient.get(`${indexLink}?${createQueryString(queryParams)}`).then((response) => response.json()),
+  });
+  useEffect(() => {
+    if (result.data) {
+      result.data._embedded?.repositoryRoles.forEach((repositoryRole: RepositoryRole) =>
+        queryClient.setQueryData(["repositoryRole", repositoryRole.name], repositoryRole),
+      );
     }
-  );
+  }, [queryClient, result.data]);
+
+  return result;
 };
 
 export const useRepositoryRole = (name: string): ApiResult<RepositoryRole> => {
   const indexLink = useRequiredIndexLink("repositoryRoles");
-  return useQuery<RepositoryRole, Error>(["repositoryRole", name], () =>
-    apiClient.get(urls.concat(indexLink, name)).then((response) => response.json())
-  );
+  return useQuery<RepositoryRole, Error>({
+    queryKey: ["repositoryRole", name],
+    queryFn: () => apiClient.get(urls.concat(indexLink, name)).then((response) => response.json()),
+  });
 };
 
 const createRepositoryRole = (link: string) => {
@@ -73,18 +77,16 @@ const createRepositoryRole = (link: string) => {
 export const useCreateRepositoryRole = () => {
   const queryClient = useQueryClient();
   const link = useRequiredIndexLink("repositoryRoles");
-  const { mutate, data, isLoading, error } = useMutation<RepositoryRole, Error, RepositoryRoleCreation>(
-    createRepositoryRole(link),
-    {
-      onSuccess: (repositoryRole) => {
-        queryClient.setQueryData(["repositoryRole", repositoryRole.name], repositoryRole);
-        return queryClient.invalidateQueries(["repositoryRoles"]);
-      },
-    }
-  );
+  const { mutate, data, isPending, error } = useMutation<RepositoryRole, Error, RepositoryRoleCreation>({
+    mutationFn: createRepositoryRole(link),
+    onSuccess: (repositoryRole) => {
+      queryClient.setQueryData(["repositoryRole", repositoryRole.name], repositoryRole);
+      return queryClient.invalidateQueries({ queryKey: ["repositoryRoles"] });
+    },
+  });
   return {
     create: (repositoryRole: RepositoryRoleCreation) => mutate(repositoryRole),
-    isLoading,
+    isPending,
     error,
     repositoryRole: data,
   };
@@ -92,21 +94,19 @@ export const useCreateRepositoryRole = () => {
 
 export const useUpdateRepositoryRole = () => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, RepositoryRole>(
-    (repositoryRole) => {
+  const { mutate, isPending, error, data } = useMutation<unknown, Error, RepositoryRole>({
+    mutationFn: (repositoryRole) => {
       const updateUrl = requiredLink(repositoryRole, "update");
       return apiClient.put(updateUrl, repositoryRole, "application/vnd.scmm-repositoryRole+json;v=2");
     },
-    {
-      onSuccess: async (_, repositoryRole) => {
-        await queryClient.invalidateQueries(["repositoryRole", repositoryRole.name]);
-        await queryClient.invalidateQueries(["repositoryRoles"]);
-      },
-    }
-  );
+    onSuccess: async (_, repositoryRole) => {
+      await queryClient.invalidateQueries({ queryKey: ["repositoryRole", repositoryRole.name] });
+      await queryClient.invalidateQueries({ queryKey: ["repositoryRoles"] });
+    },
+  });
   return {
     update: (repositoryRole: RepositoryRole) => mutate(repositoryRole),
-    isLoading,
+    isPending,
     error,
     isUpdated: !!data,
   };
@@ -114,21 +114,19 @@ export const useUpdateRepositoryRole = () => {
 
 export const useDeleteRepositoryRole = () => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, RepositoryRole>(
-    (repositoryRole) => {
+  const { mutate, isPending, error, data } = useMutation<unknown, Error, RepositoryRole>({
+    mutationFn: (repositoryRole) => {
       const deleteUrl = requiredLink(repositoryRole, "delete");
       return apiClient.delete(deleteUrl);
     },
-    {
-      onSuccess: async (_, name) => {
-        await queryClient.removeQueries(["repositoryRole", name]);
-        await queryClient.invalidateQueries(["repositoryRoles"]);
-      },
-    }
-  );
+    onSuccess: async (_, name) => {
+      await queryClient.removeQueries({ queryKey: ["repositoryRole", name] });
+      await queryClient.invalidateQueries({ queryKey: ["repositoryRoles"] });
+    },
+  });
   return {
     remove: (repositoryRole: RepositoryRole) => mutate(repositoryRole),
-    isLoading,
+    isPending,
     error,
     isDeleted: !!data,
   };

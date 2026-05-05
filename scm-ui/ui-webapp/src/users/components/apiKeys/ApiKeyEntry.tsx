@@ -15,10 +15,11 @@
  */
 
 import React, { FC, useState } from "react";
-import { ConfirmAlert, Button, DateFromNow } from "@scm-manager/ui-components";
+import { ConfirmAlert, Button } from "@scm-manager/ui-components";
 import { ApiKey } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { DeleteFunction } from "@scm-manager/ui-api";
+import { AbsoluteDate } from "@scm-manager/ui-core";
 
 type Props = {
   apiKey: ApiKey;
@@ -41,7 +42,7 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
         <td className="is-vertical-align-middle">{apiKey.displayName}</td>
         <td className="is-vertical-align-middle">{apiKey.permissionRole}</td>
         <td className="is-vertical-align-middle is-hidden-mobile">
-          <DateFromNow date={apiKey.created} />
+          <AbsoluteDate date={apiKey.created} />
         </td>
         <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
       </tr>

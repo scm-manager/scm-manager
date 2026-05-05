@@ -114,4 +114,8 @@ public final class InstalledPlugin implements Plugin {
     this.uninstallable = uninstallable;
   }
 
+  @Override
+  public String toString() {
+    return descriptor.getInformation().getName(true);
+  }
 }

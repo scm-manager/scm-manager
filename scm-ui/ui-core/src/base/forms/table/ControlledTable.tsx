@@ -54,23 +54,31 @@ function ControlledTable<T extends Record<string, unknown>, PATH extends Path<T>
   const deleteLabel = t(`${prefixedNameWithoutIndices}.delete`) || defaultTranslate("delete.label");
   const emptyTableLabel = t(`${prefixedNameWithoutIndices}.empty`) || defaultTranslate("empty.label");
   const actionHeaderLabel = t(`${prefixedNameWithoutIndices}.action.label`) || defaultTranslate("headers.action.label");
+  const renderedChildren = typeof children === "function" ? children({} as RenderProps<T, PATH>) : children;
 
   return (
     <table className={classNames("table content is-hoverable", className)}>
       <thead>
         <tr>
-          {React.Children.map(children, (child) => (
-            <th>{t(`${prefixedNameWithoutIndices}.${(child as ReactElement).props.name}.label`)}</th>
+          {React.Children.map(renderedChildren, (child) => (
+            // @ts-ignore
+            <th>{String(t(`${prefixedNameWithoutIndices}.${(child as ReactElement).props.name}.label`))}</th>
           ))}
           {withDelete && !readOnly ? <th className="has-text-right">{actionHeaderLabel}</th> : null}
         </tr>
       </thead>
       <tbody>
-      {fields.length === 0 ? <tr><td colSpan={1000}><Notification type="info">{emptyTableLabel}</Notification></td></tr> : null}
+        {fields.length === 0 ? (
+          <tr>
+            <td colSpan={1000}>
+              <Notification type="info">{emptyTableLabel}</Notification>
+            </td>
+          </tr>
+        ) : null}
         {fields.map((value, index) => (
           <ScmFormPathContextProvider key={value.id} path={`${nameWithPrefix}.${index}`}>
             <tr>
-              {children}
+              {renderedChildren}
               {withDelete && !readOnly ? (
                 <td className="has-text-right">
                   <Button className="px-4" onClick={() => remove(index)} aria-label={deleteLabel}>

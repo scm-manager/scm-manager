@@ -14,12 +14,32 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { storiesOf } from "@storybook/react";
+// import { storiesOf } from "@storybook/react";
+// import React from "react";
+// import SmallLoadingSpinner from "./SmallLoadingSpinner";
+//
+// storiesOf("SmallLoading", module).add("Default", () => (
+//   <div>
+//     <SmallLoadingSpinner />
+//   </div>
+// ));
+
 import React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import SmallLoadingSpinner from "./SmallLoadingSpinner";
 
-storiesOf("SmallLoading", module).add("Default", () => (
-  <div>
-    <SmallLoadingSpinner />
-  </div>
-));
+const meta: Meta<typeof SmallLoadingSpinner> = {
+  title: "Components/SmallLoadingSpinner",
+  component: SmallLoadingSpinner,
+  parameters: {
+    layout: "centered",
+  },
+  tags: ["autodocs"],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {};

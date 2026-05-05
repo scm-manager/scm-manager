@@ -25,8 +25,8 @@ import {
   RepositoryRoleCollection,
   RepositoryVerbs,
 } from "@scm-manager/ui-types";
-import fetchMock from "fetch-mock-jest";
-import { renderHook } from "@testing-library/react-hooks";
+import fetchMock from "fetch-mock";
+import { renderHook, act, waitFor } from "@testing-library/react";
 import createWrapper from "./tests/createWrapper";
 import {
   useAvailablePermissions,
@@ -36,7 +36,6 @@ import {
   useRepositoryVerbs,
   useUpdatePermission,
 } from "./permissions";
-import { act } from "react-test-renderer";
 
 describe("permission hooks test", () => {
   const readRole: RepositoryRole = {
@@ -129,19 +128,18 @@ describe("permission hooks test", () => {
       setIndexLink(queryClient, "repositoryVerbs", "/verbs");
       fetchMock.get("/api/v2/verbs", verbCollection);
 
-      const { result, waitFor } = renderHook(() => useRepositoryVerbs(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useRepositoryVerbs(), {
+        wrapper: createWrapper(queryClient),
       });
       await waitFor(() => {
-        return !!result.current.data;
+        expect(result.current.data).toEqual(verbCollection);
       });
-      expect(result.current.data).toEqual(verbCollection);
     });
   });
 
   describe("useAvailablePermissions tests", () => {
     it("should return available roles and verbs", async () => {
-      queryClient.setQueryData("index", {
+      queryClient.setQueryData(["index"], {
         version: "x.y.z",
         _links: {
           repositoryRoles: {
@@ -155,25 +153,25 @@ describe("permission hooks test", () => {
       fetchMock.get("/api/v2/roles", roleCollection);
       fetchMock.get("/api/v2/verbs", verbCollection);
 
-      const { result, waitFor } = renderHook(() => useAvailablePermissions(), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useAvailablePermissions(), {
+        wrapper: createWrapper(queryClient),
       });
       await waitFor(() => {
-        return !!result.current.data;
+        expect(result.current.data?.repositoryRoles).toEqual(roleCollection._embedded?.repositoryRoles);
+        expect(result.current.data?.repositoryVerbs).toEqual(verbCollection.verbs);
       });
-      expect(result.current.data?.repositoryRoles).toEqual(roleCollection._embedded?.repositoryRoles);
-      expect(result.current.data?.repositoryVerbs).toEqual(verbCollection.verbs);
     });
   });
 
   describe("usePermissions tests", () => {
     const fetchPermissions = async (namespaceOrRepository: Namespace | Repository) => {
-      const { result, waitFor } = renderHook(() => usePermissions(namespaceOrRepository), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => usePermissions(namespaceOrRepository), {
+        wrapper: createWrapper(queryClient),
       });
       await waitFor(() => {
-        return !!result.current.data;
+        expect(result.current.data).toBeDefined();
       });
+
       return result.current.data;
     };
 
@@ -215,15 +213,18 @@ describe("permission hooks test", () => {
 
       fetchMock.getOnce("/api/v2/ns/spaceships/permissions/42", readPermission);
 
-      const { result, waitForNextUpdate } = renderHook(() => useCreatePermission(namespace), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useCreatePermission(namespace), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { create } = result.current;
-        create(readPermission);
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.create(readPermission);
       });
+
+      await waitFor(() => {
+        expect(result.current.permission).toEqual(readPermission);
+      });
+
       return result.current;
     };
 
@@ -237,17 +238,17 @@ describe("permission hooks test", () => {
         status: 201,
       });
 
-      const { result, waitForNextUpdate } = renderHook(() => useCreatePermission(namespace), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useCreatePermission(namespace), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { create } = result.current;
-        create(readPermission);
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.create(readPermission);
       });
 
-      expect(result.current.error).toBeDefined();
+      await waitFor(() => {
+        expect(result.current.error).toBeDefined();
+      });
     });
 
     it("should invalidate namespace cache", async () => {
@@ -266,14 +267,16 @@ describe("permission hooks test", () => {
         status: 204,
       });
 
-      const { result, waitForNextUpdate } = renderHook(() => useDeletePermission(repository), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useDeletePermission(repository), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { remove } = result.current;
-        remove(writePermission);
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.remove(writePermission);
+      });
+
+      await waitFor(() => {
+        expect(result.current.isDeleted).toBe(true);
       });
 
       return result.current;
@@ -304,14 +307,16 @@ describe("permission hooks test", () => {
         status: 204,
       });
 
-      const { result, waitForNextUpdate } = renderHook(() => useUpdatePermission(repository), {
-        wrapper: createWrapper(undefined, queryClient),
+      const { result } = renderHook(() => useUpdatePermission(repository), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { update } = result.current;
-        update(readPermission);
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.update(readPermission);
+      });
+
+      await waitFor(() => {
+        expect(result.current.isUpdated).toBe(true);
       });
 
       return result.current;

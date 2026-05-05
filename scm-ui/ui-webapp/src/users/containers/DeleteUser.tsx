@@ -15,7 +15,7 @@
  */
 
 import React, { FC, useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
@@ -27,7 +27,7 @@ type Props = {
 };
 
 const DeleteUser: FC<Props> = ({ confirmDialog = true, user }) => {
-  const { isDeleted, isLoading, error, remove } = useDeleteUser();
+  const { isDeleted, isPending, error, remove } = useDeleteUser();
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("users");
   const isDeletable = !!user._links.delete;
@@ -39,7 +39,7 @@ const DeleteUser: FC<Props> = ({ confirmDialog = true, user }) => {
   const action = confirmDialog ? confirmDelete : deleteUserCallback;
 
   if (isDeleted) {
-    return <Redirect to="/users/" />;
+    return <Navigate to="/users/" />;
   }
 
   if (!isDeletable) {
@@ -54,14 +54,14 @@ const DeleteUser: FC<Props> = ({ confirmDialog = true, user }) => {
         buttons={[
           {
             label: t("deleteUser.confirmAlert.submit"),
-            onClick: deleteUserCallback
+            onClick: deleteUserCallback,
           },
           {
             className: "is-info",
             label: t("deleteUser.confirmAlert.cancel"),
             onClick: () => null,
-            autofocus: true
-          }
+            autofocus: true,
+          },
         ]}
         close={() => setShowConfirmAlert(false)}
       />
@@ -72,7 +72,7 @@ const DeleteUser: FC<Props> = ({ confirmDialog = true, user }) => {
     <>
       <hr />
       <ErrorNotification error={error || undefined} />
-      <Level right={<DeleteButton label={t("deleteUser.button")} action={action} loading={isLoading} />} />
+      <Level right={<DeleteButton label={t("deleteUser.button")} action={action} loading={isPending} />} />
     </>
   );
 };

@@ -15,12 +15,15 @@
  */
 
 import { File } from "@scm-manager/ui-types";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
 import { requiredLink } from "./links";
 import { ApiResult } from "./base";
 
 export const useFileContent = (file: File): ApiResult<string> => {
   const selfLink = requiredLink(file, "self");
-  return useQuery(["fileContent", selfLink], () => apiClient.get(selfLink).then((response) => response.text()));
+  return useQuery({
+    queryKey: ["fileContent", selfLink],
+    queryFn: () => apiClient.get(selfLink).then((response) => response.text()),
+  });
 };

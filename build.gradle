@@ -148,7 +148,11 @@ project.ext {
     isSnapshot = true
     expandedVersion = project.version.replace('SNAPSHOT', timestamp)
     expandedVersionWithDot = project.version.replace('-SNAPSHOT', ".${timestamp}")
-    dockerRepository = 'docker.io/cloudogu/scm-manager'
+    if (project.version.contains('-REACT19-')) {
+      dockerRepository = 'docker.io/cloudogu/scm-manager-react19'
+    } else {
+      dockerRepository = 'docker.io/cloudogu/scm-manager'
+    }
     String snapshotVersion = revision
     def buildNumber = System.getenv('BUILD_NUMBER')
     if (buildNumber != null) {

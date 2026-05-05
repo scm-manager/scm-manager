@@ -30,7 +30,7 @@ type Props = {
 const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
   const { isLoading, error, data: tags } = useTags(repository);
   const {
-    isLoading: isLoadingCreate,
+    isPending: isLoadingCreate,
     error: errorCreate,
     create,
     tag: createdTag,

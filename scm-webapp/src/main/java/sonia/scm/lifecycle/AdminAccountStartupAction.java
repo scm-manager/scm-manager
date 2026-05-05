@@ -108,7 +108,7 @@ public class AdminAccountStartupAction implements InitializationStep {
 
   @Override
   public int sequence() {
-    return 0;
+    return 100;
   }
 
   @Override

@@ -23,21 +23,20 @@ import PermissionRoleDetailsTable from "./PermissionRoleDetailsTable";
 
 type Props = {
   role: RepositoryRole;
-  url: string;
 };
 
-const PermissionRoleDetails: FC<Props> = ({ role, url }) => {
+const PermissionRoleDetails: FC<Props> = ({ role }) => {
   const [t] = useTranslation("admin");
   useDocumentTitle(t("repositoryRole.detailsTitle"));
 
   const renderEditButton = () => {
-    if (!!role._links.update) {
+    if (role._links.update) {
       return (
         <>
           <hr />
           <Level
             right={
-              <LinkButton to={`${url}/edit`} variant="primary" color="primary">
+              <LinkButton to="../edit" variant="primary" color="primary">
                 {t("repositoryRole.editButton")}
               </LinkButton>
             }

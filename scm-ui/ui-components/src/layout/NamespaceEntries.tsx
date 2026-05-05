@@ -16,10 +16,10 @@
 
 import React, { FC, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocalStorage } from "@scm-manager/ui-api";
-import { CardList, Collapsible } from "@scm-manager/ui-layout";
-import { RepositoryGroup } from "@scm-manager/ui-types";
 import { Link } from "react-router-dom";
+import { useLocalStorage } from "@scm-manager/ui-api";
+import { CardList, Collapsible } from "@scm-manager/ui-core";
+import { RepositoryGroup } from "@scm-manager/ui-types";
 import { Icon } from "../index";
 
 type Props = {

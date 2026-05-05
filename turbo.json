@@ -1,10 +1,12 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "baseBranch": "origin/main",
   "globalDependencies": [
-    "$NODE_ENV"
+    "tsconfig.json"
   ],
-  "pipeline": {
+  "globalEnv": [
+    "NODE_ENV"
+  ],
+  "tasks": {
     "depcheck": {
     },
     "typecheck": {
@@ -12,7 +14,7 @@
     "lint": {
     },
     "test": {
-      "outputs": ["build/jest-reports"]
+      "outputs": ["build/vitest-reports"]
     },
     "ci": {
     },
@@ -22,7 +24,8 @@
     },
     "serve": {
       "dependsOn": ["^build"],
-      "cache": false
+      "cache": false,
+      "persistent": true
     }
   }
 }

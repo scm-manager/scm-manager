@@ -16,51 +16,55 @@
 
 import React, { FC, useState } from "react";
 import App from "./App";
-import { ErrorBoundary, Header } from "@scm-manager/ui-components";
-import { Loading } from "@scm-manager/ui-core";
 import PluginLoader from "./PluginLoader";
 import ScrollToTop from "./ScrollToTop";
-import IndexErrorPage from "./IndexErrorPage";
 import { NamespaceAndNameContextProvider, useIndex } from "@scm-manager/ui-api";
 import { Link } from "@scm-manager/ui-types";
 import i18next from "i18next";
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import InitializationAdminAccountStep from "./InitializationAdminAccountStep";
 import InitializationPluginWizardStep from "./InitializationPluginWizardStep";
+import { Footer, Header } from "@scm-manager/ui-components";
+import NavigationBar from "./NavigationBar";
+import InitializationScm4xCompatibilityStep from "./InitializationScm4xCompatibilityStep";
+import styled from "styled-components";
+
+const MinViewportDiv = styled.div`
+  min-height: 100vh;
+`;
 
 const Index: FC = () => {
-  const { isLoading, error, data } = useIndex();
+  const data = useIndex();
   const [pluginsLoaded, setPluginsLoaded] = useState(false);
-
-  // TODO check componentDidUpdate method for anonymous user stuff
 
   i18next.on("languageChanged", (lng) => {
     document.documentElement.setAttribute("lang", lng);
   });
 
-  if (error) {
+  if (data.initialization) {
+    const Extension = binder.getExtension(`initialization.step.${data.initialization}`);
     return (
-      <>
-        <Header />
-        <IndexErrorPage error={error} />
-      </>
+      <MinViewportDiv className="is-flex is-flex-direction-column">
+        <Header authenticated={false}>
+          <NavigationBar links={data._links} />
+        </Header>
+        <div className="is-flex-grow-1">
+          <Extension data={data?._embedded ? data._embedded[data.initialization] : undefined} />
+        </div>
+        <Footer me={undefined} version={data.version} links={data._links} />
+      </MinViewportDiv>
     );
-  }
-  if (isLoading || !data) {
-    return <Loading />;
   }
 
   const link = (data._links.uiPlugins as Link).href;
   return (
-    <ErrorBoundary fallback={IndexErrorPage}>
-      <ScrollToTop>
-        <NamespaceAndNameContextProvider>
-          <PluginLoader link={link} loaded={pluginsLoaded} callback={() => setPluginsLoaded(true)}>
-            <App />
-          </PluginLoader>
-        </NamespaceAndNameContextProvider>
-      </ScrollToTop>
-    </ErrorBoundary>
+    <ScrollToTop>
+      <NamespaceAndNameContextProvider>
+        <PluginLoader link={link} loaded={pluginsLoaded} callback={() => setPluginsLoaded(true)}>
+          <App />
+        </PluginLoader>
+      </NamespaceAndNameContextProvider>
+    </ScrollToTop>
   );
 };
 
@@ -68,10 +72,8 @@ export default Index;
 
 binder.bind<extensionPoints.InitializationStep<"adminAccount">>(
   "initialization.step.adminAccount",
-  InitializationAdminAccountStep
+  InitializationAdminAccountStep,
 );
 
-binder.bind<extensionPoints.InitializationStep<"pluginWizard">>(
-  "initialization.step.pluginWizard",
-  InitializationPluginWizardStep
-);
+binder.bind("initialization.step.pluginWizard", InitializationPluginWizardStep);
+binder.bind("initialization.step.scm4xCompatibility", InitializationScm4xCompatibilityStep);

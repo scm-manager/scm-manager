@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { binder, extensionPoints } from "@scm-manager/ui-extensions";
+import { binder } from "@scm-manager/ui-extensions";
 import { ConfigurationBinder as cfgBinder } from "@scm-manager/ui-components";
 import ProtocolInformation from "./ProtocolInformation";
 import SvnAvatar from "./SvnAvatar";
@@ -24,13 +24,9 @@ const svnPredicate = (props: any) => {
   return props.repository && props.repository.type === "svn";
 };
 
-binder.bind<extensionPoints.RepositoryDetailsInformation>(
-  "repos.repository-details.information",
-  ProtocolInformation,
-  svnPredicate
-);
+binder.bind("repos.repository-details.information", ProtocolInformation, svnPredicate);
 binder.bind("repos.repository-avatar", SvnAvatar, svnPredicate);
 
 // bind global configuration
 
-cfgBinder.bindGlobal("/svn", "scm-svn-plugin.config.link", "svnConfig", SvnGlobalConfiguration);
+cfgBinder.bindAdminSetting("/svn", "scm-svn-plugin.config.link", "svnConfig", SvnGlobalConfiguration);

@@ -17,10 +17,10 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Group } from "@scm-manager/ui-types";
-import { Icon } from "@scm-manager/ui-components";
 import classNames from "classnames";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
+import { Icon } from "@scm-manager/ui-components";
+import { useKeyboardIteratorTarget } from "@scm-manager/ui-core";
+import { Group } from "@scm-manager/ui-types";
 
 type Props = {
   group: Group;

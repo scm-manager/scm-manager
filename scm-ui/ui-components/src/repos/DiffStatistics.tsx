@@ -31,14 +31,14 @@ const DiffStatistics: FC<DiffStatisticsProps> = ({ data }) => {
         t={t}
         i18nKey="changesets.showModifiedFiles"
         values={{ newFiles: data.added, modified: data.modified, deleted: data.deleted }}
-        components={{ tag: <Tag size={"normal"} rounded={true} className={"mx-1"} /> }}
+        components={{ tag: <Tag size="normal" rounded={true} className="mx-1" /> }}
       ></Trans>
       {data.renamed > 0 && (
         <Trans
           t={t}
           i18nKey="changesets.showRenamedFiles"
           values={{ renamed: data.renamed }}
-          components={{ tag: <Tag size={"normal"} rounded={true} className={"mx-1"} /> }}
+          components={{ tag: <Tag size="normal" rounded={true} className="mx-1" /> }}
         ></Trans>
       )}
       {data.copied > 0 && (
@@ -46,7 +46,7 @@ const DiffStatistics: FC<DiffStatisticsProps> = ({ data }) => {
           t={t}
           i18nKey="changesets.showCopiedFiles"
           values={{ copied: data.copied }}
-          components={{ tag: <Tag size={"normal"} rounded={true} className={"mx-1"} /> }}
+          components={{ tag: <Tag size="normal" rounded={true} className="mx-1" /> }}
         ></Trans>
       )}
       <span className="ml-1">{t("changesets.showFiles")}</span>

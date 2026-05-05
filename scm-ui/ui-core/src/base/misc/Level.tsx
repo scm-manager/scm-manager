@@ -14,20 +14,21 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { HTMLAttributes, ReactNode } from "react";
+import React, { FC, HTMLAttributes, ReactNode, Ref } from "react";
 import classNames from "classnames";
 
 type Props = HTMLAttributes<HTMLDivElement> & {
   left?: ReactNode;
   right?: ReactNode;
+  ref?: Ref<HTMLDivElement>;
 };
 
-const Level = React.forwardRef<HTMLDivElement, Props>(({ right, left, children, className, ...props }, ref) => (
+const Level: FC<Props> = ({ right, left, children, className, ref, ...props }) => (
   <div className={classNames("level", className)} {...props} ref={ref}>
     <div className="level-left">{left}</div>
     {children ? <div className="level-item">{children}</div> : null}
     <div className="level-right">{right}</div>
   </div>
-));
+);
 
 export default Level;

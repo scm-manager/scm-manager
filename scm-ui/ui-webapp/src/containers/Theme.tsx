@@ -20,8 +20,8 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { Me } from "@scm-manager/ui-types";
 import { useDocumentTitle } from "@scm-manager/ui-core";
+import { useRequiredMe } from "@scm-manager/ui-api";
 
 const LS_KEY = "scm.theme";
 
@@ -38,10 +38,6 @@ export const useThemeState = () => {
   return { theme, setTheme, isLoading };
 };
 
-type Props = {
-  me: Me;
-};
-
 type ThemeForm = {
   theme: string;
 };
@@ -53,8 +49,9 @@ const RadioColumn = styled.div`
   width: 2rem;
 `;
 
-const Theme: FC<Props> = ({ me }) => {
+const Theme: FC = () => {
   const { theme, setTheme, isLoading } = useThemeState();
+  const me = useRequiredMe();
   const {
     register,
     setValue,
@@ -92,7 +89,7 @@ const Theme: FC<Props> = ({ me }) => {
                 "columns",
                 "is-vcentered",
                 "has-cursor-pointer",
-                { "has-background-secondary-less": theme === watch().theme }
+                { "has-background-secondary-less": theme === watch().theme },
               )}
             >
               <RadioColumn className="column">

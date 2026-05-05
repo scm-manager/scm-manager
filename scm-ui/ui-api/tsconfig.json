@@ -1,6 +1,9 @@
 {
   "extends": "@scm-manager/tsconfig",
+  "compilerOptions": {
+    "types": ["vitest/globals"]
+  },
   "include": [
-    "./src"
+    "src/**/*"
   ]
 }

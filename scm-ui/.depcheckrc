@@ -1,2 +1,2 @@
-ignores: ["@scm-manager/tsconfig", "@scm-manager/jest-preset", "storybook-addon-*", "@storybook/*", "*-loader", "tsup"]
+ignores: ["@scm-manager/tsconfig", "@scm-manager/jest-preset", "@ui-styles/*", "storybook-addon-*", "@storybook/*", "*-loader", "tsup", "minimatch", "vite", "@vitest/*", "@vitejs/*", "refractor" ,"decode-named-character-reference", "react-*", "@emotion/*", "typescript"]
 specials: ["babel", "webpack", "jest", "eslint", "prettier", "bin"]

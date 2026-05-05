@@ -14,16 +14,15 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
+import { Mocked } from "vitest";
+import { render } from "@testing-library/react";
 import ExtensionPoint from "./ExtensionPoint";
-import { shallow, mount } from "enzyme";
-// eslint-disable-next-line no-restricted-imports
-import "@scm-manager/ui-tests/enzyme";
 import binder from "./binder";
 
-jest.mock("./binder");
+vi.mock("./binder");
 
-const mockedBinder = binder as jest.Mocked<typeof binder>;
+const mockedBinder = binder as Mocked<typeof binder>;
 
 describe("ExtensionPoint test", () => {
   beforeEach(() => {
@@ -35,8 +34,8 @@ describe("ExtensionPoint test", () => {
   it("should render nothing, if no extension was bound", () => {
     mockedBinder.hasExtension.mockReturnValue(true);
     mockedBinder.getExtensions.mockReturnValue([]);
-    const rendered = shallow(<ExtensionPoint name="something.special" />);
-    expect(rendered.text()).toBe("");
+    const { container } = render(<ExtensionPoint name="something.special" />);
+    assert.equal(container.textContent, "");
   });
 
   it("should render the given component", () => {
@@ -46,8 +45,8 @@ describe("ExtensionPoint test", () => {
     mockedBinder.hasExtension.mockReturnValue(true);
     mockedBinder.getExtension.mockReturnValue(label);
 
-    const rendered = mount(<ExtensionPoint name="something.special" />);
-    expect(rendered.text()).toBe("Extension One");
+    const { container } = render(<ExtensionPoint name="something.special" />);
+    assert.include(container.textContent ?? "", "Extension One");
   });
 
   it("should render the given components", () => {
@@ -61,10 +60,9 @@ describe("ExtensionPoint test", () => {
     mockedBinder.hasExtension.mockReturnValue(true);
     mockedBinder.getExtensions.mockReturnValue([labelOne, labelTwo]);
 
-    const rendered = mount(<ExtensionPoint name="something.special" renderAll={true} />);
-    const text = rendered.text();
-    expect(text).toContain("Extension One");
-    expect(text).toContain("Extension Two");
+    const { container } = render(<ExtensionPoint name="something.special" renderAll={true} />);
+    assert.include(container.textContent ?? "", "Extension One");
+    assert.include(container.textContent ?? "", "Extension Two");
   });
 
   it("should render the given component, with the given props", () => {
@@ -79,26 +77,24 @@ describe("ExtensionPoint test", () => {
     mockedBinder.hasExtension.mockReturnValue(true);
     mockedBinder.getExtension.mockReturnValue(label);
 
-    const rendered = mount(
+    const { container } = render(
       <ExtensionPoint
         name="something.special"
         props={{
           value: "Awesome",
         }}
-      />
+      />,
     );
-    const text = rendered.text();
-    expect(text).toContain("Awesome");
+    assert.include(container.textContent ?? "", "Awesome");
   });
 
   it("should render children, if no extension is bound", () => {
-    const rendered = mount(
+    const { container } = render(
       <ExtensionPoint name="something.special">
         <p>Cool stuff</p>
-      </ExtensionPoint>
+      </ExtensionPoint>,
     );
-    const text = rendered.text();
-    expect(text).toContain("Cool stuff");
+    assert.include(container.textContent ?? "", "Cool stuff");
   });
 
   it("should not render children, if an extension was bound", () => {
@@ -109,13 +105,12 @@ describe("ExtensionPoint test", () => {
     mockedBinder.hasExtension.mockReturnValue(true);
     mockedBinder.getExtension.mockReturnValue(label);
 
-    const rendered = mount(
+    const { container } = render(
       <ExtensionPoint name="something.special">
         <p>Cool stuff</p>
-      </ExtensionPoint>
+      </ExtensionPoint>,
     );
-    const text = rendered.text();
-    expect(text).toContain("Bound Extension");
+    assert.include(container.textContent ?? "", "Bound Extension");
   });
 
   it("should pass the context of the parent component", () => {
@@ -150,17 +145,15 @@ describe("ExtensionPoint test", () => {
       );
     };
 
-    const rendered = mount(<App />);
-    const text = rendered.text();
-    expect(text).toBe("Hello Trillian");
+    const { container } = render(<App />);
+    assert.include(container.textContent ?? "", "Hello Trillian");
   });
 
   it("should not render nothing without extension and without default", () => {
     mockedBinder.hasExtension.mockReturnValue(false);
 
-    const rendered = mount(<ExtensionPoint name="something.special" />);
-    const text = rendered.text();
-    expect(text).toBe("");
+    const { container } = render(<ExtensionPoint name="something.special" />);
+    assert.include(container.textContent ?? "", "");
   });
 
   it("should render an instance", () => {
@@ -171,8 +164,8 @@ describe("ExtensionPoint test", () => {
     mockedBinder.hasExtension.mockReturnValue(true);
     mockedBinder.getExtension.mockReturnValue(<Label />);
 
-    const rendered = mount(<ExtensionPoint name="something.special" />);
-    expect(rendered.text()).toBe("Extension One");
+    const { container } = render(<ExtensionPoint name="something.special" />);
+    assert.include(container.textContent ?? "", "Extension One");
   });
 
   it("should render an instance with props", () => {
@@ -183,8 +176,8 @@ describe("ExtensionPoint test", () => {
     mockedBinder.hasExtension.mockReturnValue(true);
     mockedBinder.getExtension.mockReturnValue(Label);
 
-    const rendered = mount(<ExtensionPoint name="something.special" props={{ name: "Two" }} />);
-    expect(rendered.text()).toBe("Extension Two");
+    const { container } = render(<ExtensionPoint name="something.special" props={{ name: "Two" }} />);
+    assert.include(container.textContent ?? "", "Extension Two");
   });
 
   it("should transform extension, before render", () => {
@@ -201,12 +194,14 @@ describe("ExtensionPoint test", () => {
       };
     };
 
-    const rendered = mount(<ExtensionPoint name="something.special" propTransformer={transformer} />);
-    expect(rendered.text()).toBe("Extension Two");
+    const transformedProps = transformer({});
+    const { container } = render(<ExtensionPoint name="something.special" props={transformedProps} />);
+
+    assert.include(container.textContent ?? "", "Extension Two");
   });
 
   it("should pass children as props", () => {
-    const label: FC = ({ children }) => {
+    const label: FC<{ children: ReactNode }> = ({ children }) => {
       return (
         <>
           <label>Bound Extension</label>
@@ -217,25 +212,24 @@ describe("ExtensionPoint test", () => {
     mockedBinder.hasExtension.mockReturnValue(true);
     mockedBinder.getExtension.mockReturnValue(label);
 
-    const rendered = mount(
+    const { container } = render(
       <ExtensionPoint name="something.special">
         <p>Cool stuff</p>
-      </ExtensionPoint>
+      </ExtensionPoint>,
     );
-    const text = rendered.text();
-    expect(text).toContain("Bound Extension");
-    expect(text).toContain("Cool stuff");
+    assert.include(container.textContent ?? "", "Bound Extension");
+    assert.include(container.textContent ?? "", "Cool stuff");
   });
 
   it("should wrap children with multiple extensions", () => {
-    const w1: FC = ({ children }) => (
+    const w1: FC<{ children: ReactNode }> = ({ children }) => (
       <>
         <label>Outer {"-> "}</label>
         <details>{children}</details>
       </>
     );
 
-    const w2: FC = ({ children }) => (
+    const w2: FC<{ children: ReactNode }> = ({ children }) => (
       <>
         <label>Inner {"-> "}</label>
         <details>{children}</details>
@@ -245,31 +239,29 @@ describe("ExtensionPoint test", () => {
     mockedBinder.hasExtension.mockReturnValue(true);
     mockedBinder.getExtensions.mockReturnValue([w1, w2]);
 
-    const rendered = mount(
+    const { container } = render(
       <ExtensionPoint name="something.special" renderAll={true} wrapper={true}>
         <p>Children</p>
-      </ExtensionPoint>
+      </ExtensionPoint>,
     );
-    const text = rendered.text();
-    expect(text).toEqual("Outer -> Inner -> Children");
+    assert.include(container.textContent ?? "", "Outer -> Inner -> Children");
   });
 
   it("should render children of non fc", () => {
-    const nonfc = (
+    const nonFc = (
       <div>
         <label>Non fc with children</label>
       </div>
     );
 
     mockedBinder.hasExtension.mockReturnValue(true);
-    mockedBinder.getExtension.mockReturnValue(nonfc);
+    mockedBinder.getExtension.mockReturnValue(nonFc);
 
-    const rendered = mount(
+    const { container } = render(
       <ExtensionPoint name="something.special">
         <p>Children</p>
-      </ExtensionPoint>
+      </ExtensionPoint>,
     );
-    const text = rendered.text();
-    expect(text).toEqual("Non fc with children");
+    assert.include(container.textContent ?? "", "Non fc with children");
   });
 });

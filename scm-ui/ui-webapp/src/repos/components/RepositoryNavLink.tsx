@@ -17,15 +17,13 @@
 import React, { FC } from "react";
 import { Repository } from "@scm-manager/ui-types";
 import { NavLink } from "@scm-manager/ui-components";
-import { RouteProps } from "react-router-dom";
 
 type Props = {
   repository: Repository;
   to: string;
   label: string;
   linkName: string;
-  activeWhenMatch?: (route: RouteProps) => boolean;
-  activeOnlyWhenExact: boolean;
+  activeWhenMatch?: RegExp | string;
   icon?: string;
   title?: string;
 };

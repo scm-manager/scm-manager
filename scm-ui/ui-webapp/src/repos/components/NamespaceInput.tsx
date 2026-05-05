@@ -15,11 +15,11 @@
  */
 
 import React, { FC, useState } from "react";
-import { CUSTOM_NAMESPACE_STRATEGY } from "@scm-manager/ui-types";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
-import { ComboboxField } from "@scm-manager/ui-forms";
 import { useNamespaceOptions } from "@scm-manager/ui-api";
+import { ComboboxField } from "@scm-manager/ui-core";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { CUSTOM_NAMESPACE_STRATEGY } from "@scm-manager/ui-types";
 
 type Props = {
   namespace: string;
@@ -46,7 +46,7 @@ const NamespaceInput: FC<Props> = ({
   }
 
   const repositorySelectValue = namespace ? { value: { id: namespace, displayName: "" }, label: namespace } : null;
-  const props = {
+  const abc = {
     label: t("repository.namespace"),
     helpText: t("help.namespaceHelpText"),
     value: namespace,
@@ -61,9 +61,9 @@ const NamespaceInput: FC<Props> = ({
     return (
       // @ts-ignore
       <ComboboxField
-        aria-label={props.label}
-        label={props.label}
-        helpText={props.helpText}
+        aria-label={abc.label}
+        label={abc.label}
+        helpText={abc.helpText}
         value={repositorySelectValue}
         onChange={(option) => handleNamespaceChange(option?.value.id ?? "")}
         onQueryChange={setQuery}
@@ -78,11 +78,7 @@ const NamespaceInput: FC<Props> = ({
   }
 
   return (
-    <ExtensionPoint<extensionPoints.ReposCreateNamespace>
-      name="repos.create.namespace"
-      props={props}
-      renderAll={false}
-    />
+    <ExtensionPoint<extensionPoints.ReposCreateNamespace> name="repos.create.namespace" props={abc} renderAll={false} />
   );
 };
 

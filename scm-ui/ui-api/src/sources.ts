@@ -18,7 +18,7 @@ import { File, Link, Repository } from "@scm-manager/ui-types";
 import { requiredLink } from "./links";
 import { apiClient } from "./apiclient";
 import * as urls from "./urls";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { repoQueryKey } from "./keys";
 import { useEffect } from "react";
 import { createQueryString } from "./utils";
@@ -34,7 +34,11 @@ export type UseSourcesOptions = {
 const UseSourcesDefaultOptions: UseSourcesOptions = {
   enabled: true,
   refetchPartialInterval: 3000,
-  collapse: true
+  collapse: true,
+};
+
+type FilePages = {
+  pages: File[];
 };
 
 export const useSources = (repository: Repository, opts: UseSourcesOptions = UseSourcesDefaultOptions) => {
@@ -43,18 +47,27 @@ export const useSources = (repository: Repository, opts: UseSourcesOptions = Use
     ...opts,
   };
   const link = createSourcesLink(repository, options);
-  const { isLoading, error, data, isFetchingNextPage, fetchNextPage, refetch } = useInfiniteQuery<File, Error, File>(
-    repoQueryKey(repository, "sources", options.revision || "", options.path || "", options.collapse ? "collapse" : ""),
-    ({ pageParam }) => {
-      return apiClient.get(pageParam || link).then((response) => response.json());
+  const { isLoading, error, data, isFetchingNextPage, fetchNextPage, refetch } = useInfiniteQuery<
+    File,
+    Error,
+    FilePages
+  >({
+    queryKey: repoQueryKey(
+      repository,
+      "sources",
+      options.revision || "",
+      options.path || "",
+      options.collapse ? "collapse" : "",
+    ),
+    queryFn: ({ pageParam }) => {
+      return apiClient.get((pageParam as string) || link).then((response) => response.json());
     },
-    {
-      enabled: options.enabled,
-      getNextPageParam: (lastPage) => {
-        return (lastPage._links.proceed as Link)?.href;
-      },
-    }
-  );
+    enabled: options.enabled,
+    initialPageParam: link,
+    getNextPageParam: (lastPage) => {
+      return (lastPage._links.proceed as Link)?.href;
+    },
+  });
 
   const file = merge(data?.pages);
   useEffect(() => {
@@ -81,12 +94,16 @@ export const useSources = (repository: Repository, opts: UseSourcesOptions = Use
 };
 
 const createSourcesLink = (repository: Repository, options: UseSourcesOptions) => {
+  const encodeFilePath = (filePath: string) => {
+    return filePath.split("/").map(encodeURIComponent).join("/");
+  };
+
   let link = requiredLink(repository, "sources");
   if (options.revision) {
     link = urls.concat(link, encodeURIComponent(options.revision));
 
     if (options.path) {
-      link = urls.concat(link, encodeInvalidCharacters(options.path));
+      link = urls.concat(link, encodeFilePath(options.path));
     }
   }
   if (options.collapse) {
@@ -94,8 +111,6 @@ const createSourcesLink = (repository: Repository, options: UseSourcesOptions) =
   }
   return link;
 };
-
-const encodeInvalidCharacters = (input: string) => input.replace(/\[/g, "%5B").replace(/]/g, "%5D");
 
 const merge = (files?: File[]): File | undefined => {
   if (!files || files.length === 0) {
@@ -116,7 +131,7 @@ const merge = (files?: File[]): File | undefined => {
     _links: {
       ...firstPage._links,
       proceed: lastPage._links.proceed,
-    }
+    },
   };
 };
 

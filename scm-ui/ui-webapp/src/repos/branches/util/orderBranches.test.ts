@@ -16,38 +16,46 @@
 
 import { orderBranches } from "./orderBranches";
 
+const links = { self: { href: "link" } };
 const branch1 = {
   name: "branch1",
-  revision: "revision1"
+  revision: "revision1",
+  _links: links,
 };
 const branch2 = {
   name: "branch2",
-  revision: "revision2"
+  revision: "revision2",
+  _links: links,
 };
 const branch3 = {
   name: "branch3",
   revision: "revision3",
-  defaultBranch: true
+  defaultBranch: true,
+  _links: links,
 };
 const defaultBranch = {
   name: "default",
   revision: "revision4",
-  defaultBranch: false
+  defaultBranch: false,
+  _links: links,
 };
 const developBranch = {
   name: "develop",
   revision: "revision5",
-  defaultBranch: false
+  defaultBranch: false,
+  _links: links,
 };
 const mainBranch = {
   name: "main",
   revision: "revision6",
-  defaultBranch: false
+  defaultBranch: false,
+  _links: links,
 };
 const masterBranch = {
   name: "master",
   revision: "revision7",
-  defaultBranch: false
+  defaultBranch: false,
+  _links: links,
 };
 
 describe("order branches", () => {

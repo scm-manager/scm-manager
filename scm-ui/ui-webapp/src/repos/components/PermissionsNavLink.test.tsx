@@ -15,12 +15,12 @@
  */
 
 import React from "react";
-import { mount } from "@scm-manager/ui-tests";
-import "@scm-manager/ui-tests";
+import { MemoryRouter } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
 import PermissionsNavLink from "./PermissionsNavLink";
 
 afterEach(() => {
-  jest.resetAllMocks();
+  vi.resetAllMocks();
 });
 
 describe("PermissionsNavLink", () => {
@@ -29,8 +29,12 @@ describe("PermissionsNavLink", () => {
       _links: {},
     };
 
-    const navLink = mount(<PermissionsNavLink repository={repository} permissionUrl="" />);
-    expect(navLink.text()).toBe("");
+    render(
+      <MemoryRouter>
+        <PermissionsNavLink repository={repository} permissionUrl="" />
+      </MemoryRouter>,
+    );
+    assert.notExists(screen.queryByText("repositoryRoot.menu.permissionsNavLink"));
   });
 
   it("should render the navLink", () => {
@@ -42,7 +46,11 @@ describe("PermissionsNavLink", () => {
       },
     };
 
-    const navLink = mount(<PermissionsNavLink repository={repository} permissionUrl="" />);
-    expect(navLink.text()).toBe("repositoryRoot.menu.permissionsNavLink");
+    render(
+      <MemoryRouter>
+        <PermissionsNavLink repository={repository} permissionUrl="" />
+      </MemoryRouter>,
+    );
+    assert.exists(screen.queryByText("repositoryRoot.menu.permissionsNavLink"));
   });
 });

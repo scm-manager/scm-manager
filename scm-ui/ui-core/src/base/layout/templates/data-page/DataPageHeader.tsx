@@ -15,7 +15,7 @@
  */
 
 import withClasses from "../../_helpers/with-classes";
-import React, { HTMLAttributes } from "react";
+import React, { FC, HTMLAttributes, Ref } from "react";
 import classNames from "classnames";
 import { useAriaId } from "../../../helpers";
 import { LinkButton } from "../../../buttons";
@@ -48,24 +48,23 @@ export const DataPageHeaderSettings = withClasses("div", [
   "is-flex-basis-0",
 ]);
 
-type DataPageHeaderSettingProps = HTMLAttributes<HTMLDivElement> & {
+type DataPageHeaderSettingProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
   children?: React.ReactNode | ((props: { formFieldId: string }) => React.ReactNode);
+  ref?: Ref<HTMLSpanElement>;
 };
 
 /**
  * @beta
  * @since 2.47.0
  */
-export const DataPageHeaderSetting = React.forwardRef<HTMLSpanElement, DataPageHeaderSettingProps>(
-  ({ className, children, ...props }, ref) => {
-    const formFieldId = useAriaId();
-    return (
-      <span {...props} className={classNames(className, "is-flex", "is-align-items-center", "has-gap-2")} ref={ref}>
-        {typeof children === "function" ? children({ formFieldId }) : children}
-      </span>
-    );
-  }
-);
+export const DataPageHeaderSetting: FC<DataPageHeaderSettingProps> = ({ className, children, ref, ...props }) => {
+  const formFieldId = useAriaId();
+  return (
+    <span {...props} className={classNames(className, "is-flex", "is-align-items-center", "has-gap-2")} ref={ref}>
+      {typeof children === "function" ? children({ formFieldId }) : children}
+    </span>
+  );
+};
 
 /**
  * @beta

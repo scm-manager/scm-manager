@@ -15,12 +15,11 @@
  */
 
 import { Branch, BranchCollection, Repository } from "@scm-manager/ui-types";
-import fetchMock from "fetch-mock-jest";
-import { renderHook } from "@testing-library/react-hooks";
+import fetchMock from "fetch-mock";
+import { renderHook, act, waitFor } from "@testing-library/react";
 import createWrapper from "./tests/createWrapper";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import { useBranch, useBranches, useCreateBranch, useDeleteBranch } from "./branches";
-import { act } from "react-test-renderer";
 
 describe("Test branches hooks", () => {
   const repository: Repository = {
@@ -29,9 +28,9 @@ describe("Test branches hooks", () => {
     type: "hg",
     _links: {
       branches: {
-        href: "/hog/branches"
-      }
-    }
+        href: "/hog/branches",
+      },
+    },
   };
 
   const develop: Branch = {
@@ -40,9 +39,9 @@ describe("Test branches hooks", () => {
     lastCommitter: { name: "trillian" },
     _links: {
       delete: {
-        href: "/hog/branches/develop"
-      }
-    }
+        href: "/hog/branches/develop",
+      },
+    },
   };
 
   const feature: Branch = {
@@ -51,16 +50,16 @@ describe("Test branches hooks", () => {
     lastCommitter: { name: "trillian" },
     _links: {
       delete: {
-        href: "/hog/branches/feature%2Fsomething-special"
-      }
-    }
+        href: "/hog/branches/feature%2Fsomething-special",
+      },
+    },
   };
 
   const branches: BranchCollection = {
     _embedded: {
-      branches: [develop]
+      branches: [develop],
     },
-    _links: {}
+    _links: {},
   };
 
   const queryClient = createInfiniteCachingClient();
@@ -77,8 +76,8 @@ describe("Test branches hooks", () => {
     const fetchBrances = async () => {
       fetchMock.getOnce("/api/v2/hog/branches", branches);
 
-      const { result, waitFor } = renderHook(() => useBranches(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+      const { result } = renderHook(() => useBranches(repository), {
+        wrapper: createWrapper(queryClient),
       });
       await waitFor(() => {
         return !!result.current.data;
@@ -99,7 +98,7 @@ describe("Test branches hooks", () => {
         "repository",
         "hitchhiker",
         "heart-of-gold",
-        "branches"
+        "branches",
       ]);
       expect(data).toEqual(branches);
     });
@@ -109,14 +108,12 @@ describe("Test branches hooks", () => {
     const fetchBranch = async (name: string, branch: Branch) => {
       fetchMock.getOnce("/api/v2/hog/branches/" + encodeURIComponent(name), branch);
 
-      const { result, waitFor } = renderHook(() => useBranch(repository, name), {
-        wrapper: createWrapper(undefined, queryClient)
+      const { result } = renderHook(() => useBranch(repository, name), {
+        wrapper: createWrapper(queryClient),
       });
 
-      expect(result.error).toBeUndefined();
-
       await waitFor(() => {
-        return !!result.current.data;
+        expect(result.current.data).toEqual(branch);
       });
 
       return result.current.data;
@@ -138,20 +135,22 @@ describe("Test branches hooks", () => {
       fetchMock.postOnce("/api/v2/hog/branches", {
         status: 201,
         headers: {
-          Location: "/hog/branches/develop"
-        }
+          Location: "/hog/branches/develop",
+        },
       });
 
       fetchMock.getOnce("/api/v2/hog/branches/develop", develop);
 
-      const { result, waitForNextUpdate } = renderHook(() => useCreateBranch(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+      const { result } = renderHook(() => useCreateBranch(repository), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { create } = result.current;
-        create({ name: "develop", parent: "main" });
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.create({ name: "develop", parent: "main" });
+      });
+
+      await waitFor(() => {
+        expect(result.current.branch).toBeDefined();
       });
 
       return result.current;
@@ -170,7 +169,7 @@ describe("Test branches hooks", () => {
         "hitchhiker",
         "heart-of-gold",
         "branch",
-        "develop"
+        "develop",
       ]);
       expect(branch).toEqual(develop);
     });
@@ -187,17 +186,19 @@ describe("Test branches hooks", () => {
   describe("useDeleteBranch tests", () => {
     const deleteBranch = async () => {
       fetchMock.deleteOnce("/api/v2/hog/branches/develop", {
-        status: 204
+        status: 204,
       });
 
-      const { result, waitForNextUpdate } = renderHook(() => useDeleteBranch(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+      const { result } = renderHook(() => useDeleteBranch(repository), {
+        wrapper: createWrapper(queryClient),
       });
 
-      await act(() => {
-        const { remove } = result.current;
-        remove(develop);
-        return waitForNextUpdate();
+      await act(async () => {
+        await result.current.remove(develop);
+      });
+
+      await waitFor(() => {
+        expect(result.current.isDeleted).toBe(true);
       });
 
       return result.current;

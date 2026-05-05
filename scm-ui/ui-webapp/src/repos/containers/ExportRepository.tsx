@@ -19,18 +19,18 @@ import {
   Button,
   ButtonGroup,
   Checkbox,
-  DateFromNow,
   ErrorNotification,
   InputField,
   Level,
   Notification,
-  Subtitle
+  Subtitle,
 } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { ExportInfo, Link, Repository } from "@scm-manager/ui-types";
 import { useExportInfo, useExportRepository } from "@scm-manager/ui-api";
 import styled from "styled-components";
 import classNames from "classnames";
+import { AbsoluteDate } from "@scm-manager/ui-core";
 
 const InfoBox = styled.div`
   white-space: pre-line;
@@ -56,7 +56,7 @@ const ExportInfoBox: FC<{ exportInfo: ExportInfo }> = ({ exportInfo }) => {
       <p>{t("export.exportInfo.exporter", { username: exportInfo.exporterName })}</p>
       <p>
         {t("export.exportInfo.created")}
-        <DateFromNow date={exportInfo.created} />
+        <AbsoluteDate date={exportInfo.created} />
       </p>
       <br />
       <p>{exportInfo.withMetadata ? t("export.exportInfo.repositoryArchive") : t("export.exportInfo.repository")}</p>
@@ -78,10 +78,10 @@ const ExportRepository: FC<Props> = ({ repository }) => {
   const [password, setPassword] = useState("");
   const { isLoading: isLoadingInfo, error: errorInfo, data: exportInfo } = useExportInfo(repository);
   const {
-    isLoading: isLoadingExport,
+    isPending: isLoadingExport,
     error: errorExport,
     data: exportedInfo,
-    exportRepository
+    exportRepository,
   } = useExportRepository();
 
   useEffect(() => {
@@ -164,7 +164,7 @@ const ExportRepository: FC<Props> = ({ repository }) => {
                 exportRepository(repository, {
                   compressed,
                   password: encrypt ? password : "",
-                  withMetadata: fullExport
+                  withMetadata: fullExport,
                 })
               }
               loading={isLoadingInfo || isLoadingExport}

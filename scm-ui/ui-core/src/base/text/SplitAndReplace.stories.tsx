@@ -14,62 +14,140 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+// import React from "react";
+// import { ComponentMeta, ComponentStory } from "@storybook/react";
+// import SplitAndReplace from "./SplitAndReplace";
+//
+// export default {
+//   title: "SplitAndReplace",
+//   component: SplitAndReplace,
+// } as ComponentMeta<typeof SplitAndReplace>;
+//
+// const textOne = "'So this is it,` said Arthur, 'We are going to die.`";
+// const textTwo = "'Yes,` said Ford, 'except... no! Wait a minute!`";
+//
+// export const ReplaceOnce: ComponentStory<typeof SplitAndReplace> = () => {
+//   const replacements = [
+//     {
+//       textToReplace: "'",
+//       replacement: <span>!</span>,
+//       replaceAll: false,
+//     },
+//   ];
+//   return (
+//     <div>
+//       <h3>Replace ' with ! once</h3>
+//       <label>Original text:</label>
+//       <p>{textOne}</p>
+//       <label>Text with replacements:</label>
+//       <p>
+//         <SplitAndReplace text={textOne} replacements={replacements} />
+//       </p>
+//     </div>
+//   );
+// };
+//
+// export const ReplaceAll: ComponentStory<typeof SplitAndReplace> = () => {
+//   const replacements = [
+//     {
+//       textToReplace: "'",
+//       replacement: <span>!</span>,
+//       replaceAll: true,
+//     },
+//     {
+//       textToReplace: "`",
+//       replacement: <span>?</span>,
+//       replaceAll: true,
+//     },
+//   ];
+//   return (
+//     <div>
+//       <h3>Replace all ` with ? and ' with !</h3>
+//       <label>Original text:</label>
+//       <p>{textTwo}</p>
+//
+//       <label> Text with replacements: </label>
+//       <p>
+//         <SplitAndReplace text={textTwo} replacements={replacements} />
+//       </p>
+//     </div>
+//   );
+// };
+
 import React from "react";
-import { ComponentMeta, ComponentStory } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import SplitAndReplace from "./SplitAndReplace";
 
-export default {
-  title: "SplitAndReplace",
+const textOne = "'So this is it,' said Arthur, 'We are going to die.'";
+const textTwo = "'Yes,' said Ford, 'except... no! Wait a minute!'";
+
+const meta: Meta<typeof SplitAndReplace> = {
+  title: "Utilities/SplitAndReplace",
   component: SplitAndReplace,
-} as ComponentMeta<typeof SplitAndReplace>;
-
-const textOne = "'So this is it,` said Arthur, 'We are going to die.`";
-const textTwo = "'Yes,` said Ford, 'except... no! Wait a minute!`";
-
-export const ReplaceOnce: ComponentStory<typeof SplitAndReplace> = () => {
-  const replacements = [
-    {
-      textToReplace: "'",
-      replacement: <span>!</span>,
-      replaceAll: false,
-    },
-  ];
-  return (
-    <div>
-      <h3>Replace ' with ! once</h3>
-      <label>Original text:</label>
-      <p>{textOne}</p>
-      <label>Text with replacements:</label>
-      <p>
-        <SplitAndReplace text={textOne} replacements={replacements} />
-      </p>
-    </div>
-  );
+  decorators: [
+    (Story) => (
+      <div style={{ margin: "2rem" }}>
+        <Story />
+      </div>
+    ),
+  ],
+  tags: ["autodocs"],
 };
 
-export const ReplaceAll: ComponentStory<typeof SplitAndReplace> = () => {
-  const replacements = [
-    {
-      textToReplace: "'",
-      replacement: <span>!</span>,
-      replaceAll: true,
-    },
-    {
-      textToReplace: "`",
-      replacement: <span>?</span>,
-      replaceAll: true,
-    },
-  ];
-  return (
-    <div>
-      <h3>Replace all ` with ? and ' with !</h3>
-      <label>Original text:</label>
-      <p>{textTwo}</p>
+export default meta;
 
-      <label> Text with replacements: </label>
-      <p>
-        <SplitAndReplace text={textTwo} replacements={replacements} />
-      </p>
-    </div>
-  );
+type Story = StoryObj<typeof meta>;
+
+export const ReplaceOnce: Story = {
+  name: "Replace Once",
+  render: () => {
+    const replacements = [
+      {
+        textToReplace: "'",
+        replacement: <span style={{ color: "red", fontWeight: "bold" }}>!</span>,
+        replaceAll: false,
+      },
+    ];
+    return (
+      <div>
+        <h3>Replace first instance of ' with !</h3>
+        <label>Original text:</label>
+        <p>{textOne}</p>
+        <label>Text with replacement:</label>
+        <p>
+          <SplitAndReplace text={textOne} replacements={replacements} />
+        </p>
+      </div>
+    );
+  },
+};
+
+export const ReplaceAll: Story = {
+  name: "Replace All",
+  render: () => {
+    const replacements = [
+      {
+        textToReplace: "'",
+        replacement: <span style={{ color: "red", fontWeight: "bold" }}>!</span>,
+        replaceAll: true,
+      },
+      {
+        textToReplace: "`",
+        replacement: <span style={{ color: "blue", fontWeight: "bold" }}>?</span>,
+        replaceAll: true,
+      },
+    ];
+    return (
+      <div>
+        <h3>Replace all ` with ? and ' with !</h3>
+        <label>Original text:</label>
+        <p>{textTwo}</p>
+        <label>Text with replacements:</label>
+        <p>
+          <SplitAndReplace text={textTwo} replacements={replacements} />
+        </p>
+      </div>
+    );
+  },
 };

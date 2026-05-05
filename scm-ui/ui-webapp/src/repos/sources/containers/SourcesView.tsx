@@ -25,6 +25,7 @@ import SwitchableMarkdownViewer from "../components/content/SwitchableMarkdownVi
 import styled from "styled-components";
 import { useContentType } from "@scm-manager/ui-api";
 import { determineSyntaxHighlightingLanguage } from "../utils/files";
+import { useLayoutWide } from "@scm-manager/ui-core";
 
 const NoSpacingSyntaxHighlighterContainer = styled.div`
   & pre {
@@ -41,6 +42,7 @@ type Props = {
 
 const SourcesView: FC<Props> = ({ file, repository, revision }) => {
   const { data: contentTypeData, error, isLoading } = useContentType((file._links.self as Link).href);
+  useLayoutWide();
 
   if (error) {
     return <ErrorNotification error={error} />;

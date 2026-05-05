@@ -16,23 +16,20 @@
 
 import React, { FC } from "react";
 import BranchView from "../components/BranchView";
-import { Redirect, Route, Switch, useLocation, useRouteMatch } from "react-router-dom";
-import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, NotFoundError, urls } from "@scm-manager/ui-components";
+import { Routes, Route, Navigate, useParams, useLocation } from "react-router-dom";
+import { ErrorNotification, Loading, NotFoundError } from "@scm-manager/ui-components";
 import queryString from "query-string";
 import { useBranch } from "@scm-manager/ui-api";
-
-type Props = {
-  repository: Repository;
-};
+import { useRepositoryFromParams } from "@scm-manager/ui-core";
 
 type Params = {
   branch: string;
 };
 
-const BranchRoot: FC<Props> = ({ repository }) => {
-  const match = useRouteMatch<Params>();
-  const { isLoading, error, data: branch } = useBranch(repository, decodeURIComponent(match.params.branch));
+const BranchRoot: FC = () => {
+  const repository = useRepositoryFromParams();
+  const { branch: branchName } = useParams<Params>();
+  const { isLoading, error, data: branch } = useBranch(repository, branchName!);
   const location = useLocation();
 
   if (isLoading) {
@@ -40,29 +37,26 @@ const BranchRoot: FC<Props> = ({ repository }) => {
   }
 
   if (error) {
-    if (error instanceof NotFoundError && queryString.parse(location.search).create === "true") {
+    if (error instanceof NotFoundError && queryString.parse(location.search).create === "true" && branchName) {
       return (
-        <Redirect to={`/repo/${repository.namespace}/${repository.name}/branches/create?name=${match.params.branch}`} />
+        <Navigate
+          to={`/repo/${repository.namespace}/${repository.name}/branches/create?name=${encodeURIComponent(branchName)}`}
+        />
       );
     }
 
     return <ErrorNotification error={error} />;
   }
 
-  const url = urls.matchedUrlFromMatch(match);
   if (!branch) {
     return null;
   }
 
-  const escapedUrl = urls.escapeUrlForRoute(url);
-
   return (
-    <Switch>
-      <Redirect exact from={escapedUrl} to={`${url}/info`} />
-      <Route path={`${escapedUrl}/info`}>
-        <BranchView repository={repository} branch={branch} />
-      </Route>
-    </Switch>
+    <Routes>
+      <Route index element={<Navigate to="info" replace />} />
+      <Route path="info" element={<BranchView repository={repository} branch={branch} />} />
+    </Routes>
   );
 };
 

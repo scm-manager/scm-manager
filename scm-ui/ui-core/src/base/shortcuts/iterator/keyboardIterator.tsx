@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useCallback, useContext, useEffect, useRef } from "react";
+import React, { FC, ReactNode, useCallback, useContext, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useShortcut } from "../index";
 import {
@@ -69,7 +69,10 @@ export const useKeyboardIteratorItemV2 = (iterable: IterableCallback) => {
   }, [iterable, registerItem, deregisterItem]);
 };
 
-export const KeyboardSubIteratorContextProvider: FC<{ initialIndex?: number }> = ({ children, initialIndex }) => {
+export const KeyboardSubIteratorContextProvider: FC<{ initialIndex?: number; children?: ReactNode }> = ({
+  children,
+  initialIndex,
+}) => {
   const callbackIterator = useCallbackIterator(initialIndex);
 
   useKeyboardIteratorItem(callbackIterator);
@@ -77,7 +80,10 @@ export const KeyboardSubIteratorContextProvider: FC<{ initialIndex?: number }> =
   return <KeyboardIteratorContext.Provider value={callbackIterator}>{children}</KeyboardIteratorContext.Provider>;
 };
 
-export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number }> = ({ children, initialIndex }) => {
+export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number; children?: ReactNode }> = ({
+  children,
+  initialIndex,
+}) => {
   const [t] = useTranslation("commons");
   const callbackIterator = useCallbackIterator(initialIndex);
 
@@ -107,6 +113,7 @@ export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number }> = ({
  * const target = <button ref={ref}>My Iteration Target</button>
  */
 export function useKeyboardIteratorTarget(): React.RefCallback<HTMLElement> {
+  // @ts-ignore
   const ref = useRef<HTMLElement>();
   const callback = useCallback(() => ref.current?.focus(), []);
   const refCallback: React.RefCallback<HTMLElement> = useCallback((el) => {
@@ -131,6 +138,7 @@ export function useKeyboardIteratorTargetV2({
 }: {
   expectedIndex: number;
 }): React.RefCallback<HTMLElement> {
+  // @ts-ignore
   const ref = useRef<HTMLElement>();
   const callback = useCallback(() => ref.current?.focus(), []);
   const cleanup = useCallback(() => ref.current?.blur(), []);
@@ -153,7 +161,7 @@ export function useKeyboardIteratorTargetV2({
  *
  * Use the {@link KeyboardSubIterator} to wrap asynchronously loaded targets.
  */
-export const KeyboardIterator: FC = ({ children }) => (
+export const KeyboardIterator: FC<{ children?: ReactNode }> = ({ children }) => (
   <KeyboardIteratorContextProvider>{children}</KeyboardIteratorContextProvider>
 );
 
@@ -180,6 +188,6 @@ export const KeyboardIterator: FC = ({ children }) => (
  *     })}
  *  </KeyboardIterator>
  */
-export const KeyboardSubIterator: FC = ({ children }) => (
+export const KeyboardSubIterator: FC<{ children?: ReactNode }> = ({ children }) => (
   <KeyboardSubIteratorContextProvider>{children}</KeyboardSubIteratorContextProvider>
 );

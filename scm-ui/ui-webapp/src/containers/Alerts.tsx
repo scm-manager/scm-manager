@@ -19,8 +19,7 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { useAlerts } from "@scm-manager/ui-api";
-import { DateFromNow } from "@scm-manager/ui-components";
-import { Icon } from "@scm-manager/ui-core";
+import { DateFromNow, Icon } from "@scm-manager/ui-core";
 import { Alert } from "@scm-manager/ui-types";
 import HeaderDropDown from "../components/HeaderDropDown";
 
@@ -125,7 +124,7 @@ const Alerts: FC<AlertsProps> = ({ className }) => {
       count={data ? data.length.toString() : "?"}
       error={error}
       className={className}
-      mobilePosition="right"
+      mobileposition="right"
     >
       {data ? <AlertsList data={data} /> : null}
     </HeaderDropDown>

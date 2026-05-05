@@ -33,6 +33,7 @@ type Props<T extends Record<string, unknown>> = Omit<
   confirmationHelpText?: string;
   confirmationErrorMessage?: string;
   confirmationTestId?: string;
+  disabled?: boolean;
 };
 
 export default function ControlledSecretConfirmationField<T extends Record<string, unknown>>({
@@ -48,6 +49,7 @@ export default function ControlledSecretConfirmationField<T extends Record<strin
   confirmationTestId,
   defaultValue,
   readOnly,
+  disabled,
   ...props
 }: Props<T>) {
   const { control, watch, t, readOnly: formReadonly, formId } = useScmFormContext();
@@ -63,7 +65,7 @@ export default function ControlledSecretConfirmationField<T extends Record<strin
     confirmationErrorMessage || t(`${prefixedNameWithoutIndices}.confirmation.errorMessage`);
   const secretValue = watch(nameWithPrefix);
   const validateConfirmField = useCallback(
-    (value) => secretValue === value || confirmationErrorMessageTranslation,
+    (value: any) => secretValue === value || confirmationErrorMessageTranslation,
     [confirmationErrorMessageTranslation, secretValue]
   );
   const confirmFieldRules = useMemo(
@@ -112,7 +114,7 @@ export default function ControlledSecretConfirmationField<T extends Record<strin
             className={classNames("column", className)}
             type="password"
             readOnly={readOnly ?? formReadonly}
-            disabled={props.disabled}
+            disabled={disabled}
             {...field}
             form={formId}
             label={confirmationLabelTranslation}

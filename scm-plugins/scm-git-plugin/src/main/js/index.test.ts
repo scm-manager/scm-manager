@@ -14,7 +14,6 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import "@scm-manager/ui-tests";
 import { Repository } from "@scm-manager/ui-types";
 import { gitPredicate } from "./index";
 

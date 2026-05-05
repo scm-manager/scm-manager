@@ -28,7 +28,7 @@ type Props = {
 
 const ExecutePendingActionModal: FC<Props> = ({ onClose, pendingPlugins }) => {
   const [t] = useTranslation("admin");
-  const { update, isLoading: loading, error, isExecuted } = useExecutePendingPlugins();
+  const { update, isPending: loading, error, isExecuted } = useExecutePendingPlugins();
 
   return (
     <PluginActionModal

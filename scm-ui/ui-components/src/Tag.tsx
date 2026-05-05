@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 import { Color, Size } from "./styleConstants";
 import { useTranslation } from "react-i18next";
@@ -30,6 +30,7 @@ type Props = {
   size?: Size;
   onClick?: () => void;
   onRemove?: () => void;
+  children?: ReactNode;
 };
 
 const smallClassNames = classNames("p-1", "is-size-7", "has-text-weight-bold");

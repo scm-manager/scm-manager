@@ -15,9 +15,9 @@
  */
 
 import React, { FC } from "react";
-import { Changeset } from "@scm-manager/ui-types";
+import { Replacement, SplitAndReplace } from "@scm-manager/ui-core";
 import { extensionPoints, useBinder } from "@scm-manager/ui-extensions";
-import { Replacement, SplitAndReplace } from "@scm-manager/ui-text";
+import { Changeset } from "@scm-manager/ui-types";
 
 type Props = {
   changeset: Changeset;

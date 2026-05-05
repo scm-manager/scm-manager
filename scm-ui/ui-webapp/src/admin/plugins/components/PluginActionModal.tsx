@@ -15,12 +15,12 @@
  */
 
 import * as React from "react";
-import { FC, useRef } from "react";
+import { FC, ReactNode, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import { ButtonGroup, ErrorNotification, Modal } from "@scm-manager/ui-components";
 import SuccessNotification from "./SuccessNotification";
-import {Button} from "@scm-manager/ui-core";
+import { Button } from "@scm-manager/ui-core";
 
 type Props = {
   onClose: () => void;
@@ -32,6 +32,7 @@ type Props = {
   loading: boolean;
   error?: Error | null;
   success: boolean;
+  children?: ReactNode;
 };
 
 const PluginActionModal: FC<Props> = ({
@@ -44,7 +45,7 @@ const PluginActionModal: FC<Props> = ({
   label,
   loading,
   onClose,
-  execute
+  execute,
 }) => {
   const [t] = useTranslation("admin");
   const initialFocusRef = useRef<HTMLButtonElement>(null);
@@ -65,8 +66,8 @@ const PluginActionModal: FC<Props> = ({
           <strong>{t("plugins.modal.updateQueue")}</strong>
           <ul>
             {installedPlugins._embedded.plugins
-              .filter(plugin => plugin._links && plugin._links.update)
-              .map(plugin => (
+              .filter((plugin) => plugin._links && plugin._links.update)
+              .map((plugin) => (
                 <li key={plugin.name}>{plugin.name}</li>
               ))}
           </ul>
@@ -81,7 +82,7 @@ const PluginActionModal: FC<Props> = ({
         <>
           <strong>{t("plugins.modal.installQueue")}</strong>
           <ul>
-            {pendingPlugins._embedded.new.map(plugin => (
+            {pendingPlugins._embedded.new.map((plugin) => (
               <li key={plugin.name}>{plugin.name}</li>
             ))}
           </ul>
@@ -94,23 +95,25 @@ const PluginActionModal: FC<Props> = ({
     <>
       <strong>{t("plugins.modal.updateQueue")}</strong>
       <ul>
-        {pendingPlugins._embedded.update.map(plugin => (
+        {pendingPlugins._embedded.update.map((plugin) => (
           <li key={plugin.name}>{plugin.name}</li>
         ))}
       </ul>
     </>
   );
 
-  const uninstallQueue = pendingPlugins && pendingPlugins._embedded && pendingPlugins._embedded.uninstall.length > 0 && (
-    <>
-      <strong>{t("plugins.modal.uninstallQueue")}</strong>
-      <ul>
-        {pendingPlugins._embedded.uninstall.map(plugin => (
-          <li key={plugin.name}>{plugin.name}</li>
-        ))}
-      </ul>
-    </>
-  );
+  const uninstallQueue = pendingPlugins &&
+    pendingPlugins._embedded &&
+    pendingPlugins._embedded.uninstall.length > 0 && (
+      <>
+        <strong>{t("plugins.modal.uninstallQueue")}</strong>
+        <ul>
+          {pendingPlugins._embedded.uninstall.map((plugin) => (
+            <li key={plugin.name}>{plugin.name}</li>
+          ))}
+        </ul>
+      </>
+    );
 
   const content = (
     <>
@@ -136,11 +139,9 @@ const PluginActionModal: FC<Props> = ({
   const footer = (
     <ButtonGroup>
       {success ? (
-        <Button
-          onClick={() => window.location.reload()}
-          variant="primary"
-          color="success"
-        >{t("plugins.modal.reload")}</Button>
+        <Button onClick={() => window.location.reload()} variant="primary" color="success">
+          {t("plugins.modal.reload")}
+        </Button>
       ) : (
         <>
           <Button
@@ -149,8 +150,10 @@ const PluginActionModal: FC<Props> = ({
             onClick={execute}
             disabled={!!error || success}
             ref={initialFocusRef}
-          >{label}</Button>
-          <Button onClick={onClose} >{t("plugins.modal.abort")}</Button>
+          >
+            {label}
+          </Button>
+          <Button onClick={onClose}>{t("plugins.modal.abort")}</Button>
         </>
       )}
     </ButtonGroup>

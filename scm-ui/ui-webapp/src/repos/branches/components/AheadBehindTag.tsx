@@ -14,13 +14,12 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Branch, BranchDetails } from "@scm-manager/ui-types";
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { Tooltip } from "@scm-manager/ui-overlays";
-import { Icon } from "@scm-manager/ui-core";
 import { SmallLoadingSpinner } from "@scm-manager/ui-components";
+import { Icon, Tooltip } from "@scm-manager/ui-core";
+import { Branch, BranchDetails } from "@scm-manager/ui-types";
 
 type Props = {
   branch: Branch;

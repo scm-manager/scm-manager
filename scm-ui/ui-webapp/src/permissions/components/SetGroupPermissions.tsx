@@ -34,7 +34,7 @@ const SetGroupPermissions: FC<Props> = ({ group }) => {
     error: permissionsLoadError,
   } = useGroupPermissions(group);
   const {
-    isLoading: isUpdatingPermissions,
+    isPending: isUpdatingPermissions,
     isUpdated: permissionsUpdated,
     setPermissions,
     error: permissionsUpdateError,

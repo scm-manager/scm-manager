@@ -37,7 +37,7 @@ describe("Anonymous Mode Disabled", () => {
     cy.restLogin(username, password);
 
     // Act
-    cy.visit("/home");
+    cy.visit("/");
 
     // Assert
     cy.byTestId("footer-user-profile");

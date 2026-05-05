@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
+import React, { FC, Ref } from "react";
 import classNames from "classnames";
 import { Icon } from "../buttons";
 
@@ -47,6 +47,7 @@ type IconProps = React.HTMLProps<HTMLElement> & {
   color?: string;
   iconSize?: StatusIconSizeVariant;
   invert?: boolean;
+  ref?: Ref<HTMLElement>;
 };
 
 /**
@@ -54,51 +55,57 @@ type IconProps = React.HTMLProps<HTMLElement> & {
  * @beta
  * @since 3.9.0
  */
-const StatusIcon = React.forwardRef<HTMLElement, IconProps>(
-  ({ color, className, iconSize = StatusIconSizeVariants.MEDIUM, variant, invert = false, children }, ref) => {
-    const icon = classNames({
-      "exclamation-triangle": variant === StatusVariants.DANGER,
-      "check-circle": variant === StatusVariants.SUCCESS,
-      "hourglass-start": variant === StatusVariants.IN_PROGRESS,
-      "circle-notch": variant === StatusVariants.UNDEFINED,
-    });
-    if (!color) {
-      if (invert) {
-        color = classNames({
-          "icon-color-inverted": variant === StatusVariants.DANGER || StatusVariants.SUCCESS,
-          "icon-warning-inverted": variant === StatusVariants.WARNING,
-          "icon-color-inverted-secondary":
-            variant === StatusVariants.IN_PROGRESS || variant === StatusVariants.UNDEFINED,
-        });
-      } else {
-        color = classNames({
-          "has-text-danger": variant === StatusVariants.DANGER,
-          "has-text-success": variant === StatusVariants.SUCCESS,
-          "has-text-warning": variant === StatusVariants.WARNING,
-          "icon-color-secondary": variant === StatusVariants.IN_PROGRESS || variant === StatusVariants.UNDEFINED,
-        });
-      }
+const StatusIcon: FC<IconProps> = ({
+  color,
+  className,
+  iconSize = StatusIconSizeVariants.MEDIUM,
+  variant,
+  invert = false,
+  children,
+  ref,
+}) => {
+  const icon = classNames({
+    "exclamation-triangle": variant === StatusVariants.DANGER,
+    "check-circle": variant === StatusVariants.SUCCESS,
+    "hourglass-start": variant === StatusVariants.IN_PROGRESS,
+    "circle-notch": variant === StatusVariants.UNDEFINED,
+  });
+  if (!color) {
+    if (invert) {
+      color = classNames({
+        "icon-color-inverted": variant === StatusVariants.DANGER || StatusVariants.SUCCESS,
+        "icon-warning-inverted": variant === StatusVariants.WARNING,
+        "icon-color-inverted-secondary": variant === StatusVariants.IN_PROGRESS || variant === StatusVariants.UNDEFINED,
+      });
+    } else {
+      color = classNames({
+        "has-text-danger": variant === StatusVariants.DANGER,
+        "has-text-success": variant === StatusVariants.SUCCESS,
+        "has-text-warning": variant === StatusVariants.WARNING,
+        "icon-color-secondary": variant === StatusVariants.IN_PROGRESS || variant === StatusVariants.UNDEFINED,
+      });
     }
-
-    return (
-      <div className="is-flex is-align-items-center">
-        {variant === "warning" ? (
-          <WarningIcon color={color} iconSize={iconSize} className={className}>{`${icon}`}</WarningIcon>
-        ) : (
-          <Icon className={className}>{`${icon} ${color} fa-${iconSize}`}</Icon>
-        )}
-        {children && <span className="ml-2">{children}</span>}
-      </div>
-    );
   }
-);
+
+  return (
+    <div className="is-flex is-align-items-center">
+      {variant === "warning" ? (
+        <WarningIcon color={color} iconSize={iconSize} className={className} ref={ref}>{`${icon}`}</WarningIcon>
+      ) : (
+        <Icon className={className} ref={ref}>{`${icon} ${color} fa-${iconSize}`}</Icon>
+      )}
+      {children && <span className="ml-2">{children}</span>}
+    </div>
+  );
+};
 
 type WarningIconProps = React.HTMLProps<HTMLElement> & {
   color?: string;
   iconSize?: string;
+  ref?: Ref<HTMLElement>;
 };
 
-const WarningIcon = React.forwardRef<HTMLElement, WarningIconProps>(({ color, className, iconSize }, ref) => {
+const WarningIcon: FC<WarningIconProps> = ({ color, className, iconSize, ref }) => {
   return (
     <span className={classNames(className, "icon", color)} aria-hidden="true" ref={ref}>
       <svg
@@ -130,6 +137,6 @@ const WarningIcon = React.forwardRef<HTMLElement, WarningIconProps>(({ color, cl
       </svg>
     </span>
   );
-});
+};
 
 export default StatusIcon;

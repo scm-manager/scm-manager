@@ -15,7 +15,7 @@
  */
 
 import React, { FC, useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
@@ -28,11 +28,11 @@ type Props = {
 
 export const DeleteGroup: FC<Props> = ({ confirmDialog = true, group }) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
-  const { isLoading, error, remove, isDeleted } = useDeleteGroup();
+  const { isPending, error, remove, isDeleted } = useDeleteGroup();
   const [t] = useTranslation("groups");
 
   if (isDeleted) {
-    return <Redirect to={"/groups/"} />;
+    return <Navigate to="/groups/" />;
   }
 
   const deleteGroupCallback = () => remove(group);
@@ -54,14 +54,14 @@ export const DeleteGroup: FC<Props> = ({ confirmDialog = true, group }) => {
         buttons={[
           {
             label: t("deleteGroup.confirmAlert.submit"),
-            onClick: deleteGroupCallback
+            onClick: deleteGroupCallback,
           },
           {
             className: "is-info",
             label: t("deleteGroup.confirmAlert.cancel"),
             onClick: () => null,
-            autofocus: true
-          }
+            autofocus: true,
+          },
         ]}
         close={() => setShowConfirmAlert(false)}
       />
@@ -72,7 +72,7 @@ export const DeleteGroup: FC<Props> = ({ confirmDialog = true, group }) => {
     <>
       <hr />
       <ErrorNotification error={error || undefined} />
-      <Level right={<DeleteButton label={t("deleteGroup.button")} action={action} loading={isLoading} />} />
+      <Level right={<DeleteButton label={t("deleteGroup.button")} action={action} loading={isPending} />} />
     </>
   );
 };

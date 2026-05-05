@@ -14,13 +14,13 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import styled from "styled-components";
 import copyToClipboard from "./CopyToClipboard";
 import { useTranslation } from "react-i18next";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const RowContainer = styled.div`
   span.linenumber + span > span.linenumber {
@@ -73,14 +73,14 @@ type ExternalProps = {
 };
 
 type BaseProps = {
-  children: React.ReactChild[];
+  children?: ReactNode;
 };
 
 type Props = ExternalProps & BaseProps;
 
 const SyntaxHighlighterRenderer: FC<Props> = ({ children: rows, createLinePermaLink, showLineNumbers = true }) => {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [focusedLine, setLineToFocus] = useState<number | undefined>(undefined);
   const [copying, setCopying] = useState(false);
   const [t] = useTranslation("repos");
@@ -94,14 +94,14 @@ const SyntaxHighlighterRenderer: FC<Props> = ({ children: rows, createLinePermaL
   }, [location.hash]);
 
   const lineNumberClick = (lineNumber: number) => {
-    history.push(location.pathname + "#line-" + lineNumber);
+    navigate(location.pathname + "#line-" + lineNumber);
     setCopying(true);
     copyToClipboard(createLinePermaLink(lineNumber)).finally(() => setCopying(false));
   };
 
   return (
     <>
-      {rows.map((line: React.ReactNode, i: number) => {
+      {React.Children.map(rows, (line: React.ReactNode, i: number) => {
         const lineNumber = i + 1;
         return (
           <RowContainer
@@ -123,7 +123,7 @@ const SyntaxHighlighterRenderer: FC<Props> = ({ children: rows, createLinePermaL
                   </Tooltip>
                 )}
                 <LineNumber
-                  onClick={() => history.push(location.pathname + "#line-" + lineNumber)}
+                  onClick={() => navigate(location.pathname + "#line-" + lineNumber)}
                   className="linenumber react-syntax-highlighter-line-number"
                   value={lineNumber}
                 />

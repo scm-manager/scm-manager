@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
 import React, { useContext, useMemo, useRef } from "react";
 
 export type ShortcutDocsContextType = {
@@ -22,10 +22,9 @@ export type ShortcutDocsContextType = {
   add: (key: string, description: string) => void;
   remove: (key: string) => void;
 };
-
 const ShortcutDocsContext = React.createContext<ShortcutDocsContextType>({} as ShortcutDocsContextType);
 
-export const ShortcutDocsContextProvider: FC = ({ children }) => {
+export const ShortcutDocsContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const docs = useRef<Record<string, string>>({});
   const value = useMemo(
     () => ({

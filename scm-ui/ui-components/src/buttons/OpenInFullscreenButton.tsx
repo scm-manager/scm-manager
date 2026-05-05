@@ -14,12 +14,11 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import * as React from "react";
-import { FC, ReactNode, useState } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import { Tooltip } from "@scm-manager/ui-core";
 import FullscreenModal from "../modals/FullscreenModal";
-import { Tooltip } from "@scm-manager/ui-overlays";
 
 type Props = {
   modalTitle: string;

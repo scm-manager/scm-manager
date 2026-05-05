@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import AddPublicKey from "./AddPublicKey";
 import PublicKeyTable from "./PublicKeyTable";
 import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
-import { useDeletePublicKey, usePublicKeys } from "@scm-manager/ui-api";
+import { useDeletePublicKey, usePublicKeys, useRequiredMe } from "@scm-manager/ui-api";
 import { useDocumentTitle } from "@scm-manager/ui-core";
 
 type Props = {
@@ -53,6 +53,11 @@ const SetPublicKeys: FC<Props> = ({ user }) => {
       {createLink && <AddPublicKey publicKeys={publicKeys} user={user} />}
     </>
   );
+};
+
+export const SetMyPublicKeys: FC = () => {
+  const me = useRequiredMe();
+  return <SetPublicKeys user={me} />;
 };
 
 export default SetPublicKeys;

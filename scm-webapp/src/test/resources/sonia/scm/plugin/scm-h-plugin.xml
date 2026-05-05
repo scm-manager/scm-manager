@@ -25,6 +25,7 @@
     <version>1.0.0</version>
     <name>scm-h-plugin</name>
     <description>Plugin h is nothing special</description>
+    <is-scm4-compatible>true</is-scm4-compatible>
   </information>
 
   <packages>

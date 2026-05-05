@@ -15,7 +15,7 @@
  */
 
 import { createChangesetLink, createChangesetLinkByBranch, parseDescription } from "./changesets";
-import { Branch, Changeset, Repository } from "@scm-manager/ui-types";
+import { Changeset, Repository } from "@scm-manager/ui-types";
 
 describe("createChangesetLink", () => {
   it("should return a changeset link", () => {
@@ -27,20 +27,20 @@ describe("createChangesetLink", () => {
 
 describe("createChangesetLinkByBranch", () => {
   it("should return a changeset link with a branch query with given branch", () => {
-    const { repository, changeset, branch } = createTestData();
-    const link = createChangesetLinkByBranch(repository, changeset, branch);
+    const { repository, changeset, sourceName } = createTestData();
+    const link = createChangesetLinkByBranch(repository, changeset, sourceName);
     expect(link).toBe("/repo/sandbox/anarchy/code/changeset/4f153aa670d4b27c?branch=resonanceCascade");
   });
   it("should return no branch query parameter with empty string", () => {
-    const { repository, changeset, branch } = createTestData();
-    branch.name = "";
-    const link = createChangesetLinkByBranch(repository, changeset, branch);
+    const { repository, changeset } = createTestData();
+    const sourceName = "";
+    const link = createChangesetLinkByBranch(repository, changeset, sourceName);
     expect(link).toBe("/repo/sandbox/anarchy/code/changeset/4f153aa670d4b27c");
   });
   it("should escape a branch with a slash inside", () => {
-    const { repository, changeset, branch } = createTestData();
-    branch.name = "feature/rescueWorld";
-    const link = createChangesetLinkByBranch(repository, changeset, branch);
+    const { repository, changeset } = createTestData();
+    const sourceName = "feature/rescueWorld";
+    const link = createChangesetLinkByBranch(repository, changeset, sourceName);
     expect(link).toBe("/repo/sandbox/anarchy/code/changeset/4f153aa670d4b27c?branch=feature%2FrescueWorld");
   });
 });
@@ -82,15 +82,11 @@ function createTestData() {
     _links: {},
   };
 
-  const branch: Branch = {
-    name: "resonanceCascade",
-    revision: "4f153aa670d4b27c",
-    _links: {},
-  };
+  const sourceName = "resonanceCascade";
 
   return {
     repository,
     changeset,
-    branch,
+    sourceName,
   };
 }

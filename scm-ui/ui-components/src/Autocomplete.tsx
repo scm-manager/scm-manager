@@ -14,120 +14,53 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
-import classNames from "classnames";
-import { Async, AsyncCreatable } from "react-select";
-import { SelectValue } from "@scm-manager/ui-types";
-import LabelWithHelpIcon from "./forms/LabelWithHelpIcon";
-import { ActionMeta, ValueType } from "react-select/lib/types";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { useSuggestions } from "@scm-manager/ui-api";
+import { ComboboxField } from "@scm-manager/ui-core";
+import { AutocompleteObject, Option } from "@scm-manager/ui-types";
+
+export type SuggestionsType = "user" | "group";
 
 type Props = {
-  loadSuggestions: (p: string) => Promise<SelectValue[]>;
-  valueSelected: (p: SelectValue) => void;
-  label?: string;
-  helpText?: string;
-  value?: SelectValue;
-  placeholder: string;
-  loadingMessage: string;
-  noOptionsMessage: string;
-  errorMessage?: string;
-  informationMessage?: string;
-  creatable?: boolean;
-  className?: string;
-  disabled?: boolean;
+  onSelect: (option: Option<AutocompleteObject>) => void;
+  autocompleteLink: string;
+  type: SuggestionsType;
 };
 
-type State = {};
+const Autocomplete: FC<Props> = ({ onSelect, autocompleteLink, type }) => {
+  const [t] = useTranslation("plugins");
+  const loadSuggestions = useSuggestions(autocompleteLink);
 
-/**
- * @deprecated
- * @since 2.45.0
- *
- * Use {@link Combobox} instead
- */
-class Autocomplete extends React.Component<Props, State> {
-  static defaultProps = {
-    placeholder: "Type here",
-    loadingMessage: "Loading...",
-    noOptionsMessage: "No suggestion available",
+  const loadOptions = async (query: string): Promise<Option<AutocompleteObject>[]> => {
+    const suggestions = await loadSuggestions(query);
+
+    if (query && query.trim() !== "") {
+      const customOption: Option<AutocompleteObject> = {
+        value: { id: query, displayName: query },
+        label: query,
+      };
+
+      const exactMatch = suggestions.find((s) => s.label === query);
+      return exactMatch ? suggestions : [customOption, ...suggestions];
+    }
+
+    return suggestions;
   };
 
-  handleInputChange = (newValue: ValueType<SelectValue>, action: ActionMeta) => {
-    this.selectValue(newValue as SelectValue);
-  };
-
-  selectValue = (value: SelectValue) => {
-    this.props.valueSelected(value);
-  };
-
-  // We overwrite this to avoid running into a bug (https://github.com/JedWatson/react-select/issues/2944)
-  isValidNewOption = (
-    inputValue: string,
-    selectValue: ValueType<SelectValue>,
-    selectOptions: readonly SelectValue[]
-  ): boolean => {
-    const isNotDuplicated = !selectOptions.map((option) => option.label).includes(inputValue);
-    const isNotEmpty = inputValue !== "";
-    return isNotEmpty && isNotDuplicated;
-  };
-
-  render() {
-    const {
-      label,
-      helpText,
-      value,
-      placeholder,
-      loadingMessage,
-      noOptionsMessage,
-      loadSuggestions,
-      errorMessage,
-      informationMessage,
-      creatable,
-      className,
-      disabled,
-    } = this.props;
-
-    const asyncProps = {
-      className: "autocomplete-entry",
-      classNamePrefix: "autocomplete-entry",
-      cacheOptions: true,
-      loadOptions: loadSuggestions,
-      onChange: this.handleInputChange,
-      value,
-      placeholder,
-      loadingMessage: () => loadingMessage,
-      noOptionsMessage: () => noOptionsMessage,
-      isDisabled: disabled,
-      "aria-label": helpText || label,
-    };
-
-    return (
-      <div className={classNames("field", className)}>
-        <LabelWithHelpIcon label={label} helpText={helpText} />
-        <div className="control">
-          {creatable ? (
-            <AsyncCreatable
-              {...asyncProps}
-              isValidNewOption={this.isValidNewOption}
-              onCreateOption={(newValue) => {
-                this.selectValue({
-                  label: newValue,
-                  value: {
-                    id: newValue,
-                    displayName: newValue,
-                  },
-                });
-              }}
-            />
-          ) : (
-            <Async {...asyncProps} />
-          )}
-        </div>
-        {errorMessage ? <p className="help is-danger">{errorMessage}</p> : null}
-        {informationMessage ? <p className="help is-info">{informationMessage}</p> : null}
-      </div>
-    );
-  }
-}
+  return (
+    <ComboboxField
+      label={t(`scm-review-plugin.config.branchProtection.bypasses.add.${type}.label`)}
+      options={loadOptions}
+      placeholder={t(`scm-review-plugin.config.branchProtection.bypasses.add.${type}.placeholder`)}
+      onChange={(option) => {
+        if (option) {
+          onSelect(option as Option<AutocompleteObject>);
+        }
+      }}
+      value={null}
+    />
+  );
+};
 
 export default Autocomplete;

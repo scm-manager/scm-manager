@@ -21,7 +21,7 @@ import { StyledHunk } from "./styledElements";
 import LastHunkFooter from "./LastHunkFooter";
 import { DiffExpandedCallback, DiffFileProps, ErrorHandler } from "./types";
 import HunkFooter from "./HunkFooter";
-// @ts-ignore react-diff-view does not provide types
+// @ts-expect-error react-diff-view does not provide types with v2
 import { Decoration, getChangeKey } from "react-diff-view";
 import { collectHunkAnnotations, markConflicts } from "./helpers";
 import HunkHeader from "./HunkHeader";
@@ -70,7 +70,7 @@ const DiffFileHunk: FC<Props> = ({
         onClick(context);
       }
     },
-    [file, onClick]
+    [file, onClick],
   );
 
   const gutterEvents = useMemo(
@@ -78,7 +78,7 @@ const DiffFileHunk: FC<Props> = ({
       onClick && {
         onClick: (event: ChangeEvent) => handleClickEvent(event.change, hunk),
       },
-    [handleClickEvent, hunk, onClick]
+    [handleClickEvent, hunk, onClick],
   );
 
   if (shouldMarkConflicts && hunk.changes) {
@@ -92,13 +92,13 @@ const DiffFileHunk: FC<Props> = ({
         expandableHunk={expandableHunk}
         diffExpanded={diffExpanded}
         diffExpansionFailed={diffExpansionFailed}
-      />
+      />,
     );
   } else if (i > 0) {
     items.push(
       <Decoration key={"decoration-" + hunk.content}>
         <hr className="my-2" />
-      </Decoration>
+      </Decoration>,
     );
   }
 
@@ -112,7 +112,11 @@ const DiffFileHunk: FC<Props> = ({
       icon={hunkGutterHoverIcon}
       actionable={!!gutterEvents}
       highlightLineOnHover={highlightLineOnHover}
-    />
+      selectedChanges={[]}
+      generateAnchorID={() => undefined}
+      // @ts-expect-error react-diff-view does not provide types with v2
+      renderGutter={({ renderDefault, wrapInAnchor }) => wrapInAnchor(renderDefault())}
+    />,
   );
   if (file._links?.lines) {
     if (i === (file.hunks ?? []).length - 1) {
@@ -122,7 +126,7 @@ const DiffFileHunk: FC<Props> = ({
           expandableHunk={expandableHunk}
           diffExpanded={diffExpanded}
           diffExpansionFailed={diffExpansionFailed}
-        />
+        />,
       );
     } else {
       items.push(
@@ -131,7 +135,7 @@ const DiffFileHunk: FC<Props> = ({
           expandableHunk={expandableHunk}
           diffExpanded={diffExpanded}
           diffExpansionFailed={diffExpansionFailed}
-        />
+        />,
       );
     }
   }

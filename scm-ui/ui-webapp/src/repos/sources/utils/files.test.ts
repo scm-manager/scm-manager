@@ -26,8 +26,8 @@ describe("files tests", () => {
       directory: true,
       _links: {},
       _embedded: {
-        children: []
-      }
+        children: [],
+      },
     };
   };
 
@@ -36,7 +36,7 @@ describe("files tests", () => {
     path: "README.md",
     revision: "42",
     directory: false,
-    _links: {}
+    _links: {},
   };
 
   describe("isRootPath tests", () => {
@@ -72,12 +72,14 @@ describe("files tests", () => {
     it("should return false, if it is not a directory", () => {
       const directory = createRootDirectory();
       directory.directory = false;
+      // @ts-ignore TS18048: 'directory._embedded' is possibly 'undefined'
       directory._embedded.children = [readme];
       expect(isEmptyDirectory(directory)).toBe(false);
     });
 
     it("should return false, if it is not empty", () => {
       const directory = createRootDirectory();
+      // @ts-ignore TS18048: 'directory._embedded' is possibly 'undefined'
       directory._embedded.children = [readme];
       expect(isEmptyDirectory(directory)).toBe(false);
     });
@@ -89,6 +91,7 @@ describe("files tests", () => {
 
     it("should return true, if children is undefined", () => {
       const directory = createRootDirectory();
+      // @ts-ignore TS18048: 'directory._embedded' is possibly 'undefined'
       directory._embedded.children = undefined;
       expect(isEmptyDirectory(directory)).toBe(true);
     });

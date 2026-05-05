@@ -17,7 +17,7 @@
 import React, { useCallback, useEffect } from "react";
 import { ScmFormPathContextProvider, useScmFormPathContext } from "./FormPathContext";
 import { ScmFormContextProvider, useScmFormContext } from "./ScmFormContext";
-import { DeepPartial, UseFieldArrayReturn, useForm, UseFormReturn } from "react-hook-form";
+import { UseFieldArrayReturn, useForm, DefaultValues, UseFormReturn } from "react-hook-form";
 import { Button } from "../buttons";
 import { prefixWithoutIndices } from "./helpers";
 import { useScmFormListContext } from "./ScmFormListContext";
@@ -35,9 +35,9 @@ type RenderProps<T extends Record<string, unknown>> = Omit<
   "register" | "unregister" | "handleSubmit" | "control"
 >;
 
-type Props<FormType extends Record<string, unknown>, DefaultValues extends FormType> = {
+type Props<FormType extends Record<string, unknown>> = {
   children: ((renderProps: RenderProps<FormType>) => React.ReactNode | React.ReactNode[]) | React.ReactNode;
-  defaultValues: DefaultValues;
+  defaultValues: DefaultValues<FormType>;
   submit?: (data: FormType, append: UseFieldArrayReturn["append"]) => unknown;
   /**
    * @default true
@@ -49,20 +49,20 @@ type Props<FormType extends Record<string, unknown>, DefaultValues extends FormT
  * @beta
  * @since 2.43.0
  */
-function AddListEntryForm<FormType extends Record<string, unknown>, DefaultValues extends FormType>({
+function AddListEntryForm<FormType extends Record<string, unknown>>({
   children,
   defaultValues,
   submit,
   disableSubmitWhenDirty = true,
-}: Props<FormType, DefaultValues>) {
+}: Props<FormType>) {
   const [defaultTranslate] = useTranslation("commons", { keyPrefix: "form" });
   const { readOnly, t } = useScmFormContext();
   const nameWithPrefix = useScmFormPathContext();
   const prefixedNameWithoutIndices = prefixWithoutIndices(nameWithPrefix);
   const { append, isNested } = useScmFormListContext();
-  const form = useForm<FormType, DefaultValues>({
+  const form = useForm<FormType>({
     mode: "onChange",
-    defaultValues: defaultValues as DeepPartial<FormType>,
+    defaultValues: defaultValues,
   });
 
   const {
@@ -75,7 +75,7 @@ function AddListEntryForm<FormType extends Record<string, unknown>, DefaultValue
     [prefixedNameWithoutIndices, t]
   );
 
-  const onSubmit = useCallback((data) => (submit ? submit(data, append) : append(data)), [append, submit]);
+  const onSubmit = useCallback((data: any) => (submit ? submit(data, append) : append(data)), [append, submit]);
 
   const submitButtonLabel = translateWithExtraPrefix("add", {
     defaultValue: defaultTranslate("list.add.label", { entity: translateWithExtraPrefix("entity") }),

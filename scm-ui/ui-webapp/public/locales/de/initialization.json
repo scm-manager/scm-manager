@@ -11,6 +11,45 @@
     "password-confirmation": "Passwort Bestätigung",
     "submit": "Absenden"
   },
+  "scm4CompatibilityStep": {
+    "header": {
+      "title": "Update zum SCM-Manager 4",
+      "description": "Der SCM-Manager wurde auf die Version 4 aktualisiert. Um das Update abzuschließen, werden noch weitere Schritte von Ihnen benötigt."
+    },
+    "updated": {
+      "title": "Plugin Updates erfolgreich installiert",
+      "description": "Alle installierten Plugins konnten erfolgreich mit einer SCM-Manager 4 kompatiblen Version aktualisiert werden. Um das Update abzuschließen, starten Sie bitte ihren SCM-Manager-Server neu.",
+      "submit": "Neustart"
+    },
+    "conflictingPlugins": {
+      "title": "Plugin Updates fehlgeschlagen",
+      "description_one": "Es gibt ein Plugin, welches nicht mit dem SCM-Manager ab der Version 4 kompatibel ist. Für dieses Plugin ist auch kein kompatibles Update verfügbar. Sie können entweder eine andere Plugin-Center URL einstellen, dieses Plugin deinstallieren oder die Aktualisierung des SCM-Managers zurückzurollen.",
+      "description_other": "Es gibt {{count}} Plugins, welche nicht mit dem SCM-Manager ab der Version 4 kompatibel sind. Für diese Plugins sind auch keine kompatiblen Updates verfügbar. Sie können entweder eine andere Plugin-Center URL einstellen, diese Plugins deinstallieren oder die Aktualisierung des SCM-Managers zurückzurollen.",
+      "submit_one": "Inkompatibles Plugin deinstallieren",
+      "submit_other": "Alle inkompatiblen Plugins deinstallieren",
+      "list_one": "Inkompatibles Plugin",
+      "list_other": "Inkompatible Plugins",
+      "nonDefaultPluginCenterUrl": "Die aktuell konfigurierte Plugin-Center URL unterscheidet sich von der Default URL. Solange sie keine eigenen Plugins verwenden, empfehlen wir die Nutzung der Default URL."
+    },
+    "pluginCenterDeactivated": {
+      "title": "Deaktiviertes Plugin-Center",
+      "description_one": "Es gibt ein Plugin, welches nicht mit dem SCM-Manager ab der Version 4 kompatibel ist. Allerdings konnte nach keinem kompatiblen Update gesucht werden, da die URL des Plugin-Centers nicht gesetzt wurde. Bitte setzen Sie die URL für das Plugin-Center.",
+      "description_other": "Es gibt {{count}} Plugins, welche nicht mit dem SCM-Manager ab der Version 4 kompatibel sind. Allerdings konnte nach keinen kompatiblen Updates gesucht werden, da die URL des Plugin-Centers nicht gesetzt wurde. Bitte setzen Sie die URL für das Plugin-Center.",
+      "pluginCenterUrl": {
+        "label": "Plugin-Center URL",
+        "invalidUrl": "Keine gültige URL",
+        "submit": "Plugin-Center URL aktualisieren"
+      }
+    },
+    "defaultPluginCenterUrl": "Default Plugin-Center-URL",
+    "restartNotSupported": "Die Änderung wurde gespeichert, aber ein Neustart des Servers ist erforderlich. Bitte starten Sie ihren SCM-Manager-Server neu.",
+    "token": {
+      "description": "Um fortzufahren müssen Sie sich zunächst mit einem Token authentifizieren. Diesen Token können Sie aus den Logs ihres SCM-Manager-Servers entnehmen.",
+      "label": "Token",
+      "isEmptyError": "Token darf nicht leer sein",
+      "wrongToken": "Der Token ist ungültig. Stellen Sie sicher, dass Sie den Token korrekt aus den Logs des SCM-Managers kopiert haben."
+    }
+  },
   "pluginWizardStep": {
     "title": "Plugin Sets",
     "description": "Der SCM-Manager ist ein minimalistisches Werkzeug, um Git, SVN und mercurial Repositories zu verwalten. Mit Plugins vereinfachen Sie Ihren Workflow und erreichen mehr mit Ihrem SCM-Manager. Wählen Sie ein oder mehrere Plugin-Sets, um ihren Start zu beschleunigen.",

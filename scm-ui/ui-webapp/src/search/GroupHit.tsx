@@ -15,16 +15,9 @@
  */
 
 import React, { FC } from "react";
-import {
-  HitProps,
-  DateFromNow,
-  TextHitField,
-  useDateHitFieldValue,
-  useStringHitFieldValue,
-} from "@scm-manager/ui-components";
 import { Link } from "react-router-dom";
-import { CardList } from "@scm-manager/ui-layout";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
+import { HitProps, TextHitField, useDateHitFieldValue, useStringHitFieldValue } from "@scm-manager/ui-components";
+import { CardList, DateFromNow, useKeyboardIteratorTarget } from "@scm-manager/ui-core";
 import { HighlightedHitField, ValueHitField } from "@scm-manager/ui-types";
 
 const GroupHit: FC<HitProps> = ({ hit }) => {

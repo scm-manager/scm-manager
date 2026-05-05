@@ -15,7 +15,7 @@
  */
 
 import { useActiveModals } from "@scm-manager/ui-components";
-import { usePauseShortcuts } from "@scm-manager/ui-shortcuts";
+import { usePauseShortcuts } from "@scm-manager/ui-core";
 import { useAccessibilityConfig } from "../accessibilityConfig";
 
 /**

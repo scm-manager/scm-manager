@@ -21,7 +21,7 @@ import { ErrorNotification, Loading, Subtitle, Title } from "@scm-manager/ui-com
 import { RepositoryRole } from "@scm-manager/ui-types";
 import DeleteRepositoryRole from "./DeleteRepositoryRole";
 import { useUpdateRepositoryRole } from "@scm-manager/ui-api";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useDocumentTitle } from "@scm-manager/ui-core";
 
 type Props = {
@@ -31,10 +31,10 @@ type Props = {
 const EditRepositoryRole: FC<Props> = ({ role }) => {
   const [t] = useTranslation("admin");
   useDocumentTitle(t("repositoryRole.editSubtitle"));
-  const { isUpdated, update, error, isLoading: loading } = useUpdateRepositoryRole();
+  const { isUpdated, update, error, isPending: loading } = useUpdateRepositoryRole();
 
   if (isUpdated) {
-    return <Redirect to="/admin/roles/" />;
+    return <Navigate to="/admin/roles/" />;
   }
 
   if (loading) {

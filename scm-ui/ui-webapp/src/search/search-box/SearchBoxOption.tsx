@@ -16,26 +16,26 @@
 
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import React, { ComponentProps, MouseEventHandler, useCallback, useContext, useEffect, useRef } from "react";
+import React, { ComponentProps, FC, MouseEventHandler, Ref, useCallback, useContext, useEffect, useRef } from "react";
 import { SearchBoxContext } from "./SearchBoxContext";
 import { mergeRefs } from "./mergeRefs";
-import { useGeneratedId } from "@scm-manager/ui-components";
+import { useAriaId } from "@scm-manager/ui-core";
 import classNames from "classnames";
 
-const SearchBoxOptionLink = styled(Link)<{ isActive: boolean }>`
-  line-height: inherit;
-  word-break: break-all;
-  background-color: ${({ isActive }) => (isActive ? "var(--scm-column-selection)" : "")};
-`;
+type SearchBoxOptionProps = Omit<ComponentProps<typeof Link>, "tabIndex" | "role"> & { ref: Ref<HTMLAnchorElement> };
 
-export const SearchBoxOption = React.forwardRef<
-  HTMLAnchorElement,
-  Omit<ComponentProps<typeof Link>, "tabIndex" | "role">
->(({ children, id: propId, className, onMouseEnter, ...props }, forwardRef) => {
+export const SearchBoxOption: FC<SearchBoxOptionProps> = ({
+  children,
+  id: propId,
+  className,
+  onMouseEnter,
+  ref: forwardRef,
+  ...props
+}) => {
   const ref = useRef<HTMLAnchorElement>(null);
   const { activeId, deregisterOption, registerOption, handleOptionMouseEnter } = useContext(SearchBoxContext);
   const mergedRef = mergeRefs(ref, forwardRef);
-  const id = useGeneratedId(propId);
+  const id = useAriaId(propId);
   const isActive = activeId === id;
   const handleMouseEnter: MouseEventHandler<HTMLAnchorElement> = useCallback(
     (e) => {
@@ -50,11 +50,16 @@ export const SearchBoxOption = React.forwardRef<
     return () => deregisterOption(ref);
   }, [deregisterOption, registerOption]);
 
+  const SearchBoxOptionLink = styled(Link)`
+    line-height: inherit;
+    word-break: break-all;
+    background-color: ${isActive ? "var(--scm-column-selection)" : ""};
+  `;
+
   return (
     <li role="presentation">
       <SearchBoxOptionLink
         {...props}
-        isActive={isActive}
         className={classNames(
           "px-3 py-2 has-text-inherit is-clickable is-size-6 is-borderless has-background-transparent is-full-width is-inline-block",
           className
@@ -69,4 +74,4 @@ export const SearchBoxOption = React.forwardRef<
       </SearchBoxOptionLink>
     </li>
   );
-});
+};

@@ -14,13 +14,13 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, Fragment } from "react";
+import React, { FC, Fragment, ReactNode } from "react";
 import { HighlightedHitField, Hit } from "@scm-manager/ui-types";
 import HighlightedFragment from "./HighlightedFragment";
 import { isHighlightedHitField } from "./fields";
 import { SyntaxHighlighter } from "@scm-manager/ui-syntaxhighlighting";
 
-const MarkerWrapper: FC = ({ children }) => <mark>{children}</mark>;
+const MarkerWrapper: FC<{ children?: ReactNode }> = ({ children }) => <mark>{children}</mark>;
 
 const MARKER_CONFIG = {
   start: "<|[[--",
@@ -73,6 +73,7 @@ type Props = {
   field: string;
   truncateValueAt?: number;
   syntaxHighlightingLanguage?: string;
+  children?: ReactNode;
 };
 
 function truncate(value: string, truncateValueAt = 0, syntaxHighlightingLanguage?: string): string {
@@ -109,7 +110,7 @@ const TextHitField: FC<Props> = ({
       const v = truncate(value, truncateValueAt, syntaxHighlightingLanguage);
       return <FieldFragment fragment={v} syntaxHighlightingLanguage={syntaxHighlightingLanguage} />;
     }
-    return <>{value}</>;
+    return <>{String(value)}</>;
   }
 };
 

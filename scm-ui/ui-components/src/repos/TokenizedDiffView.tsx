@@ -14,11 +14,12 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
 // @ts-ignore we have no typings for react-diff-view
 import { Diff, useTokenizeWorker } from "react-diff-view";
-import { FileDiff } from "@scm-manager/ui-types";
+import { FileDiff, Hunk as HunkType } from "@scm-manager/ui-types";
+
 import { determineLanguage } from "../languages";
 import { useSyntaxHighlightingWorker } from "@scm-manager/ui-syntaxhighlighting";
 
@@ -67,6 +68,7 @@ type Props = {
   viewType: "split" | "unified";
   className?: string;
   whitespace: boolean;
+  children?: ReactNode | ((hunks: HunkType[]) => ReactNode);
 };
 
 const findSyntaxHighlightingLanguage = (file: FileDiff) => {

@@ -14,12 +14,32 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+// import React from "react";
+// import { storiesOf } from "@storybook/react";
+// import Loading from "./Loading";
+//
+// storiesOf("Loading", module).add("Default", () => (
+//   <div>
+//     <Loading />
+//   </div>
+// ));
+
 import React from "react";
-import { storiesOf } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import Loading from "./Loading";
 
-storiesOf("Loading", module).add("Default", () => (
-  <div>
-    <Loading />
-  </div>
-));
+const meta: Meta<typeof Loading> = {
+  title: "Components/Loading",
+  component: Loading,
+  parameters: {
+    layout: "centered",
+  },
+  tags: ["autodocs"],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {};

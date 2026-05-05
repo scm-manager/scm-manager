@@ -169,9 +169,10 @@ class ApiClient {
 
   post = (
     url: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload?: any,
     contentType = "application/json",
-    additionalHeaders: Record<string, string> = {}
+    additionalHeaders: Record<string, string> = {},
   ) => {
     return this.httpRequestWithJSONBody("POST", url, contentType, additionalHeaders, payload);
   };
@@ -233,7 +234,7 @@ class ApiClient {
     url: string,
     contentType: string,
     additionalHeaders: Record<string, string>,
-    payload?: any
+    payload?: any,
   ): Promise<Response> => {
     const options: RequestInit = {
       method: method,
@@ -249,7 +250,7 @@ class ApiClient {
     method: string,
     url: string,
     additionalHeaders: Record<string, string> = {},
-    payload: string
+    payload: string,
   ) => {
     const options: RequestInit = {
       method: method,

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import { Hit as HitType } from "@scm-manager/ui-types";
 import classNames from "classnames";
 
@@ -24,9 +24,10 @@ export type HitProps = {
 
 type Props = {
   className?: string;
+  children?: ReactNode;
 };
 
-type SearchResultType = FC & {
+type SearchResultType = FC<{ children?: ReactNode }> & {
   Title: FC<Props>;
   Left: FC<Props>;
   Content: FC<Props>;

@@ -15,7 +15,7 @@
  */
 
 import React, { FC } from "react";
-import { Redirect, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useCreateGroup, urls } from "@scm-manager/ui-api";
 import { useDocumentTitle } from "@scm-manager/ui-core";
@@ -25,11 +25,11 @@ import GroupForm from "../components/GroupForm";
 const CreateGroup: FC = () => {
   const [t] = useTranslation("groups");
   useDocumentTitle(t("addGroup.title"));
-  const { isLoading, create, error, group } = useCreateGroup();
+  const { isPending, create, error, group } = useCreateGroup();
   const location = useLocation();
 
   if (group) {
-    return <Redirect to={`/group/${group.name}`} />;
+    return <Navigate to={`/group/${group.name}`} />;
   }
 
   return (
@@ -37,7 +37,7 @@ const CreateGroup: FC = () => {
       <div>
         <GroupForm
           submitForm={create}
-          loading={isLoading}
+          loading={isPending}
           transmittedName={urls.getValueStringFromLocationByKey(location, "name")}
           transmittedExternal={urls.getValueStringFromLocationByKey(location, "external") === "true"}
         />

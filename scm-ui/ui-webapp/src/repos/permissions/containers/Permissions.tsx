@@ -18,7 +18,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useAvailablePermissions, usePermissions } from "@scm-manager/ui-api";
 import { ErrorPage, Loading, Subtitle } from "@scm-manager/ui-components";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { useDocumentTitle, useNamespaceFromParams, useRepositoryFromParams } from "@scm-manager/ui-core";
 import { Namespace, Repository } from "@scm-manager/ui-types";
 import CreatePermissionForm from "./CreatePermissionForm";
 import PermissionsTable from "../components/PermissionsTable";
@@ -49,7 +49,7 @@ const Permissions: FC<Props> = ({ namespaceOrRepository }) => {
   useDocumentTitle(
     t("repositoryRoot.menu.permissionsNavLink"),
     commonTranslation(`documentTitle.${isRepository(namespaceOrRepository) ? "repository" : "namespace"}Configuration`),
-    namespaceOrRepository.namespace + (isRepository(namespaceOrRepository) ? "/" + namespaceOrRepository.name : "")
+    namespaceOrRepository.namespace + (isRepository(namespaceOrRepository) ? "/" + namespaceOrRepository.name : ""),
   );
 
   if (error) {
@@ -84,4 +84,10 @@ const Permissions: FC<Props> = ({ namespaceOrRepository }) => {
   );
 };
 
-export default Permissions;
+export const RepositoryPermissions: FC = () => {
+  return <Permissions namespaceOrRepository={useRepositoryFromParams()} />;
+};
+
+export const NamespacePermissions: FC = () => {
+  return <Permissions namespaceOrRepository={useNamespaceFromParams()} />;
+};

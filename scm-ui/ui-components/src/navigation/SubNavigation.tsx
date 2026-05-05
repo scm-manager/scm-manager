@@ -14,42 +14,29 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useEffect } from "react";
+import React, { FC, ReactNode, useEffect } from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { useSecondaryNavigation } from "../useSecondaryNavigation";
 import { RoutingProps } from "./RoutingProps";
-import useActiveMatch from "./useActiveMatch";
 import { createAttributesForTesting } from "../devBuild";
 import { SubNavigationContext } from "./SubNavigationContext";
+import useActiveMatch from "./useActiveMatch";
 
 type Props = RoutingProps & {
   label: string;
   title?: string;
   icon?: string;
   testId?: string;
+  children?: ReactNode;
 };
 
-const SubNavigation: FC<Props> = ({
-  to,
-  activeOnlyWhenExact,
-  activeWhenMatch,
-  icon,
-  title,
-  label,
-  children,
-  testId,
-}) => {
+const SubNavigation: FC<Props> = ({ to, activeWhenMatch, icon, title, label, children, testId }) => {
   const { collapsed, setCollapsible } = useSecondaryNavigation();
   const parents = to.split("/");
   parents.splice(-1, 1);
   const parent = parents.join("/");
-
-  const active = useActiveMatch({
-    to: parent,
-    activeOnlyWhenExact,
-    activeWhenMatch,
-  });
+  const active = useActiveMatch({ to: parent, activeWhenMatch });
 
   useEffect(() => {
     if (active) {

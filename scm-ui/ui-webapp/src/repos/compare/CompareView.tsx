@@ -15,19 +15,14 @@
  */
 
 import React, { FC } from "react";
-import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Repository } from "@scm-manager/ui-types";
 import { createDiffUrl } from "@scm-manager/ui-api";
-import { LoadingDiff, Subtitle, urls } from "@scm-manager/ui-components";
+import { LoadingDiff, Subtitle } from "@scm-manager/ui-components";
 import CompareSelectBar, { CompareTypes } from "./CompareSelectBar";
 import CompareTabs from "./CompareTabs";
 import IncomingChangesets from "./IncomingChangesets";
-
-type Props = {
-  repository: Repository;
-  baseUrl: string;
-};
+import { REPOSITORY_SUB_ROUTES, useCurrentRepositoryBaseUrl, useRepositoryFromParams } from "@scm-manager/ui-core";
 
 export type CompareBranchesParams = {
   sourceType: CompareTypes;
@@ -36,31 +31,42 @@ export type CompareBranchesParams = {
   targetName: string;
 };
 
-const CompareRoutes: FC<Props> = ({ repository, baseUrl }) => {
-  const match = useRouteMatch<CompareBranchesParams>();
-  const url = urls.matchedUrlFromMatch(match);
-  const source = decodeURIComponent(match.params.sourceName);
-  const target = decodeURIComponent(match.params.targetName);
+const CompareRoutes: FC = () => {
+  const repository = useRepositoryFromParams();
+  const baseUrl = useCurrentRepositoryBaseUrl() + `/${REPOSITORY_SUB_ROUTES.CODE}/${REPOSITORY_SUB_ROUTES.COMPARE}`;
+  const { sourceType, sourceName, targetType, targetName } = useParams<CompareBranchesParams>();
+  const source = sourceName!;
+  const target = targetName!;
 
   return (
-    <Switch>
-      <Redirect exact from={url} to={`${url}/diff/`} />
-      <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/diff/`}>
-        <LoadingDiff url={createDiffUrl(repository, source, target) + "?format=GIT"} stickyHeader={true} />
-      </Route>
-      <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/changesets/`} exact>
-        <IncomingChangesets repository={repository} source={source} target={target} url={`${url}/changesets`} />
-      </Route>
-      <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/changesets/:page`} exact>
-        <IncomingChangesets repository={repository} source={source} target={target} url={`${url}/changesets`} />
-      </Route>
-    </Switch>
+    <Routes>
+      <Route
+        index
+        element={
+          <Navigate
+            to={`${baseUrl}/${sourceType}/${encodeURIComponent(source)}/${targetType}/${encodeURIComponent(
+              target,
+            )}/diff/`}
+            replace
+          />
+        }
+      />
+      <Route
+        path="diff/"
+        element={<LoadingDiff url={createDiffUrl(repository, source, target) + "?format=GIT"} stickyHeader />}
+      />
+      <Route
+        path="changesets/:page?"
+        element={<IncomingChangesets repository={repository} source={source} target={target} />}
+      />
+    </Routes>
   );
 };
 
-const CompareView: FC<Props> = ({ repository, baseUrl }) => {
+const CompareView: FC = () => {
   const [t] = useTranslation("repos");
-
+  const repository = useRepositoryFromParams();
+  const baseUrl = useCurrentRepositoryBaseUrl() + `/${REPOSITORY_SUB_ROUTES.CODE}/${REPOSITORY_SUB_ROUTES.COMPARE}`;
   if (!repository._links.incomingDiff) {
     return null;
   }
@@ -70,7 +76,7 @@ const CompareView: FC<Props> = ({ repository, baseUrl }) => {
       <Subtitle subtitle={t("compare.title")} />
       <CompareSelectBar repository={repository} baseUrl={baseUrl} />
       <CompareTabs baseUrl={baseUrl} />
-      <CompareRoutes repository={repository} baseUrl={baseUrl} />
+      <CompareRoutes />
     </>
   );
 };

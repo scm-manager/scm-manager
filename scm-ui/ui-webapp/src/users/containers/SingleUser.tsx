@@ -15,22 +15,22 @@
  */
 
 import React, { FC } from "react";
-import { Route, useParams, useRouteMatch } from "react-router-dom";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { useTranslation } from "react-i18next";
+import { Outlet, RouteObject, useParams, useRoutes, Navigate } from "react-router-dom";
+import { useUser } from "@scm-manager/ui-api";
 import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
-  Loading,
   NavLink,
   Page,
   PrimaryContentColumn,
   SecondaryNavigation,
   SecondaryNavigationColumn,
   SubNavigation,
-  urls,
 } from "@scm-manager/ui-components";
+import { Loading, SINGLE_USER_SETTINGS_SUB_ROUTES, SINGLE_USER_SUB_ROUTES } from "@scm-manager/ui-core";
+import { ExtensionPoint, extensionPoints, useRouteExtensions } from "@scm-manager/ui-extensions";
 import { Details } from "./../components/table";
-import EditUser from "./EditUser";
 import {
   EditUserNavLink,
   SetApiKeysNavLink,
@@ -38,18 +38,71 @@ import {
   SetPermissionsNavLink,
   SetPublicKeysNavLink,
 } from "./../components/navLinks";
-import { useTranslation } from "react-i18next";
+import SetUserPermissions from "../../permissions/components/SetUserPermissions";
 import SetUserPassword from "../components/SetUserPassword";
 import SetPublicKeys from "../components/publicKeys/SetPublicKeys";
 import SetApiKeys from "../components/apiKeys/SetApiKeys";
-import { useUser } from "@scm-manager/ui-api";
-import SetUserPermissions from "../../permissions/components/SetUserPermissions";
+import EditUser from "./EditUser";
 
 const SingleUser: FC = () => {
   const [t] = useTranslation("users");
   const { name } = useParams<{ name: string }>();
-  const match = useRouteMatch();
-  const { isLoading, data: user, error } = useUser(name);
+  const { isLoading, data: user, error } = useUser(name!);
+
+  const extensionProps = {
+    user: user!,
+  };
+
+  const extensionRoutes = useRouteExtensions<extensionPoints.UserRoute>({
+    name: "user.route",
+    props: extensionProps,
+  });
+
+  const userRoutes: RouteObject[] = user
+    ? [
+        {
+          index: true,
+          element: <Navigate to={SINGLE_USER_SUB_ROUTES.INFO} replace />,
+        },
+        {
+          path: SINGLE_USER_SUB_ROUTES.INFO,
+          element: <Details user={user} />,
+        },
+        {
+          path: SINGLE_USER_SUB_ROUTES.SETTINGS,
+          element: <Outlet />,
+          children: [
+            {
+              index: true,
+              element: <Navigate to={SINGLE_USER_SETTINGS_SUB_ROUTES.GENERAL} replace />,
+            },
+            {
+              path: SINGLE_USER_SETTINGS_SUB_ROUTES.GENERAL,
+              element: <EditUser user={user} />,
+            },
+            {
+              path: SINGLE_USER_SETTINGS_SUB_ROUTES.PASSWORD,
+              element: <SetUserPassword user={user} />,
+            },
+            {
+              path: SINGLE_USER_SETTINGS_SUB_ROUTES.PERMISSIONS,
+              element: <SetUserPermissions user={user} />,
+            },
+            {
+              path: SINGLE_USER_SETTINGS_SUB_ROUTES.PUBLIC_KEYS,
+              element: <SetPublicKeys user={user} />,
+            },
+            {
+              path: SINGLE_USER_SETTINGS_SUB_ROUTES.API_KEYS,
+              element: <SetApiKeys user={user} />,
+            },
+            ...extensionRoutes,
+          ],
+        },
+      ]
+    : [];
+
+  const element = useRoutes(userRoutes);
 
   if (error) {
     return <ErrorPage title={t("singleUser.errorTitle")} subtitle={t("singleUser.errorSubtitle")} error={error} />;
@@ -59,71 +112,48 @@ const SingleUser: FC = () => {
     return <Loading />;
   }
 
-  const url = urls.matchedUrlFromMatch(match);
-
-  const extensionProps = {
-    user,
-    url,
-  };
-
-  const escapedUrl = urls.escapeUrlForRoute(url);
+  const basePath = `/user/${name}`;
 
   return (
     <Page title={user.displayName}>
       <CustomQueryFlexWrappedColumns>
-        <PrimaryContentColumn>
-          <Route path={escapedUrl} exact>
-            <Details user={user} />
-          </Route>
-          <Route path={`${escapedUrl}/settings/general`}>
-            <EditUser user={user} />
-          </Route>
-          <Route path={`${escapedUrl}/settings/password`}>
-            <SetUserPassword user={user} />
-          </Route>
-          <Route path={`${escapedUrl}/settings/permissions`}>
-            <SetUserPermissions user={user} />
-          </Route>
-          <Route path={`${escapedUrl}/settings/publickeys`}>
-            <SetPublicKeys user={user} />
-          </Route>
-          <Route path={`${escapedUrl}/settings/apiKeys`}>
-            <SetApiKeys user={user} />
-          </Route>
-          <ExtensionPoint<extensionPoints.UserRoute>
-            name="user.route"
-            props={{
-              user,
-              url: escapedUrl,
-            }}
-            renderAll={true}
-          />
-        </PrimaryContentColumn>
+        <PrimaryContentColumn>{element}</PrimaryContentColumn>
         <SecondaryNavigationColumn>
           <SecondaryNavigation label={t("singleUser.menu.navigationLabel")}>
             <NavLink
-              to={url}
+              to={`${basePath}/${SINGLE_USER_SUB_ROUTES.INFO}`}
               icon="fas fa-info-circle"
               label={t("singleUser.menu.informationNavLink")}
               title={t("singleUser.menu.informationNavLink")}
               testId="user-information-link"
             />
             <SubNavigation
-              to={`${url}/settings/general`}
+              to={`${basePath}/${SINGLE_USER_SUB_ROUTES.SETTINGS}/${SINGLE_USER_SETTINGS_SUB_ROUTES.GENERAL}`}
               label={t("singleUser.menu.settingsNavLink")}
               title={t("singleUser.menu.settingsNavLink")}
               testId="user-settings-link"
             >
-              <EditUserNavLink user={user} editUrl={`${url}/settings/general`} />
-              <SetPasswordNavLink user={user} passwordUrl={`${url}/settings/password`} />
-              <SetPermissionsNavLink user={user} permissionsUrl={`${url}/settings/permissions`} />
-              <SetPublicKeysNavLink user={user} publicKeyUrl={`${url}/settings/publickeys`} />
-              <SetApiKeysNavLink user={user} apiKeyUrl={`${url}/settings/apiKeys`} />
-              <ExtensionPoint<extensionPoints.UserSetting>
-                name="user.setting"
-                props={extensionProps}
-                renderAll={true}
+              <EditUserNavLink
+                user={user}
+                editUrl={`${basePath}/${SINGLE_USER_SUB_ROUTES.SETTINGS}/${SINGLE_USER_SETTINGS_SUB_ROUTES.GENERAL}`}
               />
+              <SetPasswordNavLink
+                user={user}
+                passwordUrl={`${basePath}/${SINGLE_USER_SUB_ROUTES.SETTINGS}/${SINGLE_USER_SETTINGS_SUB_ROUTES.PASSWORD}`}
+              />
+              <SetPermissionsNavLink
+                user={user}
+                permissionsUrl={`${basePath}/${SINGLE_USER_SUB_ROUTES.SETTINGS}/${SINGLE_USER_SETTINGS_SUB_ROUTES.PERMISSIONS}`}
+              />
+              <SetPublicKeysNavLink
+                user={user}
+                publicKeyUrl={`${basePath}/${SINGLE_USER_SUB_ROUTES.SETTINGS}/${SINGLE_USER_SETTINGS_SUB_ROUTES.PUBLIC_KEYS}`}
+              />
+              <SetApiKeysNavLink
+                user={user}
+                apiKeyUrl={`${basePath}/${SINGLE_USER_SUB_ROUTES.SETTINGS}/${SINGLE_USER_SETTINGS_SUB_ROUTES.API_KEYS}`}
+              />
+              <ExtensionPoint<extensionPoints.UserSetting> name="user.setting" props={extensionProps} renderAll />
             </SubNavigation>
           </SecondaryNavigation>
         </SecondaryNavigationColumn>

@@ -14,20 +14,23 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { ComponentProps, ElementRef, ForwardRefExoticComponent, ReactElement } from "react";
+import React, { ComponentProps, ElementRef, ForwardRefExoticComponent, ReactElement, Ref } from "react";
 import classNames from "classnames";
 import { Slot } from "@radix-ui/react-slot";
 
-const withClasses = <Element extends React.ElementType | ForwardRefExoticComponent<any>>(
-  typ: Element,
-  additionalClassNames: string[],
-  additionalProps?: Partial<ComponentProps<Element>>
-) =>
-  React.forwardRef<
-    ElementRef<Element>,
-    | (ComponentProps<Element> & { asChild?: false; className?: string })
-    | { asChild: true; children: ReactElement<{ className?: string }> }
-  >((props, ref) => {
+type Props<Element extends React.ElementType | ForwardRefExoticComponent<any>> = (
+  | (ComponentProps<Element> & { asChild?: false; className?: string })
+  | { asChild: true; children: ReactElement<{ className?: string }> }
+) & { ref?: Ref<Element> };
+
+const withClasses =
+  <Element extends React.ElementType | ForwardRefExoticComponent<any>>(
+    typ: Element,
+    additionalClassNames: string[],
+    additionalProps?: Partial<ComponentProps<Element>>,
+  ) =>
+  // @ts-ignore TypeScript for some reason does not understand that ref will always be part of the Props
+  ({ ref, ...props }: Props<Element>) => {
     // @ts-ignore Typescript doesn't get it for some reason
     if (props.asChild) {
       return <Slot {...props} className={classNames(...additionalClassNames)} />;
@@ -39,6 +42,6 @@ const withClasses = <Element extends React.ElementType | ForwardRefExoticCompone
         ref,
       });
     }
-  });
+  };
 
 export default withClasses;

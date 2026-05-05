@@ -22,13 +22,10 @@ type BaseProps = {
   passwordChanged: (p1: string, p2: boolean) => void;
   passwordValidator?: (p: string) => boolean;
   onReturnPressed?: () => void;
+  ref?: React.Ref<HTMLInputElement>;
 };
 
-type InnerProps = BaseProps & {
-  innerRef: React.Ref<HTMLInputElement>;
-};
-
-const PasswordConfirmation: FC<InnerProps> = ({ passwordChanged, passwordValidator, onReturnPressed, innerRef }) => {
+const PasswordConfirmation: FC<BaseProps> = ({ passwordChanged, passwordValidator, onReturnPressed, ref }) => {
   const [t] = useTranslation("commons");
   const [password, setPassword] = useState("");
   const [confirmedPassword, setConfirmedPassword] = useState("");
@@ -51,13 +48,7 @@ const PasswordConfirmation: FC<InnerProps> = ({ passwordChanged, passwordValidat
     setPasswordConfirmationFailed(password !== newConfirmedPassword);
   };
 
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement> | string) => {
-    let newPassword;
-    if (typeof event === "string") {
-      newPassword = event;
-    } else {
-      newPassword = event.target.value;
-    }
+  const handlePasswordChange = (newPassword: string) => {
     setPasswordConfirmationFailed(newPassword !== confirmedPassword);
     setPassword(newPassword);
     setPasswordValid(validatePassword(newPassword));
@@ -69,11 +60,12 @@ const PasswordConfirmation: FC<InnerProps> = ({ passwordChanged, passwordValidat
         <InputField
           label={t("password.newPassword")}
           type="password"
-          onChange={(event) => handlePasswordChange(event)}
+          onChange={handlePasswordChange}
           value={password}
           validationError={!passwordValid}
           errorMessage={t("password.passwordInvalid")}
-          ref={innerRef}
+          // @ts-ignore TODO check this
+          ref={ref}
           onReturnPressed={onReturnPressed}
           testId="input-password"
         />
@@ -94,9 +86,4 @@ const PasswordConfirmation: FC<InnerProps> = ({ passwordChanged, passwordValidat
   );
 };
 
-/**
- * @deprecated
- */
-export default React.forwardRef<HTMLInputElement, BaseProps>((props, ref) => (
-  <PasswordConfirmation {...props} innerRef={ref} />
-));
+export default PasswordConfirmation;

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { createContext, FC, useContext, useState } from "react";
+import React, { createContext, FC, ReactNode, useContext, useState } from "react";
 
 export type NamespaceAndNameContext = {
   namespace?: string;
@@ -32,7 +32,7 @@ export const useNamespaceAndNameContext = () => {
   return context;
 };
 
-export const NamespaceAndNameContextProvider: FC = ({ children }) => {
+export const NamespaceAndNameContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [namespace, setNamespace] = useState("");
   const [name, setName] = useState("");
 

@@ -14,11 +14,12 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import Logo from "./../Logo";
 
 type Props = {
   authenticated?: boolean;
+  children?: ReactNode;
 };
 
 const LargeHeader: FC = () => {

@@ -3,12 +3,16 @@ title: Repository
 subtitle: Code
 displayToc: true
 ---
-Die Sektion "Code" enthält sämtliche Informationen, die sich auf den Code bzw. Inhalt des Repository beziehen. Oben auf der Seite befindet sich ein Aktionsbalken über den innerhalb der Code-Sektion navigiert werden kann. 
+Die Sektion "Code" enthält sämtliche Informationen, die sich auf den Code bzw. Inhalt des Repository beziehen.
+Oben auf der Seite befindet sich ein Aktionsbalken über den innerhalb der Code-Sektion navigiert werden kann. 
 
 ### Sources
-Die Übersicht der Sources zeigt die Dateien und Ordner in dem Repository an. Wenn Branches existieren, werden die Sources für den ausgewählten Branch angezeigt. 
+Die Übersicht der Sources zeigt die Dateien und Ordner in dem Repository an.
+Für Git und Mercurial Repositories kann ein Branch, ein Tag oder eine konkrete Revision für den zu zeigenden Code
+gewählt werden.
 
-Es gibt unter dem Aktionsbalken eine Breadcrumbs Navigation, die den Pfad der angezeigten Dateien darstellt. Durch Klicken auf die einzelnen Pfad-Bestandteile, kann man sich durch die Dateistruktur des Repository (zurück-)navigieren.
+Es gibt unter dem Aktionsbalken eine Breadcrumbs Navigation, die den Pfad der angezeigten Dateien darstellt.
+Durch Klicken auf die einzelnen Pfad-Bestandteile, kann man sich durch die Dateistruktur des Repository (zurück-)navigieren.
 
 ![Beispiel für eine Code-Ansicht](assets/repository-code-sourcesView.png)
 

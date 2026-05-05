@@ -14,13 +14,99 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+// import styled from "styled-components";
+// import * as React from "react";
+// import { ReactNode } from "react";
+// import { MemoryRouter } from "react-router-dom";
+// import { storiesOf } from "@storybook/react";
+// import Tooltip, { TooltipLocation } from "./Tooltip";
+// import Button from "./buttons/Button";
+//
+// const Wrapper = styled.div`
+//   margin: 2rem;
+//   width: 100%;
+// `;
+//
+// const Spacing = styled.div`
+//   padding: 2em 6em;
+//   width: 50%;
+//   margin: 0 auto;
+// `;
+//
+// const positions: TooltipLocation[] = ["right", "top", "left", "bottom"];
+//
+// const message = "Heart of Gold";
+//
+// const mutltiline = `Characters:
+//
+// - Arthur Dent
+// - Ford Prefect
+// - Zaphod Beeblebrox
+// - Marvin the Paranoid Android
+// - Trillian
+// - Slartibartfast`;
+//
+// const shortMultiline = `* a
+// * b
+// * c`;
+//
+// const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
+//
+// storiesOf("Tooltip", module)
+//   .addDecorator(RoutingDecorator)
+//   .add("Default", () => (
+//     <Wrapper>
+//       {positions.map((position) => (
+//         <Spacing>
+//           <Tooltip message={message} location={position}>
+//             <Button label={position} color="info" />{" "}
+//           </Tooltip>
+//         </Spacing>
+//       ))}
+//     </Wrapper>
+//   ))
+//   .add("Multiline", () => (
+//     <Wrapper>
+//       {positions.map((position) => (
+//         <Spacing>
+//           <Tooltip message={mutltiline} location={position}>
+//             <Button label={position} color="info" />{" "}
+//           </Tooltip>
+//         </Spacing>
+//       ))}
+//     </Wrapper>
+//   ))
+//   .add("Short Multiline", () => (
+//     <Wrapper>
+//       {positions.map((position) => (
+//         <Spacing>
+//           <Tooltip message={shortMultiline} location={position}>
+//             <Button label={position} color="info" />{" "}
+//           </Tooltip>
+//         </Spacing>
+//       ))}
+//     </Wrapper>
+//   ))
+//   .add("Styled", () => (
+//     <Wrapper>
+//       {positions.map((position) => (
+//         <Spacing>
+//           <Tooltip message={message} location={position} className="has-text-warning">
+//             <Button label={position} color="info" />{" "}
+//           </Tooltip>
+//         </Spacing>
+//       ))}
+//     </Wrapper>
+//   ));
+
+import React from "react";
 import styled from "styled-components";
-import * as React from "react";
-import { ReactNode } from "react";
-import { MemoryRouter } from "react-router-dom";
-import { storiesOf } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import Tooltip, { TooltipLocation } from "./Tooltip";
 import Button from "./buttons/Button";
+
+// --- Helper Components & Mock Data (preserved from your original story) ---
 
 const Wrapper = styled.div`
   margin: 2rem;
@@ -31,13 +117,14 @@ const Spacing = styled.div`
   padding: 2em 6em;
   width: 50%;
   margin: 0 auto;
+  text-align: center; // Center the button for better display
 `;
 
 const positions: TooltipLocation[] = ["right", "top", "left", "bottom"];
 
 const message = "Heart of Gold";
 
-const mutltiline = `Characters:
+const multiline = `Characters:
 
 - Arthur Dent
 - Ford Prefect
@@ -50,51 +137,77 @@ const shortMultiline = `* a
 * b
 * c`;
 
-const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
+// --- Storybook Metadata ---
 
-storiesOf("Tooltip", module)
-  .addDecorator(RoutingDecorator)
-  .add("Default", () => (
-    <Wrapper>
+const meta: Meta<typeof Tooltip> = {
+  title: "Components/Tooltip",
+  component: Tooltip,
+  decorators: [(Story) => <Wrapper>{Story()}</Wrapper>],
+  tags: ["autodocs"],
+};
+
+export default meta;
+
+// --- Story Definitions ---
+
+type Story = StoryObj<typeof meta>;
+
+// Since these stories showcase multiple components at once, we use
+// a custom `render` function instead of the `args` object.
+
+export const Default: Story = {
+  render: () => (
+    <>
       {positions.map((position) => (
-        <Spacing>
+        <Spacing key={position}>
           <Tooltip message={message} location={position}>
-            <Button label={position} color="info" />{" "}
+            <Button label={position} color="info" />
           </Tooltip>
         </Spacing>
       ))}
-    </Wrapper>
-  ))
-  .add("Multiline", () => (
-    <Wrapper>
+    </>
+  ),
+};
+
+export const Multiline: Story = {
+  render: () => (
+    <>
       {positions.map((position) => (
-        <Spacing>
-          <Tooltip message={mutltiline} location={position}>
-            <Button label={position} color="info" />{" "}
+        <Spacing key={position}>
+          <Tooltip message={multiline} location={position}>
+            <Button label={position} color="info" />
           </Tooltip>
         </Spacing>
       ))}
-    </Wrapper>
-  ))
-  .add("Short Multiline", () => (
-    <Wrapper>
+    </>
+  ),
+};
+
+export const ShortMultiline: Story = {
+  name: "Short Multiline", // Explicit name to maintain spacing
+  render: () => (
+    <>
       {positions.map((position) => (
-        <Spacing>
+        <Spacing key={position}>
           <Tooltip message={shortMultiline} location={position}>
-            <Button label={position} color="info" />{" "}
+            <Button label={position} color="info" />
           </Tooltip>
         </Spacing>
       ))}
-    </Wrapper>
-  ))
-  .add("Styled", () => (
-    <Wrapper>
+    </>
+  ),
+};
+
+export const Styled: Story = {
+  render: () => (
+    <>
       {positions.map((position) => (
-        <Spacing>
-          <Tooltip message={message} location={position} className={"has-text-warning"}>
-            <Button label={position} color="info" />{" "}
+        <Spacing key={position}>
+          <Tooltip message={message} location={position} className="has-text-warning">
+            <Button label={position} color="info" />
           </Tooltip>
         </Spacing>
       ))}
-    </Wrapper>
-  ));
+    </>
+  ),
+};

@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { InputHTMLAttributes } from "react";
+import React, { InputHTMLAttributes, Ref, FC } from "react";
 import { createAttributesForTesting } from "../../helpers";
 import Help from "../base/help/Help";
 import styled from "styled-components";
@@ -36,71 +36,53 @@ type InputFieldProps = {
   descriptionText?: string;
   testId?: string;
   labelClassName?: string;
+  ref?: Ref<HTMLInputElement>;
 } & Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
 
 /**
  * @see https://bulma.io/documentation/form/checkbox/
  */
-const Checkbox = React.forwardRef<HTMLInputElement, InputFieldProps>(
-  (
-    {
-      readOnly,
-      label,
-      descriptionText,
-      className,
-      labelClassName,
-      value,
-      name,
-      checked,
-      defaultChecked,
-      defaultValue,
-      testId,
-      helpText,
-      ...props
-    },
-    ref
-  ) => {
-    const descriptionId = descriptionText ? `checkbox-description-${name}` : undefined;
-    return (
-      <>
-        {descriptionText ? <p id={descriptionId}>{descriptionText}</p> : null}
-        <StyledLabel
-          className={classNames("checkbox is-align-items-center", labelClassName)}
-          // @ts-ignore bulma uses the disabled attribute on labels, although it is not part of the html spec
-          disabled={readOnly || props.disabled}
-        >
-          {readOnly ? (
-            <>
-              <input
-                type="hidden"
-                name={name}
-                value={value}
-                defaultValue={defaultValue}
-                checked={checked}
-                defaultChecked={defaultChecked}
-                aria-describedby={descriptionId}
-                readOnly
-              />
-              <StyledInput
-                type="checkbox"
-                className={classNames("m-3", className)}
-                ref={ref}
-                value={value}
-                defaultValue={defaultValue}
-                checked={checked}
-                defaultChecked={defaultChecked}
-                aria-describedby={descriptionId}
-                {...props}
-                {...createAttributesForTesting(testId)}
-                disabled
-              />
-            </>
-          ) : (
+const Checkbox: FC<InputFieldProps> = ({
+  readOnly,
+  label,
+  descriptionText,
+  className,
+  labelClassName,
+  value,
+  name,
+  checked,
+  defaultChecked,
+  defaultValue,
+  testId,
+  helpText,
+  ref,
+  ...props
+}) => {
+  const descriptionId = descriptionText ? `checkbox-description-${name}` : undefined;
+  return (
+    <>
+      {descriptionText ? <p id={descriptionId}>{descriptionText}</p> : null}
+      <StyledLabel
+        className={classNames("checkbox is-align-items-center", labelClassName)}
+        // @ts-ignore bulma uses the disabled attribute on labels, although it is not part of the html spec
+        disabled={readOnly || props.disabled}
+      >
+        {readOnly ? (
+          <>
+            <input
+              type="hidden"
+              name={name}
+              value={value}
+              defaultValue={defaultValue}
+              checked={checked}
+              defaultChecked={defaultChecked}
+              aria-describedby={descriptionId}
+              readOnly
+            />
             <StyledInput
               type="checkbox"
               className={classNames("m-3", className)}
               ref={ref}
-              name={name}
               value={value}
               defaultValue={defaultValue}
               checked={checked}
@@ -108,14 +90,30 @@ const Checkbox = React.forwardRef<HTMLInputElement, InputFieldProps>(
               aria-describedby={descriptionId}
               {...props}
               {...createAttributesForTesting(testId)}
+              disabled
             />
-          )}
+          </>
+        ) : (
+          <StyledInput
+            type="checkbox"
+            className={classNames("m-3", className)}
+            ref={ref}
+            name={name}
+            value={value}
+            defaultValue={defaultValue}
+            checked={checked}
+            defaultChecked={defaultChecked}
+            aria-describedby={descriptionId}
+            {...props}
+            {...createAttributesForTesting(testId)}
+          />
+        )}
 
-          {label}
-          {helpText ? <Help className="ml-1" text={helpText} /> : null}
-        </StyledLabel>
-      </>
-    );
-  }
-);
+        {label}
+        {helpText ? <Help className="ml-1" text={helpText} /> : null}
+      </StyledLabel>
+    </>
+  );
+};
+
 export default Checkbox;

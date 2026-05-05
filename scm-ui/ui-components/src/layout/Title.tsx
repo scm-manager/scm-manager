@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 
 type Props = {
@@ -22,6 +22,7 @@ type Props = {
   customPageTitle?: string;
   preventRefreshingPageTitle?: boolean;
   className?: string;
+  children?: ReactNode;
 };
 
 /**
@@ -35,10 +36,6 @@ const Title: FC<Props> = ({ title, className, children }) => {
     return <h1 className={classNames("title", className)}>{title}</h1>;
   }
   return null;
-};
-
-Title.defaultProps = {
-  preventRefreshingPageTitle: false,
 };
 
 export default Title;

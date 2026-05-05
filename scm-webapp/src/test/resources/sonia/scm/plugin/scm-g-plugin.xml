@@ -25,6 +25,7 @@
     <version>1.0.0</version>
     <name>scm-g-plugin</name>
     <description>Plugin g has a min version over 9000</description>
+    <is-scm4-compatible>true</is-scm4-compatible>
   </information>
 
   <conditions>

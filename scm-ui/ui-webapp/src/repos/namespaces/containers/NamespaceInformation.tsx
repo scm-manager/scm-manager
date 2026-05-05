@@ -18,16 +18,18 @@ import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useRepositories } from "@scm-manager/ui-api";
-import { DateFromNow } from "@scm-manager/ui-components";
-import { ErrorNotification, Loading, Subtitle, useDocumentTitle } from "@scm-manager/ui-core";
-import { Namespace } from "@scm-manager/ui-types";
+import {
+  DateFromNow,
+  ErrorNotification,
+  Loading,
+  Subtitle,
+  useDocumentTitle,
+  useNamespaceFromParams,
+} from "@scm-manager/ui-core";
 
-type Props = {
-  namespace: Namespace;
-};
-
-const NamespaceInformation: FC<Props> = ({ namespace }) => {
+const NamespaceInformation: FC = () => {
   const [t] = useTranslation("namespaces");
+  const namespace = useNamespaceFromParams();
   useDocumentTitle(t("namespaceRoot.infoPage.subtitle"), namespace.namespace);
   const { data: repositories, error, isLoading } = useRepositories({ namespace: namespace, pageSize: 9999, page: 0 });
 

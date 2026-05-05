@@ -22,7 +22,6 @@ import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
 import LoginAttempt from "./LoginAttempt";
-import PluginSettings from "./PluginSettings";
 import FunctionSettings from "./FunctionSettings";
 import InvalidateCaches from "./InvalidateCaches";
 import InvalidateSearchIndex from "./InvalidateSearchIndex";
@@ -124,16 +123,14 @@ const ConfigForm: FC<Props> = ({
   let noPermissionNotification = null;
 
   if (!configReadPermission) {
-    return <Notification type={"danger"} children={t("config.form.no-read-permission-notification")} />;
+    return <Notification type="danger">{t("config.form.no-read-permission-notification")}</Notification>;
   }
 
   if (showNotification) {
     noPermissionNotification = (
-      <Notification
-        type={"info"}
-        children={t("config.form.no-write-permission-notification")}
-        onClose={() => onClose()}
-      />
+      <Notification type="info" onClose={() => onClose()}>
+        {t("config.form.no-write-permission-notification")}
+      </Notification>
     );
   }
 

@@ -15,17 +15,19 @@
  */
 
 import { extensionPoints } from "@scm-manager/ui-extensions";
-import { ComponentProps } from "react";
+import { ComponentProps, FC, ReactNode } from "react";
+
+type WithChildren<T> = T extends FC<infer P> ? FC<P & { children?: ReactNode }> : never;
 
 export type ProtocolLinkRendererProps<Protocol extends string | undefined = undefined> = ComponentProps<
-  extensionPoints.MarkdownLinkProtocolRenderer<Protocol>["type"]["renderer"]
+  WithChildren<extensionPoints.MarkdownLinkProtocolRenderer<Protocol>["type"]["renderer"]>
 >;
 
 /**
  * @deprecated use {@link MarkdownLinkProtocolRenderer}`["type"]` instead
  */
-export type ProtocolLinkRendererExtension = extensionPoints.MarkdownLinkProtocolRenderer["type"];
+export type ProtocolLinkRendererExtension = WithChildren<extensionPoints.MarkdownLinkProtocolRenderer["type"]>;
 
 export type ProtocolLinkRendererExtensionMap = {
-  [protocol: string]: extensionPoints.MarkdownLinkProtocolRenderer["type"]["renderer"] | undefined;
+  [protocol: string]: WithChildren<extensionPoints.MarkdownLinkProtocolRenderer["type"]["renderer"]> | undefined;
 };

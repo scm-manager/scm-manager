@@ -16,18 +16,15 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import { useDocumentTitleForRepository } from "@scm-manager/ui-core";
+import { REPOSITORY_SUB_ROUTES, useDocumentTitleForRepository } from "@scm-manager/ui-core";
 import { useBranches } from "@scm-manager/ui-api";
 import BranchTableWrapper from "./BranchTableWrapper";
+import { useCurrentRepositoryBaseUrl, useRepositoryFromParams } from "@scm-manager/ui-core";
 
-type Props = {
-  repository: Repository;
-  baseUrl: string;
-};
-
-const BranchesOverview: FC<Props> = ({ repository, baseUrl }) => {
+const BranchesOverview: FC = () => {
+  const repository = useRepositoryFromParams();
+  const baseUrl = useCurrentRepositoryBaseUrl();
   const { isLoading, error, data } = useBranches(repository);
   const [t] = useTranslation("repos");
   useDocumentTitleForRepository(repository, t("branches.overview.title"));
@@ -40,7 +37,9 @@ const BranchesOverview: FC<Props> = ({ repository, baseUrl }) => {
     return <Loading />;
   }
 
-  return <BranchTableWrapper repository={repository} baseUrl={baseUrl} data={data} />;
+  return (
+    <BranchTableWrapper repository={repository} baseUrl={`${baseUrl}/${REPOSITORY_SUB_ROUTES.BRANCH}`} data={data} />
+  );
 };
 
 export default BranchesOverview;

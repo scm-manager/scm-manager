@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import SubNavigation from "./SubNavigation";
 import NavLink from "./NavLink";
 import { RoutingProps } from "./RoutingProps";
@@ -23,6 +23,7 @@ type Props = RoutingProps & {
   label: string;
   title?: string;
   icon?: string;
+  children?: ReactNode;
 };
 
 const SecondaryNavigationItem: FC<Props> = ({ children, ...props }) => {

@@ -15,8 +15,11 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import classNames from "classnames";
+import styled from "styled-components";
+import { useNamespaceAndNameContext, useNamespaces, useRepositories } from "@scm-manager/ui-api";
 import {
   CreateButton,
   devices,
@@ -29,14 +32,10 @@ import {
   PageActions,
   urls,
 } from "@scm-manager/ui-components";
-import { useDocumentTitle } from "@scm-manager/ui-core";
-import RepositoryList from "../components/list";
-import { useNamespaceAndNameContext, useNamespaces, useRepositories } from "@scm-manager/ui-api";
-import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
+import { KeyboardIterator, KeyboardSubIterator, REPOSITORY_COLLECTION_BASE_ROUTE, useDocumentTitle } from "@scm-manager/ui-core";
 import { binder, ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
-import styled from "styled-components";
-import { KeyboardIterator, KeyboardSubIterator } from "@scm-manager/ui-shortcuts";
-import classNames from "classnames";
+import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
+import RepositoryList from "../components/list";
 
 const StickyColumn = styled.div`
   align-self: flex-start;
@@ -63,7 +62,7 @@ const useOverviewData = () => {
   const search = urls.getQueryStringFromLocation(location);
 
   const listOptions = binder.getExtension<extensionPoints.RepositoryOverviewListOptionsExtensionPoint>(
-    "repository.overview.listOptions"
+    "repository.overview.listOptions",
   );
 
   const listOptionsValue = listOptions ? listOptions() : { pageSize: 10, showArchived: true };
@@ -142,7 +141,12 @@ const Repositories: FC<RepositoriesProps> = ({
       return (
         <>
           <RepositoryList repositories={repositories._embedded.repositories} namespaces={namespaces} />
-          <LinkPaginator collection={repositories} page={page} filter={search} />
+          <LinkPaginator
+            collection={repositories}
+            page={page}
+            filter={search}
+            baseUrl={REPOSITORY_COLLECTION_BASE_ROUTE}
+          />
         </>
       );
     } else {
@@ -169,7 +173,7 @@ function getCurrentGroup(namespace?: string, namespaces?: NamespaceCollection) {
 
 const Overview: FC = () => {
   const { isLoading, error, namespace, namespaces, repositories, search, page } = useOverviewData();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [t] = useTranslation("repos");
   const getDocumentTitle = () => {
     if (repositories?.pageTotal && repositories.pageTotal > 1 && page) {
@@ -220,9 +224,9 @@ const Overview: FC = () => {
   }
   const namespaceSelected = (newNamespace: string) => {
     if (newNamespace === allNamespacesPlaceholder) {
-      history.push("/repos/");
+      navigate("/repos/");
     } else {
-      history.push(`/repos/${newNamespace}/`);
+      navigate(`/repos/${newNamespace}/`);
     }
   };
 

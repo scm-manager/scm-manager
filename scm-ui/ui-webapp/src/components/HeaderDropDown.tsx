@@ -14,13 +14,13 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, Ref, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { devices, ErrorNotification, Loading } from "@scm-manager/ui-components";
 import classNames from "classnames";
 
 type DropDownMenuProps = {
-  mobilePosition: "left" | "right";
+  mobileposition: "left" | "right";
 };
 
 const DropDownMenu = styled.div<DropDownMenuProps>`
@@ -66,7 +66,7 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
     }
 
     ${(props) =>
-      props.mobilePosition === "right" &&
+      props.mobileposition === "right" &&
       css`
         @media screen and (max-width: ${devices.mobile.width}px) {
           left: 21.75rem;
@@ -149,6 +149,7 @@ type Props = React.PropsWithChildren<
     count?: string;
     error?: Error | null;
     isLoading?: boolean;
+    ref?: Ref<HTMLButtonElement>;
   }
 >;
 
@@ -156,49 +157,47 @@ const DropDownTrigger = styled.div`
   padding: 0.65rem 0.75rem;
 `;
 
-const HeaderDropDown = React.forwardRef<HTMLButtonElement, Props>(
-  ({ className, icon, count, error, isLoading, mobilePosition, children }, ref) => {
-    const [open, setOpen] = useState(false);
+const HeaderDropDown: FC<Props> = ({ className, icon, count, error, isLoading, mobileposition, children, ref }) => {
+  const [open, setOpen] = useState(false);
 
-    useEffect(() => {
-      const close = () => setOpen(false);
-      window.addEventListener("click", close);
-      return () => window.removeEventListener("click", close);
-    }, []);
+  useEffect(() => {
+    const close = () => setOpen(false);
+    window.addEventListener("click", close);
+    return () => window.removeEventListener("click", close);
+  }, []);
 
-    return (
-      <button
-        type="button"
-        className={classNames(
-          "notifications",
-          "dropdown",
-          "is-hoverable",
-          "p-0",
-          "is-borderless",
-          "has-background-transparent",
-          {
-            "is-active": open,
-          },
-          className
-        )}
-        onClick={(e) => e.stopPropagation()}
-        tabIndex={0}
-        ref={ref}
+  return (
+    <button
+      type="button"
+      className={classNames(
+        "notifications",
+        "dropdown",
+        "is-hoverable",
+        "p-0",
+        "is-borderless",
+        "has-background-transparent",
+        {
+          "is-active": open,
+        },
+        className,
+      )}
+      onClick={(e) => e.stopPropagation()}
+      tabIndex={0}
+      ref={ref}
+    >
+      <DropDownTrigger
+        className={classNames("is-flex", "dropdown-trigger", "is-clickable")}
+        onClick={() => setOpen((o) => !o)}
       >
-        <DropDownTrigger
-          className={classNames("is-flex", "dropdown-trigger", "is-clickable")}
-          onClick={() => setOpen((o) => !o)}
-        >
-          <IconWrapper icon={icon} count={count} />
-        </DropDownTrigger>
-        <DropDownMenu mobilePosition={mobilePosition} className="dropdown-menu pt-0" id="dropdown-menu" role="menu">
-          <ErrorBox error={error} />
-          {isLoading ? <LoadingBox /> : null}
-          {children}
-        </DropDownMenu>
-      </button>
-    );
-  }
-);
+        <IconWrapper icon={icon} count={count} />
+      </DropDownTrigger>
+      <DropDownMenu mobileposition={mobileposition} className="dropdown-menu pt-0" id="dropdown-menu" role="menu">
+        <ErrorBox error={error} />
+        {isLoading ? <LoadingBox /> : null}
+        {children}
+      </DropDownMenu>
+    </button>
+  );
+};
 
 export default HeaderDropDown;

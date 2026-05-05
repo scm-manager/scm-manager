@@ -64,7 +64,7 @@ export { useNamespaceOptions, useGroupOptions, useUserOptions } from "./useAutoc
 export { default as ApiProvider } from "./ApiProvider";
 export * from "./ApiProvider";
 
-export * from "./LegacyContext";
 export * from "./NamespaceAndNameContext";
+export * from "./NamespaceContext";
 export * from "./RepositoryContext";
 export * from "./RepositoryRevisionContext";

@@ -14,19 +14,21 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, Ref } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { User } from "@scm-manager/ui-types";
-import { createAttributesForTesting, Icon } from "@scm-manager/ui-components";
 import classNames from "classnames";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
+import { createAttributesForTesting, Icon } from "@scm-manager/ui-components";
+import { useKeyboardIteratorTarget } from "@scm-manager/ui-core";
+import { User } from "@scm-manager/ui-types";
 
 type Props = {
   user: User;
 };
 
-const UserRowLink = React.forwardRef<HTMLAnchorElement, { to?: string; children: string }>(({ children, to }, ref) => (
+type UserRowLinkProps = { to?: string; children: string; ref?: Ref<HTMLAnchorElement> };
+
+const UserRowLink: FC<UserRowLinkProps> = ({ children, to, ref }) => (
   <>
     {to ? (
       <Link ref={ref} to={to} {...createAttributesForTesting(children)}>
@@ -36,7 +38,8 @@ const UserRowLink = React.forwardRef<HTMLAnchorElement, { to?: string; children:
       <div {...createAttributesForTesting(children)}>{children}</div>
     )}
   </>
-));
+);
+
 const UserRow: FC<Props> = ({ user }) => {
   const ref = useKeyboardIteratorTarget();
   const [t] = useTranslation("users");

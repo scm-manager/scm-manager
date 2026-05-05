@@ -46,9 +46,6 @@ const AvatarImage = styled(Image)`
 `;
 
 type Props = {
-  /**
-   * @deprecated Unused because the component now uses {@link useLoginInfo} internally.
-   */
   loginInfoLink?: string;
   loading?: boolean;
   error?: Error | null;
@@ -56,7 +53,7 @@ type Props = {
 };
 
 const LoginInfo: FC<Props> = (props) => {
-  const { isLoading: isLoadingLoginInfo, data: info } = useLoginInfo();
+  const { isLoading: isLoadingLoginInfo, data: info } = useLoginInfo(props.loginInfoLink);
   const [t] = useTranslation("commons");
   useDocumentTitle(t("login.title"));
 

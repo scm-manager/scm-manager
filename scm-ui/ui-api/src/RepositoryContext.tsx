@@ -14,13 +14,14 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { createContext, FC, useContext } from "react";
+import React, { createContext, FC, ReactNode, useContext } from "react";
 import { Repository } from "@scm-manager/ui-types";
 
 const Context = createContext<Repository | undefined>(undefined);
 
 export const useRepositoryContext = () => useContext(Context);
 
-export const RepositoryContextProvider: FC<{ repository: Repository }> = ({ repository, children }) => (
-  <Context.Provider value={repository}>{children}</Context.Provider>
-);
+export const RepositoryContextProvider: FC<{ repository: Repository; children: ReactNode }> = ({
+  repository,
+  children,
+}) => <Context.Provider value={repository}>{children}</Context.Provider>;

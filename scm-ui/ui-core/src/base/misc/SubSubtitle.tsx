@@ -14,16 +14,16 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { HTMLAttributes } from "react";
+import React, { FC, HTMLAttributes, Ref } from "react";
 import classNames from "classnames";
 
-const SubSubtitle = React.forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement>>(
-  ({ className, children, ...props }, ref) =>
-    children ? (
-      <h3 className={classNames("is-size-5", className)} ref={ref} {...props}>
-        {children}
-      </h3>
-    ) : null
-);
+type Props = HTMLAttributes<HTMLHeadingElement> & { ref?: Ref<HTMLHeadingElement> };
+
+const SubSubtitle: FC<Props> = ({ className, children, ref, ...props }) =>
+  children ? (
+    <h3 className={classNames("is-size-5", className)} ref={ref} {...props}>
+      {children}
+    </h3>
+  ) : null;
 
 export default SubSubtitle;

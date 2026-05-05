@@ -14,10 +14,10 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
-const CommaSeparatedList: FC = ({ children }) => {
+const CommaSeparatedList: FC<{ children: ReactNode }> = ({ children }) => {
   const [t] = useTranslation("commons");
   const childArray = React.Children.toArray(children);
   return (

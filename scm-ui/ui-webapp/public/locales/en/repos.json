@@ -188,24 +188,23 @@
       "with": "Compare changes with...",
       "filter": "Filter selection...",
       "typeTitle": {
-        "b": "Branch",
-        "t": "Tag",
-        "r": "Revision"
+        "branch": "Branch",
+        "tag": "Tag",
+        "revision": "Revision"
       },
       "type": {
-        "b": "branch",
-        "t": "tag",
-        "r": "revision"
+        "branch": "branch",
+        "tag": "tag",
+        "revision": "revision"
       },
       "emptyResult": "No results matching the filter were found.",
       "tabs": {
-        "b": "Branches",
-        "t": "Tags",
-        "r": "Revision"
+        "branch": "Branches",
+        "tags": "Tags",
+        "revision": "Revision"
       },
       "revision": {
-        "input": "Enter revision",
-        "submit": "Select"
+        "input": "Enter revision with at least 3 character"
       }
     },
     "tabs": {

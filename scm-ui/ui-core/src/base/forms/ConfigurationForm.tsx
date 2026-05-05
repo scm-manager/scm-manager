@@ -20,19 +20,23 @@ import React, { ComponentProps } from "react";
 import { HalRepresentation } from "@scm-manager/ui-types";
 import Form from "./Form";
 import { useTranslation } from "react-i18next";
+import { DefaultValues, FieldValues } from "react-hook-form";
 
 type Props<T extends HalRepresentation> =
-// eslint-disable-next-line prettier/prettier
-  Omit<ComponentProps<typeof Form<T>>, "onSubmit" | "defaultValues" | "readOnly" | "successMessageFallback">
-  & {
-  link: string;
-};
+  // eslint-disable-next-line prettier/prettier
+  Omit<ComponentProps<typeof Form<T>>, "onSubmit" | "defaultValues" | "readOnly" | "successMessageFallback"> & {
+    link: string;
+  };
 
 /**
  * @beta
  * @since 2.41.0
  */
-export function ConfigurationForm<T extends HalRepresentation>({ link, children, ...formProps }: Props<T>) {
+export function ConfigurationForm<T extends HalRepresentation & FieldValues>({
+  link,
+  children,
+  ...formProps
+}: Props<T>) {
   const { initialConfiguration, isReadOnly, update, isLoading } = useConfigLink<T>(link);
   const [t] = useTranslation("commons", { keyPrefix: "form" });
 
@@ -41,8 +45,13 @@ export function ConfigurationForm<T extends HalRepresentation>({ link, children,
   }
 
   return (
-    <Form onSubmit={update} defaultValues={initialConfiguration} readOnly={isReadOnly}
-          successMessageFallback={t("submit-success-notification")} {...formProps}>
+    <Form
+      onSubmit={update}
+      defaultValues={initialConfiguration as DefaultValues<T>}
+      readOnly={isReadOnly}
+      successMessageFallback={t("submit-success-notification")}
+      {...formProps}
+    >
       {children}
     </Form>
   );

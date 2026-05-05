@@ -16,19 +16,17 @@
 
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
+import classNames from "classnames";
+import styled from "styled-components";
 import {
-  DateFromNow,
   HitProps,
   RepositoryAvatar,
   TextHitField,
   useDateHitFieldValue,
   useStringHitFieldValue,
 } from "@scm-manager/ui-components";
-import { CardList } from "@scm-manager/ui-layout";
-import classNames from "classnames";
-import styled from "styled-components";
+import { CardList, DateFromNow, useKeyboardIteratorTarget } from "@scm-manager/ui-core";
 import { HighlightedHitField, ValueHitField } from "@scm-manager/ui-types";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 
 const StyledLink = styled(Link)`
   gap: 0.5rem;

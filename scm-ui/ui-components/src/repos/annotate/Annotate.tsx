@@ -16,7 +16,6 @@
 
 import React, { FC, useReducer } from "react";
 import { AnnotatedLine, AnnotatedSource, Repository } from "@scm-manager/ui-types";
-import { DateInput } from "../../useDateFormatter";
 import AnnotatePopover from "./AnnotatePopover";
 import AnnotateLine from "./AnnotateLine";
 import { Action } from "./actions";
@@ -26,7 +25,6 @@ import { SyntaxHighlighter } from "@scm-manager/ui-syntaxhighlighting";
 type Props = {
   source: AnnotatedSource;
   repository: Repository;
-  baseDate?: DateInput;
 };
 
 type State = {
@@ -83,7 +81,7 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
+const Annotate: FC<Props> = ({ source, repository }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const defaultRenderer: FC = ({ children }: any) => {
@@ -115,14 +113,16 @@ const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
   };
 
   let popover = null;
+  //@ts-ignore
   if ((state.onPopover || state.onLine) && state.annotation) {
     popover = (
       <AnnotatePopover
+        //@ts-ignore
         annotation={state.annotation}
         dispatch={dispatch}
+        //@ts-ignore
         offsetTop={state.offset}
         repository={repository}
-        baseDate={baseDate}
       />
     );
   }

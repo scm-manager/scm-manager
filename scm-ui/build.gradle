@@ -97,7 +97,7 @@ task test(type: YarnTask) {
     include 'ui-*/**/*.tsx'
   })
     .withPathSensitivity(PathSensitivity.RELATIVE)
-  outputs.dir('build/jest-reports')
+  outputs.dir('build/vitest-reports')
 
   if (project.isCI) {
     dependsOn('yarn_install', 'updateUiTestTimestamps')
@@ -107,7 +107,7 @@ task test(type: YarnTask) {
 }
 
 task updateUiTestTimestamps(type: TouchFiles) {
-  directory = project.file('build/jest-reports')
+  directory = project.file('build/vitest-reports')
   extension = "xml"
 }
 
@@ -272,10 +272,10 @@ sonarqube {
     property 'sonar.sources', project.fileTree('.').include('ui-*/src/**')
     property 'sonar.tests', project.fileTree('.').include('ui-*/src/**')
     property 'sonar.test.inclusions', '**/*.test.ts,**/*.test.js,**/*.test.tsx'
-    property 'sonar.junit.reportPaths', 'build/jest-reports/'
+    property 'sonar.junit.reportPaths', 'build/vitest-reports/'
     // no wildcard support
     // https://github.com/SonarSource/SonarJS/issues/578
-    property 'sonar.javascript.lcov.reportPaths', 'build/jest-reports/coverage-ui-components/lcov.info,build/jest-reports/coverage-ui-extensions/lcov.info,build/jest-reports/coverage-ui-webapp/lcov.info'
+    property 'sonar.javascript.lcov.reportPaths', 'build/vitest-reports/coverage-ui-components/lcov.info,build/vitest-reports/coverage-ui-extensions/lcov.info,build/vitest-reports/coverage-ui-webapp/lcov.info'
     property 'sonar.nodejs.executable', project.file(".gradle/nodejs/node-v${nodeVersion}-${os}-${arch}/bin/node")
   }
 }

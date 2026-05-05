@@ -14,4 +14,4 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-export { default as StatusIcon, StatusVariant, StatusIconSizeVariant, StatusVariants } from "./StatusIcon";
+export { default as StatusIcon, type StatusVariant, type StatusIconSizeVariant, StatusVariants } from "./StatusIcon";

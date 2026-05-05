@@ -70,8 +70,8 @@ export type UseShortcutOptions = {
  */
 export default function useShortcut(
   key: string,
-  callback: (e: KeyboardEvent) => void | boolean,
-  options?: UseShortcutOptions
+  callback: (e: KeyboardEvent) => void | boolean | Promise<void>,
+  options?: UseShortcutOptions,
 ) {
   const { add, remove } = useShortcutDocs();
   useEffect(() => {

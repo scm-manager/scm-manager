@@ -16,16 +16,12 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Repository } from "@scm-manager/ui-types";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { useDocumentTitleForRepository } from "@scm-manager/ui-core";
+import { useDocumentTitleForRepository, useRepositoryFromParams } from "@scm-manager/ui-core";
 import RepositoryDetailTable from "./RepositoryDetailTable";
 
-type Props = {
-  repository: Repository;
-};
-
-const RepositoryDetails: FC<Props> = ({ repository }) => {
+const RepositoryDetails: FC = () => {
+  const repository = useRepositoryFromParams();
   const [t] = useTranslation("repos");
   useDocumentTitleForRepository(repository, t("repositoryRoot.menu.informationNavLink"));
 

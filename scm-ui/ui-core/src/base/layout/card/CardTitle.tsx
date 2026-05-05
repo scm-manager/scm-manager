@@ -14,13 +14,14 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { HTMLAttributes } from "react";
+import React, { FC, HTMLAttributes, Ref } from "react";
 
 type Props = HTMLAttributes<HTMLHeadingElement> & {
   /**
    * @default 3
    */
   level?: number;
+  ref?: Ref<HTMLHeadingElement>;
 };
 
 /**
@@ -37,15 +38,14 @@ type Props = HTMLAttributes<HTMLHeadingElement> & {
  * @beta
  * @since 2.44.0
  */
-const CardTitle = React.forwardRef<HTMLHeadingElement, Props>(({ children, level = 3, ...props }, ref) =>
+const CardTitle: FC<Props> = ({ children, level = 3, ref, ...props }) =>
   React.createElement(
     `h${level}`,
     {
       ref,
       ...props,
     },
-    children
-  )
-);
+    children,
+  );
 
 export default CardTitle;

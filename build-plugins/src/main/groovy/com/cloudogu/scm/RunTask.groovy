@@ -16,7 +16,7 @@
 
 package com.cloudogu.scm
 
-import com.moowork.gradle.node.task.NodeTask
+import com.moowork.gradle.node.yarn.YarnTask
 import com.moowork.gradle.node.NodeExtension
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -25,6 +25,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
+import org.apache.tools.ant.taskdefs.condition.Os
 
 class RunTask extends DefaultTask {
 
@@ -150,23 +151,28 @@ class RunTask extends DefaultTask {
 
   }
 
-  private Closure<Void> createFrontend() {
-    def yarnBinDir = nodeExtension.variant.yarnBinDir.getAbsolutePath()
-    def nodeBinDir = nodeExtension.variant.nodeBinDir.getAbsolutePath()
-    def path = yarnBinDir + File.pathSeparator + nodeBinDir + File.separator + System.getenv().get("PATH");
 
-    def frontend = project.tasks.create('boot-frontend', NodeTask) {
-      script = new File(project.rootProject.projectDir, 'scripts/turbo-runner.js')
-      args = ['run', 'serve', '--filter=@scm-manager/ui-webapp']
-      environment = [
-        'PATH': path,
-        'NODE_ENV': 'development',
-        'ANALYZE_BUNDLES': analyzeBundles
-      ]
-    }
+  private Closure<Void> createFrontend() {
+    def yarnExecutable = new File(
+      nodeExtension.variant.yarnBinDir.absolutePath,
+      Os.isFamily(Os.FAMILY_WINDOWS) ? 'yarn.cmd' : 'yarn'
+    ).absolutePath
+    def nodeDir = nodeExtension.variant.nodeBinDir.absolutePath
+    def nodeBinPath = Os.isFamily(Os.FAMILY_WINDOWS) ? nodeDir : new File(nodeDir, 'bin').absolutePath
+
+    def path = nodeBinPath + File.pathSeparator + System.getenv("PATH")
+
     return {
-      frontend.exec()
+      project.exec {
+        workingDir project.projectDir
+
+        commandLine yarnExecutable, 'turbo', 'run', 'serve', '--filter=@scm-manager/ui-webapp'
+
+        environment 'PATH', path
+        environment 'NODE_ENV', 'development'
+        environment 'ANALYZE_BUNDLES', analyzeBundles
+      }
+      return null
     }
   }
-
 }

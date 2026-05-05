@@ -15,10 +15,11 @@
  */
 
 import { ChangesetCollection, Link, Repository } from "@scm-manager/ui-types";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiResultWithFetching } from "./base";
 import { apiClient } from "./apiclient";
 import { changesetQueryKey } from "./changesets";
+import { useEffect } from "react";
 
 function createIncomingUrl(repository: Repository, linkName: string, source: string, target: string) {
   const link = repository._links[linkName];
@@ -52,7 +53,7 @@ export const useIncomingChangesets = (
   repository: Repository,
   source: string,
   target: string,
-  request?: UseIncomingChangesetsRequest
+  request?: UseIncomingChangesetsRequest,
 ): ApiResultWithFetching<ChangesetCollection> => {
   const queryClient = useQueryClient();
 
@@ -68,15 +69,26 @@ export const useIncomingChangesets = (
     }
   }
 
-  return useQuery<ChangesetCollection, Error>(
-    ["repository", repository.namespace, repository.name, "compare", source, target, "changesets", request?.page || 0],
-    () => apiClient.get(link).then(response => response.json()),
-    {
-      onSuccess: changesetCollection => {
-        changesetCollection._embedded?.changesets.forEach(changeset => {
-          queryClient.setQueryData(changesetQueryKey(repository, changeset.id), changeset);
-        });
-      }
+  const result = useQuery<ChangesetCollection, Error>({
+    queryKey: [
+      "repository",
+      repository.namespace,
+      repository.name,
+      "compare",
+      source,
+      target,
+      "changesets",
+      request?.page || 0,
+    ],
+    queryFn: () => apiClient.get(link).then((response) => response.json()),
+  });
+  useEffect(() => {
+    if (result.data) {
+      result.data._embedded?.changesets.forEach((changeset) => {
+        queryClient.setQueryData(changesetQueryKey(repository, changeset.id), changeset);
+      });
     }
-  );
+  }, [queryClient, repository, result.data]);
+
+  return result;
 };
