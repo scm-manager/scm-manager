@@ -127,7 +127,7 @@ ext {
     bouncycastlePkix: "org.bouncycastle:bcpkix-lts8on:${bouncycastleVersion}",
 
     // service registration
-    metainfServices: 'org.kohsuke.metainf-services:metainf-services:1.8',
+    metainfServices: 'org.kohsuke.metainf-services:metainf-services:1.11',
 
     // cron expression
     cronUtils: 'com.cronutils:cron-utils:9.1.+',

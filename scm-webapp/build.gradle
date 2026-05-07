@@ -221,10 +221,6 @@ task prepareOpenAPI(type: Copy) {
   expand(version: project.version)
 }
 
-repositories {
-  mavenCentral()
-}
-
 tasks.getByName("resolve").configure {
   dependsOn 'prepareOpenAPI'
 }

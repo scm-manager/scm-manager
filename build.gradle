@@ -31,8 +31,17 @@ changelog {
 subprojects { s ->
   repositories {
     mavenLocal()
+    mavenCentral()
     maven {
       url 'https://packages.scm-manager.org/repository/public/'
+      content {
+        includeGroupByRegex "sonia\\..*"
+        includeGroupByRegex "org\\.scm-manager\\..*"
+        includeGroupByRegex "com\\.cloudogu\\..*"
+        includeGroup "org.tmatesoft.svnkit"
+        includeGroup "org.apache.shiro"
+        includeGroup "com.aragost.javahg"
+      }
     }
   }
 }
