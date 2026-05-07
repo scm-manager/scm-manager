@@ -28,7 +28,7 @@ RUN jlink \
 # ---
 
 # SCM-Manager runtime
-FROM --platform=linux/amd64 debian:13.3-slim as runtime
+FROM --platform=linux/amd64 debian:13.4-slim as runtime
 
 ENV SCM_HOME /var/lib/scm
 ENV CACHE_DIR /var/cache/scm/work
