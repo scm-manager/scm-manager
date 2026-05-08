@@ -180,7 +180,7 @@
         "description": "Achtung: Darf das Repository inklusive aller Metadaten exportieren."
       },
       "healthCheck": {
-        "displayName": "überprüfen",
+        "displayName": "Repository überprüfen",
         "description": "Darf das Repository überprüfen."
       },
       "*": {
