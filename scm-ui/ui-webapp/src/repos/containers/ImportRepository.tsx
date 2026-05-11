@@ -123,12 +123,7 @@ const ImportRepository: extensionPoints.RepositoryCreator["type"]["component"] =
       {repositoryType && (
         <>
           <hr />
-          <ImportTypeSelect
-            repositoryType={repositoryType}
-            importType={importType}
-            setImportType={setImportType}
-            disabled={importPending}
-          />
+          <ImportTypeSelect repositoryType={repositoryType} setImportType={setImportType} disabled={importPending} />
           <hr />
         </>
       )}

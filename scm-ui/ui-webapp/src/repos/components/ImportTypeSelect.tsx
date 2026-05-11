@@ -21,19 +21,17 @@ import { RadioGroup, RadioGroupField } from "@scm-manager/ui-core";
 
 type Props = {
   repositoryType: RepositoryType;
-  importType: string;
   setImportType: (type: string) => void;
   disabled?: boolean;
 };
 
-const ImportTypeSelect: FC<Props> = ({ repositoryType, importType, setImportType, disabled }) => {
+const ImportTypeSelect: FC<Props> = ({ repositoryType, setImportType, disabled }) => {
   const [t] = useTranslation("repos");
 
   return (
     <RadioGroupField label={t("import.importTypes.label")} onValueChange={setImportType} disabled={disabled}>
       {(repositoryType._links.import as Link[]).map((type) => (
         <RadioGroup.Option
-          checked={importType === type.name}
           value={type.name || ""}
           label={t(`import.importTypes.${type.name}.label`)}
           helpText={t(`import.importTypes.${type.name}.helpText`)}

@@ -29,20 +29,20 @@ const StyledRadioButton = styled(RadioGroup.Item)`
   border: var(--scm-border);
   border-radius: 100%;
 
-  :hover {
+  &:hover:not([data-disabled]) {
     border-color: var(--scm-hover-color);
   }
 
-  :hover *::after {
+  &:hover:not([data-disabled]) [data-state="checked"]::after {
     background-color: var(--scm-info-hover-color);
   }
 
-  :disabled {
+  &[data-disabled] {
     background-color: var(--scm-dark-color-25);
     border-color: var(--scm-hover-color);
   }
 
-  :disabled *::after {
+  &[data-disabled] [data-state="checked"]::after {
     background-color: var(--scm-info-color);
   }
 `;
@@ -55,7 +55,7 @@ const StyledIndicator = styled(RadioGroup.Indicator)`
   height: 100%;
   position: relative;
 
-  ::after {
+  &[data-state="checked"]::after {
     content: "";
     display: block;
     width: 0.5rem;

@@ -29,7 +29,7 @@ type Props = {
  * @since 2.48.0
  */
 const RadioGroup: FC<Props> = ({ options, children, className, ref, ...props }) => (
-  <RadixRadio.Root {...props} asChild>
+  <RadixRadio.Root {...props}>
     <Control ref={ref} className={className}>
       {children ??
         options?.map((option) => (
