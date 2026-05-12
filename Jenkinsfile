@@ -130,7 +130,10 @@ pipeline {
 
     stage('React 19 Deployment') {
       when {
-        branch 'feature/react-19-upgrade'
+        anyOf {
+          branch 'feature/react-19-upgrade'
+          expression { return env.CHANGE_BRANCH == 'feature/react-19-upgrade' }
+        }
         expression { return isBuildSuccess() }
       }
       steps {
