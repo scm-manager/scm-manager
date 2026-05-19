@@ -15,7 +15,7 @@
  */
 
 plugins {
-  id 'org.scm-manager.smp' version '0.20.0-alpha6'
+  id 'org.scm-manager.smp' version '0.20.0'
 }
 
 def jgitVersion = '7.5.0.202512021534-r-scm1'
