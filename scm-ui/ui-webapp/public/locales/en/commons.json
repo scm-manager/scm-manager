@@ -186,6 +186,15 @@
         "helpText": "Disable all custom shortcuts which could negatively impact accessibility."
       },
       "submit": "Submit"
+    },
+    "code": {
+      "navLink": "Code View",
+      "subtitle": "Code View",
+      "label": {
+        "tabSize": "Tab size in the browser for the code view and the code editor",
+        "preview": "Preview of tab sizes:"
+      },
+      "submit": "Submit"
     }
   },
   "password": {
@@ -203,6 +212,7 @@
   "footer": {
     "user": {
       "profile": "Profile",
+      "code": "Code View",
       "theme": "Theme",
       "accessibility": "Accessibility"
     },

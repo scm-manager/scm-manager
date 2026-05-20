@@ -24,6 +24,7 @@ export const ME_SUB_ROUTES = {
 export const ME_SETTINGS_SUB_ROUTES = {
   THEME: "theme",
   ACCESSIBILITY: "accessibility",
+  CODE: "code",
   PASSWORD: "password", // NOSONAR - S2068 false positive: used as route identifier, not a credential
   PUBLIC_KEYS: "publicKeys",
   API_KEYS: "apiKeys",

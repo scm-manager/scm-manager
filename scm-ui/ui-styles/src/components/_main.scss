@@ -1093,6 +1093,10 @@ form .field:not(.is-grouped) {
   position: absolute;
 }
 
+.diff-code {
+  tab-size: var(--user-tab-size, 4);
+}
+
 .tabulator_char::before {
   font-size: 0.75rem;
   content: "↦";

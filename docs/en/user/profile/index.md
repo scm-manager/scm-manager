@@ -11,6 +11,13 @@ Here the password for the current account can be changed when it is a local acco
 external system). To authorize the change, the current password has to be put first. Then the new password has to be
 entered twice.
 
+## Code View
+
+The Code View settings page allows users to customize how the size of tabs are rendered within the web interface.
+These settings apply to both the repository code browser and the integrated code editor.
+
+![Code View Tab Size Menu](assets/tab-size.png)
+
 ## Public Keys
 
 To check signatures (for example for commits), gpg public keys can be stored here. Additionally the keys created by

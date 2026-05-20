@@ -83,6 +83,10 @@ const Profile: FC = () => {
                 to={`/${ME_BASE_ROUTE}/${ME_SUB_ROUTES.SETTINGS}/${ME_SETTINGS_SUB_ROUTES.ACCESSIBILITY}`}
                 label={t("profile.accessibility.navLink")}
               />
+              <NavLink
+                to={`/${ME_BASE_ROUTE}/${ME_SUB_ROUTES.SETTINGS}/${ME_SETTINGS_SUB_ROUTES.CODE}`}
+                label={t("profile.code.navLink")}
+              />
               {mayChangePassword && (
                 <NavLink
                   to={`/${ME_BASE_ROUTE}/${ME_SUB_ROUTES.SETTINGS}/${ME_SETTINGS_SUB_ROUTES.PASSWORD}`}

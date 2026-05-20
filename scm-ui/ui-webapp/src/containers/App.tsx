@@ -78,6 +78,7 @@ import { SetMyPublicKeys } from "../users/components/publicKeys/SetPublicKeys";
 import { SetMyApiKeys } from "../users/components/apiKeys/SetApiKeys";
 import CompareView from "../repos/compare/CompareView";
 import { IndexResources } from "@scm-manager/ui-types";
+import CodeSettings from "./CodeSettings";
 
 const App: FC = () => {
   // auth routes
@@ -159,6 +160,7 @@ const App: FC = () => {
   const meSettings = ME_SUB_ROUTES.SETTINGS;
   const meTheme = ME_SETTINGS_SUB_ROUTES.THEME;
   const meAccessibility = ME_SETTINGS_SUB_ROUTES.ACCESSIBILITY;
+  const meCode = ME_SETTINGS_SUB_ROUTES.CODE;
   const mePassword = ME_SETTINGS_SUB_ROUTES.PASSWORD;
   const mePublicKeys = ME_SETTINGS_SUB_ROUTES.PUBLIC_KEYS;
   const meApiKeys = ME_SETTINGS_SUB_ROUTES.API_KEYS;
@@ -582,6 +584,10 @@ const App: FC = () => {
                         {
                           path: meAccessibility,
                           element: <Accessibility />,
+                        },
+                        {
+                          path: meCode,
+                          element: <CodeSettings />,
                         },
                         {
                           path: mePassword,

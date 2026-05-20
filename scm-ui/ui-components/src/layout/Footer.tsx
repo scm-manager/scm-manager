@@ -95,6 +95,7 @@ const Footer: FC<Props> = ({ me, version, links }) => {
                 label={t("footer.user.accessibility")}
                 testId="footer-user-accessibility"
               />
+              <NavLink to="/me/settings/code" label={t("footer.user.code")} testId="footer-user-code" />
               {me?._links?.password && (
                 <NavLink to="/me/settings/password" label={t("profile.changePasswordNavLink")} />
               )}

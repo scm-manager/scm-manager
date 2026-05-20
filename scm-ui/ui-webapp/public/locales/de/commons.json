@@ -185,6 +185,15 @@
         "helpText": "Deaktiviert alle speziellen Tastaturkombinationen, welche die Barrierefreiheit beeinträchtigen könnten."
       },
       "submit": "Speichern"
+    },
+    "code": {
+      "navLink": "Code Ansicht",
+      "subtitle": "Code Ansicht",
+      "label": {
+        "tabSize": "Tabulatorgröße im Browser für die Code Ansicht und den Code-Editor",
+        "preview": "Vorschau für Tabulatorgrößen:"
+      },
+      "submit": "Speichern"
     }
   },
   "password": {
@@ -202,6 +211,7 @@
   "footer": {
     "user": {
       "profile": "Profil",
+      "code": "Code Ansicht",
       "theme": "Design",
       "accessibility": "Barrierefreiheit"
     },

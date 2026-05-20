@@ -49,6 +49,7 @@ export * from "./configLink";
 export * from "./apiKeys";
 export * from "./publicKeys";
 export * from "./fileContent";
+export * from "./profile";
 export * from "./history";
 export * from "./contentType";
 export * from "./annotations";

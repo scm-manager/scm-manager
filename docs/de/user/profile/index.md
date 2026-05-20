@@ -11,6 +11,13 @@ Hier kann das Passwort für das Konto geändert werden, wenn es sich um ein loka
 also nicht über ein Fremdsystem erfolgt). Um die Änderung zu autorisieren, muss zunächst das aktuelle Passwort
 eingegeben werden. Danach muss das neue Passwort zweimal eingegeben werden.
 
+## Code Ansicht
+
+Auf der Einstellungsseite für die Code-Ansicht können Benutzer anpassen, wie groß ein Tab innerhalb der Weboberfläche dargestellt werden soll.
+Diese Einstellungen gelten sowohl für den Repository-Code-Browser als auch für den integrierten Code-Editor.
+
+![Code View Tab Size Menü](assets/tab-size.png)
+
 ## Öffentliche Schlüssel
 
 Zum Prüfen von Signaturen für z. B. Commits können hier die entsprechenden öffentlichen GPG-Schlüssel hinterlegt werden.

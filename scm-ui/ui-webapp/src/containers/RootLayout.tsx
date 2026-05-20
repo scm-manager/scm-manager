@@ -25,6 +25,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useShortcut } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import usePauseShortcutsWhenModalsActive from "../shortcuts/usePauseShortcutsWhenModalsActive";
+import { useCodeSettingsConfig } from "../codeSettingsConfig";
 
 const AppWrapper = styled.div`
   min-height: 100vh;
@@ -39,6 +40,10 @@ export const RootLayout: FC = () => {
   const [t] = useTranslation("commons");
 
   const navigate = useNavigate();
+
+  const {
+    value: { tabSize },
+  } = useCodeSettingsConfig();
 
   usePauseShortcutsWhenModalsActive();
 
@@ -67,7 +72,10 @@ export const RootLayout: FC = () => {
   }
 
   return (
-    <AppWrapper className={classNames("App", { "has-navbar-fixed-top": authenticatedOrAnonymous })}>
+    <AppWrapper
+      style={{ "--user-tab-size": tabSize } as React.CSSProperties}
+      className={classNames("App", { "has-navbar-fixed-top": authenticatedOrAnonymous })}
+    >
       <Header authenticated={authenticatedOrAnonymous}>
         <NavigationBar links={index._links} />
       </Header>
