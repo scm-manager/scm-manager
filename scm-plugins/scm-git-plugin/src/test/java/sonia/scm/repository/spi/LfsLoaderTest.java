@@ -16,11 +16,12 @@
 
 package sonia.scm.repository.spi;
 
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lfs.Lfs;
 import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lfs.lib.AnyLongObjectId;
 import org.eclipse.jgit.lfs.lib.LongObjectId;
-import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import org.junit.Before;
@@ -37,29 +38,15 @@ import sonia.scm.web.lfs.LfsBlobStoreFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
 
-import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/*
- * This test uses a repository with the following layout:
-   * 7100a0f (branch/b) Add fourth png
-   * d89ee93 (branch/a) Add third png
-   | * f3134d6 (master) Add second png
-   |/
-   * 62c8598 Add first png
-   * cccd744 init lfs
- *
- * Each commit with the text "Add ..." adds exactly one lfs file to the repository.
- */
 public class LfsLoaderTest extends ZippedRepositoryTestBase {
 
   @Rule
@@ -78,7 +65,6 @@ public class LfsLoaderTest extends ZippedRepositoryTestBase {
 
   private LfsLoader lfsLoader;
 
-  private LfsLoader.EntryHandler entryHandler;
   private final Map<AnyLongObjectId, Path> storedBlobs = new HashMap<>();
   private Path lfsTemp;
 
@@ -101,12 +87,6 @@ public class LfsLoaderTest extends ZippedRepositoryTestBase {
       void storeLfsBlob(AnyLongObjectId oid, Path tempFilePath, BlobStore lfsBlobStore) {
         storedBlobs.put(oid, tempFilePath);
       }
-
-      @Override
-      EntryHandler createEntryHandler(Repository gitRepository, LfsLoaderLogger mirrorLog, MirrorCommandResult.LfsUpdateResult lfsUpdateResult, sonia.scm.repository.Repository repository, HttpConnectionFactory httpConnectionFactory) {
-        entryHandler = spy(super.createEntryHandler(gitRepository, mirrorLog, lfsUpdateResult, repository, httpConnectionFactory));
-        return entryHandler;
-      }
     };
   }
 
@@ -117,53 +97,56 @@ public class LfsLoaderTest extends ZippedRepositoryTestBase {
 
   @Test
   public void shouldLoadAllLfsFiles() throws IOException {
-    lfsLoader.inspectTree(
-      ObjectId.fromString("f3134d622484981329034ef63c6c1c9b0e5c5232"),
-      GitUtil.open(repositoryDirectory),
-      lfsLoaderLogger,
-      lfsUpdateResult,
-      repository,
-      httpConnectionFactory,
-      "http://localhost:8081/scm/repo.git"
-    );
+    try (Repository gitRepository = GitUtil.open(repositoryDirectory)) {
+      lfsLoader.loadComplete(
+        gitRepository,
+        lfsLoaderLogger,
+        httpConnectionFactory,
+        "http://localhost:8081/scm/repo.git",
+        repository,
+        lfsUpdateResult
+      );
+    }
 
     assertThat(storedBlobs)
-      .hasSize(2)
+      .hasSize(4)
       .containsAllEntriesOf(
         Map.of(
           LongObjectId.fromString("53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"), lfsTemp.resolve("53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"),
-          LongObjectId.fromString("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"), lfsTemp.resolve("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865")
+          LongObjectId.fromString("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"), lfsTemp.resolve("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"),
+          LongObjectId.fromString("1121cfccd5913f0a63fec40a6ffd44ea64f9dc135c66634ba001d10bcf4302a2"), lfsTemp.resolve("1121cfccd5913f0a63fec40a6ffd44ea64f9dc135c66634ba001d10bcf4302a2"),
+          LongObjectId.fromString("7de1555df0c2700329e815b93b32c571c3ea54dc967b89e81ab73b9972b72d1d"), lfsTemp.resolve("7de1555df0c2700329e815b93b32c571c3ea54dc967b89e81ab73b9972b72d1d")
         ));
     assertThat(lfsTemp).isEmptyDirectory();
   }
 
   @Test
-  public void shouldCheckLfsFilesOnlyOnce() throws IOException {
-    Set<ObjectId> alreadyVisited = new HashSet<>();
+  public void shouldIgnoreUninterestingRevisions() throws IOException {
+    try (Repository gitRepository = GitUtil.open(repositoryDirectory)) {
+      Collection<ObjectId> existingRefs = gatherAllRefs(gitRepository);
 
-    try (Repository repository = GitUtil.open(repositoryDirectory)) {
-      asList(
-        "d89ee931a676bec618177fb4ae6e056f8907a82b", // branch/a
-        "7100a0f377b142a9a746ee0b18cb4124309c0900"  // branch/b
-      )
-        .forEach(
-          objId -> lfsLoader.inspectTree(
-            ObjectId.fromString(objId),
-            repository,
-            lfsLoaderLogger,
-            lfsUpdateResult,
-            this.repository,
-            httpConnectionFactory,
-            "http://localhost:8081/scm/repo.git",
-            alreadyVisited
-          )
-        );
+      lfsLoader.load(
+        gitRepository,
+        lfsLoaderLogger,
+        httpConnectionFactory,
+        "http://localhost:8081/scm/repo.git",
+        repository,
+        lfsUpdateResult,
+        existingRefs,
+        existingRefs
+      );
     }
 
-    assertThat(storedBlobs).hasSize(3);
-    // The second entry handler created for the last revision (branch/b) should be used only once, because all other
-    // object ids for this revision have been handled by the other revision (branch/a) before:
-    verify(entryHandler).handleTreeEntry(any());
+    assertThat(storedBlobs).isEmpty();
+    assertThat(lfsTemp).isEmptyDirectory();
+  }
+
+  private Collection<ObjectId> gatherAllRefs(Repository gitRepository) throws IOException {
+    return gitRepository.getRefDatabase().getRefs()
+      .stream()
+      .map(Ref::getObjectId)
+      .filter(Objects::nonNull)
+      .collect(toSet());
   }
 
   @Override

@@ -1,0 +1,2 @@
+- type: fixed
+  description: Optimized loading of LFS files for imported and mirrored repositories
