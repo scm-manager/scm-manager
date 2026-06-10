@@ -77,9 +77,15 @@ class DefaultHookHandler implements HookHandler {
   }
 
   private void handleHookRequest(InputStream input, OutputStream output) throws IOException {
-    Request request = Sockets.receive(input, Request.class);
-    TransactionId.set(request.getTransactionId());
-    Response response = handleHookRequest(request);
+    Response response;
+    try {
+      Request request = Sockets.receive(input, Request.class);
+      TransactionId.set(request.getTransactionId());
+      response = handleHookRequest(request);
+    } catch (RuntimeException ex) {
+      LOG.warn("unknown error on hook occurred", ex);
+      response = error("unknown error");
+    }
     Sockets.send(output, response);
   }
 
@@ -103,9 +109,10 @@ class DefaultHookHandler implements HookHandler {
 
   @Nonnull
   private Response fireHook(Request request) {
-    HgHookContextProvider context = hookContextProviderFactory.create(request.getRepositoryId(), request.getNode());
+    HgHookContextProvider context = null;
 
     try {
+      context = hookContextProviderFactory.create(request.getRepositoryId(), request.getNode());
       environment.setPending(request.getType() == RepositoryHookType.PRE_RECEIVE);
 
       hookEventFacade.handle(request.getRepositoryId()).fireHookEvent(request.getType(), context);
@@ -135,6 +142,9 @@ class DefaultHookHandler implements HookHandler {
   }
 
   private Response error(HgHookContextProvider context, String message) {
+    if (context == null) {
+      return error(message);
+    }
     List<HgHookMessage> messages = new ArrayList<>(context.getHgMessageProvider().getMessages());
     messages.add(createErrorMessage(message));
     return new Response(messages, true);

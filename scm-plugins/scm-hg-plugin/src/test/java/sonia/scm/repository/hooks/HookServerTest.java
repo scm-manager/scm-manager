@@ -60,10 +60,10 @@ class HookServerTest {
   }
 
   @Test
-  void shouldStartHookServer() throws IOException {
+  void shouldStartHookServerWithoutInheritedSubject() throws IOException {
     Response response = send(new Request("Joe"));
     assertThat(response.getGreeting()).isEqualTo("Hello Joe");
-    assertThat(response.getGreeter()).isEqualTo("Tricia");
+    assertThat(response.getGreeter()).isNull();
   }
 
   private Response send(Request request) throws IOException {
@@ -95,7 +95,8 @@ class HookServerTest {
       try (InputStream input = socket.getInputStream(); OutputStream output = socket.getOutputStream()) {
         Request request = Sockets.receive(input, Request.class);
         Subject subject = SecurityUtils.getSubject();
-        Sockets.send(output, new Response("Hello " + request.getName(), subject.getPrincipal().toString()));
+        Object principal = subject.getPrincipal();
+        Sockets.send(output, new Response("Hello " + request.getName(), principal != null ? principal.toString() : null));
       } catch (IOException ex) {
         throw new RuntimeException("failed", ex);
       } finally {

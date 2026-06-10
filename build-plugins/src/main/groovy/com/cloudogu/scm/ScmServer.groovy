@@ -18,15 +18,15 @@ package com.cloudogu.scm
 
 import com.google.common.base.Strings
 import groovy.json.JsonSlurper
+import org.eclipse.jetty.http.UriCompliance
 import org.eclipse.jetty.server.Handler
 import org.eclipse.jetty.server.HttpConfiguration
 import org.eclipse.jetty.server.HttpConnectionFactory
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
-import org.eclipse.jetty.server.handler.HandlerList
 import org.eclipse.jetty.server.handler.ShutdownHandler
 import org.eclipse.jetty.util.component.LifeCycle
-import org.eclipse.jetty.webapp.WebAppContext
+import org.eclipse.jetty.ee9.webapp.WebAppContext
 
 import java.awt.Desktop
 
@@ -60,12 +60,10 @@ class ScmServer {
     server = new Server()
     server.addConnector(createServerConnector(server))
 
-    HandlerList handlerList = new HandlerList()
-    handlerList.setHandlers([
-      createScmContext(),
-      createShutdownHandler()
-    ] as Handler[])
-    server.setHandler(handlerList)
+    Handler.Sequence handlers = new Handler.Sequence()
+    handlers.addHandler(createScmContext())
+    handlers.addHandler(createShutdownHandler())
+    server.setHandler(handlers)
     server.addEventListener(new LifeCycle.Listener() {
       @Override
       void lifeCycleStarted(LifeCycle event) {
@@ -119,7 +117,7 @@ class ScmServer {
   }
 
   private ShutdownHandler createShutdownHandler() {
-    return new ShutdownHandler("_shutdown_", true, false)
+    return new ShutdownHandler("_shutdown_", true)
   }
 
   private ServerConnector createServerConnector(Server server) throws MalformedURLException {
@@ -129,7 +127,14 @@ class ScmServer {
     cfg.setRequestHeaderSize(configuration.headerSize)
     cfg.setResponseHeaderSize(configuration.headerSize)
     cfg.setSendServerVersion(false)
-
+    UriCompliance scmCompliance = UriCompliance.DEFAULT.with(
+      "SCM_COMPLIANCE",
+      UriCompliance.Violation.AMBIGUOUS_PATH_ENCODING,
+      UriCompliance.Violation.AMBIGUOUS_PATH_PARAMETER,
+      UriCompliance.Violation.AMBIGUOUS_PATH_SEPARATOR,
+      UriCompliance.Violation.AMBIGUOUS_PATH_SEGMENT
+    );
+    cfg.setUriCompliance(scmCompliance);
     connector.setConnectionFactories([new HttpConnectionFactory(cfg)])
     connector.setPort(configuration.port)
 

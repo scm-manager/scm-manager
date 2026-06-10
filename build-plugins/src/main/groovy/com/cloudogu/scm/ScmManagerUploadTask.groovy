@@ -19,8 +19,8 @@ package com.cloudogu.scm
 import com.google.common.base.Strings
 import groovy.json.JsonOutput
 import org.eclipse.jetty.client.HttpClient
-import org.eclipse.jetty.client.api.Request
-import org.eclipse.jetty.client.util.StringContentProvider
+import org.eclipse.jetty.client.Request
+import org.eclipse.jetty.client.StringRequestContent
 import org.eclipse.jetty.http.HttpMethod
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
@@ -71,7 +71,7 @@ class ScmManagerUploadTask extends UploadTask {
       fileName: filename,
       fileContent: artifact.text
     ]
-    request.content(new StringContentProvider(JsonOutput.toJson(body), StandardCharsets.UTF_8))
+    request.body(new StringRequestContent(JsonOutput.toJson(body), StandardCharsets.UTF_8))
     return request
   }
 }

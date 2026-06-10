@@ -17,7 +17,7 @@
 package sonia.scm.server;
 
 import org.eclipse.jetty.http.HttpStatus;
-import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.http.UriCompliance;
 import org.eclipse.jetty.server.ForwardedRequestCustomizer;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -26,11 +26,10 @@ import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
-import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.SecuredRedirectHandler;
-import org.eclipse.jetty.util.resource.ResourceCollection;
+import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.ee9.webapp.WebAppContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +59,7 @@ public final class ServerConfiguration {
     try {
       configureHttp(server);
       configureHandler(server);
-      if (configYaml.getHttps().getKeyStorePath() != null && !configYaml.getHttps().getKeyStorePath().isEmpty()) {
+      if (isSslEnabled()) {
         configureSSL(server);
       }
     } catch (Exception ex) {
@@ -124,14 +123,16 @@ public final class ServerConfiguration {
   }
 
   private void configureHandler(Server server) {
-    HandlerCollection handlerCollection = new HandlerCollection();
+    WebAppContext webApp = createWebAppContext();
+    WebAppContext docRoot = createDocRoot();
+    Handler.Sequence handlers = new Handler.Sequence(webApp.get(), docRoot.get());
+
     if (configYaml.getHttps().isRedirectHttpToHttps()) {
       System.out.println("Set http to https redirect");
-      handlerCollection.addHandler(new SecuredRedirectHandler(HttpStatus.MOVED_PERMANENTLY_301));
+      server.setHandler(new SecuredRedirectHandler(handlers, HttpStatus.MOVED_PERMANENTLY_301));
+    } else {
+      server.setHandler(handlers);
     }
-    handlerCollection.addHandler(createWebAppContext());
-    handlerCollection.addHandler(createDocRoot());
-    server.setHandler(handlerCollection);
   }
 
   private WebAppContext createWebAppContext() {
@@ -163,7 +164,7 @@ public final class ServerConfiguration {
     WebAppContext docRoot = new WebAppContext();
     docRoot.setContextPath("/");
     String baseDir = this.baseDir;
-    docRoot.setBaseResource(new ResourceCollection(new String[]{baseDir + "/var/webapp/docroot"}));
+    docRoot.setBaseResource(ResourceFactory.of(docRoot).newResource(baseDir + "/var/webapp/docroot"));
     String tempDir = configYaml.getTempDir();
     File docRootTempDir =
       asCanonicalFile(tempDir.startsWith("/") ?
@@ -194,45 +195,36 @@ public final class ServerConfiguration {
     if (configYaml.isForwardHeadersEnabled()) {
       httpConfig.addCustomizer(new ForwardedRequestCustomizer());
     }
+    UriCompliance scmCompliance = UriCompliance.DEFAULT.with(
+      "SCM_COMPLIANCE",
+      UriCompliance.Violation.AMBIGUOUS_PATH_ENCODING,
+      UriCompliance.Violation.AMBIGUOUS_PATH_PARAMETER,
+      UriCompliance.Violation.AMBIGUOUS_PATH_SEPARATOR,
+      UriCompliance.Violation.AMBIGUOUS_PATH_SEGMENT
+    );
+    httpConfig.setUriCompliance(scmCompliance);
     return httpConfig;
   }
 
   public List<Listener> getListeners() {
     List<Listener> listeners = new ArrayList<>();
 
-    Server server = new Server();
-    configureServer(server);
-
-    String contextPath = findContextPath(server.getHandlers());
+    String contextPath = configYaml.getContextPath();
     if (contextPath == null) {
       contextPath = DEFAULT_CONTEXT_PATH;
     }
 
-    for (Connector connector : server.getConnectors()) {
-      if (connector instanceof ServerConnector serverConnector) {
-        String scheme = "http";
-        String protocol = serverConnector.getDefaultProtocol();
-        if ("SSL".equalsIgnoreCase(protocol) || "TLS".equalsIgnoreCase(protocol)) {
-          scheme = "https";
-        }
-        listeners.add(new Listener(scheme, serverConnector.getPort(), contextPath));
-      }
+    listeners.add(new Listener("http", configYaml.getPort(), contextPath));
+
+    if (isSslEnabled()) {
+      listeners.add(new Listener("https", configYaml.getHttps().getSslPort(), contextPath));
     }
 
     return listeners;
   }
 
-  private String findContextPath(Handler[] handlers) {
-    for (Handler handler : handlers) {
-      if (handler instanceof WebAppContext) {
-        return ((WebAppContext) handler).getContextPath();
-      } else if (handler instanceof HandlerCollection) {
-        String contextPath = findContextPath(((HandlerCollection) handler).getHandlers());
-        if (contextPath != null) {
-          return contextPath;
-        }
-      }
-    }
-    return null;
+  private boolean isSslEnabled() {
+    String keyStorePath = configYaml.getHttps().getKeyStorePath();
+    return keyStorePath != null && !keyStorePath.isEmpty();
   }
 }

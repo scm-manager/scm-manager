@@ -16,16 +16,19 @@
 
 package sonia.scm.server;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpVersion;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.util.Callback;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -178,25 +181,25 @@ class HealthCheckTest {
   }
 
   private int start(String contextPath, Server server) throws Exception {
-    server.setHandler(new AbstractHandler() {
+    server.setHandler(new Handler.Abstract() {
       @Override
-      public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/plain; charset=utf-8");
+      public boolean handle(Request request, Response response, Callback callback) {
+        response.getHeaders().put(HttpHeader.CONTENT_TYPE, "text/plain; charset=utf-8");
+        String target = request.getHttpURI().getPath();
         if (target.equals(contextPath + "/api/v2")) {
-          response.setStatus(HttpServletResponse.SC_OK);
+          response.setStatus(200);
         } else {
-          response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+          response.setStatus(404);
         }
-        baseRequest.setHandled(true);
+        callback.succeeded();
+        return true;
       }
     });
-
 
     server.start();
     servers.add(server);
     return server.getURI().getPort();
   }
-
   private int startHttpsServer(Path directory, String contextPath) throws Exception {
     Server server = new Server();
 
@@ -208,17 +211,19 @@ class HealthCheckTest {
 
   private int startHttpRedirector(String contextPath, String targetScheme, int targetPort) throws Exception {
     Server server = new Server(0);
-    server.setHandler(new AbstractHandler() {
+    server.setHandler(new Handler.Abstract() {
       @Override
-      public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/plain; charset=utf-8");
+      public boolean handle(Request request, Response response, Callback callback) {
+        response.getHeaders().put(HttpHeader.CONTENT_TYPE, "text/plain; charset=utf-8");
+        String target = request.getHttpURI().getPath();
         if (target.equals(contextPath + "/api/v2")) {
-          response.setHeader("Location", String.format("%s://127.0.0.1:%d%s", targetScheme, targetPort, target));
+          response.getHeaders().put("Location", String.format("%s://127.0.0.1:%d%s", targetScheme, targetPort, target));
           response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
         } else {
           response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
-        baseRequest.setHandled(true);
+        callback.succeeded();
+        return true;
       }
     });
 
@@ -232,14 +237,16 @@ class HealthCheckTest {
     Server server = new Server(0);
     server.setHandler(new AbstractHandler() {
       @Override
-      public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/plain; charset=utf-8");
+      public boolean handle(Request request, Response response, Callback callback) {
+        response.getHeaders().put(HttpHeader.CONTENT_TYPE, "text/plain; charset=utf-8");
+        String target = request.getHttpURI().getPath();
         if (target.equals(contextPath + "/api/v2")) {
           response.setStatus(HttpServletResponse.SC_FOUND);
         } else {
           response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
-        baseRequest.setHandled(true);
+        callback.succeeded();
+        return true;
       }
     });
 

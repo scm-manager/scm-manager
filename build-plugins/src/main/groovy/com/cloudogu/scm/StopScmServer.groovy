@@ -35,13 +35,16 @@ class StopScmServer extends DefaultTask {
 
   @TaskAction
   void exec() {
+    System.out.println("About to stop SCM Server")
     URL url = new URL("http://localhost:${extension.port}/shutdown?token=_shutdown_")
     try {
       HttpURLConnection connection = (HttpURLConnection )url.openConnection()
       connection.setRequestMethod("POST")
-      // ???
-      connection.getResponseCode()
+      int code = connection.getResponseCode()
+      System.out.println("Got response code " + code)
     } catch (IOException ex) {
+      System.out.println("Got exception from stop trigger: " + ex.getMessage())
+      ex.printStackTrace(System.out)
       // already closed ?
     }
   }

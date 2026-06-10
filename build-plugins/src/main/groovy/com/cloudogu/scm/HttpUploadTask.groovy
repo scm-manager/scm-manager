@@ -17,8 +17,8 @@
 package com.cloudogu.scm
 
 import org.eclipse.jetty.client.HttpClient
-import org.eclipse.jetty.client.api.Request
-import org.eclipse.jetty.client.util.BasicAuthentication
+import org.eclipse.jetty.client.Request
+import org.eclipse.jetty.client.BasicAuthentication
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.slf4j.Logger

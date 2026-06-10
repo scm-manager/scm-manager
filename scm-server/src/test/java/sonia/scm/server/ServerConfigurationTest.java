@@ -17,6 +17,10 @@
 package sonia.scm.server;
 
 import com.google.common.io.Resources;
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.SecuredRedirectHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
@@ -25,6 +29,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -79,7 +84,25 @@ class ServerConfigurationTest {
         assertThat(listener.getPort()).isEqualTo(443);
         assertThat(listener.getContextPath()).isEqualTo("/scm");
       });
-    ;
+  }
+
+  @Test
+  void shouldWrapHandlersWithRedirectHandler(@TempDir Path directory) throws IOException {
+    ServerConfiguration configuration = configure(directory, "ctxPath.yml");
+
+    Server server = new Server();
+    configuration.configureServer(server);
+
+    assertThat(server.getHandler()).isInstanceOf(SecuredRedirectHandler.class);
+    Handler handler = ((SecuredRedirectHandler) server.getHandler()).getHandler();
+    assertThat(handler).isInstanceOf(Handler.Sequence.class);
+
+    List<String> contextPaths = ((Handler.Sequence) handler).getHandlers().stream()
+      .filter(ContextHandler.class::isInstance)
+      .map(ContextHandler.class::cast)
+      .map(ContextHandler::getContextPath)
+      .toList();
+    assertThat(contextPaths).contains("/myscm", "/");
   }
 
   @SuppressWarnings("UnstableApiUsage")

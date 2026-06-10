@@ -122,10 +122,15 @@ public class HookServer implements AutoCloseable {
   }
 
   @Nonnull
-  private ThreadFactory createThreadFactory(String hgHookAcceptor) {
-    return new ThreadFactoryBuilder()
-      .setNameFormat(hgHookAcceptor)
+  private ThreadFactory createThreadFactory(String threadNameFormat) {
+    ThreadFactory threadFactory = new ThreadFactoryBuilder()
+      .setNameFormat(threadNameFormat)
       .build();
+
+    return runnable -> threadFactory.newThread(() -> {
+      ThreadContext.remove();
+      runnable.run();
+    });
   }
 
   @Override

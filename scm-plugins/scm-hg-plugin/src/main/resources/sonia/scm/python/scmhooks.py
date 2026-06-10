@@ -42,6 +42,8 @@ def read_bytes(connection, length):
   received = bytearray()
   while len(received) < length:
     buffer = connection.recv(length - len(received))
+    if not buffer:
+      raise EOFError("scm-hook connection closed")
     received = received + buffer
   return received
 
@@ -73,6 +75,8 @@ def fire_hook(ui, repo, hooktype, node):
     abort = response['abort']
     print_messages(ui, response['messages'])
 
+  except EOFError:
+    ui.warn( b"scm-hook connection closed before response was received\n" )
   except ValueError:
     ui.warn( b"scm-hook failed with an exception\n" )
     ui.traceback()

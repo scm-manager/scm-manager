@@ -248,6 +248,18 @@ class DefaultHookHandlerTest {
   }
 
   @Test
+  void shouldHandleContextCreationFailure() throws IOException {
+    doThrow(NotFoundException.class)
+      .when(hookContextProviderFactory)
+      .create("42", "abc");
+
+    DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
+    DefaultHookHandler.Response response = send(request);
+
+    assertError(response, "repository not found");
+  }
+
+  @Test
   void shouldReturnErrorWithInvalidChallenge() throws IOException {
     DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE, "something-different");
     DefaultHookHandler.Response response = send(request);

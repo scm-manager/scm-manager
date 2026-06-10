@@ -17,9 +17,8 @@
 package com.cloudogu.scm
 
 import org.eclipse.jetty.client.HttpClient
-import org.eclipse.jetty.client.api.ContentResponse
-import org.eclipse.jetty.client.api.Request
-import org.eclipse.jetty.util.ssl.SslContextFactory
+import org.eclipse.jetty.client.ContentResponse
+import org.eclipse.jetty.client.Request
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
