@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.11.10] - 2026-06-10
+### Fixed
+- Optimized loading of LFS files for imported and mirrored repositories
+
 ## [3.11.9] - 2026-05-07
 ### Fixed
 - Bump dependencies to fix critical CVE
@@ -1888,3 +1892,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.11.7]: https://scm-manager.org/download/3.11.7
 [3.11.8]: https://scm-manager.org/download/3.11.8
 [3.11.9]: https://scm-manager.org/download/3.11.9
+[3.11.10]: https://scm-manager.org/download/3.11.10
