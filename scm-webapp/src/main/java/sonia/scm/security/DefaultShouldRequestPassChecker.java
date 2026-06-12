@@ -20,6 +20,7 @@ import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import sonia.scm.WebResourceRequestClassifier;
 import sonia.scm.api.v2.resources.HealthCheckResource;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.HttpUtil;
@@ -39,6 +40,7 @@ public class DefaultShouldRequestPassChecker implements ShouldRequestPassChecker
   @Override
   public boolean shouldPass(HttpServletRequest request) {
     return isUserAuthenticated()
+      || WebResourceRequestClassifier.isPublicStaticResource(request)
       || isAnonymousProtocolRequest(request)
       || isMercurialHookRequest(request)
       || (!isLoginRequest(request) && isFullAnonymousAccessEnabled())

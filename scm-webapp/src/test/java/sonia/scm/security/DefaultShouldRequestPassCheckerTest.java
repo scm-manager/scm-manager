@@ -73,6 +73,23 @@ class DefaultShouldRequestPassCheckerTest {
 
   @Test
   @SubjectAware(Authentications.PRINCIPAL_ANONYMOUS)
+  void shouldPassBecauseRequestIsPublicStaticResource() {
+    assertPublicStaticResourcePasses("/assets/webapp.bundle.js");
+    assertPublicStaticResourcePasses("/images/logo.png");
+    assertPublicStaticResourcePasses("/locales/en/commons.json");
+    assertPublicStaticResourcePasses("/favicon.ico");
+    assertPublicStaticResourcePasses("/manifest.json");
+  }
+
+  @Test
+  @SubjectAware(Authentications.PRINCIPAL_ANONYMOUS)
+  void shouldNotPassBecauseRequestOnlyLooksLikeStaticResource() {
+    when(request.getRequestURI()).thenReturn("/scm/admin.json");
+    assertThat(checker.shouldPass(request)).isFalse();
+  }
+
+  @Test
+  @SubjectAware(Authentications.PRINCIPAL_ANONYMOUS)
   void shouldPassBecauseMercurialHookRequest() {
     when(request.getContextPath()).thenReturn("/scm");
     when(request.getRequestURI()).thenReturn("/scm/hook/hg/");
@@ -90,6 +107,11 @@ class DefaultShouldRequestPassCheckerTest {
   @SubjectAware(Authentications.PRINCIPAL_ANONYMOUS)
   void shouldPassBecauseRequestIsHealthCheck() {
     when(request.getRequestURI()).thenReturn("/scm/api/" + HealthCheckResource.PATH);
+    assertThat(checker.shouldPass(request)).isTrue();
+  }
+
+  private void assertPublicStaticResourcePasses(String uri) {
+    when(request.getRequestURI()).thenReturn("/scm" + uri);
     assertThat(checker.shouldPass(request)).isTrue();
   }
 }

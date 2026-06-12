@@ -1,0 +1,2 @@
+- type: fixed
+  description: Avoid static metrics for repository file paths
