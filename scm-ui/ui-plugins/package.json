@@ -13,8 +13,8 @@
   "dependencies": {
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-router": "^5.3.1",
-    "react-router-dom": "^5.3.1",
+    "react-router": "^6.30.2",
+    "react-router-dom": "^6.30.2",
     "react-i18next": "11",
     "styled-components": "^5.3.5",
     "@scm-manager/ui-api": "3.11.11-SNAPSHOT",
