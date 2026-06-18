@@ -19,7 +19,7 @@ import * as React from "react";
 import { Suspense, useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n";
-import withApiProvider from "./withApiProvider"
+import withApiProvider from "./withApiProvider";
 
 // @ts-ignore
 import lightStyle from "@ui-styles/light.scss?url";
@@ -27,6 +27,7 @@ import lightStyle from "@ui-styles/light.scss?url";
 import darkStyle from "@ui-styles/dark.scss?url";
 // @ts-ignore
 import highContrastStyle from "@ui-styles/highcontrast.scss?url";
+import { initialize, mswLoader } from "msw-storybook-addon";
 
 const THEMES: Record<string, string> = {
   light: lightStyle,
@@ -78,8 +79,11 @@ export const withTheme: Decorator = (Story, context) => {
   return <Story />;
 };
 
+initialize({ onUnhandledRequest: "warn" });
+
 const preview: Preview = {
   decorators: [withI18next, withTheme, withApiProvider],
+  loaders: [mswLoader],
   globalTypes: {
     locale: {
       name: "Locale",

@@ -60,5 +60,10 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint",
     "./docs/**/*.md": "remark --frail --"
+  },
+  "msw": {
+    "workerDirectory": [
+      "scm-ui\\ui-webapp\\public"
+    ]
   }
 }

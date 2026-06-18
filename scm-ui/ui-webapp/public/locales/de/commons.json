@@ -124,12 +124,14 @@
   },
   "filterEntries": "Einträge filtern",
   "autocomplete": {
-    "group": "Gruppe",
-    "user": "Benutzer",
-    "noGroupOptions": "Kein Gruppenname als Vorschlag verfügbar",
-    "groupPlaceholder": "Gruppe eingeben",
-    "noUserOptions": "Kein Benutzername als Vorschlag verfügbar",
-    "userPlaceholder": "Benutzer eingeben",
+    "user": {
+      "label": "Benutzer",
+      "placeholder": "Benutzer eingeben"
+    },
+    "group": {
+      "label": "Gruppe",
+      "placeholder": "Gruppe eingeben"
+    },
     "loading": "suche..."
   },
   "paginator": {

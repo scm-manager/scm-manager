@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSuggestions } from "@scm-manager/ui-api";
 import { ComboboxField } from "@scm-manager/ui-core";
@@ -26,11 +26,17 @@ type Props = {
   onSelect: (option: Option<AutocompleteObject>) => void;
   autocompleteLink: string;
   type: SuggestionsType;
+  clearAfterSelect?: boolean;
 };
 
-const Autocomplete: FC<Props> = ({ onSelect, autocompleteLink, type }) => {
-  const [t] = useTranslation("plugins");
+/**
+ * @beta
+ * @since 4.0.0
+ */
+const Autocomplete: FC<Props> = ({ onSelect, autocompleteLink, type, clearAfterSelect }) => {
+  const [t] = useTranslation("commons");
   const loadSuggestions = useSuggestions(autocompleteLink);
+  const [selectedValue, setSelectedValue] = useState<Option<AutocompleteObject> | null>(null);
 
   const loadOptions = async (query: string): Promise<Option<AutocompleteObject>[]> => {
     const suggestions = await loadSuggestions(query);
@@ -48,17 +54,23 @@ const Autocomplete: FC<Props> = ({ onSelect, autocompleteLink, type }) => {
     return suggestions;
   };
 
+  const handleChange = (option: unknown) => {
+    const typedOption = option as Option<AutocompleteObject> | null;
+
+    if (typedOption) {
+      onSelect(typedOption);
+    }
+
+    setSelectedValue(clearAfterSelect ? null : typedOption);
+  };
+
   return (
     <ComboboxField
-      label={t(`scm-review-plugin.config.branchProtection.bypasses.add.${type}.label`)}
+      label={t(`autocomplete.${type}.label`)}
       options={loadOptions}
-      placeholder={t(`scm-review-plugin.config.branchProtection.bypasses.add.${type}.placeholder`)}
-      onChange={(option) => {
-        if (option) {
-          onSelect(option as Option<AutocompleteObject>);
-        }
-      }}
-      value={null}
+      placeholder={t(`autocomplete.${type}.placeholder`)}
+      onChange={handleChange}
+      value={selectedValue}
     />
   );
 };

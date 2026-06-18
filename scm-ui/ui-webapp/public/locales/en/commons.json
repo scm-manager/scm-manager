@@ -125,12 +125,14 @@
   },
   "filterEntries": "filter entries",
   "autocomplete": {
-    "group": "Group",
-    "user": "User",
-    "noGroupOptions": "No group suggestion available",
-    "groupPlaceholder": "Enter group",
-    "noUserOptions": "No user suggestion available",
-    "userPlaceholder": "Enter user",
+    "user": {
+      "label": "User",
+      "placeholder": "Enter user"
+    },
+    "group": {
+      "label": "Group",
+      "placeholder": "Enter group"
+    },
     "loading": "Loading..."
   },
   "paginator": {
