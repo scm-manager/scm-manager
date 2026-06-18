@@ -258,6 +258,7 @@ license {
   exclude '**/*.iml'
   exclude '**/.babelrc'
   exclude '**/storybook-static/**'
+  exclude "**/mockServiceWorker.js"
 
   tasks {
     modules {
