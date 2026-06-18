@@ -41,6 +41,7 @@ subprojects { s ->
         includeGroup "org.tmatesoft.svnkit"
         includeGroup "org.apache.shiro"
         includeGroup "com.aragost.javahg"
+        includeGroup "commons-daemon"
       }
     }
   }

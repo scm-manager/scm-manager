@@ -43,11 +43,18 @@ class RequestCategoryDetectorTest {
   void shouldReturnStatic() {
     assertThat(category("/assets/bla")).isEqualTo(RequestCategory.STATIC);
     assertThat(category("/assets/bla/foo/bar")).isEqualTo(RequestCategory.STATIC);
-    assertThat(category("/some/path.jpg")).isEqualTo(RequestCategory.STATIC);
-    assertThat(category("/some/path.css")).isEqualTo(RequestCategory.STATIC);
-    assertThat(category("/some/path.js")).isEqualTo(RequestCategory.STATIC);
-    assertThat(category("/my.png")).isEqualTo(RequestCategory.STATIC);
+    assertThat(category("/favicon.ico")).isEqualTo(RequestCategory.STATIC);
+    assertThat(category("/manifest.json")).isEqualTo(RequestCategory.STATIC);
     assertThat(category("/images/loading.svg")).isEqualTo(RequestCategory.STATIC);
+  }
+
+  @Test
+  void shouldNotReturnStaticForRepositoryFiles() {
+    HttpServletRequest request = request("/repo/space/name/file.js");
+    when(userAgentParser.parse(request)).thenReturn(UserAgent.scmClient("MySCM").build());
+    assertThat(detector.detect(request)).isEqualTo(RequestCategory.PROTOCOL);
+
+    assertThat(category("/api/v2/repositories/space/name/content/file.jpg")).isEqualTo(RequestCategory.API);
   }
 
   @Test

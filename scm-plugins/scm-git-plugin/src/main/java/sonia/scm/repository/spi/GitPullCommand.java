@@ -21,6 +21,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
+import lombok.Getter;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -40,11 +41,10 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.PullResponse;
+import sonia.scm.repository.spi.LfsLoader.LfsLoaderLogger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 
 public class GitPullCommand extends AbstractGitPushOrPullCommand
@@ -167,8 +167,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     return response;
   }
 
-  private PullResponse pullFromUrl(PullCommandRequest request)
-    throws IOException {
+  private PullResponse pullFromUrl(PullCommandRequest request) {
     LOG.debug("pull changes from {} to {}", request.getRemoteUrl(), repository);
 
     PullResponse response;
@@ -218,19 +217,14 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     }
   }
 
-  private void fetchLfs(PullCommandRequest request, Git git, LfsLoader.LfsLoaderLogger lfsLoaderLogger) throws IOException {
-    Set<ObjectId> alreadyVisited = new HashSet<>(1000);
-    open().getRefDatabase().getRefs().forEach(
-      ref -> lfsLoader.inspectTree(
-        ref.getObjectId(),
-        git.getRepository(),
-        lfsLoaderLogger,
-        new MirrorCommandResult.LfsUpdateResult(),
-        repository,
-        pullHttpConnectionProvider.createHttpConnectionFactory(request),
-        request.getRemoteUrl().toString(),
-        alreadyVisited
-      )
+  private void fetchLfs(PullCommandRequest request, Git git, LfsLoaderLogger lfsLoaderLogger) {
+    lfsLoader.loadComplete(
+      git.getRepository(),
+      lfsLoaderLogger,
+      pullHttpConnectionProvider.createHttpConnectionFactory(request),
+      request.getRemoteUrl().toString(),
+      repository,
+      new MirrorCommandResult.LfsUpdateResult()
     );
   }
 
@@ -238,7 +232,8 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     postReceiveRepositoryHookEventFactory.fireForFetch(git, result);
   }
 
-  private static class CountingLfsLoaderLogger implements LfsLoader.LfsLoaderLogger {
+  @Getter
+  private static class CountingLfsLoaderLogger implements LfsLoaderLogger {
 
     private int successCount = 0;
     private int failureCount = 0;
@@ -251,14 +246,6 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     @Override
     public void loading(String name) {
       ++successCount;
-    }
-
-    public int getSuccessCount() {
-      return successCount;
-    }
-
-    public int getFailureCount() {
-      return failureCount;
     }
   }
 

@@ -190,6 +190,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
     private MirrorCommandResult doUpdate() throws GitAPIException {
       copyRemoteRefsToMain();
+      Collection<ObjectId> existingRevisions = gatherAllRefs();
       fetchResult = createFetchCommand().call();
       filterContext = new GitFilterContext();
       filter = mirrorCommandRequest.getFilter().getFilter(filterContext);
@@ -199,8 +200,23 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         mirrorLog.add("No updates found");
         return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
       } else {
-        handleBranches();
-        handleTags();
+        Collection<ObjectId> accepted = new HashSet<>();
+        handleBranches(accepted);
+        handleTags(accepted);
+        if (!mirrorCommandRequest.isIgnoreLfs()) {
+          LfsLoaderLogger lfsLoaderLogger = new MirrorLfsLoaderLogger();
+
+          lfsLoader.load(
+            git.getRepository(),
+            lfsLoaderLogger,
+            mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog),
+            mirrorCommandRequest.getSourceUrl(),
+            repository,
+            lfsUpdateResult,
+            accepted,
+            existingRevisions
+          );
+        }
       }
 
       if (!defaultBranchSelector.isChanged()) {
@@ -216,6 +232,19 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       forcePush(pushRefSpecs);
       ResultType finalResult = lfsUpdateResult.hasFailures()? FAILED: result;
       return new MirrorCommandResult(finalResult, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
+    }
+
+    private class MirrorLfsLoaderLogger implements LfsLoaderLogger {
+      @Override
+      public void failed(Exception e) {
+        mirrorLog.add("Failed to load lfs file:");
+        mirrorLog.add(e.getMessage());
+      }
+
+      @Override
+      public void loading(String name) {
+        mirrorLog.add(String.format("Loading lfs file with id '%s'", name));
+      }
     }
 
     private void setNewDefaultBranch(String newDefaultBranch) {
@@ -280,24 +309,34 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
     }
 
-    private void handleBranches() {
+    private Collection<ObjectId> gatherAllRefs() {
+      try {
+        return lfsLoader.gatherAllRefs(git.getRepository());
+      } catch (IOException e) {
+        throw new InternalRepositoryException(context.getRepository(), "Failed to gather existing refs", e);
+      }
+    }
+
+    private void handleBranches(Collection<ObjectId> accepted) {
       LoggerWithHeader logger = new LoggerWithHeader("Branches:");
-      doForEachRefStartingWith("refs/heads", ref -> handleBranch(logger, ref));
+      doForEachRefStartingWith("refs/heads", ref -> handleBranch(logger, ref, accepted));
     }
 
-    private void handleBranch(LoggerWithHeader logger, TrackingRefUpdate ref) {
+    private void handleBranch(LoggerWithHeader logger, TrackingRefUpdate ref, Collection<ObjectId> accepted) {
       MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, RefType.BRANCH);
-      refHandler.handleRef(ref1 -> refHandler.testFilterForBranch());
+      refHandler.handleRef(ref1 -> refHandler.testFilterForBranch())
+        .ifPresent(accepted::add);
     }
 
-    private void handleTags() {
+    private void handleTags(Collection<ObjectId> accepted) {
       LoggerWithHeader logger = new LoggerWithHeader("Tags:");
-      doForEachRefStartingWith("refs/tags", ref -> handleTag(logger, ref));
+      doForEachRefStartingWith("refs/tags", ref -> handleTag(logger, ref, accepted));
     }
 
-    private void handleTag(LoggerWithHeader logger, TrackingRefUpdate ref) {
+    private void handleTag(LoggerWithHeader logger, TrackingRefUpdate ref, Collection<ObjectId> accepted) {
       MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, RefType.TAG);
-      refHandler.handleRef(ref1 -> refHandler.testFilterForTag());
+      refHandler.handleRef(ref1 -> refHandler.testFilterForTag())
+        .ifPresent(accepted::add);
     }
 
     private class MirrorReferenceUpdateHandler {
@@ -311,14 +350,14 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         this.refType = refType;
       }
 
-      private void handleRef(Function<TrackingRefUpdate, Result> filter) {
+      private Optional<ObjectId> handleRef(Function<TrackingRefUpdate, Result> filter) {
         LOG.trace("Handling {}", ref.getLocalName());
         Result filterResult = filter.apply(ref);
         try {
           String referenceName = ref.getLocalName().substring("refs/".length() + refType.refPath.length());
           if (filterResult.isAccepted()) {
             LOG.trace("Accepted ref {}", ref.getLocalName());
-            handleAcceptedReference(referenceName);
+            return handleAcceptedReference(referenceName);
           } else {
             LOG.trace("Rejected ref {}", ref.getLocalName());
             handleRejectedRef(referenceName, filterResult);
@@ -326,6 +365,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         } catch (Exception e) {
           handleReferenceUpdateException(e);
         }
+        return empty();
       }
 
       private Result testFilterForBranch() {
@@ -353,7 +393,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         logger.logChange(ref, referenceName, filterResult.getRejectReason().orElse("rejected due to filter"));
       }
 
-      private void handleAcceptedReference(String referenceName) throws IOException {
+      private Optional<ObjectId> handleAcceptedReference(String referenceName) throws IOException {
         String targetRef = "refs/" + refType.refPath + referenceName;
         if (isDeletedReference(ref)) {
           LOG.trace("deleting {} ref in {}: {}", refType.typeForLog, GitMirrorCommand.this.repository, targetRef);
@@ -361,23 +401,12 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           logger.logChange(ref, referenceName, "deleted");
           deleteReference(targetRef);
           deletedRefs.add(targetRef);
+          return empty();
         } else {
           LOG.trace("updating {} ref in {}: {}", refType.typeForLog, GitMirrorCommand.this.repository, targetRef);
           defaultBranchSelector.accepted(refType, referenceName);
           logger.logChange(ref, referenceName, getUpdateType(ref));
-
-          if (!mirrorCommandRequest.isIgnoreLfs()) {
-            LfsLoaderLogger lfsLoaderLogger = new MirrorLfsLoaderLogger();
-            lfsLoader.inspectTree(
-              ref.getNewObjectId(),
-              git.getRepository(),
-              lfsLoaderLogger,
-              lfsUpdateResult,
-              repository,
-              mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog),
-              mirrorCommandRequest.getSourceUrl()
-            );
-          }
+          return Optional.of(ref.getNewObjectId());
         }
       }
 
@@ -414,19 +443,6 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       private String getUpdateType(TrackingRefUpdate trackingRefUpdate) {
         return trackingRefUpdate.getResult().name().toLowerCase(Locale.ENGLISH);
-      }
-
-      private class MirrorLfsLoaderLogger implements LfsLoaderLogger {
-        @Override
-        public void failed(Exception e) {
-          mirrorLog.add("Failed to load lfs file:");
-          mirrorLog.add(e.getMessage());
-        }
-
-        @Override
-        public void loading(String name) {
-          mirrorLog.add(String.format("Loading lfs file with id '%s'", name));
-        }
       }
     }
 
@@ -477,8 +493,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         .setRemoveDeletedRefs(true)
         .setRemote(mirrorCommandRequest.getSourceUrl())
         .setTransportConfigCallback(transport -> {
-          if (transport instanceof TransportHttp) {
-            TransportHttp transportHttp = (TransportHttp) transport;
+          if (transport instanceof TransportHttp transportHttp) {
             transportHttp.setHttpConnectionFactory(mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog));
           }
         });
@@ -679,17 +694,12 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private Optional<MirrorFilter.UpdateType> getUpdateTypeFor(ReceiveCommand receiveCommand) {
-      switch (receiveCommand.getType()) {
-        case UPDATE:
-        case UPDATE_NONFASTFORWARD:
-          return of(MirrorFilter.UpdateType.UPDATE);
-        case CREATE:
-          return of(MirrorFilter.UpdateType.CREATE);
-        case DELETE:
-          return of(MirrorFilter.UpdateType.DELETE);
-        default:
-          return empty();
-      }
+      return switch (receiveCommand.getType()) {
+        case UPDATE, UPDATE_NONFASTFORWARD -> of(MirrorFilter.UpdateType.UPDATE);
+        case CREATE -> of(MirrorFilter.UpdateType.CREATE);
+        case DELETE -> of(MirrorFilter.UpdateType.DELETE);
+        default -> empty();
+      };
     }
   }
 

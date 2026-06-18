@@ -18,6 +18,7 @@ package sonia.scm.metrics;
 
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
+import sonia.scm.WebResourceRequestClassifier;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
@@ -32,10 +33,12 @@ public final class RequestCategoryDetector {
   }
 
   public RequestCategory detect(HttpServletRequest request) {
-    String uri = HttpUtil.getStrippedURI(request);
-    if (isStatic(uri)) {
+    if (WebResourceRequestClassifier.isPublicStaticResource(request)) {
       return RequestCategory.STATIC;
-    } else if (HttpUtil.isWUIRequest(request)) {
+    }
+
+    String uri = HttpUtil.getStrippedURI(request);
+    if (HttpUtil.isWUIRequest(request)) {
       return RequestCategory.UI;
     } else if (uri.startsWith("/api/")) {
       return RequestCategory.API;
@@ -43,18 +46,6 @@ public final class RequestCategoryDetector {
       return RequestCategory.PROTOCOL;
     }
     return RequestCategory.UNKNOWN;
-  }
-
-  private boolean isStatic(String uri) {
-    return uri.startsWith("/assets")
-      || uri.endsWith(".js")
-      || uri.endsWith(".css")
-      || uri.endsWith(".jpg")
-      || uri.endsWith(".jpeg")
-      || uri.endsWith(".png")
-      || uri.endsWith(".gif")
-      || uri.endsWith(".svg")
-      || uri.endsWith(".html");
   }
 
   private boolean isScmClient(HttpServletRequest request) {
