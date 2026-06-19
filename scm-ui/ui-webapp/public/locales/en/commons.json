@@ -16,6 +16,7 @@
     "submit": "Submit",
     "reset": "Clear",
     "discardChanges": "Discard changes",
+    "cancel": "Cancel",
     "submit-success-notification": "Configuration changed successfully!",
     "combobox": {
       "arbitraryDisplayValue": "Use '{{query}}'"

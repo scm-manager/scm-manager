@@ -16,6 +16,7 @@
     "submit": "Speichern",
     "reset": "Leeren",
     "discardChanges": "Änderungen verwerfen",
+    "cancel": "Abbrechen",
     "submit-success-notification": "Einstellungen wurden erfolgreich geändert!",
     "combobox": {
       "arbitraryDisplayValue": "Verwende '{{query}}'"
