@@ -32,42 +32,22 @@ const SubpageContext = React.createContext<SubpageContextType>(null as never);
 type ProviderProps = PropsWithChildren<{
   title: string;
   error?: Error | null;
-  submitForm: () => Promise<boolean>;
-  onLeaveSubpage?: () => void;
-  onEnterSubpage?: () => void;
+  activeSubpage: string | null;
+  openSubpage: (name: string) => void;
+  closeSubpage: () => void;
+  saveActiveSubpage: () => Promise<void>;
 }>;
 
 export function SubpageContextProvider({
   title,
   error,
-  submitForm,
-  onLeaveSubpage,
-  onEnterSubpage,
+  activeSubpage,
+  openSubpage,
+  closeSubpage,
+  saveActiveSubpage,
   children,
 }: ProviderProps) {
-  const [activeSubpage, setActiveSubpage] = useState<string | null>(null);
   const [subpageTitles, setSubpageTitles] = useState<Record<string, string>>({});
-
-  const openSubpage = useCallback(
-    (name: string) => {
-      onEnterSubpage?.();
-      setActiveSubpage(name);
-    },
-    [onEnterSubpage],
-  );
-
-  const closeSubpage = useCallback(() => {
-    onLeaveSubpage?.();
-    setActiveSubpage(null);
-  }, [onLeaveSubpage]);
-
-  const saveActiveSubpage = useCallback(async () => {
-    const success = await submitForm();
-    if (success) {
-      // The form values were already saved and reset; just return to the overview.
-      setActiveSubpage(null);
-    }
-  }, [submitForm]);
 
   const registerSubpage = useCallback((name: string, subpageTitle: string) => {
     setSubpageTitles((prev) => (prev[name] === subpageTitle ? prev : { ...prev, [name]: subpageTitle }));

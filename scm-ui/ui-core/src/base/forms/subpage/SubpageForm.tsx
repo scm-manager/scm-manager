@@ -17,6 +17,7 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { DefaultValues, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { ScmFormContextProvider } from "../ScmFormContext";
 import { SubpageContextProvider, useSubpageContext } from "./SubpageContext";
@@ -24,27 +25,20 @@ import { Notification } from "../../notifications";
 import { Icon } from "../../buttons";
 
 const BreadcrumbNav = styled.nav`
-  /* Bulma aligns breadcrumb items to flex-start, which leaves the active item sitting a pixel high. */
   ul {
     align-items: center;
   }
 
-  /* We render an angle-right icon as separator, so suppress both built-in pseudo-separators:
-     Bulma core's "li + li::before" and the global "::after" from _main.scss. */
   && li + li::before,
   && li:not(:last-child)::after {
     content: none;
   }
 
-  /* Let the separator icon size to the text instead of Bulma's fixed 1.5rem box,
-     so it stays optically centered with the breadcrumb labels. */
   .icon {
     height: auto;
     color: var(--scm-secondary-more-color, #363636);
   }
 
-  /* Breadcrumb typography per design: 20px, tight line-height, secondary-more color.
-     The title crumb is semibold; the active subpage crumb (the second) is regular. */
   .subtitle {
     color: var(--scm-secondary-more-color, #363636);
     font-size: 20px;
@@ -70,7 +64,6 @@ const SuccessNotification: FC<{ label?: string; hide: () => void }> = ({ label, 
     return null;
   }
 
-  // role="status" announces the success to screen readers via its implicit polite live region.
   return (
     <Notification type="success" role="status" onClose={hide}>
       {label}
@@ -118,6 +111,7 @@ type Props<FormType extends Record<string, unknown>> = {
   defaultValues: DefaultValues<FormType>;
   readOnly?: boolean;
   successMessageFallback?: string;
+  subpageParam?: string;
 };
 
 /**
@@ -138,6 +132,7 @@ function SubpageForm<FormType extends Record<string, unknown>>({
   translationPath,
   readOnly,
   successMessageFallback,
+  subpageParam = "subpage",
 }: Props<FormType>) {
   const form = useForm<FormType>({ mode: "onChange", defaultValues });
   const { formState, handleSubmit, reset } = form;
@@ -162,15 +157,12 @@ function SubpageForm<FormType extends Record<string, unknown>>({
 
   useEffect(() => reset(defaultValues as never), [defaultValues, reset]);
 
-  // Submits the whole configuration object. Resolves to true when the save succeeded so the active
-  // subpage can return to the overview; on validation or save errors it resolves to false.
   const submitForm = useCallback(async () => {
     let success = false;
     await handleSubmit(async (data) => {
       setError(null);
       try {
         await onSubmit(data);
-        // Reset the dirty state to the saved values until the reloaded defaultValues arrive.
         reset(data);
         setShowSuccessNotification(true);
         success = true;
@@ -185,21 +177,54 @@ function SubpageForm<FormType extends Record<string, unknown>>({
     return success;
   }, [handleSubmit, onSubmit, reset]);
 
-  // Leaving a subpage discards unsaved changes; entering one clears stale notifications.
-  const onLeaveSubpage = useCallback(() => reset(), [reset]);
-  const onEnterSubpage = useCallback(() => {
-    setError(null);
-    setShowSuccessNotification(false);
-  }, []);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeSubpage = readOnly ? null : searchParams.get(subpageParam);
+
+  const setSubpageParam = useCallback(
+    (name: string | null) => {
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        if (name === null) {
+          next.delete(subpageParam);
+        } else {
+          next.set(subpageParam, name);
+        }
+        return next;
+      });
+    },
+    [setSearchParams, subpageParam],
+  );
+
+  const openSubpage = useCallback(
+    (name: string) => {
+      setError(null);
+      setShowSuccessNotification(false);
+      setSubpageParam(name);
+    },
+    [setSubpageParam],
+  );
+
+  const closeSubpage = useCallback(() => {
+    reset();
+    setSubpageParam(null);
+  }, [reset, setSubpageParam]);
+
+  const saveActiveSubpage = useCallback(async () => {
+    const success = await submitForm();
+    if (success) {
+      setSubpageParam(null);
+    }
+  }, [submitForm, setSubpageParam]);
 
   return (
     <ScmFormContextProvider {...form} readOnly={isSubmitting || readOnly} t={translateWithFallback} formId={prefix}>
       <SubpageContextProvider
         title={title}
         error={error}
-        submitForm={submitForm}
-        onLeaveSubpage={onLeaveSubpage}
-        onEnterSubpage={onEnterSubpage}
+        activeSubpage={activeSubpage}
+        openSubpage={openSubpage}
+        closeSubpage={closeSubpage}
+        saveActiveSubpage={saveActiveSubpage}
       >
         <SubpageBreadcrumb />
         {showSuccessNotification ? (

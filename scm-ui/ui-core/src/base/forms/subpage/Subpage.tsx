@@ -120,8 +120,6 @@ type SubpageHeaderProps = Omit<OpenButtonProps, "subpage" | "children"> & {
 };
 
 const SubpageHeader: FC<SubpageHeaderProps> = ({ subpage, label, children, icon = "edit", className, ...props }) => {
-  // Associate the button with the section label so screen readers announce which section it edits,
-  // e.g. "Edit list, Send notifications to", instead of an isolated "Edit list".
   const labelId = useAriaId();
   return (
     <HeaderLevel
