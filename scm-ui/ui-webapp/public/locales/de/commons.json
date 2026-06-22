@@ -1,4 +1,14 @@
 {
+  "notification": {
+    "close": {
+      "ariaLabel": "Benachrichtigung schließen"
+    }
+  },
+  "subpageForm": {
+    "breadcrumb": {
+      "ariaLabel": "Breadcrumb"
+    }
+  },
   "dialog": {
     "closeButton": {
       "ariaLabel": "Dialog schließen"

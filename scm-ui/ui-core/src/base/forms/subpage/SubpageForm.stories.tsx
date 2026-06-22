@@ -65,8 +65,8 @@ const SubpageFormExample: FC<{ readOnly?: boolean }> = ({ readOnly }) => {
       translationPath={["sample", "form"]}
       defaultValues={data}
       readOnly={readOnly}
+      successMessageFallback="Configuration changed successfully!"
       onSubmit={(values) => {
-        console.log(values);
         setData(values);
       }}
     >

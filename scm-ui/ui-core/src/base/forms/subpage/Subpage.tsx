@@ -16,9 +16,9 @@
 
 import React, { ComponentProps, FC, ReactNode, useEffect } from "react";
 import styled from "styled-components";
-import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { Button, Icon } from "../../buttons";
+import { useAriaId } from "../../helpers";
 import { Level } from "../../misc";
 import { ErrorNotification } from "../../notifications";
 import { useScmFormContext } from "../ScmFormContext";
@@ -72,7 +72,7 @@ const Subpage: FC<SubpageProps> = ({ name, title, path, children }) => {
           right={
             <ButtonsContainer>
               <Button type="button" onClick={closeSubpage} testId={`${formId}-${name}-cancel-button`}>
-                {t("form.submit")}
+                {t("form.cancel")}
               </Button>
               <Button
                 type="button"
@@ -82,7 +82,7 @@ const Subpage: FC<SubpageProps> = ({ name, title, path, children }) => {
                 isLoading={isSubmitting}
                 testId={`${formId}-${name}-submit-button`}
               >
-                {t("form.cancel")}
+                {t("form.submit")}
               </Button>
             </ButtonsContainer>
           }
@@ -106,7 +106,7 @@ const OpenButton: FC<OpenButtonProps> = ({ subpage, children, ...props }) => {
   }
 
   return (
-    <Button type="button" onClick={() => openSubpage(subpage)} {...props}>
+    <Button variant="ghost" type="button" onClick={() => openSubpage(subpage)} {...props}>
       {children}
     </Button>
   );
@@ -119,17 +119,26 @@ type SubpageHeaderProps = Omit<OpenButtonProps, "subpage" | "children"> & {
   icon?: string;
 };
 
-const SubpageHeader: FC<SubpageHeaderProps> = ({ subpage, label, children, icon = "edit", className, ...props }) => (
-  <HeaderLevel
-    left={<span className="has-text-weight-semibold">{label}</span>}
-    right={
-      <OpenButton subpage={subpage} className={classNames("is-text", className)} {...props}>
-        <Icon className="mr-1">{icon}</Icon>
-        {children}
-      </OpenButton>
-    }
-  />
-);
+const SubpageHeader: FC<SubpageHeaderProps> = ({ subpage, label, children, icon = "edit", className, ...props }) => {
+  // Associate the button with the section label so screen readers announce which section it edits,
+  // e.g. "Edit list, Send notifications to", instead of an isolated "Edit list".
+  const labelId = useAriaId();
+  return (
+    <HeaderLevel
+      left={
+        <span id={labelId} className="has-text-weight-semibold">
+          {label}
+        </span>
+      }
+      right={
+        <OpenButton subpage={subpage} className={className} aria-describedby={labelId} {...props}>
+          <Icon className="mr-1">{icon}</Icon>
+          {children}
+        </OpenButton>
+      }
+    />
+  );
+};
 
 export { OpenButton, SubpageHeader };
 export default Subpage;

@@ -20,12 +20,40 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { ScmFormContextProvider } from "../ScmFormContext";
 import { SubpageContextProvider, useSubpageContext } from "./SubpageContext";
+import { Notification } from "../../notifications";
+import { Icon } from "../../buttons";
 
 const BreadcrumbNav = styled.nav`
-  li + li::before {
-    content: "›";
-    color: inherit;
-    padding: 0 0.5rem;
+  /* Bulma aligns breadcrumb items to flex-start, which leaves the active item sitting a pixel high. */
+  ul {
+    align-items: center;
+  }
+
+  /* We render an angle-right icon as separator, so suppress both built-in pseudo-separators:
+     Bulma core's "li + li::before" and the global "::after" from _main.scss. */
+  && li + li::before,
+  && li:not(:last-child)::after {
+    content: none;
+  }
+
+  /* Let the separator icon size to the text instead of Bulma's fixed 1.5rem box,
+     so it stays optically centered with the breadcrumb labels. */
+  .icon {
+    height: auto;
+    color: var(--scm-secondary-more-color, #363636);
+  }
+
+  /* Breadcrumb typography per design: 20px, tight line-height, secondary-more color.
+     The title crumb is semibold; the active subpage crumb (the second) is regular. */
+  .subtitle {
+    color: var(--scm-secondary-more-color, #363636);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 18px;
+  }
+
+  li + li .subtitle {
+    font-weight: 400;
   }
 
   a {
@@ -42,19 +70,20 @@ const SuccessNotification: FC<{ label?: string; hide: () => void }> = ({ label, 
     return null;
   }
 
+  // role="status" announces the success to screen readers via its implicit polite live region.
   return (
-    <div className="notification is-success">
-      <button className="delete" onClick={hide} />
+    <Notification type="success" role="status" onClose={hide}>
       {label}
-    </div>
+    </Notification>
   );
 };
 
 const SubpageBreadcrumb: FC = () => {
   const { title, activeSubpage, subpageTitles, closeSubpage } = useSubpageContext();
+  const { t } = useTranslation("commons");
 
   return (
-    <BreadcrumbNav className="breadcrumb subtitle" aria-label="breadcrumbs">
+    <BreadcrumbNav className="breadcrumb subtitle" aria-label={t("subpageForm.breadcrumb.ariaLabel")}>
       <ul>
         <li className={activeSubpage === null ? "is-active" : undefined}>
           <a
@@ -65,13 +94,14 @@ const SubpageBreadcrumb: FC = () => {
               closeSubpage();
             }}
           >
-            {title}
+            <span className="subtitle">{title}</span>
           </a>
         </li>
         {activeSubpage !== null ? (
           <li className="is-active">
+            <Icon className="mx-2">angle-right</Icon>
             <a href="#" aria-current="page" onClick={(e) => e.preventDefault()}>
-              {subpageTitles[activeSubpage] ?? activeSubpage}
+              <span className="subtitle">{subpageTitles[activeSubpage] ?? activeSubpage}</span>
             </a>
           </li>
         ) : null}
