@@ -37,6 +37,11 @@ const BreadcrumbNav = styled.nav`
   .icon {
     height: auto;
     color: var(--scm-secondary-more-color, #363636);
+    width: 0.5em;
+    
+    &:first-child {
+      margin-right: 0;
+    }
   }
 
   .subtitle {
@@ -92,7 +97,7 @@ const SubpageBreadcrumb: FC = () => {
         </li>
         {activeSubpage !== null ? (
           <li className="is-active">
-            <Icon className="mx-2">angle-right</Icon>
+            <Icon>angle-right</Icon>
             <a href="#" aria-current="page" onClick={(e) => e.preventDefault()}>
               <span className="subtitle">{subpageTitles[activeSubpage] ?? activeSubpage}</span>
             </a>
