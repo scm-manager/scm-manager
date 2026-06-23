@@ -16,22 +16,36 @@
 
 import React, { FC, HTMLAttributes, Ref } from "react";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 type NotificationType = "primary" | "info" | "success" | "warning" | "danger" | "inherit";
 
 type Props = {
   type?: NotificationType;
   onClose?: () => void;
+  closeButtonLabel?: string;
   role?: string;
   ref?: Ref<HTMLDivElement>;
 } & HTMLAttributes<HTMLDivElement>;
 
-const Notification: FC<Props> = ({ type = "info", onClose, className, children, role, ref, ...props }) => {
+const Notification: FC<Props> = ({
+  type = "info",
+  onClose,
+  closeButtonLabel,
+  className,
+  children,
+  role,
+  ref,
+  ...props
+}) => {
+  const [t] = useTranslation("commons");
   const color = type !== "inherit" ? "is-" + type : "";
 
   return (
     <div className={classNames("notification", color, className)} role={role} ref={ref} {...props}>
-      {onClose ? <button className="delete" onClick={onClose} /> : null}
+      {onClose ? (
+        <button className="delete" aria-label={closeButtonLabel ?? t("notification.close.ariaLabel")} onClick={onClose} />
+      ) : null}
       {children}
     </div>
   );

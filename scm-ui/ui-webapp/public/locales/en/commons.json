@@ -1,4 +1,14 @@
 {
+  "notification": {
+    "close": {
+      "ariaLabel": "Close notification"
+    }
+  },
+  "subpageForm": {
+    "breadcrumb": {
+      "ariaLabel": "Breadcrumb"
+    }
+  },
   "dialog": {
     "closeButton": {
       "ariaLabel": "Close Dialog"
@@ -16,6 +26,7 @@
     "submit": "Submit",
     "reset": "Clear",
     "discardChanges": "Discard changes",
+    "cancel": "Cancel",
     "submit-success-notification": "Configuration changed successfully!",
     "combobox": {
       "arbitraryDisplayValue": "Use '{{query}}'"

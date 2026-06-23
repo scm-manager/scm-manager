@@ -34,6 +34,10 @@ import ControlledRadioGroupField from "./radio-button/ControlledRadioGroupField"
 import RadioGroupComponent from "./radio-button/RadioGroup";
 import RadioButton from "./radio-button/RadioButton";
 import RadioGroupFieldComponent from "./radio-button/RadioGroupField";
+import SubpageFormCmp from "./subpage/SubpageForm";
+import ConfigurationSubpageFormCmp from "./ConfigurationSubpageForm";
+import FormSubpage, { OpenButton as SubpageOpenButton, SubpageHeader } from "./subpage/Subpage";
+import SubpageContainer from "./subpage/SubpageContainer";
 
 export { default as Field } from "./base/Field";
 export { default as FieldMessage } from "./base/field-message/FieldMessage";
@@ -78,3 +82,28 @@ export const Form = Object.assign(FormCmp, {
   Combobox: ControlledComboboxField,
   RadioGroup: Object.assign(ControlledRadioGroupField, RadioGroupExport),
 });
+
+const OverviewExtensions = {
+  Overview: SubpageContainer,
+  Subpage: Object.assign(FormSubpage, {
+    OpenButton: SubpageOpenButton,
+    Header: SubpageHeader,
+  }),
+};
+
+/**
+ * Additional, read-only "overview" form variant with editable subpages.
+ * Does not replace {@link Form}/{@link ConfigurationForm}.
+ *
+ * @beta
+ * @since 4.0.0
+ */
+export const SubpageForm = Object.assign(SubpageFormCmp, OverviewExtensions);
+
+/**
+ * Config-link based variant of {@link SubpageForm}.
+ *
+ * @beta
+ * @since 4.0.0
+ */
+export const ConfigurationSubpageForm = Object.assign(ConfigurationSubpageFormCmp, OverviewExtensions);

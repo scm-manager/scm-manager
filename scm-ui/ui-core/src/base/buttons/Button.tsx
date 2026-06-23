@@ -18,7 +18,7 @@ import React, { AnchorHTMLAttributes, ButtonHTMLAttributes, FC, ReactNode, Ref }
 import { Link as ReactRouterLink, LinkProps as ReactRouterLinkProps } from "react-router";
 import classNames from "classnames";
 import { createAttributesForTesting } from "../helpers";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 /**
  * @beta
@@ -31,11 +31,43 @@ export const ButtonVariants = {
   SIGNAL: "signal",
   DANGER: "danger",
   INFO: "info",
+  GHOST: "ghost",
 } as const;
 
 export const ButtonVariantList = Object.values(ButtonVariants);
 
 type ButtonVariant = (typeof ButtonVariants)[keyof typeof ButtonVariants];
+
+/**
+ * Borderless, transparent button styling that blends into its surroundings ("ghost button").
+ * It inherits the surrounding text color and, on hover/active, only shifts the text color to the
+ * primary hover/active colors without applying any background effect.
+ * Shared between the {@link Button}, {@link LinkButton} and {@link ExternalLinkButton} ghost variant.
+ */
+const ghostStyles = css`
+  border: none;
+  background-color: transparent;
+  border-radius: 6px;
+  height: auto;
+  padding: 0.5em 0.75em;
+  color: inherit;
+  &:not(:disabled) {
+    &:hover {
+      color: var(--scm-primary-hover-color, var(--scm-primary-color, #00d1df));
+    }
+    &:active {
+      color: var(--scm-primary-active-color, var(--scm-primary-color, #00d1df));
+    }
+  }
+`;
+
+const GhostButtonElement = styled.button`
+  ${ghostStyles}
+`;
+
+const GhostLinkElement = styled(ReactRouterLink)`
+  ${ghostStyles}
+`;
 
 const createButtonClasses = (variant?: ButtonVariant, isLoading?: boolean) =>
   classNames("button", {
@@ -67,17 +99,20 @@ type ButtonProps = BaseButtonProps &
  * @beta
  * @since 2.41.0
  */
-export const Button: FC<ButtonProps> = ({ className, variant, isLoading, testId, type, children, ref, ...props }) => (
-  <button
-    type={type ?? "button"}
-    {...props}
-    className={classNames(createButtonClasses(variant, isLoading), className)}
-    ref={ref}
-    {...createAttributesForTesting(testId)}
-  >
-    {children}
-  </button>
-);
+export const Button: FC<ButtonProps> = ({ className, variant, isLoading, testId, type, children, ref, ...props }) => {
+  const Component = variant === "ghost" ? GhostButtonElement : "button";
+  return (
+    <Component
+      type={type ?? "button"}
+      {...props}
+      className={classNames(createButtonClasses(variant, isLoading), className)}
+      ref={ref}
+      {...createAttributesForTesting(testId)}
+    >
+      {children}
+    </Component>
+  );
+};
 
 type LinkButtonProps = BaseButtonProps & ReactRouterLinkProps & { ref?: Ref<HTMLAnchorElement> };
 
@@ -89,16 +124,19 @@ type LinkButtonProps = BaseButtonProps & ReactRouterLinkProps & { ref?: Ref<HTML
  * @beta
  * @since 2.41.0
  */
-export const LinkButton: FC<LinkButtonProps> = ({ className, variant, isLoading, testId, children, ref, ...props }) => (
-  <ReactRouterLink
-    {...props}
-    className={classNames(createButtonClasses(variant, isLoading), className)}
-    ref={ref}
-    {...createAttributesForTesting(testId)}
-  >
-    {children}
-  </ReactRouterLink>
-);
+export const LinkButton: FC<LinkButtonProps> = ({ className, variant, isLoading, testId, children, ref, ...props }) => {
+  const Component = variant === "ghost" ? GhostLinkElement : ReactRouterLink;
+  return (
+    <Component
+      {...props}
+      className={classNames(createButtonClasses(variant, isLoading), className)}
+      ref={ref}
+      {...createAttributesForTesting(testId)}
+    >
+      {children}
+    </Component>
+  );
+};
 
 type ExternalLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & { ref?: Ref<HTMLAnchorElement> };
 
@@ -113,6 +151,10 @@ export const ExternalLink: FC<ExternalLinkProps> = ({ children, ref, ...props })
     {children}
   </a>
 );
+
+const GhostExternalLinkElement = styled(ExternalLink)`
+  ${ghostStyles}
+`;
 
 type ExternalLinkButtonProps = BaseButtonProps &
   AnchorHTMLAttributes<HTMLAnchorElement> & { ref?: Ref<HTMLAnchorElement> };
@@ -134,16 +176,19 @@ export const ExternalLinkButton: FC<ExternalLinkButtonProps> = ({
   children,
   ref,
   ...props
-}) => (
-  <ExternalLink
-    {...props}
-    className={classNames(createButtonClasses(variant, isLoading), className)}
-    ref={ref}
-    {...createAttributesForTesting(testId)}
-  >
-    {children}
-  </ExternalLink>
-);
+}) => {
+  const Component = variant === "ghost" ? GhostExternalLinkElement : ExternalLink;
+  return (
+    <Component
+      {...props}
+      className={classNames(createButtonClasses(variant, isLoading), className)}
+      ref={ref}
+      {...createAttributesForTesting(testId)}
+    >
+      {children}
+    </Component>
+  );
+};
 
 const StyledIconButton = styled.button`
   border-radius: 6px !important;
