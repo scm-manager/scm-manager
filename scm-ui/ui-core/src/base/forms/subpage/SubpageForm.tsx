@@ -38,9 +38,10 @@ const BreadcrumbNav = styled.nav`
     height: auto;
     color: var(--scm-secondary-more-color, #363636);
     width: 0.5em;
+    padding-top: 2px;
     
     &:first-child {
-      margin-right: 0;
+      margin: 0 0.75em;
     }
   }
 
@@ -57,6 +58,14 @@ const BreadcrumbNav = styled.nav`
 
   a {
     color: inherit;
+    padding-right: 0;
+    padding-left: 0;
+    
+    &:focus-visible{
+      outline-width:  3px;
+      outline-offset: 3px;
+      border-radius: 0.25em;
+    }
   }
 
   li:not(.is-active) a:hover {
@@ -82,7 +91,7 @@ const SubpageBreadcrumb: FC = () => {
 
   return (
     <BreadcrumbNav className="breadcrumb subtitle" aria-label={t("subpageForm.breadcrumb.ariaLabel")}>
-      <ul>
+      <ol role="list">
         <li className={activeSubpage === null ? "is-active" : undefined}>
           <a
             href="#"
@@ -103,7 +112,7 @@ const SubpageBreadcrumb: FC = () => {
             </a>
           </li>
         ) : null}
-      </ul>
+      </ol>
     </BreadcrumbNav>
   );
 };
