@@ -44,6 +44,7 @@ export { default as FieldMessage } from "./base/field-message/FieldMessage";
 export { default as Checkbox } from "./checkbox/Checkbox";
 export { default as Combobox } from "./combobox/Combobox";
 export { default as ConfigurationForm } from "./ConfigurationForm";
+export { useScmFormContext, ScmFormContextProvider } from "./ScmFormContext";
 export { default as SelectField } from "./select/SelectField";
 export { default as ComboboxField } from "./combobox/ComboboxField";
 export { default as Input } from "./input/Input";
