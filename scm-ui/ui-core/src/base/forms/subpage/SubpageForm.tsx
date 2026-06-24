@@ -23,6 +23,7 @@ import { ScmFormContextProvider } from "../ScmFormContext";
 import { SubpageContextProvider, useSubpageContext } from "./SubpageContext";
 import { Notification } from "../../notifications";
 import { Icon } from "../../buttons";
+import { Divider } from "./Subpage";
 
 const BreadcrumbNav = styled.nav`
   ul {
@@ -39,7 +40,7 @@ const BreadcrumbNav = styled.nav`
     color: var(--scm-secondary-more-color, #363636);
     width: 0.5em;
     padding-top: 2px;
-    
+
     &:first-child {
       margin: 0 0.75em;
     }
@@ -60,9 +61,9 @@ const BreadcrumbNav = styled.nav`
     color: inherit;
     padding-right: 0;
     padding-left: 0;
-    
-    &:focus-visible{
-      outline-width:  3px;
+
+    &:focus-visible {
+      outline-width: 3px;
       outline-offset: 3px;
       border-radius: 0.25em;
     }
@@ -241,6 +242,7 @@ function SubpageForm<FormType extends Record<string, unknown>>({
         saveActiveSubpage={saveActiveSubpage}
       >
         <SubpageBreadcrumb />
+        <Divider />
         {showSuccessNotification ? (
           <SuccessNotification label={successNotification} hide={() => setShowSuccessNotification(false)} />
         ) : null}
