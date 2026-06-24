@@ -8,8 +8,8 @@ pipeline {
 
   agent {
     docker {
-      image 'scmmanager/java-build:17.0.9_9'
-      args '-v /var/run/docker.sock:/var/run/docker.sock --group-add 998'
+      image 'scmmanager/java-build:17.0.9_9-4'
+      args '-v /var/run/docker.sock:/var/run/docker.sock --group-add 988'
       label 'scmm-core'
     }
   }
