@@ -30,9 +30,25 @@ const ButtonsContainer = styled.div`
   gap: 0.75rem;
 `;
 
+const PaddinglessButton = styled(Button)`
+  && {
+    padding: 0;
+  }
+`;
+
 const HeaderLevel = styled(Level)`
-  border-bottom: 1px solid var(--scm-border-color, #dbdbdb);
   padding-bottom: 0.5rem;
+`;
+
+/**
+ * A horizontal divider line for structuring the content of a `SubpageForm`/`Subpage`.
+ * Renders as an `<hr>` and can be spaced via utility classes (e.g. `className="my-2"`).
+ */
+const Divider = styled.hr`
+  background-color: var(--scm-border-color, #dbdbdb);
+  border: none;
+  height: 1px;
+  margin: 1rem 0;
 `;
 
 type SubpageProps = {
@@ -106,9 +122,9 @@ const OpenButton: FC<OpenButtonProps> = ({ subpage, children, ...props }) => {
   }
 
   return (
-    <Button variant="ghost" type="button" onClick={() => openSubpage(subpage)} {...props}>
+    <PaddinglessButton variant="ghost" type="button" onClick={() => openSubpage(subpage)} {...props}>
       {children}
-    </Button>
+    </PaddinglessButton>
   );
 };
 
@@ -138,5 +154,5 @@ const SubpageHeader: FC<SubpageHeaderProps> = ({ subpage, label, children, icon 
   );
 };
 
-export { OpenButton, SubpageHeader };
+export { OpenButton, SubpageHeader, Divider };
 export default Subpage;

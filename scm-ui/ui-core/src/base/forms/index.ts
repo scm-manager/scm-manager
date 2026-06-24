@@ -36,7 +36,7 @@ import RadioButton from "./radio-button/RadioButton";
 import RadioGroupFieldComponent from "./radio-button/RadioGroupField";
 import SubpageFormCmp from "./subpage/SubpageForm";
 import ConfigurationSubpageFormCmp from "./ConfigurationSubpageForm";
-import FormSubpage, { OpenButton as SubpageOpenButton, SubpageHeader } from "./subpage/Subpage";
+import FormSubpage, { OpenButton as SubpageOpenButton, SubpageHeader, Divider as SubpageDivider } from "./subpage/Subpage";
 import SubpageContainer from "./subpage/SubpageContainer";
 
 export { default as Field } from "./base/Field";
@@ -44,6 +44,7 @@ export { default as FieldMessage } from "./base/field-message/FieldMessage";
 export { default as Checkbox } from "./checkbox/Checkbox";
 export { default as Combobox } from "./combobox/Combobox";
 export { default as ConfigurationForm } from "./ConfigurationForm";
+export { useScmFormContext, ScmFormContextProvider } from "./ScmFormContext";
 export { default as SelectField } from "./select/SelectField";
 export { default as ComboboxField } from "./combobox/ComboboxField";
 export { default as Input } from "./input/Input";
@@ -88,6 +89,7 @@ const OverviewExtensions = {
   Subpage: Object.assign(FormSubpage, {
     OpenButton: SubpageOpenButton,
     Header: SubpageHeader,
+    Divider: SubpageDivider,
   }),
 };
 

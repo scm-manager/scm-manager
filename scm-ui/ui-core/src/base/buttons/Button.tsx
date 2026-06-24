@@ -40,7 +40,8 @@ type ButtonVariant = (typeof ButtonVariants)[keyof typeof ButtonVariants];
 
 /**
  * Borderless, transparent button styling that blends into its surroundings ("ghost button").
- * It inherits the surrounding text color and only reveals a subtle background on hover/active.
+ * It inherits the surrounding text color and, on hover/active, only shifts the text color to the
+ * primary hover/active colors without applying any background effect.
  * Shared between the {@link Button}, {@link LinkButton} and {@link ExternalLinkButton} ghost variant.
  */
 const ghostStyles = css`
@@ -52,11 +53,10 @@ const ghostStyles = css`
   color: inherit;
   &:not(:disabled) {
     &:hover {
-      color: inherit;
-      background-color: color-mix(in srgb, currentColor 10%, transparent);
+      color: var(--scm-primary-hover-color, var(--scm-primary-color, #00d1df));
     }
     &:active {
-      background-color: color-mix(in srgb, currentColor 25%, transparent);
+      color: var(--scm-primary-active-color, var(--scm-primary-color, #00d1df));
     }
   }
 `;

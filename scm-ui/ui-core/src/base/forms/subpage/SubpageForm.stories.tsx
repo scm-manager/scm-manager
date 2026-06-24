@@ -19,7 +19,7 @@ import React, { FC, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import SubpageForm from "./SubpageForm";
 import SubpageContainer from "./SubpageContainer";
-import Subpage, { SubpageHeader } from "./Subpage";
+import Subpage, { Divider, SubpageHeader } from "./Subpage";
 import { useScmFormContext } from "../ScmFormContext";
 import FormRow from "../FormRow";
 import ControlledChipInputField from "../chip-input/ControlledChipInputField";
@@ -71,10 +71,12 @@ const SubpageFormExample: FC<{ readOnly?: boolean }> = ({ readOnly }) => {
       }}
     >
       <SubpageContainer>
+        <Divider />
         <SubpageHeader subpage="emails" label="Send notifications to">
           Edit list
         </SubpageHeader>
         <OverviewValues />
+        <Divider />
         <SubpageHeader subpage="settings" label="Commit notification settings">
           Edit settings
         </SubpageHeader>
