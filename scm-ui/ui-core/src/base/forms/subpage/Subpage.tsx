@@ -37,6 +37,7 @@ const PaddinglessButton = styled(Button)`
 `;
 
 const HeaderLevel = styled(Level)`
+  border-bottom: 1px solid var(--scm-border-color, #dbdbdb);
   padding-bottom: 0.5rem;
 `;
 

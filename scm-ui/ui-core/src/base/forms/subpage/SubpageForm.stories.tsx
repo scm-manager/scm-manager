@@ -71,7 +71,6 @@ const SubpageFormExample: FC<{ readOnly?: boolean }> = ({ readOnly }) => {
       }}
     >
       <SubpageContainer>
-        <Divider />
         <SubpageHeader subpage="emails" label="Send notifications to">
           Edit list
         </SubpageHeader>
