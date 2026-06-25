@@ -37,7 +37,6 @@ const PaddinglessButton = styled(Button)`
 `;
 
 const HeaderLevel = styled(Level)`
-  padding-bottom: 0.5rem;
 `;
 
 /**
@@ -48,7 +47,7 @@ const Divider = styled.hr`
   background-color: var(--scm-border-color, #dbdbdb);
   border: none;
   height: 1px;
-  margin: 1rem 0;
+  margin: 1.5rem 0;
 `;
 
 type SubpageProps = {
@@ -140,7 +139,7 @@ const SubpageHeader: FC<SubpageHeaderProps> = ({ subpage, label, children, icon 
   return (
     <HeaderLevel
       left={
-        <span id={labelId} className="has-text-weight-semibold">
+        <span id={labelId} className="hast-text-grey">
           {label}
         </span>
       }
