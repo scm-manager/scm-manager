@@ -33,6 +33,10 @@ const ButtonsContainer = styled.div`
 const PaddinglessButton = styled(Button)`
   && {
     padding: 0;
+    .icon {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
   }
 `;
 
