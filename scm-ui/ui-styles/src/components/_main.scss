@@ -20,6 +20,8 @@
   --scm-dark-color: #{$dark};
   --scm-dark-color-25: #{$dark-25};
   --scm-primary-color: #{$primary};
+  --scm-primary-hover-color: #{scale-color($primary, $lightness: -10%)};
+  --scm-primary-active-color: #{scale-color($primary, $lightness: -20%)};
   --scm-link-color: #{$link};
   --scm-info-color: #{$info};
   --scm-info-hover-color: #{$info-75};
