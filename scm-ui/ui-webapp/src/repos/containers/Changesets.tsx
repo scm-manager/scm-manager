@@ -160,17 +160,6 @@ const Changesets: FC = ({ ...props }) => {
         <div className="column columns">
           <InputField
             className="column"
-            label={t("changesets.filters.before")}
-            value={beforeFilter}
-            type="date"
-            onChange={(e) => {
-              setBeforeFilter(e.target.value);
-              updateFilters({ before: e.target.value });
-            }}
-            min={afterFilter}
-          />
-          <InputField
-            className="column"
             label={t("changesets.filters.after")}
             value={afterFilter}
             type="date"
@@ -179,6 +168,17 @@ const Changesets: FC = ({ ...props }) => {
               updateFilters({ after: e.target.value });
             }}
             max={beforeFilter}
+          />
+          <InputField
+            className="column"
+            label={t("changesets.filters.before")}
+            value={beforeFilter}
+            type="date"
+            onChange={(e) => {
+              setBeforeFilter(e.target.value);
+              updateFilters({ before: e.target.value });
+            }}
+            min={afterFilter}
           />
         </div>
       </div>
