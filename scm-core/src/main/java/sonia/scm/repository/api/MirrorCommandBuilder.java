@@ -51,6 +51,7 @@ public final class MirrorCommandBuilder {
   private List<PublicKey> publicKeys = emptyList();
   private MirrorFilter filter = new MirrorFilter() {};
   private boolean ignoreLfs;
+  private boolean reloadLfs;
 
   @Nullable
   private ProxyConfiguration proxyConfiguration;
@@ -103,6 +104,19 @@ public final class MirrorCommandBuilder {
   }
 
   /**
+   * If set to <code>true</code>, the update will check the complete repository for LFS files. Otherwise only
+   * new objects will be checked. This overrides {@link #setIgnoreLfs(boolean)}, so if this is set to <code>true</code>,
+   * LFS files will be checked nonetheless what is set for {@link #setIgnoreLfs(boolean)}.
+   * Defaults to <code>false</code>.
+   * @return This builder instance
+   * @since 3.12.0
+   */
+  public MirrorCommandBuilder setReloadLfs(boolean reloadLfs) {
+    this.reloadLfs = reloadLfs;
+    return this;
+  }
+
+  /**
    * Set the proxy configuration which should be used to access the source repository of the mirror.
    * If not proxy configuration is set the global configuration should be used instead.
    * @param proxyConfiguration proxy configuration to access the source repository
@@ -134,6 +148,7 @@ public final class MirrorCommandBuilder {
     mirrorCommandRequest.setPublicKeys(publicKeys);
     mirrorCommandRequest.setProxyConfiguration(proxyConfiguration);
     mirrorCommandRequest.setIgnoreLfs(ignoreLfs);
+    mirrorCommandRequest.setReloadLfs(reloadLfs);
     Preconditions.checkArgument(mirrorCommandRequest.isValid(), "source url has to be specified");
     return mirrorCommandRequest;
   }
