@@ -69,7 +69,7 @@ const InputField: FC<InputFieldProps> = ({
       {extendedText && descriptionText ? (
         <ExpandableText id={descriptionId} descriptionText={descriptionText} extendedDescriptionText={extendedText} />
       ) : (
-        <p className="mb-2" id={descriptionId}>
+        <p className="mb-2 is-size-7" id={descriptionId}>
           {descriptionText}
         </p>
       )}

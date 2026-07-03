@@ -26,6 +26,7 @@ const StyledRadioButton = styled(RadioGroup.Item)`
   all: unset;
   width: 1rem;
   height: 1rem;
+  flex-shrink: 0;
   border: var(--scm-border);
   border-radius: 100%;
 
