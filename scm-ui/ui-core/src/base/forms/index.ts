@@ -31,13 +31,20 @@ import ControlledComboboxField from "./combobox/ControlledComboboxField";
 import ChipInputFieldComponent from "./chip-input/ChipInputField";
 import ChipInput from "./headless-chip-input/ChipInput";
 import ControlledRadioGroupField from "./radio-button/ControlledRadioGroupField";
+import ControlledBooleanRadioField from "./radio-button/ControlledBooleanRadioField";
 import RadioGroupComponent from "./radio-button/RadioGroup";
 import RadioButton from "./radio-button/RadioButton";
 import RadioGroupFieldComponent from "./radio-button/RadioGroupField";
 import SubpageFormCmp from "./subpage/SubpageForm";
 import ConfigurationSubpageFormCmp from "./ConfigurationSubpageForm";
-import FormSubpage, { OpenButton as SubpageOpenButton, SubpageHeader, Divider as SubpageDivider } from "./subpage/Subpage";
+import FormSubpage, {
+  OpenButton as SubpageOpenButton,
+  OpenIconButton as SubpageOpenIconButton,
+  SubpageHeader,
+  Divider as SubpageDivider,
+} from "./subpage/Subpage";
 import SubpageContainer from "./subpage/SubpageContainer";
+import SubpageTable from "./subpage/SubpageTable";
 
 export { default as Field } from "./base/Field";
 export { default as FieldMessage } from "./base/field-message/FieldMessage";
@@ -45,6 +52,7 @@ export { default as Checkbox } from "./checkbox/Checkbox";
 export { default as Combobox } from "./combobox/Combobox";
 export { default as ConfigurationForm } from "./ConfigurationForm";
 export { useScmFormContext, ScmFormContextProvider } from "./ScmFormContext";
+export { useSubpageContext } from "./subpage/SubpageContext";
 export { default as SelectField } from "./select/SelectField";
 export { default as ComboboxField } from "./combobox/ComboboxField";
 export { default as Input } from "./input/Input";
@@ -82,14 +90,17 @@ export const Form = Object.assign(FormCmp, {
   ChipInput: ControlledChipInputField,
   Combobox: ControlledComboboxField,
   RadioGroup: Object.assign(ControlledRadioGroupField, RadioGroupExport),
+  BooleanRadio: ControlledBooleanRadioField,
 });
 
 const OverviewExtensions = {
   Overview: SubpageContainer,
+  SubpageTable,
+  Divider: SubpageDivider,
   Subpage: Object.assign(FormSubpage, {
     OpenButton: SubpageOpenButton,
+    OpenIconButton: SubpageOpenIconButton,
     Header: SubpageHeader,
-    Divider: SubpageDivider,
   }),
 };
 

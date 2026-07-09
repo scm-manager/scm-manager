@@ -17,7 +17,7 @@
 import React, { ComponentProps, FC, ReactNode, useEffect } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { Button, Icon } from "../../buttons";
+import { Button, Icon, IconButton } from "../../buttons";
 import { useAriaId } from "../../helpers";
 import { Level } from "../../misc";
 import { ErrorNotification } from "../../notifications";
@@ -28,6 +28,10 @@ import { ScmNestedFormPathContextProvider } from "../FormPathContext";
 const ButtonsContainer = styled.div`
   display: flex;
   gap: 0.75rem;
+  
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const PaddinglessButton = styled(Button)`
@@ -41,6 +45,12 @@ const PaddinglessButton = styled(Button)`
 `;
 
 const HeaderLevel = styled(Level)`
+  /* Theme-aware secondary text colour (same token as the breadcrumb title) so the header label keeps a
+     sufficient contrast in the light, dark and high-contrast themes. Bulma's fixed .has-text-grey does not
+     adapt and fails contrast on the light background. */
+  .subtitle {
+    color: var(--scm-secondary-more-color);
+  }
 `;
 
 /**
@@ -131,31 +141,69 @@ const OpenButton: FC<OpenButtonProps> = ({ subpage, children, ...props }) => {
   );
 };
 
-type SubpageHeaderProps = Omit<OpenButtonProps, "subpage" | "children"> & {
+type OpenIconButtonProps = Omit<ComponentProps<typeof IconButton>, "onClick"> & {
   subpage: string;
+};
+
+/**
+ * Like {@link OpenButton}, but rendered as a bordered {@link IconButton} instead of a ghost button.
+ * Use it for icon-only row actions (e.g. an edit button in a `SubpageTable`) so it matches the
+ * neighbouring `IconButton`s. Requires an `aria-label`.
+ *
+ * @beta
+ * @since 4.0.0
+ */
+const OpenIconButton: FC<OpenIconButtonProps> = ({ subpage, children, ...props }) => {
+  const { openSubpage } = useSubpageContext();
+  const { readOnly } = useScmFormContext();
+
+  if (readOnly) {
+    return null;
+  }
+
+  return (
+    <IconButton onClick={() => openSubpage(subpage)} {...props}>
+      {children}
+    </IconButton>
+  );
+};
+
+type SubpageHeaderProps = Omit<OpenButtonProps, "subpage" | "children"> & {
+  subpage?: string;
   label: ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
   icon?: string;
 };
 
+/**
+ * A section header for a `SubpageForm` overview. Renders the `label` on the left and, when both a target
+ * `subpage` and `children` are provided, an {@link OpenButton} (edit link) on the right that opens that
+ * subpage. Omit `subpage`/`children` for a plain label-only header, e.g. above a `SubpageTable` whose
+ * rows carry their own {@link OpenIconButton}s.
+ *
+ * @beta
+ * @since 4.0.0
+ */
 const SubpageHeader: FC<SubpageHeaderProps> = ({ subpage, label, children, icon = "edit", className, ...props }) => {
   const labelId = useAriaId();
   return (
     <HeaderLevel
       left={
-        <span id={labelId} className="hast-text-grey">
+        <span id={labelId} className="subtitle">
           {label}
         </span>
       }
       right={
-        <OpenButton subpage={subpage} className={className} aria-describedby={labelId} {...props}>
-          <Icon className="mr-1">{icon}</Icon>
-          {children}
-        </OpenButton>
+        subpage && children ? (
+          <OpenButton subpage={subpage} className={className} aria-describedby={labelId} {...props}>
+            <Icon className="mr-1">{icon}</Icon>
+            {children}
+          </OpenButton>
+        ) : undefined
       }
     />
   );
 };
 
-export { OpenButton, SubpageHeader, Divider };
+export { OpenButton, OpenIconButton, SubpageHeader, Divider };
 export default Subpage;

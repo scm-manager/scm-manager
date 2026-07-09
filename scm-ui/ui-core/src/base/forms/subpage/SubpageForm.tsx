@@ -26,35 +26,24 @@ import { Icon } from "../../buttons";
 import { Divider } from "./Subpage";
 
 const BreadcrumbNav = styled.nav`
-  ul {
+  ol {
     align-items: center;
+    gap: 0 0.5em;
+    white-space: break-spaces;
+  }
+
+  li {
+    gap:0 0.5em;
+    word-break: break-all;
+  }
+
+  li:not(.is-active) a:hover {
+    text-decoration: underline;
   }
 
   && li + li::before,
   && li:not(:last-child)::after {
     content: none;
-  }
-
-  .icon {
-    height: auto;
-    color: var(--scm-secondary-more-color, #363636);
-    width: 0.5em;
-    padding-top: 2px;
-
-    &:first-child {
-      margin: 0 0.75em;
-    }
-  }
-
-  .subtitle {
-    color: var(--scm-secondary-more-color, #363636);
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 18px;
-  }
-
-  li + li .subtitle {
-    font-weight: 400;
   }
 
   a {
@@ -69,8 +58,26 @@ const BreadcrumbNav = styled.nav`
     }
   }
 
-  li:not(.is-active) a:hover {
-    text-decoration: underline;
+  .subtitle {
+    color: var(--scm-secondary-more-color, #363636);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  li + li .subtitle {
+    font-weight: 400;
+  }
+
+  .icon {
+    height: auto;
+    color: var(--scm-secondary-more-color, #363636);
+    width: 0.5em;
+    padding-top: 2px;
+
+    &:first-child {
+      margin: 0;
+    }
   }
 `;
 
