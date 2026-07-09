@@ -69,12 +69,43 @@ const StyledSubpageTable = styled.table`
   }
 `;
 
+type EmptyRowProps = {
+  colSpan?: number;
+  children?: ReactNode;
+  className?: string;
+};
+
+const StyledEmptyCell = styled.td`
+  color: var(--scm-secondary-text, #363636);
+  opacity: 0.6;
+`;
+
+/**
+ * The empty-state row of a {@link SubpageTable}. Render it as the only child of the
+ * `<tbody>` when the table has no data rows; it spans all columns and shows the
+ * message as muted, theme-aware text.
+ *
+ * @beta
+ * @since 4.0.0
+ */
+const SubpageTableEmptyRow: FC<EmptyRowProps> = ({ colSpan = 1000, children, className }) => {
+  return (
+    <tr>
+      <StyledEmptyCell colSpan={colSpan} className={className}>
+        {children ?? ""}
+      </StyledEmptyCell>
+    </tr>
+  );
+};
+
 /**
  * A read-only table for the overview of a `SubpageForm` that stacks into blocks on narrow screens: the
  * `thead` is hidden and each `td` shows its column header from its `data-label` attribute.
  *
  * Body rows share a fixed height and vertically center their content, so rows stay uniform and a row-action
  * button (e.g. `Subpage.OpenIconButton`) lines up with the row's text.
+ *
+ * When the table has no data rows, render a single {@link SubpageTable.EmptyRow} inside the `<tbody>`.
  *
  * @beta
  * @since 4.0.0
@@ -85,4 +116,6 @@ const SubpageTable: FC<Props> = ({ className, children, ...rest }) => (
   </StyledSubpageTable>
 );
 
-export default SubpageTable;
+export default Object.assign(SubpageTable, {
+  EmptyRow: SubpageTableEmptyRow,
+});

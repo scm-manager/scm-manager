@@ -143,3 +143,29 @@ export const MixedRowActions: Story = {
     </SubpageTable>
   ),
 };
+
+export const Empty: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "When the table has no data rows, render a single `SubpageTable.EmptyRow` inside the `<tbody>`. It spans " +
+          "all columns and shows an informational notification. Pass a context-specific message as its children, or " +
+          "omit it to fall back to the generic `commons:form.table.empty.label` text (see the *Fallback message* story).",
+      },
+    },
+  },
+  render: () => (
+    <SubpageTable>
+      <thead>
+        <tr>
+          <th>Email address</th>
+          <th>Send as</th>
+        </tr>
+      </thead>
+      <tbody>
+        <SubpageTable.EmptyRow colSpan={2}>No recipients have been added yet.</SubpageTable.EmptyRow>
+      </tbody>
+    </SubpageTable>
+  ),
+};
