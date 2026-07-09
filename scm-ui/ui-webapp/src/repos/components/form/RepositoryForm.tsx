@@ -149,7 +149,6 @@ const RepositoryForm: FC<Props> = ({
               onChange={type => setRepo({ ...repo, type })}
               value={repo ? repo.type : ""}
               options={createSelectOptions(repositoryTypes)}
-              helpText={t("help.typeHelpText")}
               disabled={disabled}
             />
           </div>
