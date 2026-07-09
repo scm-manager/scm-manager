@@ -51,8 +51,8 @@ const ImportRepositoryTypeSelect: FC<Props> = ({ repositoryTypes, repositoryType
   }
 
   return (
-    <Label className="is-flex is-align-items-baseline">
-      <span className="mr-2">{t("repository.type")}</span>
+    <Label className="is-block is-align-items-baseline">
+      <span className="mr-2 label">{t("repository.type")}</span>
       <Select
         onChange={onChangeType}
         options={createSelectOptions()}
