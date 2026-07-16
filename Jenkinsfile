@@ -8,8 +8,8 @@ pipeline {
 
   agent {
     docker {
-      image 'scmmanager/java-build:17.0.9_9'
-      args '-v /var/run/docker.sock:/var/run/docker.sock --group-add 998'
+      image 'scmmanager/java-build:17.0.9_9-4'
+      args '-v /var/run/docker.sock:/var/run/docker.sock --group-add 988'
       label 'scmm-core'
     }
   }
@@ -17,6 +17,8 @@ pipeline {
   environment {
     HOME = "${env.WORKSPACE}"
     SONAR_USER_HOME = "${env.WORKSPACE}/.sonar"
+    SONAR = "${env.SCMM_CUSTOM_PROP_SONAR ?: 'RUN'}"
+    NOTIFICATION_MAIL = "${env.SCMM_CUSTOM_PROP_NOTIFICATION_MAIL ?: 'scm-team@cloudogu.com'}"
   }
 
   stages {
@@ -88,6 +90,15 @@ pipeline {
     }
 
      stage('SonarQube') {
+      when {
+        environment name: 'SONAR', value: 'RUN'
+        not {
+          anyOf {
+            branch pattern: 'release/*', comparator: 'GLOB'
+            branch pattern: 'hotfix/*', comparator: 'GLOB'
+          }
+        }
+      }
       steps {
         sh 'git config --replace-all "remote.origin.fetch" "+refs/heads/*:refs/remotes/origin/*"'
         sh 'git fetch origin develop'
@@ -246,7 +257,7 @@ pipeline {
         expression { return isBuildSuccess() }
       }
       steps {
-        mail to: "scm-team@cloudogu.com",
+        mail to: "${env.NOTIFICATION_MAIL}",
           subject: "Jenkins Job ${JOB_NAME} - Merge Hotfix Release #${env.BRANCH_NAME}!",
           body: """Please,
           - merge the hotfix release branch ${env.BRANCH_NAME} into main (keep versions of main, merge changelog to keep both versions),
@@ -258,17 +269,17 @@ pipeline {
 
   post {
     failure {
-      mail to: "scm-team@cloudogu.com",
+      mail to: "${env.NOTIFICATION_MAIL}",
         subject: "Jenkins Job ${JOB_NAME} - Build #${BUILD_NUMBER} - ${currentBuild.currentResult}!",
         body: "Check console output at ${BUILD_URL} to view the results."
     }
     unstable {
-      mail to: "scm-team@cloudogu.com",
+      mail to: "${env.NOTIFICATION_MAIL}",
         subject: "Jenkins Job ${JOB_NAME} - Build #${BUILD_NUMBER} - ${currentBuild.currentResult}!",
         body: "Check console output at ${BUILD_URL} to view the results."
     }
     fixed {
-      mail to: "scm-team@cloudogu.com",
+      mail to: "${env.NOTIFICATION_MAIL}",
         subject: "Jenkins Job ${JOB_NAME} - Is back to normal with Build #${BUILD_NUMBER}",
         body: "Check console output at ${BUILD_URL} to view the results."
     }

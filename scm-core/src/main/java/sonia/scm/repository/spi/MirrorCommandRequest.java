@@ -46,6 +46,7 @@ public final class MirrorCommandRequest {
   @Nullable
   private ProxyConfiguration proxyConfiguration;
   private boolean ignoreLfs;
+  private boolean reloadLfs;
 
   public String getSourceUrl() {
     return sourceUrl;
@@ -85,6 +86,14 @@ public final class MirrorCommandRequest {
 
   public boolean isIgnoreLfs() {
     return ignoreLfs;
+  }
+
+  public void setReloadLfs(boolean reloadLfs) {
+    this.reloadLfs = reloadLfs;
+  }
+
+  public boolean isReloadLfs() {
+    return reloadLfs;
   }
 
   public boolean isValid() {

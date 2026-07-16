@@ -17,8 +17,12 @@
 import styled from "styled-components";
 import { devices } from "./devices";
 
-export const DangerZone = styled.div`
-  border: 1px solid #ff6a88;
+interface DangerZoneProps {
+  borderColor?: "danger" | "warning";
+}
+
+export const DangerZone = styled.div<DangerZoneProps>`
+  border: 1px solid ${(props) => props.borderColor === "warning" ? "#ffb600" : "#ff6a88"};
   border-radius: 5px;
 
   > .level {

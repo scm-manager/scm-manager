@@ -885,6 +885,100 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldIgnoreExistingRevisionsForLfsLoaderOnUpdateWithLfsReload() throws IOException, GitAPIException {
+    callMirrorCommand();
+    reset(lfsLoader);
+
+    try (Git existingClone = Git.open(repositoryDirectory)) {
+      existingClone.branchCreate().setName("added-branch").call();
+    }
+
+    when(lfsLoader.gatherAllRefs(any())).thenReturn(List.of(
+      ObjectId.fromString("fcd0ef1831e4002ac43ea539f4094334c79ea9ec"),
+      ObjectId.fromString("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4"),
+      ObjectId.fromString("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1")
+    ));
+
+    callUpdate(r -> r.setReloadLfs(true));
+
+    org.mockito.ArgumentCaptor<Collection<ObjectId>> uninterestingRevisionsCaptor = forClass(Collection.class);
+
+    verify(lfsLoader)
+      .load(any(), any(), any(), any(), eq(repository), any(), any(), uninterestingRevisionsCaptor.capture());
+
+    assertThat(uninterestingRevisionsCaptor.getValue())
+      .isEmpty();
+  }
+
+  @Test
+  public void shouldPassAllMirroredRefsToLfsLoaderOnUpdateWithLfsReloadWithoutChanges() throws IOException {
+    callMirrorCommand();
+    reset(lfsLoader);
+    Collection<String> expectedMirroredRefs = gatherMirroredRefIds();
+
+    callUpdate(r -> r.setReloadLfs(true));
+
+    org.mockito.ArgumentCaptor<Collection<ObjectId>> interestingRevisionsCaptor = forClass(Collection.class);
+    org.mockito.ArgumentCaptor<Collection<ObjectId>> uninterestingRevisionsCaptor = forClass(Collection.class);
+
+    verify(lfsLoader)
+      .load(any(), any(), any(), any(), eq(repository), any(), interestingRevisionsCaptor.capture(), uninterestingRevisionsCaptor.capture());
+
+    assertThat(interestingRevisionsCaptor.getValue())
+      .extracting(ObjectId::getName)
+      .containsExactlyInAnyOrderElementsOf(expectedMirroredRefs);
+
+    assertThat(uninterestingRevisionsCaptor.getValue())
+      .isEmpty();
+  }
+
+  @Test
+  public void shouldNotPassRejectedNewBranchToLfsLoaderOnUpdateWithLfsReload() throws IOException, GitAPIException {
+    callMirrorCommand();
+    reset(lfsLoader);
+    Collection<String> expectedMirroredRefs = gatherMirroredRefIds();
+
+    try (Git existingClone = Git.open(repositoryDirectory)) {
+      existingClone.branchCreate()
+        .setName("added-branch")
+        .setStartPoint("9e93d8631675a89615fac56b09209686146ff3c0")
+        .call();
+    }
+
+    callUpdate(r -> {
+      r.setReloadLfs(true);
+      r.setFilter(new MirrorFilter() {
+        @Override
+        public Filter getFilter(FilterContext context) {
+          return new Filter() {
+            @Override
+            public Result acceptBranch(BranchUpdate branch) {
+              if (branch.getBranchName().equals("added-branch")) {
+                return Result.reject();
+              }
+              return Result.accept();
+            }
+          };
+        }
+      });
+    });
+
+    org.mockito.ArgumentCaptor<Collection<ObjectId>> interestingRevisionsCaptor = forClass(Collection.class);
+    org.mockito.ArgumentCaptor<Collection<ObjectId>> uninterestingRevisionsCaptor = forClass(Collection.class);
+
+    verify(lfsLoader)
+      .load(any(), any(), any(), any(), eq(repository), any(), interestingRevisionsCaptor.capture(), uninterestingRevisionsCaptor.capture());
+
+    assertThat(interestingRevisionsCaptor.getValue())
+      .extracting(ObjectId::getName)
+      .containsExactlyInAnyOrderElementsOf(expectedMirroredRefs)
+      .doesNotContain("9e93d8631675a89615fac56b09209686146ff3c0");
+
+    assertThat(uninterestingRevisionsCaptor.getValue())
+      .isEmpty();
+  }
+
+  @Test
   public void shouldMarkMirrorAsFailedIfLfsFileFails() {
     doAnswer(invocation -> {
       invocation.getArgument(5, MirrorCommandResult.LfsUpdateResult.class).increaseFailureCount();
@@ -903,6 +997,17 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> c.setIgnoreLfs(true));
 
     verify(lfsLoader, never())
+      .load(any(), any(), any(), any(), any(), any(), any(), any());
+  }
+
+  @Test
+  public void shouldCallLfsLoaderIfIgnoreLfsIsSetButAlsoReloadLfs() {
+    callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> {
+      c.setIgnoreLfs(true);
+      c.setReloadLfs(true);
+    });
+
+    verify(lfsLoader)
       .load(any(), any(), any(), any(), any(), any(), any(), any());
   }
 
@@ -1043,6 +1148,23 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     request.setSourceUrl(repositoryDirectory.getAbsolutePath());
     requestModifier.accept(request);
     return command.update(request);
+  }
+
+  private Collection<String> gatherMirroredRefIds() throws IOException {
+    try (Repository mirroredRepository = GitUtil.open(clone)) {
+      Collection<String> mirroredRefs = new ArrayList<>();
+      gatherMirroredRefIds(mirroredRepository, Constants.R_HEADS, mirroredRefs);
+      gatherMirroredRefIds(mirroredRepository, Constants.R_TAGS, mirroredRefs);
+      return mirroredRefs;
+    }
+  }
+
+  private void gatherMirroredRefIds(Repository mirroredRepository, String prefix, Collection<String> mirroredRefs) throws IOException {
+    for (Ref ref : mirroredRepository.getRefDatabase().getRefsByPrefix(prefix)) {
+      if (ref.getObjectId() != null) {
+        mirroredRefs.add(ref.getObjectId().getName());
+      }
+    }
   }
 
   private Optional<Ref> findBranch(Git git, String branchName) throws GitAPIException {

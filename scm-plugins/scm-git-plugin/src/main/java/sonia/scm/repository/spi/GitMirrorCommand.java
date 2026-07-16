@@ -190,7 +190,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
     private MirrorCommandResult doUpdate() throws GitAPIException {
       copyRemoteRefsToMain();
-      Collection<ObjectId> existingRevisions = gatherAllRefs();
+      Collection<ObjectId> existingRevisions = mirrorCommandRequest.isReloadLfs() ? emptyList() : gatherAllRefs();
       fetchResult = createFetchCommand().call();
       filterContext = new GitFilterContext();
       filter = mirrorCommandRequest.getFilter().getFilter(filterContext);
@@ -198,12 +198,20 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       if (fetchResult.getTrackingRefUpdates().isEmpty()) {
         LOG.trace("No updates found for mirror repository {}", repository);
         mirrorLog.add("No updates found");
-        return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
-      } else {
-        Collection<ObjectId> accepted = new HashSet<>();
+        if (!mirrorCommandRequest.isReloadLfs()) {
+          return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
+        }
+      }
+      Collection<ObjectId> accepted = new HashSet<>();
+      if (!fetchResult.getTrackingRefUpdates().isEmpty()) {
         handleBranches(accepted);
         handleTags(accepted);
-        if (!mirrorCommandRequest.isIgnoreLfs()) {
+      }
+      if (mirrorCommandRequest.isReloadLfs()) {
+        gatherAllMirroredRefs(accepted);
+      }
+      if (!fetchResult.getTrackingRefUpdates().isEmpty() || mirrorCommandRequest.isReloadLfs()) {
+        if (mirrorCommandRequest.isReloadLfs() || !mirrorCommandRequest.isIgnoreLfs()) {
           LfsLoaderLogger lfsLoaderLogger = new MirrorLfsLoaderLogger();
 
           lfsLoader.load(
@@ -314,6 +322,23 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         return lfsLoader.gatherAllRefs(git.getRepository());
       } catch (IOException e) {
         throw new InternalRepositoryException(context.getRepository(), "Failed to gather existing refs", e);
+      }
+    }
+
+    private void gatherAllMirroredRefs(Collection<ObjectId> accepted) {
+      try {
+        gatherRefsByPrefix(Constants.R_HEADS, accepted);
+        gatherRefsByPrefix(Constants.R_TAGS, accepted);
+      } catch (IOException e) {
+        throw new InternalRepositoryException(context.getRepository(), "Failed to gather all mirrored refs", e);
+      }
+    }
+
+    private void gatherRefsByPrefix(String prefix, Collection<ObjectId> accepted) throws IOException {
+      for (Ref ref : git.getRepository().getRefDatabase().getRefsByPrefix(prefix)) {
+        if (ref.getObjectId() != null) {
+          accepted.add(ref.getObjectId());
+        }
       }
     }
 
