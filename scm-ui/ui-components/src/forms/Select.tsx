@@ -39,6 +39,7 @@ type BaseProps = {
   defaultValue?: string;
   readOnly?: boolean;
   className?: string;
+  fieldsetClassName?: string;
   addValueToOptions?: boolean;
   ariaLabelledby?: string;
 };
@@ -57,6 +58,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   testId,
   readOnly,
   className,
+  fieldsetClassName,
   options,
   addValueToOptions,
   ariaLabelledby,
@@ -109,7 +111,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   const helpId = createA11yId("select");
 
   return (
-    <fieldset className="field" disabled={readOnly}>
+    <fieldset className={classNames("field", fieldsetClassName)} disabled={readOnly}>
       <LabelWithHelpIcon label={label} helpText={helpText} id={a11yId} helpId={helpId} />
       <div className={classNames("control select", loadingClass, className)}>
         <select

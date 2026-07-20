@@ -16,9 +16,61 @@
 
 import React, { FC, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import styled from "styled-components";
 import classNames from "classnames";
 import { Button, urls } from "./index";
 import { FilterInput, Select } from "./forms";
+import { devices } from "./devices";
+
+const StyledGroupSelector = styled.div`
+  .fieldset-is-fullwidth {
+    width: 100%;
+  }
+`;
+
+const StyledFilterWrapper = styled.div`
+  .control {
+    min-width: 150px;
+    width: 100%;
+  }
+  
+  label, .label:not(:last-child){
+    margin-bottom: 0;
+  }
+  
+  @media screen and (max-width: ${devices.tablet.width}px) {
+    .column{
+       justify-content: center
+    }
+  }
+
+  @media screen and (min-width: ${devices.tablet.width}px){
+    .columns {
+      margin-right: initial;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  @media screen and (min-width: ${devices.tablet.width}px) and (max-width: ${devices.fullhd.width}px) {
+    .columns {
+      max-width: calc(100%);
+    }
+    .column{
+      justify-content: end;
+      margin-bottom: 0 !important;
+    }
+    .column:last-child:not(.input-button){
+      padding-right: 0 !important;
+    }
+  }
+  
+  @media screen and (max-width: ${devices.fullhd.width}px) {
+    flex-direction: column;
+    margin-left: 0 !important;
+    max-width: 100%;
+  }
+`;
 
 type Props = {
   showCreateButton: boolean;
@@ -55,15 +107,16 @@ const OverviewPageActions: FC<Props> = ({
   const link = createAbsoluteLink(inputLink);
 
   const groupSelector = groups && (
-    <div className="column is-flex is-align-items-center">
+    <StyledGroupSelector className="column is-flex is-align-items-center">
       <Select
         ariaLabelledby={groupAriaLabelledby}
         className="is-fullwidth"
+        fieldsetClassName="fieldset-is-fullwidth"
         options={groups.map((g) => ({ value: g, label: g }))}
         value={currentGroup}
         onChange={groupSelected}
       />
-    </div>
+    </StyledGroupSelector>
   );
 
   const renderCreateButton = () => {
@@ -85,18 +138,20 @@ const OverviewPageActions: FC<Props> = ({
   };
 
   return (
-    <div className="columns is-desktop">
-      {groupSelector}
-      <div className="column is-flex is-align-items-center">
-        <FilterInput
-          placeholder={searchPlaceholder}
-          value={urls.getQueryStringFromLocation(location)}
-          filter={filter}
-          testId={testId + "-filter"}
-        />
+    <StyledFilterWrapper className="columns is-widescreen">
+      <div className="columns is-flex-widescreen is-align-items-center">
+        {groupSelector}
+        <div className="column is-flex is-align-items-center">
+          <FilterInput
+            placeholder={searchPlaceholder}
+            value={urls.getQueryStringFromLocation(location)}
+            filter={filter}
+            testId={testId + "-filter"}
+          />
+        </div>
       </div>
       {renderCreateButton()}
-    </div>
+    </StyledFilterWrapper>
   );
 };
 

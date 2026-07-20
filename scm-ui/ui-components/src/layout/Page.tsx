@@ -57,11 +57,10 @@ const Page: FC<Props> = ({ title, afterTitle, subtitle, loading, error, showCont
             <PageActionContainer
               className={classNames(
                 "column",
-                "is-three-quarters",
-                "is-mobile-action-spacing",
-                "is-flex-tablet",
                 "is-justify-content-flex-end",
                 "is-align-items-center",
+                "is-mobile-action-spacing",
+                "is-flex-tablet",
               )}
             >
               {child}
@@ -78,7 +77,7 @@ const Page: FC<Props> = ({ title, afterTitle, subtitle, loading, error, showCont
       return (
         <>
           <div className="columns">
-            <div className="column">
+            <div className="column is-one-third-tablet">
               <div className="is-flex is-flex-wrap-wrap is-align-items-center">
                 <Title className="mb-0 mr-2">{title}</Title>
                 {afterTitle}
