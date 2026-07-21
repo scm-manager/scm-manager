@@ -200,19 +200,32 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
       if (isRootFile(file) && isEmptyDirectory(file)) {
         body = (
           <div className="panel-block">
-            <Notification type="info">{t("sources.noSources")}</Notification>
+            <ExtensionPoint<extensionPoints.RepositoryCodeOverviewNoSourcesBanner>
+              name="repository.code.overview.noSources.banner"
+              props={{ repository }}
+              renderAll={true}
+            >
+              <Notification type="info">{t("sources.noSources")}</Notification>
+            </ExtensionPoint>
           </div>
         );
       } else {
         body = (
-          <FileTree
-            repository={repository}
-            directory={file}
-            revision={revision || file.revision}
-            baseUrl={baseUrl + "/sources"}
-            isFetchingNextPage={isFetchingNextPage}
-            fetchNextPage={fetchNextPage}
-          />
+          <>
+            <ExtensionPoint<extensionPoints.RepositoryCodeOverviewBanner>
+              name="repository.code.overview.banner"
+              props={{ sources: file, repository }}
+              renderAll={true}
+            />
+            <FileTree
+              repository={repository}
+              directory={file}
+              revision={revision || file.revision}
+              baseUrl={baseUrl + "/sources"}
+              isFetchingNextPage={isFetchingNextPage}
+              fetchNextPage={fetchNextPage}
+            />
+          </>
         );
       }
 

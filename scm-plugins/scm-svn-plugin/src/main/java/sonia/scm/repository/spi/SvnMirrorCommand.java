@@ -23,10 +23,17 @@ import org.slf4j.LoggerFactory;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
+import org.tmatesoft.svn.core.io.SVNRepository;
+import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
+import org.tmatesoft.svn.core.wc.admin.SVNAdminEvent;
+import org.tmatesoft.svn.core.wc.admin.SVNAdminEventAction;
+import org.tmatesoft.svn.core.wc.admin.SVNAdminEventAdapter;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
 import sonia.scm.net.GlobalProxyConfiguration;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.SvnUtil;
+import sonia.scm.repository.api.MirrorCommandBuilder.LogCallback;
 import sonia.scm.repository.api.MirrorCommandResult;
 
 import javax.net.ssl.TrustManager;
@@ -38,6 +45,7 @@ import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(SvnMirrorCommand.class);
+  private static final String SYNCHRONIZING_REVISIONS_STEP = "Synchronizing SVN revisions";
   private static final int TARGET_NOT_INITIALIZED_ERROR_CODE = 204899;
 
   private final SvnMirrorAuthenticationFactory authenticationFactory;
@@ -87,11 +95,17 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
 
       SVNURL sourceUrl = SVNURL.parseURIEncoded(mirrorCommandRequest.getSourceUrl());
       SVNURL targetUrl = createUrlForLocalRepository();
-      SVNAdminClient admin = createAdminClient(sourceUrl, mirrorCommandRequest);
+      BasicAuthenticationManager authenticationManager = authenticationFactory.create(sourceUrl, mirrorCommandRequest);
+      long sourceLatestRevision = getLatestRevision(sourceUrl, authenticationManager);
+      SVNAdminClient admin = createAdminClient(authenticationManager);
+      LogCallback progressCallback = mirrorCommandRequest.getProgressCallback();
+      progressCallback.stepStarted(SYNCHRONIZING_REVISIONS_STEP, toCallbackWork(sourceLatestRevision - beforeUpdate));
+      admin.setEventHandler(new ProgressCallbackEventHandler(progressCallback, beforeUpdate + 1));
 
       worker.doWork(admin, sourceUrl, targetUrl);
 
       afterUpdate = context.open().getLatestRevision();
+      progressCallback.currentStepFinished();
     } catch (SVNException e) {
       LOG.warn("Could not mirror svn repository", e);
       return new MirrorCommandResult(
@@ -117,12 +131,46 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
     }
   }
 
-  private SVNAdminClient createAdminClient(SVNURL sourceUrl, MirrorCommandRequest mirrorCommandRequest) {
-    BasicAuthenticationManager authenticationManager = authenticationFactory.create(sourceUrl, mirrorCommandRequest);
+  private long getLatestRevision(SVNURL sourceUrl, BasicAuthenticationManager authenticationManager) throws SVNException {
+    SVNRepository sourceRepository = null;
+    try {
+      sourceRepository = SVNRepositoryFactory.create(sourceUrl);
+      sourceRepository.setAuthenticationManager(authenticationManager);
+      return sourceRepository.getLatestRevision();
+    } finally {
+      SvnUtil.closeSession(sourceRepository);
+    }
+  }
+
+  private SVNAdminClient createAdminClient(BasicAuthenticationManager authenticationManager) {
     return new SVNAdminClient(authenticationManager, SVNWCUtil.createDefaultOptions(true));
+  }
+
+  private static int toCallbackWork(long work) {
+    return (int) Math.min(Math.max(work, 0L), Integer.MAX_VALUE);
   }
 
   private interface Worker {
     void doWork(SVNAdminClient adminClient, SVNURL sourceUrl, SVNURL targetUrl) throws SVNException;
+  }
+
+  static class ProgressCallbackEventHandler extends SVNAdminEventAdapter {
+    private final LogCallback callback;
+    private final long firstExpectedRevision;
+
+    ProgressCallbackEventHandler(LogCallback callback, long firstExpectedRevision) {
+      this.callback = callback;
+      this.firstExpectedRevision = firstExpectedRevision;
+    }
+
+    @Override
+    public void handleAdminEvent(SVNAdminEvent event, double progress) throws SVNException {
+      if (event.getAction() == SVNAdminEventAction.REVISION_PROPERTIES_COPIED) {
+        long completedWork = event.getRevision() - firstExpectedRevision + 1;
+        if (completedWork > 0) {
+          callback.currentStepProgressed(toCallbackWork(completedWork));
+        }
+      }
+    }
   }
 }

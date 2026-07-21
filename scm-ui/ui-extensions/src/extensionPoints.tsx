@@ -409,6 +409,16 @@ export type RepositoryCodeOverviewContent = RenderableExtensionPointDefinition<
   { sources: File; repository: Repository }
 >;
 
+export type RepositoryCodeOverviewBanner = RenderableExtensionPointDefinition<
+  "repository.code.overview.banner",
+  { sources: File; repository: Repository }
+>;
+
+export type RepositoryCodeOverviewNoSourcesBanner = RenderableExtensionPointDefinition<
+  "repository.code.overview.noSources.banner",
+  { repository: Repository }
+>;
+
 export type RepositoryNavigation = RenderableExtensionPointDefinition<
   "repository.navigation",
   { repository: Repository; url: string; indexLinks: Links }

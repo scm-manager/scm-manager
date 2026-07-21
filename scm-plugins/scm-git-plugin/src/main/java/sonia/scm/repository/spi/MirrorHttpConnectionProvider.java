@@ -24,6 +24,7 @@ import sonia.scm.net.HttpConnectionOptions;
 import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
+import sonia.scm.repository.spi.GitMirrorCommand.MirrorLogWithCallback;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.ScmHttpConnectionFactory;
 
@@ -35,7 +36,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.util.Base64;
-import java.util.List;
 
 class MirrorHttpConnectionProvider {
 
@@ -48,7 +48,7 @@ class MirrorHttpConnectionProvider {
     this.httpURLConnectionFactory = httpURLConnectionFactory;
   }
 
-  public HttpConnectionFactory createHttpConnectionFactory(MirrorCommandRequest mirrorCommandRequest, List<String> log) {
+  public HttpConnectionFactory createHttpConnectionFactory(MirrorCommandRequest mirrorCommandRequest, MirrorLogWithCallback log) {
     HttpConnectionOptions options = new HttpConnectionOptions();
 
     mirrorCommandRequest.getCredential(Pkcs12ClientCertificateCredential.class)
@@ -66,7 +66,7 @@ class MirrorHttpConnectionProvider {
     return new ScmHttpConnectionFactory(httpURLConnectionFactory, options);
   }
 
-  private KeyManager[] createKeyManagers(Pkcs12ClientCertificateCredential credential, List<String> log) {
+  private KeyManager[] createKeyManagers(Pkcs12ClientCertificateCredential credential, MirrorLogWithCallback log) {
     try {
       KeyStore pkcs12 = KeyStore.getInstance("PKCS12");
       pkcs12.load(new ByteArrayInputStream(credential.getCertificate()), credential.getPassword());
