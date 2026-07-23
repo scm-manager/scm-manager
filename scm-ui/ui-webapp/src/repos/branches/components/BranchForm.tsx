@@ -35,10 +35,16 @@ const BranchForm: FC<Props> = ({ submitForm, branches, disabled, transmittedName
   const [name, setName] = useState(transmittedName || "");
   const [source, setSource] = useState("");
   const [nameValid, setNameValid] = useState(false);
+  const [nameTouched, setNameTouched] = useState(false);
 
   useEffect(() => {
     setNameValid(validator.isBranchValid(name));
   }, [name]);
+
+  const changeName = (value: string) => {
+    setNameTouched(true);
+    setName(value);
+  };
 
   const isValid = () => nameValid && source && name;
 
@@ -75,9 +81,9 @@ const BranchForm: FC<Props> = ({ submitForm, branches, disabled, transmittedName
             <InputField
               name="name"
               label={t("branches.create.name")}
-              onChange={setName}
+              onChange={changeName}
               value={name ? name : ""}
-              validationError={!nameValid}
+              validationError={nameTouched && !nameValid}
               errorMessage={t("validation.branch.nameInvalid")}
               disabled={!!transmittedName || disabled}
               testId="input-branch-name"
