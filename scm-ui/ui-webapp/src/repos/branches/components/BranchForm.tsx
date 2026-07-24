@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, FormEvent, useEffect, useState } from "react";
+import React, { FC, FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Branch, BranchCreation } from "@scm-manager/ui-types";
 import { InputField, Level, Select, SubmitButton, validation as validator } from "@scm-manager/ui-components";
@@ -34,11 +34,12 @@ const BranchForm: FC<Props> = ({ submitForm, branches, disabled, transmittedName
   const [t] = useTranslation("repos");
   const [name, setName] = useState(transmittedName || "");
   const [source, setSource] = useState("");
-  const [nameValid, setNameValid] = useState(false);
+  const [nameValid, setNameValid] = useState(true);
 
-  useEffect(() => {
-    setNameValid(validator.isBranchValid(name));
-  }, [name]);
+  const changeName = (value: string) => {
+    setName(value);
+    setNameValid(validator.isBranchValid(value));
+  };
 
   const isValid = () => nameValid && source && name;
 
@@ -75,7 +76,7 @@ const BranchForm: FC<Props> = ({ submitForm, branches, disabled, transmittedName
             <InputField
               name="name"
               label={t("branches.create.name")}
-              onChange={setName}
+              onChange={changeName}
               value={name ? name : ""}
               validationError={!nameValid}
               errorMessage={t("validation.branch.nameInvalid")}
