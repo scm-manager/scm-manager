@@ -66,7 +66,7 @@ type Credentials = {
 
 export const useLogin = (link: string, onSuccess: () => void) => {
   const reset = useReset();
-  const { mutate, isPending, error } = useMutation<unknown, Error, Credentials>({
+  const { mutate, isPending, isSuccess, error } = useMutation<unknown, Error, Credentials>({
     mutationFn: (credentials) => apiClient.post(link!, credentials),
     onSuccess: () => {
       reset();
@@ -77,6 +77,7 @@ export const useLogin = (link: string, onSuccess: () => void) => {
     return {
       login: undefined,
       isPending: false,
+      isSuccess: false,
       error: undefined,
     };
   }
@@ -88,6 +89,7 @@ export const useLogin = (link: string, onSuccess: () => void) => {
   return {
     login: link ? login : undefined,
     isPending,
+    isSuccess,
     error,
   };
 };

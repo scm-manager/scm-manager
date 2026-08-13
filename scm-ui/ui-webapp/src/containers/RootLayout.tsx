@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, Suspense } from "react";
 import classNames from "classnames";
 import { Footer, Header } from "@scm-manager/ui-components";
 import NavigationBar from "./NavigationBar";
@@ -22,7 +22,7 @@ import ShortcutDocsModal from "../shortcuts/ShortcutDocsModal";
 import styled from "styled-components";
 import { useIndex, useMe } from "@scm-manager/ui-api";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useShortcut } from "@scm-manager/ui-core";
+import { Loading, useShortcut } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import usePauseShortcutsWhenModalsActive from "../shortcuts/usePauseShortcutsWhenModalsActive";
 import { useCodeSettingsConfig } from "../codeSettingsConfig";
@@ -34,9 +34,9 @@ const AppWrapper = styled.div`
 `;
 
 export const RootLayout: FC = () => {
-  const authenticatedOrAnonymous = true;
   const index = useIndex();
   const { data: me } = useMe();
+  const authenticatedOrAnonymous = !!index._links.me;
   const [t] = useTranslation("commons");
 
   const navigate = useNavigate();
@@ -81,7 +81,9 @@ export const RootLayout: FC = () => {
       </Header>
       <ShortcutDocsModal />
       <div className="is-flex-grow-1">
-        <Outlet />
+        <Suspense fallback={<Loading />}>
+          <Outlet />
+        </Suspense>
       </div>
       <Footer me={me} version={index.version} links={index._links} />
     </AppWrapper>

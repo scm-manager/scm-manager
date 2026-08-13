@@ -15,9 +15,9 @@
  */
 
 import React, { FC } from "react";
-import { createBrowserRouter, redirect, type RouteObject } from "react-router-dom";
+import { createBrowserRouter, type LoaderFunctionArgs, redirect, type RouteObject } from "react-router-dom";
 import { indexLoader } from "@scm-manager/ui-api";
-import { ErrorBoundary, ProtectedRoute, urls } from "@scm-manager/ui-components";
+import { ErrorBoundary, urls } from "@scm-manager/ui-components";
 import {
   ADMIN_BASE_ROUTE,
   ADMIN_PLUGINS_SUB_ROUTES,
@@ -79,6 +79,7 @@ import { SetMyApiKeys } from "../users/components/apiKeys/SetApiKeys";
 import CompareView from "../repos/compare/CompareView";
 import { IndexResources } from "@scm-manager/ui-types";
 import CodeSettings from "./CodeSettings";
+import { loginRedirectTarget } from "./loginRedirect";
 
 const App: FC = () => {
   // auth routes
@@ -170,8 +171,6 @@ const App: FC = () => {
   const help = HELP_BASE_ROUTE;
   const searchSyntax = HELP_SUB_ROUTES.SEARCH_SYNTAX;
 
-  const authenticated = true;
-
   const mainExtensionRoutes = useRouteExtensions<extensionPoints.MainRoute>({
     name: "main.route",
   });
@@ -205,11 +204,11 @@ const App: FC = () => {
     return redirect("/repos/");
   };
 
-  const redirectWithoutLoginLoader = async () => {
+  const redirectWithoutLoginLoader = async ({ request }: LoaderFunctionArgs) => {
     const data = (await indexLoader()) as IndexResources;
     if (data._links.login && !data._links.me) {
       // not logged in and no anonymous mode
-      return redirect("/login");
+      return redirect(loginRedirectTarget(request.url, urls.contextPath));
     }
     return data;
   };
@@ -264,7 +263,6 @@ const App: FC = () => {
               },
             },
             {
-              element: <ProtectedRoute authenticated={authenticated} />,
               children: [
                 {
                   path: `${repos}/`,

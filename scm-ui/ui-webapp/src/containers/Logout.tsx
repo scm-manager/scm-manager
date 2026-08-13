@@ -15,17 +15,18 @@
  */
 
 import React, { FC, useEffect } from "react";
-import { Navigate, useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLogout } from "@scm-manager/ui-api";
-import { ErrorPage, Loading } from "@scm-manager/ui-components";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { ErrorPage } from "@scm-manager/ui-components";
+import { useDocumentTitle, Loading } from "@scm-manager/ui-core";
 import { IndexResources, Link } from "@scm-manager/ui-types";
 
 const Logout: FC = () => {
   const index = useLoaderData<IndexResources>();
-  const { error, logout } = useLogout((index._links.logout as Link)!.href);
+  const { error, logout } = useLogout((index._links.logout as Link | undefined)?.href ?? "");
   const [t] = useTranslation("commons");
+  const navigate = useNavigate();
   useDocumentTitle(t("logout.title"));
 
   useEffect(() => {
@@ -34,9 +35,11 @@ const Logout: FC = () => {
     }
   }, [logout]);
 
-  if (!logout) {
-    return <Navigate to="/login" />;
-  }
+  useEffect(() => {
+    if (!logout) {
+      navigate("/login");
+    }
+  }, [logout, navigate]);
 
   if (error) {
     return <ErrorPage title={t("logout.error.title")} subtitle={t("logout.error.subtitle")} error={error} />;

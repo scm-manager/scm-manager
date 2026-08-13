@@ -20,6 +20,7 @@ import LoginInfo from "../components/LoginInfo";
 import { parse } from "query-string";
 import { useLogin } from "@scm-manager/ui-api";
 import { IndexResources, Link } from "@scm-manager/ui-types";
+import { Loading } from "@scm-manager/ui-core";
 
 interface FromObject {
   from?: string;
@@ -38,7 +39,7 @@ const Login: FC = () => {
   const location = useLocation();
   const index = useLoaderData<IndexResources>();
   const navigate = useNavigate();
-  const { login, isPending, error } = useLogin((index._links.login as Link)?.href, () => {
+  const { login, isPending, isSuccess, error } = useLogin((index._links.login as Link)?.href, () => {
     const to = from(window.location.search, location.state);
     return navigate(to);
   });
@@ -54,6 +55,10 @@ const Login: FC = () => {
   if (!login) {
     const to = from(window.location.search, location.state);
     return <Navigate to={to} />;
+  }
+
+  if (isSuccess) {
+    return <Loading />;
   }
 
   return (

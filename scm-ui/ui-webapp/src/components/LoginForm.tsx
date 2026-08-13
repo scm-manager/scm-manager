@@ -16,7 +16,9 @@
 
 import React, { FormEvent } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { ErrorNotification, InputField, SubmitButton, UnauthorizedError } from "@scm-manager/ui-components";
+import { InputField } from "@scm-manager/ui-components";
+import { Button, ErrorNotification } from "@scm-manager/ui-core";
+import { UnauthorizedError } from "@scm-manager/ui-api";
 
 type Props = WithTranslation & {
   error?: Error | null;
@@ -81,14 +83,25 @@ class LoginForm extends React.Component<Props, State> {
             placeholder={t("login.username-placeholder")}
             autofocus={true}
             onChange={this.handleUsernameChange}
+            disabled={loading}
           />
           <InputField
             testId="password-input"
             placeholder={t("login.password-placeholder")}
             type="password"
             onChange={this.handlePasswordChange}
+            disabled={loading}
           />
-          <SubmitButton label={t("login.submit")} fullWidth={true} loading={loading} testId="login-button" />
+          <Button
+            type="submit"
+            variant="primary"
+            className="is-fullwidth"
+            isLoading={loading}
+            disabled={loading}
+            testId="login-button"
+          >
+            {t("login.submit")}
+          </Button>
         </form>
       </>
     );

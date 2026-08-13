@@ -41,7 +41,7 @@ import {
   useCurrentRepositoryBaseUrl,
   useShortcut,
 } from "@scm-manager/ui-core";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import EditRepoNavLink from "../components/EditRepoNavLink";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import RepositoryNavLink from "../components/RepositoryNavLink";
@@ -65,6 +65,18 @@ const RepositoryRoot: FC = () => {
   const [showHealthCheck, setShowHealthCheck] = useState(false);
   const indexLinks = useIndexLinks();
   const absoluteRepoUrl = useCurrentRepositoryBaseUrl();
+  const binder = useBinder();
+
+  const extensionProps = {
+    repository,
+    indexLinks,
+    absoluteRepoUrl,
+  };
+
+  const hasRepositorySettings =
+    !!repository._links.update ||
+    !!repository._links.permissions ||
+    binder.hasExtension<extensionPoints.RepositorySetting>("repository.setting", extensionProps);
 
   const codeLinkname = useMemo(() => {
     if (repository?._links?.sources) {
@@ -121,6 +133,7 @@ const RepositoryRoot: FC = () => {
       navigate(`${absoluteRepoUrl}/${REPOSITORY_SUB_ROUTES.SETTINGS}/${REPOSITORY_SETTINGS_SUB_ROUTES.GENERAL}`);
     },
     {
+      active: hasRepositorySettings,
       description: t("shortcuts.settings"),
     },
   );
@@ -136,12 +149,6 @@ const RepositoryRoot: FC = () => {
       </RouteLink>
     </>
   );
-
-  const extensionProps = {
-    repository,
-    indexLinks,
-    absoluteRepoUrl,
-  };
 
   const evaluateDestinationForCodeLink = () => {
     if (repository?._links?.sources) {
@@ -226,52 +233,32 @@ const RepositoryRoot: FC = () => {
               props={extensionProps}
               renderAll={true}
             />
-            <SubNavigation
-              to={`${absoluteRepoUrl}/${REPOSITORY_SUB_ROUTES.SETTINGS}/${REPOSITORY_SETTINGS_SUB_ROUTES.GENERAL}`}
-              label={t("repositoryRoot.menu.settingsNavLink")}
-              title={t("repositoryRoot.menu.settingsNavLink")}
-            >
-              <EditRepoNavLink
-                repository={repository}
-                editUrl={`${absoluteRepoUrl}/${REPOSITORY_SUB_ROUTES.SETTINGS}/${REPOSITORY_SETTINGS_SUB_ROUTES.GENERAL}`}
-              />
-              <PermissionsNavLink
-                permissionUrl={`${absoluteRepoUrl}/${REPOSITORY_SUB_ROUTES.SETTINGS}/${REPOSITORY_SETTINGS_SUB_ROUTES.PERMISSIONS}`}
-                repository={repository}
-              />
-              <ExtensionPoint<extensionPoints.RepositorySetting>
-                name="repository.setting"
-                props={extensionProps}
-                renderAll
-              />
-            </SubNavigation>
+            {hasRepositorySettings && (
+              <SubNavigation
+                to={`${absoluteRepoUrl}/${REPOSITORY_SUB_ROUTES.SETTINGS}/${REPOSITORY_SETTINGS_SUB_ROUTES.GENERAL}`}
+                label={t("repositoryRoot.menu.settingsNavLink")}
+                title={t("repositoryRoot.menu.settingsNavLink")}
+              >
+                <EditRepoNavLink
+                  repository={repository}
+                  editUrl={`${absoluteRepoUrl}/${REPOSITORY_SUB_ROUTES.SETTINGS}/${REPOSITORY_SETTINGS_SUB_ROUTES.GENERAL}`}
+                />
+                <PermissionsNavLink
+                  permissionUrl={`${absoluteRepoUrl}/${REPOSITORY_SUB_ROUTES.SETTINGS}/${REPOSITORY_SETTINGS_SUB_ROUTES.PERMISSIONS}`}
+                  repository={repository}
+                />
+                <ExtensionPoint<extensionPoints.RepositorySetting>
+                  name="repository.setting"
+                  props={extensionProps}
+                  renderAll
+                />
+              </SubNavigation>
+            )}
           </SecondaryNavigation>
         </SecondaryNavigationColumn>
       </CustomQueryFlexWrappedColumns>
     </Page>
   );
-
-  // TODO: Fix with plugin e.q. readme
-  // props used for extensions
-  // most of the props required for compatibility
-  // const props = {
-  //   namespace: repository.namespace,
-  //   name: repository.name,
-  //   repository: repository,
-  //   loading: isLoading,
-  //   error,
-  //   match: true,
-  //   repoLink: (indexLinks.repositories as Link)?.href,
-  //   indexLinks,
-  // };
-  //
-  // const redirectUrlFactory = binder.getExtension<extensionPoints.RepositoryRedirect>("repository.redirect", props);
-  // let redirectedUrl = "/code/sources/"; // let
-  // if (redirectUrlFactory) {
-  //   redirectedUrl = redirectUrlFactory(props);
-  // } else {
-  //   redirectedUrl= "/code/sources/" ;
-  // }
 };
 
 export default RepositoryRoot;

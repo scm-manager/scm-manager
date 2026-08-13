@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
+import React, { Suspense } from "react";
 import Index from "./containers/Index";
 import ReactDOM from "react-dom/client";
 
@@ -27,7 +27,7 @@ import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink
 
 import "./tokenExpired";
 import { ApiProvider } from "@scm-manager/ui-api";
-import { ShortcutDocsContextProvider } from "@scm-manager/ui-core"; // Makes sure that the global `define` function is registered and all provided modules are included in the final bundle at all times
+import { Loading, ShortcutDocsContextProvider } from "@scm-manager/ui-core";
 import "./_modules/provided-modules";
 
 async function startApp() {
@@ -44,7 +44,9 @@ async function startApp() {
       <I18nextProvider i18n={i18n}>
         <ShortcutDocsContextProvider>
           <ActiveModalCountContextProvider>
-            <Index />
+            <Suspense fallback={<Loading />}>
+              <Index />
+            </Suspense>
           </ActiveModalCountContextProvider>
         </ShortcutDocsContextProvider>
       </I18nextProvider>
