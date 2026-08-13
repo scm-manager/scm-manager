@@ -1,0 +1,2 @@
+- type: fixed
+  description: Dumps are not written to disk on repository import

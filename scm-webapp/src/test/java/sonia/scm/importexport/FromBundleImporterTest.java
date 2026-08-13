@@ -25,7 +25,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -45,14 +44,11 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.UnbundleCommandBuilder;
 import sonia.scm.repository.api.UnbundleResponse;
-import sonia.scm.repository.work.WorkdirProvider;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.function.Consumer;
 
 import static java.util.Collections.singleton;
@@ -68,7 +64,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("UnstableApiUsage")
 class FromBundleImporterTest {
 
   public static final Repository REPOSITORY = RepositoryTestData.createHeartOfGold("svn");
@@ -80,8 +75,6 @@ class FromBundleImporterTest {
   private RepositoryServiceFactory serviceFactory;
   @Mock
   private ScmEventBus eventBus;
-  @Mock
-  private WorkdirProvider workdirProvider;
   @Mock
   private RepositoryImportLoggerFactory loggerFactory;
   @Mock
@@ -108,9 +101,8 @@ class FromBundleImporterTest {
   class WithPermission {
 
     @BeforeEach
-    void initMocks(@TempDir Path temp) throws IOException {
+    void initMocks() throws IOException {
       when(subject.getPrincipal()).thenReturn("dent");
-      when(workdirProvider.createNewWorkdir(REPOSITORY.getId())).thenReturn(temp.toFile());
       when(manager.create(eq(REPOSITORY), any())).thenAnswer(
         invocation -> {
           invocation.getArgument(1, Consumer.class).accept(REPOSITORY);
@@ -123,7 +115,7 @@ class FromBundleImporterTest {
       when(repositoryType.getSupportedCommands()).thenReturn(singleton(Command.UNBUNDLE));
       when(loggerFactory.createLogger()).thenReturn(logger);
 
-      when(unbundleCommandBuilder.unbundle(any(File.class))).thenReturn(new UnbundleResponse(42));
+      when(unbundleCommandBuilder.unbundle(any(InputStream.class))).thenReturn(new UnbundleResponse(42));
       RepositoryService service = mock(RepositoryService.class);
       when(serviceFactory.create(any(Repository.class))).thenReturn(service);
       when(service.getUnbundleCommand()).thenReturn(unbundleCommandBuilder);
@@ -136,7 +128,7 @@ class FromBundleImporterTest {
       importer.importFromBundle(true, in, REPOSITORY);
 
       verify(unbundleCommandBuilder).setCompressed(true);
-      verify(unbundleCommandBuilder).unbundle(any(File.class));
+      verify(unbundleCommandBuilder).unbundle(any(InputStream.class));
     }
 
     @Test
@@ -146,7 +138,7 @@ class FromBundleImporterTest {
       importer.importFromBundle(false, in, REPOSITORY);
 
       verify(unbundleCommandBuilder, never()).setCompressed(true);
-      verify(unbundleCommandBuilder).unbundle(any(File.class));
+      verify(unbundleCommandBuilder).unbundle(any(InputStream.class));
     }
 
     @Test
