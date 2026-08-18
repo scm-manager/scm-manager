@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.12.0] - 2026-08-18
+### Added
+- Progress callback to mirror command
+- Extension points in code overview on top of sources or as a replacement for the 'No sources available' banner
+- Option to check a complete mirrored repository for lfs pointers
+- Configration for color of danger zone
+
+### Fixed
+- Allow public static resources with external authentication plugins
+- Dumps are not written to disk on repository import
+- Avoid static metrics for repository file paths
+
 ## [3.11.10] - 2026-06-10
 ### Fixed
 - Optimized loading of LFS files for imported and mirrored repositories
@@ -1893,3 +1905,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.11.8]: https://scm-manager.org/download/3.11.8
 [3.11.9]: https://scm-manager.org/download/3.11.9
 [3.11.10]: https://scm-manager.org/download/3.11.10
+[3.12.0]: https://scm-manager.org/download/3.12.0

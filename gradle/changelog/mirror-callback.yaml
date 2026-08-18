@@ -1,4 +1,0 @@
-- type: added
-  description: Progress callback to mirror command
-- type: added
-  description: Extension points in code overview on top of sources or as a replacement for the 'No sources available' banner
