@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Progress callback to mirror command
 - Extension points in code overview on top of sources or as a replacement for the 'No sources available' banner
-- Option to check a complete mirrored repository for lfs pointers
-- Configration for color of danger zone
+- Option to check a complete mirrored repository for LFS pointers
+- Configuration for color of danger zone
 
 ### Fixed
 - Allow public static resources with external authentication plugins
