@@ -21,22 +21,30 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
 import org.tmatesoft.svn.core.auth.SVNAuthentication;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
+import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.GlobalProxyConfiguration;
 import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.repository.api.MirrorCommandBuilder;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.util.SystemUtil;
 
 import javax.net.ssl.X509TrustManager;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -54,6 +62,8 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
   private SvnContext emptyContext;
 
   private final ScmConfiguration configuration = new ScmConfiguration();
+
+  private final SVNClientManager client = SVNClientManager.newInstance();
 
   @Before
   public void bendContextToNewRepository() throws IOException, SVNException {
@@ -97,6 +107,61 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
     verify(authenticationFactory).create(SVNURL.parseURIEncoded(request.getSourceUrl()), request);
   }
 
+  @Test
+  public void shouldReportInitialMirrorProgress() {
+    RecordingLogCallback progressCallback = new RecordingLogCallback();
+    MirrorCommandRequest request = createRequest(repositoryDirectory);
+    request.setProgressCallback(progressCallback);
+
+    MirrorCommandResult result = createMirrorCommand(emptyContext).mirror(request);
+
+    assertThat(result.getResult()).isEqualTo(OK);
+    assertThat(progressCallback.events).containsExactly(
+      "started:Synchronizing SVN revisions:5",
+      "progressed:1",
+      "progressed:2",
+      "progressed:3",
+      "progressed:4",
+      "progressed:5",
+      "finished"
+    );
+  }
+
+  @Test
+  public void shouldReportMirrorUpdateProgress() throws SVNException, IOException {
+    callMirror(emptyContext, repositoryDirectory);
+    addRevisionToSourceRepository();
+    RecordingLogCallback progressCallback = new RecordingLogCallback();
+    MirrorCommandRequest request = createRequest(repositoryDirectory);
+    request.setProgressCallback(progressCallback);
+
+    MirrorCommandResult result = createMirrorCommand(emptyContext).update(request);
+
+    assertThat(result.getResult()).isEqualTo(OK);
+    assertThat(result.getLog()).contains("Updated from revision 5 to revision 6");
+    assertThat(progressCallback.events).containsExactly(
+      "started:Synchronizing SVN revisions:1",
+      "progressed:1",
+      "finished"
+    );
+  }
+
+  @Test
+  public void shouldReportFinishedProgressForUpToDateMirror() {
+    callMirror(emptyContext, repositoryDirectory);
+    RecordingLogCallback progressCallback = new RecordingLogCallback();
+    MirrorCommandRequest request = createRequest(repositoryDirectory);
+    request.setProgressCallback(progressCallback);
+
+    MirrorCommandResult result = createMirrorCommand(emptyContext).update(request);
+
+    assertThat(result.getResult()).isEqualTo(OK);
+    assertThat(progressCallback.events).containsExactly(
+      "started:Synchronizing SVN revisions:0",
+      "finished"
+    );
+  }
+
   private MirrorCommandResult callMirrorUpdate(SvnContext context, File source) {
     MirrorCommandRequest request = createRequest(source);
     return createMirrorCommand(context).update(request);
@@ -120,5 +185,49 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
     File dir = tempFolder.newFolder();
     SVNRepositoryFactory.createLocalRepository(dir, true, true);
     return new SvnContext(RepositoryTestData.createHappyVerticalPeopleTransporter(), dir);
+  }
+
+  private void addRevisionToSourceRepository() throws SVNException, IOException {
+    File workingCopy = tempFolder.newFolder();
+    client.getUpdateClient().doCheckout(
+      SVNURL.fromFile(repositoryDirectory),
+      workingCopy,
+      SVNRevision.HEAD,
+      SVNRevision.HEAD,
+      SVNDepth.INFINITY,
+      true
+    );
+    Path newFile = workingCopy.toPath().resolve("progress.txt");
+    Files.write(newFile, "progress\n".getBytes());
+    client.getWCClient().doAdd(newFile.toFile(), false, false, false, SVNDepth.INFINITY, false, false);
+    client.getCommitClient().doCommit(
+      new File[]{workingCopy},
+      false,
+      "add progress file",
+      null,
+      null,
+      false,
+      false,
+      SVNDepth.UNKNOWN
+    );
+  }
+
+  private static class RecordingLogCallback implements MirrorCommandBuilder.LogCallback {
+    private final List<String> events = new ArrayList<>();
+
+    @Override
+    public void stepStarted(String step, int totalWork) {
+      events.add("started:" + step + ":" + totalWork);
+    }
+
+    @Override
+    public void currentStepProgressed(int completedWork) {
+      events.add("progressed:" + completedWork);
+    }
+
+    @Override
+    public void currentStepFinished() {
+      events.add("finished");
+    }
   }
 }

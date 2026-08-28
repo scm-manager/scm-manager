@@ -16,11 +16,11 @@
 
 package sonia.scm.repository.spi;
 
-import com.google.common.annotations.Beta;
 import jakarta.annotation.Nullable;
 import org.apache.commons.lang.StringUtils;
 import sonia.scm.net.ProxyConfiguration;
 import sonia.scm.repository.api.Credential;
+import sonia.scm.repository.api.MirrorCommandBuilder.LogCallback;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.security.PublicKey;
 
@@ -35,8 +35,24 @@ import static java.util.Collections.unmodifiableCollection;
 /**
  * @since 2.19.0
  */
-@Beta
 public final class MirrorCommandRequest {
+
+  private static LogCallback NO_OP_CALLBACK = new LogCallback() {
+    @Override
+    public void stepStarted(String step, int totalWork) {
+
+    }
+
+    @Override
+    public void currentStepProgressed(int completedWork) {
+
+    }
+
+    @Override
+    public void currentStepFinished() {
+
+    }
+  };
 
   private String sourceUrl;
   private Collection<Credential> credentials = emptyList();
@@ -47,6 +63,8 @@ public final class MirrorCommandRequest {
   private ProxyConfiguration proxyConfiguration;
   private boolean ignoreLfs;
   private boolean reloadLfs;
+
+  private LogCallback progressCallback = NO_OP_CALLBACK;
 
   public String getSourceUrl() {
     return sourceUrl;
@@ -115,6 +133,18 @@ public final class MirrorCommandRequest {
    */
   public void setProxyConfiguration(ProxyConfiguration proxyConfiguration) {
     this.proxyConfiguration = proxyConfiguration;
+  }
+
+  /**
+   * Optional callback that may (depending on the implementation) notify about progress of single steps.
+   * @since 3.12.0
+   */
+  public void setProgressCallback(LogCallback progressCallback) {
+    this.progressCallback = progressCallback;
+  }
+
+  public LogCallback getProgressCallback() {
+    return progressCallback;
   }
 
   /**

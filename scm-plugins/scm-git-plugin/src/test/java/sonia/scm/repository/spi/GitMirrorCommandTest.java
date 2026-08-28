@@ -32,6 +32,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Spy;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.GlobalProxyConfiguration;
@@ -40,6 +41,7 @@ import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitHeadModifier;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.api.MirrorCommandBuilder;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.SimpleUsernamePasswordCredential;
@@ -73,6 +75,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
@@ -270,7 +273,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 000000000..fcd0ef183 added-branch (new)"
+      "- 000000000..fcd0ef183 added-branch (new)",
+      "Checking for LFS files"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -292,7 +296,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 3f76a12f0..9e93d8631 test-branch (forced)"
+      "- 3f76a12f0..9e93d8631 test-branch (forced)",
+      "Checking for LFS files"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -314,7 +319,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 3f76a12f0..000000000 test-branch (deleted)"
+      "- 3f76a12f0..000000000 test-branch (deleted)",
+      "Checking for LFS files"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -337,7 +343,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Tags:",
-      "- 000000000..9e93d8631 added-tag (new)"
+      "- 000000000..9e93d8631 added-tag (new)",
+      "Checking for LFS files"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -360,7 +367,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Tags:",
-      "- 86a6645ec..9e93d8631 test-tag (forced)"
+      "- 86a6645ec..9e93d8631 test-tag (forced)",
+      "Checking for LFS files"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -382,7 +390,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Tags:",
-      "- 86a6645ec..000000000 test-tag (deleted)"
+      "- 86a6645ec..000000000 test-tag (deleted)",
+      "Checking for LFS files"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -405,6 +414,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "- 000000000..fcd0ef183 added-branch (rejected due to filter)",
+      "Checking for LFS files",
       "No effective changes detected"
     );
 
@@ -428,6 +438,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "- 3f76a12f0..9e93d8631 test-branch (rejected due to filter)",
+      "Checking for LFS files",
       "No effective changes detected"
     );
 
@@ -451,6 +462,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "- 3f76a12f0..000000000 test-branch (rejected due to filter)",
+      "Checking for LFS files",
       "No effective changes detected"
     );
 
@@ -475,6 +487,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Tags:",
       "- 000000000..9e93d8631 added-tag (rejected due to filter)",
+      "Checking for LFS files",
       "No effective changes detected"
     );
 
@@ -499,6 +512,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Tags:",
       "- 86a6645ec..9e93d8631 test-tag (rejected due to filter)",
+      "Checking for LFS files",
       "No effective changes detected"
     );
 
@@ -522,6 +536,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Tags:",
       "- 86a6645ec..000000000 test-tag (rejected due to filter)",
+      "Checking for LFS files",
       "No effective changes detected"
     );
 
@@ -545,6 +560,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Tags:",
       "- 86a6645ec..000000000 test-tag (thou shalt not pass)",
+      "Checking for LFS files",
       "No effective changes detected"
     );
   }
@@ -564,6 +580,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       "! got error checking filter for update: this tag creates an exception",
       "Tags:",
       "- 86a6645ec..000000000 test-tag (exception in filter)",
+      "Checking for LFS files",
       "No effective changes detected"
     );
   }
@@ -854,6 +871,32 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldReportLfsLoadingProgress() {
+    RecordingLogCallback progressCallback = new RecordingLogCallback();
+
+    callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> c.setProgressCallback(progressCallback));
+
+    assertThat(progressCallback.events)
+      .containsSubsequence(
+        "started:Loading LFS files:0",
+        "finished"
+      );
+  }
+
+  @Test
+  public void shouldNotReportLfsLoadingProgressIfLfsIsIgnored() {
+    RecordingLogCallback progressCallback = new RecordingLogCallback();
+
+    callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> {
+      c.setIgnoreLfs(true);
+      c.setProgressCallback(progressCallback);
+    });
+
+    assertThat(progressCallback.events)
+      .doesNotContain("started:Loading LFS files:0");
+  }
+
+  @Test
   public void shouldPassExistingRevisionsToLfsLoaderOnUpdate() throws IOException, GitAPIException {
     callMirrorCommand();
     reset(lfsLoader);
@@ -1102,6 +1145,24 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(selector.newDefaultBranch("master")).get().isEqualTo("main");
   }
 
+  @Test
+  public void shouldHandleCallbacks() {
+    MirrorCommandBuilder.LogCallback logCallbackSpy = spy(MirrorCommandBuilder.LogCallback.class);
+    GitMirrorCommand.ProgressMonitorAdapter progressMonitorAdapter = new GitMirrorCommand.ProgressMonitorAdapter(logCallbackSpy);
+
+    progressMonitorAdapter.beginTask("Build bypass", 42);
+    verify(logCallbackSpy).stepStarted("Build bypass", 42);
+
+    progressMonitorAdapter.update(22);
+    verify(logCallbackSpy).currentStepProgressed(22);
+
+    progressMonitorAdapter.update(20);
+    verify(logCallbackSpy).currentStepProgressed(42);
+
+    progressMonitorAdapter.endTask();
+    verify(logCallbackSpy).currentStepFinished();
+  }
+
   private Updates callMirrorAndCollectUpdates() {
     Updates updates = new Updates();
 
@@ -1135,6 +1196,25 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   private class Updates {
     private final List<MirrorFilter.BranchUpdate> branchUpdates = new ArrayList<>();
     private final List<MirrorFilter.TagUpdate> tagUpdates = new ArrayList<>();
+  }
+
+  private static class RecordingLogCallback implements MirrorCommandBuilder.LogCallback {
+    private final List<String> events = new ArrayList<>();
+
+    @Override
+    public void stepStarted(String step, int totalWork) {
+      events.add("started:" + step + ":" + totalWork);
+    }
+
+    @Override
+    public void currentStepProgressed(int completedWork) {
+      events.add("progressed:" + completedWork);
+    }
+
+    @Override
+    public void currentStepFinished() {
+      events.add("finished");
+    }
   }
 
   private RevObject getRevObject(Git existingClone, String revision) throws IOException {

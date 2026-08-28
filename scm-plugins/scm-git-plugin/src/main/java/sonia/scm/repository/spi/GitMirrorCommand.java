@@ -25,6 +25,7 @@ import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.EmptyProgressMonitor;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefDatabase;
@@ -49,6 +50,7 @@ import sonia.scm.repository.GitHeadModifier;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Tag;
+import sonia.scm.repository.api.MirrorCommandBuilder;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.MirrorCommandResult.ResultType;
 import sonia.scm.repository.api.MirrorFilter;
@@ -59,6 +61,7 @@ import sonia.scm.repository.spi.LfsLoader.LfsLoaderLogger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -153,7 +156,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   private class Worker extends GitCloneWorker<MirrorCommandResult> {
 
     private final MirrorCommandRequest mirrorCommandRequest;
-    private final List<String> mirrorLog = new ArrayList<>();
+    private final MirrorLogWithCallback mirrorLog;
     private final Stopwatch stopwatch;
 
     private final DefaultBranchSelector defaultBranchSelector;
@@ -172,6 +175,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     private Worker(GitContext context, MirrorCommandRequest mirrorCommandRequest, sonia.scm.repository.Repository repository, Git git) {
       super(git, context, repository);
       this.mirrorCommandRequest = mirrorCommandRequest;
+      this.mirrorLog = new MirrorLogWithCallback(mirrorCommandRequest.getProgressCallback());
       this.git = git;
       stopwatch = Stopwatch.createStarted();
       defaultBranchSelector = new DefaultBranchSelector(git);
@@ -184,7 +188,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         result = FAILED;
         LOG.info("got exception while trying to synchronize mirror for repository {}", context.getRepository(), e);
         mirrorLog.add("failed to synchronize: " + e.getMessage());
-        return new MirrorCommandResult(FAILED, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
+        return new MirrorCommandResult(FAILED, mirrorLog.getLog(), stopwatch.stop().elapsed(), lfsUpdateResult);
       }
     }
 
@@ -199,7 +203,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         LOG.trace("No updates found for mirror repository {}", repository);
         mirrorLog.add("No updates found");
         if (!mirrorCommandRequest.isReloadLfs()) {
-          return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
+          return new MirrorCommandResult(result, mirrorLog.getLog(), stopwatch.stop().elapsed(), lfsUpdateResult);
         }
       }
       Collection<ObjectId> accepted = new HashSet<>();
@@ -212,24 +216,16 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
       if (!fetchResult.getTrackingRefUpdates().isEmpty() || mirrorCommandRequest.isReloadLfs()) {
         if (mirrorCommandRequest.isReloadLfs() || !mirrorCommandRequest.isIgnoreLfs()) {
-          LfsLoaderLogger lfsLoaderLogger = new MirrorLfsLoaderLogger();
-
-          lfsLoader.load(
-            git.getRepository(),
-            lfsLoaderLogger,
-            mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog),
-            mirrorCommandRequest.getSourceUrl(),
-            repository,
-            lfsUpdateResult,
-            accepted,
-            existingRevisions
-          );
+          mirrorLog.add("Checking for LFS files");
+          loadLfsFiles(accepted, existingRevisions);
+        } else {
+          mirrorLog.add("Skipping LFS files");
         }
       }
 
       if (!defaultBranchSelector.isChanged()) {
         mirrorLog.add("No effective changes detected");
-        return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
+        return new MirrorCommandResult(result, mirrorLog.getLog(), stopwatch.stop().elapsed(), lfsUpdateResult);
       }
 
       String currentDefaultBranchInRepository = getCurrentDefaultBranch();
@@ -239,7 +235,27 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       String[] pushRefSpecs = generatePushRefSpecs().toArray(new String[0]);
       forcePush(pushRefSpecs);
       ResultType finalResult = lfsUpdateResult.hasFailures()? FAILED: result;
-      return new MirrorCommandResult(finalResult, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
+      return new MirrorCommandResult(finalResult, mirrorLog.getLog(), stopwatch.stop().elapsed(), lfsUpdateResult);
+    }
+
+    private void loadLfsFiles(Collection<ObjectId> accepted, Collection<ObjectId> existingRevisions) {
+      mirrorLog.callback.stepStarted("Loading LFS files", 0);
+      try {
+        LfsLoaderLogger lfsLoaderLogger = new MirrorLfsLoaderLogger();
+
+        lfsLoader.load(
+          git.getRepository(),
+          lfsLoaderLogger,
+          mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog),
+          mirrorCommandRequest.getSourceUrl(),
+          repository,
+          lfsUpdateResult,
+          accepted,
+          existingRevisions
+        );
+      } finally {
+        mirrorLog.callback.currentStepFinished();
+      }
     }
 
     private class MirrorLfsLoaderLogger implements LfsLoaderLogger {
@@ -517,6 +533,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         .setForceUpdate(true)
         .setRemoveDeletedRefs(true)
         .setRemote(mirrorCommandRequest.getSourceUrl())
+        .setProgressMonitor(new ProgressMonitorAdapter(mirrorLog.callback))
         .setTransportConfigCallback(transport -> {
           if (transport instanceof TransportHttp transportHttp) {
             transportHttp.setHttpConnectionFactory(mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog));
@@ -728,6 +745,39 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
   }
 
+  static class ProgressMonitorAdapter extends EmptyProgressMonitor {
+
+    private final MirrorCommandBuilder.LogCallback callback;
+
+    private int currentTotal;
+    private int currentCount;
+
+    ProgressMonitorAdapter(MirrorCommandBuilder.LogCallback callback) {
+      this.callback = callback;
+    }
+
+    @Override
+    public void beginTask(String title, int totalWork) {
+      currentTotal = totalWork;
+      currentCount = 0;
+      callback.stepStarted(title, totalWork);
+    }
+
+    @Override
+    public void endTask() {
+      callback.currentStepFinished();
+    }
+
+    @Override
+    public void update(int completed) {
+      currentCount += completed;
+      if (currentTotal == 0) {
+        return;
+      }
+      callback.currentStepProgressed(currentCount);
+    }
+  }
+
   private interface RefUpdateConsumer {
     void accept(TrackingRefUpdate refUpdate) throws IOException;
   }
@@ -832,4 +882,20 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     MirrorCommand create(GitContext context);
   }
 
+  static class MirrorLogWithCallback {
+    private final List<String> log = new ArrayList<>();
+    private final MirrorCommandBuilder.LogCallback callback;
+
+    MirrorLogWithCallback(MirrorCommandBuilder.LogCallback callback) {
+      this.callback = callback;
+    }
+
+    void add(String line) {
+      log.add(line);
+    }
+
+    public List<String> getLog() {
+      return Collections.unmodifiableList(log);
+    }
+  }
 }

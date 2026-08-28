@@ -24,10 +24,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.net.HttpConnectionOptions;
 import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.net.ProxyConfiguration;
+import sonia.scm.repository.api.MirrorCommandBuilder;
 import sonia.scm.repository.api.SimpleUsernamePasswordCredential;
 
 import java.io.IOException;
@@ -51,6 +53,9 @@ class MirrorHttpConnectionProviderTest {
 
   @Captor
   private ArgumentCaptor<HttpConnectionOptions> captor;
+
+  @Spy
+  private MirrorCommandBuilder.LogCallback logCallback;
 
   @Test
   void shouldNotConfigureProxy() throws IOException {
@@ -92,7 +97,7 @@ class MirrorHttpConnectionProviderTest {
   }
 
   private HttpConnectionOptions create(MirrorCommandRequest request) throws IOException {
-    List<String> log = new ArrayList<>();
+    GitMirrorCommand.MirrorLogWithCallback log = new GitMirrorCommand.MirrorLogWithCallback(logCallback);
 
     HttpConnectionFactory connectionFactory = provider.createHttpConnectionFactory(request, log);
     assertThat(connectionFactory).isNotNull();

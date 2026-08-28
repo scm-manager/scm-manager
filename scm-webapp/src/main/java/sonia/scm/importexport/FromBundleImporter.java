@@ -16,7 +16,6 @@
 
 package sonia.scm.importexport;
 
-import com.google.common.io.Files;
 import jakarta.inject.Inject;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
@@ -35,10 +34,7 @@ import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.repository.work.WorkdirProvider;
-import sonia.scm.util.IOUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicReference;
@@ -56,15 +52,13 @@ public class FromBundleImporter {
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
   private final ScmEventBus eventBus;
-  private final WorkdirProvider workdirProvider;
   private final RepositoryImportLoggerFactory loggerFactory;
 
   @Inject
-  public FromBundleImporter(RepositoryManager manager, RepositoryServiceFactory serviceFactory, ScmEventBus eventBus, WorkdirProvider workdirProvider, RepositoryImportLoggerFactory loggerFactory) {
+  public FromBundleImporter(RepositoryManager manager, RepositoryServiceFactory serviceFactory, ScmEventBus eventBus, RepositoryImportLoggerFactory loggerFactory) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.eventBus = eventBus;
-    this.workdirProvider = workdirProvider;
     this.loggerFactory = loggerFactory;
   }
 
@@ -95,34 +89,22 @@ public class FromBundleImporter {
   private Consumer<Repository> unbundleImport(InputStream inputStream, boolean compressed, RepositoryImportLogger logger) {
     return repository -> {
       logger.start(DUMP, repository);
-      File workdir = workdirProvider.createNewWorkdir(repository.getId());
       try (RepositoryService service = serviceFactory.create(repository)) {
-        logger.step("writing temporary dump file");
-        File file = File.createTempFile("scm-import-", ".bundle", workdir);
-        long length = Files.asByteSink(file).writeFrom(inputStream);
-        LOG.info("copied {} bytes to temp, start bundle import", length);
-        logger.step("importing repository data from dump file");
-        runUnbundleCommand(compressed, service, file);
+        runUnbundleCommand(compressed, service, inputStream);
         logger.finished();
       } catch (IOException e) {
         logger.failed(e);
         throw new InternalRepositoryException(repository, "Failed to import from bundle", e);
-      } finally {
-        try {
-          IOUtil.delete(workdir);
-        } catch (IOException ex) {
-          LOG.warn("could not delete temporary file", ex);
-        }
       }
     };
   }
 
-  private void runUnbundleCommand(boolean compressed, RepositoryService service, File file) throws IOException {
+  private void runUnbundleCommand(boolean compressed, RepositoryService service, InputStream inputStream) throws IOException {
     AtomicReference<RepositoryHookEvent> eventSink = new AtomicReference<>();
     service.getUnbundleCommand()
       .setCompressed(compressed)
       .setPostEventSink(eventSink::set)
-      .unbundle(file);
+      .unbundle(inputStream);
     RepositoryHookEvent repositoryHookEvent = eventSink.get();
     if (repositoryHookEvent != null) {
       eventBus.post(new PostReceiveRepositoryHookEvent(repositoryHookEvent));

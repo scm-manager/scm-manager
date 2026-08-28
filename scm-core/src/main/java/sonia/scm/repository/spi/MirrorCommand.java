@@ -16,13 +16,11 @@
 
 package sonia.scm.repository.spi;
 
-import com.google.common.annotations.Beta;
 import sonia.scm.repository.api.MirrorCommandResult;
 
 /**
  * @since 2.19.0
  */
-@Beta
 public interface MirrorCommand {
 
   MirrorCommandResult mirror(MirrorCommandRequest mirrorCommandRequest);

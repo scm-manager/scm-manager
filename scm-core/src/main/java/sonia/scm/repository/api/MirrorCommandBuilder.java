@@ -16,9 +16,6 @@
 
 package sonia.scm.repository.api;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Preconditions;
-import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.net.ProxyConfiguration;
@@ -33,28 +30,17 @@ import java.util.Collection;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 
 /**
  * @since 2.19.0
  */
-@Beta
 public final class MirrorCommandBuilder {
 
   private static final Logger LOG = LoggerFactory.getLogger(MirrorCommandBuilder.class);
 
   private final MirrorCommand mirrorCommand;
+  private final MirrorCommandRequest request = new MirrorCommandRequest();
   private final Repository targetRepository;
-
-  private String sourceUrl;
-  private Collection<Credential> credentials = emptyList();
-  private List<PublicKey> publicKeys = emptyList();
-  private MirrorFilter filter = new MirrorFilter() {};
-  private boolean ignoreLfs;
-  private boolean reloadLfs;
-
-  @Nullable
-  private ProxyConfiguration proxyConfiguration;
 
   MirrorCommandBuilder(MirrorCommand mirrorCommand, Repository targetRepository) {
     this.mirrorCommand = mirrorCommand;
@@ -62,34 +48,35 @@ public final class MirrorCommandBuilder {
   }
 
   public MirrorCommandBuilder setCredentials(Credential credential, Credential... furtherCredentials) {
-    this.credentials = new ArrayList<>();
+    List<Credential> credentials = new ArrayList<>();
     credentials.add(credential);
     credentials.addAll(asList(furtherCredentials));
+    request.setCredentials(credentials);
     return this;
   }
 
   public MirrorCommandBuilder setCredentials(Collection<Credential> credentials) {
-    this.credentials = credentials;
+    request.setCredentials(credentials);
     return this;
   }
 
   public MirrorCommandBuilder setPublicKeys(PublicKey... publicKeys) {
-    this.publicKeys = Arrays.asList(publicKeys);
+    request.setPublicKeys(Arrays.asList(publicKeys));
     return this;
   }
 
   public MirrorCommandBuilder setPublicKeys(Collection<PublicKey> publicKeys) {
-    this.publicKeys = new ArrayList<>(publicKeys);
+    request.setPublicKeys(new ArrayList<>(publicKeys));
     return this;
   }
 
   public MirrorCommandBuilder setSourceUrl(String sourceUrl) {
-    this.sourceUrl = sourceUrl;
+    request.setSourceUrl(sourceUrl);
     return this;
   }
 
   public MirrorCommandBuilder setFilter(MirrorFilter filter) {
-    this.filter = filter;
+    request.setFilter(filter);
     return this;
   }
 
@@ -99,7 +86,19 @@ public final class MirrorCommandBuilder {
    * @since 2.37.0
    */
   public MirrorCommandBuilder setIgnoreLfs(boolean ignoreLfs) {
-    this.ignoreLfs = ignoreLfs;
+    request.setIgnoreLfs(ignoreLfs);
+    return this;
+  }
+
+  /**
+   * The callback that is set here will be called each time the log of the current process gets
+   * updated. The log is the same that will be returned by {@link MirrorCommandResult#getLog()}
+   * when the process has finished.
+   * @return This builder instance
+   * @since 3.12.0
+   */
+  public MirrorCommandBuilder setProgressCallback(LogCallback progressCallback) {
+    request.setProgressCallback(progressCallback);
     return this;
   }
 
@@ -112,7 +111,7 @@ public final class MirrorCommandBuilder {
    * @since 3.12.0
    */
   public MirrorCommandBuilder setReloadLfs(boolean reloadLfs) {
-    this.reloadLfs = reloadLfs;
+    this.request.setReloadLfs(reloadLfs);
     return this;
   }
 
@@ -124,32 +123,42 @@ public final class MirrorCommandBuilder {
    * @since 2.23.0
    */
   public MirrorCommandBuilder setProxyConfiguration(ProxyConfiguration proxyConfiguration) {
-    this.proxyConfiguration = proxyConfiguration;
+    request.setProxyConfiguration(proxyConfiguration);
     return this;
   }
 
   public MirrorCommandResult initialCall() {
-    LOG.info("Creating mirror for {} in repository {}", sourceUrl, targetRepository);
-    MirrorCommandRequest mirrorCommandRequest = createRequest();
-    return mirrorCommand.mirror(mirrorCommandRequest);
+    LOG.info("Creating mirror for {} in repository {}", request.getSourceUrl(), targetRepository);
+    return mirrorCommand.mirror(request);
   }
 
   public MirrorCommandResult update() {
-    LOG.debug("Updating mirror for {} in repository {}", sourceUrl, targetRepository);
-    MirrorCommandRequest mirrorCommandRequest = createRequest();
-    return mirrorCommand.update(mirrorCommandRequest);
+    LOG.debug("Updating mirror for {} in repository {}", request.getSourceUrl(), targetRepository);
+    return mirrorCommand.update(request);
   }
 
-  private MirrorCommandRequest createRequest() {
-    MirrorCommandRequest mirrorCommandRequest = new MirrorCommandRequest();
-    mirrorCommandRequest.setSourceUrl(sourceUrl);
-    mirrorCommandRequest.setCredentials(credentials);
-    mirrorCommandRequest.setFilter(filter);
-    mirrorCommandRequest.setPublicKeys(publicKeys);
-    mirrorCommandRequest.setProxyConfiguration(proxyConfiguration);
-    mirrorCommandRequest.setIgnoreLfs(ignoreLfs);
-    mirrorCommandRequest.setReloadLfs(reloadLfs);
-    Preconditions.checkArgument(mirrorCommandRequest.isValid(), "source url has to be specified");
-    return mirrorCommandRequest;
+  /**
+   * This interface can be used to get information about currently running mirror processes.
+   */
+  public interface LogCallback {
+    /**
+     * This will be called each time a named step is started.
+     * @param step The description of the step.
+     * @param totalWork The totally expected work represented by a number. If this in unknown, it will be set to 0.
+     */
+    void stepStarted(String step, int totalWork);
+
+    /**
+     * Called whenever there is an update of the completed work for the last step declared by
+     * {@link #stepStarted(String, int)}
+     * @param completedWork The currently completed work in relation to the total work announced by
+     * {@link #stepStarted(String, int)}.
+     */
+    void currentStepProgressed(int completedWork);
+
+    /**
+     * Called when the last step declared by {@link #stepStarted(String, int)} has been completed.
+     */
+    void currentStepFinished();
   }
 }
