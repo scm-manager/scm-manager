@@ -31,6 +31,7 @@ describe("Repository File Search", () => {
     cy.restLogin(username, password);
 
     // Create repo
+    cy.intercept("GET", "/scm/api/v2/**").as("loadData");
     namespace = hri.random();
     name = hri.random();
     cy.restCreateRepo("git", namespace, name, true);
@@ -42,6 +43,9 @@ describe("Repository File Search", () => {
 
     // Act
     cy.visit(`/repo/${namespace}/${name}/code/sources`);
+
+    // Waiting here explicitly for background data because otherwise the search button might be detached before click
+    cy.wait("@loadData");
     cy.byTestId("file_search_button").click();
     cy.url().should("include", `/repo/${namespace}/${name}/code/search/HEAD`);
     cy.byTestId("file_search_filter_input").type("README");
