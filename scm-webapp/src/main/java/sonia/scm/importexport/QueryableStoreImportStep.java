@@ -22,6 +22,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.api.ImportFailedException;
+import sonia.scm.util.Archives;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,7 +68,7 @@ class QueryableStoreImportStep implements ImportStep {
   }
 
   private void extractTarToDirectory(InputStream inputStream, File outputDir) throws IOException {
-    try (TarArchiveInputStream tarInput = new NoneClosingTarArchiveInputStream(inputStream)) {
+    try (TarArchiveInputStream tarInput = Archives.createNonClosingTarInputStream(inputStream)) {
       TarArchiveEntry entry;
       while ((entry = tarInput.getNextEntry()) != null) {
         if (entry.isDirectory()) {

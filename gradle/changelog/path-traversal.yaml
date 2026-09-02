@@ -1,0 +1,2 @@
+- type: fixed
+  description: Arbitrary reads and writes, by exploiting path traversals in tar archive inputs
