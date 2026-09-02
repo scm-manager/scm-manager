@@ -275,10 +275,17 @@
   },
   "changesets": {
     "filters": {
+      "label": "Filter commits",
+      "description": "The commit list updates automatically as you type or select a date",
+      "filtering": "Filtering commits",
+      "results_one": "Showing {{count}} commit on this page",
+      "results_other": "Showing {{count}} commits on this page",
+      "noMatches": "No commits match the current filters",
+      "noChangesets": "No commits found",
       "message": "Commit Message",
       "person": "Person",
-      "before": "Before",
-      "after": "After"
+      "before": "End date",
+      "after": "Start date"
     },
     "commitsWithNamespaceName": "Commits in {{namespace}}/{{name}}",
     "commitsWithPageAndNamespaceName": "Commits page {{page}} of {{total}} in {{namespace}}/{{name}}",
@@ -288,6 +295,7 @@
     "errorTitle": "Error",
     "errorSubtitle": "Could not fetch commits",
     "noChangesets": "No commits found for this branch. The commits could have been removed.",
+    "noChangesetsMatchingFilters": "No commits match the current filters.",
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Collapse",
     "ignoreWhitespace": "Ignore whitespaces changes",

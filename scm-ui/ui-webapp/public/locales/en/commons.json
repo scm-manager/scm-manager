@@ -19,6 +19,27 @@
       "ariaLabel": "Close Popover"
     }
   },
+  "datePicker": {
+    "openButton": {
+      "ariaLabel": "Open calendar for {{label}}"
+    },
+    "formatHint": "Date format {{format}}; To access this date field, press the down arrow",
+    "previousMonth": "Go to the previous month",
+    "nextMonth": "Go to the next month",
+    "monthDropdown": "Choose a month",
+    "yearDropdown": "Choose a year",
+    "selectDate": "Select a date",
+    "clearButton": {
+      "ariaLabel": "Clear {{label}}"
+    },
+    "validation": {
+      "invalid": "Enter a valid date in the format {{format}}.",
+      "min": "{{label}} must be on or after {{date}}.",
+      "minWithSource": "{{label}} must not be before the {{sourceLabel}}.",
+      "max": "{{label}} must be on or before {{date}}.",
+      "maxWithSource": "{{label}} must not be after the {{sourceLabel}}."
+    }
+  },
   "menu": {
     "defaultTriggerLabel": "Menu"
   },

@@ -19,6 +19,25 @@
       "ariaLabel": "Popover schließen"
     }
   },
+  "datePicker": {
+    "openButton": {
+      "ariaLabel": "Kalender für {{label}} öffnen"
+    },
+    "formatHint": "Datums-Format {{format}}; Um in dieses Datumsfeld zu gelangen, drücken Sie den Abwärtspfeil",
+    "previousMonth": "Zum vorherigen Monat",
+    "nextMonth": "Zum nächsten Monat",
+    "monthDropdown": "Monat auswählen",
+    "yearDropdown": "Jahr auswählen",
+    "selectDate": "Datum auswählen",
+    "clearButton": {
+      "ariaLabel": "{{label}} leeren"
+    },
+    "validation": {
+      "invalid": "Geben Sie ein gültiges Datum im Format {{format}} ein.",
+      "min": "{{label}} muss am oder nach dem {{date}} liegen.",
+      "max": "{{label}} muss am oder vor dem {{date}} liegen."
+    }
+  },
   "menu": {
     "defaultTriggerLabel": "Menü"
   },

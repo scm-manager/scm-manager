@@ -31,6 +31,7 @@ import {
   REPOSITORY_SUB_ROUTES,
   useSourceNameFromParams,
   InputField,
+  DatePicker,
   useDebounce,
 } from "@scm-manager/ui-core";
 import { useSearchParams } from "react-router";
@@ -73,7 +74,9 @@ const Changesets: FC = ({ ...props }) => {
   const [afterFilter, setAfterFilter] = useState(searchParams.get("after") || "");
   const debouncedAfterFilter = useDebounce(afterFilter, 500);
 
-  const { isLoading, error, data } = useChangesets(repository, {
+  const [filterInteraction, setFilterInteraction] = useState(false);
+
+  const { isLoading, isFetching, error, data } = useChangesets(repository, {
     revision: sourceName,
     page: typeof page === "number" ? page - 1 : -1,
     messageFilter: debouncedMessageFilter,
@@ -83,6 +86,25 @@ const Changesets: FC = ({ ...props }) => {
   });
 
   const [t] = useTranslation("repos");
+  const hasActiveFilters = Boolean(messageFilter || personFilter || beforeFilter || afterFilter);
+  const filtersPending =
+    messageFilter !== debouncedMessageFilter ||
+    personFilter !== debouncedPersonFilter ||
+    beforeFilter !== debouncedBeforeFilter ||
+    afterFilter !== debouncedAfterFilter;
+  const changesets = data?._embedded?.changesets;
+  const redirectingToValidPage = Boolean(
+    data && data.pageTotal && (page === "last" || (typeof page === "number" && data.pageTotal < page && page > 1)),
+  );
+
+  const getFilterStatus = () => {
+    if (!filterInteraction) return "";
+    if (filtersPending || isFetching || redirectingToValidPage) return t("changesets.filters.filtering");
+    if (error) return "";
+    if (!changesets || changesets.length === 0)
+      return hasActiveFilters ? t("changesets.filters.noMatches") : t("changesets.filters.noChangesets");
+    return t("changesets.filters.results", { count: changesets.length });
+  };
   const getDocumentTitle = () => {
     if (data?.pageTotal && data.pageTotal > 1 && page) {
       if (sourceName) {
@@ -134,53 +156,74 @@ const Changesets: FC = ({ ...props }) => {
     setSearchParams(filters);
   };
 
+  const formatDate = (date: Date): string => {
+    const year = date.getFullYear().toString().padStart(4, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+  const today = formatDate(new Date());
+
   return (
     <>
-      <div className="columns">
-        <InputField
-          className="column"
-          label={t("changesets.filters.message")}
-          value={messageFilter}
-          type="search"
-          onChange={(e) => {
-            setMessageFilter(e.target.value);
-            updateFilters({ message: e.target.value });
-          }}
-        />
-        <InputField
-          className="column"
-          label={t("changesets.filters.person")}
-          value={personFilter}
-          type="search"
-          onChange={(e) => {
-            setPersonFilter(e.target.value);
-            updateFilters({ person: e.target.value });
-          }}
-        />
-        <div className="column columns">
+      <fieldset
+        className="field"
+        aria-label={t("changesets.filters.label")}
+        aria-description={t("changesets.filters.description")}
+      >
+        <div className="columns">
           <InputField
             className="column"
-            label={t("changesets.filters.after")}
-            value={afterFilter}
-            type="date"
+            label={t("changesets.filters.message")}
+            value={messageFilter}
+            type="search"
             onChange={(e) => {
-              setAfterFilter(e.target.value);
-              updateFilters({ after: e.target.value });
+              setFilterInteraction(true);
+              setMessageFilter(e.target.value);
+              updateFilters({ message: e.target.value });
             }}
-            max={beforeFilter}
           />
           <InputField
             className="column"
-            label={t("changesets.filters.before")}
-            value={beforeFilter}
-            type="date"
+            label={t("changesets.filters.person")}
+            value={personFilter}
+            type="search"
             onChange={(e) => {
-              setBeforeFilter(e.target.value);
-              updateFilters({ before: e.target.value });
+              setFilterInteraction(true);
+              setPersonFilter(e.target.value);
+              updateFilters({ person: e.target.value });
             }}
-            min={afterFilter}
           />
+          <div className="column columns">
+            <DatePicker
+              className="column"
+              label={t("changesets.filters.after")}
+              value={afterFilter}
+              onChange={(value) => {
+                setFilterInteraction(true);
+                setAfterFilter(value);
+                updateFilters({ after: value });
+              }}
+              min="2000-01-01"
+              max={beforeFilter || today}
+            />
+            <DatePicker
+              className="column"
+              label={t("changesets.filters.before")}
+              value={beforeFilter}
+              onChange={(value) => {
+                setFilterInteraction(true);
+                setBeforeFilter(value);
+                updateFilters({ before: value });
+              }}
+              min={afterFilter}
+              max={today}
+            />
+          </div>
         </div>
+      </fieldset>
+      <div className="is-sr-only" role="status" aria-atomic="true">
+        {getFilterStatus()}
       </div>
       <ChangesetsPanel
         isLoading={isLoading}
@@ -188,6 +231,7 @@ const Changesets: FC = ({ ...props }) => {
         data={data}
         repository={repository}
         sourceName={sourceName}
+        hasActiveFilters={hasActiveFilters}
         {...props}
       />
     </>
@@ -200,9 +244,17 @@ type ChangesetsPanelProps = {
   error: Error | null;
   isLoading: boolean;
   data?: ChangesetCollection;
+  hasActiveFilters?: boolean;
 };
 
-export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({ repository, error, isLoading, data, sourceName }) => {
+export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({
+  repository,
+  error,
+  isLoading,
+  data,
+  sourceName,
+  hasActiveFilters = false,
+}) => {
   const page = usePage();
   const [t] = useTranslation("repos");
   const changesets = data?._embedded?.changesets;
@@ -223,7 +275,11 @@ export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({ repository, error, i
   }
 
   if (!data || !changesets || changesets.length === 0) {
-    return <Notification type="info">{t("changesets.noChangesets")}</Notification>;
+    return (
+      <Notification type="info">
+        {t(hasActiveFilters ? "changesets.noChangesetsMatchingFilters" : "changesets.noChangesets")}
+      </Notification>
+    );
   }
 
   const baseUrl1 = sourceName

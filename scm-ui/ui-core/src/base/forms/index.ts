@@ -57,6 +57,8 @@ export { default as SelectField } from "./select/SelectField";
 export { default as ComboboxField } from "./combobox/ComboboxField";
 export { default as Input } from "./input/Input";
 export { default as InputField } from "./input/InputField";
+export { default as DatePicker } from "./date-picker/DatePicker";
+export type { DatePickerProps } from "./date-picker/DatePicker";
 export { default as Textarea } from "./input/Textarea";
 export { default as Select } from "./select/Select";
 export * from "./resourceHooks";

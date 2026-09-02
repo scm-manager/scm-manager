@@ -277,10 +277,17 @@
   },
   "changesets": {
     "filters": {
+      "label": "Commits filtern",
+      "description": "Die Commitliste aktualisiert sich automatisch beim Tippen oder bei der Datumsauswahl",
+      "filtering": "Commits werden gefiltert",
+      "results_one": "Auf dieser Seite wird {{count}} Commit angezeigt",
+      "results_other": "Auf dieser Seite werden {{count}} Commits angezeigt",
+      "noMatches": "Keine Commits entsprechen den aktuellen Filtern",
+      "noChangesets": "Keine Commits gefunden",
       "message": "Commit-Nachricht",
       "person": "Person",
-      "before": "Vor",
-      "after": "Nach"
+      "before": "Enddatum",
+      "after": "Startdatum"
     },
     "commitsWithNamespaceName": "Commits in {{namespace}}/{{name}}",
     "commitsWithPageAndNamespaceName": "Commits Seite {{page}} von {{total}} in {{namespace}}/{{name}}",
@@ -290,6 +297,7 @@
     "errorTitle": "Fehler",
     "errorSubtitle": "Commits konnten nicht abgerufen werden",
     "noChangesets": "Keine Commits in diesem Branch gefunden. Die Commits könnten gelöscht worden sein.",
+    "noChangesetsMatchingFilters": "Keine Commits entsprechen den aktuellen Filtern.",
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Auf-/Zuklappen",
     "ignoreWhitespace": "Whitespace-Änderungen ignorieren",
