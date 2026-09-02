@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.12.1] - 2026-09-02
+### Fixed
+- Arbitrary reads and writes by exploiting path traversals in tar archive inputs
+
 ## [3.12.0] - 2026-08-18
 ### Added
 - Progress callback to mirror command
@@ -1906,3 +1910,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.11.9]: https://scm-manager.org/download/3.11.9
 [3.11.10]: https://scm-manager.org/download/3.11.10
 [3.12.0]: https://scm-manager.org/download/3.12.0
+[3.12.1]: https://scm-manager.org/download/3.12.1
