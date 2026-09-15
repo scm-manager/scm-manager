@@ -14,25 +14,21 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Checkbox } from "@scm-manager/ui-core";
-import { WhitespaceMode } from "./LoadingDiff";
+import { CollapseMode, WhitespaceMode } from "./LoadingDiff";
 
 type DiffDropDownProps = {
-  collapseDiffs: () => void;
-  /**
-   * @deprecated Use isIgnoreWhitespaces/setIgnoreWhitespaces instead.
-   */
-  ignoreWhitespaces?: () => void;
+  collapseMode: CollapseMode;
+  setCollapseMode?: (collapseMode: CollapseMode) => void;
   renderOnMount: boolean;
   ignoreWhitespacesMode?: WhitespaceMode;
   setIgnoreWhitespacesMode?: (hideWhiteSpaceMode: WhitespaceMode) => void;
 };
 const DiffDropDown: FC<DiffDropDownProps> = ({
-  collapseDiffs,
-  ignoreWhitespaces,
-  renderOnMount,
+  collapseMode = "MANUAL",
+  setCollapseMode,
   ignoreWhitespacesMode,
   setIgnoreWhitespacesMode,
 }) => {
@@ -40,28 +36,22 @@ const DiffDropDown: FC<DiffDropDownProps> = ({
 
   const [isOpen, setOpen] = useState(false);
 
-  // This is a hack and it needs to be here until we fix the re rendering problem upon changing the whitespaces in the diffs
-  useEffect(() => {
-    if (renderOnMount) {
-      if (setIgnoreWhitespacesMode && ignoreWhitespacesMode) {
-        setIgnoreWhitespacesMode(ignoreWhitespacesMode);
-      } else if (ignoreWhitespaces) {
-        ignoreWhitespaces();
-        ignoreWhitespaces();
-      } else {
-        throw new Error("Neither setIgnoreWhitesspaces nor ignoreWhitespaces set for DiffDropDown!");
-      }
-    }
-  }, []);
-
   const handleOpen = () => {
     setOpen(!isOpen);
   };
 
-  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+  const handleIgnoreWhitespacesModeChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     if (setIgnoreWhitespacesMode) {
       setIgnoreWhitespacesMode(event.target.checked ? "ALL" : "NONE");
     }
+    setOpen(false);
+  };
+
+  const handleCollapseModeChange = () => {
+    if (setCollapseMode) {
+      setCollapseMode(collapseMode === "MANUAL" ? "ALL" : "MANUAL");
+    }
+    setOpen(false);
   };
 
   return (
@@ -82,11 +72,11 @@ const DiffDropDown: FC<DiffDropDownProps> = ({
             {setIgnoreWhitespacesMode && ignoreWhitespacesMode ? (
               <Checkbox
                 checked={ignoreWhitespacesMode === "ALL"}
-                onChange={handleChange}
+                onChange={handleIgnoreWhitespacesModeChange}
                 label={t("changesets.checkBoxHideWhitespaceChanges")}
-              ></Checkbox>
+              />
             ) : (
-              <Checkbox onChange={ignoreWhitespaces} label={t("changesets.checkBoxHideWhitespaceChanges")}></Checkbox>
+              <Checkbox label={t("changesets.checkBoxHideWhitespaceChanges")} />
             )}
           </div>
           <hr className="dropdown-divider" />
@@ -94,7 +84,11 @@ const DiffDropDown: FC<DiffDropDownProps> = ({
             <span className="has-text-weight-semibold">{t("changesets.checkBoxHeadingOtherSettings")}</span>
           </div>
           <div className="dropdown-item">
-            <Checkbox onChange={collapseDiffs} label={t("changesets.checkBoxCollapseOption")}></Checkbox>
+            <Checkbox
+              checked={collapseMode === "ALL"}
+              onChange={handleCollapseModeChange}
+              label={t("changesets.checkBoxCollapseOption")}
+            />
           </div>
         </div>
       </div>

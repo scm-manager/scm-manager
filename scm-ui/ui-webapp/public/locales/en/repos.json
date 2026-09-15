@@ -301,7 +301,7 @@
     "ignoreWhitespace": "Ignore whitespaces changes",
     "checkBoxHeadingWhitespaces": "Whitespace Settings",
     "checkBoxHeadingOtherSettings": "Other Settings",
-    "checkBoxCollapseOption": "Collapse all Diffs",
+    "checkBoxCollapseOption": "Collapse diffs by default",
     "checkBoxHideWhitespaceChanges": "Hide Diffs which only contain whitespace changes",
     "activateWhitespace": "Show whitespaces changes",
     "moreDiffsAvailable": "There are more diffs available",

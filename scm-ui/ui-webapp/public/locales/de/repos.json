@@ -303,7 +303,7 @@
     "ignoreWhitespace": "Whitespace-Änderungen ignorieren",
     "checkBoxHeadingWhitespaces": "Umgang mit Leerzeichen",
     "checkBoxHeadingOtherSettings": "Weitere Einstellungen",
-    "checkBoxCollapseOption": "Alle Diffs einklappen",
+    "checkBoxCollapseOption": "Standardmäßig alle Diffs einklappen",
     "checkBoxHideWhitespaceChanges": "Ignoriere Diffs die nur Whitespace Änderungen enthalten",
     "activateWhitespace": "Whitespace-Änderungen einblenden",
     "moreDiffsAvailable": "Es sind weitere Diffs verfügbar",

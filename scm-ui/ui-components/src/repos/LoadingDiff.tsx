@@ -35,6 +35,7 @@ import { useAriaId, useLayoutWide } from "@scm-manager/ui-core";
 import { useLayoutState } from "./diffLayout";
 
 export type WhitespaceMode = "ALL" | "NONE";
+export type CollapseMode = "ALL" | "MANUAL";
 
 type Props = DiffObjectProps & {
   url: string;
@@ -73,7 +74,7 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
 
   const [ignoreWhitespace, setIgnoreWhitespace] = useState<WhitespaceMode>("NONE");
   const [layout, setLayout] = useLayoutState();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapseMode, setCollapseMode] = useState<CollapseMode>("MANUAL");
   const [prevHash, setPrevHash] = useState("");
   const diffContentId = useAriaId();
   const location = useLocation();
@@ -86,9 +87,6 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
   });
 
   const [t] = useTranslation("repos");
-  const collapseDiffs = () => {
-    setCollapsed(!collapsed);
-  };
 
   const setFilePath = () => {
     setPrevHash("");
@@ -111,7 +109,8 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
         <div className="is-flex is-justify-content-space-between">
           <DiffStatistics data={data.statistics} />
           <DiffDropDown
-            collapseDiffs={collapseDiffs}
+            setCollapseMode={setCollapseMode}
+            collapseMode={collapseMode}
             renderOnMount={true}
             ignoreWhitespacesMode={ignoreWhitespace}
             setIgnoreWhitespacesMode={(hideWhiteSpaceMode: WhitespaceMode) => {
@@ -143,7 +142,7 @@ const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) 
           </StickyFileDiffContainer>
           <DiffContent id={diffContentId} className={layout !== "Tree" ? "column" : "is-hidden"}>
             <Diff
-              defaultCollapse={collapsed}
+              defaultCollapse={collapseMode === "ALL"}
               diff={data.files}
               ignoreWhitespace={ignoreWhitespace}
               fetchNextPage={fetchNextPage}
