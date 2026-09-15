@@ -77,7 +77,7 @@ const Page: FC<Props> = ({ title, afterTitle, subtitle, loading, error, showCont
       return (
         <>
           <div className="columns">
-            <div className="column is-one-third-tablet">
+            <div className="column">
               <div className="is-flex is-flex-wrap-wrap is-align-items-center">
                 <Title className="mb-0 mr-2">{title}</Title>
                 {afterTitle}
