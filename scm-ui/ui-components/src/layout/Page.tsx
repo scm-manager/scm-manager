@@ -57,10 +57,11 @@ const Page: FC<Props> = ({ title, afterTitle, subtitle, loading, error, showCont
             <PageActionContainer
               className={classNames(
                 "column",
-                "is-justify-content-flex-end",
-                "is-align-items-center",
+                "is-two-thirds",
                 "is-mobile-action-spacing",
                 "is-flex-tablet",
+                "is-justify-content-flex-end",
+                "is-align-items-center",
               )}
             >
               {child}
