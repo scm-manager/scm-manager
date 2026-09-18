@@ -85,11 +85,12 @@ const Admin: FC = () => {
               </SubNavigation>
             )}
             <NavLink
-              to={`/${ADMIN_BASE_ROUTE}/${ADMIN_SUB_ROUTES.ROLES}/`}
+              to={`/${ADMIN_BASE_ROUTE}/${ADMIN_SUB_ROUTES.ROLES}`}
               icon="fas fa-user-shield"
               label={t("repositoryRole.navLink")}
               title={t("repositoryRole.navLink")}
               testId="admin-repository-role-link"
+              activeWhenMatch={new RegExp(`${ADMIN_SUB_ROUTES.ROLE}/`)}
             />
             <ExtensionPoint<extensionPoints.AdminNavigation>
               name="admin.navigation"

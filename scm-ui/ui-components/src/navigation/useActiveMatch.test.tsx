@@ -152,4 +152,23 @@ describe("useActiveMatch tests", () => {
       expect(result.current).toBe(true);
     });
   });
+
+  describe("Admin permission roles navigation (regression)", () => {
+    const roleProps: RoutingProps = { to: "/admin/roles", activeWhenMatch: new RegExp("role/") };
+
+    it("should match the roles list", () => {
+      const { result } = setup("/admin/roles", roleProps);
+      expect(result.current).toBe(true);
+    });
+
+    it("should match creating a new role", () => {
+      const { result } = setup("/admin/roles/create", roleProps);
+      expect(result.current).toBe(true);
+    });
+
+    it("should match a single role's detail page (singular path segment)", () => {
+      const { result } = setup("/admin/role/READ/info", roleProps);
+      expect(result.current).toBe(true);
+    });
+  });
 });
