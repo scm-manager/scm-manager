@@ -127,6 +127,7 @@ class JwtAccessTokenBuilderTest {
       assertThat(compact).isNotEmpty();
       Claims claims = Jwts.parser()
         .setSigningKey(secureKeyResolver.getSecureKey("dent").getBytes())
+        .build()
         .parseClaimsJws(compact)
         .getBody();
       assertClaims(new JwtAccessToken(claims, compact));

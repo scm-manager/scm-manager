@@ -18,10 +18,6 @@ package sonia.scm.security;
 
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Strings;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwsHeader;
-import io.jsonwebtoken.SigningKeyResolverAdapter;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -34,8 +30,6 @@ import sonia.scm.store.ConfigurationEntryStoreFactory;
 import java.security.SecureRandom;
 import java.util.Random;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Resolve secure keys which can be used for signing token and messages.
@@ -43,8 +37,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @since 2.0.0
  */
 @Singleton
-public class SecureKeyResolver extends SigningKeyResolverAdapter
-{
+public class SecureKeyResolver {
 
   private static final int KEY_LENGTH = 64;
 
@@ -65,7 +58,6 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
   private final JwtSettingsStore jwtSettingsStore;
 
   @Inject
-  @SuppressWarnings("unchecked")
   public SecureKeyResolver(ConfigurationEntryStoreFactory storeFactory, JwtSettingsStore jwtSettingsStore) {
     this(storeFactory, jwtSettingsStore, new SecureRandom());
   }
@@ -79,21 +71,6 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
     this.jwtSettingsStore = jwtSettingsStore;
     this.random = random;
   }
-
-
- 
-  @Override
-  public byte[] resolveSigningKeyBytes(JwsHeader header, Claims claims)
-  {
-    checkNotNull(claims, "claims is required");
-    
-    String subject = claims.getSubject();
-
-    checkArgument(!Strings.isNullOrEmpty(subject), "subject is required");
-
-    return getSecureKey(subject).getBytes();
-  }
-
 
   /**
    * Returns the secure key for the given subject, if there is no key for the

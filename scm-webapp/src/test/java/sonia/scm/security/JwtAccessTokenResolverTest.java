@@ -16,11 +16,10 @@
 
 package sonia.scm.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
@@ -36,7 +35,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
 import java.util.Set;
 
@@ -71,7 +69,7 @@ public class JwtAccessTokenResolverTest {
   public void prepareObjectUnderTest() {
     Set<AccessTokenValidator> validators = Sets.newHashSet(validator);
     when(validator.validate(Mockito.any(AccessToken.class))).thenReturn(true);
-    resolver = new JwtAccessTokenResolver(keyResolver, validators);
+    resolver = new JwtAccessTokenResolver(keyResolver, validators, new ObjectMapper());
   }
 
   /**
@@ -80,7 +78,7 @@ public class JwtAccessTokenResolverTest {
   @Test
   public void testResolve() {
     SecureKey secureKey = createSecureKey();
-    resolveKey(secureKey);
+    resolveKey("marvin", secureKey);
     String compact = createCompactToken("marvin", secureKey);
 
     BearerToken bearer = BearerToken.valueOf(compact);
@@ -94,7 +92,7 @@ public class JwtAccessTokenResolverTest {
   @Test
   public void testResolveWithFailedValidator() {
     SecureKey secureKey = createSecureKey();
-    resolveKey(secureKey);
+    resolveKey("marvin", secureKey);
     String compact = createCompactToken("marvin", secureKey);
 
     // prepare mock
@@ -114,7 +112,7 @@ public class JwtAccessTokenResolverTest {
   @Test
   public void testResolveWithExpiredToken() {
     SecureKey secureKey = createSecureKey();
-    resolveKey(secureKey);
+    resolveKey("trillian", secureKey);
     
     // create expired token
     Date exp = new Date(System.currentTimeMillis() - 600l);
@@ -133,7 +131,7 @@ public class JwtAccessTokenResolverTest {
    */
   @Test
   public void testResolveWithInvalidSignature() {
-    resolveKey(createSecureKey());
+    resolveKey("trillian", createSecureKey());
     
     // create expired token
     String compact = createCompactToken("trillian", createSecureKey());
@@ -147,27 +145,12 @@ public class JwtAccessTokenResolverTest {
   }
   
   /**
-   * Tests {@link JwtAccessTokenResolver#resolve(BearerToken)} without signature.
-   */
-  @Test
-  public void testResolveWithoutSignature() {
-    String compact = Jwts.builder().setSubject("test").compact();
-    
-    // expect exception
-    expectedException.expect(AuthenticationException.class);
-    expectedException.expectCause(instanceOf(UnsupportedJwtException.class));
-    
-    BearerToken bearer = BearerToken.valueOf(compact);
-    resolver.resolve(bearer);
-  }
-  
-  /**
    * Tests {@link JwtAccessTokenResolver#resolve(BearerToken)} with scope.
    */
   @Test
   public void testResolveWithScope() {
     SecureKey key = createSecureKey();
-    resolveKey(key);
+    resolveKey("marvin", key);
 
     String compact = createCompactToken(
       "marvin", 
@@ -180,6 +163,27 @@ public class JwtAccessTokenResolverTest {
     AccessToken access = resolver.resolve(bearer);
     Scope scope = access.getScope();
     assertThat(scope, Matchers.containsInAnyOrder("repo:*", "user:*"));
+  }
+
+  @Test
+  public void testResolveWithMalformedPayload() {
+    String compact = "eyJhbGciOiJIUzI1NiJ9.%25%25%25.signature";
+
+    expectedException.expect(AuthenticationException.class);
+
+    resolver.resolve(BearerToken.valueOf(compact));
+  }
+
+  @Test
+  public void testResolveWithoutSubject() {
+    SecureKey key = createSecureKey();
+    String compact = Jwts.builder()
+      .signWith(SignatureAlgorithm.HS256, key.getBytes())
+      .compact();
+
+    expectedException.expect(AuthenticationException.class);
+
+    resolver.resolve(BearerToken.valueOf(compact));
   }
   
   private String createCompactToken(String subject, SecureKey key) {
@@ -199,19 +203,8 @@ public class JwtAccessTokenResolverTest {
       .compact();
   }
   
-  private void resolveKey(SecureKey key) {
-    when(
-      keyResolver.resolveSigningKey(
-        Mockito.any(JwsHeader.class), 
-        Mockito.any(Claims.class)
-      )
-    )
-    .thenReturn(
-      new SecretKeySpec(
-        key.getBytes(), 
-        SignatureAlgorithm.HS256.getJcaName()
-      )
-    );
+  private void resolveKey(String subject, SecureKey key) {
+    when(keyResolver.getSecureKey(subject)).thenReturn(key);
   }
 
 

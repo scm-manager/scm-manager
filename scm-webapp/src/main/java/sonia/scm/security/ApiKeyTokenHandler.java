@@ -37,7 +37,7 @@ import static java.util.Optional.of;
 class ApiKeyTokenHandler {
 
   private static final Encoder<byte[], String> encoder = Encoders.BASE64URL;
-  private static final Decoder<String, byte[]> decoder = Decoders.BASE64URL;
+  private static final Decoder<CharSequence, byte[]> decoder = Decoders.BASE64URL;
   private static final Logger LOG = LoggerFactory.getLogger(ApiKeyTokenHandler.class);
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

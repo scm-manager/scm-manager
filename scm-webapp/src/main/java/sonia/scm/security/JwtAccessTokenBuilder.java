@@ -21,8 +21,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ClaimsBuilder;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
@@ -180,37 +180,39 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     Instant now = clock.instant();
     long expiration = expiresInUnit.toMillis(expiresIn);
 
-    Claims claims = Jwts.claims(customClaims)
-      .setSubject(sub)
-      .setId(id)
-      .setIssuedAt(Date.from(now));
+    ClaimsBuilder claimsBuilder = Jwts.claims()
+      .add(customClaims)
+      .subject(sub)
+      .id(id)
+      .issuedAt(Date.from(now));
 
     if(!jwtConfig.isEndlessJwtEnabled()) {
-      claims.setExpiration(new Date(now.toEpochMilli() + expiration));
+      claimsBuilder.expiration(new Date(now.toEpochMilli() + expiration));
     } else {
       scmConfiguration.setEnabledJwtExpiration(true);
     }
 
     if (refreshableFor > 0) {
       long re = refreshableForUnit.toMillis(refreshableFor);
-      claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, Date.from(now.plusMillis(re)));
+      claimsBuilder.add(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, Date.from(now.plusMillis(re)));
     } else if (refreshExpiration != null) {
-      claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, Date.from(refreshExpiration));
+      claimsBuilder.add(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, Date.from(refreshExpiration));
     }
     if (parentKeyId == null) {
-      claims.put(JwtAccessToken.PARENT_TOKEN_ID_CLAIM_KEY, id);
+      claimsBuilder.add(JwtAccessToken.PARENT_TOKEN_ID_CLAIM_KEY, id);
     } else {
-      claims.put(JwtAccessToken.PARENT_TOKEN_ID_CLAIM_KEY, parentKeyId);
+      claimsBuilder.add(JwtAccessToken.PARENT_TOKEN_ID_CLAIM_KEY, parentKeyId);
     }
 
     if ( issuer != null ) {
-      claims.setIssuer(issuer);
+      claimsBuilder.issuer(issuer);
     }
     
     // sign token and create compact version
+    Claims claims = claimsBuilder.build();
     String compact = Jwts.builder()
-        .setClaims(claims)
-        .signWith(Keys.hmacShaKeyFor(key.getBytes()), SignatureAlgorithm.HS256)
+        .claims(claims)
+        .signWith(Keys.hmacShaKeyFor(key.getBytes()), Jwts.SIG.HS256)
         .compact();
 
     return new JwtAccessToken(claims, compact);

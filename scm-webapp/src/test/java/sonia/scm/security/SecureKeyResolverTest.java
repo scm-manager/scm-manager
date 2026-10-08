@@ -17,7 +17,6 @@
 package sonia.scm.security;
 
 
-import io.jsonwebtoken.Jwts;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +31,6 @@ import java.util.Arrays;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
@@ -87,30 +85,6 @@ public class SecureKeyResolverTest {
     SecureKey sameRegeneratedKey = resolver.getSecureKey("test");
     assertThat(Arrays.equals(sameRegeneratedKey.getBytes(), regeneratedKey.getBytes())).isTrue();
     assertThat(sameRegeneratedKey.getCreationDate()).isEqualTo(regeneratedKey.getCreationDate());
-  }
-
-  @Test
-  public void testResolveSigningKeyBytes() {
-    SecureKey key = resolver.getSecureKey("test");
-
-    when(store.get("test")).thenReturn(key);
-    when(jwtSettingsStore.get()).thenReturn(settings);
-
-    byte[] bytes = resolver.resolveSigningKeyBytes(null,
-      Jwts.claims().setSubject("test"));
-
-    assertArrayEquals(key.getBytes(), bytes);
-  }
-
-  @Test
-  public void testResolveSigningKeyBytesWithoutKey() {
-    byte[] bytes = resolver.resolveSigningKeyBytes(null, Jwts.claims().setSubject("test"));
-    assertThat(bytes[0]).isEqualTo((byte) 42);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testResolveSigningKeyBytesWithoutSubject() {
-    resolver.resolveSigningKeyBytes(null, Jwts.claims());
   }
 
   @Before
