@@ -197,7 +197,7 @@ public class Repository
   }
 
   public Collection<RepositoryPermission> getPermissions() {
-    return Collections.unmodifiableCollection(permissions);
+    return Collections.unmodifiableSet(permissions);
   }
 
   /**

@@ -16,6 +16,8 @@
 
 package sonia.scm.repository.cli;
 
+import org.github.sdorra.jse.ShiroExtension;
+import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(ShiroExtension.class)
 @ExtendWith(MockitoExtension.class)
 class RepositoryPermissionsClearCommandTest {
 
@@ -50,10 +53,12 @@ class RepositoryPermissionsClearCommandTest {
   private final Repository repository = RepositoryTestData.createHeartOfGold();
 
   @Nested
+  @SubjectAware(value = "dent", permissions = {"repository:permissionRead:42"})
   class ForExistingRepository {
 
     @BeforeEach
     void mockRepository() {
+      repository.setId("42");
       when(repositoryManager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
         .thenReturn(repository);
     }

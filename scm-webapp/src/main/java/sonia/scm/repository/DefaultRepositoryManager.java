@@ -226,6 +226,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
       repository,
       RepositoryPermissions::modify,
       notModified -> {
+        if (!repository.getPermissions().equals(notModified.getPermissions())) {
+          RepositoryPermissions.permissionWrite(repository).check();
+        }
         fireEvent(HandlerEventType.BEFORE_MODIFY, repository, notModified);
         try {
           getHandler(repository).modify(repository);

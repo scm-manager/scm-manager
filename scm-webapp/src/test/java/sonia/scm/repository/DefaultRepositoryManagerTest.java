@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import sonia.scm.AlreadyExistsException;
@@ -52,6 +53,7 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -89,7 +91,7 @@ import static org.mockito.Mockito.when;
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
+public class DefaultRepositoryManagerTest extends ManagerTestBase<RepositoryManager> {
 
   private RepositoryDAO repositoryDAO;
   private RepositoryPostProcessor postProcessor = mock(RepositoryPostProcessor.class);
@@ -107,6 +109,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   private NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
 
   private String mockedNamespace = "default_namespace";
+
+  private KeyGenerator keyGenerator = mock(KeyGenerator.class);
 
   @Before
   public void initContext() {
@@ -183,7 +187,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   )
   public void testGetWithoutRequiredPrivileges() {
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
-    manager.create(heartOfGold);
+    createRepository(heartOfGold);
 
     thrown.expect(UnauthorizedException.class);
     manager.get(heartOfGold.getId());
@@ -240,58 +244,57 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
       return keys.pop();
     });
 
-    // create repository manager
-    RepositoryManager repositoryManager = createRepositoryManager(keyGenerator);
-
     // create first test repository
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
-    repositoryManager.create(heartOfGold);
+    heartOfGold.setId("hof");
+    createRepository(heartOfGold);
     assertEquals("hof", heartOfGold.getId());
 
     // create second test repository
     Repository puzzle42 = RepositoryTestData.create42Puzzle();
-    repositoryManager.create(puzzle42);
+    puzzle42.setId("p42");
+    createRepository(puzzle42);
     assertEquals("p42", puzzle42.getId());
 
     // create third test repository
     Repository restaurant = RepositoryTestData.createRestaurantAtTheEndOfTheUniverse();
-    repositoryManager.create(restaurant);
+    restaurant.setId("rateotu");
+    createRepository(restaurant);
     assertEquals("rateotu", restaurant.getId());
 
     // assert returned repositories
-    Collection<Repository> repositories = repositoryManager.getAll();
+    Collection<Repository> repositories = manager.getAll();
     assertEquals(2, repositories.size());
     assertThat(repositories, containsInAnyOrder(
-      hasProperty("id", is("p42")),
-      hasProperty("id", is("hof"))
+        hasProperty("id", is("p42")),
+        hasProperty("id", is("hof"))
       )
     );
   }
 
   @Test
   public void testEvents() {
-    RepositoryManager repoManager = createManager();
-    repoManager.init(contextProvider);
+    manager.init(contextProvider);
     TestListener listener = new TestListener();
 
     ScmEventBus.getInstance().register(listener);
 
     Repository repository = RepositoryTestData.create42Puzzle();
 
-    repoManager.create(repository);
+    createRepository(repository);
     assertRepositoriesEquals(repository, listener.preRepository);
     assertSame(HandlerEventType.BEFORE_CREATE, listener.preEvent);
     assertRepositoriesEquals(repository, listener.postRepository);
     assertSame(HandlerEventType.CREATE, listener.postEvent);
 
     repository.setDescription("changed description");
-    repoManager.modify(repository);
+    manager.modify(repository);
     assertRepositoriesEquals(repository, listener.preRepository);
     assertSame(HandlerEventType.BEFORE_MODIFY, listener.preEvent);
     assertRepositoriesEquals(repository, listener.postRepository);
     assertSame(HandlerEventType.MODIFY, listener.postEvent);
 
-    repoManager.delete(repository);
+    manager.delete(repository);
 
     assertRepositoriesEquals(repository, listener.preRepository);
     assertSame(HandlerEventType.BEFORE_DELETE, listener.preEvent);
@@ -316,8 +319,21 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   @SubjectAware(username = "crato")
   public void testModifyWithoutRequiredPermissions() {
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
-    manager.create(heartOfGold);
+    createRepository(heartOfGold);
     heartOfGold.setDescription("prototype ship");
+
+    thrown.expect(UnauthorizedException.class);
+    manager.modify(heartOfGold);
+  }
+
+  @Test
+  @SubjectAware(username = "dent")
+  public void testModifyPermissionsWithoutRequiredPermissions() {
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+    heartOfGold.setId("hof");
+    createRepository(heartOfGold);
+
+    heartOfGold.addPermission(new RepositoryPermission("somebody", List.of("*"), false));
 
     thrown.expect(UnauthorizedException.class);
     manager.modify(heartOfGold);
@@ -342,7 +358,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   @SubjectAware(username = "crato")
   public void testRefreshWithoutRequiredPermissions() {
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
-    manager.create(heartOfGold);
+    createRepository(heartOfGold);
     heartOfGold.setDescription("prototype ship");
 
     thrown.expect(UnauthorizedException.class);
@@ -357,7 +373,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   @Test
   public void testRepositoryHook() {
     CountingReceiveHook hook = new CountingReceiveHook();
-    RepositoryManager repoManager = createManager();
 
     ScmEventBus.getInstance().register(hook);
 
@@ -366,27 +381,27 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     Repository repository = createTestRepository();
     HookContext ctx = createHookContext(repository);
 
-    repoManager.fireHookEvent(new RepositoryHookEvent(ctx, repository,
+    manager.fireHookEvent(new RepositoryHookEvent(ctx, repository,
       RepositoryHookType.POST_RECEIVE));
     assertEquals(1, hook.eventsReceived);
-    repoManager.fireHookEvent(new RepositoryHookEvent(ctx, repository,
+    manager.fireHookEvent(new RepositoryHookEvent(ctx, repository,
       RepositoryHookType.POST_RECEIVE));
     assertEquals(2, hook.eventsReceived);
   }
 
   @Test
   public void testNamespaceSet() {
-    RepositoryManager repoManager = createManager();
-    Repository repository = spy(createTestRepository());
+    Repository repository = createTestRepository();
     repository.setName("Testrepo");
-    repoManager.create(repository);
+    repository.setId("test");
+    createRepository(repository);
     assertEquals("default_namespace", repository.getNamespace());
   }
 
   @Test
   public void shouldSetNamespace() {
     Repository repository = new Repository(null, "hg", null, "scm");
-    manager.create(repository);
+    createRepository(repository);
     assertNotNull(repository.getId());
     assertNotNull(repository.getNamespace());
   }
@@ -394,53 +409,48 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   @Test
   public void shouldThrowChangeNamespaceNotAllowedException() {
     Repository repository = new Repository("1", "hg", "space", "x");
-    RepositoryManager repoManager = createManager();
     when(namespaceStrategy.canBeChanged()).thenReturn(false);
 
     thrown.expect(ChangeNamespaceNotAllowedException.class);
 
-    repoManager.rename(repository, "hitchhiker", "heart-of-gold");
+    manager.rename(repository, "hitchhiker", "heart-of-gold");
   }
 
   @Test
   public void shouldThrowNoChangesMadeException() {
     Repository repository = createTestRepository();
-    RepositoryManager repoManager = createManager();
 
     thrown.expect(NoChangesMadeException.class);
 
-    repoManager.rename(repository, "default_namespace", "HeartOfGold");
+    manager.rename(repository, "default_namespace", "HeartOfGold");
   }
 
   @Test
   public void shouldThrowValidationException() {
     Repository repository = createTestRepository();
-    RepositoryManager repoManager = createManager();
     when(namespaceStrategy.canBeChanged()).thenReturn(true);
     when(namespaceStrategy.createNamespace(argThat(r -> r.getNamespace().equals("invalid")))).thenThrow(ScmConstraintViolationException.class);
 
     thrown.expect(ScmConstraintViolationException.class);
 
-    repoManager.rename(repository, "invalid", "splendid");
+    manager.rename(repository, "invalid", "splendid");
   }
 
   @Test
   public void shouldOnlyChangeRepositoryName() {
     Repository repository = createTestRepository();
-    RepositoryManager repoManager = (RepositoryManager) manager;
 
-    Repository changedRepo = repoManager.rename(repository, "default_namespace", "puzzle42");
+    Repository changedRepo = manager.rename(repository, "default_namespace", "puzzle42");
     assertNotEquals(changedRepo.getName(), repository.getName());
   }
 
   @Test
   public void shouldRenameRepositoryNamespaceAndName() {
     Repository repository = createTestRepository();
-    RepositoryManager repoManager = (RepositoryManager) manager;
     when(namespaceStrategy.canBeChanged()).thenReturn(true);
     when(namespaceStrategy.createNamespace(any(Repository.class))).thenReturn("hitchhiker");
 
-    Repository changedRepo = repoManager.rename(repository, "hitchhiker", "puzzle42");
+    Repository changedRepo = manager.rename(repository, "hitchhiker", "puzzle42");
     assertEquals("puzzle42", changedRepo.getName());
     assertEquals("hitchhiker", changedRepo.getNamespace());
   }
@@ -449,9 +459,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   public void shouldNotRenameRepositoryIfNameOrNamespaceAlreadyInUse() {
     Repository repository1 = createTestRepository();
     Repository repository2 = createSecondTestRepository();
-    RepositoryManager repoManager = (RepositoryManager) manager;
 
-    assertThrows(AlreadyExistsException.class, () -> repoManager.rename(repository2, repository1.getNamespace(), repository1.getName()));
+    assertThrows(AlreadyExistsException.class, () -> manager.rename(repository2, repository1.getNamespace(), repository1.getName()));
 
   }
 
@@ -470,9 +479,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   @Test
   public void shouldMarkRepositoryAsArchived() {
     Repository repository = createTestRepository();
-    RepositoryManager repoManager = (RepositoryManager) manager;
 
-    repoManager.archive(repository);
+    manager.archive(repository);
 
     verify(repositoryDAO).modify(argThat(Repository::isArchived));
   }
@@ -483,9 +491,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     Repository repository = RepositoryTestData.createHeartOfGold();
     when(repositoryDAO.get(repository.getNamespaceAndName())).thenReturn(repository);
     when(repositoryDAO.get(repository.getId())).thenReturn(repository);
-    RepositoryManager repoManager = (RepositoryManager) manager;
 
-    assertThrows(UnauthorizedException.class, () -> repoManager.archive(repository));
+    assertThrows(UnauthorizedException.class, () -> manager.archive(repository));
 
     verify(repositoryDAO, never()).modify(any());
   }
@@ -495,9 +502,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     Repository repository = RepositoryTestData.createHeartOfGold();
     repository.setArchived(true);
     createRepository(repository);
-    RepositoryManager repoManager = (RepositoryManager) manager;
 
-    assertThrows(NoChangesMadeException.class, () -> repoManager.archive(repository));
+    assertThrows(NoChangesMadeException.class, () -> manager.archive(repository));
 
     verify(repositoryDAO, never()).modify(any());
   }
@@ -507,9 +513,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     Repository repository = RepositoryTestData.createHeartOfGold();
     repository.setArchived(true);
     createRepository(repository);
-    RepositoryManager repoManager = (RepositoryManager) manager;
 
-    repoManager.unarchive(repository);
+    manager.unarchive(repository);
 
     verify(repositoryDAO).modify(argThat(r -> !r.isArchived()));
   }
@@ -521,9 +526,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     when(repositoryDAO.get(repository.getNamespaceAndName())).thenReturn(repository);
     when(repositoryDAO.get(repository.getId())).thenReturn(repository);
     repository.setArchived(true);
-    RepositoryManager repoManager = (RepositoryManager) manager;
 
-    assertThrows(UnauthorizedException.class, () -> repoManager.unarchive(repository));
+    assertThrows(UnauthorizedException.class, () -> manager.unarchive(repository));
 
     verify(repositoryDAO, never()).modify(any());
   }
@@ -531,9 +535,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   @Test
   public void shouldNotRemoveArchiveMarkFromNotArchivedRepository() {
     Repository repository = createTestRepository();
-    RepositoryManager repoManager = (RepositoryManager) manager;
 
-    assertThrows(NoChangesMadeException.class, () -> repoManager.unarchive(repository));
+    assertThrows(NoChangesMadeException.class, () -> manager.unarchive(repository));
 
     verify(repositoryDAO, never()).modify(any());
   }
@@ -541,10 +544,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
 
   @Override
   protected DefaultRepositoryManager createManager() {
-    return createRepositoryManager(new DefaultKeyGenerator());
-  }
-
-  private DefaultRepositoryManager createRepositoryManager(KeyGenerator keyGenerator) {
     Set<RepositoryHandler> handlerSet = new HashSet<>();
     repositoryDAO = createRepositoryDaoMock();
     mock(ConfigurationStoreFactory.class);
@@ -621,6 +620,11 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   }
 
   private Repository createRepository(Repository repository) {
+    if (repository.getId() != null) {
+      when(keyGenerator.createKey()).thenReturn(repository.getId());
+    } else {
+      when(keyGenerator.createKey()).thenReturn(new DefaultKeyGenerator().createKey());
+    }
     manager.create(repository);
     assertNotNull(repository.getId());
     return repository;

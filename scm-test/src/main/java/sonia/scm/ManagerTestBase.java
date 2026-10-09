@@ -32,7 +32,7 @@ import static java.util.Collections.emptySet;
 import static org.mockito.Mockito.mock;
 
 
-public abstract class ManagerTestBase<T extends ModelObject>
+public abstract class ManagerTestBase<M extends Manager<?>>
 {
 
   @Rule
@@ -41,7 +41,7 @@ public abstract class ManagerTestBase<T extends ModelObject>
   protected SCMContextProvider contextProvider;
   protected RepositoryLocationResolver locationResolver;
 
-  protected Manager<T> manager;
+  protected M manager;
 
   protected File temp ;
 
@@ -64,6 +64,6 @@ public abstract class ManagerTestBase<T extends ModelObject>
   }
 
 
-  protected abstract Manager<T> createManager();
+  protected abstract M createManager();
 
 }

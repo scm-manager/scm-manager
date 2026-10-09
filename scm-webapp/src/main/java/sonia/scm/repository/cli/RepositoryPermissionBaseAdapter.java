@@ -19,6 +19,7 @@ package sonia.scm.repository.cli;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermissions;
 
 import java.util.Optional;
 
@@ -49,6 +50,7 @@ class RepositoryPermissionBaseAdapter implements PermissionBaseAdapter<Repositor
       templateRenderer.renderNotFoundError();
       return empty();
     } else {
+      RepositoryPermissions.permissionRead(repository).check();
       return of(repository);
     }
   }
