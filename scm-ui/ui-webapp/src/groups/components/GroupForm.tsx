@@ -17,8 +17,8 @@
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useUserOptions } from "@scm-manager/ui-api";
-import { Checkbox, InputField, Level, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
-import { ChipInputField, Combobox } from "@scm-manager/ui-core";
+import { Checkbox, InputField, Subtitle, Textarea } from "@scm-manager/ui-components";
+import { Button, ChipInputField, Combobox, Level } from "@scm-manager/ui-core";
 import { AutocompleteObject, Group, Member, Option } from "@scm-manager/ui-types";
 import * as validator from "./groupValidation";
 
@@ -142,7 +142,20 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, transmittedName = ""
         />
         {renderExternalField()}
         {renderMemberfields()}
-        <Level right={<SubmitButton disabled={!isValid} label={t("groupForm.submit")} loading={loading} />} />
+        <Level
+          right={
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={!isValid}
+              isLoading={loading}
+              testId="submit-button"
+              onClick={() => window.scrollTo(0, 0)}
+            >
+              {t("groupForm.submit")}
+            </Button>
+          }
+        />
       </form>
     </>
   );

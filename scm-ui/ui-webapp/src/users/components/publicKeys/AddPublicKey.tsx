@@ -15,7 +15,8 @@
  */
 
 import React, { FC, useState } from "react";
-import { ErrorNotification, InputField, Level, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
+import { ErrorNotification, InputField, Subtitle, Textarea } from "@scm-manager/ui-components";
+import { Button, Level } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import { Me, PublicKeysCollection, User } from "@scm-manager/ui-types";
 import { useCreatePublicKey } from "@scm-manager/ui-api";
@@ -54,12 +55,18 @@ const AddPublicKey: FC<Props> = ({ user, publicKeys }) => {
       <Textarea name="raw" label={t("publicKey.raw")} value={raw} onChange={setRaw} />
       <Level
         right={
-          <SubmitButton
-            label={t("publicKey.addKey")}
-            loading={isPending}
+          <Button
+            variant="primary"
+            isLoading={isPending}
             disabled={!isValid() || isPending}
-            action={addKey}
-          />
+            testId="submit-button"
+            onClick={() => {
+              addKey();
+              window.scrollTo(0, 0);
+            }}
+          >
+            {t("publicKey.addKey")}
+          </Button>
         }
       />
     </>

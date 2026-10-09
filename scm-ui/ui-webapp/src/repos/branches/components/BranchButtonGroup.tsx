@@ -16,7 +16,6 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { ButtonAddons } from "@scm-manager/ui-components";
 import { Icon, LinkButton } from "@scm-manager/ui-core";
 import { Branch, Repository } from "@scm-manager/ui-types";
 
@@ -36,16 +35,20 @@ const BranchButtonGroup: FC<Props> = ({ repository, branch }) => {
   )}/`;
 
   return (
-    <ButtonAddons>
-      <LinkButton to={changesetLink}>
-        <Icon>exchange-alt</Icon>
-        <span>{t("branch.commits")}</span>
-      </LinkButton>
-      <LinkButton to={sourcesLink}>
-        <Icon>code</Icon>
-        <span>{t("branch.sources")}</span>
-      </LinkButton>
-    </ButtonAddons>
+    <div className="field has-addons mb-0">
+      <p className="control">
+        <LinkButton to={changesetLink}>
+          <Icon>exchange-alt</Icon>
+          <span>{t("branch.commits")}</span>
+        </LinkButton>
+      </p>
+      <p className="control">
+        <LinkButton to={sourcesLink}>
+          <Icon>code</Icon>
+          <span>{t("branch.sources")}</span>
+        </LinkButton>
+      </p>
+    </div>
   );
 };
 

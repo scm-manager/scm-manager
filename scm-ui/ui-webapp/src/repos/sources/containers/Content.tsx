@@ -20,14 +20,14 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { File, Link, Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, FileSize, Icon, OpenInFullscreenButton } from "@scm-manager/ui-components";
+import { ErrorNotification, FileSize } from "@scm-manager/ui-components";
 import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
 import AnnotateView from "./AnnotateView";
 import ContentActionMenu from "../components/content/overflowMenu/ContentActionMenu";
 import { useContentType } from "@scm-manager/ui-api";
-import { DateFromNow, useAriaId } from "@scm-manager/ui-core";
+import { DateFromNow, Dialog, Icon, IconButton, useAriaId } from "@scm-manager/ui-core";
 
 type Props = {
   file: File;
@@ -91,21 +91,15 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
     let icon;
     if (collapsed) {
       icon = (
-        <Icon
-          className={classNames("is-inline", "mr-2")}
-          name="angle-right fa-fw"
-          color="inherit"
-          alt={t("sources.content.showMore")}
-        />
+        <Icon className={classNames("is-inline", "ml-0", "mr-1")} alt={t("sources.content.showMore")}>
+          angle-right
+        </Icon>
       );
     } else {
       icon = (
-        <Icon
-          className={classNames("is-inline", "mr-2")}
-          name="angle-down fa-fw"
-          color="inherit"
-          alt={t("sources.content.hideMore")}
-        />
+        <Icon className={classNames("is-inline", "ml-0", "mr-1")} alt={t("sources.content.hideMore")}>
+          angle-down
+        </Icon>
       );
     }
 
@@ -142,11 +136,18 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
           </FullWidthTitleHeader>
           <div className={classNames("level-right", "buttons", "ml-auto")}>
             {selector}
-            <OpenInFullscreenButton
-              modalTitle={file?.name}
-              modalBody={<BorderLessDiv className="panel">{content}</BorderLessDiv>}
-              tooltipStyle="htmlTitle"
-            />
+            <Dialog
+              size="fullscreen"
+              title={file?.name}
+              trigger={
+                <IconButton title={t("diff.fullscreen.open")} aria-label={t("diff.fullscreen.open")}>
+                  <Icon>search-plus</Icon>
+                </IconButton>
+              }
+              footer={[<Dialog.CloseButton key="close">{t("diff.fullscreen.close")}</Dialog.CloseButton>]}
+            >
+              <BorderLessDiv className="panel">{content}</BorderLessDiv>
+            </Dialog>
             <ExtensionPoint<extensionPoints.ReposSourcesContentActionBar>
               name="repos.sources.content.actionbar"
               props={extensionProps}

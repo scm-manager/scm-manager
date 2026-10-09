@@ -15,12 +15,12 @@
  */
 
 import React, { FC, useState } from "react";
-import { ButtonGroup, createA11yId, Radio, SubmitButton, Subtitle } from "@scm-manager/ui-components";
+import { createA11yId, Radio, Subtitle } from "@scm-manager/ui-components";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { Button, useDocumentTitle } from "@scm-manager/ui-core";
 import { useRequiredMe } from "@scm-manager/ui-api";
 
 const LS_KEY = "scm.theme";
@@ -102,9 +102,18 @@ const Theme: FC = () => {
             </div>
           );
         })}
-        <ButtonGroup className="is-justify-content-flex-end">
-          <SubmitButton label={t("profile.theme.submit")} loading={isLoading} disabled={!isDirty} />
-        </ButtonGroup>
+        <div className="buttons is-justify-content-flex-end">
+          <Button
+            type="submit"
+            variant="primary"
+            isLoading={isLoading}
+            disabled={!isDirty}
+            testId="submit-button"
+            onClick={() => window.scrollTo(0, 0)}
+          >
+            {t("profile.theme.submit")}
+          </Button>
+        </div>
       </form>
     </>
   );

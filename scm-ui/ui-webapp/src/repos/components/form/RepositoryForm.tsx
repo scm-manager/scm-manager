@@ -26,7 +26,8 @@ import {
   RepositoryCreation,
   RepositoryType
 } from "@scm-manager/ui-types";
-import { Checkbox, Level, Select, SubmitButton, urls } from "@scm-manager/ui-components";
+import { Checkbox, Select, urls } from "@scm-manager/ui-components";
+import { Button, Level } from "@scm-manager/ui-core";
 import NamespaceAndNameFields from "../NamespaceAndNameFields";
 import RepositoryInformationForm from "../RepositoryInformationForm";
 import { useLocation } from "react-router-dom";
@@ -180,7 +181,16 @@ const RepositoryForm: FC<Props> = ({
     return (
       <Level
         right={
-          <SubmitButton disabled={!isValid() || loading} loading={loading} label={t("repositoryForm.submitCreate")} />
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!isValid() || loading}
+            isLoading={loading}
+            testId="submit-button"
+            onClick={() => window.scrollTo(0, 0)}
+          >
+            {t("repositoryForm.submitCreate")}
+          </Button>
         }
       />
     );

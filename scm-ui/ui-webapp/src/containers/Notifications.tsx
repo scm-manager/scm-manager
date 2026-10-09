@@ -27,15 +27,13 @@ import {
 } from "@scm-manager/ui-api";
 import { Notification, NotificationCollection } from "@scm-manager/ui-types";
 import {
-  Button,
   ErrorNotification,
-  Icon,
   Notification as InfoNotification,
   ToastArea,
   ToastNotification,
   ToastType,
 } from "@scm-manager/ui-components";
-import { DateFromNow } from "@scm-manager/ui-core";
+import { Button, DateFromNow, Icon, IconButton } from "@scm-manager/ui-core";
 import HeaderDropDown, { Column, OnlyMobileWrappingColumn, Table } from "../components/HeaderDropDown";
 
 const DismissColumn = styled.td`
@@ -73,7 +71,9 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
         {isPending ? (
           <div className="small-loading-spinner" aria-label={t("notifications.loading")} />
         ) : (
-          <Button color="text" icon="trash" action={remove} title={t("notifications.dismiss")} className="px-1" />
+          <IconButton onClick={remove} title={t("notifications.dismiss")} aria-label={t("notifications.dismiss")}>
+            <Icon>trash</Icon>
+          </IconButton>
         )}
       </DismissColumn>
     </tr>
@@ -95,8 +95,9 @@ const ClearEntry: FC<ClearEntryProps> = ({ notifications, clearToasts }) => {
   return (
     <div className={classNames("dropdown-item", "has-text-centered")}>
       <ErrorNotification error={error} />
-      <Button className="is-outlined m-3" color="link" loading={isPending} action={clear}>
-        <Icon color="inherit" name="trash" className="mr-1" alt="" /> {t("notifications.dismissAll")}
+      <Button className="is-link is-outlined m-3" isLoading={isPending} onClick={clear}>
+        <Icon>trash</Icon>
+        <span>{t("notifications.dismissAll")}</span>
       </Button>
     </div>
   );
@@ -224,11 +225,12 @@ const BellNotificationIcon: FC<BellNotificationIconProps> = ({ data }) => {
   return (
     <Icon
       className="is-size-4"
-      iconStyle={counter === 0 ? "far" : "fas"}
-      name="bell"
-      color="inherit"
-      alt={t("notifications.bellTitle")}
-    />
+      type={counter === 0 ? "far" : "fas"}
+      aria-hidden={false}
+      aria-label={t("notifications.bellTitle")}
+    >
+      bell
+    </Icon>
   );
 };
 

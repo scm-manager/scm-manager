@@ -18,7 +18,8 @@ import React, { FC, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { Button, Icon, Level } from "@scm-manager/ui-core";
 import { useDeleteBranch } from "@scm-manager/ui-api";
 
 type Props = {
@@ -74,7 +75,12 @@ const DeleteBranch: FC<Props> = ({ repository, branch }: Props) => {
             <p>{t("branch.delete.description")}</p>
           </div>
         }
-        right={<DeleteButton label={t("branch.delete.button")} action={() => setShowConfirmAlert(true)} />}
+        right={
+          <Button variant="signal" onClick={() => setShowConfirmAlert(true)}>
+            <Icon>times</Icon>
+            <span>{t("branch.delete.button")}</span>
+          </Button>
+        }
       />
     </>
   );

@@ -18,7 +18,7 @@ import styled from "styled-components";
 import NoStyleButton from "./NoStyleButton";
 
 /**
- * @deprecated Use Button from ui-core instead
+ * @deprecated Use UnstyledButton from ui-core with the class "is-underlined" instead
  */
 const LinkStyleButton = styled(NoStyleButton)`
   text-decoration: underline;

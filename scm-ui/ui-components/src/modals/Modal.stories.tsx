@@ -352,7 +352,7 @@ import Modal from "./Modal";
 import Checkbox from "../forms/Checkbox";
 import ExternalLink from "../navigation/ExternalLink";
 import { InputField, Radio, Textarea } from "../forms";
-import { Button, ButtonGroup } from "../buttons";
+import { Button } from "../buttons";
 import Notification from "../Notification";
 import ActiveModalCountContext from "./activeModalCountContext";
 
@@ -385,10 +385,10 @@ const withFormElementsBody = (
   </>
 );
 const withFormElementsFooter = (
-  <ButtonGroup>
+  <div className="buttons">
     <Button label="One" />
     <Button label="Two" />
-  </ButtonGroup>
+  </div>
 );
 
 const loadSuggestions = (p: string): Promise<SelectValue[]> =>

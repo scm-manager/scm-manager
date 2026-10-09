@@ -16,7 +16,8 @@
 
 import React, { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, ButtonGroup, Modal, SubmitButton } from "@scm-manager/ui-components";
+import { Modal } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-core";
 import PermissionCheckbox from "../../../permissions/components/PermissionCheckbox";
 
 type SelectedVerbs = { [verb: string]: boolean };
@@ -77,10 +78,14 @@ const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, e
 
   const footer = (
     <form onSubmit={handleSubmit}>
-      <ButtonGroup>
-        {!readOnly ? <SubmitButton label={t("permission.advanced.dialog.submit")} /> : null}
-        <Button label={t("permission.advanced.dialog.abort")} action={onClose} />
-      </ButtonGroup>
+      <div className="buttons">
+        {!readOnly ? (
+          <Button type="submit" variant="primary" testId="submit-button" onClick={() => window.scrollTo(0, 0)}>
+            {t("permission.advanced.dialog.submit")}
+          </Button>
+        ) : null}
+        <Button onClick={onClose}>{t("permission.advanced.dialog.abort")}</Button>
+      </div>
     </form>
   );
 

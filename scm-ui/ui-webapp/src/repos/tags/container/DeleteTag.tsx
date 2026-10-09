@@ -17,7 +17,8 @@
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
-import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { Button, Icon, Level } from "@scm-manager/ui-core";
 import { Repository, Tag } from "@scm-manager/ui-types";
 import { useDeleteTag } from "@scm-manager/ui-api";
 
@@ -65,7 +66,12 @@ const DeleteTag: FC<Props> = ({ tag, repository }) => {
             <p>{t("tag.delete.description")}</p>
           </div>
         }
-        right={<DeleteButton label={t("tag.delete.button")} action={() => setShowConfirmAlert(true)} />}
+        right={
+          <Button variant="signal" onClick={() => setShowConfirmAlert(true)}>
+            <Icon>times</Icon>
+            <span>{t("tag.delete.button")}</span>
+          </Button>
+        }
       />
     </>
   );

@@ -34,7 +34,7 @@ const Button = styled.button`
 `;
 
 /**
- * @deprecated
+ * @deprecated Use Dialog with size "fullscreen" from ui-core instead
  */
 const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody, tooltipStyle = "tooltipComponent" }) => {
   const [t] = useTranslation("repos");

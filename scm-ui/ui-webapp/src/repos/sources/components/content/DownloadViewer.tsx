@@ -17,7 +17,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { File, Link, Repository } from "@scm-manager/ui-types";
-import { DownloadButton } from "@scm-manager/ui-components";
+import { ExternalLinkButton } from "@scm-manager/ui-core";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 
 type Props = WithTranslation & {
@@ -35,7 +35,12 @@ class DownloadViewer extends React.Component<Props> {
           name="repos.sources.content.downloadButton"
           props={{ repository, file }}
         >
-          <DownloadButton url={(file._links.self as Link).href} displayName={t("sources.content.downloadButton")} />
+          <ExternalLinkButton className="is-link" href={(file._links.self as Link).href} target="_self">
+            <span className="icon is-medium">
+              <i className="fas fa-arrow-circle-down" />
+            </span>
+            <span>{t("sources.content.downloadButton")}</span>
+          </ExternalLinkButton>
         </ExtensionPoint>
       </div>
     );

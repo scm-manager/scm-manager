@@ -15,7 +15,8 @@
  */
 
 import React, { FC, useEffect } from "react";
-import { apiClient, validation, ErrorNotification, InputField, SubmitButton } from "@scm-manager/ui-components";
+import { apiClient, validation, ErrorNotification, InputField } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useMutation } from "@tanstack/react-query";
@@ -174,12 +175,17 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
         {errorComponent}
         <div className="columns">
           <div className="column is-full-width">
-            <SubmitButton
-              label={t("adminStep.submit")}
-              fullWidth={true}
-              loading={isPending}
+            <Button
+              type="submit"
+              variant="primary"
+              className="is-fullwidth"
+              isLoading={isPending}
               disabled={!formState.isValid}
-            />
+              testId="submit-button"
+              onClick={() => window.scrollTo(0, 0)}
+            >
+              {t("adminStep.submit")}
+            </Button>
           </div>
         </div>
       </form>

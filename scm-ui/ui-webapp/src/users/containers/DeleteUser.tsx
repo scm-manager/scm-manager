@@ -18,7 +18,8 @@ import React, { FC, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { Button, Icon, Level } from "@scm-manager/ui-core";
 import { useDeleteUser } from "@scm-manager/ui-api";
 
 type Props = {
@@ -72,7 +73,14 @@ const DeleteUser: FC<Props> = ({ confirmDialog = true, user }) => {
     <>
       <hr />
       <ErrorNotification error={error || undefined} />
-      <Level right={<DeleteButton label={t("deleteUser.button")} action={action} loading={isPending} />} />
+      <Level
+        right={
+          <Button variant="signal" onClick={action} isLoading={isPending}>
+            <Icon>times</Icon>
+            <span>{t("deleteUser.button")}</span>
+          </Button>
+        }
+      />
     </>
   );
 };

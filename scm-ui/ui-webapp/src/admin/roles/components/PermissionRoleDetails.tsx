@@ -36,7 +36,7 @@ const PermissionRoleDetails: FC<Props> = ({ role }) => {
           <hr />
           <Level
             right={
-              <LinkButton to="../edit" variant="primary" color="primary">
+              <LinkButton to="../edit" variant="primary">
                 {t("repositoryRole.editButton")}
               </LinkButton>
             }

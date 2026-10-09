@@ -18,7 +18,8 @@ import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Namespace, Permission, Repository, RepositoryRole } from "@scm-manager/ui-types";
-import { Button, ErrorNotification, Icon } from "@scm-manager/ui-components";
+import { ErrorNotification, Icon } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-core";
 import DeletePermissionButton from "../components/DeletePermissionButton";
 import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
@@ -62,7 +63,7 @@ const SinglePermission: FC<Props> = ({
 }) => {
   const [permission, setPermission] = useState(defaultPermission);
   const [showAdvancedDialog, setShowAdvancedDialog] = useState(false);
-  const { isLoading, error, update } = useUpdatePermission(namespaceOrRepository);
+  const { isPending, error, update } = useUpdatePermission(namespaceOrRepository);
   const [t] = useTranslation("repos");
   useEffect(() => {
     setPermission(defaultPermission);
@@ -107,13 +108,13 @@ const SinglePermission: FC<Props> = ({
             handleRoleChange={handleRoleChange}
             availableRoles={availableRoleNames}
             role={permission.role || ""}
-            loading={isLoading}
+            loading={isPending}
             emptyLabel={t("permission.custom")}
           />
         </td>
       )}
       <VCenteredTd>
-        <Button label={t("permission.advanced-button.label")} action={() => setShowAdvancedDialog(true)} />
+        <Button onClick={() => setShowAdvancedDialog(true)}>{t("permission.advanced-button.label")}</Button>
       </VCenteredTd>
       <VCenteredTd className="has-text-centered">
         {permission._links.delete ? (

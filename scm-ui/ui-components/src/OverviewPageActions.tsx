@@ -18,7 +18,8 @@ import React, { FC, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import classNames from "classnames";
-import { Button, urls } from "./index";
+import { LinkButton } from "@scm-manager/ui-core";
+import { urls } from "./index";
 import { FilterInput, Select } from "./forms";
 import { devices } from "./devices";
 
@@ -123,7 +124,9 @@ const OverviewPageActions: FC<Props> = ({
     if (showCreateButton) {
       return (
         <div className={classNames("input-button", "control", "column", "is-flex", "is-align-items-center")}>
-          <Button label={label} link={createLink || `${link}create/`} color="primary" />
+          <LinkButton variant="primary" to={createLink || `${link}create/`}>
+            {label}
+          </LinkButton>
         </div>
       );
     }

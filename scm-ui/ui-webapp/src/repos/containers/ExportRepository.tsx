@@ -15,22 +15,13 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import {
-  Button,
-  ButtonGroup,
-  Checkbox,
-  ErrorNotification,
-  InputField,
-  Level,
-  Notification,
-  Subtitle,
-} from "@scm-manager/ui-components";
+import { Checkbox, ErrorNotification, InputField, Notification, Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { ExportInfo, Link, Repository } from "@scm-manager/ui-types";
 import { useExportInfo, useExportRepository } from "@scm-manager/ui-api";
 import styled from "styled-components";
 import classNames from "classnames";
-import { AbsoluteDate } from "@scm-manager/ui-core";
+import { AbsoluteDate, Button, ExternalLinkButton, Icon, Level } from "@scm-manager/ui-core";
 
 const InfoBox = styled.div`
   white-space: pre-line;
@@ -107,6 +98,13 @@ const ExportRepository: FC<Props> = ({ repository }) => {
   };
 
   const downloadLink = (exportInfo?._links.download as Link)?.href;
+  const isDownloadDisabled = isLoadingInfo || isLoadingExport || !downloadLink;
+  const downloadButtonContent = (
+    <>
+      <Icon>download</Icon>
+      <span>{t("export.downloadExportButton")}</span>
+    </>
+  );
 
   return (
     <>
@@ -150,29 +148,32 @@ const ExportRepository: FC<Props> = ({ repository }) => {
       {renderExportInfo()}
       <Level
         right={
-          <ButtonGroup>
+          <div className="buttons">
+            {isDownloadDisabled ? (
+              <Button className="is-info" disabled>
+                {downloadButtonContent}
+              </Button>
+            ) : (
+              <ExternalLinkButton className="is-info" href={downloadLink} target="_self">
+                {downloadButtonContent}
+              </ExternalLinkButton>
+            )}
             <Button
-              label={t("export.downloadExportButton")}
-              icon="download"
-              link={downloadLink}
-              color="info"
-              disabled={isLoadingInfo || isLoadingExport || !downloadLink}
-            />
-            <Button
-              color="primary"
-              action={() =>
+              variant="primary"
+              onClick={() =>
                 exportRepository(repository, {
                   compressed,
                   password: encrypt ? password : "",
                   withMetadata: fullExport,
                 })
               }
-              loading={isLoadingInfo || isLoadingExport}
+              isLoading={isLoadingInfo || isLoadingExport}
               disabled={isLoadingInfo || isLoadingExport}
-              label={t("export.createExportButton")}
-              icon="file-export"
-            />
-          </ButtonGroup>
+            >
+              <Icon>file-export</Icon>
+              <span>{t("export.createExportButton")}</span>
+            </Button>
+          </div>
         }
       />
     </>

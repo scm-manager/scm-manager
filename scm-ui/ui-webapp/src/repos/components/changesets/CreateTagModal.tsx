@@ -15,7 +15,8 @@
  */
 
 import React, { FC, useEffect, useRef, useState } from "react";
-import { Modal, InputField, Button, Loading, ErrorNotification } from "@scm-manager/ui-components";
+import { Modal, InputField, Loading, ErrorNotification } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import { Changeset, Repository } from "@scm-manager/ui-types";
 import { useCreateTag, useTags } from "@scm-manager/ui-api";
@@ -90,14 +91,14 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
       footer={
         <>
           <Button
-            color="primary"
-            action={() => create(newTagName)}
-            loading={isLoadingCreate}
+            variant="primary"
+            onClick={() => create(newTagName)}
+            isLoading={isLoadingCreate}
             disabled={isLoading || isLoadingCreate || !!validationError || newTagName.length === 0}
           >
             {t("tags.create.confirm")}
           </Button>
-          <Button action={onClose}>{t("tags.create.cancel")}</Button>
+          <Button onClick={onClose}>{t("tags.create.cancel")}</Button>
         </>
       }
       closeFunction={onClose}

@@ -18,7 +18,7 @@ import * as React from "react";
 import { FC, ReactNode, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
-import { ButtonGroup, ErrorNotification, Modal } from "@scm-manager/ui-components";
+import { ErrorNotification, Modal } from "@scm-manager/ui-components";
 import SuccessNotification from "./SuccessNotification";
 import { Button } from "@scm-manager/ui-core";
 
@@ -137,9 +137,9 @@ const PluginActionModal: FC<Props> = ({
   );
 
   const footer = (
-    <ButtonGroup>
+    <div className="buttons">
       {success ? (
-        <Button onClick={() => window.location.reload()} variant="primary" color="success">
+        <Button onClick={() => window.location.reload()} variant="primary">
           {t("plugins.modal.reload")}
         </Button>
       ) : (
@@ -156,7 +156,7 @@ const PluginActionModal: FC<Props> = ({
           <Button onClick={onClose}>{t("plugins.modal.abort")}</Button>
         </>
       )}
-    </ButtonGroup>
+    </div>
   );
 
   return (

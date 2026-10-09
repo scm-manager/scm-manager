@@ -10,11 +10,21 @@ as minimal wrappers around native html elements styled to match the general SCM-
 
 ## Components
 
-There are three actionable components available. Styling is consistent amongst them and all have the required `variant` property.
+There are three actionable components available. Styling is consistent amongst them and all support the optional `variant`
+property. Without a variant, they are rendered in the neutral default style.
 
-1. [Button](?path=/story/components--button)
-2. [Link Button](?path=/story/components--link-button)
-3. [External Link Button](?path=/story/components--external-link-button)
+1. [Button](?path=/story/buttons-button--button)
+2. [Link Button](?path=/story/buttons-button--link-button)
+3. [External Link Button](?path=/story/buttons-button--external-link-button)
+
+In addition, there are three specialized components:
+
+- [Icon Button](?path=/story/buttons-button--bordered-icon) for actions which are represented by an icon only.
+  It has its own variants (`default`, `colored`) and sizes (`medium`, `small`) and has to declare an `aria-label`.
+- [Icon Link Button](?path=/story/buttons-button--icon-link-button) for links which are represented by an icon only.
+  It looks like the medium Icon Button, has the same variants and has to declare an `aria-label`.
+- [Unstyled Button](?path=/story/buttons-button--unstyled-button) for clickable elements which must not look like a
+  button, e.g. an icon or an entry of a list. It has to declare an `aria-label` if it exclusively contains an icon.
 
 ## Usage
 
@@ -22,7 +32,7 @@ Actionable components serve a dedicated purpose. It is therefore important to kn
 
 ### Variants
 
-There are four variants available to each of the three button types, varying in importance.
+The following variants are available to each of the three button types, varying in importance.
 
 <table>
   <thead>
@@ -46,6 +56,11 @@ There are four variants available to each of the three button types, varying in 
   <tr>
     <td>Normal</td>
     <td><Button variant="secondary">Secondary</Button></td>
+    <td>Additional action next to a primary action</td>
+  </tr>
+  <tr>
+    <td>Normal</td>
+    <td><Button>Default</Button></td>
     <td>Cancel action in dialog</td>
   </tr>
   <tr>
@@ -53,12 +68,31 @@ There are four variants available to each of the three button types, varying in 
     <td><Button variant="tertiary">Tertiary</Button></td>
     <td>Circumstantially relevant action on page with many actionable elements</td>
   </tr>
+  <tr>
+    <td>Low</td>
+    <td><Button variant="ghost">Ghost</Button></td>
+    <td>Action which blends into its surroundings</td>
+  </tr>
   </tbody>
 </table>
 
+Besides these, the variants `danger` and `info` are available.
+
 ## Content
 
-Buttons exclusively contain text and no icons. Icons tend to be ambiguous and not always applicable which leads to inconsistent
-and cluttered layouts.
-
 Button text should be short, concise and describe the action performed.
+
+Icons tend to be ambiguous and not always applicable which leads to inconsistent and cluttered layouts. An icon may
+therefore only complement the text of a button, never replace it. Place the `Icon` component inside the button and wrap
+the text in a `span`, so the spacing between icon and text is applied:
+
+```tsx
+<Button variant="signal">
+  <Icon>trash</Icon>
+  <span>Delete</span>
+</Button>
+```
+
+Actions which can only be represented by an icon use the [Icon Button](?path=/story/buttons-button--bordered-icon)
+instead, links use the [Icon Link Button](?path=/story/buttons-button--icon-link-button). As there is no icon-only
+variant for external links, an External Link Button which exclusively contains an icon has to declare an `aria-label`.

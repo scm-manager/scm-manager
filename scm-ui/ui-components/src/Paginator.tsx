@@ -17,7 +17,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { PagedCollection, Link } from "@scm-manager/ui-types";
-import { Button } from "./buttons";
+import { Button } from "@scm-manager/ui-core";
 
 type Props = WithTranslation & {
   collection: PagedCollection;
@@ -64,12 +64,9 @@ class Paginator extends React.Component<Props> {
 
   renderButton(className: string, label: string, linkType: string) {
     return (
-      <Button
-        className={className}
-        label={label}
-        disabled={this.isLinkUnavailable(linkType)}
-        action={this.createAction(linkType)}
-      />
+      <Button className={className} disabled={this.isLinkUnavailable(linkType)} onClick={this.createAction(linkType)}>
+        {label}
+      </Button>
     );
   }
 
@@ -78,7 +75,11 @@ class Paginator extends React.Component<Props> {
   }
 
   currentPage(page: number) {
-    return <Button className="pagination-link is-current" label={"" + page} disabled={true} />;
+    return (
+      <Button className="pagination-link is-current" disabled>
+        {page}
+      </Button>
+    );
   }
 
   pageLinks() {

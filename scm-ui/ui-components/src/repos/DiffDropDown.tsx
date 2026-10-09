@@ -16,7 +16,7 @@
 
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Checkbox } from "@scm-manager/ui-core";
+import { Checkbox, Icon, IconButton } from "@scm-manager/ui-core";
 import { CollapseMode, WhitespaceMode } from "./LoadingDiff";
 
 type DiffDropDownProps = {
@@ -57,11 +57,15 @@ const DiffDropDown: FC<DiffDropDownProps> = ({
   return (
     <div className={"dropdown is-right " + (isOpen ? " is-active" : "")}>
       <div className="dropdown-trigger">
-        <button onClick={handleOpen} className="button" aria-haspopup="true" aria-controls="dropdown-menu2">
-          <span className="icon is-small">
-            <i className="fas fa-cog" aria-hidden="true"></i>
-          </span>
-        </button>
+        <IconButton
+          onClick={handleOpen}
+          title={t("changesets.diffSettings")}
+          aria-label={t("changesets.diffSettings")}
+          aria-haspopup="true"
+          aria-controls="dropdown-menu2"
+        >
+          <Icon>cog</Icon>
+        </IconButton>
       </div>
       <div className="dropdown-menu" id="dropdown-menu2" role="menu">
         <div className="dropdown-content">

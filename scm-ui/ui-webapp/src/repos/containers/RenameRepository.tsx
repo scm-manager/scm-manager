@@ -16,7 +16,8 @@
 
 import React, { FC, useRef, useState } from "react";
 import { Repository } from "@scm-manager/ui-types";
-import { Button, ButtonGroup, ErrorNotification, InputField, Level, Loading, Modal } from "@scm-manager/ui-components";
+import { ErrorNotification, InputField, Loading, Modal } from "@scm-manager/ui-components";
+import { Button, Icon, Level } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
 import * as validator from "../components/form/repositoryValidation";
@@ -99,22 +100,21 @@ const RenameRepository: FC<Props> = ({ repository }) => {
 
   const footer = (
     <>
-      <ButtonGroup>
+      <div className="buttons">
         <Button
-          color="warning"
-          icon="exclamation-triangle"
-          label={t("renameRepo.modal.button.rename")}
+          variant="signal"
           disabled={!isValid}
           title={t("renameRepo.modal.button.rename")}
-          loading={isRenaming}
-          action={() => renameRepository(namespace, name)}
-        />
-        <Button
-          label={t("renameRepo.modal.button.cancel")}
-          title={t("renameRepo.modal.button.cancel")}
-          action={() => setShowModal(false)}
-        />
-      </ButtonGroup>
+          isLoading={isRenaming}
+          onClick={() => renameRepository(namespace, name)}
+        >
+          <Icon>exclamation-triangle</Icon>
+          <span>{t("renameRepo.modal.button.rename")}</span>
+        </Button>
+        <Button title={t("renameRepo.modal.button.cancel")} onClick={() => setShowModal(false)}>
+          {t("renameRepo.modal.button.cancel")}
+        </Button>
+      </div>
     </>
   );
 
@@ -144,7 +144,12 @@ const RenameRepository: FC<Props> = ({ repository }) => {
             </p>
           </div>
         }
-        right={<Button label={t("renameRepo.button")} action={() => setShowModal(true)} color="warning" icon="edit" />}
+        right={
+          <Button variant="signal" onClick={() => setShowModal(true)}>
+            <Icon>edit</Icon>
+            <span>{t("renameRepo.button")}</span>
+          </Button>
+        }
       />
     </>
   );

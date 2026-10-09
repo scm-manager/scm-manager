@@ -17,7 +17,8 @@
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { Button, ConfirmAlert, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { Button, Icon, Level } from "@scm-manager/ui-core";
 import { useArchiveRepository } from "@scm-manager/ui-api";
 
 type Props = {
@@ -72,7 +73,10 @@ const ArchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
           </div>
         }
         right={
-          <Button color="warning" icon="archive" label={t("archiveRepo.button")} action={action} loading={isPending} />
+          <Button variant="signal" onClick={action} isLoading={isPending}>
+            <Icon>archive</Icon>
+            <span>{t("archiveRepo.button")}</span>
+          </Button>
         }
       />
     </>

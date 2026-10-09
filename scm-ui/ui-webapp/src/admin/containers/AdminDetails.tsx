@@ -19,7 +19,15 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { devices } from "@scm-manager/ui-components";
 import { useUpdateInfo, useVersion } from "@scm-manager/ui-api";
-import { ErrorNotification, Image, Loading, Subtitle, Title, useDocumentTitle } from "@scm-manager/ui-core";
+import {
+  ErrorNotification,
+  ExternalLinkButton,
+  Image,
+  Loading,
+  Subtitle,
+  Title,
+  useDocumentTitle,
+} from "@scm-manager/ui-core";
 
 const BoxShadowBox = styled.div`
   box-shadow: 0 2px 3px rgba(40, 177, 232, 0.1), 0 0 0 2px rgba(40, 177, 232, 0.2);
@@ -69,9 +77,9 @@ const AdminDetails: FC = () => {
                   version: updateInfo?.latestVersion,
                 })}
               </p>
-              <a className="button is-warning is-pulled-right" target="_blank" href={updateInfo?.link} rel="noreferrer">
+              <ExternalLinkButton variant="signal" className="is-pulled-right" href={updateInfo?.link}>
                 {t("admin.info.newRelease.downloadButton")}
-              </a>
+              </ExternalLinkButton>
             </div>
           </div>
         </MobileWrapped>
@@ -95,14 +103,9 @@ const AdminDetails: FC = () => {
             <div className="content">
               <h3 className="has-text-weight-medium">{t("admin.info.communityTitle")}</h3>
               <p>{t("admin.info.communityInfo")}</p>
-              <a
-                className="button is-info is-pulled-right"
-                target="_blank"
-                href="https://scm-manager.org/support/"
-                rel="noreferrer"
-              >
+              <ExternalLinkButton className="is-info is-pulled-right" href="https://scm-manager.org/support/">
                 {t("admin.info.communityButton")}
-              </a>
+              </ExternalLinkButton>
             </div>
           </div>
         </MobileWrapped>
@@ -120,14 +123,9 @@ const AdminDetails: FC = () => {
                 <br />
                 <strong>{t("admin.info.enterprisePartner")}</strong>
               </p>
-              <a
-                className="button is-info is-pulled-right is-normal"
-                target="_blank"
-                href={t("admin.info.enterpriseLink")}
-                rel="noreferrer"
-              >
+              <ExternalLinkButton className="is-info is-pulled-right is-normal" href={t("admin.info.enterpriseLink")}>
                 {t("admin.info.enterpriseButton")}
-              </a>
+              </ExternalLinkButton>
             </div>
           </div>
         </MobileWrapped>

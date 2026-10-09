@@ -19,7 +19,8 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Plugin } from "@scm-manager/ui-types";
-import { Button, ButtonGroup, Checkbox, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
+import { Checkbox, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
+import { Button, ButtonVariants, Icon } from "@scm-manager/ui-core";
 import SuccessNotification from "./SuccessNotification";
 import { useInstallPlugin, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
 import { PluginAction } from "../containers/PluginsOverview";
@@ -79,35 +80,34 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   };
 
   const footer = () => {
-    let color = pluginAction === PluginAction.UNINSTALL ? "warning" : "primary";
+    let variant = pluginAction === PluginAction.UNINSTALL ? ButtonVariants.SIGNAL : ButtonVariants.PRIMARY;
     let label = `plugins.modal.${pluginAction}`;
     if (shouldRestart) {
-      color = "warning";
+      variant = ButtonVariants.SIGNAL;
       label = `plugins.modal.${pluginAction}AndRestart`;
     }
     return (
-      <ButtonGroup>
+      <div className="buttons">
         {isDone ? (
-          <Button
-            label={t("plugins.modal.reload")}
-            action={() => window.location.reload()}
-            color="success"
-            icon="sync-alt"
-          />
+          <Button variant="primary" onClick={() => window.location.reload()}>
+            <Icon>sync-alt</Icon>
+            <span>{t("plugins.modal.reload")}</span>
+          </Button>
         ) : (
           <>
             <Button
-              label={t(label)}
-              color={color}
-              action={handlePluginAction}
-              loading={loading}
+              variant={variant}
+              onClick={handlePluginAction}
+              isLoading={loading}
               disabled={!!error || isDone}
               ref={initialFocusRef}
-            />
-            <Button label={t("plugins.modal.abort")} action={onClose} />
+            >
+              {t(label)}
+            </Button>
+            <Button onClick={onClose}>{t("plugins.modal.abort")}</Button>
           </>
         )}
-      </ButtonGroup>
+      </div>
     );
   };
 

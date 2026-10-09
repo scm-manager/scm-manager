@@ -7,7 +7,7 @@ import { Button } from "../";
 
 In confirmation dialogs, there are two actions.<br/>
 One to cancel the current process and one to confirm it.<br/>
-Aborting is always the secondary action, confirmation always the primary.
+Aborting always uses the default button without a variant, confirmation always the primary variant.
 Focus is always on the cancelling action.
 
 <Story name="Confirmation Dialog">
@@ -15,7 +15,7 @@ Focus is always on the cancelling action.
     <h4>Delete User</h4>
     <p>Do you really want to delete this user ?</p>
     <div>
-      <Button variant="secondary">Cancel</Button>
+      <Button>Cancel</Button>
       <Button variant="primary">Delete</Button>
     </div>
   </div>

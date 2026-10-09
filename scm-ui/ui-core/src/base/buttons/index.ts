@@ -14,5 +14,14 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-export { Button, LinkButton, IconButton, ExternalLinkButton, ExternalLink, ButtonVariants } from "./Button";
+export {
+  Button,
+  LinkButton,
+  IconButton,
+  IconLinkButton,
+  ExternalLinkButton,
+  ExternalLink,
+  UnstyledButton,
+  ButtonVariants,
+} from "./Button";
 export { default as Icon } from "./Icon";

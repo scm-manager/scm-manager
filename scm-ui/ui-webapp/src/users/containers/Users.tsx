@@ -19,8 +19,9 @@ import { Navigate, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useUsers } from "@scm-manager/ui-api";
 import { User, UserCollection } from "@scm-manager/ui-types";
-import { CreateButton, LinkPaginator, OverviewPageActions, Page, PageActions, urls } from "@scm-manager/ui-components";
+import { LinkPaginator, OverviewPageActions, Page, PageActions, urls } from "@scm-manager/ui-components";
 import {
+  LinkButton,
   Notification,
   useDocumentTitle,
   USER_COLLECTION_BASE_ROUTE,
@@ -74,10 +75,11 @@ const Users: FC = () => {
     >
       <UserPage data={data} users={users} page={page} search={search} />
       {canAddUsers ? (
-        <CreateButton
-          link={`/${USER_COLLECTION_BASE_ROUTE}/${USER_COLLECTION_SUB_ROUTES.CREATE}`}
-          label={t("users.createButton")}
-        />
+        <div className="has-text-centered mt-5">
+          <LinkButton variant="primary" to={`/${USER_COLLECTION_BASE_ROUTE}/${USER_COLLECTION_SUB_ROUTES.CREATE}`}>
+            {t("users.createButton")}
+          </LinkButton>
+        </div>
       ) : null}
       <PageActions>
         <OverviewPageActions

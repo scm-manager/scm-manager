@@ -18,16 +18,8 @@ import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { useCreatePermission, useGroupOptions, useIndexLinks, useUserOptions } from "@scm-manager/ui-api";
-import {
-  Button,
-  ErrorNotification,
-  LabelWithHelpIcon,
-  Level,
-  Radio,
-  SubmitButton,
-  Subtitle,
-} from "@scm-manager/ui-components";
-import { ComboboxField } from "@scm-manager/ui-core";
+import { ErrorNotification, LabelWithHelpIcon, Radio, Subtitle } from "@scm-manager/ui-components";
+import { Button, ComboboxField, Level } from "@scm-manager/ui-core";
 import {
   AutocompleteObject,
   Link,
@@ -240,18 +232,23 @@ const CreatePermissionForm: FC<Props> = ({
                   label={t("permission.permissions")}
                   helpText={t("permission.help.permissionsHelpText")}
                 />
-                <Button label={t("permission.advanced-button.label")} action={() => setShowAdvancedDialog(true)} />
+                <Button onClick={() => setShowAdvancedDialog(true)}>{t("permission.advanced-button.label")}</Button>
               </div>
             </div>
           </div>
         </div>
         <Level
           right={
-            <SubmitButton
-              label={t("permission.add-permission.submit-button")}
-              loading={isPending}
+            <Button
+              type="submit"
+              variant="primary"
+              isLoading={isPending}
               disabled={!permission.valid || permission.name === ""}
-            />
+              testId="submit-button"
+              onClick={() => window.scrollTo(0, 0)}
+            >
+              {t("permission.add-permission.submit-button")}
+            </Button>
           }
         />
       </form>

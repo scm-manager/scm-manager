@@ -18,7 +18,8 @@ import React, { FC, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
-import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { Button, Icon, Level } from "@scm-manager/ui-core";
 import { useDeleteRepositoryRole } from "@scm-manager/ui-api";
 
 type Props = {
@@ -77,7 +78,14 @@ const DeleteRepositoryRole: FC<Props> = ({ confirmDialog = true, role }: Props) 
     <>
       <hr />
       <ErrorNotification error={error} />
-      <Level right={<DeleteButton label={t("repositoryRole.delete.button")} action={action} loading={loading} />} />
+      <Level
+        right={
+          <Button variant="signal" onClick={action} isLoading={loading}>
+            <Icon>times</Icon>
+            <span>{t("repositoryRole.delete.button")}</span>
+          </Button>
+        }
+      />
     </>
   );
 };

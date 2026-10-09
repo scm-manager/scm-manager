@@ -17,7 +17,7 @@
 import React, { FC, useState } from "react";
 import styled from "styled-components";
 import InputField from "./InputField";
-import { AddButton } from "../buttons";
+import { Button, Icon } from "@scm-manager/ui-core";
 import { devices } from "../devices";
 
 type Props = {
@@ -100,12 +100,14 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
         disabled={disabled}
         helpText={valueHelpText}
       />
-      <AddButton
+      <Button
         className="ml-auto mb-3"
-        label={buttonLabel}
-        action={add}
+        onClick={add}
         disabled={disabled || !key || !value || !isValid(key) || !isValid(value)}
-      />
+      >
+        <Icon>plus</Icon>
+        <span>{buttonLabel}</span>
+      </Button>
     </MobileWrappedDiv>
   );
 };

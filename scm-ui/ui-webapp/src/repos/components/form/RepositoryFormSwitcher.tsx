@@ -18,7 +18,8 @@ import React, { FC } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { Button, ButtonAddons, Icon, urls } from "@scm-manager/ui-components";
+import { Icon, urls } from "@scm-manager/ui-components";
+import { Button, LinkButton } from "@scm-manager/ui-core";
 
 type RepositoryForm = {
   path: string;
@@ -32,15 +33,20 @@ const RepositoryFormButton: FC<RepositoryForm> = ({ path, icon, label }) => {
   const isSelected = href === location.pathname;
   const [t] = useTranslation(["repos", "plugins"]);
 
-  return (
-    <Button
-      className="is-size-6"
-      color={isSelected ? "link is-selected" : undefined}
-      link={!isSelected ? href + location.search : undefined}
-    >
+  const content = (
+    <>
       <Icon className="pr-2" name={icon} color="inherit" alt="" />
       <span className={classNames("is-hidden-mobile", "is-hidden-tablet-only")}>{t(`plugins:${label}`, label)}</span>
-    </Button>
+    </>
+  );
+
+  if (isSelected) {
+    return <Button className="is-size-6 is-link is-selected">{content}</Button>;
+  }
+  return (
+    <LinkButton className="is-size-6" to={href + location.search}>
+      {content}
+    </LinkButton>
   );
 };
 
@@ -49,11 +55,13 @@ type Props = {
 };
 
 const RepositoryFormSwitcher: FC<Props> = ({ forms }) => (
-  <ButtonAddons className="ml-auto">
+  <div className="field has-addons mb-0 ml-auto">
     {(forms || []).map((form) => (
-      <RepositoryFormButton key={form.path} {...form} />
+      <p className="control" key={form.path}>
+        <RepositoryFormButton {...form} />
+      </p>
     ))}
-  </ButtonAddons>
+  </div>
 );
 
 export default RepositoryFormSwitcher;

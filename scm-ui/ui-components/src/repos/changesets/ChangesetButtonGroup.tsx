@@ -19,7 +19,6 @@ import { Changeset, File, Repository } from "@scm-manager/ui-types";
 import { createChangesetLink, createChangesetLinkByBranch, createSourcesLink } from "./changesets";
 import { useTranslation } from "react-i18next";
 import { Icon, LinkButton } from "@scm-manager/ui-core";
-import { ButtonAddons } from "../../buttons";
 
 type Props = {
   repository: Repository;
@@ -36,16 +35,20 @@ const ChangesetButtonGroup: FC<Props> = ({ repository, changeset, file, sourceNa
     : createChangesetLink(repository, changeset);
   const sourcesLink = createSourcesLink(repository, changeset, file);
   return (
-    <ButtonAddons>
-      <LinkButton className="px-3 pl-5" ref={ref} to={changesetLink}>
-        <Icon>list-ul</Icon>
-        <span>{t("changeset.buttons.details")}</span>
-      </LinkButton>
-      <LinkButton className="px-3 pl-5" to={sourcesLink}>
-        <Icon>code</Icon>
-        <span>{t("changeset.buttons.sources")}</span>
-      </LinkButton>
-    </ButtonAddons>
+    <div className="field has-addons mb-0">
+      <p className="control">
+        <LinkButton className="px-3" ref={ref} to={changesetLink}>
+          <Icon>list-ul</Icon>
+          <span>{t("changeset.buttons.details")}</span>
+        </LinkButton>
+      </p>
+      <p className="control">
+        <LinkButton className="px-3" to={sourcesLink}>
+          <Icon>code</Icon>
+          <span>{t("changeset.buttons.sources")}</span>
+        </LinkButton>
+      </p>
+    </div>
   );
 };
 

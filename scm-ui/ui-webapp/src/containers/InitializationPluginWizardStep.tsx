@@ -20,7 +20,8 @@ import { HalRepresentationWithEmbedded, PluginSet } from "@scm-manager/ui-types"
 import { apiClient, requiredLink, waitForRestartAfter } from "@scm-manager/ui-api";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { Checkbox, ErrorNotification, Icon, SubmitButton } from "@scm-manager/ui-components";
+import { Checkbox, ErrorNotification, Icon } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-core";
 import styled from "styled-components";
 
 const HighlightedImg = styled.img`
@@ -190,14 +191,16 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
             ></Checkbox>
           </BorderedDiv>
         </div>
-        <SubmitButton
-          scrollToTop={false}
+        <Button
+          type="submit"
+          variant="primary"
           disabled={isInstalling || !(hasPluginSets || skipInstallation)}
-          loading={isInstalling}
+          isLoading={isInstalling}
           className="is-align-self-flex-end"
+          testId="submit-button"
         >
           {t(`pluginWizardStep.${hasPluginSets ? "submitAndRestart" : "submit"}`)}
-        </SubmitButton>
+        </Button>
       </form>
     );
   }

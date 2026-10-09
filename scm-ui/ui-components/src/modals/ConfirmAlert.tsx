@@ -16,10 +16,10 @@
 
 import * as React from "react";
 import { FC, ReactNode, useRef, useState } from "react";
+import { Button } from "@scm-manager/ui-core";
 import Modal from "./Modal";
-import classNames from "classnames";
 
-type Button = {
+type ConfirmAlertButton = {
   className?: string;
   label: string;
   isLoading?: boolean;
@@ -31,7 +31,7 @@ type Button = {
 type Props = {
   title: string;
   message?: string;
-  buttons: Button[];
+  buttons: ConfirmAlertButton[];
   close?: () => void;
   children?: ReactNode;
 };
@@ -48,7 +48,7 @@ const ConfirmAlert: FC<Props> = ({ title, message, buttons, close, children }) =
     }
   };
 
-  const handleClickButton = (button: Button) => {
+  const handleClickButton = (button: ConfirmAlertButton) => {
     if (button.onClick) {
       button.onClick();
     }
@@ -65,9 +65,9 @@ const ConfirmAlert: FC<Props> = ({ title, message, buttons, close, children }) =
     <div className="field is-grouped">
       {buttons.map((button, index) => (
         <p className="control" key={index}>
-          <button
-            className={classNames("button", button.className, button.isLoading ? "is-loading" : "")}
-            key={index}
+          <Button
+            className={button.className}
+            isLoading={button.isLoading}
             disabled={button.disabled}
             onClick={() => handleClickButton(button)}
             onKeyDown={(e) => e.key === "Enter" && handleClickButton(button)}
@@ -75,7 +75,7 @@ const ConfirmAlert: FC<Props> = ({ title, message, buttons, close, children }) =
             ref={button.autofocus ? initialFocusButton : undefined}
           >
             {button.label}
-          </button>
+          </Button>
         </p>
       ))}
     </div>

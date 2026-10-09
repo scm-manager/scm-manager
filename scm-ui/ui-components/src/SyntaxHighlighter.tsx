@@ -23,22 +23,24 @@ import useScrollToElement from "./useScrollToElement";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import copyToClipboard from "./CopyToClipboard";
-import { Button } from "./buttons";
+import { Icon, IconButton } from "@scm-manager/ui-core";
 import { SyntaxHighlighter as NewSyntaxHighlighter } from "@scm-manager/ui-syntaxhighlighting";
 
 const LINE_NUMBER_URL_HASH_REGEX = /^#line-(.*)$/;
 
-const TopRightButton = styled(Button)`
-  height: inherit;
+// Opaque background, so the code below the transparent icon button stays covered
+const TopRightCorner = styled.div`
   position: absolute;
   display: none;
   top: 0;
   right: 0;
+  border-radius: 6px;
+  background-color: var(--scm-secondary-background);
 `;
 
 const Container = styled.div`
-  &:hover > ${TopRightButton} {
-    display: inline-block;
+  &:hover > ${TopRightCorner} {
+    display: flex;
   }
 `;
 
@@ -91,9 +93,15 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
         language={determineLanguage(language)}
         renderer={Renderer}
       />
-      <TopRightButton className="is-small" title={t("syntaxHighlighting.copyButton")} action={copy}>
-        <i className={copied ? "fa fa-clipboard-check" : "fa fa-clipboard"} />
-      </TopRightButton>
+      <TopRightCorner>
+        <IconButton
+          title={t("syntaxHighlighting.copyButton")}
+          aria-label={t("syntaxHighlighting.copyButton")}
+          onClick={copy}
+        >
+          <Icon>{copied ? "clipboard-check" : "clipboard"}</Icon>
+        </IconButton>
+      </TopRightCorner>
     </Container>
   );
 };

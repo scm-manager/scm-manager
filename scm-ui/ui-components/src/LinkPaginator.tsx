@@ -17,13 +17,35 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { UnknownTotalCollection } from "@scm-manager/ui-types";
-import { Button } from "./buttons";
+import { Button, LinkButton } from "@scm-manager/ui-core";
 
 type Props = {
   collection: UnknownTotalCollection;
   page: number;
   filter?: string | URLSearchParams;
   baseUrl: string;
+};
+
+type PageButtonProps = {
+  className: string;
+  label: string;
+  link: string;
+  disabled?: boolean;
+};
+
+const PageButton: FC<PageButtonProps> = ({ className, label, link, disabled }) => {
+  if (disabled) {
+    return (
+      <Button className={className} disabled>
+        {label}
+      </Button>
+    );
+  }
+  return (
+    <LinkButton className={className} to={link}>
+      {label}
+    </LinkButton>
+  );
 };
 
 const LinkPaginator: FC<Props> = ({ collection, page, filter, baseUrl }) => {
@@ -40,14 +62,14 @@ const LinkPaginator: FC<Props> = ({ collection, page, filter, baseUrl }) => {
   };
 
   const renderFirstButton = () => {
-    return <Button className="pagination-link" label={"1"} disabled={false} link={createLink("1")} />;
+    return <PageButton className="pagination-link" label="1" link={createLink("1")} />;
   };
 
   const renderPreviousButton = (className: string, label?: string) => {
     const previousPage = page - 1;
 
     return (
-      <Button
+      <PageButton
         className={className}
         label={label ? label : previousPage.toString()}
         disabled={!hasLink("prev")}
@@ -64,7 +86,7 @@ const LinkPaginator: FC<Props> = ({ collection, page, filter, baseUrl }) => {
     const nextPage = page + 1;
     const link = createLink(`${nextPage}`);
     return (
-      <Button
+      <PageButton
         className={className}
         label={label ? label : nextPage.toString()}
         disabled={!hasLink("next")}
@@ -75,19 +97,16 @@ const LinkPaginator: FC<Props> = ({ collection, page, filter, baseUrl }) => {
 
   const renderLastButton = () => {
     return (
-      <Button
+      <PageButton
         className="pagination-link"
         label={`${collection.pageTotal}`}
-        disabled={false}
         link={createLink(`${collection.pageTotal}`)}
       />
     );
   };
 
   const renderGenericLastButton = () => {
-    return (
-      <Button className="pagination-link" label={t("paginator.last")} disabled={false} link={createLink("last")} />
-    );
+    return <PageButton className="pagination-link" label={t("paginator.last")} link={createLink("last")} />;
   };
 
   const separator = () => {
@@ -95,7 +114,11 @@ const LinkPaginator: FC<Props> = ({ collection, page, filter, baseUrl }) => {
   };
 
   const currentPage = (page: number) => {
-    return <Button className="pagination-link is-current" label={"" + page} disabled={true} />;
+    return (
+      <Button className="pagination-link is-current" disabled>
+        {page}
+      </Button>
+    );
   };
 
   const pageLinks = () => {

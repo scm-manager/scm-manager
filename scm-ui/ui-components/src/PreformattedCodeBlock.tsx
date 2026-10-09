@@ -18,24 +18,26 @@ import * as React from "react";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import Button from "./buttons/Button";
+import { Icon, IconButton } from "@scm-manager/ui-core";
 import copyToClipboard from "./CopyToClipboard";
 
 type Props = {
   children: string;
 };
 
-const TopRightButton = styled(Button)`
+// Opaque background, so the code below the transparent icon button stays covered
+const TopRightCorner = styled.div`
   position: absolute;
   display: none;
-  height: inherit;
   top: 1.25em;
   right: 1.5em;
+  border-radius: 6px;
+  background-color: var(--scm-secondary-background);
 `;
 
 const Container = styled.div`
-  &:hover > ${TopRightButton} {
-    display: inline-block;
+  &:hover > ${TopRightCorner} {
+    display: flex;
   }
 `;
 
@@ -50,9 +52,15 @@ const PreformattedCodeBlock: FC<Props> = ({ children }) => {
       <pre>
         <code>{children}</code>
       </pre>
-      <TopRightButton className="is-small" title={t("syntaxHighlighting.copyButton")} action={copy}>
-        <i className={copied ? "fa fa-clipboard-check" : "fa fa-clipboard"} />
-      </TopRightButton>
+      <TopRightCorner>
+        <IconButton
+          title={t("syntaxHighlighting.copyButton")}
+          aria-label={t("syntaxHighlighting.copyButton")}
+          onClick={copy}
+        >
+          <Icon>{copied ? "clipboard-check" : "clipboard"}</Icon>
+        </IconButton>
+      </TopRightCorner>
     </Container>
   );
 };

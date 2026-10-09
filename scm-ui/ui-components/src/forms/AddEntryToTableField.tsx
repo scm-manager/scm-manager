@@ -16,8 +16,7 @@
 
 import React, { FC, useState, MouseEvent, KeyboardEvent } from "react";
 import styled from "styled-components";
-import Level from "../layout/Level";
-import AddButton from "../buttons/AddButton";
+import { Button, Icon, Level } from "@scm-manager/ui-core";
 import InputField from "./InputField";
 
 type Props = {
@@ -76,29 +75,27 @@ const AddEntryToTableField: FC<Props> = ({
   return (
     <Level
       className="is-align-items-stretch mb-4"
-      children={
-        <FullWidthInputField
-          className="mr-5"
-          label={fieldLabel}
-          errorMessage={errorMessage}
-          onChange={handleAddEntryChange}
-          validationError={!isValid()}
-          value={entryToAdd}
-          onReturnPressed={appendEntry}
-          disabled={disabled}
-          helpText={helpText}
-        />
-      }
       right={
         <div className="field is-align-self-flex-end">
-          <AddButton
-            label={buttonLabel}
-            action={addButtonClicked}
-            disabled={disabled || entryToAdd === "" || !isValid()}
-          />
+          <Button onClick={addButtonClicked} disabled={disabled || entryToAdd === "" || !isValid()}>
+            <Icon>plus</Icon>
+            <span>{buttonLabel}</span>
+          </Button>
         </div>
       }
-    />
+    >
+      <FullWidthInputField
+        className="mr-5"
+        label={fieldLabel}
+        errorMessage={errorMessage}
+        onChange={handleAddEntryChange}
+        validationError={!isValid()}
+        value={entryToAdd}
+        onReturnPressed={appendEntry}
+        disabled={disabled}
+        helpText={helpText}
+      />
+    </Level>
   );
 };
 

@@ -15,7 +15,8 @@
  */
 
 import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, InputField, Level, Loading, SubmitButton, Notification } from "@scm-manager/ui-components";
+import { ErrorNotification, InputField, Loading, Notification } from "@scm-manager/ui-components";
+import { Button, Level } from "@scm-manager/ui-core";
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { HgRepositoryConfiguration, useHgRepositoryConfiguration, useUpdateHgRepositoryConfiguration } from "./hooks";
@@ -68,7 +69,19 @@ const HgRepositoryConfigurationForm: FC<Props> = ({ repository }) => {
         disabled={readOnly}
       />
       {!readOnly ? (
-        <Level right={<SubmitButton loading={isUpdating} label={t("scm-hg-plugin.config.submit")} />} />
+        <Level
+          right={
+            <Button
+              type="submit"
+              variant="primary"
+              isLoading={isUpdating}
+              testId="submit-button"
+              onClick={() => window.scrollTo(0, 0)}
+            >
+              {t("scm-hg-plugin.config.submit")}
+            </Button>
+          }
+        />
       ) : null}
     </form>
   );

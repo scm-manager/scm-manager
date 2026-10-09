@@ -17,7 +17,8 @@
 import { Repository } from "@scm-manager/ui-types";
 import React, { FC } from "react";
 import { useReindexRepository } from "@scm-manager/ui-api";
-import { Button, ErrorNotification, Level, Notification, Subtitle } from "@scm-manager/ui-components";
+import { ErrorNotification, Notification, Subtitle } from "@scm-manager/ui-components";
+import { Button, Icon, Level } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -38,14 +39,14 @@ const Reindex: FC<Props> = ({ repository }) => {
       <Level
         right={
           <Button
-            color="warning"
-            icon="sync-alt"
+            variant="signal"
             className="mt-4"
-            action={() => reindex(repository)}
+            onClick={() => reindex(repository)}
             disabled={isPending}
-            loading={isPending}
+            isLoading={isPending}
           >
-            {t("reindex.button")}
+            <Icon>sync-alt</Icon>
+            <span>{t("reindex.button")}</span>
           </Button>
         }
       />

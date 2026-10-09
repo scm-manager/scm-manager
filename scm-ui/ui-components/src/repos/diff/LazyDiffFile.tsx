@@ -19,10 +19,8 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { useContentType } from "@scm-manager/ui-api";
-import { ErrorNotification, Icon } from "@scm-manager/ui-core";
+import { Dialog, ErrorNotification, Icon, IconButton } from "@scm-manager/ui-core";
 import { Hunk as HunkType, Link } from "@scm-manager/ui-types";
-import { ButtonGroup } from "../../buttons";
-import OpenInFullscreenButton from "../../buttons/OpenInFullscreenButton";
 import { Modal } from "../../modals";
 import { MenuContext } from "../../navigation";
 import DiffButton from "../DiffButton";
@@ -260,12 +258,20 @@ const DiffFile: FC<Props> = ({
   const openInFullscreen = useMemo(
     () =>
       canRenderContent ? (
-        <OpenInFullscreenButton
-          modalTitle={file.type === "delete" ? file.oldPath : file.newPath}
-          modalBody={<MarginlessModalContent>{innerContent}</MarginlessModalContent>}
-        />
+        <Dialog
+          size="fullscreen"
+          title={file.type === "delete" ? file.oldPath : file.newPath}
+          trigger={
+            <IconButton title={t("diff.fullscreen.open")} aria-label={t("diff.fullscreen.open")}>
+              <Icon>search-plus</Icon>
+            </IconButton>
+          }
+          footer={[<Dialog.CloseButton key="close">{t("diff.fullscreen.close")}</Dialog.CloseButton>]}
+        >
+          <MarginlessModalContent>{innerContent}</MarginlessModalContent>
+        </Dialog>
       ) : null,
-    [canRenderContent, file, innerContent],
+    [canRenderContent, file, innerContent, t],
   );
 
   const collapseIcon = useMemo(
@@ -300,12 +306,12 @@ const DiffFile: FC<Props> = ({
             <ChangeTag file={file} />
           </FullWidthTitleHeader>
           <div className={classNames("level-right", "is-flex", "ml-auto")}>
-            <ButtonGroup>
+            <div className="buttons">
               {sideBySideToggle}
               {openInFullscreen}
               {whitespaceToggle}
               {fileControlFactory ? fileControlFactory(file, setCollapsed) : null}
-            </ButtonGroup>
+            </div>
           </div>
         </div>
       </PanelHeading>

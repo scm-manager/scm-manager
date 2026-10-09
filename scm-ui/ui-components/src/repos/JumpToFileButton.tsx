@@ -15,17 +15,7 @@
  */
 
 import React, { FC } from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { Tooltip } from "@scm-manager/ui-core";
-import Icon from "../Icon";
-
-const Button = styled(Link)`
-  width: 50px;
-  &:hover {
-    color: var(--scm-info-color);
-  }
-`;
+import { Icon, IconLinkButton } from "@scm-manager/ui-core";
 
 type Props = {
   link: string;
@@ -36,13 +26,10 @@ type Props = {
 
 const JumpToFileButton: FC<Props> = ({ link, tooltip, icon, color }) => {
   const iconToUse = icon ?? "file-code";
-  const colorToUse = color ?? "inherit";
   return (
-    <Tooltip message={tooltip} side="top">
-      <Button aria-label={tooltip} className="button is-clickable" to={link}>
-        <Icon name={iconToUse} color={colorToUse} alt="" />
-      </Button>
-    </Tooltip>
+    <IconLinkButton title={tooltip} aria-label={tooltip} to={link}>
+      <Icon className={color ? `has-text-${color}` : undefined}>{iconToUse}</Icon>
+    </IconLinkButton>
   );
 };
 

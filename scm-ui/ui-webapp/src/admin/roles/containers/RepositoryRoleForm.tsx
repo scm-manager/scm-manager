@@ -17,7 +17,8 @@
 import React, { FC, FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
-import { ErrorNotification, InputField, Level, SubmitButton } from "@scm-manager/ui-components";
+import { ErrorNotification, InputField } from "@scm-manager/ui-components";
+import { Button, Level } from "@scm-manager/ui-core";
 import PermissionsWrapper from "../../../permissions/components/PermissionsWrapper";
 import { useRepositoryVerbs, useRequiredIndexLink } from "@scm-manager/ui-api";
 
@@ -79,7 +80,20 @@ const RepositoryRoleForm: FC<Props> = ({ role: initialRole, submitForm }) => {
         <PermissionsWrapper permissions={selectedVerbs} onChange={handleVerbChange} disabled={false} role={true} />
       </div>
       <hr />
-      <Level right={<SubmitButton loading={loading} label={t("repositoryRole.form.submit")} disabled={!isValid} />} />
+      <Level
+        right={
+          <Button
+            type="submit"
+            variant="primary"
+            isLoading={loading}
+            disabled={!isValid}
+            testId="submit-button"
+            onClick={() => window.scrollTo(0, 0)}
+          >
+            {t("repositoryRole.form.submit")}
+          </Button>
+        }
+      />
     </form>
   );
 };

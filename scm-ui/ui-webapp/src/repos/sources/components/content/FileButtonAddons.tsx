@@ -16,7 +16,8 @@
 
 import React, { FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, ButtonAddons } from "@scm-manager/ui-components";
+import classNames from "classnames";
+import { Button } from "@scm-manager/ui-core";
 import { SourceViewSelection } from "../../containers/Content";
 import { File, Link } from "@scm-manager/ui-types";
 import { useContentType } from "@scm-manager/ui-api";
@@ -30,9 +31,7 @@ type Props = {
   file: File;
 };
 
-const color = (selected: boolean) => {
-  return selected ? "link is-selected" : "";
-};
+const selectedClassName = (selected: boolean) => (selected ? "is-link is-selected" : undefined);
 
 const FileButtonAddons: FC<Props> = ({ className, selected, showSources, showHistory, showAnnotations, file }) => {
   const [t] = useTranslation("repos");
@@ -45,29 +44,43 @@ const FileButtonAddons: FC<Props> = ({ className, selected, showSources, showHis
   );
 
   return (
-    <ButtonAddons className={className}>
-      <Button action={showSources} color={color(selected === "source")} title={t("sources.content.sourcesButton")}>
-        <span className="icon">
-          <i className="fas fa-code" />
-        </span>
-      </Button>
-      {showAnnotationButton ? (
+    <div className={classNames("field", "has-addons", "mb-0", className)}>
+      <p className="control">
         <Button
-          action={showAnnotations}
-          color={color(selected === "annotations")}
-          title={t("sources.content.annotateButton")}
+          onClick={showSources}
+          className={selectedClassName(selected === "source")}
+          title={t("sources.content.sourcesButton")}
         >
           <span className="icon">
-            <i className="fas fa-user-clock" />
+            <i className="fas fa-code" />
           </span>
         </Button>
+      </p>
+      {showAnnotationButton ? (
+        <p className="control">
+          <Button
+            onClick={showAnnotations}
+            className={selectedClassName(selected === "annotations")}
+            title={t("sources.content.annotateButton")}
+          >
+            <span className="icon">
+              <i className="fas fa-user-clock" />
+            </span>
+          </Button>
+        </p>
       ) : null}
-      <Button action={showHistory} color={color(selected === "history")} title={t("sources.content.historyButton")}>
-        <span className="icon">
-          <i className="fas fa-history" />
-        </span>
-      </Button>
-    </ButtonAddons>
+      <p className="control">
+        <Button
+          onClick={showHistory}
+          className={selectedClassName(selected === "history")}
+          title={t("sources.content.historyButton")}
+        >
+          <span className="icon">
+            <i className="fas fa-history" />
+          </span>
+        </Button>
+      </p>
+    </div>
   );
 };
 

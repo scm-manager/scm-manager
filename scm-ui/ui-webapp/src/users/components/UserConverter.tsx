@@ -19,14 +19,8 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { User } from "@scm-manager/ui-types";
 import { useConvertToExternal, useConvertToInternal } from "@scm-manager/ui-api";
-import {
-  Button,
-  ErrorNotification,
-  Level,
-  Modal,
-  PasswordConfirmation,
-  SubmitButton,
-} from "@scm-manager/ui-components";
+import { ErrorNotification, Modal, PasswordConfirmation } from "@scm-manager/ui-components";
+import { Button, Icon, Level } from "@scm-manager/ui-core";
 
 type Props = {
   user: User;
@@ -70,23 +64,21 @@ const UserConverter: FC<Props> = ({ user }) => {
     if (user.external) {
       return (
         <Button
-          label={t("userForm.button.convertToInternal")}
-          action={() => setShowPasswordModal(true)}
-          icon="exchange-alt"
+          onClick={() => setShowPasswordModal(true)}
           className="is-pulled-right"
-          loading={isLoading}
+          isLoading={isLoading}
           disabled={isLoading}
-        />
+        >
+          <Icon>exchange-alt</Icon>
+          <span>{t("userForm.button.convertToInternal")}</span>
+        </Button>
       );
     } else {
       return (
-        <Button
-          label={t("userForm.button.convertToExternal")}
-          loading={isLoading}
-          disabled={isLoading}
-          action={() => convertToExternal(user)}
-          icon="exchange-alt"
-        />
+        <Button isLoading={isLoading} disabled={isLoading} onClick={() => convertToExternal(user)}>
+          <Icon>exchange-alt</Icon>
+          <span>{t("userForm.button.convertToExternal")}</span>
+        </Button>
       );
     }
   };
@@ -104,13 +96,15 @@ const UserConverter: FC<Props> = ({ user }) => {
       title={t("userForm.modal.passwordRequired")}
       initialFocusRef={initialFocusRef}
       footer={
-        <SubmitButton
-          action={() => password && passwordValid && convertToInternal(user, password)}
-          loading={isLoading}
+        <Button
+          variant="primary"
+          onClick={() => password && passwordValid && convertToInternal(user, password)}
+          isLoading={isLoading}
           disabled={!password || !passwordValid || isLoading}
-          scrollToTop={false}
-          label={t("userForm.modal.convertToInternal")}
-        />
+          testId="submit-button"
+        >
+          {t("userForm.modal.convertToInternal")}
+        </Button>
       }
     >
       <PasswordConfirmation passwordChanged={changePassword} onReturnPressed={onReturnPressed} ref={initialFocusRef} />

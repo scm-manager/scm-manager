@@ -15,7 +15,8 @@
  */
 
 import React, { FC, useState } from "react";
-import { ErrorNotification, InputField, Level, Loading, SubmitButton, Subtitle } from "@scm-manager/ui-components";
+import { ErrorNotification, InputField, Loading, Subtitle } from "@scm-manager/ui-components";
+import { Button, Level } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import RoleSelector from "../../../repos/permissions/components/RoleSelector";
 import ApiKeyCreatedModal from "./ApiKeyCreatedModal";
@@ -89,12 +90,18 @@ const AddApiKey: FC<Props> = ({ user, apiKeys }) => {
       />
       <Level
         right={
-          <SubmitButton
-            label={t("apiKey.addKey")}
-            loading={isCurrentlyAddingKey}
+          <Button
+            variant="primary"
+            isLoading={isCurrentlyAddingKey}
             disabled={!isValid() || isCurrentlyAddingKey}
-            action={() => create({ displayName, permissionRole })}
-          />
+            testId="submit-button"
+            onClick={() => {
+              create({ displayName, permissionRole });
+              window.scrollTo(0, 0);
+            }}
+          >
+            {t("apiKey.addKey")}
+          </Button>
         }
       />
     </>

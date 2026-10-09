@@ -15,7 +15,8 @@
  */
 
 import React, { FC, useRef, useState } from "react";
-import { Button, Icon, Modal } from "@scm-manager/ui-components";
+import { Icon, Modal } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { ApiKeyWithToken } from "@scm-manager/ui-types";
@@ -82,7 +83,7 @@ const ApiKeyCreatedModal: FC<Props> = ({ addedKey, close }) => {
       body={newPassphraseModalContent}
       closeFunction={close}
       title={t("apiKey.modal.title")}
-      footer={<Button label={t("apiKey.modal.close")} action={close} />}
+      footer={<Button onClick={close}>{t("apiKey.modal.close")}</Button>}
       active={true}
     />
   );

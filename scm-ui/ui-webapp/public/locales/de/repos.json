@@ -301,6 +301,7 @@
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Auf-/Zuklappen",
     "ignoreWhitespace": "Whitespace-Änderungen ignorieren",
+    "diffSettings": "Diff-Einstellungen",
     "checkBoxHeadingWhitespaces": "Umgang mit Leerzeichen",
     "checkBoxHeadingOtherSettings": "Weitere Einstellungen",
     "checkBoxCollapseOption": "Standardmäßig alle Diffs einklappen",

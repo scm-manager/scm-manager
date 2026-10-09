@@ -16,7 +16,8 @@
 
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ErrorNotification, Level, Loading, Notification, SubmitButton, Subtitle } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, Notification, Subtitle } from "@scm-manager/ui-components";
+import { Button, Level } from "@scm-manager/ui-core";
 import PermissionsWrapper from "./PermissionsWrapper";
 import { useAvailableGlobalPermissions } from "@scm-manager/ui-api";
 import { GlobalPermissionsCollection } from "@scm-manager/ui-types";
@@ -116,12 +117,16 @@ const SetPermissions: FC<Props> = ({
       <PermissionsWrapper permissions={permissions} onChange={valueChanged} disabled={!updatePermissions} />
       <Level
         right={
-          <SubmitButton
+          <Button
+            type="submit"
+            variant="primary"
             disabled={!permissionsChanged}
-            loading={isUpdatingPermissions}
-            label={t("setPermissions.button")}
+            isLoading={isUpdatingPermissions}
             testId="set-permissions-button"
-          />
+            onClick={() => window.scrollTo(0, 0)}
+          >
+            {t("setPermissions.button")}
+          </Button>
         }
       />
     </form>

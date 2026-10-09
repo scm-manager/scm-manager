@@ -114,3 +114,11 @@ export const Default: Story = {
     // ),
   },
 };
+
+export const Fullscreen: Story = {
+  args: {
+    ...Default.args,
+    title: "My Fullscreen Dialog",
+    size: "fullscreen",
+  },
+};

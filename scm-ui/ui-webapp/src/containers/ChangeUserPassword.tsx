@@ -19,13 +19,11 @@ import { useTranslation } from "react-i18next";
 import {
   ErrorNotification,
   InputField,
-  Level,
   Notification,
   PasswordConfirmation,
-  SubmitButton,
   Subtitle,
 } from "@scm-manager/ui-components";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { Button, Level, useDocumentTitle } from "@scm-manager/ui-core";
 import { useChangeUserPassword, useRequiredMe } from "@scm-manager/ui-api";
 
 const ChangeUserPassword: FC = () => {
@@ -87,7 +85,16 @@ const ChangeUserPassword: FC = () => {
       <PasswordConfirmation passwordChanged={onPasswordChange} key={passwordChanged ? "changed" : "unchanged"} />
       <Level
         right={
-          <SubmitButton disabled={!passwordValid || !oldPassword} loading={isPending} label={t("password.submit")} />
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!passwordValid || !oldPassword}
+            isLoading={isPending}
+            testId="submit-button"
+            onClick={() => window.scrollTo(0, 0)}
+          >
+            {t("password.submit")}
+          </Button>
         }
       />
     </form>

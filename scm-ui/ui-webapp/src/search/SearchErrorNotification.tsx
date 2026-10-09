@@ -16,7 +16,8 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { BackendError, ErrorNotification, LinkStyleButton, Notification } from "@scm-manager/ui-components";
+import { BackendError, ErrorNotification, Notification } from "@scm-manager/ui-components";
+import { UnstyledButton } from "@scm-manager/ui-core";
 
 type Props = {
   error?: Error | null;
@@ -28,7 +29,9 @@ const ParseErrorNotification: FC<Props> = ({ showHelp }) => {
   return (
     <Notification type="warning">
       <p>{t("search.quickSearch.parseError")}</p>
-      <LinkStyleButton onClick={showHelp}>{t("search.quickSearch.parseErrorHelp")}</LinkStyleButton>
+      <UnstyledButton className="is-underlined" onClick={showHelp}>
+        {t("search.quickSearch.parseErrorHelp")}
+      </UnstyledButton>
     </Notification>
   );
 };

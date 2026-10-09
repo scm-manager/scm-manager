@@ -18,7 +18,7 @@ import React, { FC } from "react";
 import { Modal } from "../modals";
 import { HealthCheckFailure } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
-import { Button } from "../buttons";
+import { Button } from "@scm-manager/ui-core";
 import HealthCheckFailureList from "./HealthCheckFailureList";
 
 type Props = {
@@ -30,7 +30,7 @@ type Props = {
 const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }) => {
   const [t] = useTranslation("repos");
 
-  const footer = <Button label={t("healthCheckFailure.close")} action={closeFunction} color="secondary" />;
+  const footer = <Button onClick={closeFunction}>{t("healthCheckFailure.close")}</Button>;
 
   return (
     <Modal

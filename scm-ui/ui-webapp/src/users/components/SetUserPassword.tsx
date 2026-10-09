@@ -17,16 +17,9 @@
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import {
-  ErrorNotification,
-  Level,
-  Notification,
-  PasswordConfirmation,
-  SubmitButton,
-  Subtitle,
-} from "@scm-manager/ui-components";
+import { ErrorNotification, Notification, PasswordConfirmation, Subtitle } from "@scm-manager/ui-components";
 import { useSetUserPassword } from "@scm-manager/ui-api";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { Button, Level, useDocumentTitle } from "@scm-manager/ui-core";
 
 type Props = {
   user: User;
@@ -76,7 +69,18 @@ const SetUserPassword: FC<Props> = ({ user }) => {
       {message}
       <PasswordConfirmation passwordChanged={onPasswordChange} key={passwordOverwritten ? "changed" : "unchanged"} />
       <Level
-        right={<SubmitButton disabled={!passwordValid} loading={isPending} label={t("singleUserPassword.button")} />}
+        right={
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!passwordValid}
+            isLoading={isPending}
+            testId="submit-button"
+            onClick={() => window.scrollTo(0, 0)}
+          >
+            {t("singleUserPassword.button")}
+          </Button>
+        }
       />
     </form>
   );

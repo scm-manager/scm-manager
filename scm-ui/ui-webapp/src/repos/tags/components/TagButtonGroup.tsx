@@ -16,7 +16,6 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { ButtonAddons } from "@scm-manager/ui-components";
 import { Icon, LinkButton } from "@scm-manager/ui-core";
 import { Tag, Repository } from "@scm-manager/ui-types";
 
@@ -37,16 +36,20 @@ const TagButtonGroup: FC<Props> = ({ repository, tag }) => {
 
   return (
     <>
-      <ButtonAddons>
-        <LinkButton to={changesetLink}>
-          <Icon>exchange-alt</Icon>
-          <span>{t("tag.commit")}</span>
-        </LinkButton>
-        <LinkButton to={sourcesLink}>
-          <Icon>code</Icon>
-          <span>{t("tag.sources")}</span>
-        </LinkButton>
-      </ButtonAddons>
+      <div className="field has-addons mb-0">
+        <p className="control">
+          <LinkButton to={changesetLink}>
+            <Icon>exchange-alt</Icon>
+            <span>{t("tag.commit")}</span>
+          </LinkButton>
+        </p>
+        <p className="control">
+          <LinkButton to={sourcesLink}>
+            <Icon>code</Icon>
+            <span>{t("tag.sources")}</span>
+          </LinkButton>
+        </p>
+      </div>
     </>
   );
 };

@@ -21,7 +21,6 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { useNamespaceAndNameContext, useNamespaces, useRepositories } from "@scm-manager/ui-api";
 import {
-  CreateButton,
   devices,
   ErrorNotification,
   LinkPaginator,
@@ -32,7 +31,13 @@ import {
   PageActions,
   urls,
 } from "@scm-manager/ui-components";
-import { KeyboardIterator, KeyboardSubIterator, REPOSITORY_COLLECTION_BASE_ROUTE, useDocumentTitle } from "@scm-manager/ui-core";
+import {
+  KeyboardIterator,
+  KeyboardSubIterator,
+  LinkButton,
+  REPOSITORY_COLLECTION_BASE_ROUTE,
+  useDocumentTitle,
+} from "@scm-manager/ui-core";
 import { binder, ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
 import RepositoryList from "../components/list";
@@ -284,7 +289,13 @@ const Overview: FC = () => {
               })}
             />
           </KeyboardIterator>
-          {showCreateButton ? <CreateButton label={t("overview.createButton")} link={createLink} /> : null}
+          {showCreateButton ? (
+            <div className="has-text-centered mt-5">
+              <LinkButton variant="primary" to={createLink}>
+                {t("overview.createButton")}
+              </LinkButton>
+            </div>
+          ) : null}
         </div>
       </div>
       <PageActions>

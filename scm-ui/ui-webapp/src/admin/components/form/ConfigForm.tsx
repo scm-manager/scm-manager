@@ -17,7 +17,8 @@
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Config, ConfigChangeHandler, Link, NamespaceStrategies } from "@scm-manager/ui-types";
-import { Level, Notification, SubmitButton } from "@scm-manager/ui-components";
+import { Notification } from "@scm-manager/ui-components";
+import { Button, Level } from "@scm-manager/ui-core";
 import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
@@ -210,11 +211,16 @@ const ConfigForm: FC<Props> = ({
       ) : null}
       <Level
         right={
-          <SubmitButton
-            loading={loading}
-            label={t("config.form.submit")}
+          <Button
+            type="submit"
+            variant="primary"
+            isLoading={loading}
             disabled={!configUpdatePermission || hasError() || !changed}
-          />
+            testId="submit-button"
+            onClick={() => window.scrollTo(0, 0)}
+          >
+            {t("config.form.submit")}
+          </Button>
         }
       />
     </form>

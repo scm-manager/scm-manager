@@ -24,7 +24,7 @@ type Props = {
 };
 
 /**
- * @deprecated
+ * @deprecated Use ExternalLinkButton from ui-core instead
  */
 class DownloadButton extends React.Component<Props> {
   render() {

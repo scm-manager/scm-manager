@@ -17,7 +17,8 @@
 import React, { FC, FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Branch, BranchCreation } from "@scm-manager/ui-types";
-import { InputField, Level, Select, SubmitButton, validation as validator } from "@scm-manager/ui-components";
+import { InputField, Select, validation as validator } from "@scm-manager/ui-components";
+import { Button, Level } from "@scm-manager/ui-core";
 import { orderBranches } from "../util/orderBranches";
 
 type Props = {
@@ -89,7 +90,16 @@ const BranchForm: FC<Props> = ({ submitForm, branches, disabled, transmittedName
           <div className="column">
             <Level
               right={
-                <SubmitButton disabled={disabled || !isValid()} loading={loading} label={t("branches.create.submit")} />
+                <Button
+                  type="submit"
+                  variant="primary"
+                  disabled={disabled || !isValid()}
+                  isLoading={loading}
+                  testId="submit-button"
+                  onClick={() => window.scrollTo(0, 0)}
+                >
+                  {t("branches.create.submit")}
+                </Button>
               }
             />
           </div>

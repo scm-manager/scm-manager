@@ -17,7 +17,8 @@
 import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { Repository, RepositoryCreation, RepositoryType, RepositoryUrlImport } from "@scm-manager/ui-types";
 import ImportFromUrlForm from "./ImportFromUrlForm";
-import { ErrorNotification, Level, SubmitButton, urls } from "@scm-manager/ui-components";
+import { ErrorNotification, urls } from "@scm-manager/ui-components";
+import { Button, Level } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import { useImportRepositoryFromUrl } from "@scm-manager/ui-api";
 import { extensionPoints } from "@scm-manager/ui-extensions";
@@ -98,7 +99,18 @@ const ImportRepositoryFromUrl: FC<Props> = ({
         setValid={setContactValid}
       />
       <Level
-        right={<SubmitButton disabled={!isValid()} loading={isPending} label={t("repositoryForm.submitImport")} />}
+        right={
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!isValid()}
+            isLoading={isPending}
+            testId="submit-button"
+            onClick={() => window.scrollTo(0, 0)}
+          >
+            {t("repositoryForm.submitImport")}
+          </Button>
+        }
       />
     </form>
   );

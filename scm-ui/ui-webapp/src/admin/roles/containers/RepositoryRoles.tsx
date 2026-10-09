@@ -19,7 +19,6 @@ import { Navigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { RepositoryRoleCollection } from "@scm-manager/ui-types";
 import {
-  CreateButton,
   ErrorNotification,
   LinkPaginator,
   Loading,
@@ -30,7 +29,7 @@ import {
 } from "@scm-manager/ui-components";
 import PermissionRoleTable from "../components/PermissionRoleTable";
 import { useRepositoryRoles } from "@scm-manager/ui-api";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { LinkButton, useDocumentTitle } from "@scm-manager/ui-core";
 
 type RepositoryRolesPageProps = {
   data?: RepositoryRoleCollection;
@@ -88,7 +87,13 @@ const RepositoryRoles: FC<Props> = ({ baseUrl }) => {
       <Title title={t("repositoryRole.title")} />
       <Subtitle subtitle={t("repositoryRole.overview.subtitle")} />
       <RepositoryRolesPage data={data} page={page} baseUrl={baseUrl} />
-      {canAddRoles ? <CreateButton label={t("repositoryRole.overview.createButton")} link="create" /> : null}
+      {canAddRoles ? (
+        <div className="has-text-centered mt-5">
+          <LinkButton variant="primary" to="create">
+            {t("repositoryRole.overview.createButton")}
+          </LinkButton>
+        </div>
+      ) : null}
     </>
   );
 };

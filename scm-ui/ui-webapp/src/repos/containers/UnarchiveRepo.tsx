@@ -17,7 +17,8 @@
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { Button, ConfirmAlert, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { Button, Icon, Level } from "@scm-manager/ui-core";
 import { useUnarchiveRepository } from "@scm-manager/ui-api";
 
 type Props = {
@@ -47,7 +48,7 @@ const UnarchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
       buttons={[
         {
           label: t("unarchiveRepo.confirmAlert.submit"),
-          isPending,
+          isLoading: isPending,
           onClick: () => unarchiveRepoCallback(),
           autofocus: true,
         },
@@ -73,13 +74,10 @@ const UnarchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
           </div>
         }
         right={
-          <Button
-            color="warning"
-            icon="box-open"
-            label={t("unarchiveRepo.button")}
-            action={action}
-            loading={isPending}
-          />
+          <Button variant="signal" onClick={action} isLoading={isPending}>
+            <Icon>box-open</Icon>
+            <span>{t("unarchiveRepo.button")}</span>
+          </Button>
         }
       />
     </>

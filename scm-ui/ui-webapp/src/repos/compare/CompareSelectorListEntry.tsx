@@ -17,7 +17,7 @@
 import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { NoStyleButton } from "@scm-manager/ui-components";
+import { UnstyledButton } from "@scm-manager/ui-core";
 
 type Props = {
   children: ReactNode;
@@ -25,7 +25,7 @@ type Props = {
   onClick?: (event: React.MouseEvent) => void;
 };
 
-const FocusButton = styled(NoStyleButton)`
+const FocusButton = styled(UnstyledButton)`
   border-radius: 0.25rem;
   overflow: hidden;
 

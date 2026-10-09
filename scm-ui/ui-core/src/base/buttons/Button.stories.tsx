@@ -134,7 +134,9 @@ import {
   ButtonVariants,
   ExternalLinkButton as ExternalLinkButtonComponent,
   IconButton as IconButtonComponent,
+  IconLinkButton as IconLinkButtonComponent,
   LinkButton as LinkButtonComponent,
+  UnstyledButton as UnstyledButtonComponent,
 } from "./Button";
 import Icon from "./Icon";
 
@@ -145,6 +147,8 @@ const meta: Meta = {
     LinkButton: LinkButtonComponent,
     ExternalLinkButton: ExternalLinkButtonComponent,
     IconButton: IconButtonComponent,
+    IconLinkButton: IconLinkButtonComponent,
+    UnstyledButton: UnstyledButtonComponent,
   },
   argTypes: {
     variant: {
@@ -231,5 +235,41 @@ export const BorderlessIconDefault: StoryObj<typeof IconButtonComponent> = {
     children: smallIcon,
     variant: "default",
     size: "small",
+  },
+};
+
+export const IconLinkButton: StoryObj<typeof IconLinkButtonComponent> = {
+  name: "Icon Link Button",
+  render: (args) => <IconLinkButtonComponent {...args} />,
+  args: {
+    children: <Icon>file-code</Icon>,
+    to: "/repos",
+    "aria-label": "Jump to source file",
+    title: "Jump to source file",
+  },
+};
+
+export const UnstyledButton: StoryObj<typeof UnstyledButtonComponent> = {
+  render: (args) => <UnstyledButtonComponent {...args} />,
+  args: {
+    children: "Unstyled Button",
+  },
+};
+
+export const UnstyledButtonUnderlined: StoryObj<typeof UnstyledButtonComponent> = {
+  name: "Unstyled Button (Underlined)",
+  render: (args) => <UnstyledButtonComponent {...args} />,
+  args: {
+    children: "Show help",
+    className: "is-underlined",
+  },
+};
+
+export const UnstyledButtonWithIcon: StoryObj<typeof UnstyledButtonComponent> = {
+  name: "Unstyled Button (Icon)",
+  render: (args) => <UnstyledButtonComponent {...args} />,
+  args: {
+    children: <Icon>question-circle</Icon>,
+    "aria-label": "Show help",
   },
 };

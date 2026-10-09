@@ -15,14 +15,8 @@
  */
 
 import React, { FC, useState } from "react";
-import {
-  ErrorNotification,
-  Icon,
-  Modal,
-  NoStyleButton,
-  SmallLoadingSpinner,
-  Tooltip,
-} from "@scm-manager/ui-components";
+import { ErrorNotification, Icon, Modal, SmallLoadingSpinner, Tooltip } from "@scm-manager/ui-components";
+import { UnstyledButton } from "@scm-manager/ui-core";
 import { PluginCenterAuthenticationInfo } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 
@@ -65,9 +59,9 @@ const AuthenticationError: FC<ErrorProps> = ({ error }) => {
   return (
     <>
       <Tooltip message={t("plugins.cloudoguPlatform.error.info")} multiline={true}>
-        <NoStyleButton onClick={() => setShowModal(true)}>
+        <UnstyledButton onClick={() => setShowModal(true)} aria-label={t("plugins.cloudoguPlatform.error.info")}>
           <Icon name="exclamation-triangle" color="danger" className="is-size-5" />
-        </NoStyleButton>
+        </UnstyledButton>
       </Tooltip>
       {showModal ? <ErrorModal error={error} onClose={() => setShowModal(false)} /> : null}
     </>

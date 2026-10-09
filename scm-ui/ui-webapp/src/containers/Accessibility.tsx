@@ -17,8 +17,8 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-import { useDocumentTitle } from "@scm-manager/ui-core";
-import { ButtonGroup, Checkbox, SubmitButton, Subtitle } from "@scm-manager/ui-components";
+import { Button, useDocumentTitle } from "@scm-manager/ui-core";
+import { Checkbox, Subtitle } from "@scm-manager/ui-components";
 import { AccessibilityConfig, useAccessibilityConfig } from "../accessibilityConfig";
 import { useRequiredMe } from "@scm-manager/ui-api";
 
@@ -49,9 +49,18 @@ const Accessibility: FC = () => {
           helpText={t("profile.accessibility.deactivateShortcuts.helpText")}
           {...register("deactivateShortcuts")}
         />
-        <ButtonGroup className="is-justify-content-flex-end">
-          <SubmitButton label={t("profile.accessibility.submit")} disabled={!isDirty} loading={isLoading} />
-        </ButtonGroup>
+        <div className="buttons is-justify-content-flex-end">
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!isDirty}
+            isLoading={isLoading}
+            testId="submit-button"
+            onClick={() => window.scrollTo(0, 0)}
+          >
+            {t("profile.accessibility.submit")}
+          </Button>
+        </div>
       </form>
     </>
   );

@@ -16,7 +16,8 @@
 
 import React, { FC } from "react";
 import { File } from "@scm-manager/ui-types";
-import { Button, Notification } from "@scm-manager/ui-components";
+import { Notification } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -37,7 +38,9 @@ const TruncatedNotification: FC<Props> = ({ directory, isFetchingNextPage, fetch
     <Notification type="info">
       <div className="columns is-centered">
         <div className="column">{t("sources.moreFilesAvailable", { count: fileCount })}</div>
-        <Button label={t("sources.loadMore")} action={fetchNextPage} loading={isFetchingNextPage} />
+        <Button onClick={() => fetchNextPage()} isLoading={isFetchingNextPage}>
+          {t("sources.loadMore")}
+        </Button>
       </div>
     </Notification>
   );

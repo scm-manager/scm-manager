@@ -14,8 +14,8 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Button, ConfirmAlert } from "@scm-manager/ui-components";
-import { DateFromNow } from "@scm-manager/ui-core";
+import { ConfirmAlert } from "@scm-manager/ui-components";
+import { DateFromNow, Icon, IconButton } from "@scm-manager/ui-core";
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, PublicKey } from "@scm-manager/ui-types";
@@ -33,13 +33,9 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
   let deleteButton;
   if (publicKey?._links?.delete) {
     deleteButton = (
-      <Button
-        color="text"
-        icon="trash"
-        action={() => setShowModal(true)}
-        title={t("publicKey.delete")}
-        className="px-2"
-      />
+      <IconButton onClick={() => setShowModal(true)} title={t("publicKey.delete")} aria-label={t("publicKey.delete")}>
+        <Icon>trash</Icon>
+      </IconButton>
     );
   }
 

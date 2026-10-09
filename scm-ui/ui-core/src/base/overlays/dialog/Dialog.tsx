@@ -19,6 +19,12 @@ import { DialogProps } from "@radix-ui/react-dialog";
 import React, { ComponentProps, FC, ReactComponentElement, ReactElement, ReactNode, Ref, useCallback } from "react";
 import { Button } from "../../buttons";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
+
+const FullscreenModalCard = styled.div`
+  width: 98%;
+  max-height: 97vh;
+`;
 
 type CloseButtonProps = ComponentProps<typeof Button> & { ref?: Ref<HTMLButtonElement> };
 
@@ -35,6 +41,12 @@ type Props = {
   title: ReactNode;
   description?: ReactNode;
   footer?: ReactElement[] | ((close: () => void) => ReactElement[]);
+  /**
+   * A fullscreen dialog takes up almost the whole viewport.
+   *
+   * @since 4.0.0
+   */
+  size?: "default" | "fullscreen";
   ref?: Ref<HTMLDivElement>;
 } & Pick<DialogProps, "onOpenChange" | "open" | "children">;
 
@@ -42,17 +54,18 @@ type Props = {
  * @beta
  * @since 2.46.0
  */
-const Dialog: FC<Props> = ({ children, onOpenChange, open, footer, title, trigger, description, ref }) => {
+const Dialog: FC<Props> = ({ children, onOpenChange, open, footer, title, trigger, description, size, ref }) => {
   const contentProps = description ? {} : { "aria-describedby": undefined };
   const close = useCallback(() => onOpenChange && onOpenChange(false), [onOpenChange]);
   const [t] = useTranslation("commons");
+  const ModalCard = size === "fullscreen" ? FullscreenModalCard : "div";
   return (
     <RadixDialog.Root open={open} onOpenChange={onOpenChange}>
       <RadixDialog.Trigger asChild>{trigger}</RadixDialog.Trigger>
       <RadixDialog.Portal>
         <RadixDialog.Overlay className="modal-background" />
         <RadixDialog.Content className="modal is-active" ref={ref} {...contentProps}>
-          <div className="modal-card">
+          <ModalCard className="modal-card">
             <div className="modal-card-head">
               <RadixDialog.Title className="modal-card-title">{title}</RadixDialog.Title>
               <RadixDialog.Close asChild>
@@ -66,7 +79,7 @@ const Dialog: FC<Props> = ({ children, onOpenChange, open, footer, title, trigge
             {footer ? (
               <div className="modal-card-foot">{typeof footer === "function" ? footer(close) : footer}</div>
             ) : null}
-          </div>
+          </ModalCard>
         </RadixDialog.Content>
       </RadixDialog.Portal>
     </RadixDialog.Root>

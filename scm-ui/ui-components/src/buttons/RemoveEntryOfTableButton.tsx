@@ -28,7 +28,7 @@ type Props = {
 type State = {};
 
 /**
- * @deprecated
+ * @deprecated Use Button from ui-core with the variant "signal" instead
  */
 class RemoveEntryOfTableButton extends React.Component<Props, State> {
   render() {

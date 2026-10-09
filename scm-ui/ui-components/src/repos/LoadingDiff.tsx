@@ -21,7 +21,6 @@ import { NotFoundError, useDiff } from "@scm-manager/ui-api";
 import ErrorNotification from "../ErrorNotification";
 import Loading from "../Loading";
 import Notification from "../Notification";
-import Button from "../buttons/Button";
 import Diff from "./Diff";
 import { DiffObjectProps } from "./DiffTypes";
 import DiffStatistics from "./DiffStatistics";
@@ -31,7 +30,7 @@ import { DiffContent, DiffTreeTitle, FileTreeContent, StickyFileDiffContainer } 
 import { useLocation } from "react-router-dom";
 import { getFileNameFromHash } from "./diffs";
 import LayoutRadioButtons from "./LayoutRadioButtons";
-import { useAriaId, useLayoutWide } from "@scm-manager/ui-core";
+import { Button, useAriaId, useLayoutWide } from "@scm-manager/ui-core";
 import { useLayoutState } from "./diffLayout";
 
 export type WhitespaceMode = "ALL" | "NONE";
@@ -58,7 +57,9 @@ const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingN
     <Notification className="mt-5" type="info">
       <div className="columns is-centered">
         <div className="column">{t("changesets.moreDiffsAvailable")}</div>
-        <Button label={t("changesets.loadMore")} action={fetchNextPage} loading={isFetchingNextPage} />
+        <Button onClick={() => fetchNextPage()} isLoading={isFetchingNextPage}>
+          {t("changesets.loadMore")}
+        </Button>
       </div>
     </Notification>
   );

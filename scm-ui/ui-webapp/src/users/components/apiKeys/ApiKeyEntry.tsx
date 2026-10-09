@@ -15,11 +15,11 @@
  */
 
 import React, { FC, useState } from "react";
-import { ConfirmAlert, Button } from "@scm-manager/ui-components";
+import { ConfirmAlert } from "@scm-manager/ui-components";
 import { ApiKey } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { DeleteFunction } from "@scm-manager/ui-api";
-import { AbsoluteDate } from "@scm-manager/ui-core";
+import { AbsoluteDate, Icon, IconButton } from "@scm-manager/ui-core";
 
 type Props = {
   apiKey: ApiKey;
@@ -32,7 +32,9 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
   let deleteButton;
   if (apiKey?._links?.delete) {
     deleteButton = (
-      <Button color="text" icon="trash" action={() => setShowModal(true)} title={t("apiKey.delete")} className="px-2" />
+      <IconButton onClick={() => setShowModal(true)} title={t("apiKey.delete")} aria-label={t("apiKey.delete")}>
+        <Icon>trash</Icon>
+      </IconButton>
     );
   }
 

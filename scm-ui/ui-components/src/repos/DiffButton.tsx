@@ -15,15 +15,7 @@
  */
 
 import React, { FC, MouseEvent } from "react";
-import styled from "styled-components";
-import { Tooltip } from "@scm-manager/ui-core";
-
-const Button = styled.button`
-  width: 50px;
-  &:hover {
-    color: var(--scm-info-color);
-  }
-`;
+import { Icon, IconButton } from "@scm-manager/ui-core";
 
 type Props = {
   icon: string;
@@ -38,11 +30,9 @@ const DiffButton: FC<Props> = ({ icon, tooltip, onClick }) => {
   };
 
   return (
-    <Tooltip message={tooltip} side="top">
-      <Button aria-label={tooltip} className="button is-clickable" onClick={handleClick}>
-        <i className={`fas fa-${icon}`} />
-      </Button>
-    </Tooltip>
+    <IconButton title={tooltip} aria-label={tooltip} onClick={handleClick}>
+      <Icon>{icon}</Icon>
+    </IconButton>
   );
 };
 

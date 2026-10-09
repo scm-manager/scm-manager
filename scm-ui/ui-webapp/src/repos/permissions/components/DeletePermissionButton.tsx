@@ -17,7 +17,8 @@
 import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Namespace, Permission, Repository } from "@scm-manager/ui-types";
-import { Button, ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { Icon, IconButton } from "@scm-manager/ui-core";
 import { useDeletePermission } from "@scm-manager/ui-api";
 
 type Props = {
@@ -72,13 +73,13 @@ const DeletePermissionButton: FC<Props> = ({ namespaceOrRepository, permission, 
   return (
     <>
       <ErrorNotification error={error} />
-      <Button
-        color="text"
-        icon="trash"
-        action={action}
+      <IconButton
+        onClick={action}
         title={t("permission.delete-permission-button.label")}
-        className="px-2"
-      />
+        aria-label={t("permission.delete-permission-button.label")}
+      >
+        <Icon>trash</Icon>
+      </IconButton>
     </>
   );
 };

@@ -18,9 +18,9 @@ import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { useDeleteRepository } from "@scm-manager/ui-api";
-import { InputField } from "@scm-manager/ui-core";
+import { Button, Icon, InputField, Level } from "@scm-manager/ui-core";
 
 type Props = {
   repository: Repository;
@@ -118,7 +118,12 @@ const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
             <p>{t("deleteRepo.description")}</p>
           </div>
         }
-        right={<DeleteButton label={t("deleteRepo.button")} action={action} loading={isPending} />}
+        right={
+          <Button variant="signal" onClick={action} isLoading={isPending}>
+            <Icon>times</Icon>
+            <span>{t("deleteRepo.button")}</span>
+          </Button>
+        }
       />
     </>
   );

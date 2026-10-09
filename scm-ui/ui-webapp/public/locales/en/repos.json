@@ -299,6 +299,7 @@
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Collapse",
     "ignoreWhitespace": "Ignore whitespaces changes",
+    "diffSettings": "Diff settings",
     "checkBoxHeadingWhitespaces": "Whitespace Settings",
     "checkBoxHeadingOtherSettings": "Other Settings",
     "checkBoxCollapseOption": "Collapse diffs by default",

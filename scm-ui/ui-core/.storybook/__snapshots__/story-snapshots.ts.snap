@@ -2,7 +2,7 @@
 
 exports[`Buttons/Button BorderedIcon 1`] = `
 "<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
-  <button type="button" class="sc-hKwBjT bORAFc button is-primary is-outlined button has-background-transparent">
+  <button type="button" class="sc-gKckzE bHkVwt button is-primary is-outlined">
     <span class="is-medium icon" aria-hidden="true"><i class="fas fa-fw fa-trash fa-lg"></i></span>
   </button>
 </div>
@@ -11,7 +11,7 @@ exports[`Buttons/Button BorderedIcon 1`] = `
 
 exports[`Buttons/Button BorderedIconDefault 1`] = `
 "<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
-  <button type="button" class="sc-hKwBjT bORAFc button button has-background-transparent">
+  <button type="button" class="sc-gKckzE bHkVwt button">
     <span class="is-medium icon" aria-hidden="true"><i class="fas fa-fw fa-trash fa-lg"></i></span>
   </button>
 </div>
@@ -20,7 +20,7 @@ exports[`Buttons/Button BorderedIconDefault 1`] = `
 
 exports[`Buttons/Button BorderlessIcon 1`] = `
 "<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
-  <button type="button" class="sc-eCIkAO hRTfaV button is-primary is-outlined button has-background-transparent">
+  <button type="button" class="sc-furwPO gQSWoK button is-primary is-outlined has-background-transparent">
     <span class="is-small icon" aria-hidden="true"><i class="fas fa-fw fa-trash fa-xs"></i></span>
   </button>
 </div>
@@ -29,7 +29,7 @@ exports[`Buttons/Button BorderlessIcon 1`] = `
 
 exports[`Buttons/Button BorderlessIconDefault 1`] = `
 "<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
-  <button type="button" class="sc-eCIkAO hRTfaV button button has-background-transparent">
+  <button type="button" class="sc-furwPO gQSWoK button has-background-transparent">
     <span class="is-small icon" aria-hidden="true"><i class="fas fa-fw fa-trash fa-xs"></i></span>
   </button>
 </div>
@@ -38,23 +38,60 @@ exports[`Buttons/Button BorderlessIconDefault 1`] = `
 
 exports[`Buttons/Button Button 1`] = `
 "<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
-  <button type="button" class="button is-primary">Button</button>
+  <button type="button" class="sc-bdvwhi gHijmu button is-primary">Button</button>
 </div>
 "
 `;
 
 exports[`Buttons/Button ExternalLinkButton 1`] = `
 "<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
-  <a target="_blank" rel="noreferrer noopener" href="https://scm-manager.org" class="button is-primary"
+  <a target="_blank" rel="noreferrer noopener" href="https://scm-manager.org" class="sc-eCIkAO jqxZWi button is-primary"
     >External Link Button</a
   >
 </div>
 "
 `;
 
+exports[`Buttons/Button IconLinkButton 1`] = `
+"<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
+  <a
+    aria-label="Jump to source file"
+    title="Jump to source file"
+    class="sc-iCfNyT dfOfzR button"
+    href="/repos"
+    data-discover="true"
+    ><span class="icon" aria-hidden="true"><i class="fas fa-fw fa-file-code"></i></span
+  ></a>
+</div>
+"
+`;
+
 exports[`Buttons/Button LinkButton 1`] = `
 "<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
-  <a class="button is-primary" href="/repos" data-discover="true">Link Button</a>
+  <a class="sc-gsDMPd fhkECR button is-primary" href="/repos" data-discover="true">Link Button</a>
+</div>
+"
+`;
+
+exports[`Buttons/Button UnstyledButton 1`] = `
+"<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
+  <button type="button" class="sc-pVUti zxHzd">Unstyled Button</button>
+</div>
+"
+`;
+
+exports[`Buttons/Button UnstyledButtonUnderlined 1`] = `
+"<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
+  <button type="button" class="sc-pVUti zxHzd is-underlined">Show help</button>
+</div>
+"
+`;
+
+exports[`Buttons/Button UnstyledButtonWithIcon 1`] = `
+"<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
+  <button type="button" aria-label="Show help" class="sc-pVUti zxHzd">
+    <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-question-circle"></i></span>
+  </button>
 </div>
 "
 `;
@@ -85,13 +122,13 @@ exports[`Components/Card Default 1`] = `
       </div>
       <div class="is-size-7 has-text-secondary ml-1">This is information is not important</div>
       <div class="ml-1">
-        <div class="sc-furwPO dlJagx is-flex is-flex-wrap-wrap is-align-items-center">
+        <div class="sc-crHjOq cGfZGB is-flex is-flex-wrap-wrap is-align-items-center">
           <button
             type="button"
             aria-haspopup="dialog"
             aria-expanded="false"
             data-state="closed"
-            class="sc-gKckzE iIaRyD is-flex is-align-items-center has-gap-1 p-1 is-borderless has-background-transparent is-relative has-hover-background-blue has-rounded-border is-clickable"
+            class="sc-kDTkBQ kOnbBj is-flex is-align-items-center has-gap-1 p-1 is-borderless has-background-transparent is-relative has-hover-background-blue has-rounded-border is-clickable"
           >
             <span class="has-text-secondary is-size-7">Popover Detail with Tag</span
             ><span class="tag is-rounded is-light">3</span></button
@@ -99,7 +136,7 @@ exports[`Components/Card Default 1`] = `
             ><span class="has-text-secondary is-size-7">Normal Detail with Tag</span
             ><span class="tag is-rounded is-light">2/3</span></span
           ><a
-            class="sc-iCfNyT fUzfZl is-flex is-align-items-center has-gap-1 p-1 is-borderless has-background-transparent is-relative has-hover-background-blue has-rounded-border is-clickable"
+            class="sc-iqsgXZ kVKHgU is-flex is-align-items-center has-gap-1 p-1 is-borderless has-background-transparent is-relative has-hover-background-blue has-rounded-border is-clickable"
             href="/workers"
             data-discover="true"
             ><span class="has-text-secondary is-size-7">Link Detail</span></a
@@ -108,7 +145,7 @@ exports[`Components/Card Default 1`] = `
             aria-haspopup="dialog"
             aria-expanded="false"
             data-state="closed"
-            class="sc-gKckzE iIaRyD is-flex is-align-items-center has-gap-1 p-1 is-borderless has-background-transparent is-relative has-hover-background-blue has-rounded-border is-clickable"
+            class="sc-kDTkBQ kOnbBj is-flex is-align-items-center has-gap-1 p-1 is-borderless has-background-transparent is-relative has-hover-background-blue has-rounded-border is-clickable"
           >
             <span class="has-text-secondary is-size-7">Popover Detail with Icon</span
             ><span class="is-size-5 has-text-success icon" aria-hidden="true"
@@ -145,7 +182,7 @@ exports[`Components/CardList Default 1`] = `
         aria-haspopup="menu"
         aria-expanded="false"
         data-state="closed"
-        class="button is-borderless has-background-transparent has-hover-color-blue px-2"
+        class="sc-dkPwfY fFAMvb button is-borderless has-background-transparent has-hover-color-blue px-2"
       >
         <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-ellipsis-v"></i></span>
       </button>
@@ -174,7 +211,7 @@ exports[`Components/CardList Default 1`] = `
         aria-haspopup="menu"
         aria-expanded="false"
         data-state="closed"
-        class="button is-borderless has-background-transparent has-hover-color-blue px-2"
+        class="sc-dkPwfY fFAMvb button is-borderless has-background-transparent has-hover-color-blue px-2"
       >
         <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-ellipsis-v"></i></span>
       </button>
@@ -188,7 +225,7 @@ exports[`Components/CardList Default 1`] = `
           <h3><a href="/cards/1">My least liked repo</a></h3>
         </div>
         <div class="ml-1">
-          <div class="sc-pVUti Qufpm is-flex is-flex-wrap-wrap is-align-items-center">
+          <div class="sc-eggkz jjxUQ is-flex is-flex-wrap-wrap is-align-items-center">
             <span class="is-flex is-align-items-center has-gap-1 p-1"
               ><span class="has-text-secondary is-size-7">Workers</span
               ><span class="tag is-rounded is-light">2/3</span></span
@@ -217,7 +254,7 @@ exports[`Components/CardList Default 1`] = `
           7cab5486ab8cd946af71a77d37c84bac c05156ef54a1f0bfd5d4fa12f774148c
         </div>
         <div class="ml-1">
-          <div class="sc-pVUti Qufpm is-flex is-flex-wrap-wrap is-align-items-center">
+          <div class="sc-eggkz jjxUQ is-flex is-flex-wrap-wrap is-align-items-center">
             <span class="is-flex is-align-items-center has-gap-1 p-1"
               ><span class="has-text-secondary is-size-7">Workers</span
               ><span class="tag is-rounded is-light">2/3</span></span
@@ -235,7 +272,7 @@ exports[`Components/CardList Default 1`] = `
 exports[`Components/Collapsible Default 1`] = `
 "<div style="margin: 2rem; max-width: 40rem">
   <div data-state="open" class="card">
-    <div class="sc-gKckzE kClxtQ card-header is-flex is-justify-content-space-between is-shadowless">
+    <div class="sc-kDTkBQ jJnbeU card-header is-flex is-justify-content-space-between is-shadowless">
       <span id="scm-id-1" class="card-header-title">This is a collapsible</span
       ><button
         type="button"
@@ -243,7 +280,7 @@ exports[`Components/Collapsible Default 1`] = `
         aria-expanded="true"
         data-state="open"
         aria-labelledby="scm-id-1"
-        class="sc-jRQBiJ bnCHIR card-header-icon"
+        class="sc-jrQAon iYkpCI card-header-icon"
       >
         <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-angle-down"></i></span>
       </button>
@@ -297,7 +334,28 @@ exports[`Components/DateFromNow Primary 1`] = `
 
 exports[`Components/Dialog Default 1`] = `
 "<div style="height: 100vh; padding: 2rem">
-  <button type="button" aria-haspopup="dialog" aria-expanded="false" data-state="closed" class="button">
+  <button
+    type="button"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    data-state="closed"
+    class="sc-bdvwhi gHijmu button"
+  >
+    Open Dialog
+  </button>
+</div>
+"
+`;
+
+exports[`Components/Dialog Fullscreen 1`] = `
+"<div style="height: 100vh; padding: 2rem">
+  <button
+    type="button"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    data-state="closed"
+    class="sc-bdvwhi gHijmu button"
+  >
     Open Dialog
   </button>
 </div>
@@ -399,11 +457,11 @@ exports[`Forms/ChipInputField Default 1`] = `
   <div class="field" aria-owns="scm-id-1">
     <label class="label" id="scm-id-2">Test Chips</label>
     <div class="control">
-      <ul class="sc-iqsgXZ iVUZZi is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-2">
+      <ul class="sc-fotPuT kCuFrs is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-2">
         <div class="is-flex-grow-1">
           <input
             aria-label="My personal chip list"
-            class="sc-crHjOq kjbYLn is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
+            class="sc-fFelbd fViEQl is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
             placeholder="Type a new chip name and press enter to add"
             id="scm-id-1"
             aria-describedby="scm-id-3"
@@ -429,7 +487,7 @@ exports[`Forms/ChipInputField Default 1`] = `
       >Press enter to add value to list.</span
     >
   </div>
-  <button type="button" class="button button is-link is-outlined ml-1 mt-2">Add</button>
+  <button type="button" class="sc-bdvwhi gHijmu button button is-link is-outlined ml-1 mt-2">Add</button>
 </div>
 "
 `;
@@ -439,10 +497,10 @@ exports[`Forms/ChipInputField WithAutocomplete 1`] = `
   <div class="field" aria-owns="scm-id-1">
     <label class="label" id="scm-id-2">Persons</label>
     <div class="control">
-      <ul class="sc-iqsgXZ iVUZZi is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-2">
+      <ul class="sc-fotPuT kCuFrs is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-2">
         <div class="is-relative is-flex-grow-1 is-flex" data-headlessui-state="">
           <input
-            class="sc-crHjOq kjbYLn is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow is-full-width input is-ellipsis-overflow"
+            class="sc-fFelbd fViEQl is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow is-full-width input is-ellipsis-overflow"
             aria-label="Enter a new person"
             placeholder="Enter a new person"
             autocomplete="off"
@@ -494,11 +552,11 @@ exports[`Forms/ControlledBooleanRadioField Default 1`] = `
               data-state="checked"
               value="true"
               id="scm-id-1"
-              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              class="sc-dJjZnq fqvXcG mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             >
-              <span data-state="checked" class="sc-hBUSYK kFRTZt"></span></button
+              <span data-state="checked" class="sc-hGPAwl dTLbEC"></span></button
             ><label for="scm-id-1">Yes</label>
           </div>
           <div class="radio is-flex is-align-items-center">
@@ -509,7 +567,7 @@ exports[`Forms/ControlledBooleanRadioField Default 1`] = `
               data-state="unchecked"
               value="false"
               id="scm-id-2"
-              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              class="sc-dJjZnq fqvXcG mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
@@ -522,8 +580,14 @@ exports[`Forms/ControlledBooleanRadioField Default 1`] = `
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-furwPO iJcHRQ">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-crHjOq hbAlqc">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-hKwBjT leeNgY button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -549,7 +613,7 @@ exports[`Forms/ControlledBooleanRadioField FalseByDefault 1`] = `
               data-state="unchecked"
               value="true"
               id="scm-id-1"
-              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              class="sc-dJjZnq fqvXcG mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
@@ -563,11 +627,11 @@ exports[`Forms/ControlledBooleanRadioField FalseByDefault 1`] = `
               data-state="checked"
               value="false"
               id="scm-id-2"
-              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              class="sc-dJjZnq fqvXcG mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             >
-              <span data-state="checked" class="sc-hBUSYK kFRTZt"></span></button
+              <span data-state="checked" class="sc-hGPAwl dTLbEC"></span></button
             ><label for="scm-id-2">No</label>
           </div>
         </div>
@@ -577,8 +641,14 @@ exports[`Forms/ControlledBooleanRadioField FalseByDefault 1`] = `
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-furwPO iJcHRQ">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-crHjOq hbAlqc">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-hKwBjT leeNgY button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -606,11 +676,11 @@ exports[`Forms/ControlledBooleanRadioField ReadOnly 1`] = `
               disabled=""
               value="true"
               id="scm-id-1"
-              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              class="sc-dJjZnq fqvXcG mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             >
-              <span data-state="checked" data-disabled="" class="sc-hBUSYK kFRTZt"></span></button
+              <span data-state="checked" data-disabled="" class="sc-hGPAwl dTLbEC"></span></button
             ><label for="scm-id-1">Yes</label>
           </div>
           <div class="radio is-flex is-align-items-center">
@@ -623,7 +693,7 @@ exports[`Forms/ControlledBooleanRadioField ReadOnly 1`] = `
               disabled=""
               value="false"
               id="scm-id-2"
-              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              class="sc-dJjZnq fqvXcG mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
@@ -636,8 +706,14 @@ exports[`Forms/ControlledBooleanRadioField ReadOnly 1`] = `
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-furwPO iJcHRQ">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-crHjOq hbAlqc">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-hKwBjT leeNgY button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -664,11 +740,11 @@ exports[`Forms/ControlledBooleanRadioField WithDescription 1`] = `
               data-state="checked"
               value="true"
               id="scm-id-1"
-              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              class="sc-dJjZnq fqvXcG mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             >
-              <span data-state="checked" class="sc-hBUSYK kFRTZt"></span></button
+              <span data-state="checked" class="sc-hGPAwl dTLbEC"></span></button
             ><label for="scm-id-1">Yes</label>
           </div>
           <div class="radio is-flex is-align-items-center">
@@ -679,7 +755,7 @@ exports[`Forms/ControlledBooleanRadioField WithDescription 1`] = `
               data-state="unchecked"
               value="false"
               id="scm-id-2"
-              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              class="sc-dJjZnq fqvXcG mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
@@ -692,8 +768,14 @@ exports[`Forms/ControlledBooleanRadioField WithDescription 1`] = `
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-furwPO iJcHRQ">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-crHjOq hbAlqc">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-hKwBjT leeNgY button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -705,9 +787,9 @@ exports[`Forms/ControlledBooleanRadioField WithDescription 1`] = `
 
 exports[`Forms/DatePicker Default 1`] = `
 "<div style="margin: 2rem; max-width: 20rem">
-  <div class="field sc-furwPO hdXspq">
+  <div class="field sc-crHjOq ovpve">
     <label class="label" for="scm-id-1">Date</label>
-    <div class="control sc-jrQAon bMTlHt is-expanded has-icons-right">
+    <div class="control sc-bqiQyc uAxfB is-expanded has-icons-right">
       <input
         class="input"
         id="scm-id-1"
@@ -731,9 +813,9 @@ exports[`Forms/DatePicker Default 1`] = `
 
 exports[`Forms/DatePicker WithBounds 1`] = `
 "<div style="margin: 2rem; max-width: 20rem">
-  <div class="field sc-furwPO hdXspq">
+  <div class="field sc-crHjOq ovpve">
     <label class="label" for="scm-id-1">Date</label>
-    <div class="control sc-jrQAon bMTlHt is-expanded">
+    <div class="control sc-bqiQyc uAxfB is-expanded">
       <input
         class="input"
         id="scm-id-1"
@@ -760,19 +842,19 @@ exports[`Forms/Form ControlledChipInputWithAdd 1`] = `
     <div class="field column" aria-owns="input-branches">
       <label class="label" id="scm-id-1"></label>
       <div class="control">
-        <ul class="sc-bkkgYE iOURit is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-1">
+        <ul class="sc-fKVoIy clccwg is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-1">
           <li class="tag is-light is-overflow-hidden">
             <span class="is-ellipsis-overflow">main</span
-            ><button aria-label="Delete 'main'" class="sc-dJjZnq hIwuvQ delete is-small" type="button"></button>
+            ><button aria-label="Delete 'main'" class="sc-iwjfEg lXiFt delete is-small" type="button"></button>
           </li>
           <li class="tag is-light is-overflow-hidden">
             <span class="is-ellipsis-overflow">develop</span
-            ><button aria-label="Delete 'develop'" class="sc-dJjZnq hIwuvQ delete is-small" type="button"></button>
+            ><button aria-label="Delete 'develop'" class="sc-iwjfEg lXiFt delete is-small" type="button"></button>
           </li>
           <div class="is-flex-grow-1">
             <input
               aria-label=""
-              class="sc-ieedpP eDzzzT is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
+              class="sc-bBHAhJ keExRl is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
               placeholder=""
               id="input-branches"
               aria-describedby="scm-id-2"
@@ -801,12 +883,18 @@ exports[`Forms/Form ControlledChipInputWithAdd 1`] = `
       >
     </div>
   </div>
-  <div class="columns"><button type="button" class="button">Add</button></div>
+  <div class="columns"><button type="button" class="sc-hKwBjT leeNgY button">Add</button></div>
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-furwPO iJcHRQ">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-crHjOq hbAlqc">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-hKwBjT leeNgY button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -853,9 +941,9 @@ exports[`Forms/Form Creation 1`] = `
   <div class="columns">
     <div class="field column">
       <div class="control">
-        <label class="sc-fotPuT iHJdFO checkbox is-align-items-center"
+        <label class="sc-dlVwtM fUselC checkbox is-align-items-center"
           ><input
-            class="sc-hBUSYK dcHWnb m-3"
+            class="sc-hGPAwl bhuxcg m-3"
             form="form"
             data-testid="checkbox-active"
             type="checkbox"
@@ -869,8 +957,14 @@ exports[`Forms/Form Creation 1`] = `
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-furwPO iJcHRQ">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-crHjOq hbAlqc">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-hKwBjT leeNgY button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -925,9 +1019,9 @@ exports[`Forms/Form Editing 1`] = `
   <div class="columns">
     <div class="field column">
       <div class="control">
-        <label class="sc-fotPuT iHJdFO checkbox is-align-items-center"
+        <label class="sc-dlVwtM fUselC checkbox is-align-items-center"
           ><input
-            class="sc-hBUSYK dcHWnb m-3"
+            class="sc-hGPAwl bhuxcg m-3"
             form="form"
             data-testid="checkbox-active"
             type="checkbox"
@@ -941,8 +1035,14 @@ exports[`Forms/Form Editing 1`] = `
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-furwPO iJcHRQ">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-crHjOq hbAlqc">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-hKwBjT leeNgY button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -998,8 +1098,14 @@ exports[`Forms/Form Layout 1`] = `
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-furwPO iJcHRQ">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-crHjOq hbAlqc">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-hKwBjT leeNgY button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -1060,7 +1166,7 @@ exports[`Forms/Form Nested 1`] = `
           <td>test</td>
           <td>val</td>
           <td class="has-text-right">
-            <button type="button" aria-label="Delete" class="button px-4">
+            <button type="button" aria-label="Delete" class="sc-hKwBjT leeNgY button px-4">
               <span class="icon is-small"><i class="fas fa-trash"></i></span>
             </button>
           </td>
@@ -1088,17 +1194,23 @@ exports[`Forms/Form Nested 1`] = `
       </div>
     </div>
     <div class="level-left">
-      <button type="submit" form="webhooks.0.headers" disabled="" class="button">Add</button>
+      <button type="submit" form="webhooks.0.headers" disabled="" class="sc-hKwBjT leeNgY button">Add</button>
     </div>
-    <hr class="sc-fFelbd ezNFxf" />
+    <hr class="sc-kfPsKX cAFwR" />
   </details>
-  <div class="level-right"><button type="button" class="button is-warning">Delete</button></div>
+  <div class="level-right"><button type="button" class="sc-hKwBjT leeNgY button is-warning">Delete</button></div>
   <hr />
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-furwPO iJcHRQ">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-crHjOq hbAlqc">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-hKwBjT leeNgY button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -1154,9 +1266,9 @@ exports[`Forms/Form ReadOnly 1`] = `
   <div class="columns">
     <div class="field column">
       <div class="control">
-        <label class="sc-fotPuT iHJdFO checkbox is-align-items-center" disabled=""
+        <label class="sc-dlVwtM fUselC checkbox is-align-items-center" disabled=""
           ><input readonly="" type="hidden" value="true" checked="" name="active" /><input
-            class="sc-hBUSYK dcHWnb m-3"
+            class="sc-hGPAwl bhuxcg m-3"
             form="form"
             data-testid="checkbox-active"
             disabled=""
@@ -1171,13 +1283,13 @@ exports[`Forms/Form ReadOnly 1`] = `
     <div class="field column" aria-owns="input-labels">
       <label class="label" id="scm-id-1"></label>
       <div class="control">
-        <ul class="sc-bkkgYE iOURit is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-1">
+        <ul class="sc-fKVoIy clccwg is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-1">
           <li class="tag is-light is-overflow-hidden"><span class="is-ellipsis-overflow">test</span></li>
           <li class="tag is-light is-overflow-hidden"><span class="is-ellipsis-overflow">hero</span></li>
           <div class="is-flex-grow-1">
             <input
               aria-label="Test"
-              class="sc-ieedpP eDzzzT is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
+              class="sc-bBHAhJ keExRl is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
               placeholder=""
               id="input-labels"
               aria-describedby="scm-id-2"
@@ -1222,15 +1334,15 @@ exports[`Forms/Form RepoConfiguration 1`] = `
   <div class="field column" aria-owns="input-labels">
     <label class="label" id="scm-id-1"></label>
     <div class="control">
-      <ul class="sc-bkkgYE iOURit is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-1">
+      <ul class="sc-fKVoIy clccwg is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-1">
         <li class="tag is-light is-overflow-hidden">
           <span class="is-ellipsis-overflow">test</span
-          ><button aria-label="Delete 'test'" class="sc-dJjZnq hIwuvQ delete is-small" type="button"></button>
+          ><button aria-label="Delete 'test'" class="sc-iwjfEg lXiFt delete is-small" type="button"></button>
         </li>
         <div class="is-flex-grow-1">
           <input
             aria-label=""
-            class="sc-ieedpP eDzzzT is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
+            class="sc-bBHAhJ keExRl is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
             placeholder=""
             id="input-labels"
             aria-describedby="scm-id-2"
@@ -1261,10 +1373,10 @@ exports[`Forms/Form RepoConfiguration 1`] = `
   <div class="field column" aria-owns="input-people">
     <label class="label" id="scm-id-3"></label>
     <div class="control">
-      <ul class="sc-bkkgYE iOURit is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-3">
+      <ul class="sc-fKVoIy clccwg is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-3">
         <li class="tag is-light is-overflow-hidden">
           <span class="is-ellipsis-overflow">Trillian</span
-          ><button aria-label="Delete 'Trillian'" class="sc-dJjZnq hIwuvQ delete is-small" type="button"></button>
+          ><button aria-label="Delete 'Trillian'" class="sc-iwjfEg lXiFt delete is-small" type="button"></button>
         </li>
         <input
           hidden=""
@@ -1287,7 +1399,7 @@ exports[`Forms/Form RepoConfiguration 1`] = `
         />
         <div class="is-relative is-flex-grow-1 is-flex" data-headlessui-state="">
           <input
-            class="sc-ieedpP eDzzzT is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow is-full-width input is-ellipsis-overflow"
+            class="sc-bBHAhJ keExRl is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow is-full-width input is-ellipsis-overflow"
             aria-label=""
             placeholder=""
             autocomplete="off"
@@ -1383,8 +1495,14 @@ exports[`Forms/Form RepoConfiguration 1`] = `
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-furwPO iJcHRQ">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-crHjOq hbAlqc">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-hKwBjT leeNgY button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -1440,9 +1558,9 @@ exports[`Forms/Form Reset 1`] = `
   <div class="columns">
     <div class="field column">
       <div class="control">
-        <label class="sc-fotPuT iHJdFO checkbox is-align-items-center"
+        <label class="sc-dlVwtM fUselC checkbox is-align-items-center"
           ><input
-            class="sc-hBUSYK dcHWnb m-3"
+            class="sc-hGPAwl bhuxcg m-3"
             form="form"
             data-testid="checkbox-active"
             type="checkbox"
@@ -1465,12 +1583,20 @@ exports[`Forms/Form Reset 1`] = `
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-furwPO iJcHRQ">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-crHjOq hbAlqc">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-hKwBjT leeNgY button is-primary"
+          data-testid="submit-button"
+        >
           Submit</button
-        ><button type="reset" form="form" class="button" data-testid="form-discard-changes-button">
+        ><button type="reset" form="form" class="sc-hKwBjT leeNgY button" data-testid="form-discard-changes-button">
           Discard changes</button
-        ><button type="button" form="form" class="button" data-testid="form-reset-button">Clear</button>
+        ><button type="button" form="form" class="sc-hKwBjT leeNgY button" data-testid="form-reset-button">
+          Clear
+        </button>
       </div>
     </div>
   </div>
@@ -1524,7 +1650,7 @@ exports[`Forms/InputField WithDescriptionExtended 1`] = `
 "<div style="margin: 2rem; max-width: 40rem">
   <div class="field">
     <label class="label" for="scm-id-1">MyInput 1</label>
-    <details class="sc-iqsgXZ ddgIsi mb-2 is-size-7" id="input-description-undefined">
+    <details class="sc-fotPuT dmzYOY mb-2 is-size-7" id="input-description-undefined">
       <summary>
         <span class="is-small icon" aria-hidden="true"><i class="fas fa-fw fa-chevron-right fa-xs"></i></span
         ><span>This text is a description for this input</span>
@@ -1535,7 +1661,7 @@ exports[`Forms/InputField WithDescriptionExtended 1`] = `
   </div>
   <div class="field">
     <label class="label" for="scm-id-2">MyInput 2</label>
-    <details class="sc-iqsgXZ ddgIsi mb-2 is-size-7" id="input-description-undefined">
+    <details class="sc-fotPuT dmzYOY mb-2 is-size-7" id="input-description-undefined">
       <summary>
         <span class="is-small icon" aria-hidden="true"><i class="fas fa-fw fa-chevron-right fa-xs"></i></span
         ><span>This text is a description for this input</span>
@@ -1610,7 +1736,7 @@ exports[`Forms/RadioGroup AsAField 1`] = `
             data-state="unchecked"
             value="CHARMANDER"
             id="scm-id-1"
-            class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+            class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
             tabindex="-1"
             data-radix-collection-item=""
           ></button
@@ -1624,7 +1750,7 @@ exports[`Forms/RadioGroup AsAField 1`] = `
             data-state="unchecked"
             value="SQUIRTLE"
             id="scm-id-2"
-            class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+            class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
             tabindex="-1"
             data-radix-collection-item=""
           ></button
@@ -1638,7 +1764,7 @@ exports[`Forms/RadioGroup AsAField 1`] = `
             data-state="unchecked"
             value="BULBASAUR"
             id="scm-id-3"
-            class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+            class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
             tabindex="-1"
             data-radix-collection-item=""
           ></button
@@ -1664,7 +1790,7 @@ exports[`Forms/RadioGroup ControlledState 1`] = `
           data-state="unchecked"
           value="CHARMANDER"
           id="scm-id-1"
-          class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+          class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
           tabindex="-1"
           data-radix-collection-item=""
         ></button
@@ -1678,7 +1804,7 @@ exports[`Forms/RadioGroup ControlledState 1`] = `
           data-state="unchecked"
           value="SQUIRTLE"
           id="scm-id-2"
-          class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+          class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
           tabindex="-1"
           data-radix-collection-item=""
         ></button
@@ -1692,7 +1818,7 @@ exports[`Forms/RadioGroup ControlledState 1`] = `
           data-state="unchecked"
           value="BULBASAUR"
           id="scm-id-3"
-          class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+          class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
           tabindex="-1"
           data-radix-collection-item=""
         ></button
@@ -1735,7 +1861,7 @@ exports[`Forms/RadioGroup InAForm 1`] = `
               value="CHARMANDER"
               form="form"
               id="scm-id-1"
-              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
@@ -1750,7 +1876,7 @@ exports[`Forms/RadioGroup InAForm 1`] = `
               value="SQUIRTLE"
               form="form"
               id="scm-id-2"
-              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
@@ -1765,7 +1891,7 @@ exports[`Forms/RadioGroup InAForm 1`] = `
               value="BULBASAUR"
               form="form"
               id="scm-id-3"
-              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
@@ -1779,8 +1905,14 @@ exports[`Forms/RadioGroup InAForm 1`] = `
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-hBUSYK ilXaqb">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-hGPAwl erQSbg">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-bdvwhi gHijmu button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -1817,7 +1949,7 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
           <td>Charlie</td>
           <td>CHARMANDER</td>
           <td class="has-text-right">
-            <button type="button" aria-label="Delete" class="button px-4">
+            <button type="button" aria-label="Delete" class="sc-bdvwhi gHijmu button px-4">
               <span class="icon is-small"><i class="fas fa-trash"></i></span>
             </button>
           </td>
@@ -1849,7 +1981,7 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
                 value="CHARMANDER"
                 form="trainers.0.team"
                 id="scm-id-7"
-                class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+                class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
                 tabindex="-1"
                 data-radix-collection-item=""
               ></button
@@ -1864,7 +1996,7 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
                 value="SQUIRTLE"
                 form="trainers.0.team"
                 id="scm-id-8"
-                class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+                class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
                 tabindex="-1"
                 data-radix-collection-item=""
               ></button
@@ -1879,7 +2011,7 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
                 value="BULBASAUR"
                 form="trainers.0.team"
                 id="scm-id-9"
-                class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+                class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
                 tabindex="-1"
                 data-radix-collection-item=""
               ></button
@@ -1889,10 +2021,12 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
         </div>
       </fieldset>
     </div>
-    <div class="level-left"><button type="submit" form="trainers.0.team" disabled="" class="button">Add</button></div>
-    <hr class="sc-fFelbd ezNFxf" />
+    <div class="level-left">
+      <button type="submit" form="trainers.0.team" disabled="" class="sc-bdvwhi gHijmu button">Add</button>
+    </div>
+    <hr class="sc-kfPsKX cAFwR" />
   </details>
-  <div class="level-right"><button type="button" class="button is-warning">Delete</button></div>
+  <div class="level-right"><button type="button" class="sc-bdvwhi gHijmu button is-warning">Delete</button></div>
   <hr />
   <div class="columns">
     <div class="field column">
@@ -1918,7 +2052,7 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
           <td>Squirtle</td>
           <td>SQUIRTLE</td>
           <td class="has-text-right">
-            <button type="button" aria-label="Delete" class="button px-4">
+            <button type="button" aria-label="Delete" class="sc-bdvwhi gHijmu button px-4">
               <span class="icon is-small"><i class="fas fa-trash"></i></span>
             </button>
           </td>
@@ -1950,7 +2084,7 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
                 value="CHARMANDER"
                 form="trainers.1.team"
                 id="scm-id-10"
-                class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+                class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
                 tabindex="-1"
                 data-radix-collection-item=""
               ></button
@@ -1965,7 +2099,7 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
                 value="SQUIRTLE"
                 form="trainers.1.team"
                 id="scm-id-11"
-                class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+                class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
                 tabindex="-1"
                 data-radix-collection-item=""
               ></button
@@ -1980,7 +2114,7 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
                 value="BULBASAUR"
                 form="trainers.1.team"
                 id="scm-id-12"
-                class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+                class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
                 tabindex="-1"
                 data-radix-collection-item=""
               ></button
@@ -1990,16 +2124,24 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
         </div>
       </fieldset>
     </div>
-    <div class="level-left"><button type="submit" form="trainers.1.team" disabled="" class="button">Add</button></div>
-    <hr class="sc-fFelbd ezNFxf" />
+    <div class="level-left">
+      <button type="submit" form="trainers.1.team" disabled="" class="sc-bdvwhi gHijmu button">Add</button>
+    </div>
+    <hr class="sc-kfPsKX cAFwR" />
   </details>
-  <div class="level-right"><button type="button" class="button is-warning">Delete</button></div>
+  <div class="level-right"><button type="button" class="sc-bdvwhi gHijmu button is-warning">Delete</button></div>
   <hr />
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-hBUSYK ilXaqb">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-hGPAwl erQSbg">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-bdvwhi gHijmu button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -2043,7 +2185,7 @@ exports[`Forms/RadioGroup ReadOnly 1`] = `
               value="CHARMANDER"
               form="form"
               id="scm-id-1"
-              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
@@ -2060,11 +2202,11 @@ exports[`Forms/RadioGroup ReadOnly 1`] = `
               value="SQUIRTLE"
               form="form"
               id="scm-id-2"
-              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             >
-              <span data-state="checked" data-disabled="" class="sc-crHjOq cidaHy"></span></button
+              <span data-state="checked" data-disabled="" class="sc-fFelbd bRYfQ"></span></button
             ><label for="scm-id-2">Squirtle</label>
           </div>
           <div class="radio is-flex is-align-items-center">
@@ -2078,7 +2220,7 @@ exports[`Forms/RadioGroup ReadOnly 1`] = `
               value="BULBASAUR"
               form="form"
               id="scm-id-3"
-              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
@@ -2091,8 +2233,14 @@ exports[`Forms/RadioGroup ReadOnly 1`] = `
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-hBUSYK ilXaqb">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-hGPAwl erQSbg">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-bdvwhi gHijmu button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -2114,7 +2262,7 @@ exports[`Forms/RadioGroup UncontrolledState 1`] = `
           data-state="unchecked"
           value="CHARMANDER"
           id="scm-id-1"
-          class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+          class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
           tabindex="-1"
           data-radix-collection-item=""
         ></button
@@ -2128,7 +2276,7 @@ exports[`Forms/RadioGroup UncontrolledState 1`] = `
           data-state="unchecked"
           value="SQUIRTLE"
           id="scm-id-2"
-          class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+          class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
           tabindex="-1"
           data-radix-collection-item=""
         ></button
@@ -2142,7 +2290,7 @@ exports[`Forms/RadioGroup UncontrolledState 1`] = `
           data-state="unchecked"
           value="BULBASAUR"
           id="scm-id-3"
-          class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+          class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
           tabindex="-1"
           data-radix-collection-item=""
         ></button
@@ -2178,11 +2326,11 @@ exports[`Forms/RadioGroup WithOptionsProp 1`] = `
               value="CHARMANDER"
               form="form"
               id="scm-id-1"
-              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             >
-              <span data-state="checked" class="sc-crHjOq cidaHy"></span></button
+              <span data-state="checked" class="sc-fFelbd bRYfQ"></span></button
             ><label for="scm-id-1">Charmander</label>
           </div>
           <div class="radio is-flex is-align-items-center">
@@ -2194,7 +2342,7 @@ exports[`Forms/RadioGroup WithOptionsProp 1`] = `
               value="SQUIRTLE"
               form="form"
               id="scm-id-2"
-              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
@@ -2209,7 +2357,7 @@ exports[`Forms/RadioGroup WithOptionsProp 1`] = `
               value="BULBASAUR"
               form="form"
               id="scm-id-3"
-              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
@@ -2223,8 +2371,14 @@ exports[`Forms/RadioGroup WithOptionsProp 1`] = `
   <div class="level">
     <div class="level-left"></div>
     <div class="level-right">
-      <div class="sc-hBUSYK ilXaqb">
-        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+      <div class="sc-hGPAwl erQSbg">
+        <button
+          type="submit"
+          disabled=""
+          form="form"
+          class="sc-bdvwhi gHijmu button is-primary"
+          data-testid="submit-button"
+        >
           Submit
         </button>
       </div>
@@ -2236,18 +2390,18 @@ exports[`Forms/RadioGroup WithOptionsProp 1`] = `
 
 exports[`Forms/SubpageForm HeaderNavigation 1`] = `
 "<div style="margin: 2rem; max-width: 60rem">
-  <nav class="sc-iqsgXZ dhTlwO breadcrumb subtitle" aria-label="Breadcrumb">
+  <nav class="sc-hBUSYK duEbm breadcrumb subtitle" aria-label="Breadcrumb">
     <ol role="list">
       <li class="is-active">
         <a href="#" aria-current="page"><span class="subtitle">E-Mail notifications for commits</span></a>
       </li>
     </ol>
   </nav>
-  <hr class="sc-kDTkBQ cSjRci" />
-  <div class="level sc-jrQAon jjXUZQ">
+  <hr class="sc-ksdwth kwQqFO" />
+  <div class="level sc-bqiQyc cVLrsM">
     <div class="level-left"><span id="scm-id-1" class="subtitle">Send notifications to</span></div>
     <div class="level-right">
-      <button type="button" aria-describedby="scm-id-1" class="sc-bdvwhi fjhTjt button sc-pVUti cuwvMW">
+      <button type="button" aria-describedby="scm-id-1" class="sc-dkPwfY gljJQE button sc-eggkz eWVLxM">
         <span class="mr-1 icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>Edit list
       </button>
     </div>
@@ -2260,11 +2414,11 @@ exports[`Forms/SubpageForm HeaderNavigation 1`] = `
   "sendAs": "committer",
   "maxDiffLines": 444
 }</code></pre>
-  <hr class="sc-kDTkBQ cSjRci" />
-  <div class="level sc-jrQAon jjXUZQ">
+  <hr class="sc-ksdwth kwQqFO" />
+  <div class="level sc-bqiQyc cVLrsM">
     <div class="level-left"><span id="scm-id-2" class="subtitle">Commit notification settings</span></div>
     <div class="level-right">
-      <button type="button" aria-describedby="scm-id-2" class="sc-bdvwhi fjhTjt button sc-pVUti cuwvMW">
+      <button type="button" aria-describedby="scm-id-2" class="sc-dkPwfY gljJQE button sc-eggkz eWVLxM">
         <span class="mr-1 icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>Edit settings
       </button>
     </div>
@@ -2283,18 +2437,18 @@ exports[`Forms/SubpageForm HeaderNavigation 1`] = `
 
 exports[`Forms/SubpageForm OpenButtonsInTable 1`] = `
 "<div style="margin: 2rem; max-width: 60rem">
-  <nav class="sc-iqsgXZ dhTlwO breadcrumb subtitle" aria-label="Breadcrumb">
+  <nav class="sc-hBUSYK duEbm breadcrumb subtitle" aria-label="Breadcrumb">
     <ol role="list">
       <li class="is-active">
         <a href="#" aria-current="page"><span class="subtitle">E-Mail notifications</span></a>
       </li>
     </ol>
   </nav>
-  <hr class="sc-kDTkBQ cSjRci" />
-  <div class="level sc-jrQAon jjXUZQ">
+  <hr class="sc-ksdwth kwQqFO" />
+  <div class="level sc-bqiQyc cVLrsM">
     <div class="level-left"><span id="scm-id-1" class="subtitle">Delivery settings</span></div>
     <div class="level-right">
-      <button type="button" aria-describedby="scm-id-1" class="sc-bdvwhi fjhTjt button sc-pVUti cuwvMW">
+      <button type="button" aria-describedby="scm-id-1" class="sc-dkPwfY gljJQE button sc-eggkz eWVLxM">
         <span class="mr-1 icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>Edit settings
       </button>
     </div>
@@ -2306,12 +2460,12 @@ exports[`Forms/SubpageForm OpenButtonsInTable 1`] = `
   ],
   "sendAs": "committer"
 }</code></pre>
-  <hr class="sc-kDTkBQ cSjRci" />
-  <div class="level sc-jrQAon jjXUZQ">
+  <hr class="sc-ksdwth kwQqFO" />
+  <div class="level sc-bqiQyc cVLrsM">
     <div class="level-left"><span id="scm-id-2" class="subtitle">Recipients</span></div>
     <div class="level-right"></div>
   </div>
-  <table class="sc-crHjOq jbQoiA table">
+  <table class="sc-fotPuT dSbvPx table">
     <thead>
       <tr>
         <th>Email address</th>
@@ -2325,7 +2479,7 @@ exports[`Forms/SubpageForm OpenButtonsInTable 1`] = `
           <button
             type="button"
             aria-label="Edit recipient beate-paulina.berlin@standardemail.de"
-            class="sc-hKwBjT bORAFc button button has-background-transparent"
+            class="sc-gKckzE bHkVwt button"
           >
             <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>
           </button>
@@ -2334,11 +2488,7 @@ exports[`Forms/SubpageForm OpenButtonsInTable 1`] = `
       <tr>
         <td data-label="Email address">paul.bernd@email.de</td>
         <td data-label="Actions">
-          <button
-            type="button"
-            aria-label="Edit recipient paul.bernd@email.de"
-            class="sc-hKwBjT bORAFc button button has-background-transparent"
-          >
+          <button type="button" aria-label="Edit recipient paul.bernd@email.de" class="sc-gKckzE bHkVwt button">
             <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>
           </button>
         </td>
@@ -2351,15 +2501,15 @@ exports[`Forms/SubpageForm OpenButtonsInTable 1`] = `
 
 exports[`Forms/SubpageForm ReadOnly 1`] = `
 "<div style="margin: 2rem; max-width: 60rem">
-  <nav class="sc-iqsgXZ dhTlwO breadcrumb subtitle" aria-label="Breadcrumb">
+  <nav class="sc-hBUSYK duEbm breadcrumb subtitle" aria-label="Breadcrumb">
     <ol role="list">
       <li class="is-active">
         <a href="#" aria-current="page"><span class="subtitle">E-Mail notifications for commits</span></a>
       </li>
     </ol>
   </nav>
-  <hr class="sc-kDTkBQ cSjRci" />
-  <div class="level sc-jrQAon jjXUZQ">
+  <hr class="sc-ksdwth kwQqFO" />
+  <div class="level sc-bqiQyc cVLrsM">
     <div class="level-left"><span id="scm-id-1" class="subtitle">Send notifications to</span></div>
     <div class="level-right"></div>
   </div>
@@ -2371,8 +2521,8 @@ exports[`Forms/SubpageForm ReadOnly 1`] = `
   "sendAs": "committer",
   "maxDiffLines": 444
 }</code></pre>
-  <hr class="sc-kDTkBQ cSjRci" />
-  <div class="level sc-jrQAon jjXUZQ">
+  <hr class="sc-ksdwth kwQqFO" />
+  <div class="level sc-bqiQyc cVLrsM">
     <div class="level-left"><span id="scm-id-2" class="subtitle">Commit notification settings</span></div>
     <div class="level-right"></div>
   </div>
@@ -2446,11 +2596,7 @@ exports[`Forms/SubpageTable MixedRowActions 1`] = `
         <td data-label="Email address">beate-paulina.berlin@standardemail.de</td>
         <td data-label="Send as">Committer</td>
         <td data-label="Actions">
-          <button
-            type="button"
-            aria-label="Edit beate-paulina.berlin@standardemail.de"
-            class="sc-jRQBiJ bvGRbk button button has-background-transparent"
-          >
+          <button type="button" aria-label="Edit beate-paulina.berlin@standardemail.de" class="sc-furwPO ikCSDf button">
             <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>
           </button>
         </td>
@@ -2481,11 +2627,7 @@ exports[`Forms/SubpageTable WithRowActions 1`] = `
         <td data-label="Email address">beate-paulina.berlin@standardemail.de</td>
         <td data-label="Send as">Committer</td>
         <td data-label="Actions">
-          <button
-            type="button"
-            aria-label="Edit beate-paulina.berlin@standardemail.de"
-            class="sc-jRQBiJ bvGRbk button button has-background-transparent"
-          >
+          <button type="button" aria-label="Edit beate-paulina.berlin@standardemail.de" class="sc-furwPO ikCSDf button">
             <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>
           </button>
         </td>
@@ -2494,11 +2636,7 @@ exports[`Forms/SubpageTable WithRowActions 1`] = `
         <td data-label="Email address">paul.bernd@email.de</td>
         <td data-label="Send as">Author</td>
         <td data-label="Actions">
-          <button
-            type="button"
-            aria-label="Edit paul.bernd@email.de"
-            class="sc-jRQBiJ bvGRbk button button has-background-transparent"
-          >
+          <button type="button" aria-label="Edit paul.bernd@email.de" class="sc-furwPO ikCSDf button">
             <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>
           </button>
         </td>
@@ -2543,7 +2681,7 @@ exports[`Overlays/Menu Default 1`] = `
     aria-haspopup="menu"
     aria-expanded="false"
     data-state="closed"
-    class="button is-borderless has-background-transparent has-hover-color-blue px-2"
+    class="sc-bdvwhi gHijmu button is-borderless has-background-transparent has-hover-color-blue px-2"
   >
     <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-ellipsis-v"></i></span>
   </button>
@@ -2601,14 +2739,14 @@ exports[`Templates/Data Page Default 1`] = `
         </div></span
       >
     </div>
-    <button type="button" class="button is-primary">Create New Data</button>
+    <button type="button" class="sc-bdvwhi gHijmu button is-primary">Create New Data</button>
   </div>
   <div style="margin-top: 1rem">
-    <ul class="sc-gWWZvT iPsYVe p-2 box is-flex is-flex-direction-column">
+    <ul class="sc-iAKZmh iGxnNx p-2 box is-flex is-flex-direction-column">
       <li class="is-relative is-flex scmm-card">
         <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-trash"></i></span>
         <div
-          class="sc-hiCkpJ gMUXQK is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+          class="sc-iUKrAm kChUyg is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
           style="gap: 0.25rem"
         >
           <div class="ml-1">
@@ -2622,7 +2760,7 @@ exports[`Templates/Data Page Default 1`] = `
           <div class="is-size-7 ml-1">This contains more important details about the card.</div>
           <div class="is-size-7 has-text-secondary ml-1">This contains less important information about the card</div>
           <div class="ml-1">
-            <div class="sc-jcFiBM gyYDfB is-flex is-flex-wrap-wrap is-align-items-center">
+            <div class="sc-jObTYW dweRcJ is-flex is-flex-wrap-wrap is-align-items-center">
               <span class="is-flex is-align-items-center has-gap-1 p-1"
                 ><span class="has-text-secondary is-size-7">Tags are great for numbers.</span
                 ><span class="tag is-rounded is-light">7/3</span></span
@@ -2664,7 +2802,7 @@ exports[`Templates/Data Page IsEmpty 1`] = `
         </div></span
       >
     </div>
-    <button type="button" class="button is-primary">Create New Data</button>
+    <button type="button" class="sc-bdvwhi gHijmu button is-primary">Create New Data</button>
   </div>
   <div style="margin-top: 1rem">
     <div class="notification is-info">There is no data, consider adjusting the filters</div>
@@ -2699,11 +2837,11 @@ exports[`Templates/Data Page IsLoading 1`] = `
         </div></span
       >
     </div>
-    <button type="button" class="button is-primary">Create New Data</button>
+    <button type="button" class="sc-bdvwhi gHijmu button is-primary">Create New Data</button>
   </div>
   <div style="margin-top: 1rem">
-    <div class="sc-gKckzE eMOlmt is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-      <img class="sc-iCfNyT lnsTye mb-3" alt="Loading ..." src="/images/loading.svg" />
+    <div class="sc-kDTkBQ gYXhLx is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+      <img class="sc-iqsgXZ ctjFlP mb-3" alt="Loading ..." src="/images/loading.svg" />
       <p class="has-text-centered"></p>
     </div>
   </div>
@@ -2737,7 +2875,7 @@ exports[`Templates/Data Page WithError 1`] = `
         </div></span
       >
     </div>
-    <button type="button" class="button is-primary">Create New Data</button>
+    <button type="button" class="sc-bdvwhi gHijmu button is-primary">Create New Data</button>
   </div>
   <div style="margin-top: 1rem">
     <div class="notification is-danger" role="alert"><strong>Error:</strong> Failed to fetch data from the server.</div>

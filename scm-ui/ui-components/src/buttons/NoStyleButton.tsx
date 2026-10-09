@@ -17,7 +17,7 @@
 import styled from "styled-components";
 
 /**
- * @deprecated
+ * @deprecated Use UnstyledButton from ui-core instead
  */
 const NoStyleButton = styled.button`
   background: none;

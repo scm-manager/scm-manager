@@ -15,11 +15,11 @@
  */
 
 import React, { FC } from "react";
-import styled from "styled-components";
-import { Button, ButtonAddons } from "@scm-manager/ui-components";
+import styled, { css } from "styled-components";
+import { Button, Icon, LinkButton } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 
-const SmallButton = styled(Button)`
+const smallButtonStyles = css`
   border-radius: 4px;
   font-size: 1rem;
   font-weight: 600;
@@ -27,7 +27,15 @@ const SmallButton = styled(Button)`
   padding-right: 0.75rem;
 `;
 
-const ButtonAddonsMarginRight = styled(ButtonAddons)`
+const SmallButton = styled(Button)`
+  ${smallButtonStyles}
+`;
+
+const SmallLinkButton = styled(LinkButton)`
+  ${smallButtonStyles}
+`;
+
+const ButtonAddonsMarginRight = styled.div`
   margin-right: -0.2em;
 `;
 
@@ -38,6 +46,31 @@ export type SwitchViewLink = string | ((type: Type) => string);
 type Props = {
   currentUrl: string;
   switchViewLink: SwitchViewLink;
+};
+
+type SwitchButtonProps = {
+  icon: string;
+  label: string;
+  selected: boolean;
+  link?: string;
+};
+
+const SwitchButton: FC<SwitchButtonProps> = ({ icon, label, selected, link }) => {
+  const className = selected ? "is-link is-selected" : undefined;
+  const content = (
+    <>
+      <Icon>{icon}</Icon>
+      <span>{label}</span>
+    </>
+  );
+  if (link) {
+    return (
+      <SmallLinkButton className={className} to={link}>
+        {content}
+      </SmallLinkButton>
+    );
+  }
+  return <SmallButton className={className}>{content}</SmallButton>;
 };
 
 const CodeViewSwitcher: FC<Props> = ({ currentUrl, switchViewLink }) => {
@@ -65,19 +98,23 @@ const CodeViewSwitcher: FC<Props> = ({ currentUrl, switchViewLink }) => {
   };
 
   return (
-    <ButtonAddonsMarginRight>
-      <SmallButton
-        label={t("code.commits")}
-        icon="fa fa-exchange-alt"
-        color={location === "changesets" ? "link is-selected" : undefined}
-        link={location !== "changesets" ? createLink("changesets") : undefined}
-      />
-      <SmallButton
-        label={t("code.sources")}
-        icon="fa fa-code"
-        color={location === "sources" || location === "search" ? "link is-selected" : undefined}
-        link={location !== "sources" ? createLink("sources") : undefined}
-      />
+    <ButtonAddonsMarginRight className="field has-addons mb-0">
+      <p className="control">
+        <SwitchButton
+          icon="exchange-alt"
+          label={t("code.commits")}
+          selected={location === "changesets"}
+          link={location !== "changesets" ? createLink("changesets") : undefined}
+        />
+      </p>
+      <p className="control">
+        <SwitchButton
+          icon="code"
+          label={t("code.sources")}
+          selected={location === "sources" || location === "search"}
+          link={location !== "sources" ? createLink("sources") : undefined}
+        />
+      </p>
     </ButtonAddonsMarginRight>
   );
 };

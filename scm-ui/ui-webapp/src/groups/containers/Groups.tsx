@@ -19,16 +19,13 @@ import { Navigate, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Group, GroupCollection } from "@scm-manager/ui-types";
 import { useGroups } from "@scm-manager/ui-api";
-import { GROUP_COLLECTION_BASE_ROUTE, GROUP_COLLECTION_SUB_ROUTES, useDocumentTitle } from "@scm-manager/ui-core";
 import {
-  CreateButton,
-  LinkPaginator,
-  Notification,
-  OverviewPageActions,
-  Page,
-  PageActions,
-  urls,
-} from "@scm-manager/ui-components";
+  GROUP_COLLECTION_BASE_ROUTE,
+  GROUP_COLLECTION_SUB_ROUTES,
+  LinkButton,
+  useDocumentTitle,
+} from "@scm-manager/ui-core";
+import { LinkPaginator, Notification, OverviewPageActions, Page, PageActions, urls } from "@scm-manager/ui-components";
 import { GroupTable } from "./../components/table";
 
 type GroupPageProps = {
@@ -76,10 +73,11 @@ const Groups: FC = () => {
     >
       <GroupPage data={data} groups={groups} page={page} search={search} />
       {canCreateGroups ? (
-        <CreateButton
-          link={`/${GROUP_COLLECTION_BASE_ROUTE}/${GROUP_COLLECTION_SUB_ROUTES.CREATE}`}
-          label={t("groups.createButton")}
-        />
+        <div className="has-text-centered mt-5">
+          <LinkButton variant="primary" to={`/${GROUP_COLLECTION_BASE_ROUTE}/${GROUP_COLLECTION_SUB_ROUTES.CREATE}`}>
+            {t("groups.createButton")}
+          </LinkButton>
+        </div>
       ) : null}
       <PageActions>
         <OverviewPageActions

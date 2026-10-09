@@ -15,7 +15,8 @@
  */
 
 import React, { FC, FormEvent, ReactNode, useEffect, useState } from "react";
-import { ErrorNotification, Level, SubmitButton } from "../index";
+import { ErrorNotification } from "../index";
+import { Button, Level } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import Loading from "../Loading";
 
@@ -76,7 +77,18 @@ const ConfigurationForm: FC<Props> = ({
       )}
       <hr />
       <Level
-        right={<SubmitButton label={t("config.form.submit")} disabled={!isValid || isReadOnly} loading={isUpdating} />}
+        right={
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!isValid || isReadOnly}
+            isLoading={isUpdating}
+            testId="submit-button"
+            onClick={() => window.scrollTo(0, 0)}
+          >
+            {t("config.form.submit")}
+          </Button>
+        }
       />
     </form>
   );

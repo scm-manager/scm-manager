@@ -15,7 +15,8 @@
  */
 
 import React from "react";
-import { LabelWithHelpIcon, RemoveEntryOfTableButton } from "@scm-manager/ui-components";
+import { LabelWithHelpIcon } from "@scm-manager/ui-components";
+import { Button, Icon } from "@scm-manager/ui-core";
 
 type Props = {
   items: string[];
@@ -40,12 +41,19 @@ class ArrayConfigTable extends React.Component<Props> {
                   <tr key={item}>
                     <td>{item}</td>
                     <td>
-                      <RemoveEntryOfTableButton
-                        entryname={item}
-                        removeEntry={this.removeEntry}
-                        disabled={disabled}
-                        label={removeLabel}
-                      />
+                      <div className="is-pulled-right">
+                        <Button
+                          variant="signal"
+                          disabled={disabled}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            this.removeEntry(item);
+                          }}
+                        >
+                          <Icon>times</Icon>
+                          <span>{removeLabel}</span>
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 );
