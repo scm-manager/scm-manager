@@ -19,17 +19,6 @@ import { ApiProvider } from "@scm-manager/ui-api";
 
 const withApiProvider = (storyFn) => {
   return React.createElement(ApiProvider, {
-    index: {
-      version: "x.y.z",
-      _links: {}
-    },
-    me: {
-      name: "trillian",
-      displayName: "Trillian McMillan",
-      mail: "trillian@hitchhiker.com",
-      groups: [],
-      _links: {}
-    },
     devtools: false,
     children: storyFn()
   });

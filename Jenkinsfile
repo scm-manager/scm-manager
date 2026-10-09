@@ -16,6 +16,8 @@ pipeline {
 
   environment {
     HOME = "${env.WORKSPACE}"
+    NO_COLOR = '1'
+    FORCE_COLOR = '0'
     SONAR_USER_HOME = "${env.WORKSPACE}/.sonar"
     SONAR = "${env.SCMM_CUSTOM_PROP_SONAR ?: 'RUN'}"
     NOTIFICATION_MAIL = "${env.SCMM_CUSTOM_PROP_NOTIFICATION_MAIL ?: 'scm-team@cloudogu.com'}"
@@ -72,6 +74,7 @@ pipeline {
     stage('Check') {
       steps {
         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+          gradle ':scm-ui:installPlaywrightChromium'
           gradle 'check'
         }
         junit allowEmptyResults: true, testResults: '**/build/test-results/test/TEST-*.xml,**/build/test-results/tests/test/TEST-*.xml,**/build/vitest-reports/TEST-*.xml'

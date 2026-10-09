@@ -18,7 +18,7 @@ import type { Preview, Decorator } from "@storybook/react";
 import * as React from "react";
 import { Suspense, useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
-import i18n from "./i18n";
+import i18n, { languages } from "./i18n";
 import withApiProvider from "./withApiProvider";
 
 // @ts-ignore
@@ -27,7 +27,15 @@ import lightStyle from "@ui-styles/light.scss?url";
 import darkStyle from "@ui-styles/dark.scss?url";
 // @ts-ignore
 import highContrastStyle from "@ui-styles/highcontrast.scss?url";
-import { initialize, mswLoader } from "msw-storybook-addon";
+import { setupWorker } from "msw/browser";
+import { http, HttpResponse } from "msw";
+import { mswLoader } from "msw-storybook-addon/csf3";
+
+const LANGUAGE_TITLES: Record<string, string> = {
+  en: "English",
+  de: "Deutsch",
+  es: "Español",
+};
 
 const THEMES: Record<string, string> = {
   light: lightStyle,
@@ -79,21 +87,22 @@ export const withTheme: Decorator = (Story, context) => {
   return <Story />;
 };
 
-initialize({ onUnhandledRequest: "warn" });
-
 const preview: Preview = {
   decorators: [withI18next, withTheme, withApiProvider],
-  loaders: [mswLoader],
+  loaders: [
+    mswLoader(async () => {
+      const worker = setupWorker();
+      await worker.start({ onUnhandledRequest: "warn" });
+      return worker;
+    }),
+  ],
   globalTypes: {
     locale: {
       name: "Locale",
       description: "Internationalization locale",
       toolbar: {
         icon: "globe",
-        items: [
-          { value: "en", title: "English" },
-          { value: "de", title: "Deutsch" },
-        ],
+        items: languages.map((language) => ({ value: language, title: LANGUAGE_TITLES[language] ?? language })),
         showName: true,
       },
     },
@@ -113,6 +122,13 @@ const preview: Preview = {
   },
   parameters: {
     actions: { argTypesRegex: "^on[A-Z].*" },
+    msw: {
+      handlers: {
+        index: http.get("/api/v2/", () =>
+          HttpResponse.json({ version: "x.y.z", instanceId: "storybook", _links: {} }),
+        ),
+      },
+    },
     storySort: {
       method: "alphabetical",
       order: [],

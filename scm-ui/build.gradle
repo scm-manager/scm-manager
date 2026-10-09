@@ -127,6 +127,11 @@ yarn_install {
   outputs.dir(new File(project.rootProject.projectDir, 'node_modules'))
 }
 
+task installPlaywrightChromium(type: YarnTask) {
+  args = ['playwright', 'install', 'chromium']
+  dependsOn('yarn_install')
+}
+
 task build {
   dependsOn 'check', 'bundle', 'cleanTurboRepo'
 }

@@ -31,7 +31,6 @@ describe("Repository File Search", () => {
     cy.restLogin(username, password);
 
     // Create repo
-    cy.intercept("GET", "/scm/api/v2/**").as("loadData");
     namespace = hri.random();
     name = hri.random();
     cy.restCreateRepo("git", namespace, name, true);
@@ -44,10 +43,12 @@ describe("Repository File Search", () => {
     // Act
     cy.visit(`/repo/${namespace}/${name}/code/sources`);
 
-    // Waiting here explicitly for background data because otherwise the search button might be detached before click
-    cy.wait("@loadData");
+    // Without a revision the page redirects to the default branch as soon as the branches
+    // are loaded, which remounts the breadcrumb and therefore the search button.
+    // We have to wait for that redirect, otherwise the button is detached while we click it.
+    cy.location("pathname").should("match", new RegExp(`/repo/${namespace}/${name}/code/sources/[^/]+`));
     cy.byTestId("file_search_button").click();
-    cy.url().should("include", `/repo/${namespace}/${name}/code/search/HEAD`);
+    cy.location("pathname").should("match", new RegExp(`/repo/${namespace}/${name}/code/search/[^/]+`));
     cy.byTestId("file_search_filter_input").type("README");
 
     // Assert

@@ -1,0 +1,2779 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Buttons/Button BorderedIcon 1`] = `
+"<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
+  <button type="button" class="sc-hKwBjT bORAFc button is-primary is-outlined button has-background-transparent">
+    <span class="is-medium icon" aria-hidden="true"><i class="fas fa-fw fa-trash fa-lg"></i></span>
+  </button>
+</div>
+"
+`;
+
+exports[`Buttons/Button BorderedIconDefault 1`] = `
+"<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
+  <button type="button" class="sc-hKwBjT bORAFc button button has-background-transparent">
+    <span class="is-medium icon" aria-hidden="true"><i class="fas fa-fw fa-trash fa-lg"></i></span>
+  </button>
+</div>
+"
+`;
+
+exports[`Buttons/Button BorderlessIcon 1`] = `
+"<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
+  <button type="button" class="sc-eCIkAO hRTfaV button is-primary is-outlined button has-background-transparent">
+    <span class="is-small icon" aria-hidden="true"><i class="fas fa-fw fa-trash fa-xs"></i></span>
+  </button>
+</div>
+"
+`;
+
+exports[`Buttons/Button BorderlessIconDefault 1`] = `
+"<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
+  <button type="button" class="sc-eCIkAO hRTfaV button button has-background-transparent">
+    <span class="is-small icon" aria-hidden="true"><i class="fas fa-fw fa-trash fa-xs"></i></span>
+  </button>
+</div>
+"
+`;
+
+exports[`Buttons/Button Button 1`] = `
+"<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
+  <button type="button" class="button is-primary">Button</button>
+</div>
+"
+`;
+
+exports[`Buttons/Button ExternalLinkButton 1`] = `
+"<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
+  <a target="_blank" rel="noreferrer noopener" href="https://scm-manager.org" class="button is-primary"
+    >External Link Button</a
+  >
+</div>
+"
+`;
+
+exports[`Buttons/Button LinkButton 1`] = `
+"<div style="margin: 2rem; display: flex; gap: 1rem; align-items: center">
+  <a class="button is-primary" href="/repos" data-discover="true">Link Button</a>
+</div>
+"
+`;
+
+exports[`Components/Card Default 1`] = `
+"<div style="margin: 2rem; max-width: 600px">
+  <div class="box is-relative is-flex scmm-card">
+    <span class="is-large icon" aria-hidden="true"><i class="fas fa-fw fa-user fa-2x"></i></span>
+    <div
+      class="sc-bdvwhi eCxsDf is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+      style="gap: 0.25rem"
+    >
+      <div class="ml-1">
+        <h3>
+          <a aria-label="Edit My least liked repo" href="/cards/1" data-discover="true"
+            >3c991eec687444630c0929e4e23d8a1a2565011d4bea28d4338dd1d024bb74c8
+            c076ca5eea66545ee227c8854acc8b9bf075676a6848d54fa0bc1fa291f78887
+            72d7e2ef64c9575dd8ceeed8ed6b24f185646deb6595b13fd51c5705c61a2c46
+            9127daa67e066bc49f39cca9670b92de3d576ac1fb9c916e9b44692923e12a9d
+            14d07434e8c5b3d0ba2e752bc580888a30963d4e8021be573392bb625f6150da
+            60fc6f2e7503b1ca5963afb627ef560f4e2191c0da4c9328ae4ab088e177fb41</a
+          >
+        </h3>
+      </div>
+      <div class="is-ellipsis-overflow is-size-7 ml-1">
+        7cab5486ab8cd946af71a77d37c84bac c05156ef54a1f0bfd5d4fa12f774148c 4f2964e1895470b6313e3264fef276d8
+        8c57fdf7fde5fc227ea0c59a0f359122 3bc64067ff6fb9c64f4ae5ac15e4375d 91943ad0c020859ad6cc3723fe9bd325
+      </div>
+      <div class="is-size-7 has-text-secondary ml-1">This is information is not important</div>
+      <div class="ml-1">
+        <div class="sc-furwPO dlJagx is-flex is-flex-wrap-wrap is-align-items-center">
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+            data-state="closed"
+            class="sc-gKckzE iIaRyD is-flex is-align-items-center has-gap-1 p-1 is-borderless has-background-transparent is-relative has-hover-background-blue has-rounded-border is-clickable"
+          >
+            <span class="has-text-secondary is-size-7">Popover Detail with Tag</span
+            ><span class="tag is-rounded is-light">3</span></button
+          ><span class="is-flex is-align-items-center has-gap-1 p-1"
+            ><span class="has-text-secondary is-size-7">Normal Detail with Tag</span
+            ><span class="tag is-rounded is-light">2/3</span></span
+          ><a
+            class="sc-iCfNyT fUzfZl is-flex is-align-items-center has-gap-1 p-1 is-borderless has-background-transparent is-relative has-hover-background-blue has-rounded-border is-clickable"
+            href="/workers"
+            data-discover="true"
+            ><span class="has-text-secondary is-size-7">Link Detail</span></a
+          ><button
+            type="button"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+            data-state="closed"
+            class="sc-gKckzE iIaRyD is-flex is-align-items-center has-gap-1 p-1 is-borderless has-background-transparent is-relative has-hover-background-blue has-rounded-border is-clickable"
+          >
+            <span class="has-text-secondary is-size-7">Popover Detail with Icon</span
+            ><span class="is-size-5 has-text-success icon" aria-hidden="true"
+              ><i class="fas fa-fw fa-check-circle"></i
+            ></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <span class="is-medium icon" aria-hidden="true"><i class="fas fa-fw fa-ellipsis-v fa-lg"></i></span>
+  </div>
+</div>
+"
+`;
+
+exports[`Components/CardList Default 1`] = `
+"<div style="margin: 2rem">
+  <ul class="sc-gsDMPd gXNwSw p-2 box is-flex is-flex-direction-column">
+    <li class="is-relative is-flex scmm-card">
+      <div
+        class="sc-bdvwhi eCxsDf is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+        style="gap: 0.25rem"
+      >
+        <div class="ml-1">
+          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+          dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+          clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+        </div>
+      </div>
+      <button
+        type="button"
+        aria-label="Menu"
+        id="radix-«r0»"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        data-state="closed"
+        class="button is-borderless has-background-transparent has-hover-color-blue px-2"
+      >
+        <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-ellipsis-v"></i></span>
+      </button>
+    </li>
+    <li class="is-relative is-flex scmm-card">
+      <div
+        class="sc-bdvwhi eCxsDf is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+        style="gap: 0.25rem"
+      >
+        <div class="ml-1"><h3>My favorite repository</h3></div>
+      </div>
+    </li>
+    <li class="is-relative is-flex scmm-card">
+      <div
+        class="sc-bdvwhi eCxsDf is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+        style="gap: 0.25rem"
+      >
+        <div class="ml-1">
+          <h5><a href="/cards/1">My favorite repository with a very long title and some other things</a></h5>
+        </div>
+      </div>
+      <button
+        type="button"
+        aria-label="Menu"
+        id="radix-«r2»"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        data-state="closed"
+        class="button is-borderless has-background-transparent has-hover-color-blue px-2"
+      >
+        <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-ellipsis-v"></i></span>
+      </button>
+    </li>
+    <li class="is-relative is-flex scmm-card">
+      <div
+        class="sc-bdvwhi eCxsDf is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+        style="gap: 0.25rem"
+      >
+        <div class="ml-1">
+          <h3><a href="/cards/1">My least liked repo</a></h3>
+        </div>
+        <div class="ml-1">
+          <div class="sc-pVUti Qufpm is-flex is-flex-wrap-wrap is-align-items-center">
+            <span class="is-flex is-align-items-center has-gap-1 p-1"
+              ><span class="has-text-secondary is-size-7">Workers</span
+              ><span class="tag is-rounded is-light">2/3</span></span
+            ><span class="is-flex is-align-items-center has-gap-1 p-1"
+              ><a href="/my/detail" style="text-decoration: none"
+                ><span class="has-text-secondary is-size-7">Go to docs</span></a
+              ></span
+            >
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="is-relative is-flex scmm-card">
+      <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-user"></i></span>
+      <div
+        class="sc-bdvwhi eCxsDf is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+        style="gap: 0.25rem"
+      >
+        <div class="ml-1">
+          <h3>
+            3c991eec687444630c0929e4e23d8a1a2565011d4bea28d4338dd1d024bb74c8
+            c076ca5eea66545ee227c8854acc8b9bf075676a6848d54fa0bc1fa291f78887
+          </h3>
+        </div>
+        <div class="is-ellipsis-overflow is-size-7 ml-1">
+          7cab5486ab8cd946af71a77d37c84bac c05156ef54a1f0bfd5d4fa12f774148c
+        </div>
+        <div class="ml-1">
+          <div class="sc-pVUti Qufpm is-flex is-flex-wrap-wrap is-align-items-center">
+            <span class="is-flex is-align-items-center has-gap-1 p-1"
+              ><span class="has-text-secondary is-size-7">Workers</span
+              ><span class="tag is-rounded is-light">2/3</span></span
+            >
+          </div>
+        </div>
+      </div>
+      <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-ellipsis-v"></i></span>
+    </li>
+  </ul>
+</div>
+"
+`;
+
+exports[`Components/Collapsible Default 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div data-state="open" class="card">
+    <div class="sc-gKckzE kClxtQ card-header is-flex is-justify-content-space-between is-shadowless">
+      <span id="scm-id-1" class="card-header-title">This is a collapsible</span
+      ><button
+        type="button"
+        aria-controls="radix-«r0»"
+        aria-expanded="true"
+        data-state="open"
+        aria-labelledby="scm-id-1"
+        class="sc-jRQBiJ bnCHIR card-header-icon"
+      >
+        <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-angle-down"></i></span>
+      </button>
+    </div>
+    <div
+      data-state="open"
+      id="radix-«r0»"
+      class="card-content p-2"
+      style="transition-duration: 0s; animation-name: none"
+    >
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+      dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
+      kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+      sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
+      voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+      sanctus est Lorem ipsum dolor sit amet.
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Components/DateFromNow AllExamples 1`] = `
+"<div class="p-5">
+  <div>
+    <p>
+      <time datetime="2009-06-30 18:30:00" title="6/30/2009, 6:30:00 PM" class="sc-bdvwhi cMnNXk"
+        >over 10 years ago</time
+      >
+    </p>
+    <p>
+      <time datetime="2019-06-30 18:30:00" title="6/30/2019, 6:30:00 PM" class="sc-bdvwhi cMnNXk">3 months ago</time>
+    </p>
+    <p>
+      <time datetime="2019-10-12 13:56:40" title="10/12/2019, 1:56:40 PM" class="sc-bdvwhi cMnNXk"
+        >less than a minute ago</time
+      >
+    </p>
+    <p><time datetime="2019-10-11 13:56:40" title="10/11/2019, 1:56:40 PM" class="sc-bdvwhi cMnNXk">1 day ago</time></p>
+  </div>
+</div>
+"
+`;
+
+exports[`Components/DateFromNow Primary 1`] = `
+"<div class="p-5">
+  <time datetime="2019-10-11 13:56:40" title="10/11/2019, 1:56:40 PM" class="sc-bdvwhi cMnNXk">1 day ago</time>
+</div>
+"
+`;
+
+exports[`Components/Dialog Default 1`] = `
+"<div style="height: 100vh; padding: 2rem">
+  <button type="button" aria-haspopup="dialog" aria-expanded="false" data-state="closed" class="button">
+    Open Dialog
+  </button>
+</div>
+"
+`;
+
+exports[`Components/StatusIcon Icon 1`] = `
+"<div style="margin: 2rem">
+  <div class="is-flex is-align-items-center">
+    <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-check-circle has-text-success fa-lg"></i></span>
+  </div>
+</div>
+"
+`;
+
+exports[`Components/StatusIcon WithTitle 1`] = `
+"<div style="margin: 2rem">
+  <div class="is-flex is-align-items-center">
+    <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-check-circle has-text-success fa-lg"></i></span
+    ><span class="ml-2">Lorem Ipsum</span>
+  </div>
+</div>
+"
+`;
+
+exports[`Components/Tabs Default 1`] = `
+"<div style="margin: 2rem; width: 30rem">
+  <div dir="ltr" data-orientation="horizontal">
+    <div
+      role="tablist"
+      aria-orientation="horizontal"
+      class="tabs p-1"
+      tabindex="0"
+      data-orientation="horizontal"
+      style="outline: none"
+    >
+      <ul>
+        <li>
+          <button
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="radix-«r0»-content-tab1"
+            data-state="inactive"
+            id="radix-«r0»-trigger-tab1"
+            class="has-background-transparent is-borderless"
+            tabindex="-1"
+            data-orientation="horizontal"
+            data-radix-collection-item=""
+          >
+            Account
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls="radix-«r0»-content-tab2"
+            data-state="active"
+            id="radix-«r0»-trigger-tab2"
+            class="has-background-transparent is-borderless"
+            tabindex="-1"
+            data-orientation="horizontal"
+            data-radix-collection-item=""
+          >
+            Password
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div
+      data-state="inactive"
+      data-orientation="horizontal"
+      role="tabpanel"
+      aria-labelledby="radix-«r0»-trigger-tab1"
+      hidden=""
+      id="radix-«r0»-content-tab1"
+      tabindex="0"
+    ></div>
+    <div
+      data-state="active"
+      data-orientation="horizontal"
+      role="tabpanel"
+      aria-labelledby="radix-«r0»-trigger-tab2"
+      id="radix-«r0»-content-tab2"
+      tabindex="0"
+      style="animation-duration: 0s"
+    >
+      <p class="p-4">Here you can change your password.</p>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/ChipInputField Default 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field" aria-owns="scm-id-1">
+    <label class="label" id="scm-id-2">Test Chips</label>
+    <div class="control">
+      <ul class="sc-iqsgXZ iVUZZi is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-2">
+        <div class="is-flex-grow-1">
+          <input
+            aria-label="My personal chip list"
+            class="sc-crHjOq kjbYLn is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
+            placeholder="Type a new chip name and press enter to add"
+            id="scm-id-1"
+            aria-describedby="scm-id-3"
+          />
+        </div>
+      </ul>
+    </div>
+    <span
+      aria-hidden="true"
+      id="scm-id-3"
+      style="
+        position: absolute;
+        border: 0px;
+        width: 1px;
+        height: 1px;
+        padding: 0px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0px, 0px, 0px, 0px);
+        white-space: nowrap;
+        overflow-wrap: normal;
+      "
+      >Press enter to add value to list.</span
+    >
+  </div>
+  <button type="button" class="button button is-link is-outlined ml-1 mt-2">Add</button>
+</div>
+"
+`;
+
+exports[`Forms/ChipInputField WithAutocomplete 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field" aria-owns="scm-id-1">
+    <label class="label" id="scm-id-2">Persons</label>
+    <div class="control">
+      <ul class="sc-iqsgXZ iVUZZi is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-2">
+        <div class="is-relative is-flex-grow-1 is-flex" data-headlessui-state="">
+          <input
+            class="sc-crHjOq kjbYLn is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow is-full-width input is-ellipsis-overflow"
+            aria-label="Enter a new person"
+            placeholder="Enter a new person"
+            autocomplete="off"
+            id="scm-id-1"
+            role="combobox"
+            aria-expanded="false"
+            aria-autocomplete="list"
+            data-headlessui-state=""
+            type="text"
+          />
+        </div>
+      </ul>
+    </div>
+    <span
+      aria-hidden="true"
+      id="scm-id-3"
+      style="
+        position: absolute;
+        border: 0px;
+        width: 1px;
+        height: 1px;
+        padding: 0px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0px, 0px, 0px, 0px);
+        white-space: nowrap;
+        overflow-wrap: normal;
+      "
+      >Press enter to add value to list.</span
+    >
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/ControlledBooleanRadioField Default 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <fieldset class="field column pt-0">
+      <legend class="label">Enabled</legend>
+      <div role="radiogroup" aria-required="false" dir="ltr" tabindex="0" style="outline: none">
+        <div class="control">
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="true"
+              data-state="checked"
+              value="true"
+              id="scm-id-1"
+              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            >
+              <span data-state="checked" class="sc-hBUSYK kFRTZt"></span></button
+            ><label for="scm-id-1">Yes</label>
+          </div>
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-state="unchecked"
+              value="false"
+              id="scm-id-2"
+              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            ></button
+            ><label for="scm-id-2">No</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-furwPO iJcHRQ">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/ControlledBooleanRadioField FalseByDefault 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <fieldset class="field column pt-0">
+      <legend class="label">Enabled</legend>
+      <div role="radiogroup" aria-required="false" dir="ltr" tabindex="0" style="outline: none">
+        <div class="control">
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-state="unchecked"
+              value="true"
+              id="scm-id-1"
+              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            ></button
+            ><label for="scm-id-1">Yes</label>
+          </div>
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="true"
+              data-state="checked"
+              value="false"
+              id="scm-id-2"
+              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            >
+              <span data-state="checked" class="sc-hBUSYK kFRTZt"></span></button
+            ><label for="scm-id-2">No</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-furwPO iJcHRQ">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/ControlledBooleanRadioField ReadOnly 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <fieldset class="field column pt-0">
+      <legend class="label">Enabled</legend>
+      <div role="radiogroup" aria-required="false" data-disabled="" dir="ltr" tabindex="-1" style="outline: none">
+        <div class="control">
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="true"
+              data-state="checked"
+              data-disabled=""
+              disabled=""
+              value="true"
+              id="scm-id-1"
+              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            >
+              <span data-state="checked" data-disabled="" class="sc-hBUSYK kFRTZt"></span></button
+            ><label for="scm-id-1">Yes</label>
+          </div>
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-state="unchecked"
+              data-disabled=""
+              disabled=""
+              value="false"
+              id="scm-id-2"
+              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            ></button
+            ><label for="scm-id-2">No</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-furwPO iJcHRQ">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/ControlledBooleanRadioField WithDescription 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <fieldset class="field column pt-0">
+      <legend class="label">Enabled</legend>
+      <p class="mb-2 is-size-7">Controls whether the feature is turned on for this repository.</p>
+      <div role="radiogroup" aria-required="false" dir="ltr" tabindex="0" style="outline: none">
+        <div class="control">
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="true"
+              data-state="checked"
+              value="true"
+              id="scm-id-1"
+              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            >
+              <span data-state="checked" class="sc-hBUSYK kFRTZt"></span></button
+            ><label for="scm-id-1">Yes</label>
+          </div>
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-state="unchecked"
+              value="false"
+              id="scm-id-2"
+              class="sc-ksdwth jNuwOU mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            ></button
+            ><label for="scm-id-2">No</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-furwPO iJcHRQ">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/DatePicker Default 1`] = `
+"<div style="margin: 2rem; max-width: 20rem">
+  <div class="field sc-furwPO hdXspq">
+    <label class="label" for="scm-id-1">Date</label>
+    <div class="control sc-jrQAon bMTlHt is-expanded has-icons-right">
+      <input
+        class="input"
+        id="scm-id-1"
+        aria-description="Date format MM/DD/YYYY; To access this date field, press the down arrow"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="scm-id-1-calendar"
+        placeholder="mm/dd/yyyy"
+        inputmode="numeric"
+        autocomplete="off"
+        type="search"
+        value=""
+      /><span class="date-picker-calendar is-small is-right has-text-inherit icon" aria-hidden="true"
+        ><i class="fas fa-fw fa-calendar-alt fa-xs"></i
+      ></span>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/DatePicker WithBounds 1`] = `
+"<div style="margin: 2rem; max-width: 20rem">
+  <div class="field sc-furwPO hdXspq">
+    <label class="label" for="scm-id-1">Date</label>
+    <div class="control sc-jrQAon bMTlHt is-expanded">
+      <input
+        class="input"
+        id="scm-id-1"
+        aria-description="Date format MM/DD/YYYY; To access this date field, press the down arrow"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="scm-id-1-calendar"
+        placeholder="mm/dd/yyyy"
+        inputmode="numeric"
+        autocomplete="off"
+        type="search"
+        value="05/20/2025"
+      />
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/Form ControlledChipInputWithAdd 1`] = `
+"<div style="margin: 2rem; max-width: 60rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <div class="field column" aria-owns="input-branches">
+      <label class="label" id="scm-id-1"></label>
+      <div class="control">
+        <ul class="sc-bkkgYE iOURit is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-1">
+          <li class="tag is-light is-overflow-hidden">
+            <span class="is-ellipsis-overflow">main</span
+            ><button aria-label="Delete 'main'" class="sc-dJjZnq hIwuvQ delete is-small" type="button"></button>
+          </li>
+          <li class="tag is-light is-overflow-hidden">
+            <span class="is-ellipsis-overflow">develop</span
+            ><button aria-label="Delete 'develop'" class="sc-dJjZnq hIwuvQ delete is-small" type="button"></button>
+          </li>
+          <div class="is-flex-grow-1">
+            <input
+              aria-label=""
+              class="sc-ieedpP eDzzzT is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
+              placeholder=""
+              id="input-branches"
+              aria-describedby="scm-id-2"
+              data-testid="input-branches"
+              name="branches"
+            />
+          </div>
+        </ul>
+      </div>
+      <span
+        aria-hidden="true"
+        id="scm-id-2"
+        style="
+          position: absolute;
+          border: 0px;
+          width: 1px;
+          height: 1px;
+          padding: 0px;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0px, 0px, 0px, 0px);
+          white-space: nowrap;
+          overflow-wrap: normal;
+        "
+        >Press enter to add value to list.</span
+      >
+    </div>
+  </div>
+  <div class="columns"><button type="button" class="button">Add</button></div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-furwPO iJcHRQ">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/Form Creation 1`] = `
+"<div style="margin: 2rem; max-width: 60rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-name"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input class="input" id="input-name" required="" form="form" data-testid="input-name" value="" />
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-password"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input class="input" id="input-password" form="form" data-testid="input-password" type="password" value="" />
+      </div>
+    </div>
+    <div class="field column">
+      <label class="label" for="input-password-confirmation"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input
+          class="input"
+          id="input-password-confirmation"
+          form="form"
+          data-testid="input-password-confirmation"
+          type="password"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="field column">
+      <div class="control">
+        <label class="sc-fotPuT iHJdFO checkbox is-align-items-center"
+          ><input
+            class="sc-hBUSYK dcHWnb m-3"
+            form="form"
+            data-testid="checkbox-active"
+            type="checkbox"
+            value="true"
+            checked=""
+            name="active"
+        /></label>
+      </div>
+    </div>
+  </div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-furwPO iJcHRQ">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/Form Editing 1`] = `
+"<div style="margin: 2rem; max-width: 60rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-name"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input class="input" id="input-name" form="form" data-testid="input-name" value="trillian" />
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-password"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input
+          class="input"
+          id="input-password"
+          form="form"
+          data-testid="input-password"
+          type="password"
+          value="secret"
+        />
+      </div>
+    </div>
+    <div class="field column">
+      <label class="label" for="input-password-confirmation"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input
+          class="input"
+          id="input-password-confirmation"
+          form="form"
+          data-testid="input-password-confirmation"
+          type="password"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="field column">
+      <div class="control">
+        <label class="sc-fotPuT iHJdFO checkbox is-align-items-center"
+          ><input
+            class="sc-hBUSYK dcHWnb m-3"
+            form="form"
+            data-testid="checkbox-active"
+            type="checkbox"
+            value="true"
+            checked=""
+            name="active"
+        /></label>
+      </div>
+    </div>
+  </div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-furwPO iJcHRQ">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/Form Layout 1`] = `
+"<div style="margin: 2rem; max-width: 60rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-name"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control"><input class="input" id="input-name" form="form" data-testid="input-name" value="" /></div>
+    </div>
+    <div class="field column">
+      <label class="label" for="select-method"></label>
+      <div class="control">
+        <div class="select is-full-width">
+          <select id="select-method" form="form" name="method" data-testid="select-method" class="is-full-width">
+            <option value=""></option>
+            <option value="post">post</option>
+            <option value="get">get</option>
+            <option value="put">put</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="field column">
+      <label class="label" for="input-password"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input class="input" id="input-password" form="form" data-testid="input-password" type="password" value="" />
+      </div>
+    </div>
+    <div class="field column">
+      <label class="label" for="input-password-confirmation"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input
+          class="input"
+          id="input-password-confirmation"
+          form="form"
+          data-testid="input-password-confirmation"
+          type="password"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-furwPO iJcHRQ">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/Form Nested 1`] = `
+"<div style="margin: 2rem; max-width: 60rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="select-webhooks.0.method"></label>
+      <div class="control">
+        <div class="select is-full-width">
+          <select
+            id="select-webhooks.0.method"
+            form="form"
+            name="webhooks.0.method"
+            data-testid="select-webhooks.0.method"
+            class="is-full-width"
+          >
+            <option value="post">post</option>
+            <option value="get">get</option>
+            <option value="put">put</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="field column">
+      <label class="label" for="input-webhooks.0.urlPattern"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input
+          class="input"
+          id="input-webhooks.0.urlPattern"
+          form="form"
+          data-testid="input-webhooks.0.urlpattern"
+          value="https://hitchhiker.com"
+        />
+      </div>
+    </div>
+  </div>
+  <details class="has-background-dark-25 mb-2 p-2">
+    <summary class="is-clickable">Headers</summary>
+    <table class="table content is-hoverable">
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
+          <th class="has-text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>test</td>
+          <td>val</td>
+          <td class="has-text-right">
+            <button type="button" aria-label="Delete" class="button px-4">
+              <span class="icon is-small"><i class="fas fa-trash"></i></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 class="subtitle is-5">Add new</h3>
+    <form id="webhooks.0.headers" novalidate=""></form>
+    <div class="columns">
+      <div class="field column">
+        <label class="label" for="input-key"></label>
+        <p class="mb-2 is-size-7"></p>
+        <div class="control">
+          <input class="input" id="input-key" form="webhooks.0.headers" data-testid="input-key" value="" />
+        </div>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="field column">
+        <label class="label" for="input-value"></label>
+        <p class="mb-2 is-size-7"></p>
+        <div class="control">
+          <input class="input" id="input-value" form="webhooks.0.headers" data-testid="input-value" value="" />
+        </div>
+      </div>
+    </div>
+    <div class="level-left">
+      <button type="submit" form="webhooks.0.headers" disabled="" class="button">Add</button>
+    </div>
+    <hr class="sc-fFelbd ezNFxf" />
+  </details>
+  <div class="level-right"><button type="button" class="button is-warning">Delete</button></div>
+  <hr />
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-furwPO iJcHRQ">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/Form ReadOnly 1`] = `
+"<div style="margin: 2rem; max-width: 60rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-name"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input class="input" id="input-name" readonly="" form="form" data-testid="input-name" value="trillian" />
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-password"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input
+          class="input"
+          id="input-password"
+          readonly=""
+          form="form"
+          data-testid="input-password"
+          type="password"
+          value="secret"
+        />
+      </div>
+    </div>
+    <div class="field column">
+      <label class="label" for="input-password-confirmation"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input
+          class="input"
+          id="input-password-confirmation"
+          readonly=""
+          form="form"
+          data-testid="input-password-confirmation"
+          type="password"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="field column">
+      <div class="control">
+        <label class="sc-fotPuT iHJdFO checkbox is-align-items-center" disabled=""
+          ><input readonly="" type="hidden" value="true" checked="" name="active" /><input
+            class="sc-hBUSYK dcHWnb m-3"
+            form="form"
+            data-testid="checkbox-active"
+            disabled=""
+            type="checkbox"
+            value="true"
+            checked=""
+        /></label>
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="field column" aria-owns="input-labels">
+      <label class="label" id="scm-id-1"></label>
+      <div class="control">
+        <ul class="sc-bkkgYE iOURit is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-1">
+          <li class="tag is-light is-overflow-hidden"><span class="is-ellipsis-overflow">test</span></li>
+          <li class="tag is-light is-overflow-hidden"><span class="is-ellipsis-overflow">hero</span></li>
+          <div class="is-flex-grow-1">
+            <input
+              aria-label="Test"
+              class="sc-ieedpP eDzzzT is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
+              placeholder=""
+              id="input-labels"
+              aria-describedby="scm-id-2"
+              data-testid="input-labels"
+              disabled=""
+              name="labels"
+            />
+          </div>
+        </ul>
+      </div>
+      <span
+        aria-hidden="true"
+        id="scm-id-2"
+        style="
+          position: absolute;
+          border: 0px;
+          width: 1px;
+          height: 1px;
+          padding: 0px;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0px, 0px, 0px, 0px);
+          white-space: nowrap;
+          overflow-wrap: normal;
+        "
+        >Press enter to add value to list.</span
+      >
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/Form RepoConfiguration 1`] = `
+"<div style="margin: 2rem; max-width: 60rem">
+  <form id="form" novalidate=""></form>
+  <div class="field column">
+    <label class="label" for="input-url"></label>
+    <p class="mb-2 is-size-7"></p>
+    <div class="control"><input class="input" id="input-url" form="form" data-testid="input-url" value="" /></div>
+  </div>
+  <div class="field column" aria-owns="input-labels">
+    <label class="label" id="scm-id-1"></label>
+    <div class="control">
+      <ul class="sc-bkkgYE iOURit is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-1">
+        <li class="tag is-light is-overflow-hidden">
+          <span class="is-ellipsis-overflow">test</span
+          ><button aria-label="Delete 'test'" class="sc-dJjZnq hIwuvQ delete is-small" type="button"></button>
+        </li>
+        <div class="is-flex-grow-1">
+          <input
+            aria-label=""
+            class="sc-ieedpP eDzzzT is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
+            placeholder=""
+            id="input-labels"
+            aria-describedby="scm-id-2"
+            data-testid="input-labels"
+            name="labels"
+          />
+        </div>
+      </ul>
+    </div>
+    <span
+      aria-hidden="true"
+      id="scm-id-2"
+      style="
+        position: absolute;
+        border: 0px;
+        width: 1px;
+        height: 1px;
+        padding: 0px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0px, 0px, 0px, 0px);
+        white-space: nowrap;
+        overflow-wrap: normal;
+      "
+      >Press enter to add value to list.</span
+    >
+  </div>
+  <div class="field column" aria-owns="input-people">
+    <label class="label" id="scm-id-3"></label>
+    <div class="control">
+      <ul class="sc-bkkgYE iOURit is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-3">
+        <li class="tag is-light is-overflow-hidden">
+          <span class="is-ellipsis-overflow">Trillian</span
+          ><button aria-label="Delete 'Trillian'" class="sc-dJjZnq hIwuvQ delete is-small" type="button"></button>
+        </li>
+        <input
+          hidden=""
+          readonly=""
+          type="hidden"
+          style="
+            position: fixed;
+            top: 1px;
+            left: 1px;
+            width: 1px;
+            height: 0px;
+            padding: 0px;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0px, 0px, 0px, 0px);
+            white-space: nowrap;
+            border-width: 0px;
+            display: none;
+          "
+        />
+        <div class="is-relative is-flex-grow-1 is-flex" data-headlessui-state="">
+          <input
+            class="sc-ieedpP eDzzzT is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow is-full-width input is-ellipsis-overflow"
+            aria-label=""
+            placeholder=""
+            autocomplete="off"
+            id="input-people"
+            role="combobox"
+            aria-expanded="false"
+            aria-autocomplete="list"
+            data-headlessui-state=""
+            type="text"
+          />
+        </div>
+      </ul>
+    </div>
+    <span
+      aria-hidden="true"
+      id="scm-id-4"
+      style="
+        position: absolute;
+        border: 0px;
+        width: 1px;
+        height: 1px;
+        padding: 0px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0px, 0px, 0px, 0px);
+        white-space: nowrap;
+        overflow-wrap: normal;
+      "
+      >Press enter to add value to list.</span
+    >
+  </div>
+  <div class="field column">
+    <label class="label" id="scm-id-5"></label>
+    <div class="control">
+      <input
+        hidden=""
+        readonly=""
+        form="form"
+        type="hidden"
+        value=""
+        name="author[label]"
+        style="
+          position: fixed;
+          top: 1px;
+          left: 1px;
+          width: 1px;
+          height: 0px;
+          padding: 0px;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0px, 0px, 0px, 0px);
+          white-space: nowrap;
+          border-width: 0px;
+          display: none;
+        "
+      /><input
+        hidden=""
+        readonly=""
+        form="form"
+        type="hidden"
+        value=""
+        name="author[value]"
+        style="
+          position: fixed;
+          top: 1px;
+          left: 1px;
+          width: 1px;
+          height: 0px;
+          padding: 0px;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0px, 0px, 0px, 0px);
+          white-space: nowrap;
+          border-width: 0px;
+          display: none;
+        "
+      />
+      <div class="is-relative is-flex-grow-1 is-flex" data-headlessui-state="">
+        <input
+          class="is-full-width input is-ellipsis-overflow"
+          autocomplete="off"
+          data-testid="select-author"
+          id="headlessui-combobox-input-«r8»"
+          role="combobox"
+          aria-expanded="false"
+          aria-autocomplete="list"
+          data-headlessui-state=""
+          type="text"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-furwPO iJcHRQ">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/Form Reset 1`] = `
+"<div style="margin: 2rem; max-width: 60rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-name"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input class="input" id="input-name" form="form" data-testid="input-name" value="trillian" />
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-password"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input
+          class="input"
+          id="input-password"
+          form="form"
+          required=""
+          data-testid="input-password"
+          type="password"
+          value="secret"
+        />
+      </div>
+    </div>
+    <div class="field column">
+      <label class="label" for="input-password-confirmation"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input
+          class="input"
+          id="input-password-confirmation"
+          form="form"
+          data-testid="input-password-confirmation"
+          type="password"
+          value="secret"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="field column">
+      <div class="control">
+        <label class="sc-fotPuT iHJdFO checkbox is-align-items-center"
+          ><input
+            class="sc-hBUSYK dcHWnb m-3"
+            form="form"
+            data-testid="checkbox-active"
+            type="checkbox"
+            value="true"
+            checked=""
+            name="active"
+        /></label>
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-date"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input class="input" id="input-date" form="form" data-testid="input-date" type="date" value="" />
+      </div>
+    </div>
+  </div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-furwPO iJcHRQ">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit</button
+        ><button type="reset" form="form" class="button" data-testid="form-discard-changes-button">
+          Discard changes</button
+        ><button type="button" form="form" class="button" data-testid="form-reset-button">Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/Input Default 1`] = `
+"<div style="margin: 2rem; max-width: 40rem"><input class="input" /></div>
+"
+`;
+
+exports[`Forms/Input WithCustomClass 1`] = `
+"<div style="margin: 2rem; max-width: 40rem"><input class="input is-warning" /></div>
+"
+`;
+
+exports[`Forms/Input WithRef 1`] = `
+"<div style="margin: 2rem; max-width: 40rem"><input class="input" /></div>
+"
+`;
+
+exports[`Forms/Input WithVariant 1`] = `
+"<div style="margin: 2rem; max-width: 40rem"><input class="input is-danger" /></div>
+"
+`;
+
+exports[`Forms/InputField Default 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyInput</label>
+    <p class="mb-2 is-size-7"></p>
+    <div class="control"><input class="input" id="scm-id-1" /></div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/InputField WithDescription 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyInput</label>
+    <p class="mb-2 is-size-7" id="input-description-undefined">This text is a description for this input</p>
+    <div class="control"><input class="input" id="scm-id-1" aria-describedby="input-description-undefined" /></div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/InputField WithDescriptionExtended 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyInput 1</label>
+    <details class="sc-iqsgXZ ddgIsi mb-2 is-size-7" id="input-description-undefined">
+      <summary>
+        <span class="is-small icon" aria-hidden="true"><i class="fas fa-fw fa-chevron-right fa-xs"></i></span
+        ><span>This text is a description for this input</span>
+      </summary>
+      <span>This is the extended description for this input</span>
+    </details>
+    <div class="control"><input class="input" id="scm-id-1" aria-describedby="input-description-undefined" /></div>
+  </div>
+  <div class="field">
+    <label class="label" for="scm-id-2">MyInput 2</label>
+    <details class="sc-iqsgXZ ddgIsi mb-2 is-size-7" id="input-description-undefined">
+      <summary>
+        <span class="is-small icon" aria-hidden="true"><i class="fas fa-fw fa-chevron-right fa-xs"></i></span
+        ><span>This text is a description for this input</span>
+      </summary>
+      <span
+        >This is the long long long long long long long long long long long long long long long long long long long long
+        long long long long long long long long long long long long long long long long long long long long long long
+        long long long long long long long long long long long long long long long long long long long long long long
+        long long long long long long long long long long long long long long long long long long long long long
+        extended description for this input</span
+      >
+    </details>
+    <div class="control"><input class="input" id="scm-id-2" aria-describedby="input-description-undefined" /></div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/InputField WithError 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyInput</label>
+    <p class="mb-2 is-size-7"></p>
+    <div class="control"><input class="input is-danger" id="scm-id-1" /></div>
+    <p id="input-error-undefined" class="help is-danger">This field is super required</p>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/InputField WithIcon 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyInput</label>
+    <p class="mb-2 is-size-7"></p>
+    <div class="control has-icons-left">
+      <input class="input" id="scm-id-1" /><span class="icon is-small is-left"><i class="fas fa-filter"></i></span>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/InputField WithWidth 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field column is-half">
+    <label class="label" for="scm-id-1">MyInput</label>
+    <p class="mb-2 is-size-7"></p>
+    <div class="control"><input class="input" id="scm-id-1" /></div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/RadioGroup AsAField 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <fieldset class="field">
+    <legend class="label">
+      Choose your starter<i
+        class="fas fa-fw fa-question-circle has-text-blue-light"
+        aria-hidden="true"
+        data-state="closed"
+      ></i>
+    </legend>
+    <div role="radiogroup" aria-required="false" dir="ltr" tabindex="0" style="outline: none">
+      <div class="control">
+        <div class="radio is-flex is-align-items-center">
+          <button
+            type="button"
+            role="radio"
+            aria-checked="false"
+            data-state="unchecked"
+            value="CHARMANDER"
+            id="scm-id-1"
+            class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+            tabindex="-1"
+            data-radix-collection-item=""
+          ></button
+          ><label for="scm-id-1">Charmander</label>
+        </div>
+        <div class="radio is-flex is-align-items-center">
+          <button
+            type="button"
+            role="radio"
+            aria-checked="false"
+            data-state="unchecked"
+            value="SQUIRTLE"
+            id="scm-id-2"
+            class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+            tabindex="-1"
+            data-radix-collection-item=""
+          ></button
+          ><label for="scm-id-2">Squirtle</label>
+        </div>
+        <div class="radio is-flex is-align-items-center">
+          <button
+            type="button"
+            role="radio"
+            aria-checked="false"
+            data-state="unchecked"
+            value="BULBASAUR"
+            id="scm-id-3"
+            class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+            tabindex="-1"
+            data-radix-collection-item=""
+          ></button
+          ><label for="scm-id-3">Bulbasaur</label
+          ><i class="fas fa-fw fa-question-circle has-text-blue-light" aria-hidden="true" data-state="closed"></i>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+</div>
+"
+`;
+
+exports[`Forms/RadioGroup ControlledState 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div role="radiogroup" aria-required="false" dir="ltr" tabindex="0" style="outline: none">
+    <div class="control">
+      <div class="radio is-flex is-align-items-center">
+        <button
+          type="button"
+          role="radio"
+          aria-checked="false"
+          data-state="unchecked"
+          value="CHARMANDER"
+          id="scm-id-1"
+          class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+          tabindex="-1"
+          data-radix-collection-item=""
+        ></button
+        ><label for="scm-id-1">Charmander</label>
+      </div>
+      <div class="radio is-flex is-align-items-center">
+        <button
+          type="button"
+          role="radio"
+          aria-checked="false"
+          data-state="unchecked"
+          value="SQUIRTLE"
+          id="scm-id-2"
+          class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+          tabindex="-1"
+          data-radix-collection-item=""
+        ></button
+        ><label for="scm-id-2">Squirtle</label>
+      </div>
+      <div class="radio is-flex is-align-items-center">
+        <button
+          type="button"
+          role="radio"
+          aria-checked="false"
+          data-state="unchecked"
+          value="BULBASAUR"
+          id="scm-id-3"
+          class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+          tabindex="-1"
+          data-radix-collection-item=""
+        ></button
+        ><label for="scm-id-3">Bulbasaur</label
+        ><i class="fas fa-fw fa-question-circle has-text-blue-light" aria-hidden="true" data-state="closed"></i>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/RadioGroup InAForm 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-name"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control"><input class="input" id="input-name" form="form" data-testid="input-name" value="" /></div>
+    </div>
+  </div>
+  <div class="columns">
+    <fieldset class="field column">
+      <legend class="label">
+        Starter Pokemon<i
+          class="fas fa-fw fa-question-circle has-text-blue-light"
+          aria-hidden="true"
+          data-state="closed"
+        ></i>
+      </legend>
+      <div role="radiogroup" aria-required="true" dir="ltr" tabindex="0" style="outline: none">
+        <div class="control">
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-state="unchecked"
+              value="CHARMANDER"
+              form="form"
+              id="scm-id-1"
+              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            ></button
+            ><label for="scm-id-1">Charmander</label>
+          </div>
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-state="unchecked"
+              value="SQUIRTLE"
+              form="form"
+              id="scm-id-2"
+              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            ></button
+            ><label for="scm-id-2">Squirtle</label>
+          </div>
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-state="unchecked"
+              value="BULBASAUR"
+              form="form"
+              id="scm-id-3"
+              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            ></button
+            ><label for="scm-id-3">Bulbasaur</label
+            ><i class="fas fa-fw fa-question-circle has-text-blue-light" aria-hidden="true" data-state="closed"></i>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-hBUSYK ilXaqb">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/RadioGroup NestedInTable 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-trainers.0.name"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input class="input" id="input-trainers.0.name" form="form" data-testid="input-trainers.0.name" value="Red" />
+      </div>
+    </div>
+  </div>
+  <details class="has-background-dark-25 mb-2 p-2" open="">
+    <summary class="is-clickable">Team</summary>
+    <table class="table content is-hoverable">
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
+          <th class="has-text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Charlie</td>
+          <td>CHARMANDER</td>
+          <td class="has-text-right">
+            <button type="button" aria-label="Delete" class="button px-4">
+              <span class="icon is-small"><i class="fas fa-trash"></i></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 class="subtitle is-5">Add new</h3>
+    <form id="trainers.0.team" novalidate=""></form>
+    <div class="columns">
+      <div class="field column">
+        <label class="label" for="input-nickname"></label>
+        <p class="mb-2 is-size-7"></p>
+        <div class="control">
+          <input class="input" id="input-nickname" form="trainers.0.team" data-testid="input-nickname" value="" />
+        </div>
+      </div>
+    </div>
+    <div class="columns">
+      <fieldset class="field column">
+        <legend class="label">Pokemon</legend>
+        <div role="radiogroup" aria-required="true" dir="ltr" tabindex="0" style="outline: none">
+          <div class="control">
+            <div class="radio is-flex is-align-items-center">
+              <button
+                type="button"
+                role="radio"
+                aria-checked="false"
+                data-state="unchecked"
+                value="CHARMANDER"
+                form="trainers.0.team"
+                id="scm-id-7"
+                class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+                tabindex="-1"
+                data-radix-collection-item=""
+              ></button
+              ><label for="scm-id-7"></label>
+            </div>
+            <div class="radio is-flex is-align-items-center">
+              <button
+                type="button"
+                role="radio"
+                aria-checked="false"
+                data-state="unchecked"
+                value="SQUIRTLE"
+                form="trainers.0.team"
+                id="scm-id-8"
+                class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+                tabindex="-1"
+                data-radix-collection-item=""
+              ></button
+              ><label for="scm-id-8"></label>
+            </div>
+            <div class="radio is-flex is-align-items-center">
+              <button
+                type="button"
+                role="radio"
+                aria-checked="false"
+                data-state="unchecked"
+                value="BULBASAUR"
+                form="trainers.0.team"
+                id="scm-id-9"
+                class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+                tabindex="-1"
+                data-radix-collection-item=""
+              ></button
+              ><label for="scm-id-9"></label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div class="level-left"><button type="submit" form="trainers.0.team" disabled="" class="button">Add</button></div>
+    <hr class="sc-fFelbd ezNFxf" />
+  </details>
+  <div class="level-right"><button type="button" class="button is-warning">Delete</button></div>
+  <hr />
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-trainers.1.name"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input class="input" id="input-trainers.1.name" form="form" data-testid="input-trainers.1.name" value="Blue" />
+      </div>
+    </div>
+  </div>
+  <details class="has-background-dark-25 mb-2 p-2" open="">
+    <summary class="is-clickable">Team</summary>
+    <table class="table content is-hoverable">
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
+          <th class="has-text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Squirtle</td>
+          <td>SQUIRTLE</td>
+          <td class="has-text-right">
+            <button type="button" aria-label="Delete" class="button px-4">
+              <span class="icon is-small"><i class="fas fa-trash"></i></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 class="subtitle is-5">Add new</h3>
+    <form id="trainers.1.team" novalidate=""></form>
+    <div class="columns">
+      <div class="field column">
+        <label class="label" for="input-nickname"></label>
+        <p class="mb-2 is-size-7"></p>
+        <div class="control">
+          <input class="input" id="input-nickname" form="trainers.1.team" data-testid="input-nickname" value="" />
+        </div>
+      </div>
+    </div>
+    <div class="columns">
+      <fieldset class="field column">
+        <legend class="label">Pokemon</legend>
+        <div role="radiogroup" aria-required="true" dir="ltr" tabindex="0" style="outline: none">
+          <div class="control">
+            <div class="radio is-flex is-align-items-center">
+              <button
+                type="button"
+                role="radio"
+                aria-checked="false"
+                data-state="unchecked"
+                value="CHARMANDER"
+                form="trainers.1.team"
+                id="scm-id-10"
+                class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+                tabindex="-1"
+                data-radix-collection-item=""
+              ></button
+              ><label for="scm-id-10"></label>
+            </div>
+            <div class="radio is-flex is-align-items-center">
+              <button
+                type="button"
+                role="radio"
+                aria-checked="false"
+                data-state="unchecked"
+                value="SQUIRTLE"
+                form="trainers.1.team"
+                id="scm-id-11"
+                class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+                tabindex="-1"
+                data-radix-collection-item=""
+              ></button
+              ><label for="scm-id-11"></label>
+            </div>
+            <div class="radio is-flex is-align-items-center">
+              <button
+                type="button"
+                role="radio"
+                aria-checked="false"
+                data-state="unchecked"
+                value="BULBASAUR"
+                form="trainers.1.team"
+                id="scm-id-12"
+                class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+                tabindex="-1"
+                data-radix-collection-item=""
+              ></button
+              ><label for="scm-id-12"></label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div class="level-left"><button type="submit" form="trainers.1.team" disabled="" class="button">Add</button></div>
+    <hr class="sc-fFelbd ezNFxf" />
+  </details>
+  <div class="level-right"><button type="button" class="button is-warning">Delete</button></div>
+  <hr />
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-hBUSYK ilXaqb">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/RadioGroup ReadOnly 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-name"></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input class="input" id="input-name" readonly="" form="form" data-testid="input-name" value="Red" />
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <fieldset class="field column">
+      <legend class="label">
+        Starter Pokemon<i
+          class="fas fa-fw fa-question-circle has-text-blue-light"
+          aria-hidden="true"
+          data-state="closed"
+        ></i>
+      </legend>
+      <div role="radiogroup" aria-required="false" data-disabled="" dir="ltr" tabindex="-1" style="outline: none">
+        <div class="control">
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-state="unchecked"
+              data-disabled=""
+              disabled=""
+              value="CHARMANDER"
+              form="form"
+              id="scm-id-1"
+              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            ></button
+            ><label for="scm-id-1">Charmander</label>
+          </div>
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="true"
+              data-state="checked"
+              data-disabled=""
+              disabled=""
+              value="SQUIRTLE"
+              form="form"
+              id="scm-id-2"
+              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            >
+              <span data-state="checked" data-disabled="" class="sc-crHjOq cidaHy"></span></button
+            ><label for="scm-id-2">Squirtle</label>
+          </div>
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-state="unchecked"
+              data-disabled=""
+              disabled=""
+              value="BULBASAUR"
+              form="form"
+              id="scm-id-3"
+              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            ></button
+            ><label for="scm-id-3">Bulbasaur</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-hBUSYK ilXaqb">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/RadioGroup UncontrolledState 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div role="radiogroup" aria-required="false" dir="ltr" tabindex="0" style="outline: none">
+    <div class="control">
+      <div class="radio is-flex is-align-items-center">
+        <button
+          type="button"
+          role="radio"
+          aria-checked="false"
+          data-state="unchecked"
+          value="CHARMANDER"
+          id="scm-id-1"
+          class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+          tabindex="-1"
+          data-radix-collection-item=""
+        ></button
+        ><label for="scm-id-1">Charmander</label>
+      </div>
+      <div class="radio is-flex is-align-items-center">
+        <button
+          type="button"
+          role="radio"
+          aria-checked="false"
+          data-state="unchecked"
+          value="SQUIRTLE"
+          id="scm-id-2"
+          class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+          tabindex="-1"
+          data-radix-collection-item=""
+        ></button
+        ><label for="scm-id-2">Squirtle</label>
+      </div>
+      <div class="radio is-flex is-align-items-center">
+        <button
+          type="button"
+          role="radio"
+          aria-checked="false"
+          data-state="unchecked"
+          value="BULBASAUR"
+          id="scm-id-3"
+          class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+          tabindex="-1"
+          data-radix-collection-item=""
+        ></button
+        ><label for="scm-id-3">Bulbasaur</label
+        ><i class="fas fa-fw fa-question-circle has-text-blue-light" aria-hidden="true" data-state="closed"></i>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/RadioGroup WithOptionsProp 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <fieldset class="field column">
+      <legend class="label">
+        Starter Pokemon<i
+          class="fas fa-fw fa-question-circle has-text-blue-light"
+          aria-hidden="true"
+          data-state="closed"
+        ></i>
+      </legend>
+      <div role="radiogroup" aria-required="true" dir="ltr" tabindex="0" style="outline: none">
+        <div class="control">
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="true"
+              data-state="checked"
+              value="CHARMANDER"
+              form="form"
+              id="scm-id-1"
+              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            >
+              <span data-state="checked" class="sc-crHjOq cidaHy"></span></button
+            ><label for="scm-id-1">Charmander</label>
+          </div>
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-state="unchecked"
+              value="SQUIRTLE"
+              form="form"
+              id="scm-id-2"
+              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            ></button
+            ><label for="scm-id-2">Squirtle</label>
+          </div>
+          <div class="radio is-flex is-align-items-center">
+            <button
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-state="unchecked"
+              value="BULBASAUR"
+              form="form"
+              id="scm-id-3"
+              class="sc-iqsgXZ fjYHtR mr-3 mt-3 mb-3"
+              tabindex="-1"
+              data-radix-collection-item=""
+            ></button
+            ><label for="scm-id-3">Bulbasaur</label
+            ><i class="fas fa-fw fa-question-circle has-text-blue-light" aria-hidden="true" data-state="closed"></i>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-hBUSYK ilXaqb">
+        <button type="submit" disabled="" form="form" class="button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/SubpageForm HeaderNavigation 1`] = `
+"<div style="margin: 2rem; max-width: 60rem">
+  <nav class="sc-iqsgXZ dhTlwO breadcrumb subtitle" aria-label="Breadcrumb">
+    <ol role="list">
+      <li class="is-active">
+        <a href="#" aria-current="page"><span class="subtitle">E-Mail notifications for commits</span></a>
+      </li>
+    </ol>
+  </nav>
+  <hr class="sc-kDTkBQ cSjRci" />
+  <div class="level sc-jrQAon jjXUZQ">
+    <div class="level-left"><span id="scm-id-1" class="subtitle">Send notifications to</span></div>
+    <div class="level-right">
+      <button type="button" aria-describedby="scm-id-1" class="sc-bdvwhi fjhTjt button sc-pVUti cuwvMW">
+        <span class="mr-1 icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>Edit list
+      </button>
+    </div>
+  </div>
+  <pre class="has-background-secondary-least p-4 mb-4"><code>{
+  "addresses": [
+    "beate-paulina.berlin@standardemail.de",
+    "paul.bernd@email.de"
+  ],
+  "sendAs": "committer",
+  "maxDiffLines": 444
+}</code></pre>
+  <hr class="sc-kDTkBQ cSjRci" />
+  <div class="level sc-jrQAon jjXUZQ">
+    <div class="level-left"><span id="scm-id-2" class="subtitle">Commit notification settings</span></div>
+    <div class="level-right">
+      <button type="button" aria-describedby="scm-id-2" class="sc-bdvwhi fjhTjt button sc-pVUti cuwvMW">
+        <span class="mr-1 icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>Edit settings
+      </button>
+    </div>
+  </div>
+  <pre class="has-background-secondary-least p-4 mb-4"><code>{
+  "addresses": [
+    "beate-paulina.berlin@standardemail.de",
+    "paul.bernd@email.de"
+  ],
+  "sendAs": "committer",
+  "maxDiffLines": 444
+}</code></pre>
+</div>
+"
+`;
+
+exports[`Forms/SubpageForm OpenButtonsInTable 1`] = `
+"<div style="margin: 2rem; max-width: 60rem">
+  <nav class="sc-iqsgXZ dhTlwO breadcrumb subtitle" aria-label="Breadcrumb">
+    <ol role="list">
+      <li class="is-active">
+        <a href="#" aria-current="page"><span class="subtitle">E-Mail notifications</span></a>
+      </li>
+    </ol>
+  </nav>
+  <hr class="sc-kDTkBQ cSjRci" />
+  <div class="level sc-jrQAon jjXUZQ">
+    <div class="level-left"><span id="scm-id-1" class="subtitle">Delivery settings</span></div>
+    <div class="level-right">
+      <button type="button" aria-describedby="scm-id-1" class="sc-bdvwhi fjhTjt button sc-pVUti cuwvMW">
+        <span class="mr-1 icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>Edit settings
+      </button>
+    </div>
+  </div>
+  <pre class="has-background-secondary-least p-4 mb-4"><code>{
+  "recipients": [
+    "beate-paulina.berlin@standardemail.de",
+    "paul.bernd@email.de"
+  ],
+  "sendAs": "committer"
+}</code></pre>
+  <hr class="sc-kDTkBQ cSjRci" />
+  <div class="level sc-jrQAon jjXUZQ">
+    <div class="level-left"><span id="scm-id-2" class="subtitle">Recipients</span></div>
+    <div class="level-right"></div>
+  </div>
+  <table class="sc-crHjOq jbQoiA table">
+    <thead>
+      <tr>
+        <th>Email address</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="Email address">beate-paulina.berlin@standardemail.de</td>
+        <td data-label="Actions">
+          <button
+            type="button"
+            aria-label="Edit recipient beate-paulina.berlin@standardemail.de"
+            class="sc-hKwBjT bORAFc button button has-background-transparent"
+          >
+            <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td data-label="Email address">paul.bernd@email.de</td>
+        <td data-label="Actions">
+          <button
+            type="button"
+            aria-label="Edit recipient paul.bernd@email.de"
+            class="sc-hKwBjT bORAFc button button has-background-transparent"
+          >
+            <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+"
+`;
+
+exports[`Forms/SubpageForm ReadOnly 1`] = `
+"<div style="margin: 2rem; max-width: 60rem">
+  <nav class="sc-iqsgXZ dhTlwO breadcrumb subtitle" aria-label="Breadcrumb">
+    <ol role="list">
+      <li class="is-active">
+        <a href="#" aria-current="page"><span class="subtitle">E-Mail notifications for commits</span></a>
+      </li>
+    </ol>
+  </nav>
+  <hr class="sc-kDTkBQ cSjRci" />
+  <div class="level sc-jrQAon jjXUZQ">
+    <div class="level-left"><span id="scm-id-1" class="subtitle">Send notifications to</span></div>
+    <div class="level-right"></div>
+  </div>
+  <pre class="has-background-secondary-least p-4 mb-4"><code>{
+  "addresses": [
+    "beate-paulina.berlin@standardemail.de",
+    "paul.bernd@email.de"
+  ],
+  "sendAs": "committer",
+  "maxDiffLines": 444
+}</code></pre>
+  <hr class="sc-kDTkBQ cSjRci" />
+  <div class="level sc-jrQAon jjXUZQ">
+    <div class="level-left"><span id="scm-id-2" class="subtitle">Commit notification settings</span></div>
+    <div class="level-right"></div>
+  </div>
+  <pre class="has-background-secondary-least p-4 mb-4"><code>{
+  "addresses": [
+    "beate-paulina.berlin@standardemail.de",
+    "paul.bernd@email.de"
+  ],
+  "sendAs": "committer",
+  "maxDiffLines": 444
+}</code></pre>
+</div>
+"
+`;
+
+exports[`Forms/SubpageTable Default 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <table class="sc-bdvwhi jPABQz table">
+    <thead>
+      <tr>
+        <th>Email address</th>
+        <th>Send as</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="Email address">beate-paulina.berlin@standardemail.de</td>
+        <td data-label="Send as">Committer</td>
+      </tr>
+      <tr>
+        <td data-label="Email address">paul.bernd@email.de</td>
+        <td data-label="Send as">Author</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+"
+`;
+
+exports[`Forms/SubpageTable Empty 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <table class="sc-bdvwhi jPABQz table">
+    <thead>
+      <tr>
+        <th>Email address</th>
+        <th>Send as</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="2" class="sc-gsDMPd HDkvV">No recipients have been added yet.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+"
+`;
+
+exports[`Forms/SubpageTable MixedRowActions 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <table class="sc-bdvwhi jPABQz table">
+    <thead>
+      <tr>
+        <th>Email address</th>
+        <th>Send as</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="Email address">beate-paulina.berlin@standardemail.de</td>
+        <td data-label="Send as">Committer</td>
+        <td data-label="Actions">
+          <button
+            type="button"
+            aria-label="Edit beate-paulina.berlin@standardemail.de"
+            class="sc-jRQBiJ bvGRbk button button has-background-transparent"
+          >
+            <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td data-label="Email address">paul.bernd@email.de</td>
+        <td data-label="Send as">Author</td>
+        <td data-label="Actions"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+"
+`;
+
+exports[`Forms/SubpageTable WithRowActions 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <table class="sc-bdvwhi jPABQz table">
+    <thead>
+      <tr>
+        <th>Email address</th>
+        <th>Send as</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="Email address">beate-paulina.berlin@standardemail.de</td>
+        <td data-label="Send as">Committer</td>
+        <td data-label="Actions">
+          <button
+            type="button"
+            aria-label="Edit beate-paulina.berlin@standardemail.de"
+            class="sc-jRQBiJ bvGRbk button button has-background-transparent"
+          >
+            <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td data-label="Email address">paul.bernd@email.de</td>
+        <td data-label="Send as">Author</td>
+        <td data-label="Actions">
+          <button
+            type="button"
+            aria-label="Edit paul.bernd@email.de"
+            class="sc-jRQBiJ bvGRbk button button has-background-transparent"
+          >
+            <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-edit"></i></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+"
+`;
+
+exports[`Forms/Textarea Default 1`] = `
+"<div style="margin: 2rem; max-width: 40rem"><textarea class="textarea"></textarea></div>
+"
+`;
+
+exports[`Forms/Textarea WithCustomClass 1`] = `
+"<div style="margin: 2rem; max-width: 40rem"><textarea class="textarea is-warning"></textarea></div>
+"
+`;
+
+exports[`Forms/Textarea WithDefaultValue 1`] = `
+"<div style="margin: 2rem; max-width: 40rem"><textarea class="textarea">value</textarea></div>
+"
+`;
+
+exports[`Forms/Textarea WithRef 1`] = `
+"<div style="margin: 2rem; max-width: 40rem"><textarea class="textarea"></textarea></div>
+"
+`;
+
+exports[`Forms/Textarea WithVariant 1`] = `
+"<div style="margin: 2rem; max-width: 40rem"><textarea class="textarea is-danger"></textarea></div>
+"
+`;
+
+exports[`Overlays/Menu Default 1`] = `
+"<div style="margin: 2rem; display: flex; justify-content: flex-end">
+  <button
+    type="button"
+    aria-label="Menu"
+    id="radix-«r0»"
+    aria-haspopup="menu"
+    aria-expanded="false"
+    data-state="closed"
+    class="button is-borderless has-background-transparent has-hover-color-blue px-2"
+  >
+    <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-ellipsis-v"></i></span>
+  </button>
+</div>
+"
+`;
+
+exports[`Overlays/Popover CiStatus 1`] = `
+"<div style="margin: 10rem">
+  <button
+    class="is-borderless has-background-transparent"
+    type="button"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    data-state="closed"
+  >
+    <i class="fas fa-1x has-text-secondary fa-circle-notch"></i>
+  </button>
+</div>
+"
+`;
+
+exports[`Overlays/Popover WithShortBody 1`] = `
+"<div style="margin: 10rem">
+  <button class="button" type="button" aria-haspopup="dialog" aria-expanded="false" data-state="closed">
+    a button
+  </button>
+</div>
+"
+`;
+
+exports[`Templates/Data Page Default 1`] = `
+"<div style="margin: 2rem">
+  <h1 class="title">My Page</h1>
+  <h2 class="subtitle">All the data</h2>
+  <div class="is-flex is-flex-wrap-wrap is-justify-content-space-between mb-3 has-row-gap-2 has-column-gap-4">
+    <div
+      class="is-flex is-flex-wrap-wrap is-align-items-center has-row-gap-2 has-column-gap-4 is-flex-grow-1 is-flex-shrink-1 is-flex-basis-0"
+    >
+      <span class="is-flex is-align-items-center has-gap-2"
+        ><label for="scm-id-1" class="is-flex is-align-items-center is-text-wrap-no-wrap">Filter by</label>
+        <div class="select">
+          <select id="scm-id-1">
+            <option label="Yes" value="1">Yes</option>
+            <option label="No" value="0">No</option>
+          </select>
+        </div></span
+      ><span class="is-flex is-align-items-center has-gap-2"
+        ><label for="scm-id-2" class="is-flex is-align-items-center is-text-wrap-no-wrap">Sort by</label>
+        <div class="select">
+          <select id="scm-id-2">
+            <option label="Blue" value="1">Blue</option>
+            <option label="Red" value="0">Red</option>
+          </select>
+        </div></span
+      >
+    </div>
+    <button type="button" class="button is-primary">Create New Data</button>
+  </div>
+  <div style="margin-top: 1rem">
+    <ul class="sc-gWWZvT iPsYVe p-2 box is-flex is-flex-direction-column">
+      <li class="is-relative is-flex scmm-card">
+        <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-trash"></i></span>
+        <div
+          class="sc-hiCkpJ gMUXQK is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1 is-overflow-hidden is-overflow-wrap-anywhere"
+          style="gap: 0.25rem"
+        >
+          <div class="ml-1">
+            <h3>
+              <a href="/item"
+                >The title may contain a link but most importantly does not contain any information except the "display
+                name" of the entity.</a
+              >
+            </h3>
+          </div>
+          <div class="is-size-7 ml-1">This contains more important details about the card.</div>
+          <div class="is-size-7 has-text-secondary ml-1">This contains less important information about the card</div>
+          <div class="ml-1">
+            <div class="sc-jcFiBM gyYDfB is-flex is-flex-wrap-wrap is-align-items-center">
+              <span class="is-flex is-align-items-center has-gap-1 p-1"
+                ><span class="has-text-secondary is-size-7">Tags are great for numbers.</span
+                ><span class="tag is-rounded is-light">7/3</span></span
+              >
+            </div>
+          </div>
+        </div>
+        <span class="icon" aria-hidden="true"><i class="fas fa-fw fa-ellipsis-v"></i></span>
+      </li>
+    </ul>
+  </div>
+</div>
+"
+`;
+
+exports[`Templates/Data Page IsEmpty 1`] = `
+"<div style="margin: 2rem">
+  <h1 class="title">My Page</h1>
+  <h2 class="subtitle">All the data</h2>
+  <div class="is-flex is-flex-wrap-wrap is-justify-content-space-between mb-3 has-row-gap-2 has-column-gap-4">
+    <div
+      class="is-flex is-flex-wrap-wrap is-align-items-center has-row-gap-2 has-column-gap-4 is-flex-grow-1 is-flex-shrink-1 is-flex-basis-0"
+    >
+      <span class="is-flex is-align-items-center has-gap-2"
+        ><label for="scm-id-1" class="is-flex is-align-items-center is-text-wrap-no-wrap">Filter by</label>
+        <div class="select">
+          <select id="scm-id-1">
+            <option label="Yes" value="1">Yes</option>
+            <option label="No" value="0">No</option>
+          </select>
+        </div></span
+      ><span class="is-flex is-align-items-center has-gap-2"
+        ><label for="scm-id-2" class="is-flex is-align-items-center is-text-wrap-no-wrap">Sort by</label>
+        <div class="select">
+          <select id="scm-id-2">
+            <option label="Blue" value="1">Blue</option>
+            <option label="Red" value="0">Red</option>
+          </select>
+        </div></span
+      >
+    </div>
+    <button type="button" class="button is-primary">Create New Data</button>
+  </div>
+  <div style="margin-top: 1rem">
+    <div class="notification is-info">There is no data, consider adjusting the filters</div>
+  </div>
+</div>
+"
+`;
+
+exports[`Templates/Data Page IsLoading 1`] = `
+"<div style="margin: 2rem">
+  <h1 class="title">My Page</h1>
+  <h2 class="subtitle">All the data</h2>
+  <div class="is-flex is-flex-wrap-wrap is-justify-content-space-between mb-3 has-row-gap-2 has-column-gap-4">
+    <div
+      class="is-flex is-flex-wrap-wrap is-align-items-center has-row-gap-2 has-column-gap-4 is-flex-grow-1 is-flex-shrink-1 is-flex-basis-0"
+    >
+      <span class="is-flex is-align-items-center has-gap-2"
+        ><label for="scm-id-1" class="is-flex is-align-items-center is-text-wrap-no-wrap">Filter by</label>
+        <div class="select">
+          <select id="scm-id-1">
+            <option label="Yes" value="1">Yes</option>
+            <option label="No" value="0">No</option>
+          </select>
+        </div></span
+      ><span class="is-flex is-align-items-center has-gap-2"
+        ><label for="scm-id-2" class="is-flex is-align-items-center is-text-wrap-no-wrap">Sort by</label>
+        <div class="select">
+          <select id="scm-id-2">
+            <option label="Blue" value="1">Blue</option>
+            <option label="Red" value="0">Red</option>
+          </select>
+        </div></span
+      >
+    </div>
+    <button type="button" class="button is-primary">Create New Data</button>
+  </div>
+  <div style="margin-top: 1rem">
+    <div class="sc-gKckzE eMOlmt is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+      <img class="sc-iCfNyT lnsTye mb-3" alt="Loading ..." src="/images/loading.svg" />
+      <p class="has-text-centered"></p>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Templates/Data Page WithError 1`] = `
+"<div style="margin: 2rem">
+  <h1 class="title">My Page</h1>
+  <h2 class="subtitle">All the data</h2>
+  <div class="is-flex is-flex-wrap-wrap is-justify-content-space-between mb-3 has-row-gap-2 has-column-gap-4">
+    <div
+      class="is-flex is-flex-wrap-wrap is-align-items-center has-row-gap-2 has-column-gap-4 is-flex-grow-1 is-flex-shrink-1 is-flex-basis-0"
+    >
+      <span class="is-flex is-align-items-center has-gap-2"
+        ><label for="scm-id-1" class="is-flex is-align-items-center is-text-wrap-no-wrap">Filter by</label>
+        <div class="select">
+          <select id="scm-id-1">
+            <option label="Yes" value="1">Yes</option>
+            <option label="No" value="0">No</option>
+          </select>
+        </div></span
+      ><span class="is-flex is-align-items-center has-gap-2"
+        ><label for="scm-id-2" class="is-flex is-align-items-center is-text-wrap-no-wrap">Sort by</label>
+        <div class="select">
+          <select id="scm-id-2">
+            <option label="Blue" value="1">Blue</option>
+            <option label="Red" value="0">Red</option>
+          </select>
+        </div></span
+      >
+    </div>
+    <button type="button" class="button is-primary">Create New Data</button>
+  </div>
+  <div style="margin-top: 1rem">
+    <div class="notification is-danger" role="alert"><strong>Error:</strong> Failed to fetch data from the server.</div>
+  </div>
+</div>
+"
+`;
+
+exports[`Utilities/SplitAndReplace ReplaceAll 1`] = `
+"<div style="margin: 2rem">
+  <div>
+    <h3>Replace all \` with ? and ' with !</h3>
+    <label>Original text:</label>
+    <p>'Yes,' said Ford, 'except... no! Wait a minute!'</p>
+    <label>Text with replacements:</label>
+    <p>
+      <span style="color: red; font-weight: bold">!</span>Yes,<span style="color: red; font-weight: bold">!</span>&nbsp;
+      said Ford, &nbsp;<span style="color: red; font-weight: bold">!</span>except... no! Wait a minute!<span
+        style="color: red; font-weight: bold"
+        >!</span
+      >
+    </p>
+  </div>
+</div>
+"
+`;
+
+exports[`Utilities/SplitAndReplace ReplaceOnce 1`] = `
+"<div style="margin: 2rem">
+  <div>
+    <h3>Replace first instance of ' with !</h3>
+    <label>Original text:</label>
+    <p>'So this is it,' said Arthur, 'We are going to die.'</p>
+    <label>Text with replacement:</label>
+    <p><span style="color: red; font-weight: bold">!</span>So this is it,' said Arthur, 'We are going to die.'</p>
+  </div>
+</div>
+"
+`;

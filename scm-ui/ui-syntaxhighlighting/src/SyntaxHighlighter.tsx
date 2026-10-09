@@ -191,20 +191,25 @@ const useFallbackContent = (
 
 type RootWrapperProps = {
   language: string;
-  as?: ComponentType<{ children?: ReactNode }>;
+  as?: ComponentType<{ children?: ReactNode; "aria-busy"?: boolean }> | typeof React.Fragment;
   children?: ReactNode;
+  isLoading: boolean;
 };
 
-const RootWrapper: FC<RootWrapperProps> = ({ language, children, as: AsComponent }) => {
+const RootWrapper: FC<RootWrapperProps> = ({ language, children, as: AsComponent, isLoading }) => {
   if (!AsComponent) {
     return (
-      <pre className={language ? `language-${language}` : ""}>
+      <pre className={language ? `language-${language}` : ""} aria-busy={isLoading}>
         <code>{children}</code>
       </pre>
     );
   }
 
-  return <AsComponent>{children}</AsComponent>;
+  if (AsComponent === React.Fragment) {
+    return <>{children}</>;
+  }
+
+  return <AsComponent aria-busy={isLoading}>{children}</AsComponent>;
 };
 
 const SyntaxHighlighter = ({
@@ -230,14 +235,14 @@ const SyntaxHighlighter = ({
   // we do not expose the error for now, because we have no idea how to display it
   if (isLoading || !tree || error) {
     return (
-      <RootWrapper as={as} language={language}>
-        <code>{fallbackContent}</code>
+      <RootWrapper as={as} language={language} isLoading={isLoading}>
+        <code data-syntax-highlighter-loading={isLoading ? "true" : undefined}>{fallbackContent}</code>
       </RootWrapper>
     );
   }
 
   return (
-    <RootWrapper as={as} language={language}>
+    <RootWrapper as={as} language={language} isLoading={false}>
       <Renderer>{tree?.map(mapWithDepth(0, lineWrapper, markerConfig?.wrapper))}</Renderer>
     </RootWrapper>
   );

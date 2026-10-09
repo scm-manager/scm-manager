@@ -20,8 +20,14 @@ import Loading from "../Loading";
 
 const LazyMarkdownView = React.lazy(() => import("./LazyMarkdownView"));
 
-const MarkdownView: FC<MarkdownProps> = props => (
-  <Suspense fallback={<Loading />}>
+const MarkdownViewLoading: FC = () => (
+  <div data-markdown-loading="true">
+    <Loading />
+  </div>
+);
+
+const MarkdownView: FC<MarkdownProps> = (props) => (
+  <Suspense fallback={<MarkdownViewLoading />}>
     <LazyMarkdownView {...props} />
   </Suspense>
 );

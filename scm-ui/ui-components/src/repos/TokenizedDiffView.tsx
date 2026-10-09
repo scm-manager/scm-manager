@@ -22,6 +22,7 @@ import { FileDiff, Hunk as HunkType } from "@scm-manager/ui-types";
 
 import { determineLanguage } from "../languages";
 import { useSyntaxHighlightingWorker } from "@scm-manager/ui-syntaxhighlighting";
+import classNames from "classnames";
 
 const DiffView = styled(Diff)`
   /* align line numbers */
@@ -84,9 +85,17 @@ const TokenizedDiffView: FC<Props> = ({ file, viewType, className, children, whi
     language: determineLanguage(findSyntaxHighlightingLanguage(file)),
     whitespace: whitespace,
   });
+  const diffClassName = tokens ? className : classNames(className, "diff-tokenizing");
 
   return (
-    <DiffView className={className} viewType={viewType} tokens={tokens} hunks={file.hunks} diffType={file.type}>
+    <DiffView
+      className={diffClassName}
+      viewType={viewType}
+      tokens={tokens}
+      hunks={file.hunks}
+      diffType={file.type}
+      aria-busy={!tokens}
+    >
       {children}
     </DiffView>
   );

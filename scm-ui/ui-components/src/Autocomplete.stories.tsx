@@ -16,7 +16,7 @@
 
 import React, { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { fn } from "storybook/test";
 import Autocomplete, { SuggestionsType } from "./Autocomplete";
 import { http, HttpResponse } from "msw";
 import { Option, AutocompleteObject } from "@scm-manager/ui-types";

@@ -55,6 +55,7 @@ export type DateInput = Date | string;
 
 export type DateProps = {
   date?: DateInput;
+  baseDate?: DateInput;
   timeZone?: string;
 };
 
@@ -76,7 +77,7 @@ const toDate = (value: DateInput): Date => {
   return parseISO(value);
 };
 
-export const useDateFormatter = ({ date, timeZone }: DateProps) => {
+export const useDateFormatter = ({ date, baseDate, timeZone }: DateProps) => {
   const { i18n } = useTranslation();
   if (!date) {
     return null;
@@ -101,7 +102,7 @@ export const useDateFormatter = ({ date, timeZone }: DateProps) => {
       return format(isoDate, "yyyy-MM-dd HH:mm:ss", options);
     },
     formatDistance() {
-      return formatDistance(isoDate, new Date(), options);
+      return formatDistance(isoDate, baseDate ? toDate(baseDate) : new Date(), options);
     },
   };
 };

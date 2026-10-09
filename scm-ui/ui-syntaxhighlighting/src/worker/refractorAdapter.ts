@@ -38,7 +38,7 @@ const createAdapter = (theme: { [key: string]: string }): RefractorAdapter => {
   };
 
   const loadLanguageWithDependencies = async (alias: string) => {
-    const lang = aliases[alias] || alias;
+    const lang = (aliases as { [key: string]: string })[alias] || alias;
     const deps = dependencies[lang] || [];
     for (const dep of deps) {
       await loadLanguageWithDependencies(dep);

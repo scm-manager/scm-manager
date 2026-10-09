@@ -22,16 +22,14 @@
   },
   "devDependencies": {
     "@scm-manager/remark-preset-lint": "^1.0.0",
-    "babel-eslint": "^10.0.3",
     "babel-plugin-reflow": "^0.2.7",
     "cross-env": "^7.0.3",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
     "remark-cli": "^9.0.0",
-    "turbo": "2.5.6"
+    "turbo": "2.10.12"
   },
   "resolutions": {
-    "babel-core": "7.0.0-bridge.0",
     "gitdiff-parser": "https://github.com/scm-manager/gitdiff-parser#420d6cfa17a6a8f9bf1a517a2c629dcb332dbe13",
     "@types/react": "^19.1.1",
     "**/react": "^19.1.1",
@@ -39,7 +37,7 @@
   },
   "packageManager": "yarn@1.22.19",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12"
   },
   "babel": {
     "presets": [

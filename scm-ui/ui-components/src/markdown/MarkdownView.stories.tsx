@@ -155,7 +155,8 @@ import MarkdownImages from "../__resources__/markdown-images.md";
 import MarkdownCommitLinks from "../__resources__/markdown-commit-link.md";
 import MarkdownXss from "../__resources__/markdown-xss.md";
 import MarkdownChangelog from "../__resources__/markdown-changelog.md";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { http, HttpResponse } from "msw";
 
 // --- Helfer-Komponenten und Mock-Daten (aus der Original-Story übernommen) ---
 
@@ -178,9 +179,40 @@ const meta: Meta<typeof MarkdownView> = {
   title: "Global/MarkdownView",
   component: MarkdownView,
   decorators: [
-    (Story) => <MemoryRouter initialEntries={["/"]}>{Story()}</MemoryRouter>,
-    (Story) => <Spacing>{Story()}</Spacing>],
+    (Story) => (
+      <MemoryRouter initialEntries={["/repo/storybook/markdown"]}>
+        <Routes>
+          <Route path="/repo/:namespace/:name" element={<Story />} />
+        </Routes>
+      </MemoryRouter>
+    ),
+    (Story) => (
+      <Spacing>
+        <Story />
+      </Spacing>
+    ),
+  ],
   tags: ["autodocs"],
+  parameters: {
+    msw: {
+      handlers: {
+        index: http.get("/api/v2/", () =>
+          HttpResponse.json({
+            version: "x.y.z",
+            instanceId: "storybook",
+            _links: { repositories: { href: "/repositories" } },
+          }),
+        ),
+        repository: http.get("/api/v2/repositories/storybook/markdown", () =>
+          HttpResponse.json({
+            namespace: "storybook",
+            name: "markdown",
+            _links: { content: { href: "/api/v2/repositories/storybook/markdown/content/{revision}/{path}" } },
+          }),
+        ),
+      },
+    },
+  },
 };
 
 export default meta;

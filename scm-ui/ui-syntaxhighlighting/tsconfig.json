@@ -1,5 +1,9 @@
 {
   "extends": "@scm-manager/tsconfig",
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler"
+  },
   "include": [
     "./src"
   ],

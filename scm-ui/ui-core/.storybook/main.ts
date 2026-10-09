@@ -15,21 +15,16 @@
  */
 
 import { mergeConfig } from "vite";
-import path = require("path");
+import path from "path";
+import { createRequire } from "module";
+import { fileURLToPath } from "url";
+
+const require = createRequire(import.meta.url);
+const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
 const config = {
   stories: ["../src/**/*.stories.@(ts|tsx)"],
-  addons: [
-    {
-      name: "@storybook/addon-essentials",
-      options: {
-        actions: false,
-      },
-    },
-    "@storybook/addon-links",
-    "@storybook/addon-interactions",
-    "@storybook/addon-toolbars",
-  ],
+  addons: ["@storybook/addon-a11y", "@storybook/addon-docs", "@storybook/addon-links", "storybook-addon-pseudo-states"],
   framework: {
     name: "@storybook/react-vite",
     options: {},
@@ -43,7 +38,7 @@ const config = {
         alias: {
           "decode-named-character-reference": require.resolve("decode-named-character-reference"),
           "react-query/devtools": require.resolve("@tanstack/react-query-devtools"),
-          "@ui-styles": path.resolve(__dirname, "../../ui-styles/src"),
+          "@ui-styles": path.resolve(currentDir, "../../ui-styles/src"),
         },
       },
       plugins: [],

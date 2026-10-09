@@ -57,7 +57,7 @@ const MenuItem = styled(RadixMenu.Item).attrs({
 `;
 
 type MenuLinkProps = Omit<ReactRouterLinkProps, "onSelect"> &
-  Pick<RadixMenu.MenuItemProps, "disabled"> & { ref?: Ref<HTMLAnchorElement> };
+  Pick<RadixMenu.DropdownMenuItemProps, "disabled"> & { ref?: Ref<HTMLAnchorElement> };
 
 /**
  * @beta
@@ -72,7 +72,7 @@ export const MenuLink: FC<MenuLinkProps> = ({ children, disabled, ref, ...props 
 );
 
 type MenuExternalLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "onSelect"> &
-  Pick<RadixMenu.MenuItemProps, "disabled"> & { ref?: Ref<HTMLAnchorElement> };
+  Pick<RadixMenu.DropdownMenuItemProps, "disabled"> & { ref?: Ref<HTMLAnchorElement> };
 
 /**
  * External links open in a new browser tab with rel flags "noopener" and "noreferrer" set by default.
@@ -89,7 +89,7 @@ export const MenuExternalLink: FC<MenuExternalLinkProps> = ({ children, disabled
 );
 
 type MenuButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick" | "onSelect"> &
-  Pick<RadixMenu.MenuItemProps, "onSelect"> & { ref?: Ref<HTMLButtonElement> };
+  Pick<RadixMenu.DropdownMenuItemProps, "onSelect"> & { ref?: Ref<HTMLButtonElement> };
 
 /**
  * Use {@link MenuButtonProps#onSelect} to handle menu item selection.

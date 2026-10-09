@@ -101,7 +101,11 @@ const doHighlighting = (
   { id, payload: { value, language, nodeLimit, groupByLine, markedTexts } }: HighlightingRequest,
 ) => {
   try {
-    let tree = refractor.highlight(value, language).children;
+    // `text` is the fallback language and intentionally has no Refractor grammar.
+    // Still return its source as a text node so consumers can leave the loading
+    // state instead of waiting forever for a worker response.
+    let tree: RefractorNode[] =
+      language === "text" ? [{ type: "text", value }] : refractor.highlight(value, language).children;
     if (groupByLine) {
       try {
         tree = groupByLines(tree, nodeLimit);
@@ -274,7 +278,9 @@ self.addEventListener("message", ({ data }: RequestMessage) => {
     initRefractor(data.payload);
   } else if (isTokenizeMessage(data)) {
     runTokenize(data);
-  } else if (data.payload.language !== "text") {
+  } else if (data.payload.language === "text") {
+    doHighlighting(self, data);
+  } else {
     refractor.loadLanguage(data.payload.language, () => doHighlighting(self, data));
   }
 });

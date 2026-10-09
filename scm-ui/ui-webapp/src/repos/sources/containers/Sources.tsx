@@ -63,7 +63,7 @@ const useUrlParams = () => {
 
 const Sources: FC = () => {
   const repository = useRepositoryFromParams();
-  const { data: branchesData } = useBranchesIfAvailable(repository);
+  const { data: branchesData, isLoading: isLoadingBranches } = useBranchesIfAvailable(repository);
   const branches = branchesData?._embedded?.branches?.length === 0 ? undefined : branchesData?._embedded?.branches;
   const { data: tagsData } = useTagsIfAvailable(repository);
   const tags: Tag[] = (tagsData?._embedded?.tags as Tag[]) || undefined;
@@ -123,8 +123,11 @@ const Sources: FC = () => {
     revision: sourceName,
     path,
     // we have to wait until a branch is selected,
-    // except if we have no branches (svn)
-    enabled: !branches || !!sourceName,
+    // except if we have no branches (svn).
+    // while the branches are still loading we cannot tell the two apart yet, so we
+    // have to wait for them, otherwise we would load the sources for the default
+    // revision first and discard them right away when the redirect below kicks in
+    enabled: !!sourceName || (!isLoadingBranches && !branches),
   });
 
   useShortcut(

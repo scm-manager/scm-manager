@@ -106,7 +106,7 @@
 
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { MemoryRouter, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import Card from "./Card";
 import CardTitle from "../card/CardTitle";
@@ -128,11 +128,9 @@ const meta: Meta<typeof Card> = {
   component: Card,
   decorators: [
     (Story) => (
-      <MemoryRouter>
-        <div style={{ margin: "2rem", maxWidth: "600px" }}>
-          <Story />
-        </div>
-      </MemoryRouter>
+      <div style={{ margin: "2rem", maxWidth: "600px" }}>
+        <Story />
+      </div>
     ),
   ],
   tags: ["autodocs"],

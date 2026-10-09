@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { nanoid } from "nanoid";
 import type { HighlightingRequest, RefractorNode, Response, ResponseMessage, SuccessResponse } from "./types";
@@ -40,12 +40,12 @@ const useSyntaxHighlighting = ({
   markedTexts,
 }: UseSyntaxHighlightingOptions) => {
   const worker = useSyntaxHighlightingWorker();
-  const job = useRef(nanoid());
   const [isLoading, setIsLoading] = useState(true);
   const [tree, setTree] = useState<Array<RefractorNode> | undefined>(undefined);
   const [error, setError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
+    const jobId = nanoid();
     setIsLoading(true);
     setError(undefined);
     setTree(undefined);
@@ -58,23 +58,25 @@ const useSyntaxHighlighting = ({
       markedTexts,
     };
 
-    worker.postMessage({
-      id: job.current,
-      payload,
-    } as HighlightingRequest);
-
     const listener = ({ data }: ResponseMessage) => {
-      if (data.id === job.current) {
-        if (isSuccess(data)) {
-          setTree(data.payload.tree);
-        } else {
-          setError(data.payload.reason);
-        }
+      if (data.id !== jobId) {
+        return;
       }
+
+      if (isSuccess(data)) {
+        setTree(data.payload.tree);
+      } else {
+        setError(data.payload.reason);
+      }
+
       setIsLoading(false);
     };
 
     worker.addEventListener("message", listener);
+    worker.postMessage({
+      id: jobId,
+      payload,
+    } as HighlightingRequest);
     return () => worker.removeEventListener("message", listener);
   }, [value, language, nodeLimit, groupByLine, worker, markedTexts]);
 

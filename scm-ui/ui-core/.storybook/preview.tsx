@@ -18,7 +18,7 @@ import type { Preview, Decorator } from "@storybook/react";
 import * as React from "react";
 import { Suspense, useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
-import i18n from "./i18n";
+import i18n, { languages } from "./i18n";
 import { MemoryRouter } from "react-router-dom";
 
 // @ts-ignore
@@ -27,6 +27,12 @@ import lightStyle from "@ui-styles/light.scss?url";
 import darkStyle from "@ui-styles/dark.scss?url";
 // @ts-ignore
 import highContrastStyle from "@ui-styles/highcontrast.scss?url";
+
+const LANGUAGE_TITLES: Record<string, string> = {
+  en: "English",
+  de: "Deutsch",
+  es: "Español",
+};
 
 const THEMES: Record<string, string> = {
   light: lightStyle,
@@ -92,10 +98,7 @@ const preview: Preview = {
       description: "Internationalization locale",
       toolbar: {
         icon: "globe",
-        items: [
-          { value: "en", title: "English" },
-          { value: "de", title: "Deutsch" },
-        ],
+        items: languages.map((language) => ({ value: language, title: LANGUAGE_TITLES[language] ?? language })),
         showName: true,
       },
     },

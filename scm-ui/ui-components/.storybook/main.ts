@@ -17,22 +17,15 @@
 import { mergeConfig } from "vite";
 import path from "path";
 
-import { createRequire } from 'module';
+import { createRequire } from "module";
+import { fileURLToPath } from "url";
+
 const require = createRequire(import.meta.url);
+const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
 const config = {
   stories: ["../src/**/*.stories.@(ts|tsx)"],
-  /*addons: [
-    {
-      name: "@storybook/addon-essentials",
-      options: {
-        actions: false,
-      },
-    },
-    "@storybook/addon-links",
-    "@storybook/addon-interactions",
-    "@storybook/addon-toolbars",
-  ],*/
+  addons: ["@storybook/addon-a11y", "@storybook/addon-docs", "@storybook/addon-links", "msw-storybook-addon"],
   framework: {
     name: "@storybook/react-vite",
     options: {},
@@ -42,12 +35,12 @@ const config = {
   },
   async viteFinal(config: any) {
     return mergeConfig(config, {
-      publicDir: path.resolve(__dirname, "../../ui-webapp/public"),
+      publicDir: path.resolve(currentDir, "../../ui-webapp/public"),
       resolve: {
         alias: {
           "decode-named-character-reference": require.resolve("decode-named-character-reference"),
           "react-query/devtools": require.resolve("@tanstack/react-query-devtools"),
-          "@ui-styles": path.resolve(__dirname, "../../ui-styles/src"),
+          "@ui-styles": path.resolve(currentDir, "../../ui-styles/src"),
           "refractor/lang": path.join(path.dirname(require.resolve("refractor")), "lang"),
         },
       },

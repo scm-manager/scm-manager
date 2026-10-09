@@ -14,6 +14,8 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+/// <reference types="node" />
+
 import React, { FC, ReactNode, useCallback, useContext, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useShortcut } from "../index";

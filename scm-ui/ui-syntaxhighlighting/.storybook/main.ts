@@ -16,16 +16,7 @@
 
 const config = {
   stories: ["../src/**/*.stories.@(ts|tsx)"],
-  addons: [
-    {
-      name: "@storybook/addon-essentials",
-      options: {
-        actions: false,
-      },
-    },
-    "@storybook/addon-links",
-    "@storybook/addon-interactions",
-  ],
+  addons: ["@storybook/addon-a11y", "@storybook/addon-docs", "@storybook/addon-links"],
   framework: {
     name: "@storybook/react-vite",
     options: {},
