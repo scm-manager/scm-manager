@@ -51,7 +51,8 @@ public final class ValidationUtil {
       && !path.contains("../")
       && !path.contains("//")
       && !path.contains("\\")
-      && !path.equals("..");
+      && !path.equals("..")
+      && !path.startsWith("/");
   }
 
   public static boolean isMailAddressValid(String mail) {

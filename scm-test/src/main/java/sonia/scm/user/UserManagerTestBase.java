@@ -36,7 +36,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public abstract class UserManagerTestBase extends ManagerTestBase<User> {
+public abstract class UserManagerTestBase extends ManagerTestBase<UserManager> {
 
   public static final int THREAD_COUNT = 10;
 

@@ -52,7 +52,18 @@ public final class Archives {
    * @param source The stream the tar should be extracted from.
    */
   public static TarArchiveInputStream createTarInputStream(InputStream source) {
-    return new TarArchiveInputStream(source);
+    return new ScmSecureTarArchiveInputStream(source);
+  }
+
+  /**
+   * Creates a tar input stream that takes its bytes from the given input stream.
+   * But does not close itself, after reading its entries.
+   * This behavior is needed, if a tar archive is read as a stream,
+   * but is also contained within another streamed tar archive.
+   * @param source The stream the tar should be extracted from.
+   */
+  public static TarArchiveInputStream createNonClosingTarInputStream(InputStream source) {
+    return new NoneClosingTarArchiveInputStream(source);
   }
 
   /**
@@ -134,11 +145,9 @@ public final class Archives {
 
     private void createTarEntryForFiles(String path, Path fileOrDir, TarArchiveOutputStream taos) throws IOException {
       try (Stream<Path> files = Files.list(fileOrDir)) {
-        if (files != null) {
-          files
-            .filter(filter)
-            .forEach(f -> bundleFileOrDir(path, f, taos));
-        }
+        files
+          .filter(filter)
+          .forEach(f -> bundleFileOrDir(path, f, taos));
       }
     }
 
@@ -187,7 +196,7 @@ public final class Archives {
 
     TarExtractor(InputStream inputStream, Path targetPath) {
       this.inputStream = inputStream;
-      this.targetPath = targetPath;
+      this.targetPath = targetPath.toAbsolutePath().normalize();
     }
 
     /**
@@ -196,19 +205,30 @@ public final class Archives {
     public void run() throws IOException {
       try (TarArchiveInputStream tais = createTarInputStream(inputStream)) {
         TarArchiveEntry entry;
-        while ((entry = tais.getNextTarEntry()) != null) {
+        while ((entry = tais.getNextEntry()) != null) {
           Path filePath = targetPath.resolve(entry.getName());
           createDirectoriesIfNestedFile(filePath);
           if (entry.isDirectory()) {
             Files.createDirectories(filePath);
-          } else if (entry.isSymbolicLink() || entry.isLink()) {
+          } else if (entry.isSymbolicLink()) {
             String linkTarget = entry.getLinkName();
             if (linkTarget == null || linkTarget.isEmpty()) {
               throw new ArchiveException("Symbolic link entry '" + entry.getName() + "' has no target", null);
             }
-            Files.createSymbolicLink(filePath, Path.of(linkTarget));
-          } else {
+
+            Path linkTargetPath = Path.of(linkTarget);
+            if (isFileLinkEscapingTargetPath(filePath, linkTargetPath)) {
+              throw new ArchiveException(
+                String.format("Symbolic link entry '%s' leads to a file outside of the repository", entry.getName()),
+                null
+              );
+            }
+
+            Files.createSymbolicLink(filePath, linkTargetPath);
+          } else if (entry.isFile() && !entry.isLink()) {
             Files.copy(tais, filePath, StandardCopyOption.REPLACE_EXISTING);
+          } else {
+            throw new ArchiveException("Unsupported archive entry '" + entry.getName() + "'", null);
           }
         }
       }
@@ -219,6 +239,14 @@ public final class Archives {
       if (!Files.exists(directory)) {
         Files.createDirectories(directory);
       }
+    }
+
+    private boolean isFileLinkEscapingTargetPath(Path linkFilePath, Path linkTarget) {
+      Path normalizedLinkTarget = linkTarget.isAbsolute() ?
+        linkTarget.normalize() :
+        linkFilePath.resolve(linkTarget).toAbsolutePath().normalize();
+
+      return !normalizedLinkTarget.startsWith(targetPath);
     }
   }
 

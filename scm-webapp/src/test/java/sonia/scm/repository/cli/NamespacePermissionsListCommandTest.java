@@ -16,6 +16,9 @@
 
 package sonia.scm.repository.cli;
 
+import org.apache.shiro.authz.UnauthenticatedException;
+import org.github.sdorra.jse.ShiroExtension;
+import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,14 +31,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.PermissionDescriptionResolver;
 import sonia.scm.repository.Namespace;
-import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.NamespaceManager;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
-import sonia.scm.repository.RepositoryTestData;
 
 import java.util.Collection;
 import java.util.List;
@@ -44,10 +43,12 @@ import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(ShiroExtension.class)
 @ExtendWith(MockitoExtension.class)
 class NamespacePermissionsListCommandTest {
 
@@ -96,100 +97,110 @@ class NamespacePermissionsListCommandTest {
       command.setNamespace("hitchhiker");
     }
 
-    @Nested
-    class WithoutVerboseFlag {
-
-      @BeforeEach
-      void setUpRenderer() {
-        doNothing().when(templateRenderer).render(permissionsCaptor.capture());
-      }
-
-      @Test
-      void shouldRenderEmptyTableWithoutPermissions() {
-        command.run();
-
-        Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
-        assertThat(beans).isEmpty();
-      }
-
-      @Test
-      void shouldListCustomUserPermission() {
-        RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
-        namespace.setPermissions(List.of(permission));
-        when(permissionDescriptionResolver.getDescription("read"))
-          .thenReturn(of("read repository"));
-        when(permissionDescriptionResolver.getDescription("write"))
-          .thenReturn(of("write repository"));
-
-        command.run();
-
-        Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
-        assertThat(beans).extracting("groupPermission", "name", "role")
-          .containsExactly(tuple(false, "trillian", "CUSTOM"));
-      }
+    @Test
+    void shouldFailWithoutPermissions() {
+      assertThrows(UnauthenticatedException.class, command::run);
     }
 
     @Nested
-    class WithVerboseFlag {
+    @SubjectAware(value = "dent", permissions = {"namespace:permissionRead:hitchhiker"})
+    class WithPermission {
 
-      @BeforeEach
-      void setUpRenderer() {
-        doNothing().when(templateRenderer).renderVerbose(permissionsCaptor.capture());
-      }
+      @Nested
+      class WithoutVerboseFlag {
 
-      @BeforeEach
-      void setVerbose() {
-        command.setVerbose(true);
-      }
+        @BeforeEach
+        void setUpRenderer() {
+          doNothing().when(templateRenderer).render(permissionsCaptor.capture());
+        }
 
-      @Test
-      void shouldListUserPermissionWithVerbs() {
-        RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
-        namespace.setPermissions(List.of(permission));
-        when(permissionDescriptionResolver.getDescription("read"))
-          .thenReturn(of("read repository"));
-        when(permissionDescriptionResolver.getDescription("write"))
-          .thenReturn(of("write repository"));
+        @Test
+        void shouldRenderEmptyTableWithoutPermissions() {
+          command.run();
 
-        command.run();
+          Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
+          assertThat(beans).isEmpty();
+        }
 
-        Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
-        assertThat(beans).extracting("groupPermission", "name", "role", "verbs")
-          .containsExactly(tuple(false, "trillian", "CUSTOM", List.of("read repository", "write repository")));
-      }
+        @Test
+        void shouldListCustomUserPermission() {
+          RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
+          namespace.setPermissions(List.of(permission));
+          when(permissionDescriptionResolver.getDescription("read"))
+            .thenReturn(of("read repository"));
+          when(permissionDescriptionResolver.getDescription("write"))
+            .thenReturn(of("write repository"));
 
-      @Test
-      void shouldListUserPermissionWithRole() {
-        RepositoryPermission permission = new RepositoryPermission("trillian", "READ", false);
-        namespace.setPermissions(List.of(permission));
-        when(roleManager.get("READ"))
-          .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
-        when(permissionDescriptionResolver.getDescription("read"))
-          .thenReturn(of("read repository"));
-        when(permissionDescriptionResolver.getDescription("pull"))
-          .thenReturn(of("clone/checkout repository"));
+          command.run();
 
-        command.run();
-
-        Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
-        assertThat(beans).extracting("groupPermission", "name", "verbs")
-          .containsExactly(tuple(false, "trillian", List.of("read repository", "clone/checkout repository")));
-      }
-
-      @Test
-      void shouldListUserPermissionWithVerbsAsKeys() {
-        RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
-        namespace.setPermissions(List.of(permission));
-
-        command.setKeys(true);
-        command.run();
-
-        Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
+          Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
         assertThat(beans).extracting("groupPermission", "name", "role")
           .containsExactly(tuple(false, "trillian", "CUSTOM"));
-        assertThat(beans).extracting("verbs")
-          .map(c -> ((Collection) c).stream().collect(toList())) // to satisfy equal in the comparison, we have to use this form
-          .containsExactly(List.of("read", "write"));
+        }
+      }
+
+      @Nested
+      class WithVerboseFlag {
+
+        @BeforeEach
+        void setUpRenderer() {
+          doNothing().when(templateRenderer).renderVerbose(permissionsCaptor.capture());
+        }
+
+        @BeforeEach
+        void setVerbose() {
+          command.setVerbose(true);
+        }
+
+        @Test
+        void shouldListUserPermissionWithVerbs() {
+          RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
+          namespace.setPermissions(List.of(permission));
+          when(permissionDescriptionResolver.getDescription("read"))
+            .thenReturn(of("read repository"));
+          when(permissionDescriptionResolver.getDescription("write"))
+            .thenReturn(of("write repository"));
+
+          command.run();
+
+          Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
+          assertThat(beans).extracting("groupPermission", "name", "role", "verbs")
+            .containsExactly(tuple(false, "trillian", "CUSTOM", List.of("read repository", "write repository")));
+        }
+
+        @Test
+        void shouldListUserPermissionWithRole() {
+          RepositoryPermission permission = new RepositoryPermission("trillian", "READ", false);
+          namespace.setPermissions(List.of(permission));
+          when(roleManager.get("READ"))
+            .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
+          when(permissionDescriptionResolver.getDescription("read"))
+            .thenReturn(of("read repository"));
+          when(permissionDescriptionResolver.getDescription("pull"))
+            .thenReturn(of("clone/checkout repository"));
+
+          command.run();
+
+          Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
+         assertThat(beans).extracting("groupPermission", "name", "verbs")
+            .containsExactly(tuple(false, "trillian", List.of("read repository", "clone/checkout repository")));
+        }
+
+        @Test
+        void shouldListUserPermissionWithVerbsAsKeys() {
+          RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
+          namespace.setPermissions(List.of(permission));
+
+          command.setKeys(true);
+          command.run();
+
+          Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
+          assertThat(beans).extracting("groupPermission", "name", "role")
+            .containsExactly(tuple(false, "trillian", "CUSTOM"));
+          assertThat(beans).extracting("verbs")
+            .map(c -> ((Collection) c).stream().collect(toList())) // to satisfy equal in the comparison, we have to use this form
+              .containsExactly(List.of("read", "write"));
+        }
       }
     }
   }

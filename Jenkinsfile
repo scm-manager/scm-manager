@@ -95,6 +95,8 @@ pipeline {
      stage('SonarQube') {
       when {
         environment name: 'SONAR', value: 'RUN'
+        // Older Java builds must skip Sonar even when the repository opts in.
+        expression { return getBuildJavaVersion() >= 25 }
         not {
           anyOf {
             branch pattern: 'release/*', comparator: 'GLOB'
@@ -292,6 +294,15 @@ pipeline {
 void gradle(String command) {
   // setting user home system property, should fix user prefs (?/.java/.prefs ...)
   sh "./gradlew -Duser.home=${env.WORKSPACE} ${command}"
+}
+
+int getBuildJavaVersion() {
+  // Query the build agent's Java, using JAVA_HOME just like the Gradle wrapper.
+  String version = sh(returnStdout: true, script: '''
+    "${JAVA_HOME:+$JAVA_HOME/bin/}java" -XshowSettings:properties -version 2>&1 |
+      sed -n 's/^[[:space:]]*java.specification.version = //p'
+  ''').trim()
+  return version.toInteger()
 }
 
 boolean isReleaseBuild() {

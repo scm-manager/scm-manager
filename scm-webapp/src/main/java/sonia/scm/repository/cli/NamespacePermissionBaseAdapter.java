@@ -18,6 +18,7 @@ package sonia.scm.repository.cli;
 
 import sonia.scm.repository.Namespace;
 import sonia.scm.repository.NamespaceManager;
+import sonia.scm.repository.NamespacePermissions;
 
 import java.util.Optional;
 
@@ -37,6 +38,7 @@ class NamespacePermissionBaseAdapter implements PermissionBaseAdapter<Namespace>
   public Optional<Namespace> get(String namespace) {
     Optional<Namespace> ns = namespaceManager.get(namespace);
     if (ns.isPresent()) {
+      NamespacePermissions.permissionRead(ns.get()).check();
       return ns;
     } else {
       templateRenderer.renderNotFoundError();

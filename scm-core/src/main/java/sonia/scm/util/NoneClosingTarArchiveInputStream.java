@@ -14,14 +14,12 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-package sonia.scm.importexport;
-
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+package sonia.scm.util;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-class NoneClosingTarArchiveInputStream extends TarArchiveInputStream {
+class NoneClosingTarArchiveInputStream extends ScmSecureTarArchiveInputStream {
 
   NoneClosingTarArchiveInputStream(InputStream is) {
     super(is);

@@ -62,7 +62,9 @@ class ValidationUtilTest {
     "some\\windows",
     "../../",
     "../ka",
-    "test/../.."
+    "test/../..",
+    "/root/test",
+    "test/../../other"
   })
   void shouldRejectPath(String value) {
     assertFalse(ValidationUtil.isPathValid(value));

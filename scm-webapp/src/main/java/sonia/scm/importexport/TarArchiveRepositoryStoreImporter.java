@@ -25,6 +25,7 @@ import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.store.RepositoryStoreImporter;
 import sonia.scm.store.StoreEntryMetaData;
 import sonia.scm.store.StoreType;
+import sonia.scm.util.Archives;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +40,7 @@ public class TarArchiveRepositoryStoreImporter {
   }
 
   public void importFromTarArchive(Repository repository, InputStream inputStream, RepositoryImportLogger logger) {
-    try (TarArchiveInputStream tais = new NoneClosingTarArchiveInputStream(inputStream)) {
+    try (TarArchiveInputStream tais = Archives.createNonClosingTarInputStream(inputStream)) {
       ArchiveEntry entry = tais.getNextEntry();
       while (entry != null) {
         String[] entryPathParts = entry.getName().split("/");
