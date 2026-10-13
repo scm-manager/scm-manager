@@ -184,6 +184,9 @@ File npmrc = new File(project.rootDir, ".npmrc")
 File yarnrc = new File(project.rootDir, ".yarnrc")
 
 task publish(type: YarnTask) {
+  if (project.hasProperty('npmToken')) {
+    args.set(['run', 'deploy', project.version.toString()])
+  }
   doFirst {
     if (project.hasProperty("npmToken")) {
       npmrc.createNewFile()
@@ -194,7 +197,6 @@ task publish(type: YarnTask) {
       if (project.hasProperty('npmEmail')) {
         yarnrc.append "email ${project.property('npmEmail')}\n"
       }
-      args = ['run', 'deploy', project.version]
     }
   }
   finalizedBy 'cleanUpAfterPublishing'
@@ -202,10 +204,8 @@ task publish(type: YarnTask) {
 }
 
 task cleanTurboRepo(type: YarnTask) {
-  doFirst {
-    if (project.gradle.startParameter.taskNames.contains "clean") {
-      args = ['turbo', 'run', 'build', '--force']
-    }
+  if (project.gradle.startParameter.taskNames.contains "clean") {
+    args.set(['turbo', 'run', 'build', '--force'])
   }
 }
 
