@@ -273,11 +273,11 @@ allprojects {
   configurations.all {
     resolutionStrategy {
       // Force all swagger-related libraries to the same, consistent version
-      force 'io.swagger.core.v3:swagger-core-jakarta:2.2.26'
-      force 'io.swagger.core.v3:swagger-models-jakarta:2.2.26'
-      force 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.26'
-      force 'io.swagger.core.v3:swagger-integration-jakarta:2.2.26'
-      force 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.26'
+      force 'io.swagger.core.v3:swagger-core-jakarta:2.2.55'
+      force 'io.swagger.core.v3:swagger-models-jakarta:2.2.55'
+      force 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.55'
+      force 'io.swagger.core.v3:swagger-integration-jakarta:2.2.55'
+      force 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.55'
     }
   }
 }
