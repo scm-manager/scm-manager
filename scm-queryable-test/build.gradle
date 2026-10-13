@@ -24,13 +24,13 @@ dependencies {
   api project(':scm-core')
   api project(':scm-persistence')
 
-  api libraries.junitJupiterApi
-  api libraries.mockitoCore
-  implementation libraries.jacksonDatatypeJsr310
-  implementation libraries.jacksonJaxbAnnotations
+  api libs.junitJupiterApi
+  api libs.mockitoCore
+  implementation libs.jacksonDatatypeJsr310
+  implementation libs.jacksonJaxbAnnotations
 
   // tests
   testImplementation project(':scm-test')
-  testImplementation libraries.junitPioneer
+  testImplementation libs.junitPioneer
   testAnnotationProcessor project(':scm-core-annotation-processor')
 }

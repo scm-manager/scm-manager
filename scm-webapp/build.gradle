@@ -30,11 +30,13 @@ configurations {
     create("swaggerCoreDeps").defaultDependencies(new Action<DependencySet>() {
       @Override
       void execute(DependencySet dependencies) {
-        dependencies.add(project.getDependencies().create(libraries.commonsLang3))
-        dependencies.add(project.getDependencies().create(libraries.jaxRs))
-        dependencies.add(project.getDependencies().create(libraries.servletApi))
-        dependencies.add(project.getDependencies().create(libraries.swaggerJaxRs))
-        dependencies.add(project.getDependencies().create(libraries.jacksonCore))
+        dependencies.add(project.getDependencies().create(libs.commonsLang3.get()))
+        dependencies.add(project.getDependencies().create(libs.jaxRs.get()))
+        dependencies.add(project.getDependencies().create(libs.servletApi.get()))
+        dependencies.add(project.getDependencies().create(libs.swaggerJaxRs.get()))
+        def jacksonCore = project.getDependencies().create(libs.jacksonCore.get())
+        jacksonCore.version { strictly libs.versions.jackson.get() }
+        dependencies.add(jacksonCore)
       }
     })
   }
@@ -57,25 +59,25 @@ dependencies {
   testAnnotationProcessor project(':scm-core-annotation-processor')
 
   // servlet api
-  providedCompile libraries.servletApi
-  testImplementation libraries.servletApi
+  providedCompile libs.servletApi
+  testImplementation libs.servletApi
 
   // security
-  implementation libraries.shiroWeb
-  implementation libraries.shiroGuice
+  implementation variantOf(libs.shiroWeb) { classifier('jakarta') }
+  implementation variantOf(libs.shiroGuice) { classifier('jakarta') }
 
   // tests
-  testImplementation libraries.junitPioneer
+  testImplementation libs.junitPioneer
 
   // jwt
-  implementation libraries.jjwtApi
-  implementation libraries.jjwtRuntime
-  implementation libraries.jjwtJackson
+  implementation libs.jjwtApi
+  implementation libs.jjwtRuntime
+  implementation libs.jjwtJackson
 
   // gpg
-  implementation libraries.bouncycastlePg
-  implementation libraries.bouncycastleProv
-  implementation libraries.bouncycastlePkix
+  implementation libs.bouncycastlePg
+  implementation libs.bouncycastleProv
+  implementation libs.bouncycastlePkix
 
   implementation 'org.pgpainless:pgpainless-core:1.7.6'
   constraints {
@@ -84,75 +86,75 @@ dependencies {
   }
 
   // json
-  implementation libraries.jacksonJaxbAnnotations
-  implementation libraries.jacksonJaxRsBase
-  implementation libraries.jacksonJaxRsJsonProvider
-  implementation libraries.jacksonDatatypeJdk8
-  implementation libraries.jacksonDatatypeJsr310
-  implementation libraries.jacksonDataFormatYaml
+  implementation libs.jacksonJaxbAnnotations
+  implementation libs.jacksonJaxRsBase
+  implementation libs.jacksonJaxRsJsonProvider
+  implementation libs.jacksonDatatypeJdk8
+  implementation libs.jacksonDatatypeJsr310
+  implementation libs.jacksonDataFormatYaml
 
   // rest api
-  implementation libraries.resteasyJaxbProvider
-  implementation libraries.resteasyJackson2Provider
-  implementation libraries.resteasyMultiartProvider
-  implementation libraries.resteasyServletInitializer
-  implementation libraries.resteasyValidatorProvider
+  implementation libs.resteasyJaxbProvider
+  implementation libs.resteasyJackson2Provider
+  implementation libs.resteasyMultiartProvider
+  implementation libs.resteasyServletInitializer
+  implementation libs.resteasyValidatorProvider
   implementation "org.apache.httpcomponents:httpcore:4.4.16"
 
   // openapi
-  compileOnly libraries.swaggerJaxRs
+  compileOnly libs.swaggerJaxRs
 
   // logging
-  implementation libraries.logback
+  implementation libs.logback
 
   // cron expression
-  implementation libraries.cronUtils
+  implementation libs.cronUtils
 
   // templates
-  implementation libraries.mustache
+  implementation libs.mustache
 
   // static resources
-  implementation libraries.webResources
+  implementation libs.webResources
 
   // content type detection
-  implementation libraries.spotter
-  implementation libraries.tika
+  implementation libs.spotter
+  implementation libs.tika
 
   // restart on unix
-  implementation libraries.akuma
+  implementation libs.akuma
 
   // native access
-  implementation libraries.jna
+  implementation libs.jna
 
   // util
-  implementation libraries.commonsCompress
+  implementation libs.commonsCompress
 
   // events
-  implementation libraries.legmanShiro
-  implementation libraries.legmanMicrometer
+  implementation libs.legmanShiro
+  implementation libs.legmanMicrometer
 
   // metrics
-  implementation libraries.micrometerExtra
+  implementation libs.micrometerExtra
 
-  implementation libraries.luceneCore
-  implementation libraries.luceneQueryParser
-  implementation libraries.luceneHighlighter
-  implementation libraries.luceneAnalyzersCommon
+  implementation libs.luceneCore
+  implementation libs.luceneQueryParser
+  implementation libs.luceneHighlighter
+  implementation libs.luceneAnalyzersCommon
 
   // lombok
-  compileOnly libraries.lombok
-  testCompileOnly libraries.lombok
-  annotationProcessor libraries.lombok
-  testAnnotationProcessor libraries.lombok
+  compileOnly libs.lombok
+  testCompileOnly libs.lombok
+  annotationProcessor libs.lombok
+  testAnnotationProcessor libs.lombok
 
   // dto mapping
-  annotationProcessor libraries.mapstructProcessor
+  annotationProcessor libs.mapstructProcessor
 
   // testing async code
-  testImplementation libraries.awaitility
+  testImplementation libs.awaitility
 
   // shiro unit
-  testImplementation libraries.shiroUnit
+  testImplementation libs.shiroUnit
 
   // plugin transformer
   implementation 'org.eclipse.transformer:org.eclipse.transformer:1.0.0'

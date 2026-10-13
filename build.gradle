@@ -47,87 +47,87 @@ subprojects { s ->
   }
 }
 
-allprojects {
-  apply from: rootProject.file('gradle/dependencies.gradle')
-}
-
 dependencies {
   constraints {
     // lombok
-    api libraries.lombok
+    api libs.lombok
 
     // jakarta
-    api libraries.jakartaAnnotationApi
+    api libs.jakartaAnnotationApi
 
     // servlet api
-    api libraries.servletApi
+    api libs.servletApi
 
     // logging
-    api libraries.slf4jApi
-    api libraries.slf4jJcl
-    api libraries.logback
+    api libs.slf4jApi
+    api libs.slf4jJcl
+    api libs.logback
 
     // injection
-    api libraries.guice
-    api libraries.guiceServlet
-    api libraries.guiceThrowingproviders
-    api libraries.guiceAssistedinject
+    api libs.guice
+    api libs.guiceServlet
+    api libs.guiceThrowingproviders
+    api libs.guiceAssistedinject
 
     // rest api
-    api libraries.jaxRs
-    api libraries.resteasyCore
+    api libs.jaxRs
+    api libs.resteasyCore
 
     // json
-    api libraries.jacksonCore
-    api libraries.jacksonAnnotations
+    api(libs.jacksonCore) {
+      version { strictly libs.versions.jackson.get() }
+    }
+    api(libs.jacksonAnnotations) {
+      version { strictly libs.versions.jacksonAnnotations.get() }
+    }
 
     // hypermedia
-    api libraries.edison
-    api libraries.damnhandy
+    api libs.edison
+    api libs.damnhandy
 
     // dto mapping
-    api libraries.mapstruct
-    api libraries.mapstructProcessor
+    api libs.mapstruct
+    api libs.mapstructProcessor
 
     // events
-    api libraries.legman
+    api libs.legman
 
     // xml binding
-    api libraries.jaxbApi
-    api libraries.jaxbRuntime
+    api libs.jaxbApi
+    api libs.jaxbRuntime
 
     // validation
-    api libraries.validator
-    api libraries.elApi
-    api libraries.elRuntime
+    api libs.validator
+    api libs.elApi
+    api libs.elRuntime
 
     // utils
-    api libraries.guava
-    api libraries.commonsLang
+    api libs.guava
+    api libs.commonsLang
 
     // security
-    api libraries.shiroCore
-    api libraries.ssp
-    api libraries.sspProcessor
-    api libraries.shiroUnit
+    api libs.shiroCore
+    api libs.ssp
+    api libs.sspProcessor
+    api libs.shiroUnit
 
     // tests
-    api libraries.junitJupiterApi
-    api libraries.junitJupiterParams
-    api libraries.junitJupiterEngine
+    api libs.junitJupiterApi
+    api libs.junitJupiterParams
+    api libs.junitJupiterEngine
 
     // junit 4 support
-    api libraries.junitVintageEngine
-    api libraries.junit
+    api libs.junitVintageEngine
+    api libs.junit
 
     // assertions
-    api libraries.hamcrestCore
-    api libraries.hamcrestLibrary
-    api libraries.assertj
+    api libs.hamcrestCore
+    api libs.hamcrestLibrary
+    api libs.assertj
 
     // mocking
-    api libraries.mockitoCore
-    api libraries.mockitoJunitJupiter
+    api libs.mockitoCore
+    api libs.mockitoJunitJupiter
   }
 }
 

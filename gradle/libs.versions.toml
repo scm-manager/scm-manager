@@ -1,0 +1,203 @@
+# Shared dependency coordinates and versions. Gradle and Renovate read this catalog.
+# Classifiers, artifact extensions, and strict Jackson constraints stay in build scripts.
+
+[versions]
+slf4j = "2.0.17"
+guice = "7.0.0"
+resteasy = "6.2.15.Final"
+jackson = "2.22.1"
+jacksonAnnotations = "2.22"
+legman = "2.0.3"
+mapstruct = "1.6.3"
+jaxbBindApi = "4.0.4"
+jaxbRuntime = "4.0.6"
+shiro = "1.13.0"
+ssp = "1.3.0"
+jjwt = "0.11.5"
+bouncycastle = "2.73.12"
+jetty = "11.0.26"
+lucene = "8.11.4"
+sqlite = "3.51.1.0"
+hikariCp = "7.0.2"
+junitJupiter = "5.10.3"
+hamcrest = "3.0"
+mockito = "5.18.0"
+jersey = "3.1.11"
+micrometer = "1.16.2"
+node = "24.12.0"
+yarn = "1.22.18"
+
+[libraries]
+# lombok
+lombok = { module = "org.projectlombok:lombok", version = "1.18.30" }
+
+# jakarta
+jakartaAnnotationApi = { module = "jakarta.annotation:jakarta.annotation-api", version = "2.1.1" }
+
+# servlet api
+servletApi = { module = "jakarta.servlet:jakarta.servlet-api", version = "6.0.0" }
+
+# logging
+slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+slf4jJcl = { module = "org.slf4j:jcl-over-slf4j", version.ref = "slf4j" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.26" }
+
+# injection
+guice = { module = "com.google.inject:guice", version.ref = "guice" }
+guiceServlet = { module = "com.google.inject.extensions:guice-servlet", version.ref = "guice" }
+guiceThrowingproviders = { module = "com.google.inject.extensions:guice-throwingproviders", version.ref = "guice" }
+guiceAssistedinject = { module = "com.google.inject.extensions:guice-assistedinject", version.ref = "guice" }
+
+# rest api
+jaxRs = { module = "jakarta.ws.rs:jakarta.ws.rs-api", version = "3.1.0" }
+resteasyCore = { module = "org.jboss.resteasy:resteasy-core", version.ref = "resteasy" }
+resteasyJaxbProvider = { module = "org.jboss.resteasy:resteasy-jaxb-provider", version.ref = "resteasy" }
+resteasyJackson2Provider = { module = "org.jboss.resteasy:resteasy-jackson2-provider", version.ref = "resteasy" }
+resteasyMultiartProvider = { module = "org.jboss.resteasy:resteasy-multipart-provider", version.ref = "resteasy" }
+resteasyServletInitializer = { module = "org.jboss.resteasy:resteasy-servlet-initializer", version.ref = "resteasy" }
+resteasyValidatorProvider = { module = "org.jboss.resteasy:resteasy-validator-provider", version.ref = "resteasy" }
+
+# cli
+picocli = { module = "info.picocli:picocli", version = "4.7.7" }
+
+# json
+jacksonCore = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson" }
+jacksonAnnotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jacksonAnnotations" }
+jacksonDatabind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+jacksonJaxbAnnotations = { module = "com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations", version.ref = "jackson" }
+jacksonJaxRsBase = { module = "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base", version.ref = "jackson" }
+jacksonJaxRsJsonProvider = { module = "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider", version.ref = "jackson" }
+jacksonDatatypeJdk8 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jdk8", version.ref = "jackson" }
+jacksonDatatypeJsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
+jacksonDataFormatYaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
+
+# hypermedia
+edison = { module = "de.otto.edison:edison-hal", version = "2.2.0" }
+damnhandy = { module = "com.damnhandy:handy-uri-templates", version = "2.1.8" }
+
+# openapi
+swaggerJaxRs = { module = "io.swagger.core.v3:swagger-jaxrs2-jakarta", version = "2.2.26" }
+
+# dto mapping
+mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
+mapstructProcessor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstruct" }
+
+# events
+legman = { module = "com.cloudogu.legman:core", version.ref = "legman" }
+legmanShiro = { module = "com.cloudogu.legman.support:shiro", version.ref = "legman" }
+legmanMicrometer = { module = "com.cloudogu.legman.support:micrometer", version.ref = "legman" }
+
+# xml binding
+jaxbApi = { module = "jakarta.xml.bind:jakarta.xml.bind-api", version.ref = "jaxbBindApi" }
+jaxbRuntime = { module = "org.glassfish.jaxb:jaxb-runtime", version.ref = "jaxbRuntime" }
+
+# validation
+validator = { module = "org.hibernate.validator:hibernate-validator", version = "8.0.3.Final" }
+elApi = { module = "jakarta.el:jakarta.el-api", version = "5.0.1" }
+elRuntime = { module = "org.glassfish:jakarta.el", version = "4.0.2" }
+
+# utils
+guava = { module = "com.google.guava:guava", version = "33.5.0-jre" }
+commonsLang = { module = "commons-lang:commons-lang", version = "2.6" }
+commonsCompress = { module = "org.apache.commons:commons-compress", version = "1.28.0" }
+commonsIo = { module = "commons-io:commons-io", version = "2.21.0" }
+commonsLang3 = { module = "org.apache.commons:commons-lang3", version = "3.20.0" }
+
+# security
+shiroCore = { module = "org.apache.shiro:shiro-core", version.ref = "shiro" }
+shiroWeb = { module = "org.apache.shiro:shiro-web", version.ref = "shiro" }
+shiroGuice = { module = "org.apache.shiro:shiro-guice", version.ref = "shiro" }
+
+ssp = { module = "com.github.sdorra:ssp-lib", version.ref = "ssp" }
+sspProcessor = { module = "com.github.sdorra:ssp-processor", version.ref = "ssp" }
+
+shiroUnit = { module = "com.github.sdorra:shiro-unit", version = "1.0.2" }
+shiroExtension = { module = "com.github.sdorra:junit-shiro-extension", version = "1.0.1" }
+
+# jwt
+jjwtApi = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwtRuntime = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwtJackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
+
+# gpg
+bouncycastlePg = { module = "org.bouncycastle:bcpg-lts8on", version.ref = "bouncycastle" }
+bouncycastleProv = { module = "org.bouncycastle:bcprov-lts8on", version.ref = "bouncycastle" }
+bouncycastlePkix = { module = "org.bouncycastle:bcpkix-lts8on", version.ref = "bouncycastle" }
+
+# service registration
+metainfServices = { module = "org.kohsuke.metainf-services:metainf-services", version = "1.11" }
+
+# cron expression
+cronUtils = { module = "com.cronutils:cron-utils", version = "9.1.+" }
+
+# templates
+mustache = { module = "com.github.spullara.mustache.java:compiler", version = "0.9.14" }
+
+# static resources
+webResources = { module = "com.github.sdorra:web-resources", version = "2.0.0" }
+
+# content type detection
+spotter = { module = "com.cloudogu.spotter:spotter-core", version = "4.1.0" }
+tika = { module = "org.apache.tika:tika-core", version = "3.2.2" }
+
+# restart on unix
+akuma = { module = "org.kohsuke:akuma", version = "1.10" }
+
+# native access
+jna = { module = "net.java.dev.jna:jna", version = "5.14.0" }
+
+# daemonize scm-manager on unix systems
+commonsDaemon = { module = "commons-daemon:commons-daemon", version = "1.5.1" }
+jsvc = { module = "commons-daemon:commons-daemon-native", version = "1.1.0" }
+
+# yaml
+snakeYml = { module = "org.yaml:snakeyaml", version = "2.2" }
+
+# jetty
+jettyServer = { module = "org.eclipse.jetty:jetty-server", version.ref = "jetty" }
+jettyWebapp = { module = "org.eclipse.jetty:jetty-webapp", version.ref = "jetty" }
+jettyClient = { module = "org.eclipse.jetty:jetty-client", version.ref = "jetty" }
+
+# search
+luceneCore = { module = "org.apache.lucene:lucene-core", version.ref = "lucene" }
+luceneQueryParser = { module = "org.apache.lucene:lucene-queryparser", version.ref = "lucene" }
+luceneHighlighter = { module = "org.apache.lucene:lucene-highlighter", version.ref = "lucene" }
+luceneAnalyzersCommon = { module = "org.apache.lucene:lucene-analyzers-common", version.ref = "lucene" }
+
+# tests
+junitJupiterApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
+junitJupiterParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junitJupiter" }
+junitJupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiter" }
+
+# junit 4 support
+junitVintageEngine = { module = "org.junit.vintage:junit-vintage-engine", version.ref = "junitJupiter" }
+junit = { module = "junit:junit", version = "4.13.2" }
+
+# junit 5 extensions
+junitPioneer = { module = "org.junit-pioneer:junit-pioneer", version = "2.0.1" }
+
+# assertions
+hamcrestCore = { module = "org.hamcrest:hamcrest-core", version.ref = "hamcrest" }
+hamcrestLibrary = { module = "org.hamcrest:hamcrest-library", version.ref = "hamcrest" }
+assertj = { module = "org.assertj:assertj-core", version = "3.26.3" }
+
+# mocking
+mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
+
+# testing async code
+awaitility = { module = "org.awaitility:awaitility", version = "4.3.0" }
+
+# rest api client for testing
+jerseyCommon = { module = "org.glassfish.jersey.core:jersey-common", version.ref = "jersey" }
+jerseyClientApi = { module = "org.glassfish.jersey.core:jersey-client", version.ref = "jersey" }
+jerseyClientRuntime = { module = "com.sun.jersey.contribs:jersey-apache-client", version.ref = "jersey" }
+jerseyMediaJson = { module = "org.glassfish.jersey.media:jersey-media-json-jackson", version.ref = "jersey" }
+
+# metrics
+micrometerCore = { module = "io.micrometer:micrometer-core", version.ref = "micrometer" }
+micrometerExtra = { module = "io.github.mweirauch:micrometer-jvm-extras", version = "0.2.2" }
+
+# SQLite
+sqlite = { module = "org.xerial:sqlite-jdbc", version.ref = "sqlite" }
+hikariCp = { module = "com.zaxxer:HikariCP", version.ref = "hikariCp" }
