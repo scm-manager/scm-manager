@@ -14,17 +14,19 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+import com.github.gradle.node.yarn.task.YarnTask
+
 plugins {
-  id 'com.github.node-gradle.node' version '2.2.4'
+  id 'com.github.node-gradle.node' version '7.1.0'
   id 'org.scm-manager.license'
   id 'org.scm-manager.ci'
 }
 
 node {
-  download = true
-  version = nodeVersion
-  yarnVersion = yarnVersion
-  nodeModulesDir = file(project.rootProject.projectDir)
+  download.set(true)
+  version.set(rootProject.nodeVersion.toString())
+  yarnVersion.set(rootProject.yarnVersion.toString())
+  nodeProjectDir.set(rootProject.projectDir)
 }
 
 task typecheck(type: YarnTask) {
@@ -38,9 +40,9 @@ task typecheck(type: YarnTask) {
   })
     .withPathSensitivity(PathSensitivity.RELATIVE)
   outputs.file('build/tmp/typecheck/marker')
-  dependsOn('yarn_install')
+  dependsOn('yarn')
   doLast {
-    File directory = new File(project.buildDir, 'tmp/typecheck')
+    File directory = layout.buildDirectory.dir('tmp/typecheck').get().asFile
     directory.mkdirs()
     File marker = new File(directory, 'marker')
     marker.createNewFile()
@@ -58,9 +60,9 @@ task lint(type: YarnTask) {
   })
     .withPathSensitivity(PathSensitivity.RELATIVE)
   outputs.file('build/tmp/lint/marker')
-  dependsOn('yarn_install')
+  dependsOn('yarn')
   doLast {
-    File directory = new File(project.buildDir, 'tmp/lint')
+    File directory = layout.buildDirectory.dir('tmp/lint').get().asFile
     directory.mkdirs()
     File marker = new File(directory, 'marker')
     marker.createNewFile()
@@ -78,9 +80,9 @@ task depcheck(type: YarnTask) {
   })
     .withPathSensitivity(PathSensitivity.RELATIVE)
   outputs.file('build/tmp/depcheck/marker')
-  dependsOn('yarn_install')
+  dependsOn('yarn')
   doLast {
-    File directory = new File(project.buildDir, 'tmp/depcheck')
+    File directory = layout.buildDirectory.dir('tmp/depcheck').get().asFile
     directory.mkdirs()
     File marker = new File(directory, 'marker')
     marker.createNewFile()
@@ -99,10 +101,10 @@ task test(type: YarnTask) {
     .withPathSensitivity(PathSensitivity.RELATIVE)
   outputs.dir('build/vitest-reports')
 
-  if (project.isCI) {
-    dependsOn('yarn_install', 'updateUiTestTimestamps')
+  if (rootProject.isCI) {
+    dependsOn('yarn', 'updateUiTestTimestamps')
   } else {
-    dependsOn('yarn_install')
+    dependsOn('yarn')
   }
 }
 
@@ -115,7 +117,7 @@ task check {
   dependsOn('typecheck', 'test', 'checkLicenses', 'lint', 'depcheck')
 }
 
-yarn_install {
+yarn {
   inputs.files(fileTree(project.projectDir) {
     include 'ui-*/package.json'
   })
@@ -153,7 +155,7 @@ task bundle(type: YarnTask) {
   })
     .withPathSensitivity(PathSensitivity.RELATIVE)
   outputs.dir('build/assets')
-  dependsOn('yarn_install')
+  dependsOn('yarn')
 }
 
 configurations {
@@ -196,7 +198,7 @@ task publish(type: YarnTask) {
     }
   }
   finalizedBy 'cleanUpAfterPublishing'
-  dependsOn 'yarn_install'
+  dependsOn 'yarn'
 }
 
 task cleanTurboRepo(type: YarnTask) {
@@ -228,12 +230,12 @@ task setVersion(type: YarnTask) {
   if (project.hasProperty('newVersion')) {
     args = ['run', 'set-version', project.property('newVersion')]
   }
-  dependsOn('yarn_install')
+  dependsOn('yarn')
 }
 
 task setVersionToNextSnapshot(type: YarnTask) {
-  args = ['run', 'set-version', nextSnapshotVersion]
-  dependsOn('yarn_install')
+  args.set(['run', 'set-version', rootProject.nextSnapshotVersion])
+  dependsOn('yarn')
 }
 
 license {

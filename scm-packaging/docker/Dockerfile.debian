@@ -15,7 +15,7 @@
 #
 
 # Create minimal java version
-FROM eclipse-temurin:17.0.15_6-jdk-focal as jre-build
+FROM eclipse-temurin:25.0.3_9-jdk-noble as jre-build
 
 RUN jlink \
     --add-modules ALL-MODULE-PATH \

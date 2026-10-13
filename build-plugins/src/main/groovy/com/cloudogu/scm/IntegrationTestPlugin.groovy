@@ -18,7 +18,7 @@ package com.cloudogu.scm
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import com.moowork.gradle.node.NodeExtension
+import com.github.gradle.node.NodeExtension
 
 class IntegrationTestPlugin implements Plugin<Project> {
 
@@ -35,7 +35,7 @@ class IntegrationTestPlugin implements Plugin<Project> {
       it.extension = extension
     }
 
-    def nodeExt = NodeExtension.get(project)
+    def nodeExt = project.extensions.getByType(NodeExtension)
 
     project.tasks.register("startScmServer", RunTask) {
       it.extension = extension

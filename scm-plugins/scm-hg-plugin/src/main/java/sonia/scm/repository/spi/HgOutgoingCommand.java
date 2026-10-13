@@ -19,7 +19,7 @@ package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
-import org.javahg.commands.ExecutionException;
+import org.javahg.exceptions.ExecutionException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.HgRepositoryHandler;

@@ -18,7 +18,7 @@ package sonia.scm.repository.client.spi;
 
 import org.javahg.Repository;
 import org.javahg.RepositoryConfiguration;
-import org.javahg.commands.ExecutionException;
+import org.javahg.exceptions.ExecutionException;
 import org.javahg.commands.PullCommand;
 import com.google.common.base.Strings;
 import java.io.File;

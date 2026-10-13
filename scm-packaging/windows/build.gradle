@@ -14,10 +14,8 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import org.gradle.util.VersionNumber
-
 plugins {
-  id "de.undercouch.download" version "4.1.1"
+  id "de.undercouch.download" version "5.7.0"
   id 'org.scm-manager.packaging'
   id 'signing'
   id 'maven-publish'
@@ -47,19 +45,19 @@ def winsw = [
 
 task downloadWinSW(type: Download) {
   src "https://github.com/winsw/winsw/releases/download/v${winsw.version}/${winsw.name}"
-  dest new File(project.buildDir, 'winsw/scm-server.exe')
+  dest layout.buildDirectory.file('winsw/scm-server.exe').get().asFile
   onlyIfModified true
 }
 
 task verifyWinSW(type: Verify) {
-  src new File(project.buildDir, 'winsw/scm-server.exe')
+  src layout.buildDirectory.file('winsw/scm-server.exe').get().asFile
   algorithm 'SHA-256'
   checksum winsw.checksum
   dependsOn 'downloadWinSW'
 }
 
 task windows(type: Zip) {
-  VersionNumber version = VersionNumber.parse(project.version)
+  def version = parseScmVersion(project.version.toString())
 
   archiveFileName = "windows-${project.version}.zip"
   into('scm-server') {
@@ -83,8 +81,12 @@ task windows(type: Zip) {
     from 'build/winsw'
   }
 
-  destinationDir file('build/libs')
+  destinationDirectory = layout.buildDirectory.dir('libs')
   dependsOn 'verifyWinSW'
+}
+
+tasks.named('assemble') {
+  dependsOn windows
 }
 
 task distribution(type: PackageYaml)  {

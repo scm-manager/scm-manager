@@ -49,7 +49,7 @@ class PackageYamlTask extends DefaultTask {
 
   @OutputFile
   File getOutputFile() {
-    return new File(project.buildDir, 'libs/package.yml')
+    return project.layout.buildDirectory.file('libs/package.yml').get().asFile
   }
 
   @TaskAction

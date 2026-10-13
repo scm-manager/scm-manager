@@ -17,11 +17,11 @@
 plugins {
   id 'java-platform'
   id 'maven-publish'
-  id "org.sonarqube" version "3.0"
+  id "org.sonarqube" version "7.5.0.8588"
   id "org.scm-manager.changelog" version "0.2.0"
-  id 'org.scm-manager.license' version "0.7.1"
-  id "com.github.hierynomus.license-report" version"0.16.1"
-  id "com.github.ben-manes.versions" version "0.53.0"
+  id 'org.scm-manager.license' version "0.9.0"
+  id "cloud.rio.license-report" version "0.18.0"
+  id "com.github.ben-manes.versions" version "0.54.0"
 }
 
 changelog {
@@ -33,7 +33,7 @@ subprojects { s ->
     mavenLocal()
     mavenCentral()
     maven {
-      url 'https://packages.scm-manager.org/repository/public/'
+      url = uri('https://packages.scm-manager.org/repository/public/')
       content {
         includeGroupByRegex "sonia\\..*"
         includeGroupByRegex "org\\.scm-manager\\..*"
@@ -148,8 +148,6 @@ downloadLicenses {
   dependencyConfiguration = "runtimeClasspath"
 }
 
-import org.gradle.util.VersionNumber
-
 // set build props
 project.ext {
   timestamp = new Date().format('yyyyMMddHHmmSS')
@@ -177,7 +175,7 @@ project.ext {
     dockerTag = project.version
   }
 
-  VersionNumber v = VersionNumber.parse(project.version)
+  def v = parseScmVersion(project.version.toString())
   nextSnapshotVersion = "${v.major}.${v.minor}.${v.micro + 1}-SNAPSHOT"
 
   // base url for generating links such as
@@ -206,7 +204,7 @@ project.ext {
 publishing {
   publications {
     mavenJava(MavenPublication) {
-      artifactId project.name
+      artifactId = project.name
       from components.javaPlatform
     }
   }
@@ -277,11 +275,11 @@ allprojects {
   configurations.all {
     resolutionStrategy {
       // Force all swagger-related libraries to the same, consistent version
-      force 'io.swagger.core.v3:swagger-core-jakarta:2.2.26'
-      force 'io.swagger.core.v3:swagger-models-jakarta:2.2.26'
-      force 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.26'
-      force 'io.swagger.core.v3:swagger-integration-jakarta:2.2.26'
-      force 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.26'
+      force 'io.swagger.core.v3:swagger-core-jakarta:2.2.52'
+      force 'io.swagger.core.v3:swagger-models-jakarta:2.2.52'
+      force 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.52'
+      force 'io.swagger.core.v3:swagger-integration-jakarta:2.2.52'
+      force 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.52'
     }
   }
 }

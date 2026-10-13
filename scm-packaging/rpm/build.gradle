@@ -14,7 +14,6 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import org.gradle.util.VersionNumber
 
 // nebula.ospackage uses redline to build the rpm package.
 // The problem is that redline does not support 4096 bit rsa keys,
@@ -39,7 +38,7 @@ buildscript {
 }
 
 plugins {
-  id 'nebula.ospackage' version '8.5.6'
+  id 'com.netflix.nebula.ospackage' version '12.3.0'
   id 'org.scm-manager.packaging'
   id 'org.scm-manager.license'
 }
@@ -72,8 +71,7 @@ task rpm(type: Rpm) {
   requires 'procps'
   // recommends (weak dependency) is not supported,
   // so we define a hard dependencies for java and mercurial
-  requires 'java-17-openjdk-headless'
-  requires 'mercurial'
+  requires 'java-25-openjdk-headless'
 
   preInstall file('src/main/scripts/before-installation.sh')
   postInstall file('src/main/scripts/after-installation.sh')
@@ -90,13 +88,13 @@ task rpm(type: Rpm) {
     signingKeyRingFile file(project.property("signing.secretKeyRingFile"))
   }
 
-  VersionNumber version = VersionNumber.parse(project.version)
+  def version = parseScmVersion(project.version.toString())
 
   from('src/main/bin') {
     into '/opt/scm-server/bin'
     user 'root'
     permissionGroup 'scm'
-    fileMode 0750
+    filePermissions { unix("0750") }
   }
 
   from('src/main/fs/etc/default/scm-server') {
@@ -104,7 +102,7 @@ task rpm(type: Rpm) {
     into '/etc/default'
     user 'root'
     permissionGroup 'scm'
-    fileMode 0640
+    filePermissions { unix("0640") }
   }
 
   from('src/main/fs/etc/scm') {
@@ -112,7 +110,7 @@ task rpm(type: Rpm) {
     into '/etc/scm'
     user 'root'
     permissionGroup 'scm'
-    fileMode 0640
+    filePermissions { unix("0640") }
     expand([version: version])
   }
 
@@ -120,28 +118,28 @@ task rpm(type: Rpm) {
     into '/etc/systemd'
     user 'root'
     permissionGroup 'root'
-    fileMode 0644
+    filePermissions { unix("0644") }
   }
 
   from('src/main/fs/opt') {
     into '/opt'
     user 'root'
     permissionGroup 'scm'
-    fileMode 0644
+    filePermissions { unix("0644") }
   }
 
   from(project.configurations.server) {
     into '/opt/scm-server/lib'
     user 'root'
     permissionGroup 'scm'
-    fileMode 0644
+    filePermissions { unix("0644") }
   }
 
   from(project.configurations.webapp) {
     into '/opt/scm-server/var/webapp'
     user 'root'
     permissionGroup 'scm'
-    fileMode 0644
+    filePermissions { unix("0644") }
     rename {
       'scm-webapp.war'
     }
@@ -152,7 +150,7 @@ task rpm(type: Rpm) {
       into dir
       user 'scm'
       permissionGroup 'scm'
-      fileMode 0750
+      filePermissions { unix("0750") }
       createDirectoryEntry true
     }
   }
@@ -160,6 +158,10 @@ task rpm(type: Rpm) {
   link '/opt/scm-server/var/log', '/var/log/scm'
   link '/opt/scm-server/conf', '/etc/scm'
   link '/opt/scm-server/work', '/var/cache/scm/work'
+}
+
+tasks.named('assemble') {
+  dependsOn rpm
 }
 
 task distribution(type: PackageYaml)  {

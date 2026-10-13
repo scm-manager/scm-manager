@@ -1,3 +1,4 @@
 [tools]
-java = "17"
-node = "22"
+java = "25"
+node = "24"
+yarn = "1.22.22"

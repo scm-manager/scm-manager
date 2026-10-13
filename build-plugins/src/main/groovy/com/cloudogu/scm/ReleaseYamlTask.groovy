@@ -41,7 +41,7 @@ class ReleaseYamlTask extends DefaultTask {
 
   @OutputFile
   File getOutputFile() {
-    return new File(project.buildDir, 'libs/release.yml')
+    return project.layout.buildDirectory.file('libs/release.yml').get().asFile
   }
 
   @TaskAction

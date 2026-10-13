@@ -271,8 +271,6 @@ const DatePickerField: FC<DatePickerProps> = ({
   onChange,
   min,
   max,
-  minSourceLabel,
-  maxSourceLabel,
   className,
   id,
   name,

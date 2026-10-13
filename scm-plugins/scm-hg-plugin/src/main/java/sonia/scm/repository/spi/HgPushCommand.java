@@ -21,7 +21,7 @@ import com.google.common.base.Strings;
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
 import org.javahg.Changeset;
-import org.javahg.commands.ExecutionException;
+import org.javahg.exceptions.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.HgRepositoryHandler;

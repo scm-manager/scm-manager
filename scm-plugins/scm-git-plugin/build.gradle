@@ -15,7 +15,7 @@
  */
 
 plugins {
-  id 'org.scm-manager.smp' version '0.20.0'
+  id 'org.scm-manager.smp' version '0.21.0'
 }
 
 def jgitVersion = '7.5.0.202512021534-r-scm1'
@@ -51,12 +51,12 @@ scmPlugin {
 }
 
 task testJar(type: Jar) {
- 	classifier = 'tests'
+  archiveClassifier = 'tests'
 	from sourceSets.test.output
 }
 
 task insertJGitVersionFile() {
-  def file = new File(project.buildDir, "resources/main/sonia/scm/version/scm-git-plugin")
+  def file = layout.buildDirectory.file("resources/main/sonia/scm/version/scm-git-plugin").get().asFile
   file.parentFile.mkdirs()
   file.createNewFile()
   file.text = "scm-git-plugin/${project.version} org.eclipse.jgit/${jgitVersion}"

@@ -16,6 +16,19 @@ ext {
   jjwtVersion = '0.13.0'
   bouncycastleVersion = '2.73.12'
   jettyVersion = '12.1.14'
+  parseScmVersion = { String value ->
+    def matcher = value =~ /^(\d+)\.(\d+)\.(\d+)(?:-(.+))?$/
+    if (!matcher.matches()) {
+      throw new GradleException("version must match major.minor.patch[-qualifier], but was '${value}'")
+    }
+    [
+      major: matcher.group(1).toInteger(),
+      minor: matcher.group(2).toInteger(),
+      micro: matcher.group(3).toInteger(),
+      qualifier: matcher.group(4)
+    ]
+  }
+
   luceneVersion = '8.11.4'
   sqliteVersion = '3.53.4.0'
   hikariCpVersion = '7.1.0'
@@ -31,7 +44,7 @@ ext {
 
   libraries = [
     // lombok
-    lombok: 'org.projectlombok:lombok:1.18.30',
+    lombok: 'org.projectlombok:lombok:1.18.46',
 
     // jakarta
     jakartaAnnotationApi: 'jakarta.annotation:jakarta.annotation-api:2.1.1',
@@ -78,7 +91,7 @@ ext {
     damnhandy: "com.damnhandy:handy-uri-templates:2.1.8",
 
     // openapi
-    swaggerJaxRs: 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.26',
+    swaggerJaxRs: 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.52',
 
     // dto mapping
     mapstruct: "org.mapstruct:mapstruct:${mapstructVersion}",

@@ -14,13 +14,42 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.TaskAction
+import org.gradle.process.ExecOperations
+
+import javax.inject.Inject
+
 plugins {
   id 'org.scm-manager.packaging'
   id 'org.scm-manager.license'
 }
 
+abstract class SetupBuilder extends DefaultTask {
 
-import org.gradle.util.VersionNumber
+  @Inject
+  protected abstract ExecOperations getExecOperations()
+
+  @TaskAction
+  void setup() {
+    def inspect = execOperations.exec {
+      commandLine = ["docker", "buildx", "inspect", "scm-builder"]
+      ignoreExitValue = true
+    }
+    if (inspect.exitValue != 0) {
+      execOperations.exec {
+        commandLine = ["docker", "run", "--privileged", "--rm", "tonistiigi/binfmt", "--install", "arm64"]
+      }
+      execOperations.exec {
+        commandLine = ["docker", "buildx", "create", "--name", "scm-builder", "--driver", "docker-container", "--platform", "linux/arm/v7,linux/arm64/v8,linux/amd64"]
+      }
+      execOperations.exec {
+        commandLine = ["docker", "buildx", "inspect", "scm-builder"]
+      }
+    }
+  }
+}
+
 
 configurations {
   server
@@ -36,8 +65,8 @@ dependencies {
 }
 
 task context(type: Copy) {
-  VersionNumber version = VersionNumber.parse(project.version)
-  destinationDir = project.buildDir
+  def version = parseScmVersion(project.version.toString())
+  into layout.buildDirectory
   into('docker') {
     into('etc') {
       from('src/main/fs/etc')
@@ -61,25 +90,7 @@ task context(type: Copy) {
   }
 }
 
-task setupBuilder() {
-  doLast {
-    def inspect = exec {
-      commandLine = ["docker", "buildx", "inspect", "scm-builder"]
-      ignoreExitValue = true
-    }
-    if (inspect.exitValue != 0) {
-      exec {
-        commandLine = ["docker", "run", "--privileged", "--rm", "tonistiigi/binfmt", "--install", "arm64"]
-      }
-      exec {
-        commandLine = ["docker", "buildx", "create", "--name", "scm-builder", "--driver", "docker-container", "--platform", "linux/arm/v7,linux/arm64/v8,linux/amd64"]
-      }
-      exec {
-        commandLine = ["docker", "buildx", "inspect", "scm-builder"]
-      }
-    }
-  }
-}
+task setupBuilder(type: SetupBuilder)
 
 task build(type: Exec) {
   commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder", isSnapshot ? "dev": "prod"]
@@ -87,7 +98,7 @@ task build(type: Exec) {
   setEnvironmentForDockerBuild({ String name, Object value -> environment(name, value) })
 
   doLast {
-    File file = new File(project.buildDir, 'docker.tag')
+    File file = layout.buildDirectory.file('docker.tag').get().asFile
     file.text = dockerTag
   }
   dependsOn 'context', 'setupBuilder'
@@ -107,6 +118,10 @@ task publish() {
 
 task distribution(type: PackageYaml)  {
   type = 'docker'
+  dependsOn build
+}
+
+tasks.register('assemble') {
   dependsOn build
 }
 

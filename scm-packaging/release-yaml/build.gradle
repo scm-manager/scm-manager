@@ -40,6 +40,10 @@ task distribution(type: ReleaseYaml) {
   configuration = configurations.packageYaml
 }
 
+tasks.register('assemble') {
+  dependsOn distribution
+}
+
 task publish(type: ScmManagerUploadTask) {
   server = "https://ecosystem.cloudogu.com/scm"
   namespace = "scm-manager"

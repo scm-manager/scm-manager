@@ -18,7 +18,7 @@ package sonia.scm.repository.spi;
 
 import org.javahg.Changeset;
 import org.javahg.Repository;
-import org.javahg.commands.ExecutionException;
+import org.javahg.exceptions.ExecutionException;
 import org.javahg.commands.PullCommand;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.work.WorkingCopy;

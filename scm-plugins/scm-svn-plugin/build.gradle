@@ -15,7 +15,7 @@
  */
 
 plugins {
-  id 'org.scm-manager.smp' version '0.20.0'
+  id 'org.scm-manager.smp' version '0.21.0'
 }
 
 def svnkitVersion = '1.10.10-scm2-jakarta'
@@ -61,12 +61,12 @@ scmPlugin {
 }
 
 task testJar(type: Jar) {
- 	classifier = 'tests'
+  archiveClassifier = 'tests'
 	from sourceSets.test.output
 }
 
 task insertSVNKitVersionFile() {
-  def file = new File(project.buildDir, "resources/main/sonia/scm/version/scm-svn-plugin")
+  def file = layout.buildDirectory.file("resources/main/sonia/scm/version/scm-svn-plugin").get().asFile
   file.parentFile.mkdirs()
   file.createNewFile()
   file.text = "scm-svn-plugin/${project.version} svnkit/${svnkitVersion}"

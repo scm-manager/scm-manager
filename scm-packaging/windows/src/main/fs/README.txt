@@ -3,7 +3,7 @@ SCM-Manager
 
 Requirements:
 
-Be sure you have installed Java 8 or newer (11 is recommended) and the java.exe
+Be sure you have installed Java 25 or newer and the java.exe
 is added to the PATH environment variable.
 
 Installation:

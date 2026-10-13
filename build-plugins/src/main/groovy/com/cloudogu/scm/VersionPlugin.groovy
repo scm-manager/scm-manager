@@ -6,7 +6,6 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
-import org.gradle.util.VersionNumber
 
 import java.nio.charset.StandardCharsets
 
@@ -68,9 +67,9 @@ class VersionTasks {
 
     @TaskAction
     void execute() {
-      VersionNumber v = VersionNumber.parse(project.version)
-      String version = "${v.major}.${v.minor}.${v.micro + 1}-SNAPSHOT"
-      setVersion(project, version)
+      def version = project.parseScmVersion(project.version.toString())
+      String nextVersion = "${version.major}.${version.minor}.${version.micro + 1}-SNAPSHOT"
+      setVersion(project, nextVersion)
     }
   }
 

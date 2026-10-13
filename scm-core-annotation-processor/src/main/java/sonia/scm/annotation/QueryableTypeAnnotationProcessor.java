@@ -39,7 +39,7 @@ import static java.util.Optional.of;
 
 @SupportedAnnotationTypes("sonia.scm.store.QueryableType")
 @MetaInfServices(Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(SourceVersion.RELEASE_25)
 public class QueryableTypeAnnotationProcessor extends AbstractProcessor {
 
   @Override

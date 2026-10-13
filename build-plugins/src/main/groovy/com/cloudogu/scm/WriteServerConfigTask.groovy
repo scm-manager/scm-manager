@@ -39,7 +39,7 @@ class WriteServerConfigTask extends DefaultTask {
 
   @OutputFile
   File getServerConfig() {
-    return new File(project.buildDir, 'server/config.json')
+    return project.layout.buildDirectory.file('server/config.json').get().asFile
   }
 
   @TaskAction

@@ -23,7 +23,7 @@ import org.javahg.Changeset;
 import org.javahg.Repository;
 import org.javahg.commands.AddCommand;
 import org.javahg.commands.CommitCommand;
-import org.javahg.commands.ExecutionException;
+import org.javahg.exceptions.ExecutionException;
 import org.javahg.commands.RemoveCommand;
 import org.javahg.commands.StatusCommand;
 import org.slf4j.Logger;

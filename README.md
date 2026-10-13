@@ -38,11 +38,11 @@ You can find the complete documentation on our [homepage](https://scm-manager.or
 The build of SCM-Manager requires the following installed packages:
 
 * Git
-* JDK 11
+* JDK 25
 * Mercurial (required for tests)
 * Docker (required for the docker package)
 
-The build of SCM-Manager requires Java 11. 
+The build of SCM-Manager requires Java 25. 
 
 ### Tasks
 
@@ -75,7 +75,7 @@ The next table defines a few more tasks which are more relevant for CI servers.
 | Name | Description |
 | ---- | ----------- |
 | publish | Publishes all artifacts and packages (required properties, see section 'Properties for publishing') |
-| sonarqube | Executes a SonarQube analysis |
+| sonar | Executes a SonarQube analysis |
 | setVersion | Sets the version to a new version |
 | setVersionToNextSnapshot | Sets the version to the next snapshot version |
 

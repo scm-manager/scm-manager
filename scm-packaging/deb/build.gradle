@@ -14,10 +14,8 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import org.gradle.util.VersionNumber
-
 plugins {
-  id 'nebula.ospackage' version '8.5.6'
+  id 'com.netflix.nebula.ospackage' version '12.3.0'
   id 'org.scm-manager.packaging'
   id 'org.scm-manager.license'
 }
@@ -53,7 +51,7 @@ task deb(type: Deb) {
   requires 'procps'
   requires 'psmisc'
   requires 'net-tools'
-  recommends 'openjdk-17-jre-headless'
+  recommends 'openjdk-25-jre-headless'
   recommends 'mercurial'
 
   preInstallFile file('src/main/scripts/preinst')
@@ -71,13 +69,13 @@ task deb(type: Deb) {
     signingKeyRingFile file(project.property("signing.secretKeyRingFile"))
   }
 
-  VersionNumber version = VersionNumber.parse(project.version)
+  def version = parseScmVersion(project.version.toString())
 
   from('src/main/bin') {
     into '/opt/scm-server/bin'
     user 'root'
     permissionGroup 'scm'
-    fileMode 0750
+    filePermissions { unix("0750") }
   }
 
   from('src/main/fs/etc/default/scm-server') {
@@ -85,7 +83,7 @@ task deb(type: Deb) {
     into '/etc/default'
     user 'root'
     permissionGroup 'scm'
-    fileMode 0640
+    filePermissions { unix("0640") }
   }
   // https://github.com/nebula-plugins/gradle-ospackage-plugin/issues/118
   configurationFile('/etc/default/scm-server')
@@ -95,7 +93,7 @@ task deb(type: Deb) {
     into '/etc/scm'
     user 'root'
     permissionGroup 'scm'
-    fileMode 0640
+    filePermissions { unix("0640") }
     expand([version: version])
   }
   // https://github.com/nebula-plugins/gradle-ospackage-plugin/issues/118
@@ -105,28 +103,28 @@ task deb(type: Deb) {
     into '/etc/systemd'
     user 'root'
     permissionGroup 'root'
-    fileMode 0644
+    filePermissions { unix("0644") }
   }
 
   from('src/main/fs/opt') {
     into '/opt'
     user 'root'
     permissionGroup 'scm'
-    fileMode 0644
+    filePermissions { unix("0644") }
   }
 
   from(project.configurations.server) {
     into '/opt/scm-server/lib'
     user 'root'
     permissionGroup 'scm'
-    fileMode 0644
+    filePermissions { unix("0644") }
   }
 
   from(project.configurations.webapp) {
     into '/opt/scm-server/var/webapp'
     user 'root'
     permissionGroup 'scm'
-    fileMode 0644
+    filePermissions { unix("0644") }
     rename {
       'scm-webapp.war'
     }
@@ -137,7 +135,7 @@ task deb(type: Deb) {
       into dir
       user 'scm'
       permissionGroup 'scm'
-      fileMode 0750
+      filePermissions { unix("0750") }
       createDirectoryEntry true
     }
   }
@@ -145,6 +143,10 @@ task deb(type: Deb) {
   link '/opt/scm-server/var/log', '/var/log/scm'
   link '/opt/scm-server/conf', '/etc/scm'
   link '/opt/scm-server/work', '/var/cache/scm/work'
+}
+
+tasks.named('assemble') {
+  dependsOn deb
 }
 
 task distribution(type: PackageYaml)  {

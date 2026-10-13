@@ -18,13 +18,14 @@
 FROM alpine:3.23.3 as jre-build
 
 RUN set -x \
- && apk add --no-cache openjdk17-jdk openjdk17-jmods binutils \
+ && apk add --no-cache openjdk25-jdk openjdk25-jmods binutils \
  && jlink \
+    --module-path /usr/lib/jvm/java-25-openjdk/jmods \
     --add-modules ALL-MODULE-PATH \
     --strip-debug \
     --no-man-pages \
     --no-header-files \
-    --compress=2 \
+    --compress=zip-6 \
     --output /javaruntime
 
 # ---

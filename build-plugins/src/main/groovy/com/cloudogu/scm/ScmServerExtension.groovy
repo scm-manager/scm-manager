@@ -60,7 +60,7 @@ class ScmServerExtension implements Serializable {
     if (project.hasProperty('scm.home')) {
       return project.getProperty('scm.home')
     }
-    return new File(project.buildDir, 'scm-home').toString()
+    return project.layout.buildDirectory.dir('scm-home').get().asFile.toString()
   }
 
   @Input

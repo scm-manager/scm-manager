@@ -14,6 +14,13 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
+pluginManagement {
+  repositories {
+    mavenLocal()
+    gradlePluginPortal()
+  }
+}
+
 rootProject.name = 'scm'
 
 // enfore rules
@@ -33,7 +40,7 @@ dependencyResolutionManagement {
   repositories {
     mavenCentral()
     maven {
-      url 'https://packages.scm-manager.org/repository/public/'
+      url = uri('https://packages.scm-manager.org/repository/public/')
       content {
         includeGroupByRegex "sonia\\..*"
         includeGroupByRegex "org\\.scm-manager\\..*"
@@ -53,13 +60,13 @@ apply plugin: 'org.kordamp.gradle.enforcer'
 
 enforce {
   rule(enforcer.rules.RequireGradleVersion) { r ->
-    r.version = '6.7'
+    r.version = '9.6.1'
   }
   rule(enforcer.rules.RequireJavaVersion) { r ->
-    r.version = '17'
+    r.version = '25'
   }
 //  rule(enforcer.rules.EnforceBytecodeVersion) { r ->
-//    r.maxJdkVersion = '17'
+//    r.maxJdkVersion = '25'
 //  }
 }
 
@@ -101,7 +108,7 @@ buildCache {
   remote(HttpBuildCache) {
     enabled = true
     useExpectContinue = true
-    url = 'https://build-cache.scm-manager.org/cache/'
+    url = uri('https://build-cache.scm-manager.org/cache/')
     push = "develop".equals(System.getenv("BRANCH_NAME"))
     credentials {
       username = System.getenv('GRADLE_BUILD_CACHE_USER')

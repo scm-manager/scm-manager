@@ -16,18 +16,23 @@
 
 package com.cloudogu.scm
 
-import com.moowork.gradle.node.yarn.YarnTask
-import com.moowork.gradle.node.NodeExtension
+import com.github.gradle.node.NodeExtension
+import com.github.gradle.node.variant.VariantComputer
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Internal
+import org.gradle.process.ExecOperations
 import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
-import org.apache.tools.ant.taskdefs.condition.Os
+import javax.inject.Inject
 
-class RunTask extends DefaultTask {
+abstract class RunTask extends DefaultTask {
+
+  @Inject
+  protected abstract ExecOperations getExecOperations()
 
   @Input
   boolean frontend = true
@@ -35,7 +40,7 @@ class RunTask extends DefaultTask {
   @Input
   boolean waitForCompletion = true
 
-  @Input
+  @Internal
   NodeExtension nodeExtension
 
   @Nested
@@ -126,10 +131,9 @@ class RunTask extends DefaultTask {
     runProperties.put("scm.workingCopyPoolStrategy", "sonia.scm.repository.work.SimpleCachingWorkingCopyPool")
 
     return {
-      project.javaexec {
+      execOperations.javaexec {
         mainClass.set(ScmServer.name)
-        jvmArgs("-Xverify:none")
-        args(new File(project.buildDir, 'server/config.json').toString())
+        args(project.layout.buildDirectory.file('server/config.json').get().asFile.toString())
         environment 'NODE_ENV', 'development'
         environment 'SCM_WEBAPP_HOMEDIR', extension.getHome()
         classpath serverClasspath
@@ -153,17 +157,20 @@ class RunTask extends DefaultTask {
 
 
   private Closure<Void> createFrontend() {
-    def yarnExecutable = new File(
-      nodeExtension.variant.yarnBinDir.absolutePath,
-      Os.isFamily(Os.FAMILY_WINDOWS) ? 'yarn.cmd' : 'yarn'
-    ).absolutePath
-    def nodeDir = nodeExtension.variant.nodeBinDir.absolutePath
-    def nodeBinPath = Os.isFamily(Os.FAMILY_WINDOWS) ? nodeDir : new File(nodeDir, 'bin').absolutePath
+    def variantComputer = new VariantComputer()
+    def nodeBinDir = variantComputer.computeNodeBinDir(
+      nodeExtension.resolvedNodeDir,
+      nodeExtension.resolvedPlatform
+    )
+    def yarnDir = variantComputer.computeYarnDir(nodeExtension)
+    def yarnBinDir = variantComputer.computeYarnBinDir(yarnDir, nodeExtension.resolvedPlatform)
+    def yarnExecutable = variantComputer.computeYarnExec(nodeExtension, yarnBinDir).get()
+    def nodeBinPath = nodeBinDir.get().asFile.absolutePath
 
     def path = nodeBinPath + File.pathSeparator + System.getenv("PATH")
 
     return {
-      project.exec {
+      execOperations.exec {
         workingDir project.projectDir
 
         commandLine yarnExecutable, 'turbo', 'run', 'serve', '--filter=@scm-manager/ui-webapp'

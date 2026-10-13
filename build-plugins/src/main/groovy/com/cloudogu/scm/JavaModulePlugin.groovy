@@ -32,38 +32,40 @@ class JavaModulePlugin implements Plugin<Project> {
 
     project.java {
       toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(25)
       }
       withJavadocJar()
       withSourcesJar()
     }
 
-    project.tasks.withType(JavaCompile) {
-      options.release = 17
+    project.tasks.withType(JavaCompile).configureEach {
+      options.release = 25
       options.encoding = 'UTF-8'
     }
 
-    project.tasks.withType(Javadoc) {
-      failOnError true
+    project.tasks.withType(Javadoc).configureEach {
+      failOnError = true
     }
 
-    project.sonarqube {
+    project.dependencies.add("testRuntimeOnly", "org.junit.platform:junit-platform-launcher:6.1.3")
+
+    project.sonar {
       properties {
-        property "sonar.java.source", "17"
+        property "sonar.java.source", "25"
       }
     }
 
     project.afterEvaluate {
-      if (project.isCI) {
+      if (project.rootProject.isCI) {
         project.plugins.apply("jacoco")
         project.jacocoTestReport {
           reports {
-            xml.enabled true
+            xml.required = true
           }
         }
 
         project.tasks.register("update-test-timestamp", TouchFilesTask) {
-          directory = new File(project.buildDir, "test-results")
+          directory = project.layout.buildDirectory.dir("test-results").get().asFile
           extension = "xml"
         }
 
@@ -74,7 +76,7 @@ class JavaModulePlugin implements Plugin<Project> {
 
       project.test {
         useJUnitPlatform()
-        if (project.isCI){
+        if (project.rootProject.isCI){
           ignoreFailures = true
           finalizedBy project.jacocoTestReport
         }
@@ -84,7 +86,7 @@ class JavaModulePlugin implements Plugin<Project> {
     project.publishing {
       publications {
         mavenJava(MavenPublication) {
-          artifactId project.name
+          artifactId = project.name
           project.afterEvaluate {
             def component = project.components.findByName("web")
             if (component == null) {

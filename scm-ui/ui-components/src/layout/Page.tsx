@@ -41,6 +41,7 @@ const PageActionContainer = styled.div`
 `;
 
 const Page: FC<Props> = ({ title, afterTitle, subtitle, loading, error, showContentOnError, children }) => {
+  // eslint-disable-next-line
   const isPageAction = (node: any) => {
     return (
       node.displayName === PageActions.displayName || (node.type && node.type.displayName === PageActions.displayName)

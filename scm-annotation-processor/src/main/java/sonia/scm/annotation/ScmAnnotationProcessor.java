@@ -77,7 +77,7 @@ import static javax.lang.model.util.ElementFilter.methodsIn;
 @SupportedAnnotationTypes("*")
 @MetaInfServices(Processor.class)
 @SuppressWarnings({"Since16"})
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(SourceVersion.RELEASE_25)
 public final class ScmAnnotationProcessor extends AbstractProcessor {
 
   private static final String DESCRIPTOR_MODULE = "META-INF/scm/module.xml";

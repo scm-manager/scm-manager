@@ -8,7 +8,7 @@ pipeline {
 
   agent {
     docker {
-      image 'scmmanager/java-build:17.0.9_9-4'
+      image 'scmmanager/java-build:25.0.3_9-2'
       args '-v /var/run/docker.sock:/var/run/docker.sock --group-add 988'
       label 'scmm-core'
     }
@@ -92,7 +92,7 @@ pipeline {
       }
     }
 
-     stage('SonarQube') {
+    stage('SonarQube') {
       when {
         environment name: 'SONAR', value: 'RUN'
         // Older Java builds must skip Sonar even when the repository opts in.
@@ -122,7 +122,7 @@ pipeline {
                 parameters += " -Dsonar.branch.target=develop"
               }
             }
-            gradle "sonarqube ${parameters}"
+            gradle "sonar ${parameters}"
           }
         }
       }

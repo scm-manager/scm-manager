@@ -21,7 +21,7 @@ import org.javahg.DateTime;
 import org.javahg.Repository;
 import org.javahg.internals.AbstractCommand;
 import org.javahg.internals.HgInputStream;
-import org.javahg.internals.RuntimeIOException;
+import org.javahg.exceptions.RuntimeIOException;
 import org.javahg.internals.Utils;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;

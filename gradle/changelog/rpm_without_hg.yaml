@@ -1,0 +1,2 @@
+- type: changed
+  description: The RPM packages does no longer depend upon a mercurial installation

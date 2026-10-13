@@ -14,8 +14,6 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import org.gradle.util.VersionNumber
-
 plugins {
   id 'org.scm-manager.packaging'
   id 'signing'
@@ -40,7 +38,7 @@ dependencies {
 }
 
 task unix(type: Tar) {
-  VersionNumber version = VersionNumber.parse(project.version)
+  def version = parseScmVersion(project.version.toString())
 
   archiveFileName = "unix-${project.version}.tar.gz"
   into('scm-server') {
@@ -54,7 +52,7 @@ task unix(type: Tar) {
     }
     into('bin') {
       from('src/main/bin') {
-        fileMode 0755
+        filePermissions { unix("0755") }
       }
     }
     into('lib') {
@@ -79,8 +77,12 @@ task unix(type: Tar) {
     }
   }
 
-  destinationDir file('build/libs')
+  destinationDirectory = layout.buildDirectory.dir('libs')
   compression = Compression.GZIP
+}
+
+tasks.named('assemble') {
+  dependsOn unix
 }
 
 task distribution(type: PackageYaml)  {

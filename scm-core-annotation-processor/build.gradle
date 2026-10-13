@@ -31,7 +31,7 @@ dependencies {
   compileOnly libraries.lombok;
   annotationProcessor libraries.lombok;
 
-  testImplementation "com.google.testing.compile:compile-testing:0.21.0"
+  testImplementation "com.google.testing.compile:compile-testing:0.23.0"
   testImplementation libraries.junitJupiterApi
   testImplementation libraries.junitJupiterParams
   testImplementation libraries.junitJupiterEngine
@@ -47,4 +47,7 @@ test {
   jvmArgs("--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED")
   jvmArgs("--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED")
   jvmArgs("--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED")
+  jvmArgs("--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED")
+  jvmArgs("--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED")
+  jvmArgs("--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED")
 }

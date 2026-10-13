@@ -18,7 +18,7 @@ package sonia.scm.repository.spi;
 
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
-import org.javahg.commands.ExecutionException;
+import org.javahg.exceptions.ExecutionException;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
 import org.slf4j.Logger;

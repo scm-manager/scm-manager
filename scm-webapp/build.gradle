@@ -19,7 +19,7 @@ plugins {
   id 'org.scm-manager.java'
   id 'org.scm-manager.run'
   id 'org.scm-manager.core-plugins'
-  id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.2.26'
+  id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.2.52'
 }
 
 configurations {
@@ -171,7 +171,7 @@ war {
   into('WEB-INF/classes/META-INF/scm') {
     from('build/openapi')
   }
-  duplicatesStrategy 'WARN'
+  duplicatesStrategy = 'WARN'
   dependsOn 'copy-core-plugins', 'resolve'
 }
 
@@ -181,7 +181,7 @@ artifacts {
 
 // war without assets for development and livereload
 task 'dev-war'(type: War) {
-  archiveName 'scm-webapp-dev.war'
+  archiveFileName = 'scm-webapp-dev.war'
   from 'build/war'
   into('WEB-INF/classes') {
     from('src/main/conf/config.yml')
@@ -189,7 +189,7 @@ task 'dev-war'(type: War) {
   into('WEB-INF/classes/META-INF/scm') {
     from('build/openapi')
   }
-  duplicatesStrategy 'WARN'
+  duplicatesStrategy = 'WARN'
   dependsOn 'copy-core-plugins', 'resolve'
 }
 
@@ -217,7 +217,7 @@ resolve {
 task prepareOpenAPI(type: Copy) {
   from 'src/main/doc/openapi.yml'
   into 'build/openapi_tmp'
-  duplicatesStrategy 'WARN'
+  duplicatesStrategy = 'WARN'
   expand(version: project.version)
 }
 

@@ -17,7 +17,7 @@
 package sonia.scm.repository.client.spi;
 
 import org.javahg.Repository;
-import org.javahg.commands.ExecutionException;
+import org.javahg.exceptions.ExecutionException;
 import sonia.scm.repository.client.api.RepositoryClientException;
 
 import java.io.IOException;

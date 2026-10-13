@@ -18,7 +18,7 @@ package com.cloudogu.scm
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import com.moowork.gradle.node.NodeExtension
+import com.github.gradle.node.NodeExtension
 
 class RunPlugin implements Plugin<Project> {
 
@@ -26,13 +26,14 @@ class RunPlugin implements Plugin<Project> {
     def extension = project.extensions.create("scmServer", ScmServerExtension, project)
 
     project.plugins.apply("com.github.node-gradle.node")
-    def nodeExt = NodeExtension.get(project)
-    nodeExt.setDownload(true)
-    nodeExt.setVersion('22.19.0')
-    nodeExt.setYarnVersion('1.22.18')
-    nodeExt.setNodeModulesDir( project.rootProject.projectDir )
+    def nodeExt = project.extensions.getByType(NodeExtension)
+    nodeExt.download.set(true)
+    nodeExt.version.set('24.21.0')
+    nodeExt.yarnVersion.set('1.22.22')
+    nodeExt.nodeProjectDir.set(project.rootProject.projectDir)
 
-    project.tasks.getByName('yarn_install').configure {
+    project.tasks.getByName('yarn').configure {
+      dependsOn ':scm-ui:yarn'
       inputs.file( project.rootProject.file('yarn.lock') )
       outputs.dir( project.rootProject.file('node_modules') )
 

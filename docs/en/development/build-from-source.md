@@ -4,9 +4,9 @@ title: Building SCM-Manager from Source
 
 ### Software Requirements
 
-- JDK 1.8 or higher
+- JDK 25 or higher
     ([download](https://openjdk.java.net/install/))
-- Maven 3 or higher ([download](https://maven.apache.org/))
+- Gradle 9 (please use the Gradle wrapper (`./gradlew`))
 - Git ([download](https://git-scm.com/))
 
 ### Build SCM-Manager from Source

@@ -15,11 +15,11 @@
  */
 
 plugins {
-  id 'org.scm-manager.smp' version '0.20.0'
+  id 'org.scm-manager.smp' version '0.21.0'
 }
 
 dependencies {
-  implementation('org.javahg:javahg:1.0.0') {
+  implementation('org.javahg:javahg:2.0.0') {
     exclude group: 'com.google.guava', module: 'guava'
     exclude group: 'org.slf4j'
   }
@@ -52,7 +52,7 @@ scmPlugin {
 }
 
 task testJar(type: Jar) {
- 	classifier = 'tests'
+  archiveClassifier = 'tests'
 	from sourceSets.test.output
 }
 
