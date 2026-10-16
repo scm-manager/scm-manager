@@ -192,16 +192,6 @@ export type AdminRoute = RouteExtensionPointDefinition<"admin.route">;
 export type AdminSetting = RenderableExtensionPointDefinition<"admin.setting", { links?: Links }>;
 
 /**
- * - can be used to replace the whole description of a changeset
- *
- * @deprecated Use `changeset.description.tokens` instead
- */
-export type ChangesetDescription = RenderableExtensionPointDefinition<
-  "changeset.description",
-  { changeset: Changeset; value: string }
->;
-
-/**
  * - Can be used to replace parts of a changeset description with components
  * - Has to be bound with a funktion taking the changeset and the (partial) description and returning `Replacement` objects with the following attributes:
  * - textToReplace: The text part of the description that should be replaced by a component

@@ -31,18 +31,9 @@ export type SimpleRenderableDynamicExtensionPointDefinition<
   Properties
 > = RenderableExtensionPointDefinition<Suffix extends string ? `${Prefix}${Suffix}` : `${Prefix}${string}`, Properties>;
 
-/**
- * @deprecated Obsolete type
- */
-type PropTransformer = (props: object) => object;
-
 type BaseProps<E extends RenderableExtensionPointDefinition> = {
   name: E["name"];
   renderAll?: boolean;
-  /**
-   * @deprecated Obsolete property, do not use
-   */
-  propTransformer?: PropTransformer;
   wrapper?: boolean;
 };
 
@@ -115,28 +106,17 @@ const renderDefault = (children: ReactNode) => {
   return null;
 };
 
-const createRenderProps = (propTransformer?: PropTransformer, props?: object) => {
-  const transform = (untransformedProps: object) => {
-    if (!propTransformer) {
-      return untransformedProps;
-    }
-    return propTransformer(untransformedProps);
-  };
-
-  return transform(props || {});
-};
-
 /**
  * ExtensionPoint renders components which are bound to an extension point.
  */
 export default function ExtensionPoint<
   E extends RenderableExtensionPointDefinition<string, any> = RenderableExtensionPointDefinition<string, any>
->({ name, propTransformer, props, renderAll, wrapper, children }: PropsWithChildren<Props<E>>): JSX.Element | null {
+>({ name, props, renderAll, wrapper, children }: PropsWithChildren<Props<E>>): JSX.Element | null {
   const binder = useBinder();
-  const renderProps: E["props"] | Record<string, unknown> = createRenderProps(propTransformer, {
+  const renderProps: E["props"] | Record<string, unknown> = {
     ...(props || {}),
     children,
-  });
+  };
   if (!binder.hasExtension<E>(name, renderProps)) {
     return renderDefault(children);
   } else if (renderAll) {

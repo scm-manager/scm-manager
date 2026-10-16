@@ -49,6 +49,3 @@ export type BranchCreation = {
   name: string;
   parent: string;
 };
-
-// @deprecated use BranchCreation instead
-export type BranchRequest = BranchCreation;

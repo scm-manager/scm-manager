@@ -20,7 +20,6 @@ import { Link, Link as ReactLink } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
 import { useContainedInTags } from "@scm-manager/ui-api";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Changeset, ParentChangeset, Repository } from "@scm-manager/ui-types";
 import {
   AvatarImage,
@@ -178,16 +177,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
     <>
       <div className={classNames("content", "m-0")}>
         <SubSubtitle>
-          <ExtensionPoint<extensionPoints.ChangesetDescription>
-            name="changeset.description"
-            props={{
-              changeset,
-              value: description.title,
-            }}
-            renderAll={false}
-          >
-            <ChangesetDescription changeset={changeset} value={description.title} />
-          </ExtensionPoint>
+          <ChangesetDescription changeset={changeset} value={description.title} />
         </SubSubtitle>
         <article className="media">
           <AvatarWrapper>
@@ -223,16 +213,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
           {description.message.split("\n").map((item, key) => {
             return (
               <span key={key}>
-                <ExtensionPoint<extensionPoints.ChangesetDescription>
-                  name="changeset.description"
-                  props={{
-                    changeset,
-                    value: item,
-                  }}
-                  renderAll={false}
-                >
-                  <ChangesetDescription changeset={changeset} value={item} />
-                </ExtensionPoint>
+                <ChangesetDescription changeset={changeset} value={item} />
                 <br />
               </span>
             );

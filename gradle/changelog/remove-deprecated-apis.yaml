@@ -1,0 +1,4 @@
+- type: removed
+  description: Deprecated extension point `changeset.description` (use `changeset.description.tokens` instead), the `markdown-renderer-factory` extension point with the `renderContext` property of `MarkdownView` and the `propTransformer` property of `ExtensionPoint`
+- type: removed
+  description: Deprecated `CreateTagModal` component

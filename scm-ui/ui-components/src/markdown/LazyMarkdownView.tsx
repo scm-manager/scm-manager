@@ -46,7 +46,6 @@ import classNames from "classnames";
 export type MarkdownProps = {
   content: string;
   className?: string;
-  renderContext?: object;
   renderers?: any;
   skipHtml?: boolean;
   enableAnchorHeadings?: boolean;
@@ -149,7 +148,6 @@ class LazyMarkdownView extends React.Component<Props, State> {
     const {
       content,
       renderers,
-      renderContext,
       enableAnchorHeadings,
       skipHtml,
       basePath,
@@ -159,17 +157,7 @@ class LazyMarkdownView extends React.Component<Props, State> {
       mdastPlugins = [],
     } = this.props;
 
-    // @ts-ignore
-    const rendererFactory = this.context.getExtension("markdown-renderer-factory");
-    let remarkRendererList = renderers;
-
-    if (rendererFactory) {
-      remarkRendererList = rendererFactory(renderContext);
-    }
-
-    if (!remarkRendererList) {
-      remarkRendererList = {};
-    }
+    const remarkRendererList = renderers || {};
 
     if (enableAnchorHeadings && permalink && !remarkRendererList.heading) {
       remarkRendererList.heading = createMarkdownHeadingRenderer(permalink);

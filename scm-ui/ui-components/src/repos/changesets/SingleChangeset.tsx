@@ -17,7 +17,6 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import { AvatarImage, AvatarWrapper } from "../../avatar";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import ChangesetDescription from "./ChangesetDescription";
 import { Trans } from "react-i18next";
 import ChangesetAuthor from "./ChangesetAuthor";
@@ -66,16 +65,7 @@ const SingleChangeset: FC<Props> = ({ repository, changeset }) => {
           </AvatarWrapper>
           <FullWidthDiv className={classNames("media-right", "ml-0")}>
             <h4 className={classNames("has-text-weight-bold", "is-ellipsis-overflow")}>
-              <ExtensionPoint<extensionPoints.ChangesetDescription>
-                name="changeset.description"
-                props={{
-                  changeset,
-                  value: description.title,
-                }}
-                renderAll={false}
-              >
-                <ChangesetDescription changeset={changeset} value={description.title} />
-              </ExtensionPoint>
+              <ChangesetDescription changeset={changeset} value={description.title} />
             </h4>
             <p className="is-hidden-touch">
               <Trans i18nKey="repos:changeset.summary" components={[changesetId, dateFromNow]} />
