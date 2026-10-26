@@ -20,10 +20,10 @@ plugins {
 }
 
 dependencies {
-  implementation libraries.commonsIo
-  implementation libraries.commonsLang3
-  implementation libraries.sqlite
-  implementation libraries.hikariCp
+  implementation libs.commonsIo
+  implementation libs.commonsLang3
+  implementation libs.sqlite
+  implementation libs.hikariCp
 
   api platform(project(':'))
 
@@ -32,9 +32,9 @@ dependencies {
   testImplementation project(':scm-test')
 
   // lombok
-  compileOnly libraries.lombok
-  testCompileOnly libraries.lombok
-  annotationProcessor libraries.lombok
-  testAnnotationProcessor libraries.lombok
-  testRuntimeOnly libraries.logback
+  compileOnly libs.lombok
+  testCompileOnly libs.lombok
+  annotationProcessor libs.lombok
+  testAnnotationProcessor libs.lombok
+  testRuntimeOnly libs.logback
 }

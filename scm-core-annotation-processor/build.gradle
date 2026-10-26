@@ -28,18 +28,18 @@ dependencies {
 
   implementation 'com.squareup:javapoet:1.13.0'
 
-  compileOnly libraries.lombok;
-  annotationProcessor libraries.lombok;
+  compileOnly libs.lombok;
+  annotationProcessor libs.lombok;
 
   testImplementation "com.google.testing.compile:compile-testing:0.21.0"
-  testImplementation libraries.junitJupiterApi
-  testImplementation libraries.junitJupiterParams
-  testImplementation libraries.junitJupiterEngine
-  testImplementation libraries.assertj
+  testImplementation libs.junitJupiterApi
+  testImplementation libs.junitJupiterParams
+  testImplementation libs.junitJupiterEngine
+  testImplementation libs.assertj
 
   // service registration
-  compileOnly libraries.metainfServices
-  annotationProcessor libraries.metainfServices
+  compileOnly libs.metainfServices
+  annotationProcessor libs.metainfServices
 }
 
 test {

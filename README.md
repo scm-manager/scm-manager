@@ -93,7 +93,17 @@ gradlew.bat tasks
 
 ### Dependencies
 
-Dependencies and their versions are configured in the `gradle/dependencies.gradle`.
+Shared dependencies and their versions are configured in the [Gradle version catalog](gradle/libs.versions.toml).
+Build scripts reference its aliases, for example `implementation libs.slf4jApi`.
+Related libraries use `version.ref` to share a version from the catalog's `[versions]` section.
+[Renovate's Gradle manager](https://docs.renovatebot.com/modules/manager/gradle/) recognizes the catalog without custom extraction rules.
+
+Classifiers and artifact extensions stay in the consuming build scripts, as do the strict Jackson constraints.
+The published Java platform continues to provide dependency constraints for consumers.
+The separate `build-plugins` build imports the same catalog through its settings file.
+Node and Yarn versions are also centralized in the catalog and accessed with `libs.versions.node.get()` and `libs.versions.yarn.get()`;
+automated updates for these tool versions are not configured here.
+
 Versions of dependencies can be specified as exact version or as a [range](https://docs.gradle.org/current/userguide/single_versions.html) of versions.
 In order to keep the build consistent and reproducible, we use [gradle dependency locking](https://docs.gradle.org/current/userguide/dependency_locking.html).
 Whenever a dependency was added, changed or removed the lock files must be refreshed e.g.:

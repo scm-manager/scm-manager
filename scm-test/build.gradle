@@ -24,36 +24,36 @@ dependencies {
   api project(':scm-core')
 
   // tests
-  api libraries.junitJupiterApi
-  api libraries.junitJupiterParams
-  api libraries.junitJupiterEngine
+  api libs.junitJupiterApi
+  api libs.junitJupiterParams
+  api libs.junitJupiterEngine
 
   // junit 4 support
-  api libraries.junitVintageEngine
-  api libraries.junit
+  api libs.junitVintageEngine
+  api libs.junit
 
   // assertions
-  api libraries.hamcrestCore
-  api libraries.hamcrestLibrary
-  api libraries.assertj
+  api libs.hamcrestCore
+  api libs.hamcrestLibrary
+  api libs.assertj
 
   // mocking
-  api libraries.mockitoCore
-  api libraries.mockitoJunitJupiter
+  api libs.mockitoCore
+  api libs.mockitoJunitJupiter
 
   // shiro
-  api libraries.shiroExtension
-  api libraries.shiroUnit
+  api libs.shiroExtension
+  api libs.shiroUnit
 
   // test rest api's
-  api libraries.resteasyCore
-  api libraries.resteasyValidatorProvider
+  api libs.resteasyCore
+  api libs.resteasyValidatorProvider
 
   // test servlet api
-  api libraries.servletApi
+  api libs.servletApi
 
   //validator
-  api libraries.validator
-  api libraries.elApi
-  api libraries.elRuntime
+  api libs.validator
+  api libs.elApi
+  api libs.elRuntime
 }
