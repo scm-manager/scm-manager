@@ -24,7 +24,7 @@ export default defineConfig({
     reporters: ["default", "junit"],
     setupFiles: ["@vitest/web-worker"],
     outputFile: {
-      junit: "../build/vitest-reports/TEST-vitest-report.xml",
+      junit: "../build/vitest-reports/TEST-vitest-ui-components.xml",
     },
     coverage: {
       enabled: isCI,

@@ -23,7 +23,7 @@ export default defineConfig({
     environment: "jsdom",
     reporters: ["default", "junit"],
     outputFile: {
-      junit: "../build/vitest-reports/TEST-vitest-report.xml",
+      junit: "../build/vitest-reports/TEST-vitest-ui-extensions.xml",
     },
     coverage: {
       enabled: isCI,

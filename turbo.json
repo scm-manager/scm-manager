@@ -16,6 +16,27 @@
     "test": {
       "outputs": ["build/vitest-reports"]
     },
+    "@scm-manager/ui-api#test": {
+      "outputs": ["$TURBO_ROOT$/scm-ui/build/vitest-reports/TEST-vitest-ui-api.xml"]
+    },
+    "@scm-manager/ui-components#test": {
+      "outputs": [
+        "$TURBO_ROOT$/scm-ui/build/vitest-reports/TEST-vitest-ui-components.xml",
+        "$TURBO_ROOT$/scm-ui/build/vitest-reports/TEST-storybook-ui-components.xml"
+      ]
+    },
+    "@scm-manager/ui-core#test": {
+      "outputs": [
+        "$TURBO_ROOT$/scm-ui/build/vitest-reports/TEST-vitest-ui-core.xml",
+        "$TURBO_ROOT$/scm-ui/build/vitest-reports/TEST-storybook-ui-core.xml"
+      ]
+    },
+    "@scm-manager/ui-extensions#test": {
+      "outputs": ["$TURBO_ROOT$/scm-ui/build/vitest-reports/TEST-vitest-ui-extensions.xml"]
+    },
+    "@scm-manager/ui-webapp#test": {
+      "outputs": ["$TURBO_ROOT$/scm-ui/build/vitest-reports/TEST-vitest-ui-webapp.xml"]
+    },
     "ci": {
     },
     "build": {
