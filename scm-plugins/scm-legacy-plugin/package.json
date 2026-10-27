@@ -1,7 +1,7 @@
 {
     "name": "@scm-manager/scm-legacy-plugin",
     "private": true,
-    "version": "4.0.0-JAVA25-SNAPSHOT",
+    "version": "4.0.0-REACT19-SNAPSHOT",
     "license": "AGPL-3.0-only",
     "main": "./src/main/js/index.tsx",
     "scripts": {
