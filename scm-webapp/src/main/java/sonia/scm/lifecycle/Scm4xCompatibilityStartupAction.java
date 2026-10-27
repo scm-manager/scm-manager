@@ -182,7 +182,6 @@ public class Scm4xCompatibilityStartupAction implements InitializationStep {
       log.error("Found {} not updatable plugins: {}", withoutCompatibleUpdate.size(), withoutCompatibleUpdate);
       result = new Result(Status.UPDATE_NOT_POSSIBLE, withoutCompatibleUpdate);
     });
-    logResult();
   }
 
   private boolean isPluginCenterUrlInvalid() {
