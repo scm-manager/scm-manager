@@ -1,2 +1,3 @@
 ignores: ["@scm-manager/tsconfig", "@scm-manager/jest-preset", "@ui-styles/*", "storybook-addon-*", "@storybook/*", "*-loader", "tsup", "minimatch", "vite", "@vitest/*", "@vitejs/*", "refractor" ,"decode-named-character-reference", "react-*", "@emotion/*", "typescript"]
+ignore-patterns: ["build/**"]
 specials: ["babel", "webpack", "jest", "eslint", "prettier", "bin"]

@@ -34,7 +34,13 @@ configurations {
 dependencies {
   server project(':scm-server')
   webapp project(path: ':scm-webapp', configuration: 'webapp')
-  jsvc libraries.jsvc
+  jsvc(libs.jsvc) {
+    transitive = false
+    artifact {
+      type = 'tar.gz'
+      extension = 'tar.gz'
+    }
+  }
 }
 
 task unix(type: Tar) {

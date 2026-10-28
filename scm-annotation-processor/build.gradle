@@ -24,35 +24,35 @@ dependencies {
   implementation project(':scm-annotations')
 
   // injection
-  implementation libraries.guice
+  implementation libs.guice
 
   // rest api
-  implementation libraries.jaxRs
+  implementation libs.jaxRs
 
   // cli
-  implementation libraries.picocli
+  implementation libs.picocli
 
   // mapper
-  implementation libraries.mapstruct
+  implementation libs.mapstruct
 
   // events
-  implementation libraries.legman
+  implementation libs.legman
 
   // utils
-  implementation libraries.guava
+  implementation libs.guava
 
   implementation "com.google.auto:auto-common:1.2.2"
 
   implementation 'com.squareup:javapoet:1.13.0'
 
   testImplementation "com.google.testing.compile:compile-testing:0.23.0"
-  testImplementation libraries.junitJupiterApi
-  testImplementation libraries.junitJupiterEngine
-  testImplementation libraries.assertj
+  testImplementation libs.junitJupiterApi
+  testImplementation libs.junitJupiterEngine
+  testImplementation libs.assertj
 
   // service registration
-  compileOnly libraries.metainfServices
-  annotationProcessor libraries.metainfServices
+  compileOnly libs.metainfServices
+  annotationProcessor libs.metainfServices
 
 }
 

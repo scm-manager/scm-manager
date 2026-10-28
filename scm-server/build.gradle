@@ -22,21 +22,21 @@ plugins {
 dependencies {
   api platform(project(':'))
 
-  implementation libraries.commonsDaemon
-  implementation libraries.jettyServer
-  implementation libraries.jettyWebapp
+  implementation libs.commonsDaemon
+  implementation libs.jettyServer
+  implementation libs.jettyWebapp
 
   // Server Config
-  implementation libraries.snakeYml
+  implementation libs.snakeYml
 
   // tests
-  testImplementation libraries.junitJupiterApi
-  testImplementation libraries.junitJupiterParams
-  testRuntimeOnly libraries.junitJupiterEngine
-  testImplementation libraries.junitPioneer
-  testImplementation libraries.assertj
+  testImplementation libs.junitJupiterApi
+  testImplementation libs.junitJupiterParams
+  testRuntimeOnly libs.junitJupiterEngine
+  testImplementation libs.junitPioneer
+  testImplementation libs.assertj
 
-  testImplementation libraries.guava
+  testImplementation libs.guava
 }
 
 test {

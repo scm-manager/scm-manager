@@ -32,7 +32,7 @@ dependencies {
     exclude group: 'org.apache.sshd', module: 'sshd-common'
     exclude group: 'net.i2p.crypto',  module: 'eddsa'
   }
-  testImplementation libraries.shiroUnit
+  testImplementation libs.shiroUnit
 }
 
 scmPlugin {

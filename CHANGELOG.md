@@ -1905,6 +1905,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.10.3]: https://scm-manager.org/download/3.10.3
 [3.11.0]: https://scm-manager.org/download/3.11.0
 [3.11.2]: https://scm-manager.org/download/3.11.2
+[3.11.3]: https://scm-manager.org/download/3.11.3
 [3.12.0]: https://scm-manager.org/download/3.12.0
 [3.11.4]: https://scm-manager.org/download/3.11.4
 [3.11.5]: https://scm-manager.org/download/3.11.5

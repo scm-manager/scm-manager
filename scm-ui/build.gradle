@@ -24,8 +24,8 @@ plugins {
 
 node {
   download.set(true)
-  version.set(rootProject.nodeVersion.toString())
-  yarnVersion.set(rootProject.yarnVersion.toString())
+  version = libs.versions.node.get()
+  yarnVersion = libs.versions.yarn.get()
   nodeProjectDir.set(rootProject.projectDir)
 }
 
@@ -284,6 +284,6 @@ sonarqube {
     // no wildcard support
     // https://github.com/SonarSource/SonarJS/issues/578
     property 'sonar.javascript.lcov.reportPaths', 'build/vitest-reports/coverage-ui-components/lcov.info,build/vitest-reports/coverage-ui-extensions/lcov.info,build/vitest-reports/coverage-ui-webapp/lcov.info'
-    property 'sonar.nodejs.executable', project.file(".gradle/nodejs/node-v${nodeVersion}-${os}-${arch}/bin/node")
+    property 'sonar.nodejs.executable', project.file(".gradle/nodejs/node-v${libs.versions.node.get()}-${os}-${arch}/bin/node")
   }
 }

@@ -45,16 +45,16 @@ dependencies {
 
   testImplementation 'io.rest-assured:rest-assured:5.3.2'
   testImplementation 'org.glassfish:javax.json:1.1.4'
-  testImplementation libraries.jacksonDatatypeJsr310
+  testImplementation libs.jacksonDatatypeJsr310
 
   // dependencies for tests in sonia.scm.it.webapp
   testImplementation project(':scm-webapp')
-  testImplementation libraries.jerseyClientApi
-  testImplementation libraries.jerseyCommon
-  testImplementation libraries.jerseyMediaJson
-  testImplementation libraries.jacksonJaxbAnnotations
+  testImplementation libs.jerseyClientApi
+  testImplementation libs.jerseyCommon
+  testImplementation libs.jerseyMediaJson
+  testImplementation libs.jacksonJaxbAnnotations
 
-  testImplementation libraries.junitPioneer
+  testImplementation libs.junitPioneer
   testImplementation 'org.eclipse.parsson:parsson:1.1.7'
 
   itWebApp project(path: ':scm-webapp', configuration: 'webapp')
@@ -87,8 +87,8 @@ task javaIntegrationTests(type: Test) {
 
 node {
   download.set(true)
-  version.set(rootProject.nodeVersion.toString())
-  yarnVersion.set(rootProject.yarnVersion.toString())
+  version = libs.versions.node.get()
+  yarnVersion = libs.versions.yarn.get()
   nodeProjectDir.set(rootProject.projectDir)
 }
 
