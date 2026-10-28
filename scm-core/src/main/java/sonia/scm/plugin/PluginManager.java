@@ -20,6 +20,7 @@ import com.google.common.annotations.VisibleForTesting;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -101,6 +102,18 @@ public interface PluginManager {
    * @param restartAfterInstallation restart context after plugin has been marked to really uninstall the plugin
    */
   void uninstall(String name, boolean restartAfterInstallation);
+
+  /**
+   * Marks the selected plugins for uninstall, ordering dependents before their dependencies.
+   * Validates the complete selection before marking any plugins. Dependencies required by plugins
+   * outside the selection cannot be removed. Already marked plugins are skipped.
+   * If writing a marker fails, earlier successful markers remain pending.
+   *
+   * @param names plugin names
+   * @param restartAfterInstallation restart once after all selected plugins have been marked
+   * @since 4.0.0
+   */
+  void uninstall(Collection<String> names, boolean restartAfterInstallation);
 
   /**
    * Install all pending plugins and restart the scm context.

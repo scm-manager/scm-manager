@@ -28,6 +28,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -466,6 +468,109 @@ class DefaultPluginManagerTest {
       assertThrows(ScmConstraintViolationException.class, () -> manager.uninstall("scm-mail-plugin", false));
     }
 
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void shouldUninstallDependentPluginsInEitherOrder(boolean dependencyFirst, @TempDir Path temp) throws IOException {
+      InstalledPlugin mail = createInstalled("mail");
+      InstalledPlugin review = createInstalled("review");
+      when(review.getDescriptor().getDependencies()).thenReturn(singleton("mail"));
+      when(mail.getDirectory()).thenReturn(Files.createDirectory(temp.resolve("mail")));
+      when(review.getDirectory()).thenReturn(Files.createDirectory(temp.resolve("review")));
+      when(loader.getInstalledPlugins()).thenReturn(asList(mail, review));
+      manager.computeInstallationDependencies();
+
+      manager.uninstall(dependencyFirst ? asList("mail", "review") : asList("review", "mail"), true);
+
+      assertThat(temp.resolve("mail/uninstall")).exists();
+      assertThat(temp.resolve("review/uninstall")).exists();
+      verify(restarter).restart(PluginManager.class, "plugin installation");
+      manager.cancelPending();
+      assertThat(temp.resolve("mail/uninstall")).doesNotExist();
+      assertThat(temp.resolve("review/uninstall")).doesNotExist();
+      assertThrows(ScmConstraintViolationException.class, () -> manager.uninstall("mail", false));
+    }
+
+    @Test
+    void shouldRejectBatchWithExternalDependentBeforeWritingMarkers() {
+      InstalledPlugin mail = createInstalled("mail");
+      InstalledPlugin review = createInstalled("review");
+      InstalledPlugin unrelated = createInstalled("unrelated");
+      when(review.getDescriptor().getDependencies()).thenReturn(singleton("mail"));
+      when(loader.getInstalledPlugins()).thenReturn(asList(mail, review, unrelated));
+      manager.computeInstallationDependencies();
+
+      assertThrows(ScmConstraintViolationException.class,
+        () -> manager.uninstall(asList("unrelated", "mail"), true));
+
+      verify(unrelated, never()).setMarkedForUninstall(true);
+      verify(mail, never()).setMarkedForUninstall(true);
+      verify(restarter, never()).restart(any(), any());
+    }
+
+    @Test
+    void shouldValidateAllNamesBeforeWritingMarkers() {
+      InstalledPlugin mail = createInstalled("mail");
+      when(loader.getInstalledPlugins()).thenReturn(singletonList(mail));
+
+      assertThrows(NotFoundException.class, () -> manager.uninstall(asList("mail", "unknown"), false));
+
+      verify(mail, never()).setMarkedForUninstall(true);
+    }
+
+    @Test
+    void shouldRejectBatchContainingCorePluginBeforeWritingMarkers() {
+      InstalledPlugin mail = createInstalled("mail");
+      InstalledPlugin core = createInstalled("core");
+      when(core.isCore()).thenReturn(true);
+      when(loader.getInstalledPlugins()).thenReturn(asList(mail, core));
+
+      assertThrows(ScmConstraintViolationException.class, () -> manager.uninstall(asList("mail", "core"), false));
+
+      verify(mail, never()).setMarkedForUninstall(true);
+    }
+
+    @Test
+    void shouldDeduplicateAndSkipMarkedPlugins(@TempDir Path temp) {
+      InstalledPlugin mail = createInstalled("mail");
+      InstalledPlugin review = createInstalled("review");
+      when(mail.getDirectory()).thenReturn(temp);
+      when(review.isMarkedForUninstall()).thenReturn(true);
+      when(loader.getInstalledPlugins()).thenReturn(asList(mail, review));
+
+      manager.uninstall(asList("mail", "mail", "review"), false);
+
+      assertThat(temp.resolve("uninstall")).exists();
+      verify(mail).setMarkedForUninstall(true);
+      verify(review, never()).setMarkedForUninstall(true);
+      verify(restarter, never()).restart(any(), any());
+    }
+
+    @Test
+    void shouldNotRestartForEmptyBatch() {
+      manager.uninstall(List.of(), true);
+
+      verify(restarter, never()).restart(any(), any());
+    }
+
+    @Test
+    void shouldKeepEarlierMarkersAndRefreshFlagsAfterBatchFailure(@TempDir Path temp) throws IOException {
+      InstalledPlugin mail = createInstalled("mail");
+      InstalledPlugin review = createInstalled("review");
+      when(review.getDescriptor().getDependencies()).thenReturn(singleton("mail"));
+      when(review.getDirectory()).thenReturn(Files.createDirectory(temp.resolve("review")));
+      when(mail.getDirectory()).thenThrow(new PluginException("cannot write marker"));
+      when(loader.getInstalledPlugins()).thenReturn(asList(mail, review));
+      manager.computeInstallationDependencies();
+
+      assertThrows(PluginException.class, () -> manager.uninstall(asList("mail", "review"), true));
+
+      assertThat(temp.resolve("review/uninstall")).exists();
+      verify(review).setMarkedForUninstall(true);
+      verify(mail, never()).setMarkedForUninstall(true);
+      verify(mail).setUninstallable(true);
+      verify(restarter, never()).restart(any(), any());
+    }
+
     @Test
     void shouldCreateUninstallFile(@TempDir Path temp) {
       InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
@@ -819,6 +924,11 @@ class DefaultPluginManagerTest {
     @Test
     void shouldThrowAuthorizationExceptionsForUninstallMethod() {
       assertThrows(AuthorizationException.class, () -> manager.uninstall("test", false));
+    }
+
+    @Test
+    void shouldThrowAuthorizationExceptionsForBatchUninstall() {
+      assertThrows(AuthorizationException.class, () -> manager.uninstall(List.of("test"), false));
     }
 
     @Test

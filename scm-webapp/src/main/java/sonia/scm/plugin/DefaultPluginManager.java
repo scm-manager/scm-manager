@@ -268,17 +268,30 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public void uninstall(String name, boolean restartAfterInstallation) {
-    PluginPermissions.write().check();
-    InstalledPlugin installed = getInstalled(name)
-      .orElseThrow(() -> NotFoundException.notFound(entity(InstalledPlugin.class, name)));
-    doThrow().violation("plugin is a core plugin and cannot be uninstalled").when(installed.isCore());
+    uninstall(List.of(name), restartAfterInstallation);
+  }
 
-    markForUninstall(installed);
+  @Override
+  public void uninstall(Collection<String> names, boolean restartAfterInstallation) {
+    PluginPermissions.write().check();
+    List<InstalledPlugin> selected = names.stream().distinct().map(name -> {
+      InstalledPlugin installed = getInstalled(name)
+        .orElseThrow(() -> NotFoundException.notFound(entity(InstalledPlugin.class, name)));
+      doThrow().violation("plugin is a core plugin and cannot be uninstalled").when(installed.isCore());
+      return installed;
+    }).filter(plugin -> !plugin.isMarkedForUninstall()).toList();
+    List<InstalledPlugin> ordered = dependencyTracker.orderForUninstall(selected);
+    if (ordered.isEmpty()) {
+      return;
+    }
+    try {
+      ordered.forEach(this::markForUninstall);
+    } finally {
+      updateMayUninstallFlag();
+    }
 
     if (restartAfterInstallation) {
       triggerRestart("plugin installation");
-    } else {
-      updateMayUninstallFlag();
     }
   }
 

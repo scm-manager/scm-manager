@@ -16,9 +16,11 @@
 
 package sonia.scm.plugin;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
@@ -37,7 +39,28 @@ class PluginDependencyTracker {
     doThrow()
       .violation("Plugin is needed as a dependency for other plugins", "plugin")
       .when(!mayUninstall(plugin.getInformation().getName()));
-    plugin.getDependencies().forEach(dependency -> removeDependency(plugin.getInformation().getName(), dependency));
+    if (plugin.getDependencies() != null) {
+      plugin.getDependencies().forEach(dependency -> removeDependency(plugin.getInformation().getName(), dependency));
+    }
+  }
+
+  List<InstalledPlugin> orderForUninstall(Collection<InstalledPlugin> selected) {
+    PluginDependencyTracker remaining = new PluginDependencyTracker();
+    plugins.forEach((name, dependents) -> remaining.plugins.put(name, new HashSet<>(dependents)));
+    List<InstalledPlugin> pending = new ArrayList<>(selected);
+    List<InstalledPlugin> ordered = new ArrayList<>();
+    while (!pending.isEmpty()) {
+      List<InstalledPlugin> removable = pending.stream()
+        .filter(plugin -> remaining.mayUninstall(plugin.getDescriptor().getInformation().getName()))
+        .toList();
+      doThrow()
+        .violation("Plugins are needed as dependencies by other plugins or have cyclic dependencies", "plugin")
+        .when(removable.isEmpty());
+      removable.forEach(plugin -> remaining.removeInstalled(plugin.getDescriptor()));
+      ordered.addAll(removable);
+      pending.removeAll(removable);
+    }
+    return ordered;
   }
 
   boolean mayUninstall(String name) {

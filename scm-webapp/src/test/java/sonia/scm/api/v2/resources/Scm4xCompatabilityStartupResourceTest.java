@@ -130,7 +130,8 @@ class Scm4xCompatabilityStartupResourceTest {
     void shouldUninstallConflictingPluginsAndRestartServer() throws URISyntaxException {
       when(startupAction.getToken()).thenReturn("expected");
       InstalledPlugin conflictingPlugin = PluginTestHelper.createInstalled("conflicting");
-      when(startupAction.getCompatibilityResult()).thenReturn(new Result(UPDATE_NOT_POSSIBLE, List.of(conflictingPlugin)));
+      InstalledPlugin dependentPlugin = PluginTestHelper.createInstalled("dependent");
+      when(startupAction.getCompatibilityResult()).thenReturn(new Result(UPDATE_NOT_POSSIBLE, List.of(conflictingPlugin, dependentPlugin)));
       when(restarter.isSupported()).thenReturn(true);
 
       JsonMockHttpRequest request = JsonMockHttpRequest.post("/v2/initialization/scm4xCompatibility/uninstall")
@@ -140,7 +141,7 @@ class Scm4xCompatabilityStartupResourceTest {
       dispatcher.invoke(request, response);
 
       assertThat(response.getStatus()).isEqualTo(204);
-      verify(pluginManager).uninstall("conflicting", false);
+      verify(pluginManager).uninstall(List.of("conflicting", "dependent"), false);
       verify(restarter).restart(Scm4xCompatabilityStartupResource.class, "Finish removal of SCM 4.x incompatible plugins");
     }
 
@@ -159,7 +160,7 @@ class Scm4xCompatabilityStartupResourceTest {
       dispatcher.invoke(request, response);
 
       assertThat(response.getStatus()).isEqualTo(204);
-      verify(pluginManager, never()).uninstall("conflicting", false);
+      verify(pluginManager).uninstall(List.of(), false);
       verify(restarter).restart(Scm4xCompatabilityStartupResource.class, "Finish removal of SCM 4.x incompatible plugins");
     }
 
@@ -193,7 +194,7 @@ class Scm4xCompatabilityStartupResourceTest {
       dispatcher.invoke(request, response);
 
       assertThat(response.getStatus()).isEqualTo(400);
-      verify(pluginManager).uninstall("conflicting", false);
+      verify(pluginManager).uninstall(List.of("conflicting"), false);
       verify(restarter, never()).restart(any(), any());
     }
   }

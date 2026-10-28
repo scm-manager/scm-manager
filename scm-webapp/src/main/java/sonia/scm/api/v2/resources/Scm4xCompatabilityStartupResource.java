@@ -29,7 +29,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.UnauthenticatedException;
 import sonia.scm.admin.ScmConfigurationStore;
 import sonia.scm.config.ScmConfiguration;
@@ -40,7 +39,6 @@ import sonia.scm.lifecycle.Scm4xCompatibilityStartupAction;
 import sonia.scm.lifecycle.Scm4xCompatibilityStartupAction.Result;
 import sonia.scm.lifecycle.Scm4xCompatibilityStartupAction.Status;
 import sonia.scm.plugin.Extension;
-import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.security.AllowAnonymousAccess;
@@ -53,7 +51,6 @@ import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 @AllowAnonymousAccess
 @Extension
-@Slf4j
 public class Scm4xCompatabilityStartupResource implements InitializationStepResource {
 
   private final Scm4xCompatibilityStartupAction startupAction;
@@ -89,13 +86,11 @@ public class Scm4xCompatabilityStartupResource implements InitializationStepReso
       .when(!isUninstallAllowed(result));
 
     adminContext.runAsAdmin((PrivilegedStartupAction) () -> {
-      for (InstalledPlugin conflictingPlugin : startupAction.getCompatibilityResult().conflictingPlugins()) {
-        log.trace("Uninstalling plugin {}", conflictingPlugin);
-
-        if (!conflictingPlugin.isMarkedForUninstall()) {
-          pluginManager.uninstall(conflictingPlugin.getDescriptor().getInformation().getName(), false);
-        }
-      }
+      List<String> conflictingPlugins = result.conflictingPlugins().stream()
+        .filter(plugin -> !plugin.isMarkedForUninstall())
+        .map(plugin -> plugin.getDescriptor().getInformation().getName())
+        .toList();
+      pluginManager.uninstall(conflictingPlugins, false);
 
       if (!restarter.isSupported()) {
         throw new RestartNotSupportedException();
