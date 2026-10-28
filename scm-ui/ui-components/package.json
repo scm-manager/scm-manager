@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-components",
-  "version": "4.0.0-REACT19-SNAPSHOT",
+  "version": "4.0.0-SNAPSHOT",
   "description": "UI Components for SCM-Manager and its plugins",
   "main": "src/index.ts",
   "files": [
@@ -35,8 +35,8 @@
     "@scm-manager/eslint-config": "^2.18.2",
     "@scm-manager/prettier-config": "^2.12.0",
     "@scm-manager/tsconfig": "^3.0.0-alpha1",
-    "@scm-manager/ui-syntaxhighlighting": "4.0.0-REACT19-SNAPSHOT",
-    "@scm-manager/ui-types": "4.0.0-REACT19-SNAPSHOT",
+    "@scm-manager/ui-syntaxhighlighting": "4.0.0-SNAPSHOT",
+    "@scm-manager/ui-types": "4.0.0-SNAPSHOT",
     "@storybook/addon-a11y": "10.5.8",
     "@storybook/addon-docs": "^10.5.8",
     "@storybook/addon-links": "^10.5.8",
@@ -66,9 +66,9 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
-    "@scm-manager/ui-api": "4.0.0-REACT19-SNAPSHOT",
-    "@scm-manager/ui-core": "4.0.0-REACT19-SNAPSHOT",
-    "@scm-manager/ui-extensions": "4.0.0-REACT19-SNAPSHOT",
+    "@scm-manager/ui-api": "4.0.0-SNAPSHOT",
+    "@scm-manager/ui-core": "4.0.0-SNAPSHOT",
+    "@scm-manager/ui-extensions": "4.0.0-SNAPSHOT",
     "deepmerge": "^4.3.1",
     "hast-util-sanitize": "^3.0.2",
     "react-diff-view": "2.6.0",

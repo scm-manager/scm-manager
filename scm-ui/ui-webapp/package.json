@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-webapp",
-  "version": "4.0.0-REACT19-SNAPSHOT",
+  "version": "4.0.0-SNAPSHOT",
   "private": true,
   "scripts": {
     "test": "vitest",
@@ -13,10 +13,10 @@
     "@headlessui/react": "^2.2.7",
     "@radix-ui/react-portal": "^1.1.17",
     "@react-aria/overlays": "^3.23.1",
-    "@scm-manager/ui-api": "4.0.0-REACT19-SNAPSHOT",
-    "@scm-manager/ui-components": "4.0.0-REACT19-SNAPSHOT",
-    "@scm-manager/ui-core": "4.0.0-REACT19-SNAPSHOT",
-    "@scm-manager/ui-extensions": "4.0.0-REACT19-SNAPSHOT",
+    "@scm-manager/ui-api": "4.0.0-SNAPSHOT",
+    "@scm-manager/ui-components": "4.0.0-SNAPSHOT",
+    "@scm-manager/ui-core": "4.0.0-SNAPSHOT",
+    "@scm-manager/ui-extensions": "4.0.0-SNAPSHOT",
     "classnames": "^2.3.4",
     "date-fns": "^4.1.0",
     "decode-named-character-reference": "^1.0.1",
@@ -39,8 +39,8 @@
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.5",
     "@scm-manager/eslint-config": "^2.18.2",
-    "@scm-manager/ui-plugins": "4.0.0-REACT19-SNAPSHOT",
-    "@scm-manager/ui-types": "4.0.0-REACT19-SNAPSHOT",
+    "@scm-manager/ui-plugins": "4.0.0-SNAPSHOT",
+    "@scm-manager/ui-types": "4.0.0-SNAPSHOT",
     "@testing-library/react": "16.3.0",
     "@types/react": "^19.1.1",
     "@types/react-dom": "^19.1.1",

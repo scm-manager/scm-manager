@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-syntaxhighlighting",
-  "version": "4.0.0-REACT19-SNAPSHOT",
+  "version": "4.0.0-SNAPSHOT",
   "private": true,
   "main": "src/index.ts",
   "scripts": {
@@ -22,7 +22,7 @@
     "react": "^19.1.1",
     "react-diff-view": "2.6.0",
     "react-dom": "^19.1.1",
-    "@scm-manager/ui-core": "4.0.0-REACT19-SNAPSHOT"
+    "@scm-manager/ui-core": "4.0.0-SNAPSHOT"
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.13.1",
