@@ -47,10 +47,6 @@ subprojects { s ->
   }
 }
 
-allprojects {
-  apply from: rootProject.file('gradle/dependencies.gradle')
-}
-
 dependencies {
   constraints {
     // lombok
@@ -154,6 +150,19 @@ downloadLicenses {
 
 // set build props
 project.ext {
+  parseScmVersion = { String value ->
+    def matcher = value =~ /^(\d+)\.(\d+)\.(\d+)(?:-(.+))?$/
+    if (!matcher.matches()) {
+      throw new GradleException("version must match major.minor.patch[-qualifier], but was '${value}'")
+    }
+    [
+      major: matcher.group(1).toInteger(),
+      minor: matcher.group(2).toInteger(),
+      micro: matcher.group(3).toInteger(),
+      qualifier: matcher.group(4)
+    ]
+  }
+
   timestamp = new Date().format('yyyyMMddHHmmSS')
   revision = "git rev-parse --short HEAD".execute().text.trim()
   if (project.version.contains('-SNAPSHOT')) {
