@@ -18,6 +18,7 @@ package com.cloudogu.scm
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import com.github.gradle.node.NodeExtension
 
 class RunPlugin implements Plugin<Project> {
@@ -27,8 +28,9 @@ class RunPlugin implements Plugin<Project> {
 
     project.plugins.apply("com.github.node-gradle.node")
     def nodeExt = project.extensions.getByType(NodeExtension)
+    def libs = project.extensions.getByType(VersionCatalogsExtension).named('libs')
     nodeExt.download.set(true)
-    nodeExt.version.set('24.21.0')
+    nodeExt.version.set(libs.findVersion('node').get().requiredVersion)
     nodeExt.yarnVersion.set('1.22.22')
     nodeExt.nodeProjectDir.set(project.rootProject.projectDir)
 
