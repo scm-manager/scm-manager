@@ -1,0 +1,2 @@
+- type: fixed
+  description: Spacing in the repository header; the `repository.afterTitle` extension point now spaces its content with flex and gap, so plugins no longer need their own margins

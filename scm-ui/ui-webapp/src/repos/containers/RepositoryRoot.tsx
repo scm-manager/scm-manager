@@ -46,12 +46,6 @@ import EditRepoNavLink from "../components/EditRepoNavLink";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import RepositoryNavLink from "../components/RepositoryNavLink";
 
-const TagGroup = styled.span`
-  & > * {
-    margin-right: 0.25rem;
-  }
-`;
-
 const MobileWrapped = styled.div`
   @media screen and (max-width: ${devices.mobile.width}px) {
     margin-left: auto;
@@ -170,11 +164,9 @@ const RepositoryRoot: FC = () => {
       title={titleComponent}
       documentTitle={`${repository.namespace}/${repository.name}`}
       afterTitle={
-        <MobileWrapped className="is-flex is-align-items-center">
+        <MobileWrapped className="is-flex is-align-items-center has-gap-2">
           <ExtensionPoint name="repository.afterTitle" props={{ repository }} />
-          <TagGroup className="has-text-weight-bold">
-            <RepositoryFlags repository={repository} tooltipLocation="bottom" />
-          </TagGroup>
+          <RepositoryFlags className="has-text-weight-bold" repository={repository} tooltipLocation="bottom" />
         </MobileWrapped>
       }
     >
