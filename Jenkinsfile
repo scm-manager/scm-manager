@@ -144,21 +144,6 @@ pipeline {
       }
     }
 
-    stage('React 19 Deployment') {
-      when {
-        anyOf {
-          branch 'feature/react-19-upgrade'
-          expression { return env.CHANGE_BRANCH == 'feature/react-19-upgrade' }
-        }
-        expression { return isBuildSuccess() }
-      }
-      steps {
-        withPublishEnvironment {
-          gradle "-PenablePackaging publish -x :scm-packaging:rpm:rpm -x :scm-packaging:rpm:publish -x :scm-packaging:deb:deb -x :scm-packaging:deb:publish -PisHotfix=false"
-        }
-      }
-    }
-
 //    stage('Update tap') {
 //      when {
 //        anyOf {
