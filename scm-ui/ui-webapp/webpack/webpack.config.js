@@ -150,7 +150,9 @@ module.exports = [
           warnings: false,
         },
       },
-      historyApiFallback: true,
+      historyApiFallback: {
+        disableDotRule: true,
+      },
       host: "127.0.0.1",
       port: 3000,
       hot: true,
