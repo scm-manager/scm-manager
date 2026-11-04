@@ -18,13 +18,12 @@ import React, { FC, ReactNode, useEffect, useState } from "react";
 import {
   CustomQueryFlexWrappedColumns,
   NavLink,
-  Page,
   PrimaryContentColumn,
   SecondaryNavigation,
   Tag,
   urls,
 } from "@scm-manager/ui-components";
-import { Notification, Level, useDocumentTitle } from "@scm-manager/ui-core";
+import { Notification, Level, useDocumentTitle, Page } from "@scm-manager/ui-core";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useIndex, useNamespaceAndNameContext, useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
 import Results from "./Results";

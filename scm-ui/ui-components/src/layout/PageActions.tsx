@@ -23,6 +23,9 @@ type Props = {
   children: ReactNode;
 };
 
+/**
+ * @deprecated Please use `Page` from "@scm-manager/ui-core" and pass the actions with its `actions` prop
+ */
 export default class PageActions extends React.Component<Props> {
   static displayName = "PageActions";
 

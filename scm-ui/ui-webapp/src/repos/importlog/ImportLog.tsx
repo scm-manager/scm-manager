@@ -18,8 +18,7 @@ import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useImportLog } from "@scm-manager/ui-api";
-import { Page } from "@scm-manager/ui-components";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { useDocumentTitle, Page } from "@scm-manager/ui-core";
 
 type Params = {
   logId: string;

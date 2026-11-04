@@ -40,6 +40,7 @@ import TabsList from "./tabs/TabsList";
 import TabTrigger from "./tabs/TabTrigger";
 
 export { default as Collapsible } from "./collapsible/Collapsible";
+export { default as Page } from "./templates/page/Page";
 export { useLayoutWide } from "./_helpers/layout-wide";
 
 const CardDetailExports = {

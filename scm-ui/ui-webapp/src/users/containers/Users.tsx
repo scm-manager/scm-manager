@@ -19,13 +19,14 @@ import { Navigate, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useUsers } from "@scm-manager/ui-api";
 import { User, UserCollection } from "@scm-manager/ui-types";
-import { LinkPaginator, OverviewPageActions, Page, PageActions, urls } from "@scm-manager/ui-components";
+import { LinkPaginator, OverviewPageActions, urls } from "@scm-manager/ui-components";
 import {
   LinkButton,
   Notification,
   useDocumentTitle,
   USER_COLLECTION_BASE_ROUTE,
   USER_COLLECTION_SUB_ROUTES,
+  Page,
 } from "@scm-manager/ui-core";
 import { UserTable } from "./../components/table";
 
@@ -72,6 +73,14 @@ const Users: FC = () => {
       subtitle={t("users.subtitle")}
       loading={isLoading || !users}
       error={error || undefined}
+      actions={
+        <OverviewPageActions
+          showCreateButton={canAddUsers}
+          link="users"
+          label={t("users.createButton")}
+          searchPlaceholder={t("overview.filterUser")}
+        />
+      }
     >
       <UserPage data={data} users={users} page={page} search={search} />
       {canAddUsers ? (
@@ -81,14 +90,6 @@ const Users: FC = () => {
           </LinkButton>
         </div>
       ) : null}
-      <PageActions>
-        <OverviewPageActions
-          showCreateButton={canAddUsers}
-          link="users"
-          label={t("users.createButton")}
-          searchPlaceholder={t("overview.filterUser")}
-        />
-      </PageActions>
     </Page>
   );
 };

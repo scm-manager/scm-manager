@@ -21,7 +21,6 @@ import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import {
   CustomQueryFlexWrappedColumns,
   NavLink,
-  Page,
   PrimaryContentColumn,
   SecondaryNavigation,
   SecondaryNavigationColumn,
@@ -33,6 +32,7 @@ import {
   ADMIN_PLUGINS_SUB_ROUTES,
   ADMIN_SETTINGS_SUB_ROUTES,
   ADMIN_SUB_ROUTES,
+  Page,
 } from "@scm-manager/ui-core";
 
 const Admin: FC = () => {

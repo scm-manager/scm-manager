@@ -18,8 +18,7 @@ import React, { FC } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useCreateGroup, urls } from "@scm-manager/ui-api";
-import { useDocumentTitle } from "@scm-manager/ui-core";
-import { Page } from "@scm-manager/ui-components";
+import { useDocumentTitle, Page } from "@scm-manager/ui-core";
 import GroupForm from "../components/GroupForm";
 
 const CreateGroup: FC = () => {

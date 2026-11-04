@@ -20,8 +20,9 @@ import classNames from "classnames";
 import { parse } from "date-fns";
 import styled from "styled-components";
 import { useSearchableTypes, useSearchSyntaxContent } from "@scm-manager/ui-api";
-import { copyToClipboard, MarkdownView, Page } from "@scm-manager/ui-components";
+import { copyToClipboard, MarkdownView } from "@scm-manager/ui-components";
 import {
+  Page,
   Button,
   ErrorNotification,
   Field,

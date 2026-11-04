@@ -22,13 +22,12 @@ import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
   NavLink,
-  Page,
   PrimaryContentColumn,
   SecondaryNavigation,
   SecondaryNavigationColumn,
   SubNavigation,
 } from "@scm-manager/ui-components";
-import { ME_BASE_ROUTE, ME_SETTINGS_SUB_ROUTES, ME_SUB_ROUTES } from "@scm-manager/ui-core";
+import { ME_BASE_ROUTE, ME_SETTINGS_SUB_ROUTES, ME_SUB_ROUTES, Page } from "@scm-manager/ui-core";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import SetPublicKeysNavLink from "../users/components/navLinks/SetPublicKeysNavLink";
 import SetApiKeysNavLink from "../users/components/navLinks/SetApiKeysNavLink";

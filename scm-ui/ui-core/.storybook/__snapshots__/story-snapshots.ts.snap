@@ -3252,6 +3252,109 @@ exports[`Templates/Data Page WithError 1`] = `
 "
 `;
 
+exports[`Templates/Page Default 1`] = `
+"<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <div class="is-flex is-flex-wrap-wrap is-align-items-center"><h1 class="title mb-0 mr-2">Repositories</h1></div>
+        <h2 class="subtitle">Overview of all repositories</h2>
+      </div>
+    </div>
+    <p>The content of the page.</p>
+  </div>
+</section>
+"
+`;
+
+exports[`Templates/Page Loading 1`] = `
+"<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <div class="is-flex is-flex-wrap-wrap is-align-items-center"><h1 class="title mb-0 mr-2">Repositories</h1></div>
+        <h2 class="subtitle">Overview of all repositories</h2>
+      </div>
+    </div>
+    <div class="sc-gsDMPd gloUiH is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+      <img class="sc-dkPwfY crHNEe mb-3" alt="Loading ..." src="/images/loading.svg" />
+      <p class="has-text-centered"></p>
+    </div>
+  </div>
+</section>
+"
+`;
+
+exports[`Templates/Page WithActions 1`] = `
+"<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <div class="is-flex is-flex-wrap-wrap is-align-items-center"><h1 class="title mb-0 mr-2">Repositories</h1></div>
+        <h2 class="subtitle">Overview of all repositories</h2>
+      </div>
+      <div
+        class="sc-hKwBjT kKmDSv column is-two-thirds is-mobile-action-spacing is-flex-tablet is-justify-content-flex-end is-align-items-center"
+      >
+        <button type="button" class="sc-eCIkAO jqxZWi button is-primary">Add Repository</button>
+      </div>
+    </div>
+    <hr class="header-with-actions" />
+    <p>The content of the page.</p>
+  </div>
+</section>
+"
+`;
+
+exports[`Templates/Page WithAfterTitle 1`] = `
+"<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <div class="is-flex is-flex-wrap-wrap is-align-items-center">
+          <h1 class="title mb-0 mr-2">Add Repository</h1>
+          <span class="tag">Beta</span>
+        </div>
+        <h2 class="subtitle">Create a new repository</h2>
+      </div>
+    </div>
+    <p>The content of the page.</p>
+  </div>
+</section>
+"
+`;
+
+exports[`Templates/Page WithError 1`] = `
+"<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <div class="is-flex is-flex-wrap-wrap is-align-items-center"><h1 class="title mb-0 mr-2">Repositories</h1></div>
+        <h2 class="subtitle">Overview of all repositories</h2>
+      </div>
+    </div>
+    <div class="notification is-danger" role="alert"><strong>Error:</strong> The repositories could not be loaded</div>
+  </div>
+</section>
+"
+`;
+
+exports[`Templates/Page WithErrorAndContent 1`] = `
+"<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <div class="is-flex is-flex-wrap-wrap is-align-items-center"><h1 class="title mb-0 mr-2">Create User</h1></div>
+        <h2 class="subtitle">Create a new user</h2>
+      </div>
+    </div>
+    <div class="notification is-danger" role="alert"><strong>Error:</strong> The user could not be created</div>
+    <p>The content of the page.</p>
+  </div>
+</section>
+"
+`;
+
 exports[`Utilities/SplitAndReplace ReplaceAll 1`] = `
 "<div style="margin: 2rem">
   <div>

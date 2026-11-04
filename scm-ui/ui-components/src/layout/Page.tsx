@@ -15,10 +15,7 @@
  */
 
 import React, { FC, ReactNode } from "react";
-import classNames from "classnames";
-import styled from "styled-components";
-import Loading from "./../Loading";
-import { ErrorNotification, Subtitle, Title } from "@scm-manager/ui-core";
+import { Page as CorePage } from "@scm-manager/ui-core";
 import PageActions from "./PageActions";
 
 type Props = {
@@ -33,95 +30,19 @@ type Props = {
   children: ReactNode;
 };
 
-const PageActionContainer = styled.div`
-  // every child except first
-  > * ~ * {
-    margin-left: 1.25rem;
-  }
-`;
+const isPageActions = (node: ReactNode) =>
+  React.isValidElement(node) && (node.type as { displayName?: string }).displayName === PageActions.displayName;
 
-const Page: FC<Props> = ({ title, afterTitle, subtitle, loading, error, showContentOnError, children }) => {
-  // eslint-disable-next-line
-  const isPageAction = (node: any) => {
-    return (
-      node.displayName === PageActions.displayName || (node.type && node.type.displayName === PageActions.displayName)
-    );
-  };
-
-  const renderPageHeader = () => {
-    let pageActions = null;
-    let pageActionsExists = false;
-    React.Children.forEach(children, (child) => {
-      if (child && !error) {
-        if (isPageAction(child)) {
-          pageActions = (
-            <PageActionContainer
-              className={classNames(
-                "column",
-                "is-two-thirds",
-                "is-mobile-action-spacing",
-                "is-flex-tablet",
-                "is-justify-content-flex-end",
-                "is-align-items-center",
-              )}
-            >
-              {child}
-            </PageActionContainer>
-          );
-          pageActionsExists = true;
-        }
-      }
-    });
-
-    const underline = pageActionsExists ? <hr className="header-with-actions" /> : null;
-
-    if (title || subtitle) {
-      return (
-        <>
-          <div className="columns">
-            <div className="column">
-              <div className="is-flex is-flex-wrap-wrap is-align-items-center">
-                <Title className="mb-0 mr-2">{title}</Title>
-                {afterTitle}
-              </div>
-              {subtitle ? <Subtitle>{subtitle}</Subtitle> : null}
-            </div>
-            {pageActions}
-          </div>
-          {underline}
-        </>
-      );
-    }
-    return null;
-  };
-
-  const renderContent = () => {
-    if (error && !showContentOnError) {
-      return null;
-    }
-    if (loading) {
-      return <Loading />;
-    }
-
-    const content: ReactNode[] = [];
-    React.Children.forEach(children, (child) => {
-      if (child) {
-        if (!isPageAction(child)) {
-          content.push(child);
-        }
-      }
-    });
-    return content;
-  };
-
+/**
+ * @deprecated Please use `Page` from "@scm-manager/ui-core" and pass the actions with its `actions` prop
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const Page: FC<Props> = ({ documentTitle, children, ...props }) => {
+  const childList = React.Children.toArray(children);
   return (
-    <section className="section">
-      <div className="container">
-        {renderPageHeader()}
-        <ErrorNotification error={error} />
-        {renderContent()}
-      </div>
-    </section>
+    <CorePage {...props} actions={childList.find(isPageActions)}>
+      {childList.filter((child) => !isPageActions(child))}
+    </CorePage>
   );
 };
 

@@ -20,7 +20,6 @@ import { Outlet } from "react-router-dom";
 import {
   CustomQueryFlexWrappedColumns,
   NavLink,
-  Page,
   PrimaryContentColumn,
   SecondaryNavigation,
   SecondaryNavigationColumn,
@@ -35,6 +34,7 @@ import {
   SINGLE_NAMESPACE_BASE_ROUTE,
   useCurrentNamespaceBaseUrl,
   useNamespaceFromParams,
+  Page,
 } from "@scm-manager/ui-core";
 
 const NamespaceRoot: FC = () => {

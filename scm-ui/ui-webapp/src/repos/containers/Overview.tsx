@@ -27,8 +27,6 @@ import {
   Loading,
   Notification,
   OverviewPageActions,
-  Page,
-  PageActions,
   urls,
 } from "@scm-manager/ui-components";
 import {
@@ -37,6 +35,7 @@ import {
   LinkButton,
   REPOSITORY_COLLECTION_BASE_ROUTE,
   useDocumentTitle,
+  Page,
 } from "@scm-manager/ui-core";
 import { binder, ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
@@ -238,7 +237,6 @@ const Overview: FC = () => {
   const createLink = namespace ? `/repos/create/?namespace=${namespace}` : "/repos/create/";
   return (
     <Page
-      documentTitle={t("overview.title")}
       title={
         <ExtensionPoint<extensionPoints.RepositoryOverviewTitle> name="repository.overview.title">
           {t("overview.title")}
@@ -248,6 +246,27 @@ const Overview: FC = () => {
         <ExtensionPoint<extensionPoints.RepositoryOverviewSubtitle> name="repository.overview.subtitle">
           {t("overview.subtitle")}
         </ExtensionPoint>
+      }
+      actions={
+        showActions ? (
+          <>
+            <label id="select-namespace" hidden>
+              {t("overview.filterByNamespace")}
+            </label>
+            <OverviewPageActions
+              showCreateButton={showCreateButton}
+              currentGroup={getCurrentGroup(namespace, namespaces)}
+              groups={namespacesToRender}
+              groupSelected={namespaceSelected}
+              groupAriaLabelledby="select-namespace"
+              link={namespace ? `repos/${namespace}` : "repos"}
+              createLink={createLink}
+              label={t("overview.createButton")}
+              testId="repository-overview"
+              searchPlaceholder={t("overview.filterRepositories")}
+            />
+          </>
+        ) : null
       }
     >
       <div className="columns">
@@ -298,27 +317,6 @@ const Overview: FC = () => {
           ) : null}
         </div>
       </div>
-      <PageActions>
-        {showActions ? (
-          <>
-            <label id="select-namespace" hidden>
-              {t("overview.filterByNamespace")}
-            </label>
-            <OverviewPageActions
-              showCreateButton={showCreateButton}
-              currentGroup={getCurrentGroup(namespace, namespaces)}
-              groups={namespacesToRender}
-              groupSelected={namespaceSelected}
-              groupAriaLabelledby="select-namespace"
-              link={namespace ? `repos/${namespace}` : "repos"}
-              createLink={createLink}
-              label={t("overview.createButton")}
-              testId="repository-overview"
-              searchPlaceholder={t("overview.filterRepositories")}
-            />
-          </>
-        ) : null}
-      </PageActions>
     </Page>
   );
 };

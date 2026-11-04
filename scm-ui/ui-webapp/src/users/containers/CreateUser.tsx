@@ -18,7 +18,6 @@ import React, { FC, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
 import { useUsers } from "@scm-manager/ui-api";
-import { Page } from "@scm-manager/ui-components";
 import {
   ErrorNotification,
   Form,
@@ -26,6 +25,7 @@ import {
   Notification,
   useCreateResource,
   useDocumentTitle,
+  Page,
 } from "@scm-manager/ui-core";
 import { Link, User, UserCollection, UserCreation } from "@scm-manager/ui-types";
 import * as userValidator from "../components/userValidation";

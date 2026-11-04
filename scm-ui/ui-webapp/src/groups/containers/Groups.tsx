@@ -24,8 +24,9 @@ import {
   GROUP_COLLECTION_SUB_ROUTES,
   LinkButton,
   useDocumentTitle,
+  Page,
 } from "@scm-manager/ui-core";
-import { LinkPaginator, Notification, OverviewPageActions, Page, PageActions, urls } from "@scm-manager/ui-components";
+import { LinkPaginator, Notification, OverviewPageActions, urls } from "@scm-manager/ui-components";
 import { GroupTable } from "./../components/table";
 
 type GroupPageProps = {
@@ -70,6 +71,14 @@ const Groups: FC = () => {
       subtitle={t("groups.subtitle")}
       loading={isLoading || !groups}
       error={error || undefined}
+      actions={
+        <OverviewPageActions
+          showCreateButton={canCreateGroups}
+          link="groups"
+          label={t("groups.createButton")}
+          searchPlaceholder={t("overview.filterGroup")}
+        />
+      }
     >
       <GroupPage data={data} groups={groups} page={page} search={search} />
       {canCreateGroups ? (
@@ -79,14 +88,6 @@ const Groups: FC = () => {
           </LinkButton>
         </div>
       ) : null}
-      <PageActions>
-        <OverviewPageActions
-          showCreateButton={canCreateGroups}
-          link="groups"
-          label={t("groups.createButton")}
-          searchPlaceholder={t("overview.filterGroup")}
-        />
-      </PageActions>
     </Page>
   );
 };

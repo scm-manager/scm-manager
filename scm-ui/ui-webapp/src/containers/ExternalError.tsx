@@ -17,8 +17,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Notification, Page } from "@scm-manager/ui-components";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { Notification } from "@scm-manager/ui-components";
+import { useDocumentTitle, Page } from "@scm-manager/ui-core";
 
 type LocationState = {
   code: string;

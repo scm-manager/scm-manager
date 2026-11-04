@@ -24,7 +24,6 @@ import {
   devices,
   HealthCheckFailureDetail,
   NavLink,
-  Page,
   PrimaryContentColumn,
   RepositoryFlags,
   SecondaryNavigation,
@@ -40,6 +39,7 @@ import {
   useRepositoryFromParams,
   useCurrentRepositoryBaseUrl,
   useShortcut,
+  Page,
 } from "@scm-manager/ui-core";
 import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import EditRepoNavLink from "../components/EditRepoNavLink";
@@ -162,7 +162,6 @@ const RepositoryRoot: FC = () => {
   return (
     <Page
       title={titleComponent}
-      documentTitle={`${repository.namespace}/${repository.name}`}
       afterTitle={
         <MobileWrapped className="is-flex is-align-items-center has-gap-2">
           <ExtensionPoint name="repository.afterTitle" props={{ repository }} />
