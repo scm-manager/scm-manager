@@ -7,6 +7,7 @@
   "scripts": {
     "build": "plugin-scripts build",
     "watch": "plugin-scripts watch",
+    "test": "vitest",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -17,6 +18,8 @@
     "@scm-manager/eslint-config": "^2.18.2",
     "@scm-manager/plugin-scripts": "^1.6.1",
     "@scm-manager/prettier-config": "^2.12.0",
+    "@vitest/web-worker": "^4.0.18",
+    "vitest": "^4.0.18",
     "minimatch": "^10.0.3",
     "@types/react": "^19.1.1"
   },

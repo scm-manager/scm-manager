@@ -15,7 +15,9 @@
  */
 
 import { Repository } from "@scm-manager/ui-types";
+import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import { gitPredicate } from "./index";
+import RepositoryConfig from "./RepositoryConfig";
 
 const repository: Repository = { _links: {}, namespace: "hitchhiker", name: "HeartOfGold", type: "git" };
 
@@ -34,5 +36,20 @@ describe("test git predicate", () => {
         repository,
       })
     ).toBe(true);
+  });
+});
+
+describe("test git repository settings", () => {
+  const settingsFor = (type: string) =>
+    binder.getExtensions<extensionPoints.RepoConfigDetails>("repo-config.details", {
+      repository: { ...repository, type },
+    });
+
+  it("should be shown on the settings page of git repositories", () => {
+    expect(settingsFor("git")).toContain(RepositoryConfig);
+  });
+
+  it("should not be shown for other repository types", () => {
+    expect(settingsFor("hg")).not.toContain(RepositoryConfig);
   });
 });

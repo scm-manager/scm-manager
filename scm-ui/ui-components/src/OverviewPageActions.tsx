@@ -27,7 +27,12 @@ const StyledFilterWrapper = styled.div`
     min-width: 150px;
     width: 100%;
   }
-  
+
+  .input-button.column {
+    flex: none;
+    width: auto;
+  }
+
   label, .label:not(:last-child){
     margin-bottom: 0;
   }

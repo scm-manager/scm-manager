@@ -46,7 +46,7 @@ binder.bind<extensionPoints.RepositoryTagDetailsInformation>(
 binder.bind("repos.repository-merge.information", GitMergeInformation, gitPredicate);
 binder.bind("repos.repository-avatar", GitAvatar, gitPredicate);
 
-binder.bind("repo-config.route", RepositoryConfig, gitPredicate);
+binder.bind("repo-config.details", RepositoryConfig, gitPredicate);
 
 // global config
 cfgBinder.bindAdminSetting("git", "scm-git-plugin.config.link", "gitConfig", GitGlobalConfiguration);

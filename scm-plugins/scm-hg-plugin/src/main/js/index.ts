@@ -23,7 +23,8 @@ import HgBranchInformation from "./HgBranchInformation";
 import HgTagInformation from "./HgTagInformation";
 import HgRepositoryConfigurationForm from "./HgRepositoryConfigurationForm";
 
-const hgPredicate = (props: extensionPoints.RepositoryDetailsInformation["props"]) => {
+// @visibleForTesting
+export const hgPredicate = (props: extensionPoints.RepositoryDetailsInformation["props"]) => {
   return props.repository && props.repository.type === "hg";
 };
 
@@ -42,7 +43,7 @@ binder.bind("repos.repository-avatar", HgAvatar, hgPredicate);
 
 // bind repository specific configuration
 
-binder.bind("repo-config.route", HgRepositoryConfigurationForm, hgPredicate);
+binder.bind("repo-config.details", HgRepositoryConfigurationForm, hgPredicate);
 
 // bind global configuration
 
