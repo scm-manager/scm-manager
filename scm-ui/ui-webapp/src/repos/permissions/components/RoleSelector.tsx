@@ -14,8 +14,9 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
-import { Select } from "@scm-manager/ui-components";
+import React, { ChangeEvent, FC } from "react";
+import classNames from "classnames";
+import { Select, SelectField } from "@scm-manager/ui-core";
 
 type Props = {
   availableRoles?: string[];
@@ -25,6 +26,7 @@ type Props = {
   helpText?: string;
   loading?: boolean;
   emptyLabel?: string;
+  "aria-label"?: string;
 };
 
 const createSelectOptions = (roles: string[]) => {
@@ -36,7 +38,16 @@ const createSelectOptions = (roles: string[]) => {
   });
 };
 
-const RoleSelector: FC<Props> = ({ availableRoles, role, handleRoleChange, loading, label, helpText, emptyLabel }) => {
+const RoleSelector: FC<Props> = ({
+  availableRoles,
+  role,
+  handleRoleChange,
+  loading,
+  label,
+  helpText,
+  emptyLabel,
+  "aria-label": ariaLabel,
+}) => {
   if (!availableRoles) {
     return null;
   }
@@ -44,16 +55,16 @@ const RoleSelector: FC<Props> = ({ availableRoles, role, handleRoleChange, loadi
     ? createSelectOptions(availableRoles)
     : [{ label: emptyLabel || "", value: "" }, ...createSelectOptions(availableRoles)];
 
-  return (
-    <Select
-      onChange={handleRoleChange}
-      value={role ? role : ""}
-      options={options}
-      loading={loading}
-      label={label}
-      helpText={helpText}
-    />
-  );
+  const selectProps = {
+    onChange: (event: ChangeEvent<HTMLSelectElement>) => handleRoleChange(event.target.value),
+    value: role ? role : "",
+    options,
+  };
+
+  if (label) {
+    return <SelectField label={label} helpText={helpText} {...selectProps} />;
+  }
+  return <Select className={classNames({ "is-loading": loading })} aria-label={ariaLabel} {...selectProps} />;
 };
 
 export default RoleSelector;

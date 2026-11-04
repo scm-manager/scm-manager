@@ -20,8 +20,17 @@ import classNames from "classnames";
 import { parse } from "date-fns";
 import styled from "styled-components";
 import { useSearchableTypes, useSearchSyntaxContent } from "@scm-manager/ui-api";
-import { copyToClipboard, InputField, MarkdownView, Page } from "@scm-manager/ui-components";
-import { ErrorNotification, Icon, Loading, Tooltip, Button, useDocumentTitle } from "@scm-manager/ui-core";
+import { copyToClipboard, MarkdownView, Page } from "@scm-manager/ui-components";
+import {
+  Button,
+  ErrorNotification,
+  Field,
+  Icon,
+  Input,
+  Loading,
+  Tooltip,
+  useDocumentTitle,
+} from "@scm-manager/ui-core";
 import { SearchableType } from "@scm-manager/ui-types";
 
 const StyledTooltip = styled(Tooltip)`
@@ -182,23 +191,31 @@ const TimestampConverter: FC = () => {
   return (
     <div className="is-flex">
       <span className="is-flex mr-5">
-        <InputField
-          className="m-0"
-          value={datetime}
-          onChange={setDatetime}
-          placeholder={t("search.syntax.utilities.datetime.format")}
-        />
+        <Field className="m-0">
+          <div className="control">
+            <Input
+              value={datetime}
+              onChange={(event) => setDatetime(event.target.value)}
+              placeholder={t("search.syntax.utilities.datetime.format")}
+              aria-label={t("search.syntax.utilities.datetime.format")}
+            />
+          </div>
+        </Field>
         <Button variant="primary" onClick={convert} className="ml-2">
           {t("search.syntax.utilities.datetime.convertButtonLabel")}
         </Button>
       </span>
       <span className="is-flex">
-        <InputField
-          className="m-0 mr-4"
-          value={timestamp}
-          readOnly={true}
-          placeholder={t("search.syntax.utilities.timestampPlaceholder")}
-        />
+        <Field className="m-0 mr-4">
+          <div className="control">
+            <Input
+              value={timestamp}
+              readOnly={true}
+              placeholder={t("search.syntax.utilities.timestampPlaceholder")}
+              aria-label={t("search.syntax.utilities.timestampPlaceholder")}
+            />
+          </div>
+        </Field>
         <div className="is-flex is-align-items-center">
           <StyledTooltip message={t("search.syntax.utilities.copyTimestampTooltip")}>
             {copying ? (

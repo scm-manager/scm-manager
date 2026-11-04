@@ -16,25 +16,18 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { ErrorNotification, Loading, Subtitle, Title } from "@scm-manager/ui-components";
 import RepositoryRoleForm from "./RepositoryRoleForm";
 import { useCreateRepositoryRole } from "@scm-manager/ui-api";
 import { Navigate } from "react-router-dom";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { Subtitle, Title, useDocumentTitle } from "@scm-manager/ui-core";
 
 const CreateRepositoryRole: FC = () => {
   const [t] = useTranslation("admin");
   useDocumentTitle(t("repositoryRole.createSubtitle"));
-  const { error, isPending: loading, create, repositoryRole: created } = useCreateRepositoryRole();
+  const { create, repositoryRole: created } = useCreateRepositoryRole();
 
   if (created) {
     return <Navigate to={`/admin/role/${created.name}/info`} />;
-  }
-
-  if (loading) {
-    return <Loading />;
-  } else if (error) {
-    return <ErrorNotification error={error} />;
   }
 
   return (

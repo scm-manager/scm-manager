@@ -18,8 +18,7 @@ import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { useUserOptions } from "@scm-manager/ui-api";
-import { Checkbox, InputField, Select } from "@scm-manager/ui-components";
-import { ChipInputField, Combobox } from "@scm-manager/ui-core";
+import { Checkbox, ChipInputField, Combobox, Field, InputField, Label, SelectField } from "@scm-manager/ui-core";
 import {
   AnonymousMode,
   AutocompleteObject,
@@ -108,10 +107,9 @@ const GeneralSettings: FC<Props> = ({
         <div className="column">
           <InputField
             label={t("general-settings.realm-description")}
-            onChange={handleRealmDescriptionChange}
+            onChange={(event) => handleRealmDescriptionChange(event.target.value)}
             value={realmDescription}
             disabled={!hasUpdatePermission}
-            helpText={t("help.realmDescriptionHelpText")}
           />
         </div>
       </div>
@@ -123,7 +121,6 @@ const GeneralSettings: FC<Props> = ({
             value={namespaceStrategy}
             disabled={!hasUpdatePermission}
             namespaceStrategies={namespaceStrategies}
-            helpText={t("help.nameSpaceStrategyHelpText")}
           />
         </div>
       </div>
@@ -131,10 +128,10 @@ const GeneralSettings: FC<Props> = ({
         <div className="column">
           <InputField
             label={t("general-settings.login-info-url")}
-            onChange={handleLoginInfoUrlChange}
+            onChange={(event) => handleLoginInfoUrlChange(event.target.value)}
             value={loginInfoUrl}
             disabled={!hasUpdatePermission}
-            helpText={t("help.loginInfoUrlHelpText")}
+            descriptionText={t("help.loginInfoUrlHelpText")}
           />
         </div>
       </div>
@@ -142,33 +139,34 @@ const GeneralSettings: FC<Props> = ({
         <div className="column">
           <InputField
             label={t("general-settings.pluginUrl")}
-            onChange={handlePluginCenterUrlChange}
+            onChange={(event) => handlePluginCenterUrlChange(event.target.value)}
             value={pluginUrl}
             disabled={!hasUpdatePermission}
-            helpText={t("help.pluginUrlHelpText")}
+            descriptionText={t("help.pluginUrlHelpText")}
           />
         </div>
       </div>
       <div className="columns">
         <div className="column">
-          <Checkbox
-            label={t("general-settings.enabled-xsrf-protection")}
-            onChange={handleEnabledXsrfProtectionChange}
-            checked={enabledXsrfProtection}
-            title={t("general-settings.enabled-xsrf-protection")}
-            disabled={!hasUpdatePermission}
-            helpText={t("help.enableXsrfProtectionHelpText")}
-          />
+          <Field>
+            <Label as="span">{t("general-settings.enabled-xsrf-protection")}</Label>
+            <Checkbox
+              label={t("general-settings.enabled-xsrf-protection")}
+              onChange={(event) => handleEnabledXsrfProtectionChange(event.target.checked)}
+              checked={enabledXsrfProtection}
+              disabled={!hasUpdatePermission}
+              helpText={t("help.enableXsrfProtectionHelpText")}
+            />
+          </Field>
         </div>
       </div>
       <div className="columns">
         <div className="column">
-          <Select
+          <SelectField
             label={t("general-settings.anonymousMode.title")}
-            onChange={handleAnonymousMode}
+            onChange={(event) => handleAnonymousMode(event.target.value)}
             value={anonymousMode}
             disabled={!hasUpdatePermission}
-            className="is-fullwidth"
             options={[
               { label: t("general-settings.anonymousMode.full"), value: "FULL" },
               { label: t("general-settings.anonymousMode.protocolOnly"), value: "PROTOCOL_ONLY" },
@@ -183,10 +181,10 @@ const GeneralSettings: FC<Props> = ({
         <div className="column">
           <InputField
             label={t("general-settings.mail-domain-name")}
-            onChange={handleMailDomainNameChange}
+            onChange={(event) => handleMailDomainNameChange(event.target.value)}
             value={mailDomainName}
             disabled={!hasUpdatePermission}
-            helpText={t("help.mailDomainNameHelpText")}
+            descriptionText={t("help.mailDomainNameHelpText")}
           />
         </div>
       </div>
@@ -194,10 +192,10 @@ const GeneralSettings: FC<Props> = ({
         <div className="column">
           <InputField
             label={t("general-settings.alerts-url")}
-            onChange={handleAlertsUrlChange}
+            onChange={(event) => handleAlertsUrlChange(event.target.value)}
             value={alertsUrl}
             disabled={!hasUpdatePermission}
-            helpText={t("help.alertsUrlHelpText")}
+            descriptionText={t("help.alertsUrlHelpText")}
           />
         </div>
       </div>
@@ -205,10 +203,10 @@ const GeneralSettings: FC<Props> = ({
         <div className="column">
           <InputField
             label={t("general-settings.release-feed-url")}
-            onChange={handleReleaseFeedUrlChange}
+            onChange={(event) => handleReleaseFeedUrlChange(event.target.value)}
             value={releaseFeedUrl}
             disabled={!hasUpdatePermission}
-            helpText={t("help.releaseFeedUrlHelpText")}
+            descriptionText={t("help.releaseFeedUrlHelpText")}
           />
         </div>
       </div>

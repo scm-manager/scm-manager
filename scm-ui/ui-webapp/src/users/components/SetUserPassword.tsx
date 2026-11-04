@@ -14,75 +14,59 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, FormEvent, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { ErrorNotification, Notification, PasswordConfirmation, Subtitle } from "@scm-manager/ui-components";
 import { useSetUserPassword } from "@scm-manager/ui-api";
-import { Button, Level, useDocumentTitle } from "@scm-manager/ui-core";
+import { Form, Subtitle, useDocumentTitle } from "@scm-manager/ui-core";
+import { isPasswordValid } from "./userValidation";
 
 type Props = {
   user: User;
 };
 
+type SetPasswordForm = {
+  password: string;
+  passwordConfirmation: string;
+};
+
+const createEmptyForm = (): SetPasswordForm => ({ password: "", passwordConfirmation: "" });
+
 const SetUserPassword: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
+  const [tCommons] = useTranslation("commons");
   useDocumentTitle(t("singleUser.menu.setPasswordNavLink"), user.displayName);
-  const { passwordOverwritten, setPassword, error, isPending, reset } = useSetUserPassword(user);
-  const [newPassword, setNewPassword] = useState("");
-  const [passwordValid, setPasswordValid] = useState(false);
+  const { setPassword } = useSetUserPassword(user);
+  const [defaultValues, setDefaultValues] = useState(createEmptyForm);
 
-  useEffect(() => {
-    if (passwordOverwritten) {
-      setNewPassword("");
-      setPasswordValid(false);
-    }
-  }, [passwordOverwritten]);
-
-  const submit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (newPassword) {
-      setPassword(newPassword);
-    }
+  const submit = async ({ password }: SetPasswordForm) => {
+    await setPassword(password);
+    setDefaultValues(createEmptyForm());
   };
-
-  const onPasswordChange = (newValue: string, valid: boolean) => {
-    setNewPassword(newValue);
-    setPasswordValid(!!newValue && valid);
-  };
-
-  let message;
-
-  if (passwordOverwritten) {
-    message = (
-      <Notification type="success" onClose={reset}>
-        {t("singleUserPassword.setPasswordSuccessful")}
-      </Notification>
-    );
-  } else if (error) {
-    message = <ErrorNotification error={error} />;
-  }
 
   return (
-    <form onSubmit={submit}>
+    <>
       <Subtitle subtitle={t("singleUserPassword.subtitle")} />
-      {message}
-      <PasswordConfirmation passwordChanged={onPasswordChange} key={passwordOverwritten ? "changed" : "unchanged"} />
-      <Level
-        right={
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={!passwordValid}
-            isLoading={isPending}
-            testId="submit-button"
-            onClick={() => window.scrollTo(0, 0)}
-          >
-            {t("singleUserPassword.button")}
-          </Button>
-        }
-      />
-    </form>
+      <Form
+        translationPath={["users", "singleUserPassword"]}
+        defaultValues={defaultValues}
+        onSubmit={submit}
+        successMessageFallback={t("singleUserPassword.setPasswordSuccessful")}
+      >
+        <Form.Row>
+          <Form.SecretConfirmation
+            name="password"
+            label={tCommons("password.newPassword")}
+            confirmationLabel={tCommons("password.confirmPassword")}
+            confirmationErrorMessage={tCommons("password.passwordConfirmFailed")}
+            rules={{
+              required: tCommons("password.passwordInvalid"),
+              validate: (value: string) => isPasswordValid(value) || tCommons("password.passwordInvalid"),
+            }}
+          />
+        </Form.Row>
+      </Form>
+    </>
   );
 };
 

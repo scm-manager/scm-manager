@@ -83,6 +83,13 @@ type Props<FormType extends Record<string, unknown>> = {
    * @since 2.43.0
    */
   successMessageFallback?: string;
+  /**
+   * Enables the submit button for valid default values, before anything has been changed.
+   * This is useful for creation forms whose default values are already a complete entity.
+   *
+   * @since 4.0.0
+   */
+  allowSubmitWithoutChanges?: boolean;
 };
 
 /**
@@ -99,6 +106,7 @@ function Form<FormType extends Record<string, unknown>>({
   withDiscardChanges,
   successMessageFallback,
   submitButtonTestId,
+  allowSubmitWithoutChanges,
 }: Props<FormType>) {
   const form = useForm<FormType>({
     mode: "onChange",
@@ -180,7 +188,7 @@ function Form<FormType extends Record<string, unknown>>({
                 type="submit"
                 variant="primary"
                 testId={submitButtonTestId ?? "submit-button"}
-                disabled={!isDirty || !isValid}
+                disabled={(!isDirty && !allowSubmitWithoutChanges) || !isValid}
                 isLoading={isSubmitting}
                 form={prefix}
               >

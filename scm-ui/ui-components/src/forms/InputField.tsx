@@ -132,6 +132,9 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
   );
 };
 
+/**
+ * @deprecated Use InputField from ui-core instead
+ */
 // @ts-ignore
 const InputField: FieldType<BaseProps, HTMLInputElement, string> = createFormFieldWrapper(InnerInputField);
 

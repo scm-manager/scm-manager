@@ -20,8 +20,8 @@ import { HalRepresentationWithEmbedded, PluginSet } from "@scm-manager/ui-types"
 import { apiClient, requiredLink, waitForRestartAfter } from "@scm-manager/ui-api";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { Checkbox, ErrorNotification, Icon } from "@scm-manager/ui-components";
-import { Button } from "@scm-manager/ui-core";
+import { Icon } from "@scm-manager/ui-components";
+import { Button, Checkbox, ErrorNotification, Field, Label } from "@scm-manager/ui-core";
 import styled from "styled-components";
 
 const HighlightedImg = styled.img`
@@ -182,13 +182,15 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
             </PluginSetCard>
           ))}
           <BorderedDiv className="card-block has-border-danger px-4 pt-3">
-            <Checkbox
-              disabled={hasPluginSets}
-              checked={skipInstallation}
-              onChange={setSkipInstallation}
-              title={t("pluginWizardStep.skip.title")}
-              label={t("pluginWizardStep.skip.subtitle")}
-            ></Checkbox>
+            <Field as="fieldset">
+              <Label as="legend">{t("pluginWizardStep.skip.title")}</Label>
+              <Checkbox
+                disabled={hasPluginSets}
+                checked={skipInstallation}
+                onChange={(event) => setSkipInstallation(event.target.checked)}
+                label={t("pluginWizardStep.skip.subtitle")}
+              />
+            </Field>
           </BorderedDiv>
         </div>
         <Button

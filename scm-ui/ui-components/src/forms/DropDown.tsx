@@ -32,7 +32,7 @@ const FullWidthSelect = styled.select`
 `;
 
 /**
- * @deprecated Use `Select` instead
+ * @deprecated Use Select from ui-core instead
  */
 class DropDown extends React.Component<Props> {
   render() {

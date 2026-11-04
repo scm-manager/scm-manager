@@ -27,7 +27,7 @@ type Props = {
 };
 
 /**
- * @deprecated
+ * @deprecated Use Label from ui-core instead
  */
 class LabelWithHelpIcon extends React.Component<Props> {
   renderHelp() {

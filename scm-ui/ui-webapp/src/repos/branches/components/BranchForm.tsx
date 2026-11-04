@@ -17,8 +17,8 @@
 import React, { FC, FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Branch, BranchCreation } from "@scm-manager/ui-types";
-import { InputField, Select, validation as validator } from "@scm-manager/ui-components";
-import { Button, Level } from "@scm-manager/ui-core";
+import { validation as validator } from "@scm-manager/ui-components";
+import { Button, InputField, Level, SelectField } from "@scm-manager/ui-core";
 import { orderBranches } from "../util/orderBranches";
 
 type Props = {
@@ -34,55 +34,57 @@ const autoFocus = (el: HTMLSelectElement) => el?.focus();
 const BranchForm: FC<Props> = ({ submitForm, branches, disabled, transmittedName, loading }) => {
   const [t] = useTranslation("repos");
   const [name, setName] = useState(transmittedName || "");
-  const [source, setSource] = useState("");
+  const [source, setSource] = useState<string>();
   const [nameValid, setNameValid] = useState(true);
-
-  const changeName = (value: string) => {
-    setName(value);
-    setNameValid(validator.isBranchValid(value));
-  };
-
-  const isValid = () => nameValid && source && name;
-
-  const submit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (isValid()) {
-      submitForm({
-        name,
-        parent: source,
-      });
-    }
-  };
 
   orderBranches(branches);
   const options = branches.map((branch) => ({
     label: branch.name,
     value: branch.name,
   }));
+  // the select shows the first branch as long as the user has not chosen another one
+  const selectedSource = source ?? options[0]?.value ?? "";
+
+  const changeName = (value: string) => {
+    setName(value);
+    setNameValid(validator.isBranchValid(value));
+  };
+
+  const isValid = () => nameValid && selectedSource && name;
+
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isValid()) {
+      submitForm({
+        name,
+        parent: selectedSource,
+      });
+    }
+  };
 
   return (
     <>
       <form onSubmit={submit}>
         <div className="columns">
           <div className="column">
-            <Select
+            <SelectField
               name="source"
               label={t("branches.create.source")}
               options={options}
+              value={selectedSource}
               onChange={(e) => setSource(e.target.value)}
-              loading={loading}
               disabled={disabled}
               ref={autoFocus}
             />
             <InputField
               name="name"
               label={t("branches.create.name")}
-              onChange={changeName}
+              onChange={(event) => changeName(event.target.value)}
               value={name ? name : ""}
-              validationError={!nameValid}
-              errorMessage={t("validation.branch.nameInvalid")}
+              error={!nameValid ? t("validation.branch.nameInvalid") : undefined}
               disabled={!!transmittedName || disabled}
               testId="input-branch-name"
+              required
             />
           </div>
         </div>

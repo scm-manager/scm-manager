@@ -20,7 +20,6 @@
     "namespaceHelpText": "El espacio de nombres del repositorio. Este nombre formará parte de la URL del repositorio.",
     "nameHelpText": "El nombre del repositorio. Este nombre formará parte de la URL del repositorio.",
     "contactHelpText": "Dirección del correo electrónico de la persona responsable del repositorio.",
-    "descriptionHelpText": "Breve descripción del repositorio.",
     "initializeRepository": "Creates an initial branch and commits a basic README.md."
   },
   "repositoryRoot": {
@@ -168,7 +167,6 @@
     },
     "help": {
       "groupPermissionHelpText": "Establece si un permiso es de grupo. Si no está marcado es un permiso de usuario.",
-      "nameHelpText": "Gestionar los permisos de un usuario o grupo.",
       "roleHelpText": "READ = leer; WRITE = leer and escribir; OWNER = leer, escribir y también la capacidad de gestionar las propiedades y permisos. Si no hay nada seleccionado use el botón 'Avanzado' para ver los permisos en detalle.",
       "permissionsHelpText": "Use esto para especificar su propio conjunto de permisos independientemente de los roles predefinidos."
     },

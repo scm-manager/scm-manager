@@ -35,7 +35,7 @@ const FullWidthInputField = styled(InputField)`
 
 /**
  *
- * @deprecated
+ * @deprecated Use ChipInputField from ui-core instead
  */
 const AddEntryToTableField: FC<Props> = ({
   addEntry,

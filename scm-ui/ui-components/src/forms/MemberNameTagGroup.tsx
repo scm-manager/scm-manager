@@ -27,7 +27,7 @@ type Props = WithTranslation & {
 };
 
 /**
- * @deprecated
+ * @deprecated Use ChipInputField from ui-core instead
  */
 class MemberNameTagGroup extends React.Component<Props> {
   render() {
@@ -43,7 +43,7 @@ class MemberNameTagGroup extends React.Component<Props> {
       <TagGroup
         items={membersExtended}
         label={label ? label : t("group.members")}
-        helpText={helpText ? helpText : t("groupForm.help.memberHelpText")}
+        helpText={helpText}
         onRemove={this.removeEntry}
       />
     );
@@ -58,6 +58,6 @@ class MemberNameTagGroup extends React.Component<Props> {
 }
 
 /**
- * @deprecated
+ * @deprecated Use ChipInputField from ui-core instead
  */
 export default withTranslation("groups")(MemberNameTagGroup);

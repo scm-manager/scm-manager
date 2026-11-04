@@ -15,7 +15,7 @@
  */
 
 import React, { InputHTMLAttributes, Ref, FC } from "react";
-import { createAttributesForTesting } from "../../helpers";
+import { createAttributesForTesting, useAriaId } from "../../helpers";
 import Help from "../base/help/Help";
 import styled from "styled-components";
 import classNames from "classnames";
@@ -58,7 +58,8 @@ const Checkbox: FC<InputFieldProps> = ({
   ref,
   ...props
 }) => {
-  const descriptionId = descriptionText ? `checkbox-description-${name}` : undefined;
+  const generatedDescriptionId = useAriaId();
+  const descriptionId = descriptionText ? generatedDescriptionId : undefined;
   return (
     <>
       {descriptionText ? <p id={descriptionId}>{descriptionText}</p> : null}

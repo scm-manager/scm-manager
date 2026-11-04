@@ -41,6 +41,7 @@ function ControlledComboboxField<T extends Record<string, unknown>>({
   name,
   label,
   helpText,
+  descriptionText,
   rules,
   testId,
   defaultValue,
@@ -55,6 +56,7 @@ function ControlledComboboxField<T extends Record<string, unknown>>({
   const prefixedNameWithoutIndices = prefixWithoutIndices(nameWithPrefix);
   const labelTranslation = label || t(`${prefixedNameWithoutIndices}.label`) || "";
   const helpTextTranslation = helpText || t(`${prefixedNameWithoutIndices}.helpText`);
+  const descriptionTextTranslation = descriptionText || t(`${prefixedNameWithoutIndices}.descriptionText`);
   return (
     <Controller
       control={control}
@@ -71,6 +73,7 @@ function ControlledComboboxField<T extends Record<string, unknown>>({
           {...field}
           label={labelTranslation}
           helpText={helpTextTranslation}
+          descriptionText={descriptionTextTranslation}
           onChange={(e) => onChange(e?.value)}
           value={optionFactory(value)}
           error={

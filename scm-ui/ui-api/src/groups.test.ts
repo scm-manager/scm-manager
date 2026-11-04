@@ -156,7 +156,7 @@ describe("Test group hooks", () => {
       });
 
       await act(async () => {
-        await result.current.create(jedis);
+        await expect(result.current.create(jedis)).rejects.toThrow("Location header");
       });
 
       expect(result.current.error).toBeDefined();
@@ -180,8 +180,8 @@ describe("Test group hooks", () => {
         await result.current.remove(jedis);
       });
 
+      await waitFor(() => expect(result.current.isDeleted).toBe(true));
       expect(result.current.error).toBeFalsy();
-      expect(result.current.isDeleted).toBe(true);
       expect(result.current.isPending).toBe(false);
       expect(queryClient.getQueryData(["group", "jedis"])).toBeUndefined();
     });

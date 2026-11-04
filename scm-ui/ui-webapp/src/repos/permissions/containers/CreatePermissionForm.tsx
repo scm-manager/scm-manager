@@ -18,8 +18,17 @@ import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { useCreatePermission, useGroupOptions, useIndexLinks, useUserOptions } from "@scm-manager/ui-api";
-import { ErrorNotification, LabelWithHelpIcon, Radio, Subtitle } from "@scm-manager/ui-components";
-import { Button, ComboboxField, Level } from "@scm-manager/ui-core";
+import { Help } from "@scm-manager/ui-components";
+import {
+  Button,
+  ComboboxField,
+  ErrorNotification,
+  Field,
+  Label,
+  Level,
+  RadioGroup,
+  Subtitle,
+} from "@scm-manager/ui-core";
 import {
   AutocompleteObject,
   Link,
@@ -107,18 +116,6 @@ const CreatePermissionForm: FC<Props> = ({
     }
   };
 
-  const groupPermissionScopeChanged = (value: boolean) => {
-    if (value) {
-      permissionScopeChanged(true);
-    }
-  };
-
-  const userPermissionScopeChanged = (value: boolean) => {
-    if (value) {
-      permissionScopeChanged(false);
-    }
-  };
-
   const permissionScopeChanged = (groupPermission: boolean) => {
     setPermission({
       ...permission,
@@ -174,24 +171,21 @@ const CreatePermissionForm: FC<Props> = ({
       ) : null}
       <ErrorNotification error={error} />
       <form onSubmit={submit}>
-        <div className="field is-grouped is-grouped-multiline">
-          <div className="control is-flex-shrink-1">
-            <Radio
-              name="permission_scope"
-              value="USER_PERMISSION"
-              checked={!permission.groupPermission}
-              label={t("permission.user-permission")}
-              onChange={userPermissionScopeChanged}
-            />
-            <Radio
-              name="permission_scope"
-              value="GROUP_PERMISSION"
-              checked={permission.groupPermission}
-              label={t("permission.group-permission")}
-              onChange={groupPermissionScopeChanged}
-            />
-          </div>
-        </div>
+        <Field>
+          <RadioGroup
+            name="permission_scope"
+            className="is-flex is-flex-wrap-wrap"
+            value={permission.groupPermission ? "GROUP_PERMISSION" : "USER_PERMISSION"}
+            onValueChange={(value) => permissionScopeChanged(value === "GROUP_PERMISSION")}
+          >
+            <div className="mr-3">
+              <RadioGroup.Option value="USER_PERMISSION" label={t("permission.user-permission")} />
+            </div>
+            <div className="mr-3">
+              <RadioGroup.Option value="GROUP_PERMISSION" label={t("permission.group-permission")} />
+            </div>
+          </RadioGroup>
+        </Field>
         <div className="columns">
           <div className="column is-half">
             {permission.groupPermission && links.groups ? (
@@ -228,10 +222,10 @@ const CreatePermissionForm: FC<Props> = ({
                 />
               </div>
               <div className="column">
-                <LabelWithHelpIcon
-                  label={t("permission.permissions")}
-                  helpText={t("permission.help.permissionsHelpText")}
-                />
+                <Label>
+                  {t("permission.permissions")}
+                  <Help message={t("permission.help.permissionsHelpText")} />
+                </Label>
                 <Button onClick={() => setShowAdvancedDialog(true)}>{t("permission.advanced-button.label")}</Button>
               </div>
             </div>

@@ -18,9 +18,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
 import { useUpdateGroup } from "@scm-manager/ui-api";
-import { ErrorNotification } from "@scm-manager/ui-components";
-import { useDocumentTitle } from "@scm-manager/ui-core";
-import UpdateNotification from "../../components/UpdateNotification";
+import { Subtitle, useDocumentTitle } from "@scm-manager/ui-core";
 import GroupForm from "../components/GroupForm";
 import DeleteGroup from "./DeleteGroup";
 
@@ -30,14 +28,18 @@ type Props = {
 
 const EditGroup: FC<Props> = ({ group }) => {
   const [t] = useTranslation("groups");
+  const [tCommons] = useTranslation("commons");
   useDocumentTitle(t("singleGroup.settingsTitle"), group.name);
-  const { error, isPending, update, isUpdated } = useUpdateGroup();
+  const { update } = useUpdateGroup();
 
   return (
     <div>
-      <UpdateNotification isUpdated={isUpdated} />
-      <ErrorNotification error={error || undefined} />
-      <GroupForm group={group} submitForm={update} loading={isPending} />
+      <Subtitle subtitle={t(group.external ? "groupForm.externalSubtitle" : "groupForm.subtitle")} />
+      <GroupForm
+        group={group}
+        submitForm={(values) => update({ ...group, ...values })}
+        successMessage={tCommons("notifications.updateSuccessful")}
+      />
       <DeleteGroup group={group} />
     </div>
   );

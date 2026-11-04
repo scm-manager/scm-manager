@@ -15,7 +15,7 @@
  */
 
 import React, { FC } from "react";
-import { Checkbox, FileUpload, InputField, LabelWithHelpIcon } from "@scm-manager/ui-components";
+import { Checkbox, Field, FileInputField, InputField, Label } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -43,34 +43,38 @@ const ImportFromBundleForm: FC<Props> = ({
     <>
       <div className="columns">
         <div className="column is-half is-vcentered">
-          <LabelWithHelpIcon label={t("import.bundle.title")} helpText={t("import.bundle.helpText")} required={true} />
-          <FileUpload
-            handleFile={(file) => {
-              setFile(file);
+          <FileInputField
+            label={t("import.bundle.title")}
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) {
+                setFile(file);
+              }
               setValid(!!file);
             }}
-            required={true}
+            required
           />
         </div>
         <div className="column is-half is-vcentered">
-          <Checkbox
-            checked={compressed}
-            onChange={(value) => setCompressed(value)}
-            label={t("import.compressed.label")}
-            disabled={disabled}
-            helpText={t("import.compressed.helpText")}
-            title={t("import.compressed.label")}
-          />
+          <Field>
+            <Label as="span">{t("import.compressed.label")}</Label>
+            <Checkbox
+              checked={compressed}
+              onChange={(event) => setCompressed(event.target.checked)}
+              label={t("import.compressed.label")}
+              disabled={disabled}
+            />
+          </Field>
         </div>
       </div>
       <div className="columns">
         <div className="column is-half is-vcentered">
           <InputField
             value={password}
-            onChange={(value) => setPassword(value)}
+            onChange={(event) => setPassword(event.target.value)}
             type="password"
             label={t("import.bundle.password.title")}
-            helpText={t("import.bundle.password.helpText")}
+            descriptionText={t("import.bundle.password.helpText")}
           />
         </div>
       </div>

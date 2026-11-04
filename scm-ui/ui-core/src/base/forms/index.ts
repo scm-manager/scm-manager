@@ -17,6 +17,7 @@
 import FormCmp from "./Form";
 import FormRow from "./FormRow";
 import ControlledInputField from "./input/ControlledInputField";
+import ControlledTextareaField from "./input/ControlledTextareaField";
 import ControlledCheckboxField from "./checkbox/ControlledCheckboxField";
 import ControlledSecretConfirmationField from "./input/ControlledSecretConfirmationField";
 import ControlledSelectField from "./select/ControlledSelectField";
@@ -60,6 +61,9 @@ export { default as InputField } from "./input/InputField";
 export { default as DatePicker } from "./date-picker/DatePicker";
 export type { DatePickerProps } from "./date-picker/DatePicker";
 export { default as Textarea } from "./input/Textarea";
+export { default as TextareaField } from "./input/TextareaField";
+export { default as FileInputField } from "./input/FileInputField";
+export { default as FilterInput } from "./input/FilterInput";
 export { default as Select } from "./select/Select";
 export * from "./resourceHooks";
 export { default as Label } from "./base/label/Label";
@@ -79,6 +83,7 @@ export const ChipInputField = Object.assign(ChipInputFieldComponent, {
 export const Form = Object.assign(FormCmp, {
   Row: FormRow,
   Input: ControlledInputField,
+  Textarea: ControlledTextareaField,
   Checkbox: ControlledCheckboxField,
   SecretConfirmation: ControlledSecretConfirmationField,
   Select: ControlledSelectField,

@@ -26,8 +26,8 @@ import {
   RepositoryCreation,
   RepositoryType
 } from "@scm-manager/ui-types";
-import { Checkbox, Select, urls } from "@scm-manager/ui-components";
-import { Button, Level } from "@scm-manager/ui-core";
+import { urls } from "@scm-manager/ui-components";
+import { Button, Checkbox, Field, Level, SelectField } from "@scm-manager/ui-core";
 import NamespaceAndNameFields from "../NamespaceAndNameFields";
 import RepositoryInformationForm from "../RepositoryInformationForm";
 import { useLocation } from "react-router-dom";
@@ -87,6 +87,13 @@ const RepositoryForm: FC<Props> = ({
     }
   }, [repository]);
 
+  useEffect(() => {
+    // the select shows the first type, so it has to be the initial value of a new repository
+    if (!repository && repositoryTypes?.length) {
+      setRepo((current) => (current.type ? current : { ...current, type: repositoryTypes[0].name }));
+    }
+  }, [repository, repositoryTypes]);
+
   const isEditMode = () => !!repository;
   const isModifiable = () => !!repository && !!repository._links.update;
   const disabled = (!isModifiable() && isEditMode()) || loading;
@@ -145,22 +152,24 @@ const RepositoryForm: FC<Props> = ({
         />
         <div className="columns">
           <div className={classNames("column", "is-half")}>
-            <Select
+            <SelectField
               label={t("repository.type")}
-              onChange={type => setRepo({ ...repo, type })}
+              onChange={(event) => setRepo({ ...repo, type: event.target.value })}
               value={repo ? repo.type : ""}
               options={createSelectOptions(repositoryTypes)}
               disabled={disabled}
             />
           </div>
           <div className={classNames("column", "is-half", "is-align-self-flex-end")}>
-            <Checkbox
-              label={t("repositoryForm.initializeRepository")}
-              checked={initRepository}
-              onChange={toggleInitCheckbox}
-              helpText={t("help.initializeRepository")}
-              disabled={disabled}
-            />
+            <Field>
+              <Checkbox
+                label={t("repositoryForm.initializeRepository")}
+                checked={initRepository}
+                onChange={toggleInitCheckbox}
+                helpText={t("help.initializeRepository")}
+                disabled={disabled}
+              />
+            </Field>
             {initRepository && (
               <ExtensionPoint name="repos.create.initialize" props={extensionProps} renderAll={true} />
             )}

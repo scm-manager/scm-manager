@@ -15,13 +15,24 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { Checkbox, ErrorNotification, InputField, Notification, Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { ExportInfo, Link, Repository } from "@scm-manager/ui-types";
 import { useExportInfo, useExportRepository } from "@scm-manager/ui-api";
 import styled from "styled-components";
 import classNames from "classnames";
-import { AbsoluteDate, Button, ExternalLinkButton, Icon, Level } from "@scm-manager/ui-core";
+import {
+  AbsoluteDate,
+  Button,
+  Checkbox,
+  ErrorNotification,
+  ExternalLinkButton,
+  Field,
+  Icon,
+  InputField,
+  Level,
+  Notification,
+  Subtitle,
+} from "@scm-manager/ui-core";
 
 const InfoBox = styled.div`
   white-space: pre-line;
@@ -113,34 +124,39 @@ const ExportRepository: FC<Props> = ({ repository }) => {
       <ErrorNotification error={errorInfo} />
       <ErrorNotification error={errorExport} />
       <Notification type="inherit">{t("export.notification")}</Notification>
-      <Checkbox
-        checked={fullExport || compressed}
-        label={t("export.compressed.label")}
-        onChange={setCompressed}
-        helpText={t("export.compressed.helpText")}
-        disabled={fullExport}
-      />
-      {repository?._links?.fullExport && (
+      <Field>
         <Checkbox
-          checked={fullExport}
-          label={t("export.fullExport.label")}
-          onChange={setFullExport}
-          helpText={t("export.fullExport.helpText")}
+          checked={fullExport || compressed}
+          label={t("export.compressed.label")}
+          onChange={(event) => setCompressed(event.target.checked)}
+          helpText={t("export.compressed.helpText")}
+          disabled={fullExport}
         />
+      </Field>
+      {repository?._links?.fullExport && (
+        <Field>
+          <Checkbox
+            checked={fullExport}
+            label={t("export.fullExport.label")}
+            onChange={(event) => setFullExport(event.target.checked)}
+            helpText={t("export.fullExport.helpText")}
+          />
+        </Field>
       )}
-      <Checkbox
-        checked={encrypt}
-        label={t("export.encrypt.label")}
-        onChange={setEncrypt}
-        helpText={t("export.encrypt.helpText")}
-      />
+      <Field>
+        <Checkbox
+          checked={encrypt}
+          label={t("export.encrypt.label")}
+          onChange={(event) => setEncrypt(event.target.checked)}
+          helpText={t("export.encrypt.helpText")}
+        />
+      </Field>
       {encrypt && (
         <div className={classNames("columns", "column", "is-half")}>
           <InputField
             label={t("export.password.label")}
-            helpText={t("export.password.helpText")}
             value={password}
-            onChange={setPassword}
+            onChange={(event) => setPassword(event.target.value)}
             type="password"
           />
         </div>

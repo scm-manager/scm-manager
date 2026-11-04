@@ -87,7 +87,7 @@
     }
   },
   "singleUserPassword": {
-    "button": "Guardar",
+    "submit": "Guardar",
     "setPasswordSuccessful": "Contraseña guardada correctamente"
   },
   "userForm": {

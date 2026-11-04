@@ -16,7 +16,7 @@
 
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { Checkbox, InputField, Subtitle } from "@scm-manager/ui-components";
+import { Checkbox, Field, InputField, Subtitle } from "@scm-manager/ui-core";
 import { ConfigChangeHandler } from "@scm-manager/ui-types";
 
 type Props = WithTranslation & {
@@ -38,18 +38,20 @@ class BaseUrlSettings extends React.Component<Props> {
           <div className="column">
             <InputField
               label={t("base-url-settings.base-url")}
-              onChange={this.handleBaseUrlChange}
+              onChange={(event) => this.handleBaseUrlChange(event.target.value)}
               value={baseUrl}
               disabled={!hasUpdatePermission}
-              helpText={t("help.baseUrlHelpText")}
+              descriptionText={t("help.baseUrlHelpText")}
             />
-            <Checkbox
-              checked={forceBaseUrl}
-              label={t("base-url-settings.force-base-url")}
-              onChange={this.handleForceBaseUrlChange}
-              disabled={!hasUpdatePermission}
-              helpText={t("help.forceBaseUrlHelpText")}
-            />
+            <Field>
+              <Checkbox
+                checked={forceBaseUrl}
+                label={t("base-url-settings.force-base-url")}
+                onChange={(event) => this.handleForceBaseUrlChange(event.target.checked)}
+                disabled={!hasUpdatePermission}
+                helpText={t("help.forceBaseUrlHelpText")}
+              />
+            </Field>
           </div>
         </div>
       </>

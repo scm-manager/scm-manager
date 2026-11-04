@@ -19,8 +19,8 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Plugin } from "@scm-manager/ui-types";
-import { Checkbox, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
-import { Button, ButtonVariants, Icon } from "@scm-manager/ui-core";
+import { Modal } from "@scm-manager/ui-components";
+import { Button, ButtonVariants, Checkbox, ErrorNotification, Field, Icon, Notification } from "@scm-manager/ui-core";
 import SuccessNotification from "./SuccessNotification";
 import { useInstallPlugin, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
 import { PluginAction } from "../containers/PluginsOverview";
@@ -179,12 +179,14 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   const createRestartSectionContent = () => {
     if (plugin._links[pluginAction + "WithRestart"]) {
       return (
-        <Checkbox
-          checked={shouldRestart}
-          label={t("plugins.modal.restart")}
-          onChange={setShouldRestart}
-          disabled={false}
-        />
+        <Field>
+          <Checkbox
+            checked={shouldRestart}
+            label={t("plugins.modal.restart")}
+            onChange={(event) => setShouldRestart(event.target.checked)}
+            disabled={false}
+          />
+        </Field>
       );
     } else {
       return <Notification type="warning">{t("plugins.modal.manualRestartRequired")}</Notification>;

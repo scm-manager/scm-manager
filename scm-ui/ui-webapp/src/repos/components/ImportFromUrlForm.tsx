@@ -17,7 +17,8 @@
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RepositoryUrlImport } from "@scm-manager/ui-types";
-import { Checkbox, InputField, validation } from "@scm-manager/ui-components";
+import { validation } from "@scm-manager/ui-components";
+import { Checkbox, Field, InputField } from "@scm-manager/ui-core";
 
 type Props = {
   repository: RepositoryUrlImport;
@@ -52,44 +53,44 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled
       <div className="column is-full px-3">
         <InputField
           label={t("import.importUrl")}
-          onChange={handleImportUrlChange}
+          onChange={(event) => handleImportUrlChange(event.target.value)}
           value={repository.importUrl}
-          helpText={t("help.importUrlHelpText")}
-          validationError={urlValidationError}
-          errorMessage={t("validation.url-invalid")}
+          descriptionText={t("help.importUrlHelpText")}
+          error={urlValidationError ? t("validation.url-invalid") : undefined}
           disabled={disabled}
-          onBlur={handleImportUrlBlur}
-          required={true}
-          aria-required={true}
+          onBlur={(event) => handleImportUrlBlur(event.target.value)}
+          required
         />
       </div>
       <div className="column is-half px-3">
         <InputField
           label={t("import.username")}
-          onChange={(username) => onChange({ ...repository, username })}
+          onChange={(event) => onChange({ ...repository, username: event.target.value })}
           value={repository.username}
-          helpText={t("help.usernameHelpText")}
+          descriptionText={t("help.usernameHelpText")}
           disabled={disabled}
         />
       </div>
       <div className="column is-half px-3">
         <InputField
           label={t("import.password")}
-          onChange={(password) => onChange({ ...repository, password })}
+          onChange={(event) => onChange({ ...repository, password: event.target.value })}
           value={repository.password}
           type="password"
-          helpText={t("help.passwordHelpText")}
+          descriptionText={t("help.passwordHelpText")}
           disabled={disabled}
         />
       </div>
       <div className="column is-full px-3">
-        <Checkbox
-          label={t("import.skipLfs")}
-          onChange={(skipLfs) => onChange({ ...repository, skipLfs })}
-          checked={repository.skipLfs}
-          helpText={t("help.skipLfsHelpText")}
-          disabled={disabled}
-        />
+        <Field>
+          <Checkbox
+            label={t("import.skipLfs")}
+            onChange={(event) => onChange({ ...repository, skipLfs: event.target.checked })}
+            checked={repository.skipLfs}
+            helpText={t("help.skipLfsHelpText")}
+            disabled={disabled}
+          />
+        </Field>
       </div>
     </div>
   );

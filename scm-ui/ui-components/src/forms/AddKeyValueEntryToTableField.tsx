@@ -48,7 +48,7 @@ const MobileWrappedDiv = styled.div`
 `;
 
 /**
- * @deprecated
+ * @deprecated Use Form.Table together with Form.AddListEntryForm from ui-core instead
  */
 const AddKeyValueEntryToTableField: FC<Props> = ({
   keyFieldLabel,

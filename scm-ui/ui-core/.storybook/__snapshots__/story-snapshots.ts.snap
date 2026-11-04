@@ -835,6 +835,198 @@ exports[`Forms/DatePicker WithBounds 1`] = `
 "
 `;
 
+exports[`Forms/FileInputField Default 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyFile</label>
+    <div class="control">
+      <div class="file has-name is-fullwidth is-info">
+        <label class="file-label"
+          ><input id="scm-id-1" class="file-input" type="file" /><span class="file-cta"
+            ><span class="file-icon"><i class="fas fa-arrow-circle-up" aria-hidden="true"></i></span
+            ><span class="file-label has-text-weight-bold">Select File</span></span
+          ><span class="file-name has-text-weight-light has-text-secondary">No file chosen</span></label
+        >
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/FileInputField Required 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyFile<span aria-hidden="true">*</span></label>
+    <div class="control">
+      <div class="file has-name is-fullwidth is-info">
+        <label class="file-label"
+          ><input id="scm-id-1" class="file-input" required="" type="file" /><span class="file-cta"
+            ><span class="file-icon"><i class="fas fa-arrow-circle-up" aria-hidden="true"></i></span
+            ><span class="file-label has-text-weight-bold">Select File</span></span
+          ><span class="file-name has-text-weight-light has-text-secondary">No file chosen</span></label
+        >
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/FileInputField WithDescription 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyFile</label>
+    <p class="mb-2 is-size-7" id="scm-id-2">This text is a description for this file input</p>
+    <div class="control">
+      <div class="file has-name is-fullwidth is-info">
+        <label class="file-label"
+          ><input id="scm-id-1" class="file-input" aria-describedby="scm-id-2" type="file" /><span class="file-cta"
+            ><span class="file-icon"><i class="fas fa-arrow-circle-up" aria-hidden="true"></i></span
+            ><span class="file-label has-text-weight-bold">Select File</span></span
+          ><span class="file-name has-text-weight-light has-text-secondary">No file chosen</span></label
+        >
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/FileInputField WithError 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyFile</label>
+    <div class="control">
+      <div class="file has-name is-fullwidth is-danger">
+        <label class="file-label"
+          ><input id="scm-id-1" class="file-input" aria-describedby="scm-id-3" type="file" /><span class="file-cta"
+            ><span class="file-icon"><i class="fas fa-arrow-circle-up" aria-hidden="true"></i></span
+            ><span class="file-label has-text-weight-bold">Select File</span></span
+          ><span class="file-name has-text-weight-light has-text-secondary">No file chosen</span></label
+        >
+      </div>
+    </div>
+    <p id="scm-id-3" class="help is-danger">This field is super required</p>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/FileInputField WithPlaceholder 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyFile</label>
+    <div class="control">
+      <div class="file has-name is-fullwidth is-info">
+        <label class="file-label"
+          ><input id="scm-id-1" class="file-input" type="file" /><span class="file-cta"
+            ><span class="file-icon"><i class="fas fa-arrow-circle-up" aria-hidden="true"></i></span
+            ><span class="file-label has-text-weight-bold">Select File</span></span
+          ><span class="file-name has-text-weight-light has-text-secondary">No file chosen</span></label
+        >
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/FilterInput Default 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <form class="input-field is-flex is-align-items-center">
+    <label class="label mr-2" for="scm-id-1">filter entries</label>
+    <div class="control has-icons-left">
+      <input class="input" id="scm-id-1" type="search" value="" /><span class="icon is-small is-left"
+        ><i class="fas fa-filter" aria-hidden="true"></i
+      ></span>
+    </div>
+  </form>
+  <p class="mt-4">Current filter:</p>
+</div>
+"
+`;
+
+exports[`Forms/FilterInput WithInitialValue 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <form class="input-field is-flex is-align-items-center">
+    <label class="label mr-2" for="scm-id-1">filter entries</label>
+    <div class="control has-icons-left">
+      <input class="input" id="scm-id-1" type="search" value="scm" /><span class="icon is-small is-left"
+        ><i class="fas fa-filter" aria-hidden="true"></i
+      ></span>
+    </div>
+  </form>
+  <p class="mt-4">Current filter: scm</p>
+</div>
+"
+`;
+
+exports[`Forms/FilterInput WithLabel 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <form class="input-field is-flex is-align-items-center">
+    <label class="label mr-2" for="scm-id-1">Filter repositories</label>
+    <div class="control has-icons-left">
+      <input class="input" id="scm-id-1" type="search" value="" /><span class="icon is-small is-left"
+        ><i class="fas fa-filter" aria-hidden="true"></i
+      ></span>
+    </div>
+  </form>
+  <p class="mt-4">Current filter:</p>
+</div>
+"
+`;
+
+exports[`Forms/Form AllowSubmitWithoutChanges 1`] = `
+"<div style="margin: 2rem; max-width: 60rem">
+  <form id="form" novalidate=""></form>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="input-name"><span aria-hidden="true">*</span></label>
+      <p class="mb-2 is-size-7"></p>
+      <div class="control">
+        <input
+          class="input"
+          id="input-name"
+          required=""
+          form="form"
+          data-testid="input-name"
+          value="trillian"
+          name="name"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="field column">
+      <div class="control">
+        <label class="sc-dlVwtM fUselC checkbox is-align-items-center"
+          ><input
+            class="sc-hGPAwl bhuxcg m-3"
+            form="form"
+            data-testid="checkbox-active"
+            type="checkbox"
+            value="true"
+            checked=""
+            name="active"
+        /></label>
+      </div>
+    </div>
+  </div>
+  <div class="level">
+    <div class="level-left"></div>
+    <div class="level-right">
+      <div class="sc-crHjOq hbAlqc">
+        <button type="submit" form="form" class="sc-hKwBjT leeNgY button is-primary" data-testid="submit-button">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+"
+`;
+
 exports[`Forms/Form ControlledChipInputWithAdd 1`] = `
 "<div style="margin: 2rem; max-width: 60rem">
   <form id="form" novalidate=""></form>
@@ -909,10 +1101,24 @@ exports[`Forms/Form Creation 1`] = `
   <form id="form" novalidate=""></form>
   <div class="columns">
     <div class="field column">
-      <label class="label" for="input-name"></label>
+      <label class="label" for="input-name"><span aria-hidden="true">*</span></label>
       <p class="mb-2 is-size-7"></p>
       <div class="control">
-        <input class="input" id="input-name" required="" form="form" data-testid="input-name" value="" />
+        <input class="input" id="input-name" required="" form="form" data-testid="input-name" value="" name="name" />
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="field column">
+      <label class="label" for="textarea-description"></label>
+      <div class="control">
+        <textarea
+          class="textarea"
+          id="textarea-description"
+          name="description"
+          form="form"
+          data-testid="textarea-description"
+        ></textarea>
       </div>
     </div>
   </div>
@@ -921,7 +1127,15 @@ exports[`Forms/Form Creation 1`] = `
       <label class="label" for="input-password"></label>
       <p class="mb-2 is-size-7"></p>
       <div class="control">
-        <input class="input" id="input-password" form="form" data-testid="input-password" type="password" value="" />
+        <input
+          class="input"
+          id="input-password"
+          form="form"
+          data-testid="input-password"
+          type="password"
+          value=""
+          name="password"
+        />
       </div>
     </div>
     <div class="field column">
@@ -934,6 +1148,7 @@ exports[`Forms/Form Creation 1`] = `
           form="form"
           data-testid="input-password-confirmation"
           type="password"
+          name="passwordConfirmation"
         />
       </div>
     </div>
@@ -982,7 +1197,7 @@ exports[`Forms/Form Editing 1`] = `
       <label class="label" for="input-name"></label>
       <p class="mb-2 is-size-7"></p>
       <div class="control">
-        <input class="input" id="input-name" form="form" data-testid="input-name" value="trillian" />
+        <input class="input" id="input-name" form="form" data-testid="input-name" value="trillian" name="name" />
       </div>
     </div>
   </div>
@@ -998,6 +1213,7 @@ exports[`Forms/Form Editing 1`] = `
           data-testid="input-password"
           type="password"
           value="secret"
+          name="password"
         />
       </div>
     </div>
@@ -1012,6 +1228,7 @@ exports[`Forms/Form Editing 1`] = `
           data-testid="input-password-confirmation"
           type="password"
           value=""
+          name="passwordConfirmation"
         />
       </div>
     </div>
@@ -1059,7 +1276,9 @@ exports[`Forms/Form Layout 1`] = `
     <div class="field column">
       <label class="label" for="input-name"></label>
       <p class="mb-2 is-size-7"></p>
-      <div class="control"><input class="input" id="input-name" form="form" data-testid="input-name" value="" /></div>
+      <div class="control">
+        <input class="input" id="input-name" form="form" data-testid="input-name" value="" name="name" />
+      </div>
     </div>
     <div class="field column">
       <label class="label" for="select-method"></label>
@@ -1078,7 +1297,15 @@ exports[`Forms/Form Layout 1`] = `
       <label class="label" for="input-password"></label>
       <p class="mb-2 is-size-7"></p>
       <div class="control">
-        <input class="input" id="input-password" form="form" data-testid="input-password" type="password" value="" />
+        <input
+          class="input"
+          id="input-password"
+          form="form"
+          data-testid="input-password"
+          type="password"
+          value=""
+          name="password"
+        />
       </div>
     </div>
     <div class="field column">
@@ -1091,6 +1318,7 @@ exports[`Forms/Form Layout 1`] = `
           form="form"
           data-testid="input-password-confirmation"
           type="password"
+          name="passwordConfirmation"
         />
       </div>
     </div>
@@ -1147,6 +1375,7 @@ exports[`Forms/Form Nested 1`] = `
           form="form"
           data-testid="input-webhooks.0.urlpattern"
           value="https://hitchhiker.com"
+          name="webhooks.0.urlPattern"
         />
       </div>
     </div>
@@ -1180,7 +1409,7 @@ exports[`Forms/Form Nested 1`] = `
         <label class="label" for="input-key"></label>
         <p class="mb-2 is-size-7"></p>
         <div class="control">
-          <input class="input" id="input-key" form="webhooks.0.headers" data-testid="input-key" value="" />
+          <input class="input" id="input-key" form="webhooks.0.headers" data-testid="input-key" value="" name="key" />
         </div>
       </div>
     </div>
@@ -1189,7 +1418,14 @@ exports[`Forms/Form Nested 1`] = `
         <label class="label" for="input-value"></label>
         <p class="mb-2 is-size-7"></p>
         <div class="control">
-          <input class="input" id="input-value" form="webhooks.0.headers" data-testid="input-value" value="" />
+          <input
+            class="input"
+            id="input-value"
+            form="webhooks.0.headers"
+            data-testid="input-value"
+            value=""
+            name="value"
+          />
         </div>
       </div>
     </div>
@@ -1228,7 +1464,15 @@ exports[`Forms/Form ReadOnly 1`] = `
       <label class="label" for="input-name"></label>
       <p class="mb-2 is-size-7"></p>
       <div class="control">
-        <input class="input" id="input-name" readonly="" form="form" data-testid="input-name" value="trillian" />
+        <input
+          class="input"
+          id="input-name"
+          readonly=""
+          form="form"
+          data-testid="input-name"
+          value="trillian"
+          name="name"
+        />
       </div>
     </div>
   </div>
@@ -1245,6 +1489,7 @@ exports[`Forms/Form ReadOnly 1`] = `
           data-testid="input-password"
           type="password"
           value="secret"
+          name="password"
         />
       </div>
     </div>
@@ -1259,6 +1504,7 @@ exports[`Forms/Form ReadOnly 1`] = `
           form="form"
           data-testid="input-password-confirmation"
           type="password"
+          name="passwordConfirmation"
         />
       </div>
     </div>
@@ -1281,9 +1527,9 @@ exports[`Forms/Form ReadOnly 1`] = `
   </div>
   <div class="columns">
     <div class="field column" aria-owns="input-labels">
-      <label class="label" id="scm-id-1"></label>
+      <label class="label" id="scm-id-8"></label>
       <div class="control">
-        <ul class="sc-fKVoIy clccwg is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-1">
+        <ul class="sc-fKVoIy clccwg is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-8">
           <li class="tag is-light is-overflow-hidden"><span class="is-ellipsis-overflow">test</span></li>
           <li class="tag is-light is-overflow-hidden"><span class="is-ellipsis-overflow">hero</span></li>
           <div class="is-flex-grow-1">
@@ -1292,7 +1538,7 @@ exports[`Forms/Form ReadOnly 1`] = `
               class="sc-bBHAhJ keExRl is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
               placeholder=""
               id="input-labels"
-              aria-describedby="scm-id-2"
+              aria-describedby="scm-id-9"
               data-testid="input-labels"
               disabled=""
               name="labels"
@@ -1302,7 +1548,7 @@ exports[`Forms/Form ReadOnly 1`] = `
       </div>
       <span
         aria-hidden="true"
-        id="scm-id-2"
+        id="scm-id-9"
         style="
           position: absolute;
           border: 0px;
@@ -1329,12 +1575,14 @@ exports[`Forms/Form RepoConfiguration 1`] = `
   <div class="field column">
     <label class="label" for="input-url"></label>
     <p class="mb-2 is-size-7"></p>
-    <div class="control"><input class="input" id="input-url" form="form" data-testid="input-url" value="" /></div>
+    <div class="control">
+      <input class="input" id="input-url" form="form" data-testid="input-url" value="" name="url" />
+    </div>
   </div>
   <div class="field column" aria-owns="input-labels">
-    <label class="label" id="scm-id-1"></label>
+    <label class="label" id="scm-id-3"></label>
     <div class="control">
-      <ul class="sc-fKVoIy clccwg is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-1">
+      <ul class="sc-fKVoIy clccwg is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-3">
         <li class="tag is-light is-overflow-hidden">
           <span class="is-ellipsis-overflow">test</span
           ><button aria-label="Delete 'test'" class="sc-iwjfEg lXiFt delete is-small" type="button"></button>
@@ -1345,7 +1593,7 @@ exports[`Forms/Form RepoConfiguration 1`] = `
             class="sc-bBHAhJ keExRl is-borderless has-background-transparent is-shadowless input is-ellipsis-overflow"
             placeholder=""
             id="input-labels"
-            aria-describedby="scm-id-2"
+            aria-describedby="scm-id-4"
             data-testid="input-labels"
             name="labels"
           />
@@ -1354,7 +1602,7 @@ exports[`Forms/Form RepoConfiguration 1`] = `
     </div>
     <span
       aria-hidden="true"
-      id="scm-id-2"
+      id="scm-id-4"
       style="
         position: absolute;
         border: 0px;
@@ -1371,9 +1619,9 @@ exports[`Forms/Form RepoConfiguration 1`] = `
     >
   </div>
   <div class="field column" aria-owns="input-people">
-    <label class="label" id="scm-id-3"></label>
+    <label class="label" id="scm-id-5"></label>
     <div class="control">
-      <ul class="sc-fKVoIy clccwg is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-3">
+      <ul class="sc-fKVoIy clccwg is-flex is-flex-wrap-wrap input" aria-labelledby="scm-id-5">
         <li class="tag is-light is-overflow-hidden">
           <span class="is-ellipsis-overflow">Trillian</span
           ><button aria-label="Delete 'Trillian'" class="sc-iwjfEg lXiFt delete is-small" type="button"></button>
@@ -1415,7 +1663,7 @@ exports[`Forms/Form RepoConfiguration 1`] = `
     </div>
     <span
       aria-hidden="true"
-      id="scm-id-4"
+      id="scm-id-6"
       style="
         position: absolute;
         border: 0px;
@@ -1432,7 +1680,7 @@ exports[`Forms/Form RepoConfiguration 1`] = `
     >
   </div>
   <div class="field column">
-    <label class="label" id="scm-id-5"></label>
+    <label class="label" id="scm-id-7"></label>
     <div class="control">
       <input
         hidden=""
@@ -1520,13 +1768,13 @@ exports[`Forms/Form Reset 1`] = `
       <label class="label" for="input-name"></label>
       <p class="mb-2 is-size-7"></p>
       <div class="control">
-        <input class="input" id="input-name" form="form" data-testid="input-name" value="trillian" />
+        <input class="input" id="input-name" form="form" data-testid="input-name" value="trillian" name="name" />
       </div>
     </div>
   </div>
   <div class="columns">
     <div class="field column">
-      <label class="label" for="input-password"></label>
+      <label class="label" for="input-password"><span aria-hidden="true">*</span></label>
       <p class="mb-2 is-size-7"></p>
       <div class="control">
         <input
@@ -1537,20 +1785,23 @@ exports[`Forms/Form Reset 1`] = `
           data-testid="input-password"
           type="password"
           value="secret"
+          name="password"
         />
       </div>
     </div>
     <div class="field column">
-      <label class="label" for="input-password-confirmation"></label>
+      <label class="label" for="input-password-confirmation"><span aria-hidden="true">*</span></label>
       <p class="mb-2 is-size-7"></p>
       <div class="control">
         <input
           class="input"
           id="input-password-confirmation"
           form="form"
+          required=""
           data-testid="input-password-confirmation"
           type="password"
           value="secret"
+          name="passwordConfirmation"
         />
       </div>
     </div>
@@ -1576,7 +1827,7 @@ exports[`Forms/Form Reset 1`] = `
       <label class="label" for="input-date"></label>
       <p class="mb-2 is-size-7"></p>
       <div class="control">
-        <input class="input" id="input-date" form="form" data-testid="input-date" type="date" value="" />
+        <input class="input" id="input-date" form="form" data-testid="input-date" type="date" value="" name="date" />
       </div>
     </div>
   </div>
@@ -1635,12 +1886,23 @@ exports[`Forms/InputField Default 1`] = `
 "
 `;
 
+exports[`Forms/InputField Required 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyInput<span aria-hidden="true">*</span></label>
+    <p class="mb-2 is-size-7"></p>
+    <div class="control"><input class="input" id="scm-id-1" required="" /></div>
+  </div>
+</div>
+"
+`;
+
 exports[`Forms/InputField WithDescription 1`] = `
 "<div style="margin: 2rem; max-width: 40rem">
   <div class="field">
     <label class="label" for="scm-id-1">MyInput</label>
-    <p class="mb-2 is-size-7" id="input-description-undefined">This text is a description for this input</p>
-    <div class="control"><input class="input" id="scm-id-1" aria-describedby="input-description-undefined" /></div>
+    <p class="mb-2 is-size-7" id="scm-id-2">This text is a description for this input</p>
+    <div class="control"><input class="input" id="scm-id-1" aria-describedby="scm-id-2" /></div>
   </div>
 </div>
 "
@@ -1650,18 +1912,18 @@ exports[`Forms/InputField WithDescriptionExtended 1`] = `
 "<div style="margin: 2rem; max-width: 40rem">
   <div class="field">
     <label class="label" for="scm-id-1">MyInput 1</label>
-    <details class="sc-fotPuT dmzYOY mb-2 is-size-7" id="input-description-undefined">
+    <details class="sc-fotPuT dmzYOY mb-2 is-size-7" id="scm-id-2">
       <summary>
         <span class="is-small icon" aria-hidden="true"><i class="fas fa-fw fa-chevron-right fa-xs"></i></span
         ><span>This text is a description for this input</span>
       </summary>
       <span>This is the extended description for this input</span>
     </details>
-    <div class="control"><input class="input" id="scm-id-1" aria-describedby="input-description-undefined" /></div>
+    <div class="control"><input class="input" id="scm-id-1" aria-describedby="scm-id-2" /></div>
   </div>
   <div class="field">
-    <label class="label" for="scm-id-2">MyInput 2</label>
-    <details class="sc-fotPuT dmzYOY mb-2 is-size-7" id="input-description-undefined">
+    <label class="label" for="scm-id-4">MyInput 2</label>
+    <details class="sc-fotPuT dmzYOY mb-2 is-size-7" id="scm-id-5">
       <summary>
         <span class="is-small icon" aria-hidden="true"><i class="fas fa-fw fa-chevron-right fa-xs"></i></span
         ><span>This text is a description for this input</span>
@@ -1674,7 +1936,7 @@ exports[`Forms/InputField WithDescriptionExtended 1`] = `
         extended description for this input</span
       >
     </details>
-    <div class="control"><input class="input" id="scm-id-2" aria-describedby="input-description-undefined" /></div>
+    <div class="control"><input class="input" id="scm-id-4" aria-describedby="scm-id-5" /></div>
   </div>
 </div>
 "
@@ -1685,8 +1947,8 @@ exports[`Forms/InputField WithError 1`] = `
   <div class="field">
     <label class="label" for="scm-id-1">MyInput</label>
     <p class="mb-2 is-size-7"></p>
-    <div class="control"><input class="input is-danger" id="scm-id-1" /></div>
-    <p id="input-error-undefined" class="help is-danger">This field is super required</p>
+    <div class="control"><input class="input is-danger" id="scm-id-1" aria-describedby="scm-id-3" /></div>
+    <p id="scm-id-3" class="help is-danger">This field is super required</p>
   </div>
 </div>
 "
@@ -1700,6 +1962,18 @@ exports[`Forms/InputField WithIcon 1`] = `
     <div class="control has-icons-left">
       <input class="input" id="scm-id-1" /><span class="icon is-small is-left"><i class="fas fa-filter"></i></span>
     </div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/InputField WithWarning 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyInput</label>
+    <p class="mb-2 is-size-7"></p>
+    <div class="control"><input class="input is-warning" id="scm-id-1" aria-describedby="scm-id-3" /></div>
+    <p id="scm-id-3" class="help is-warning">This value is not recommended</p>
   </div>
 </div>
 "
@@ -1838,7 +2112,9 @@ exports[`Forms/RadioGroup InAForm 1`] = `
     <div class="field column">
       <label class="label" for="input-name"></label>
       <p class="mb-2 is-size-7"></p>
-      <div class="control"><input class="input" id="input-name" form="form" data-testid="input-name" value="" /></div>
+      <div class="control">
+        <input class="input" id="input-name" form="form" data-testid="input-name" value="" name="name" />
+      </div>
     </div>
   </div>
   <div class="columns">
@@ -1860,12 +2136,12 @@ exports[`Forms/RadioGroup InAForm 1`] = `
               data-state="unchecked"
               value="CHARMANDER"
               form="form"
-              id="scm-id-1"
+              id="scm-id-3"
               class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
-            ><label for="scm-id-1">Charmander</label>
+            ><label for="scm-id-3">Charmander</label>
           </div>
           <div class="radio is-flex is-align-items-center">
             <button
@@ -1875,12 +2151,12 @@ exports[`Forms/RadioGroup InAForm 1`] = `
               data-state="unchecked"
               value="SQUIRTLE"
               form="form"
-              id="scm-id-2"
+              id="scm-id-4"
               class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
-            ><label for="scm-id-2">Squirtle</label>
+            ><label for="scm-id-4">Squirtle</label>
           </div>
           <div class="radio is-flex is-align-items-center">
             <button
@@ -1890,12 +2166,12 @@ exports[`Forms/RadioGroup InAForm 1`] = `
               data-state="unchecked"
               value="BULBASAUR"
               form="form"
-              id="scm-id-3"
+              id="scm-id-5"
               class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
-            ><label for="scm-id-3">Bulbasaur</label
+            ><label for="scm-id-5">Bulbasaur</label
             ><i class="fas fa-fw fa-question-circle has-text-blue-light" aria-hidden="true" data-state="closed"></i>
           </div>
         </div>
@@ -1930,7 +2206,14 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
       <label class="label" for="input-trainers.0.name"></label>
       <p class="mb-2 is-size-7"></p>
       <div class="control">
-        <input class="input" id="input-trainers.0.name" form="form" data-testid="input-trainers.0.name" value="Red" />
+        <input
+          class="input"
+          id="input-trainers.0.name"
+          form="form"
+          data-testid="input-trainers.0.name"
+          value="Red"
+          name="trainers.0.name"
+        />
       </div>
     </div>
   </div>
@@ -1963,7 +2246,14 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
         <label class="label" for="input-nickname"></label>
         <p class="mb-2 is-size-7"></p>
         <div class="control">
-          <input class="input" id="input-nickname" form="trainers.0.team" data-testid="input-nickname" value="" />
+          <input
+            class="input"
+            id="input-nickname"
+            form="trainers.0.team"
+            data-testid="input-nickname"
+            value=""
+            name="nickname"
+          />
         </div>
       </div>
     </div>
@@ -1980,12 +2270,12 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
                 data-state="unchecked"
                 value="CHARMANDER"
                 form="trainers.0.team"
-                id="scm-id-7"
+                id="scm-id-19"
                 class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
                 tabindex="-1"
                 data-radix-collection-item=""
               ></button
-              ><label for="scm-id-7"></label>
+              ><label for="scm-id-19"></label>
             </div>
             <div class="radio is-flex is-align-items-center">
               <button
@@ -1995,12 +2285,12 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
                 data-state="unchecked"
                 value="SQUIRTLE"
                 form="trainers.0.team"
-                id="scm-id-8"
+                id="scm-id-20"
                 class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
                 tabindex="-1"
                 data-radix-collection-item=""
               ></button
-              ><label for="scm-id-8"></label>
+              ><label for="scm-id-20"></label>
             </div>
             <div class="radio is-flex is-align-items-center">
               <button
@@ -2010,12 +2300,12 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
                 data-state="unchecked"
                 value="BULBASAUR"
                 form="trainers.0.team"
-                id="scm-id-9"
+                id="scm-id-21"
                 class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
                 tabindex="-1"
                 data-radix-collection-item=""
               ></button
-              ><label for="scm-id-9"></label>
+              ><label for="scm-id-21"></label>
             </div>
           </div>
         </div>
@@ -2033,7 +2323,14 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
       <label class="label" for="input-trainers.1.name"></label>
       <p class="mb-2 is-size-7"></p>
       <div class="control">
-        <input class="input" id="input-trainers.1.name" form="form" data-testid="input-trainers.1.name" value="Blue" />
+        <input
+          class="input"
+          id="input-trainers.1.name"
+          form="form"
+          data-testid="input-trainers.1.name"
+          value="Blue"
+          name="trainers.1.name"
+        />
       </div>
     </div>
   </div>
@@ -2066,7 +2363,14 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
         <label class="label" for="input-nickname"></label>
         <p class="mb-2 is-size-7"></p>
         <div class="control">
-          <input class="input" id="input-nickname" form="trainers.1.team" data-testid="input-nickname" value="" />
+          <input
+            class="input"
+            id="input-nickname"
+            form="trainers.1.team"
+            data-testid="input-nickname"
+            value=""
+            name="nickname"
+          />
         </div>
       </div>
     </div>
@@ -2083,12 +2387,12 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
                 data-state="unchecked"
                 value="CHARMANDER"
                 form="trainers.1.team"
-                id="scm-id-10"
+                id="scm-id-26"
                 class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
                 tabindex="-1"
                 data-radix-collection-item=""
               ></button
-              ><label for="scm-id-10"></label>
+              ><label for="scm-id-26"></label>
             </div>
             <div class="radio is-flex is-align-items-center">
               <button
@@ -2098,12 +2402,12 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
                 data-state="unchecked"
                 value="SQUIRTLE"
                 form="trainers.1.team"
-                id="scm-id-11"
+                id="scm-id-27"
                 class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
                 tabindex="-1"
                 data-radix-collection-item=""
               ></button
-              ><label for="scm-id-11"></label>
+              ><label for="scm-id-27"></label>
             </div>
             <div class="radio is-flex is-align-items-center">
               <button
@@ -2113,12 +2417,12 @@ exports[`Forms/RadioGroup NestedInTable 1`] = `
                 data-state="unchecked"
                 value="BULBASAUR"
                 form="trainers.1.team"
-                id="scm-id-12"
+                id="scm-id-28"
                 class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
                 tabindex="-1"
                 data-radix-collection-item=""
               ></button
-              ><label for="scm-id-12"></label>
+              ><label for="scm-id-28"></label>
             </div>
           </div>
         </div>
@@ -2159,7 +2463,7 @@ exports[`Forms/RadioGroup ReadOnly 1`] = `
       <label class="label" for="input-name"></label>
       <p class="mb-2 is-size-7"></p>
       <div class="control">
-        <input class="input" id="input-name" readonly="" form="form" data-testid="input-name" value="Red" />
+        <input class="input" id="input-name" readonly="" form="form" data-testid="input-name" value="Red" name="name" />
       </div>
     </div>
   </div>
@@ -2184,12 +2488,12 @@ exports[`Forms/RadioGroup ReadOnly 1`] = `
               disabled=""
               value="CHARMANDER"
               form="form"
-              id="scm-id-1"
+              id="scm-id-3"
               class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
-            ><label for="scm-id-1">Charmander</label>
+            ><label for="scm-id-3">Charmander</label>
           </div>
           <div class="radio is-flex is-align-items-center">
             <button
@@ -2201,13 +2505,13 @@ exports[`Forms/RadioGroup ReadOnly 1`] = `
               disabled=""
               value="SQUIRTLE"
               form="form"
-              id="scm-id-2"
+              id="scm-id-4"
               class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             >
               <span data-state="checked" data-disabled="" class="sc-fFelbd bRYfQ"></span></button
-            ><label for="scm-id-2">Squirtle</label>
+            ><label for="scm-id-4">Squirtle</label>
           </div>
           <div class="radio is-flex is-align-items-center">
             <button
@@ -2219,12 +2523,12 @@ exports[`Forms/RadioGroup ReadOnly 1`] = `
               disabled=""
               value="BULBASAUR"
               form="form"
-              id="scm-id-3"
+              id="scm-id-5"
               class="sc-fotPuT jojAuf mr-3 mt-3 mb-3"
               tabindex="-1"
               data-radix-collection-item=""
             ></button
-            ><label for="scm-id-3">Bulbasaur</label>
+            ><label for="scm-id-5">Bulbasaur</label>
           </div>
         </div>
       </div>
@@ -2669,6 +2973,70 @@ exports[`Forms/Textarea WithRef 1`] = `
 
 exports[`Forms/Textarea WithVariant 1`] = `
 "<div style="margin: 2rem; max-width: 40rem"><textarea class="textarea is-danger"></textarea></div>
+"
+`;
+
+exports[`Forms/TextareaField Default 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyTextarea</label>
+    <div class="control"><textarea class="textarea" id="scm-id-1"></textarea></div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/TextareaField Required 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyTextarea<span aria-hidden="true">*</span></label>
+    <div class="control"><textarea class="textarea" id="scm-id-1" required=""></textarea></div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/TextareaField WithDefaultValue 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyTextarea</label>
+    <div class="control"><textarea class="textarea" id="scm-id-1">value</textarea></div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/TextareaField WithDescription 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyTextarea</label>
+    <p class="mb-2 is-size-7" id="scm-id-2">This text is a description for this textarea</p>
+    <div class="control"><textarea class="textarea" id="scm-id-1" aria-describedby="scm-id-2"></textarea></div>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/TextareaField WithError 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field">
+    <label class="label" for="scm-id-1">MyTextarea</label>
+    <div class="control">
+      <textarea class="textarea is-danger" id="scm-id-1" aria-describedby="scm-id-3"></textarea>
+    </div>
+    <p id="scm-id-3" class="help is-danger">This field is super required</p>
+  </div>
+</div>
+"
+`;
+
+exports[`Forms/TextareaField WithWidth 1`] = `
+"<div style="margin: 2rem; max-width: 40rem">
+  <div class="field column is-half">
+    <label class="label" for="scm-id-1">MyTextarea</label>
+    <div class="control"><textarea class="textarea" id="scm-id-1"></textarea></div>
+  </div>
+</div>
 "
 `;
 

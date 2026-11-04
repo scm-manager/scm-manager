@@ -15,8 +15,8 @@
  */
 
 import React, { FC, useEffect } from "react";
-import { apiClient, validation, ErrorNotification, InputField } from "@scm-manager/ui-components";
-import { Button } from "@scm-manager/ui-core";
+import { apiClient, validation } from "@scm-manager/ui-components";
+import { Button, ErrorNotification, Field, Input, InputField } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useMutation } from "@tanstack/react-query";
@@ -122,7 +122,16 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
         <p>{t("adminStep.description")}</p>
         <div className="columns">
           <div className="column is-full-width">
-            <InputField placeholder={t("adminStep.startupToken")} autofocus={true} {...register("startupToken")} />
+            <Field>
+              <div className="control">
+                <Input
+                  placeholder={t("adminStep.startupToken")}
+                  aria-label={t("adminStep.startupToken")}
+                  autoFocus={true}
+                  {...register("startupToken")}
+                />
+              </div>
+            </Field>
           </div>
         </div>
         <div className="columns">
@@ -130,7 +139,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
             <InputField
               testId="username-input"
               label={t("adminStep.username")}
-              validationError={!!formState.errors.userName}
+              variant={formState.errors.userName ? "danger" : undefined}
               {...register("userName", { validate: validateUserName })}
             />
           </div>
@@ -138,7 +147,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
             <InputField
               testId="displayname-input"
               label={t("adminStep.displayname")}
-              validationError={!!formState.errors.displayName}
+              variant={formState.errors.displayName ? "danger" : undefined}
               {...register("displayName", { validate: validateDisplayName })}
             />
           </div>
@@ -147,7 +156,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
           <div className="column is-full-width">
             <InputField
               label={t("adminStep.email")}
-              validationError={!!formState.errors.email}
+              variant={formState.errors.email ? "danger" : undefined}
               {...register("email", { validate: validateEmail })}
             />
           </div>
@@ -158,7 +167,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
               testId="password-input"
               label={t("adminStep.password")}
               type="password"
-              validationError={!!formState.errors.password}
+              variant={formState.errors.password ? "danger" : undefined}
               {...register("password", { validate: validatePassword })}
             />
           </div>
@@ -167,7 +176,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
               testId="password-confirmation-input"
               label={t("adminStep.password-confirmation")}
               type="password"
-              validationError={!!formState.errors.passwordConfirmation}
+              variant={formState.errors.passwordConfirmation ? "danger" : undefined}
               {...register("passwordConfirmation", { validate: validatePasswordConfirmation })}
             />
           </div>

@@ -202,7 +202,7 @@ export const useConvertToExternal = () => {
 const CONTENT_TYPE_PASSWORD_OVERWRITE = "application/vnd.scmm-passwordOverwrite+json;v=2";
 
 export const useSetUserPassword = (user: User) => {
-  const { data, isPending, error, mutate, reset } = useMutation<unknown, Error, string>({
+  const { data, isPending, error, mutateAsync, reset } = useMutation<unknown, Error, string>({
     mutationFn: (password) =>
       apiClient.put(
         requiredLink(user, "password"),
@@ -213,7 +213,7 @@ export const useSetUserPassword = (user: User) => {
       ),
   });
   return {
-    setPassword: (newPassword: string) => mutate(newPassword),
+    setPassword: (newPassword: string) => mutateAsync(newPassword),
     passwordOverwritten: !!data,
     isPending,
     error,
@@ -229,11 +229,11 @@ type ChangeUserPasswordRequest = {
 };
 
 export const useChangeUserPassword = (user: User | Me) => {
-  const { data, isPending, error, mutate, reset } = useMutation<unknown, Error, ChangeUserPasswordRequest>({
+  const { data, isPending, error, mutateAsync, reset } = useMutation<unknown, Error, ChangeUserPasswordRequest>({
     mutationFn: (request) => apiClient.put(requiredLink(user, "password"), request, CONTENT_TYPE_PASSWORD_CHANGE),
   });
   return {
-    changePassword: (oldPassword: string, newPassword: string) => mutate({ oldPassword, newPassword }),
+    changePassword: (oldPassword: string, newPassword: string) => mutateAsync({ oldPassword, newPassword }),
     passwordChanged: !!data,
     isPending,
     error,

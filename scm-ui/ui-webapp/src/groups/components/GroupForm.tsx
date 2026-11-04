@@ -14,150 +14,106 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, FormEvent, useEffect, useState } from "react";
+import React, { FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useUserOptions } from "@scm-manager/ui-api";
-import { Checkbox, InputField, Subtitle, Textarea } from "@scm-manager/ui-components";
-import { Button, ChipInputField, Combobox, Level } from "@scm-manager/ui-core";
-import { AutocompleteObject, Group, Member, Option } from "@scm-manager/ui-types";
+import { Combobox, Form } from "@scm-manager/ui-core";
+import { AutocompleteObject, GroupCreation } from "@scm-manager/ui-types";
 import * as validator from "./groupValidation";
 
-type Props = {
-  submitForm: (p: Group) => void;
-  loading?: boolean;
-  group?: Group;
-  transmittedName?: string;
-  transmittedExternal?: boolean;
+type GroupFormValues = {
+  name: string;
+  description: string;
+  type: string;
+  external: boolean;
+  members: AutocompleteObject[];
 };
 
-const GroupForm: FC<Props> = ({ submitForm, loading, group, transmittedName = "", transmittedExternal = false }) => {
+type Props = {
+  submitForm: (group: GroupCreation) => Promise<unknown>;
+  group?: GroupCreation;
+  transmittedName?: string;
+  transmittedExternal?: boolean;
+  successMessage?: string;
+};
+
+const toMember = (name: string): AutocompleteObject => ({ id: name, displayName: name });
+
+const GroupForm: FC<Props> = ({
+  submitForm,
+  group,
+  transmittedName = "",
+  transmittedExternal = false,
+  successMessage,
+}) => {
   const [t] = useTranslation("groups");
-  const [groupState, setGroupState] = useState({
-    name: transmittedName,
-    description: "",
-    _embedded: {
-      members: [] as Member[],
-    },
-    _links: {},
-    members: [] as string[],
-    type: "",
-    external: transmittedExternal,
-  });
-  const [nameValidationError, setNameValidationError] = useState(false);
   const [query, setQuery] = useState("");
   const { data: userOptions, isLoading: userOptionsLoading } = useUserOptions(query);
+  const defaultValues = useMemo<GroupFormValues>(
+    () => ({
+      name: group?.name ?? transmittedName,
+      description: group?.description ?? "",
+      type: group?.type ?? "",
+      external: group?.external ?? transmittedExternal,
+      members: group?.members.map(toMember) ?? [],
+    }),
+    [group, transmittedName, transmittedExternal],
+  );
 
-  useEffect(() => {
-    if (group) {
-      setGroupState(group);
-    }
-  }, [group]);
-
-  const isValid = !(nameValidationError || !groupState.name);
-
-  const submit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (isValid) {
-      if (groupState.external) {
-        groupState.members = [];
-      }
-      submitForm(groupState);
-    }
-  };
-
-  const renderMemberfields = () => {
-    if (groupState.external) {
-      return null;
-    }
-
-    return (
-      <ChipInputField<AutocompleteObject>
-        label={t("groupForm.addMemberAutocomplete.buttonLabel")}
-        aria-label="groupForm.addMemberAutocomplete.ariaLabel"
-        placeholder={t("groupForm.addMemberAutocomplete.placeholder")}
-        value={groupState.members.map((m) => ({ label: m, value: { id: m, displayName: m } }))}
-        onChange={updateMembers}
-        isLoading={userOptionsLoading}
-        isNewItemDuplicate={(prev, cur) => prev.value.id === cur.value.id}
-      >
-        <Combobox<AutocompleteObject> options={userOptions || []} onQueryChange={setQuery} />
-      </ChipInputField>
-    );
-  };
-
-  const renderExternalField = () => {
-    if (!groupState) {
-      return null;
-    }
-    return (
-      <Checkbox
-        label={t("group.external")}
-        checked={groupState.external}
-        helpText={t("groupForm.help.externalHelpText")}
-        onChange={(external) => setGroupState({ ...groupState, external })}
-      />
-    );
-  };
-
-  const updateMembers = (members: Array<Option<AutocompleteObject>>) => {
-    setGroupState((prevState) => ({ ...prevState, members: members.map((m) => m.value.id) }));
-  };
-
-  let nameField = null;
-  let subtitle = null;
-  if (!group) {
-    // create new group
-    nameField = (
-      <InputField
-        label={t("group.name")}
-        errorMessage={t("groupForm.nameError")}
-        onChange={(name) => {
-          setNameValidationError(!validator.isNameValid(name));
-          setGroupState({ ...groupState, name });
-        }}
-        value={groupState.name}
-        validationError={nameValidationError}
-        helpText={t("groupForm.help.nameHelpText")}
-        autofocus
-      />
-    );
-  } else if (group.external) {
-    subtitle = <Subtitle subtitle={t("groupForm.externalSubtitle")} />;
-  } else {
-    subtitle = <Subtitle subtitle={t("groupForm.subtitle")} />;
-  }
+  const submit = ({ members, ...values }: GroupFormValues) =>
+    submitForm({ ...values, members: values.external ? [] : members.map((member) => member.id) });
 
   return (
-    <>
-      {subtitle}
-      <form onSubmit={submit}>
-        {nameField}
-        <Textarea
-          label={t("group.description")}
-          errorMessage={t("groupForm.descriptionError")}
-          onChange={(description) => setGroupState({ ...groupState, description })}
-          value={groupState.description}
-          validationError={false}
-          helpText={t("groupForm.help.descriptionHelpText")}
-        />
-        {renderExternalField()}
-        {renderMemberfields()}
-        <Level
-          right={
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={!isValid}
-              isLoading={loading}
-              testId="submit-button"
-              onClick={() => window.scrollTo(0, 0)}
+    <Form
+      translationPath={["groups", "groupForm"]}
+      defaultValues={defaultValues}
+      onSubmit={submit}
+      successMessageFallback={successMessage}
+      allowSubmitWithoutChanges={!group}
+    >
+      {({ watch }) => (
+        <>
+          {!group ? (
+            <Form.Row>
+              <Form.Input
+                name="name"
+                label={t("group.name")}
+                rules={{
+                  required: t("groupForm.nameError"),
+                  validate: (name: string) => validator.isNameValid(name) || t("groupForm.nameError"),
+                }}
+                autoFocus
+              />
+            </Form.Row>
+          ) : null}
+          <Form.Row>
+            <Form.Textarea name="description" label={t("group.description")} />
+          </Form.Row>
+          <Form.Row>
+            <Form.Checkbox
+              name="external"
+              label={t("group.external")}
+              helpText={t("groupForm.help.externalHelpText")}
+            />
+          </Form.Row>
+          <Form.Row hidden={watch("external")}>
+            <Form.ChipInput
+              name="members"
+              label={t("groupForm.addMemberAutocomplete.buttonLabel")}
+              aria-label={t("groupForm.addMemberAutocomplete.buttonLabel")}
+              placeholder={t("groupForm.addMemberAutocomplete.placeholder")}
+              optionFactory={(member: AutocompleteObject) => ({ label: member.id, value: member })}
+              isNewItemDuplicate={(existing, added) =>
+                (existing.value as AutocompleteObject).id === (added.value as AutocompleteObject).id
+              }
+              isLoading={userOptionsLoading}
             >
-              {t("groupForm.submit")}
-            </Button>
-          }
-        />
-      </form>
-    </>
+              <Combobox<AutocompleteObject> options={userOptions || []} onQueryChange={setQuery} />
+            </Form.ChipInput>
+          </Form.Row>
+        </>
+      )}
+    </Form>
   );
 };
 

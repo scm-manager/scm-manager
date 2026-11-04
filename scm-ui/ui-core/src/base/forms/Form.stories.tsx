@@ -451,6 +451,7 @@ import { HalRepresentation } from "@scm-manager/ui-types";
 import Form from "./Form";
 import FormRow from "./FormRow";
 import ControlledInputField from "./input/ControlledInputField";
+import ControlledTextareaField from "./input/ControlledTextareaField";
 import ControlledSecretConfirmationField from "./input/ControlledSecretConfirmationField";
 import ControlledCheckboxField from "./checkbox/ControlledCheckboxField";
 import ControlledList from "./list/ControlledList";
@@ -542,10 +543,13 @@ export const Creation: Story = {
     <Form
       onSubmit={console.log}
       translationPath={["sample", "form"]}
-      defaultValues={{ name: "", password: "", active: true }}
+      defaultValues={{ name: "", description: "", password: "", active: true }}
     >
       <FormRow>
         <ControlledInputField rules={{ required: true }} name="name" />
+      </FormRow>
+      <FormRow>
+        <ControlledTextareaField name="description" />
       </FormRow>
       <FormRow>
         <ControlledSecretConfirmationField name="password" />
@@ -569,6 +573,24 @@ export const Editing: Story = {
       </FormRow>
       <FormRow>
         <ControlledSecretConfirmationField name="password" />
+      </FormRow>
+      <FormRow>
+        <ControlledCheckboxField name="active" />
+      </FormRow>
+    </Form>
+  ),
+};
+
+export const AllowSubmitWithoutChanges: Story = {
+  render: () => (
+    <Form
+      onSubmit={console.log}
+      translationPath={["sample", "form"]}
+      defaultValues={{ name: "trillian", active: true }}
+      allowSubmitWithoutChanges
+    >
+      <FormRow>
+        <ControlledInputField rules={{ required: true }} name="name" />
       </FormRow>
       <FormRow>
         <ControlledCheckboxField name="active" />

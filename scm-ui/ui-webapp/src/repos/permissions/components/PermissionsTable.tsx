@@ -16,7 +16,8 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { LabelWithHelpIcon, Notification } from "@scm-manager/ui-components";
+import { Help } from "@scm-manager/ui-components";
+import { Notification } from "@scm-manager/ui-core";
 import SinglePermission from "../containers/SinglePermission";
 import { Namespace, PermissionCollection, Repository, RepositoryRole } from "@scm-manager/ui-types";
 
@@ -54,17 +55,14 @@ const PermissionsTable: FC<Props> = ({
       <table className="card-table table is-hoverable is-fullwidth">
         <thead>
           <tr>
+            <th>{t("permission.name")}</th>
             <th>
-              <LabelWithHelpIcon label={t("permission.name")} helpText={t("permission.help.nameHelpText")} />
+              {t("permission.role")}
+              <Help message={t("permission.help.roleHelpText")} />
             </th>
             <th>
-              <LabelWithHelpIcon label={t("permission.role")} helpText={t("permission.help.roleHelpText")} />
-            </th>
-            <th>
-              <LabelWithHelpIcon
-                label={t("permission.permissions")}
-                helpText={t("permission.help.permissionsHelpText")}
-              />
+              {t("permission.permissions")}
+              <Help message={t("permission.help.permissionsHelpText")} />
             </th>
             <th />
           </tr>

@@ -46,6 +46,9 @@ const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => 
   );
 };
 
+const firstImportType = (repositoryType?: RepositoryType) =>
+  (repositoryType?._links?.import as Link[] | undefined)?.[0]?.name || "";
+
 const ImportRepository: extensionPoints.RepositoryCreator["type"]["component"] = ({
   repositoryTypes,
   nameForm,
@@ -56,13 +59,13 @@ const ImportRepository: extensionPoints.RepositoryCreator["type"]["component"] =
   const [repositoryType, setRepositoryType] = useState<RepositoryType | undefined>(
     repositoryTypes?._embedded?.repositoryTypes?.[0],
   );
-  const [importType, setImportType] = useState("");
+  const [importType, setImportType] = useState(() => firstImportType(repositoryType));
 
   useNavigationLock(importPending);
 
   const changeRepositoryType = (repositoryType: RepositoryType) => {
     setRepositoryType(repositoryType);
-    setImportType(((repositoryType._links?.import as Link[])[0] as Link)?.name || "");
+    setImportType(firstImportType(repositoryType));
   };
 
   const renderImportComponent = () => {
@@ -123,7 +126,12 @@ const ImportRepository: extensionPoints.RepositoryCreator["type"]["component"] =
       {repositoryType && (
         <>
           <hr />
-          <ImportTypeSelect repositoryType={repositoryType} setImportType={setImportType} disabled={importPending} />
+          <ImportTypeSelect
+            repositoryType={repositoryType}
+            importType={importType}
+            setImportType={setImportType}
+            disabled={importPending}
+          />
           <hr />
         </>
       )}

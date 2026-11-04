@@ -152,22 +152,20 @@ exports[`Components/Autocomplete UserSuggestionsWithClear 1`] = `
 `;
 
 exports[`Components/BranchSelector Default 1`] = `
-"<div class="sc-JkhKt bfxmeX">
+"<div class="sc-cHzoaq hZWSzL">
   <div class="field is-horizontal">
-    <div class="sc-jIkVsP lcFEyn field-label is-normal">
+    <div class="sc-gGCErr dtJcFQ field-label is-normal">
       <label class="label is-size-6" id="branch-select_0">Select Branch</label>
     </div>
     <div class="field-body">
       <div class="field is-narrow mb-0">
-        <div class="sc-ZOvtA hfyrFP control">
-          <fieldset class="field">
-            <div class="control select is-fullwidth">
-              <select aria-labelledby="branch-select_0">
-                <option value="master">master</option>
-                <option value="develop">develop</option>
-              </select>
-            </div>
-          </fieldset>
+        <div class="sc-clIAoS eZCsQa control">
+          <div class="select is-fullwidth">
+            <select aria-labelledby="branch-select_0" class="is-fullwidth">
+              <option label="master" value="master">master</option>
+              <option label="develop" value="develop">develop</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
@@ -921,7 +919,7 @@ exports[`Components/Popover WithLinkTrigger 1`] = `
 `;
 
 exports[`Components/PreformattedCodeBlock Combination 1`] = `
-"<div class="sc-JkhKt m-6">
+"<div class="sc-cHzoaq m-6">
   <div class="content">
     <h3 class="is-size-5">Clone the Repository</h3>
     <div class="sc-AjlSJ dtatzh is-relative">
@@ -973,7 +971,7 @@ scm repo commit-message-check aaa/ultimate-repo $BRANCH_NAME "$COMMIT_MSG_FILE"<
 `;
 
 exports[`Components/PreformattedCodeBlock Default 1`] = `
-"<div class="sc-JkhKt m-6">
+"<div class="sc-cHzoaq m-6">
   <div class="sc-AjlSJ dtatzh is-relative">
     <pre><code>git checkout main</code></pre>
     <div class="sc-cNKpwA OBeEz">
@@ -987,7 +985,7 @@ exports[`Components/PreformattedCodeBlock Default 1`] = `
 `;
 
 exports[`Components/PreformattedCodeBlock LongContent 1`] = `
-"<div class="sc-JkhKt m-6">
+"<div class="sc-cHzoaq m-6">
   <div class="sc-AjlSJ dtatzh is-relative">
     <pre><code>#!/bin/bash
 
@@ -1009,7 +1007,7 @@ scm repo commit-message-check aaa/ultimate-repo $BRANCH_NAME "$COMMIT_MSG_FILE"<
 `;
 
 exports[`Components/PreformattedCodeBlock WithScrollbar 1`] = `
-"<div class="sc-JkhKt m-6">
+"<div class="sc-cHzoaq m-6">
   <div class="sc-AjlSJ dtatzh is-relative">
     <pre><code>git remote add origin https://scm-manager-instance4.example.org:8081/scm/repo/my-new-namespace/LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlaboreetdoloremagnaaliquyameratseddiamvoluptuaAtveroeosetaccusametjustoduodoloresetearebumStetclitakasdgubergrennoseatakimatasanctusestLoremipsumdolorsitametLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlaboreetdoloremagnaaliquyameratseddiamvoluptuaAtveroeosetaccusametjustoduodoloresetearebumStetclitakasdgubergrennoseatakimatasanctusestLoremipsumdolorsitamet</code></pre>
     <div class="sc-cNKpwA OBeEz">
@@ -1565,12 +1563,12 @@ exports[`Forms/AddKeyValueEntryToTableField Disabled 1`] = `
 `;
 
 exports[`Forms/Checkbox Default 1`] = `
-"<div class="sc-JkhKt eXsJgS">
+"<div class="sc-cHzoaq cgdVKS">
   <fieldset class="field">
     <div class="control">
-      <label class="sc-cHzoaq ecAXlA checkbox is-align-items-center"
+      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
         ><input
-          class="sc-hZpGMz foacdn m-3"
+          class="sc-dSfbgX crnDd m-3"
           aria-labelledby="checkbox_0"
           aria-describedby="checkbox_1"
           type="checkbox"
@@ -1581,9 +1579,9 @@ exports[`Forms/Checkbox Default 1`] = `
   </fieldset>
   <fieldset class="field">
     <div class="control">
-      <label class="sc-cHzoaq ecAXlA checkbox is-align-items-center"
+      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
         ><input
-          class="sc-hZpGMz foacdn m-3"
+          class="sc-dSfbgX crnDd m-3"
           aria-labelledby="checkbox_2"
           aria-describedby="checkbox_3"
           type="checkbox"
@@ -1595,9 +1593,9 @@ exports[`Forms/Checkbox Default 1`] = `
   </fieldset>
   <fieldset class="field">
     <div class="control">
-      <label class="sc-cHzoaq ecAXlA checkbox is-align-items-center"
+      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
         ><input
-          class="sc-hZpGMz foacdn m-3"
+          class="sc-dSfbgX crnDd m-3"
           aria-labelledby="checkbox_4"
           aria-describedby="checkbox_5"
           type="checkbox"
@@ -1612,12 +1610,12 @@ exports[`Forms/Checkbox Default 1`] = `
 `;
 
 exports[`Forms/Checkbox Disabled 1`] = `
-"<div class="sc-JkhKt eXsJgS">
+"<div class="sc-cHzoaq cgdVKS">
   <fieldset class="field">
     <div class="control">
-      <label class="sc-cHzoaq ecAXlA checkbox is-align-items-center" disabled=""
+      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center" disabled=""
         ><input
-          class="sc-hZpGMz foacdn m-3"
+          class="sc-dSfbgX crnDd m-3"
           disabled=""
           aria-labelledby="checkbox_0"
           aria-describedby="checkbox_1"
@@ -1633,12 +1631,12 @@ exports[`Forms/Checkbox Disabled 1`] = `
 `;
 
 exports[`Forms/Checkbox HandlingOnChange 1`] = `
-"<div class="sc-JkhKt eXsJgS">
+"<div class="sc-cHzoaq cgdVKS">
   <fieldset class="field">
     <div class="control">
-      <label class="sc-cHzoaq ecAXlA checkbox is-align-items-center"
+      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
         ><input
-          class="sc-hZpGMz foacdn m-3"
+          class="sc-dSfbgX crnDd m-3"
           aria-labelledby="checkbox_0"
           aria-describedby="checkbox_1"
           type="checkbox"
@@ -1652,12 +1650,12 @@ exports[`Forms/Checkbox HandlingOnChange 1`] = `
 `;
 
 exports[`Forms/Checkbox UsingRefs 1`] = `
-"<div class="sc-JkhKt eXsJgS">
+"<div class="sc-cHzoaq cgdVKS">
   <fieldset class="field">
     <div class="control">
-      <label class="sc-cHzoaq ecAXlA checkbox is-align-items-center"
+      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
         ><input
-          class="sc-hZpGMz foacdn m-3"
+          class="sc-dSfbgX crnDd m-3"
           aria-labelledby="checkbox_0"
           aria-describedby="checkbox_1"
           type="checkbox"
@@ -1672,12 +1670,12 @@ exports[`Forms/Checkbox UsingRefs 1`] = `
 `;
 
 exports[`Forms/Checkbox WithHelpText 1`] = `
-"<div class="sc-JkhKt eXsJgS">
+"<div class="sc-cHzoaq cgdVKS">
   <fieldset class="field">
     <div class="control">
-      <label class="sc-cHzoaq ecAXlA checkbox is-align-items-center"
+      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
         ><input
-          class="sc-hZpGMz foacdn m-3"
+          class="sc-dSfbgX crnDd m-3"
           aria-labelledby="checkbox_0"
           aria-describedby="checkbox_1"
           type="checkbox" />
@@ -1689,9 +1687,9 @@ exports[`Forms/Checkbox WithHelpText 1`] = `
   </fieldset>
   <fieldset class="field">
     <div class="control">
-      <label class="sc-cHzoaq ecAXlA checkbox is-align-items-center"
+      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
         ><input
-          class="sc-hZpGMz foacdn m-3"
+          class="sc-dSfbgX crnDd m-3"
           aria-labelledby="checkbox_2"
           aria-describedby="checkbox_3"
           type="checkbox"
@@ -1707,13 +1705,13 @@ exports[`Forms/Checkbox WithHelpText 1`] = `
 `;
 
 exports[`Forms/Checkbox WithReactHookForm 1`] = `
-"<div class="sc-JkhKt eXsJgS">
+"<div class="sc-cHzoaq cgdVKS">
   <form>
     <fieldset class="field">
       <div class="control">
-        <label class="sc-cHzoaq ecAXlA checkbox is-align-items-center"
+        <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
           ><input
-            class="sc-hZpGMz foacdn m-3"
+            class="sc-dSfbgX crnDd m-3"
             aria-labelledby="checkbox_8"
             aria-describedby="checkbox_9"
             type="checkbox"
@@ -1725,9 +1723,9 @@ exports[`Forms/Checkbox WithReactHookForm 1`] = `
     </fieldset>
     <fieldset class="field">
       <div class="control">
-        <label class="sc-cHzoaq ecAXlA checkbox is-align-items-center"
+        <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
           ><input
-            class="sc-hZpGMz foacdn m-3"
+            class="sc-dSfbgX crnDd m-3"
             aria-labelledby="checkbox_10"
             aria-describedby="checkbox_11"
             type="checkbox"
@@ -1739,9 +1737,9 @@ exports[`Forms/Checkbox WithReactHookForm 1`] = `
     </fieldset>
     <fieldset class="field">
       <div class="control">
-        <label class="sc-cHzoaq ecAXlA checkbox is-align-items-center" disabled=""
+        <label class="sc-hZpGMz cDazQc checkbox is-align-items-center" disabled=""
           ><input
-            class="sc-hZpGMz foacdn m-3"
+            class="sc-dSfbgX crnDd m-3"
             disabled=""
             aria-labelledby="checkbox_12"
             aria-describedby="checkbox_13"
@@ -1754,9 +1752,9 @@ exports[`Forms/Checkbox WithReactHookForm 1`] = `
     </fieldset>
     <fieldset class="field" disabled="">
       <div class="control">
-        <label class="sc-cHzoaq ecAXlA checkbox is-align-items-center"
+        <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
           ><input
-            class="sc-hZpGMz foacdn m-3"
+            class="sc-dSfbgX crnDd m-3"
             readonly=""
             aria-labelledby="checkbox_14"
             aria-describedby="checkbox_15"
@@ -1811,7 +1809,7 @@ exports[`Forms/DropDown WithDisplayValues 1`] = `
 `;
 
 exports[`Forms/FileInput Default 1`] = `
-"<div class="sc-JkhKt hSQGni">
+"<div class="sc-cHzoaq gSZRKu">
   <div class="field">
     <label class="label"
       ><span id="file-input_0">Default File Input</span>
@@ -1831,7 +1829,7 @@ exports[`Forms/FileInput Default 1`] = `
 `;
 
 exports[`Forms/FileInput Disabled 1`] = `
-"<div class="sc-JkhKt hSQGni">
+"<div class="sc-cHzoaq gSZRKu">
   <div class="field">
     <label class="label"
       ><span id="file-input_0">Disabled File Input</span>
@@ -1851,7 +1849,7 @@ exports[`Forms/FileInput Disabled 1`] = `
 `;
 
 exports[`Forms/FileInput WithReactHookForm 1`] = `
-"<div class="sc-JkhKt hSQGni">
+"<div class="sc-cHzoaq gSZRKu">
   <form>
     <div class="field">
       <label class="label"
@@ -2009,7 +2007,7 @@ exports[`Forms/InputField WithRef 1`] = `
 `;
 
 exports[`Forms/Radio Default 1`] = `
-"<div class="sc-JkhKt eXsJgS">
+"<div class="sc-cHzoaq cgdVKS">
   <fieldset class="is-inline-block">
     <label class="radio mr-2"
       ><input aria-labelledby="radio_0" type="radio" name="default-group" />
@@ -2027,7 +2025,7 @@ exports[`Forms/Radio Default 1`] = `
 `;
 
 exports[`Forms/Radio Disabled 1`] = `
-"<div class="sc-JkhKt eXsJgS">
+"<div class="sc-cHzoaq cgdVKS">
   <fieldset class="is-inline-block">
     <label class="radio mr-2" disabled=""
       ><input disabled="" aria-labelledby="radio_0" type="radio" checked="" name="disabled-group" />
@@ -2039,7 +2037,7 @@ exports[`Forms/Radio Disabled 1`] = `
 `;
 
 exports[`Forms/Radio HandlingOnChange 1`] = `
-"<div class="sc-JkhKt eXsJgS">
+"<div class="sc-cHzoaq cgdVKS">
   <fieldset class="is-inline-block">
     <label class="radio mr-2"><input aria-labelledby="radio_0" type="radio" name="onchange-example" /> </label>
   </fieldset>
@@ -2049,7 +2047,7 @@ exports[`Forms/Radio HandlingOnChange 1`] = `
 `;
 
 exports[`Forms/Radio UsingRefs 1`] = `
-"<div class="sc-JkhKt eXsJgS">
+"<div class="sc-cHzoaq cgdVKS">
   <fieldset class="is-inline-block">
     <label class="radio mr-2"
       ><input aria-labelledby="radio_0" type="radio" name="ref-example" />
@@ -2062,7 +2060,7 @@ exports[`Forms/Radio UsingRefs 1`] = `
 `;
 
 exports[`Forms/Radio WithHelpText 1`] = `
-"<div class="sc-gGPyxg ciNrbc">
+"<div class="sc-JkhKt cA-dTWw">
   <fieldset class="is-inline-block">
     <label class="radio mr-2"
       ><input aria-labelledby="radio_0" aria-describedby="radio_1" type="radio" name="help-group" />
@@ -2082,9 +2080,9 @@ exports[`Forms/Radio WithHelpText 1`] = `
 `;
 
 exports[`Forms/Radio WithReactHookForm 1`] = `
-"<div class="sc-JkhKt eXsJgS">
+"<div class="sc-cHzoaq cgdVKS">
   <form>
-    <div class="sc-gGPyxg ciNrbc">
+    <div class="sc-JkhKt cA-dTWw">
       <fieldset class="is-inline-block">
         <label class="radio mr-2"
           ><input aria-labelledby="radio_0" type="radio" value="true" checked="" name="rememberMe" />
@@ -2423,16 +2421,16 @@ I am disabled and dont show up on submit!</textarea>
 `;
 
 exports[`Global/MarkdownView CodeWithoutLanguage 1`] = `
-"<div class="sc-JkhKt eXsJgS">
-  <div class="sc-dkQllP iifuJS content">
+"<div class="sc-cHzoaq cgdVKS">
+  <div class="sc-gGPyxg iwSbRe content">
     <div>
       <p>Here is markdown with code, but without Language.</p>
-      <div class="sc-gsNiZj hOuHKb is-relative">
+      <div class="sc-dtMhIu dGGkZZ is-relative">
         <pre
           class="language-text"
           aria-busy="false"
-        ><code><div id="line-1" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx ebxwZY linenumber react-syntax-highlighter-line-number" value="1"></span><span class="line" data-line-number="1">Code without Language!</span></div></code></pre>
-        <div class="sc-GEaMY ikNrQC">
+        ><code><div id="line-1" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp iHiPYz linenumber react-syntax-highlighter-line-number" value="1"></span><span class="line" data-line-number="1">Code without Language!</span></div></code></pre>
+        <div class="sc-hOGlKT eVDRqG">
           <button
             type="button"
             title="Copy to clipboard"
@@ -2450,8 +2448,8 @@ exports[`Global/MarkdownView CodeWithoutLanguage 1`] = `
 `;
 
 exports[`Global/MarkdownView CommitLinks 1`] = `
-"<div class="sc-JkhKt eXsJgS">
-  <div class="sc-dkQllP iifuJS content">
+"<div class="sc-cHzoaq cgdVKS">
+  <div class="sc-gGPyxg iwSbRe content">
     <div>
       <h1 id="commit-links-in-markdown">Commit Links in Markdown</h1>
       <p>
@@ -2507,8 +2505,8 @@ exports[`Global/MarkdownView CommitLinks 1`] = `
 `;
 
 exports[`Global/MarkdownView CustomCodeRenderer 1`] = `
-"<div class="sc-JkhKt eXsJgS">
-  <div class="sc-dkQllP iifuJS content">
+"<div class="sc-cHzoaq cgdVKS">
+  <div class="sc-gGPyxg iwSbRe content">
     <div>
       <h1 id="uml-code-block-in-markdown">Uml Code Block in Markdown</h1>
       <div>
@@ -2536,8 +2534,8 @@ Foo1 -&gt; Foo6 : To collections
 `;
 
 exports[`Global/MarkdownView Default 1`] = `
-"<div class="sc-JkhKt eXsJgS">
-  <div class="sc-dkQllP iifuJS content">
+"<div class="sc-cHzoaq cgdVKS">
+  <div class="sc-gGPyxg iwSbRe content">
     <div>
       <h1 id="markdown-test-page"><a name="top">Markdown Test Page</a></h1>
       <ul>
@@ -2794,26 +2792,26 @@ exports[`Global/MarkdownView Default 1`] = `
         adipisicing amet id excepteur Lorem aliquip sit irure veniam laborum duis cillum. Aliqua occaecat minim cillum
         deserunt magna sunt laboris do do irure ea nostrud consequat ut voluptate ex.
       </p>
-      <div class="sc-gsNiZj hOuHKb is-relative">
+      <div class="sc-dtMhIu dGGkZZ is-relative">
         <pre
           class="language-go"
           aria-busy="false"
-        ><code><div id="line-1" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx ebxwZY linenumber react-syntax-highlighter-line-number" value="1"></span><span class="line" data-line-number="1"><span class="_token_12v8s_92 _keyword_12v8s_133">package</span> main
-</span></div><div id="line-2" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx gGyAsf linenumber react-syntax-highlighter-line-number" value="2"></span><span class="line" data-line-number="2">
-</span></div><div id="line-3" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx bTCa-Di linenumber react-syntax-highlighter-line-number" value="3"></span><span class="line" data-line-number="3"><span class="_token_12v8s_92 _keyword_12v8s_133">import</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">(</span>
-</span></div><div id="line-4" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx fNOQId linenumber react-syntax-highlighter-line-number" value="4"></span><span class="line" data-line-number="4">    <span class="_token_12v8s_92 _string_12v8s_115">"fmt"</span>
-</span></div><div id="line-5" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx hxZITM linenumber react-syntax-highlighter-line-number" value="5"></span><span class="line" data-line-number="5">    <span class="_token_12v8s_92 _string_12v8s_115">"net/http"</span>
-</span></div><div id="line-6" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx kdaMlT linenumber react-syntax-highlighter-line-number" value="6"></span><span class="line" data-line-number="6"><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
-</span></div><div id="line-7" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx fqemwW linenumber react-syntax-highlighter-line-number" value="7"></span><span class="line" data-line-number="7">
-</span></div><div id="line-8" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx iNNlNR linenumber react-syntax-highlighter-line-number" value="8"></span><span class="line" data-line-number="8"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">handler</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span>w http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>ResponseWriter<span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> r <span class="_token_12v8s_92 _operator_12v8s_122">*</span>http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>Request<span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
-</span></div><div id="line-9" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx kxYdZA linenumber react-syntax-highlighter-line-number" value="9"></span><span class="line" data-line-number="9">    fmt<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">Fprintf</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span>w<span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> <span class="_token_12v8s_92 _string_12v8s_115">"Hi there, I love %s!"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> r<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>URL<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>Path<span class="_token_12v8s_92 _punctuation_12v8s_99">[</span><span class="_token_12v8s_92 _number_12v8s_106">1</span><span class="_token_12v8s_92 _punctuation_12v8s_99">:</span><span class="_token_12v8s_92 _punctuation_12v8s_99">]</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
-</span></div><div id="line-10" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx coTVnk linenumber react-syntax-highlighter-line-number" value="10"></span><span class="line" data-line-number="10"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span>
-</span></div><div id="line-11" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx eIfqmV linenumber react-syntax-highlighter-line-number" value="11"></span><span class="line" data-line-number="11">
-</span></div><div id="line-12" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx eGEnke linenumber react-syntax-highlighter-line-number" value="12"></span><span class="line" data-line-number="12"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">main</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
-</span></div><div id="line-13" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx ixoehX linenumber react-syntax-highlighter-line-number" value="13"></span><span class="line" data-line-number="13">    http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">HandleFunc</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">"/"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> handler<span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
-</span></div><div id="line-14" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx UckzM linenumber react-syntax-highlighter-line-number" value="14"></span><span class="line" data-line-number="14">    http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">ListenAndServe</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">":8080"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> <span class="_token_12v8s_92 _boolean_12v8s_105">nil</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
-</span></div><div id="line-15" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx dnnFzx linenumber react-syntax-highlighter-line-number" value="15"></span><span class="line" data-line-number="15"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span></span></div></code></pre>
-        <div class="sc-GEaMY ikNrQC">
+        ><code><div id="line-1" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp iHiPYz linenumber react-syntax-highlighter-line-number" value="1"></span><span class="line" data-line-number="1"><span class="_token_12v8s_92 _keyword_12v8s_133">package</span> main
+</span></div><div id="line-2" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp gchMGs linenumber react-syntax-highlighter-line-number" value="2"></span><span class="line" data-line-number="2">
+</span></div><div id="line-3" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp erWUuJ linenumber react-syntax-highlighter-line-number" value="3"></span><span class="line" data-line-number="3"><span class="_token_12v8s_92 _keyword_12v8s_133">import</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">(</span>
+</span></div><div id="line-4" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp xKepO linenumber react-syntax-highlighter-line-number" value="4"></span><span class="line" data-line-number="4">    <span class="_token_12v8s_92 _string_12v8s_115">"fmt"</span>
+</span></div><div id="line-5" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp fkGEeL linenumber react-syntax-highlighter-line-number" value="5"></span><span class="line" data-line-number="5">    <span class="_token_12v8s_92 _string_12v8s_115">"net/http"</span>
+</span></div><div id="line-6" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp cFFAME linenumber react-syntax-highlighter-line-number" value="6"></span><span class="line" data-line-number="6"><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
+</span></div><div id="line-7" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp VuIAV linenumber react-syntax-highlighter-line-number" value="7"></span><span class="line" data-line-number="7">
+</span></div><div id="line-8" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp iNhsIW linenumber react-syntax-highlighter-line-number" value="8"></span><span class="line" data-line-number="8"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">handler</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span>w http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>ResponseWriter<span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> r <span class="_token_12v8s_92 _operator_12v8s_122">*</span>http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>Request<span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
+</span></div><div id="line-9" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp ckIiYX linenumber react-syntax-highlighter-line-number" value="9"></span><span class="line" data-line-number="9">    fmt<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">Fprintf</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span>w<span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> <span class="_token_12v8s_92 _string_12v8s_115">"Hi there, I love %s!"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> r<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>URL<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>Path<span class="_token_12v8s_92 _punctuation_12v8s_99">[</span><span class="_token_12v8s_92 _number_12v8s_106">1</span><span class="_token_12v8s_92 _punctuation_12v8s_99">:</span><span class="_token_12v8s_92 _punctuation_12v8s_99">]</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
+</span></div><div id="line-10" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp iabWmr linenumber react-syntax-highlighter-line-number" value="10"></span><span class="line" data-line-number="10"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span>
+</span></div><div id="line-11" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp ejsfoy linenumber react-syntax-highlighter-line-number" value="11"></span><span class="line" data-line-number="11">
+</span></div><div id="line-12" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp ekTirp linenumber react-syntax-highlighter-line-number" value="12"></span><span class="line" data-line-number="12"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">main</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
+</span></div><div id="line-13" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp bRHNrE linenumber react-syntax-highlighter-line-number" value="13"></span><span class="line" data-line-number="13">    http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">HandleFunc</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">"/"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> handler<span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
+</span></div><div id="line-14" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp juTGZP linenumber react-syntax-highlighter-line-number" value="14"></span><span class="line" data-line-number="14">    http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">ListenAndServe</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">":8080"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> <span class="_token_12v8s_92 _boolean_12v8s_105">nil</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
+</span></div><div id="line-15" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp fEjQbW linenumber react-syntax-highlighter-line-number" value="15"></span><span class="line" data-line-number="15"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span></span></div></code></pre>
+        <div class="sc-hOGlKT eVDRqG">
           <button
             type="button"
             title="Copy to clipboard"
@@ -2876,10 +2874,10 @@ exports[`Global/MarkdownView Default 1`] = `
 `;
 
 exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
-"<div class="sc-JkhKt eXsJgS">
-  <div class="sc-dkQllP iifuJS content">
+"<div class="sc-cHzoaq cgdVKS">
+  <div class="sc-gGPyxg iwSbRe content">
     <div>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changelog"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changelog"
         ><h2 id="changelog">
           Changelog
           <div class="sc-eJwVsk ivOEsg">
@@ -2893,14 +2891,14 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
         and this project adheres to
         <a href="https://semver.org/spec/v2.0.0.html" target="_blank" rel="noopener noreferrer">Semantic Versioning</a>.
       </p>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#compl_icated_hader"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#compl_icated_hader"
         ><h2 id="compl_icated_hader">
           Compl_icated_H€aDer
           <div class="sc-eJwVsk ivOEsg">
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h2
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#2160---2021-03-26"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#2160---2021-03-26"
         ><h3 id="2160---2021-03-26">
           <a href="https://www.scm-manager.org/download/2.16.0" target="_blank" rel="noopener noreferrer">2.16.0</a> -
           2021-03-26
@@ -2908,7 +2906,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added"
         ><h4 id="added">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -2981,7 +2979,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed"
         ><h4 id="fixed">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -3038,7 +3036,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed"
         ><h4 id="changed">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -3071,7 +3069,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#2151---2021-03-17"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#2151---2021-03-17"
         ><h3 id="2151---2021-03-17">
           <a href="https://www.scm-manager.org/download/2.15.1" target="_blank" rel="noopener noreferrer">2.15.1</a> -
           2021-03-17
@@ -3079,7 +3077,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-1"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-1"
         ><h4 id="fixed-1">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -3155,7 +3153,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#2150---2021-03-12"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#2150---2021-03-12"
         ><h3 id="2150---2021-03-12">
           <a href="https://www.scm-manager.org/download/2.15.0" target="_blank" rel="noopener noreferrer">2.15.0</a> -
           2021-03-12
@@ -3163,7 +3161,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-1"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-1"
         ><h4 id="added-1">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -3212,7 +3210,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-2"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-2"
         ><h4 id="fixed-2">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -3245,7 +3243,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#2141---2021-03-03"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#2141---2021-03-03"
         ><h3 id="2141---2021-03-03">
           <a href="https://www.scm-manager.org/download/2.14.1" target="_blank" rel="noopener noreferrer">2.14.1</a> -
           2021-03-03
@@ -3253,7 +3251,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-3"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-3"
         ><h4 id="fixed-3">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -3303,7 +3301,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
         </li>
         <li>Fix redirect after logout if is set</li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#2140---2021-03-01"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#2140---2021-03-01"
         ><h3 id="2140---2021-03-01">
           <a href="https://www.scm-manager.org/download/2.14.0" target="_blank" rel="noopener noreferrer">2.14.0</a> -
           2021-03-01
@@ -3311,7 +3309,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-2"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-2"
         ><h4 id="added-2">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -3384,7 +3382,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-4"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-4"
         ><h4 id="fixed-4">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -3449,7 +3447,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-1"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-1"
         ><h4 id="changed-1">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -3506,7 +3504,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#2130---2021-01-29"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#2130---2021-01-29"
         ><h3 id="2130---2021-01-29">
           <a href="https://www.scm-manager.org/download/2.13.0" target="_blank" rel="noopener noreferrer">2.13.0</a> -
           2021-01-29
@@ -3514,7 +3512,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-3"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-3"
         ><h4 id="added-3">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -3603,7 +3601,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-2"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-2"
         ><h4 id="changed-2">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -3669,7 +3667,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-5"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-5"
         ><h4 id="fixed-5">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -3702,7 +3700,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#2120---2020-12-17"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#2120---2020-12-17"
         ><h3 id="2120---2020-12-17">
           <a href="https://www.scm-manager.org/download/2.12.0" target="_blank" rel="noopener noreferrer">2.12.0</a> -
           2020-12-17
@@ -3710,7 +3708,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-4"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-4"
         ><h4 id="added-4">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -3743,7 +3741,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-3"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-3"
         ><h4 id="changed-3">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -3760,7 +3758,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-6"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-6"
         ><h4 id="fixed-6">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -3813,7 +3811,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#2111---2020-12-07"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#2111---2020-12-07"
         ><h3 id="2111---2020-12-07">
           <a href="https://www.scm-manager.org/download/2.11.1" target="_blank" rel="noopener noreferrer">2.11.1</a> -
           2020-12-07
@@ -3821,7 +3819,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-7"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-7"
         ><h4 id="fixed-7">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -3842,7 +3840,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#2110---2020-12-04"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#2110---2020-12-04"
         ><h3 id="2110---2020-12-04">
           <a href="https://www.scm-manager.org/download/2.11.0" target="_blank" rel="noopener noreferrer">2.11.0</a> -
           2020-12-04
@@ -3850,7 +3848,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-5"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-5"
         ><h4 id="added-5">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -3927,7 +3925,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-4"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-4"
         ><h4 id="changed-4">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -3944,7 +3942,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-8"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-8"
         ><h4 id="fixed-8">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -3973,7 +3971,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#2101---2020-11-24"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#2101---2020-11-24"
         ><h3 id="2101---2020-11-24">
           <a href="https://www.scm-manager.org/download/2.10.1" target="_blank" rel="noopener noreferrer">2.10.1</a> -
           2020-11-24
@@ -3981,7 +3979,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-9"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-9"
         ><h4 id="fixed-9">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -4006,7 +4004,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#2100---2020-11-20"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#2100---2020-11-20"
         ><h3 id="2100---2020-11-20">
           <a href="https://www.scm-manager.org/download/2.10.0" target="_blank" rel="noopener noreferrer">2.10.0</a> -
           2020-11-20
@@ -4014,7 +4012,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-6"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-6"
         ><h4 id="added-6">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -4063,7 +4061,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-10"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-10"
         ><h4 id="fixed-10">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -4102,7 +4100,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#291---2020-11-11"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#291---2020-11-11"
         ><h3 id="291---2020-11-11">
           <a href="https://www.scm-manager.org/download/2.9.1" target="_blank" rel="noopener noreferrer">2.9.1</a> -
           2020-11-11
@@ -4110,7 +4108,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-11"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-11"
         ><h4 id="fixed-11">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -4120,7 +4118,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
       <ul>
         <li>German translation for repositories view</li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#290---2020-11-06"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#290---2020-11-06"
         ><h3 id="290---2020-11-06">
           <a href="https://www.scm-manager.org/download/2.9.0" target="_blank" rel="noopener noreferrer">2.9.0</a> -
           2020-11-06
@@ -4128,7 +4126,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-7"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-7"
         ><h4 id="added-7">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -4169,7 +4167,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-12"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-12"
         ><h4 id="fixed-12">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -4235,7 +4233,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#280---2020-10-27"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#280---2020-10-27"
         ><h3 id="280---2020-10-27">
           <a href="https://www.scm-manager.org/download/2.8.0" target="_blank" rel="noopener noreferrer">2.8.0</a> -
           2020-10-27
@@ -4243,7 +4241,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-8"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-8"
         ><h4 id="added-8">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -4276,7 +4274,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-5"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-5"
         ><h4 id="changed-5">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -4301,7 +4299,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-13"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-13"
         ><h4 id="fixed-13">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -4334,7 +4332,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#263---2020-10-16"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#263---2020-10-16"
         ><h3 id="263---2020-10-16">
           <a href="https://www.scm-manager.org/download/2.6.3" target="_blank" rel="noopener noreferrer">2.6.3</a> -
           2020-10-16
@@ -4342,7 +4340,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-14"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-14"
         ><h4 id="fixed-14">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -4359,7 +4357,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#271---2020-10-14"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#271---2020-10-14"
         ><h3 id="271---2020-10-14">
           <a href="https://www.scm-manager.org/download/2.7.1" target="_blank" rel="noopener noreferrer">2.7.1</a> -
           2020-10-14
@@ -4367,7 +4365,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-15"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-15"
         ><h4 id="fixed-15">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -4392,7 +4390,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-6"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-6"
         ><h4 id="changed-6">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -4409,7 +4407,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#270---2020-10-12"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#270---2020-10-12"
         ><h3 id="270---2020-10-12">
           <a href="https://www.scm-manager.org/download/2.7.0" target="_blank" rel="noopener noreferrer">2.7.0</a> -
           2020-10-12
@@ -4417,7 +4415,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-9"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-9"
         ><h4 id="added-9">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -4434,7 +4432,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#262---2020-10-09"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#262---2020-10-09"
         ><h3 id="262---2020-10-09">
           <a href="https://www.scm-manager.org/download/2.6.2" target="_blank" rel="noopener noreferrer">2.6.2</a> -
           2020-10-09
@@ -4442,7 +4440,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-10"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-10"
         ><h4 id="added-10">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -4459,7 +4457,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-16"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-16"
         ><h4 id="fixed-16">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -4492,7 +4490,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#261---2020-09-30"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#261---2020-09-30"
         ><h3 id="261---2020-09-30">
           <a href="https://www.scm-manager.org/download/2.6.1" target="_blank" rel="noopener noreferrer">2.6.1</a> -
           2020-09-30
@@ -4500,7 +4498,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-17"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-17"
         ><h4 id="fixed-17">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -4517,7 +4515,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#260---2020-09-25"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#260---2020-09-25"
         ><h3 id="260---2020-09-25">
           <a href="https://www.scm-manager.org/download/2.6.0" target="_blank" rel="noopener noreferrer">2.6.0</a> -
           2020-09-25
@@ -4525,7 +4523,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-11"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-11"
         ><h4 id="added-11">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -4566,7 +4564,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-7"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-7"
         ><h4 id="changed-7">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -4583,7 +4581,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-18"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-18"
         ><h4 id="fixed-18">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -4664,7 +4662,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#250---2020-09-10"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#250---2020-09-10"
         ><h3 id="250---2020-09-10">
           <a href="https://www.scm-manager.org/download/2.5.0" target="_blank" rel="noopener noreferrer">2.5.0</a> -
           2020-09-10
@@ -4672,7 +4670,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-12"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-12"
         ><h4 id="added-12">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -4721,7 +4719,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-19"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-19"
         ><h4 id="fixed-19">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -4755,7 +4753,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#241---2020-09-01"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#241---2020-09-01"
         ><h3 id="241---2020-09-01">
           <a href="https://www.scm-manager.org/download/2.4.1" target="_blank" rel="noopener noreferrer">2.4.1</a> -
           2020-09-01
@@ -4763,7 +4761,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-13"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-13"
         ><h4 id="added-13">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -4781,7 +4779,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-20"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-20"
         ><h4 id="fixed-20">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -4879,7 +4877,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#240---2020-08-14"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#240---2020-08-14"
         ><h3 id="240---2020-08-14">
           <a href="https://www.scm-manager.org/download/2.4.0" target="_blank" rel="noopener noreferrer">2.4.0</a> -
           2020-08-14
@@ -4887,7 +4885,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-14"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-14"
         ><h4 id="added-14">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -4952,7 +4950,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-21"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-21"
         ><h4 id="fixed-21">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -4993,7 +4991,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#231---2020-08-04"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#231---2020-08-04"
         ><h3 id="231---2020-08-04">
           <a href="https://www.scm-manager.org/download/2.3.1" target="_blank" rel="noopener noreferrer">2.3.1</a> -
           2020-08-04
@@ -5001,7 +4999,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-15"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-15"
         ><h4 id="added-15">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -5018,7 +5016,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-8"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-8"
         ><h4 id="changed-8">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -5035,7 +5033,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-22"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-22"
         ><h4 id="fixed-22">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -5060,7 +5058,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#230---2020-07-23"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#230---2020-07-23"
         ><h3 id="230---2020-07-23">
           <a href="https://www.scm-manager.org/download/2.3.0" target="_blank" rel="noopener noreferrer">2.3.0</a> -
           2020-07-23
@@ -5068,7 +5066,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-16"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-16"
         ><h4 id="added-16">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -5101,7 +5099,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-9"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-9"
         ><h4 id="changed-9">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -5127,7 +5125,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-23"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-23"
         ><h4 id="fixed-23">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -5186,7 +5184,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#220---2020-07-03"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#220---2020-07-03"
         ><h3 id="220---2020-07-03">
           <a href="https://www.scm-manager.org/download/2.2.0" target="_blank" rel="noopener noreferrer">2.2.0</a> -
           2020-07-03
@@ -5194,7 +5192,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-17"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-17"
         ><h4 id="added-17">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -5228,7 +5226,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
         </li>
         <li>Restart service after rpm or deb package upgrade</li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-10"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-10"
         ><h4 id="changed-10">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -5262,7 +5260,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-24"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-24"
         ><h4 id="fixed-24">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -5339,7 +5337,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#211---2020-06-23"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#211---2020-06-23"
         ><h3 id="211---2020-06-23">
           <a href="https://www.scm-manager.org/download/2.1.1" target="_blank" rel="noopener noreferrer">2.1.1</a> -
           2020-06-23
@@ -5347,7 +5345,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-25"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-25"
         ><h4 id="fixed-25">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -5384,7 +5382,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#210---2020-06-18"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#210---2020-06-18"
         ><h3 id="210---2020-06-18">
           <a href="https://www.scm-manager.org/download/2.1.0" target="_blank" rel="noopener noreferrer">2.1.0</a> -
           2020-06-18
@@ -5392,7 +5390,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-18"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-18"
         ><h4 id="added-18">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -5441,7 +5439,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-26"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-26"
         ><h4 id="fixed-26">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -5560,7 +5558,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#200---2020-06-04"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#200---2020-06-04"
         ><h3 id="200---2020-06-04">
           <a href="https://www.scm-manager.org/download/2.0.0" target="_blank" rel="noopener noreferrer">2.0.0</a> -
           2020-06-04
@@ -5568,7 +5566,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-19"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-19"
         ><h4 id="added-19">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -5609,7 +5607,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-27"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-27"
         ><h4 id="fixed-27">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -5642,7 +5640,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#200-rc8---2020-05-08"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#200-rc8---2020-05-08"
         ><h3 id="200-rc8---2020-05-08">
           <a href="https://www.scm-manager.org/download/2.0.0-rc8" target="_blank" rel="noopener noreferrer"
             >2.0.0-rc8</a
@@ -5652,7 +5650,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-20"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-20"
         ><h4 id="added-20">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -5693,7 +5691,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-11"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-11"
         ><h4 id="changed-11">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -5743,7 +5741,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-28"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-28"
         ><h4 id="fixed-28">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -5794,7 +5792,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#200-rc7---2020-04-09"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#200-rc7---2020-04-09"
         ><h3 id="200-rc7---2020-04-09">
           <a href="https://www.scm-manager.org/download/2.0.0-rc7" target="_blank" rel="noopener noreferrer"
             >2.0.0-rc7</a
@@ -5804,7 +5802,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-21"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-21"
         ><h4 id="added-21">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -5829,7 +5827,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-12"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-12"
         ><h4 id="changed-12">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -5854,7 +5852,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-29"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-29"
         ><h4 id="fixed-29">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -5879,7 +5877,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#200-rc6---2020-03-26"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#200-rc6---2020-03-26"
         ><h3 id="200-rc6---2020-03-26">
           <a href="https://www.scm-manager.org/download/2.0.0-rc6" target="_blank" rel="noopener noreferrer"
             >2.0.0-rc6</a
@@ -5889,7 +5887,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-22"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-22"
         ><h4 id="added-22">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -5946,7 +5944,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-13"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-13"
         ><h4 id="changed-13">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -5966,7 +5964,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#removed"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#removed"
         ><h4 id="removed">
           Removed
           <div class="sc-eJwVsk ivOEsg">
@@ -5984,7 +5982,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-30"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-30"
         ><h4 id="fixed-30">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -6023,7 +6021,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           >)
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#200-rc5---2020-03-12"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#200-rc5---2020-03-12"
         ><h3 id="200-rc5---2020-03-12">
           <a href="https://www.scm-manager.org/download/2.0.0-rc5" target="_blank" rel="noopener noreferrer"
             >2.0.0-rc5</a
@@ -6033,7 +6031,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-23"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-23"
         ><h4 id="added-23">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -6051,7 +6049,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
         <li>Babel-plugin-styled-components for persistent generated classnames</li>
         <li>By default, only 100 files will be listed in source view in one request</li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-14"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-14"
         ><h4 id="changed-14">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -6064,7 +6062,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
         <li>Update svnkit to version 1.10.1-scm1</li>
         <li>Secondary navigation collapsable</li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-31"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-31"
         ><h4 id="fixed-31">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -6077,7 +6075,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
         <li>Keep file attributes on modification</li>
         <li>Drop Down Component works again with translations</li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#removed-1"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#removed-1"
         ><h4 id="removed-1">
           Removed
           <div class="sc-eJwVsk ivOEsg">
@@ -6088,7 +6086,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
         <li>Enunciate rest documentation</li>
         <li>Obsolete fields in data transfer objects</li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#200-rc4---2020-02-14"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#200-rc4---2020-02-14"
         ><h3 id="200-rc4---2020-02-14">
           <a href="https://www.scm-manager.org/download/2.0.0-rc4" target="_blank" rel="noopener noreferrer"
             >2.0.0-rc4</a
@@ -6098,7 +6096,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-24"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-24"
         ><h4 id="added-24">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -6110,7 +6108,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
         <li>Simple ClassLoaderLifeCycle to fix integration tests on Java &gt; 8</li>
         <li>Option to use a function for default collapse state in diffs</li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-15"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-15"
         ><h4 id="changed-15">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -6133,7 +6131,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
         </li>
         <li>Upgrade smp-maven-plugin to version 1.0.0-rc3</li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-32"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-32"
         ><h4 id="fixed-32">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -6146,7 +6144,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
           <a href="mailto:noreply@scm-manager.org">noreply@scm-manager.org</a>"
         </li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#200-rc3---2020-01-31"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#200-rc3---2020-01-31"
         ><h3 id="200-rc3---2020-01-31">
           <a href="https://www.scm-manager.org/download/2.0.0-rc3" target="_blank" rel="noopener noreferrer"
             >2.0.0-rc3</a
@@ -6156,7 +6154,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-33"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-33"
         ><h4 id="fixed-33">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -6167,7 +6165,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
         <li>Broken plugin order fixed</li>
         <li>MarkdownViewer in code section renders markdown properly</li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#200-rc2---2020-01-29"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#200-rc2---2020-01-29"
         ><h3 id="200-rc2---2020-01-29">
           <a href="https://www.scm-manager.org/download/2.0.0-rc2" target="_blank" rel="noopener noreferrer"
             >2.0.0-rc2</a
@@ -6177,7 +6175,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-25"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-25"
         ><h4 id="added-25">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -6195,7 +6193,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
         <li>Code highlighting in diffs</li>
         <li>Switch between rendered version and source view for Markdown files</li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#changed-16"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#changed-16"
         ><h4 id="changed-16">
           Changed
           <div class="sc-eJwVsk ivOEsg">
@@ -6206,7 +6204,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
         <li>Stop fetching commits when it takes too long</li>
         <li>Unification of source and commits become "code"</li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#fixed-34"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#fixed-34"
         ><h4 id="fixed-34">
           Fixed
           <div class="sc-eJwVsk ivOEsg">
@@ -6222,7 +6220,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
         <li>Page title is now set correctly</li>
         <li>Restart after migration</li>
       </ul>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#200-rc1---2019-12-02"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#200-rc1---2019-12-02"
         ><h3 id="200-rc1---2019-12-02">
           <a href="https://www.scm-manager.org/download/2.0.0-rc1" target="_blank" rel="noopener noreferrer"
             >2.0.0-rc1</a
@@ -6232,7 +6230,7 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
             <i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i>
           </div></h3
       ></a>
-      <a class="sc-gGPyxg bEdIYQ anchor" href="/repo/storybook/markdown#added-26"
+      <a class="sc-JkhKt eIPkjE anchor" href="/repo/storybook/markdown#added-26"
         ><h4 id="added-26">
           Added
           <div class="sc-eJwVsk ivOEsg">
@@ -6263,8 +6261,8 @@ exports[`Global/MarkdownView HeaderAnchorLinks 1`] = `
 `;
 
 exports[`Global/MarkdownView Images 1`] = `
-"<div class="sc-JkhKt eXsJgS">
-  <div class="sc-dkQllP iifuJS content">
+"<div class="sc-cHzoaq cgdVKS">
+  <div class="sc-gGPyxg iwSbRe content">
     <div>
       <h1 id="images">Images</h1>
       <p>
@@ -6298,31 +6296,31 @@ exports[`Global/MarkdownView Images 1`] = `
 `;
 
 exports[`Global/MarkdownView InlineXml 1`] = `
-"<div class="sc-JkhKt eXsJgS">
+"<div class="sc-cHzoaq cgdVKS">
   <h1 class="title">Inline Xml</h1>
   <h2 class="subtitle">Inline xml outside of a code block is not supported</h2>
-  <div class="sc-dkQllP iifuJS content">
+  <div class="sc-gGPyxg iwSbRe content">
     <div>
       <h1 id="xml-in-markdown">Xml in Markdown</h1>
       <p>&lt;project [...]&gt;</p>
       <p>[...]</p>
 
-      <div class="sc-gsNiZj hOuHKb is-relative">
+      <div class="sc-dtMhIu dGGkZZ is-relative">
         <pre
           class="language-text"
           aria-busy="false"
-        ><code><div id="line-1" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx ebxwZY linenumber react-syntax-highlighter-line-number" value="1"></span><span class="line" data-line-number="1">  [...]
-</span></div><div id="line-2" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx gGyAsf linenumber react-syntax-highlighter-line-number" value="2"></span><span class="line" data-line-number="2">
-</span></div><div id="line-3" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx bTCa-Di linenumber react-syntax-highlighter-line-number" value="3"></span><span class="line" data-line-number="3">  &lt;plugin&gt;
-</span></div><div id="line-4" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx fNOQId linenumber react-syntax-highlighter-line-number" value="4"></span><span class="line" data-line-number="4">    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-</span></div><div id="line-5" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx hxZITM linenumber react-syntax-highlighter-line-number" value="5"></span><span class="line" data-line-number="5">    &lt;artifactId&gt;maven-enforcer-plugin&lt;/artifactId&gt;
-</span></div><div id="line-6" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx kdaMlT linenumber react-syntax-highlighter-line-number" value="6"></span><span class="line" data-line-number="6">  &lt;/plugin&gt;
-</span></div><div id="line-7" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx fqemwW linenumber react-syntax-highlighter-line-number" value="7"></span><span class="line" data-line-number="7">  &lt;plugin&gt;
-</span></div><div id="line-8" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx iNNlNR linenumber react-syntax-highlighter-line-number" value="8"></span><span class="line" data-line-number="8">    &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
-</span></div><div id="line-9" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx kxYdZA linenumber react-syntax-highlighter-line-number" value="9"></span><span class="line" data-line-number="9">    &lt;artifactId&gt;animal-sniffer-maven-plugin&lt;/artifactId&gt;
-</span></div><div id="line-10" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx coTVnk linenumber react-syntax-highlighter-line-number" value="10"></span><span class="line" data-line-number="10">  &lt;/plugin&gt;
-</span></div><div id="line-11" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx eIfqmV linenumber react-syntax-highlighter-line-number" value="11"></span><span class="line" data-line-number="11">&lt;/plugins&gt;</span></div></code></pre>
-        <div class="sc-GEaMY ikNrQC">
+        ><code><div id="line-1" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp iHiPYz linenumber react-syntax-highlighter-line-number" value="1"></span><span class="line" data-line-number="1">  [...]
+</span></div><div id="line-2" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp gchMGs linenumber react-syntax-highlighter-line-number" value="2"></span><span class="line" data-line-number="2">
+</span></div><div id="line-3" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp erWUuJ linenumber react-syntax-highlighter-line-number" value="3"></span><span class="line" data-line-number="3">  &lt;plugin&gt;
+</span></div><div id="line-4" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp xKepO linenumber react-syntax-highlighter-line-number" value="4"></span><span class="line" data-line-number="4">    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+</span></div><div id="line-5" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp fkGEeL linenumber react-syntax-highlighter-line-number" value="5"></span><span class="line" data-line-number="5">    &lt;artifactId&gt;maven-enforcer-plugin&lt;/artifactId&gt;
+</span></div><div id="line-6" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp cFFAME linenumber react-syntax-highlighter-line-number" value="6"></span><span class="line" data-line-number="6">  &lt;/plugin&gt;
+</span></div><div id="line-7" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp VuIAV linenumber react-syntax-highlighter-line-number" value="7"></span><span class="line" data-line-number="7">  &lt;plugin&gt;
+</span></div><div id="line-8" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp iNhsIW linenumber react-syntax-highlighter-line-number" value="8"></span><span class="line" data-line-number="8">    &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
+</span></div><div id="line-9" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp ckIiYX linenumber react-syntax-highlighter-line-number" value="9"></span><span class="line" data-line-number="9">    &lt;artifactId&gt;animal-sniffer-maven-plugin&lt;/artifactId&gt;
+</span></div><div id="line-10" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp iabWmr linenumber react-syntax-highlighter-line-number" value="10"></span><span class="line" data-line-number="10">  &lt;/plugin&gt;
+</span></div><div id="line-11" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp ejsfoy linenumber react-syntax-highlighter-line-number" value="11"></span><span class="line" data-line-number="11">&lt;/plugins&gt;</span></div></code></pre>
+        <div class="sc-hOGlKT eVDRqG">
           <button
             type="button"
             title="Copy to clipboard"
@@ -6342,8 +6340,8 @@ exports[`Global/MarkdownView InlineXml 1`] = `
 `;
 
 exports[`Global/MarkdownView Links 1`] = `
-"<div class="sc-JkhKt eXsJgS">
-<div class="sc-dkQllP iifuJS content">
+"<div class="sc-cHzoaq cgdVKS">
+<div class="sc-gGPyxg iwSbRe content">
 <div>
 <h1 id="links">Links</h1>
 <p>Show case for different style of markdown links.
@@ -6374,8 +6372,8 @@ the story is mostly for checking if the links are rendered correct.</p>
 `;
 
 exports[`Global/MarkdownView SkipHtml 1`] = `
-"<div class="sc-JkhKt eXsJgS">
-  <div class="sc-dkQllP iifuJS content">
+"<div class="sc-cHzoaq cgdVKS">
+  <div class="sc-gGPyxg iwSbRe content">
     <div>
       <h1 id="markdown-test-page">Markdown Test Page</h1>
       <ul>
@@ -6631,26 +6629,26 @@ exports[`Global/MarkdownView SkipHtml 1`] = `
         adipisicing amet id excepteur Lorem aliquip sit irure veniam laborum duis cillum. Aliqua occaecat minim cillum
         deserunt magna sunt laboris do do irure ea nostrud consequat ut voluptate ex.
       </p>
-      <div class="sc-gsNiZj hOuHKb is-relative">
+      <div class="sc-dtMhIu dGGkZZ is-relative">
         <pre
           class="language-go"
           aria-busy="false"
-        ><code><div id="line-1" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx ebxwZY linenumber react-syntax-highlighter-line-number" value="1"></span><span class="line" data-line-number="1"><span class="_token_12v8s_92 _keyword_12v8s_133">package</span> main
-</span></div><div id="line-2" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx gGyAsf linenumber react-syntax-highlighter-line-number" value="2"></span><span class="line" data-line-number="2">
-</span></div><div id="line-3" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx bTCa-Di linenumber react-syntax-highlighter-line-number" value="3"></span><span class="line" data-line-number="3"><span class="_token_12v8s_92 _keyword_12v8s_133">import</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">(</span>
-</span></div><div id="line-4" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx fNOQId linenumber react-syntax-highlighter-line-number" value="4"></span><span class="line" data-line-number="4">    <span class="_token_12v8s_92 _string_12v8s_115">"fmt"</span>
-</span></div><div id="line-5" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx hxZITM linenumber react-syntax-highlighter-line-number" value="5"></span><span class="line" data-line-number="5">    <span class="_token_12v8s_92 _string_12v8s_115">"net/http"</span>
-</span></div><div id="line-6" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx kdaMlT linenumber react-syntax-highlighter-line-number" value="6"></span><span class="line" data-line-number="6"><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
-</span></div><div id="line-7" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx fqemwW linenumber react-syntax-highlighter-line-number" value="7"></span><span class="line" data-line-number="7">
-</span></div><div id="line-8" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx iNNlNR linenumber react-syntax-highlighter-line-number" value="8"></span><span class="line" data-line-number="8"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">handler</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span>w http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>ResponseWriter<span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> r <span class="_token_12v8s_92 _operator_12v8s_122">*</span>http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>Request<span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
-</span></div><div id="line-9" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx kxYdZA linenumber react-syntax-highlighter-line-number" value="9"></span><span class="line" data-line-number="9">    fmt<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">Fprintf</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span>w<span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> <span class="_token_12v8s_92 _string_12v8s_115">"Hi there, I love %s!"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> r<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>URL<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>Path<span class="_token_12v8s_92 _punctuation_12v8s_99">[</span><span class="_token_12v8s_92 _number_12v8s_106">1</span><span class="_token_12v8s_92 _punctuation_12v8s_99">:</span><span class="_token_12v8s_92 _punctuation_12v8s_99">]</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
-</span></div><div id="line-10" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx coTVnk linenumber react-syntax-highlighter-line-number" value="10"></span><span class="line" data-line-number="10"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span>
-</span></div><div id="line-11" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx eIfqmV linenumber react-syntax-highlighter-line-number" value="11"></span><span class="line" data-line-number="11">
-</span></div><div id="line-12" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx eGEnke linenumber react-syntax-highlighter-line-number" value="12"></span><span class="line" data-line-number="12"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">main</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
-</span></div><div id="line-13" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx ixoehX linenumber react-syntax-highlighter-line-number" value="13"></span><span class="line" data-line-number="13">    http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">HandleFunc</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">"/"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> handler<span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
-</span></div><div id="line-14" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx UckzM linenumber react-syntax-highlighter-line-number" value="14"></span><span class="line" data-line-number="14">    http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">ListenAndServe</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">":8080"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> <span class="_token_12v8s_92 _boolean_12v8s_105">nil</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
-</span></div><div id="line-15" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx dnnFzx linenumber react-syntax-highlighter-line-number" value="15"></span><span class="line" data-line-number="15"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span></span></div></code></pre>
-        <div class="sc-GEaMY ikNrQC">
+        ><code><div id="line-1" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp iHiPYz linenumber react-syntax-highlighter-line-number" value="1"></span><span class="line" data-line-number="1"><span class="_token_12v8s_92 _keyword_12v8s_133">package</span> main
+</span></div><div id="line-2" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp gchMGs linenumber react-syntax-highlighter-line-number" value="2"></span><span class="line" data-line-number="2">
+</span></div><div id="line-3" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp erWUuJ linenumber react-syntax-highlighter-line-number" value="3"></span><span class="line" data-line-number="3"><span class="_token_12v8s_92 _keyword_12v8s_133">import</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">(</span>
+</span></div><div id="line-4" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp xKepO linenumber react-syntax-highlighter-line-number" value="4"></span><span class="line" data-line-number="4">    <span class="_token_12v8s_92 _string_12v8s_115">"fmt"</span>
+</span></div><div id="line-5" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp fkGEeL linenumber react-syntax-highlighter-line-number" value="5"></span><span class="line" data-line-number="5">    <span class="_token_12v8s_92 _string_12v8s_115">"net/http"</span>
+</span></div><div id="line-6" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp cFFAME linenumber react-syntax-highlighter-line-number" value="6"></span><span class="line" data-line-number="6"><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
+</span></div><div id="line-7" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp VuIAV linenumber react-syntax-highlighter-line-number" value="7"></span><span class="line" data-line-number="7">
+</span></div><div id="line-8" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp iNhsIW linenumber react-syntax-highlighter-line-number" value="8"></span><span class="line" data-line-number="8"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">handler</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span>w http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>ResponseWriter<span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> r <span class="_token_12v8s_92 _operator_12v8s_122">*</span>http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>Request<span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
+</span></div><div id="line-9" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp ckIiYX linenumber react-syntax-highlighter-line-number" value="9"></span><span class="line" data-line-number="9">    fmt<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">Fprintf</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span>w<span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> <span class="_token_12v8s_92 _string_12v8s_115">"Hi there, I love %s!"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> r<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>URL<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span>Path<span class="_token_12v8s_92 _punctuation_12v8s_99">[</span><span class="_token_12v8s_92 _number_12v8s_106">1</span><span class="_token_12v8s_92 _punctuation_12v8s_99">:</span><span class="_token_12v8s_92 _punctuation_12v8s_99">]</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
+</span></div><div id="line-10" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp iabWmr linenumber react-syntax-highlighter-line-number" value="10"></span><span class="line" data-line-number="10"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span>
+</span></div><div id="line-11" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp ejsfoy linenumber react-syntax-highlighter-line-number" value="11"></span><span class="line" data-line-number="11">
+</span></div><div id="line-12" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp ekTirp linenumber react-syntax-highlighter-line-number" value="12"></span><span class="line" data-line-number="12"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">main</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
+</span></div><div id="line-13" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp bRHNrE linenumber react-syntax-highlighter-line-number" value="13"></span><span class="line" data-line-number="13">    http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">HandleFunc</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">"/"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> handler<span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
+</span></div><div id="line-14" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp juTGZP linenumber react-syntax-highlighter-line-number" value="14"></span><span class="line" data-line-number="14">    http<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">ListenAndServe</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">":8080"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">,</span> <span class="_token_12v8s_92 _boolean_12v8s_105">nil</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
+</span></div><div id="line-15" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp fEjQbW linenumber react-syntax-highlighter-line-number" value="15"></span><span class="line" data-line-number="15"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span></span></div></code></pre>
+        <div class="sc-hOGlKT eVDRqG">
           <button
             type="button"
             title="Copy to clipboard"
@@ -6713,8 +6711,8 @@ exports[`Global/MarkdownView SkipHtml 1`] = `
 `;
 
 exports[`Global/MarkdownView XSSPrevention 1`] = `
-"<div class="sc-JkhKt eXsJgS">
-  <div class="sc-dkQllP iifuJS content">
+"<div class="sc-cHzoaq cgdVKS">
+  <div class="sc-gGPyxg iwSbRe content">
     <div>
       <h1 id="xss-should-prevented">XSS should prevented</h1>
       <p>You should not see an alert onload.</p>
@@ -6731,38 +6729,38 @@ exports[`Global/MarkdownView XSSPrevention 1`] = `
 `;
 
 exports[`Global/MarkdownView XmlCodeBlock 1`] = `
-"<div class="sc-JkhKt eXsJgS">
-  <div class="sc-dkQllP iifuJS content">
+"<div class="sc-cHzoaq cgdVKS">
+  <div class="sc-gGPyxg iwSbRe content">
     <div>
       <h1 id="xml-code-block-in-markdown">Xml Code Block in Markdown</h1>
-      <div class="sc-gsNiZj hOuHKb is-relative">
+      <div class="sc-dtMhIu dGGkZZ is-relative">
         <pre
           class="language-xml"
           aria-busy="false"
-        ><code><div id="line-1" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx ebxwZY linenumber react-syntax-highlighter-line-number" value="1"></span><span class="line" data-line-number="1"><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">project</span><span class="_token_12v8s_92 _tag_12v8s_104"> </span><span class="_token_12v8s_92 _tag_12v8s_104 _attr-name_12v8s_114">[...]</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
-</span></div><div id="line-2" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx gGyAsf linenumber react-syntax-highlighter-line-number" value="2"></span><span class="line" data-line-number="2">
-</span></div><div id="line-3" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx bTCa-Di linenumber react-syntax-highlighter-line-number" value="3"></span><span class="line" data-line-number="3">  [...]
-</span></div><div id="line-4" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx fNOQId linenumber react-syntax-highlighter-line-number" value="4"></span><span class="line" data-line-number="4">
-</span></div><div id="line-5" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx hxZITM linenumber react-syntax-highlighter-line-number" value="5"></span><span class="line" data-line-number="5">  <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">build</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
-</span></div><div id="line-6" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx kdaMlT linenumber react-syntax-highlighter-line-number" value="6"></span><span class="line" data-line-number="6">    <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">plugins</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
-</span></div><div id="line-7" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx fqemwW linenumber react-syntax-highlighter-line-number" value="7"></span><span class="line" data-line-number="7">
-</span></div><div id="line-8" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx iNNlNR linenumber react-syntax-highlighter-line-number" value="8"></span><span class="line" data-line-number="8">      [...]
-</span></div><div id="line-9" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx kxYdZA linenumber react-syntax-highlighter-line-number" value="9"></span><span class="line" data-line-number="9">
-</span></div><div id="line-10" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx coTVnk linenumber react-syntax-highlighter-line-number" value="10"></span><span class="line" data-line-number="10">      <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">plugin</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
-</span></div><div id="line-11" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx eIfqmV linenumber react-syntax-highlighter-line-number" value="11"></span><span class="line" data-line-number="11">        <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">groupId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>org.apache.maven.plugins<span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">groupId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
-</span></div><div id="line-12" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx eGEnke linenumber react-syntax-highlighter-line-number" value="12"></span><span class="line" data-line-number="12">        <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">artifactId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>maven-enforcer-plugin<span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">artifactId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
-</span></div><div id="line-13" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx ixoehX linenumber react-syntax-highlighter-line-number" value="13"></span><span class="line" data-line-number="13">      <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">plugin</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
-</span></div><div id="line-14" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx UckzM linenumber react-syntax-highlighter-line-number" value="14"></span><span class="line" data-line-number="14">      <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">plugin</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
-</span></div><div id="line-15" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx dnnFzx linenumber react-syntax-highlighter-line-number" value="15"></span><span class="line" data-line-number="15">        <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">groupId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>org.codehaus.mojo<span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">groupId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
-</span></div><div id="line-16" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx dlMCwG linenumber react-syntax-highlighter-line-number" value="16"></span><span class="line" data-line-number="16">        <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">artifactId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>animal-sniffer-maven-plugin<span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">artifactId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
-</span></div><div id="line-17" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx hcwtuz linenumber react-syntax-highlighter-line-number" value="17"></span><span class="line" data-line-number="17">      <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">plugin</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
-</span></div><div id="line-18" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx kscsxk linenumber react-syntax-highlighter-line-number" value="18"></span><span class="line" data-line-number="18">    <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">plugins</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
-</span></div><div id="line-19" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx bvSdXZ linenumber react-syntax-highlighter-line-number" value="19"></span><span class="line" data-line-number="19">  <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">build</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
-</span></div><div id="line-20" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx jEaMwL linenumber react-syntax-highlighter-line-number" value="20"></span><span class="line" data-line-number="20">
-</span></div><div id="line-21" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx SHYUe linenumber react-syntax-highlighter-line-number" value="21"></span><span class="line" data-line-number="21">  [...]
-</span></div><div id="line-22" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx hZsUBJ linenumber react-syntax-highlighter-line-number" value="22"></span><span class="line" data-line-number="22">
-</span></div><div id="line-23" class="sc-fvxxdC geLyvA"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-fbyePx fSnaPQ linenumber react-syntax-highlighter-line-number" value="23"></span><span class="line" data-line-number="23"><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">project</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span></span></div></code></pre>
-        <div class="sc-GEaMY ikNrQC">
+        ><code><div id="line-1" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp iHiPYz linenumber react-syntax-highlighter-line-number" value="1"></span><span class="line" data-line-number="1"><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">project</span><span class="_token_12v8s_92 _tag_12v8s_104"> </span><span class="_token_12v8s_92 _tag_12v8s_104 _attr-name_12v8s_114">[...]</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
+</span></div><div id="line-2" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp gchMGs linenumber react-syntax-highlighter-line-number" value="2"></span><span class="line" data-line-number="2">
+</span></div><div id="line-3" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp erWUuJ linenumber react-syntax-highlighter-line-number" value="3"></span><span class="line" data-line-number="3">  [...]
+</span></div><div id="line-4" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp xKepO linenumber react-syntax-highlighter-line-number" value="4"></span><span class="line" data-line-number="4">
+</span></div><div id="line-5" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp fkGEeL linenumber react-syntax-highlighter-line-number" value="5"></span><span class="line" data-line-number="5">  <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">build</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
+</span></div><div id="line-6" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp cFFAME linenumber react-syntax-highlighter-line-number" value="6"></span><span class="line" data-line-number="6">    <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">plugins</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
+</span></div><div id="line-7" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp VuIAV linenumber react-syntax-highlighter-line-number" value="7"></span><span class="line" data-line-number="7">
+</span></div><div id="line-8" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp iNhsIW linenumber react-syntax-highlighter-line-number" value="8"></span><span class="line" data-line-number="8">      [...]
+</span></div><div id="line-9" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp ckIiYX linenumber react-syntax-highlighter-line-number" value="9"></span><span class="line" data-line-number="9">
+</span></div><div id="line-10" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp iabWmr linenumber react-syntax-highlighter-line-number" value="10"></span><span class="line" data-line-number="10">      <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">plugin</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
+</span></div><div id="line-11" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp ejsfoy linenumber react-syntax-highlighter-line-number" value="11"></span><span class="line" data-line-number="11">        <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">groupId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>org.apache.maven.plugins<span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">groupId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
+</span></div><div id="line-12" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp ekTirp linenumber react-syntax-highlighter-line-number" value="12"></span><span class="line" data-line-number="12">        <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">artifactId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>maven-enforcer-plugin<span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">artifactId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
+</span></div><div id="line-13" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp bRHNrE linenumber react-syntax-highlighter-line-number" value="13"></span><span class="line" data-line-number="13">      <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">plugin</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
+</span></div><div id="line-14" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp juTGZP linenumber react-syntax-highlighter-line-number" value="14"></span><span class="line" data-line-number="14">      <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">plugin</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
+</span></div><div id="line-15" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp fEjQbW linenumber react-syntax-highlighter-line-number" value="15"></span><span class="line" data-line-number="15">        <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">groupId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>org.codehaus.mojo<span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">groupId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
+</span></div><div id="line-16" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp fFKTeN linenumber react-syntax-highlighter-line-number" value="16"></span><span class="line" data-line-number="16">        <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;</span><span class="_token_12v8s_92 _tag_12v8s_104">artifactId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>animal-sniffer-maven-plugin<span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">artifactId</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
+</span></div><div id="line-17" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp dmzyfc linenumber react-syntax-highlighter-line-number" value="17"></span><span class="line" data-line-number="17">      <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">plugin</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
+</span></div><div id="line-18" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp lmpiBn linenumber react-syntax-highlighter-line-number" value="18"></span><span class="line" data-line-number="18">    <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">plugins</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
+</span></div><div id="line-19" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp hvFrDu linenumber react-syntax-highlighter-line-number" value="19"></span><span class="line" data-line-number="19">  <span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">build</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span>
+</span></div><div id="line-20" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp fvaSUk linenumber react-syntax-highlighter-line-number" value="20"></span><span class="line" data-line-number="20">
+</span></div><div id="line-21" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp hCgMGd linenumber react-syntax-highlighter-line-number" value="21"></span><span class="line" data-line-number="21">  [...]
+</span></div><div id="line-22" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp vvQYy linenumber react-syntax-highlighter-line-number" value="22"></span><span class="line" data-line-number="22">
+</span></div><div id="line-23" class="sc-bTfXSk grppvf"><div class="sc-eJwVsk ivOEsg"><i class="fas fa-fw fa-link has-text-secondary" aria-label="Copy Permalink to Clipboard"></i></div><span class="sc-kHOYJp jgOEBf linenumber react-syntax-highlighter-line-number" value="23"></span><span class="line" data-line-number="23"><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&lt;/</span><span class="_token_12v8s_92 _tag_12v8s_104">project</span><span class="_token_12v8s_92 _tag_12v8s_104 _punctuation_12v8s_99">&gt;</span></span></div></code></pre>
+        <div class="sc-hOGlKT eVDRqG">
           <button
             type="button"
             title="Copy to clipboard"
@@ -7285,18 +7283,18 @@ exports[`Navigation/SecondaryNavigation WithSubNavigation 1`] = `
 `;
 
 exports[`Repositories/Annotate Default 1`] = `
-"<div class="sc-JkhKt xOCz box">
+"<div class="sc-cHzoaq eKuNEP box">
   <div class="panel-block">
     <pre
       class="language-go"
       aria-busy="false"
-    ><code><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-hZpGMz eGxSIj jRbCjM has-text-info"><div class="sc-iWVNNz sc-jKTeqw eGxSIj ieCbEU">Arthur Dent</div> <div class="sc-iWVNNz sc-bUbTPt eGxSIj jUaTZq"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">1</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="1"><span class="_token_12v8s_92 _keyword_12v8s_133">package</span> main
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-cHzoaq eGxSIj eqjWLV"></div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">2</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="2">
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-hZpGMz eGxSIj jRbCjM has-text-info"><div class="sc-iWVNNz sc-jKTeqw eGxSIj ieCbEU">Tricia Marie McMillan</div> <div class="sc-iWVNNz sc-bUbTPt eGxSIj jUaTZq"><time datetime="2020-05-10 11:18:42" title="5/10/2020, 11:18:42 AM" class="sc-jrQAon ka-dNDT">5/10/2020</time></div> </div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">3</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="3"><span class="_token_12v8s_92 _keyword_12v8s_133">import</span> <span class="_token_12v8s_92 _string_12v8s_115">"fmt"</span>
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-cHzoaq eGxSIj eqjWLV"></div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">4</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="4">
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-hZpGMz eGxSIj jRbCjM has-text-info"><div class="sc-iWVNNz sc-jKTeqw eGxSIj ieCbEU">Arthur Dent</div> <div class="sc-iWVNNz sc-bUbTPt eGxSIj jUaTZq"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">5</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="5"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">main</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-hZpGMz eGxSIj jRbCjM has-text-info"><div class="sc-iWVNNz sc-jKTeqw eGxSIj ieCbEU">Ford Prefect</div> <div class="sc-iWVNNz sc-bUbTPt eGxSIj jUaTZq"><time datetime="2020-04-12 18:29:42" title="4/12/2020, 6:29:42 PM" class="sc-jrQAon ka-dNDT">4/12/2020</time></div> </div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">6</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="6">  fmt<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">Println</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">"Hello World"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-hZpGMz eGxSIj jRbCjM has-text-info"><div class="sc-iWVNNz sc-jKTeqw eGxSIj ieCbEU">Arthur Dent</div> <div class="sc-iWVNNz sc-bUbTPt eGxSIj jUaTZq"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">7</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="7"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span>
+    ><code><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">1</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="1"><span class="_token_12v8s_92 _keyword_12v8s_133">package</span> main
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-hZpGMz bCUueg gHddgN"></div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">2</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="2">
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Tricia Marie McMillan</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-05-10 11:18:42" title="5/10/2020, 11:18:42 AM" class="sc-jrQAon ka-dNDT">5/10/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">3</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="3"><span class="_token_12v8s_92 _keyword_12v8s_133">import</span> <span class="_token_12v8s_92 _string_12v8s_115">"fmt"</span>
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-hZpGMz bCUueg gHddgN"></div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">4</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="4">
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">5</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="5"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">main</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Ford Prefect</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-12 18:29:42" title="4/12/2020, 6:29:42 PM" class="sc-jrQAon ka-dNDT">4/12/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">6</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="6">  fmt<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">Println</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">"Hello World"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">7</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="7"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span>
 </span></div></div></code></pre>
   </div>
 </div>
@@ -7304,16 +7302,16 @@ exports[`Repositories/Annotate Default 1`] = `
 `;
 
 exports[`Repositories/Annotate Markdown 1`] = `
-"<div class="sc-JkhKt xOCz box">
+"<div class="sc-cHzoaq eKuNEP box">
   <div class="panel-block">
     <pre
       class="language-markdown"
       aria-busy="false"
-    ><code><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-hZpGMz eGxSIj jRbCjM has-text-info"><div class="sc-iWVNNz sc-jKTeqw eGxSIj ieCbEU">Arthur Dent</div> <div class="sc-iWVNNz sc-bUbTPt eGxSIj jUaTZq"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">1</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="1"><span class="_token_12v8s_92 _title_12v8s_149 _important_12v8s_142 _punctuation_12v8s_99">#</span><span class="_token_12v8s_92 _title_12v8s_149 _important_12v8s_142"> Title</span>
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-cHzoaq eGxSIj eqjWLV"></div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">2</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="2">
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-hZpGMz eGxSIj jRbCjM has-text-info"><div class="sc-iWVNNz sc-jKTeqw eGxSIj ieCbEU">Tricia Marie McMillan</div> <div class="sc-iWVNNz sc-bUbTPt eGxSIj jUaTZq"><time datetime="2020-05-10 11:18:42" title="5/10/2020, 11:18:42 AM" class="sc-jrQAon ka-dNDT">5/10/2020</time></div> </div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">3</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="3">This is a short Markdown text.
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-cHzoaq eGxSIj eqjWLV"></div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">4</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="4">
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-hZpGMz eGxSIj jRbCjM has-text-info"><div class="sc-iWVNNz sc-jKTeqw eGxSIj ieCbEU">Arthur Dent</div> <div class="sc-iWVNNz sc-bUbTPt eGxSIj jUaTZq"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">5</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="5">With <span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">**</span><span class="_token_12v8s_92 _bold_12v8s_148 content">bold</span><span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">**</span> and <span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">__</span><span class="_token_12v8s_92 _bold_12v8s_148 content">italic</span><span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">__</span> words.
+    ><code><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">1</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="1"><span class="_token_12v8s_92 _title_12v8s_149 _important_12v8s_142 _punctuation_12v8s_99">#</span><span class="_token_12v8s_92 _title_12v8s_149 _important_12v8s_142"> Title</span>
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-hZpGMz bCUueg gHddgN"></div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">2</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="2">
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Tricia Marie McMillan</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-05-10 11:18:42" title="5/10/2020, 11:18:42 AM" class="sc-jrQAon ka-dNDT">5/10/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">3</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="3">This is a short Markdown text.
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-hZpGMz bCUueg gHddgN"></div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">4</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="4">
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">5</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="5">With <span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">**</span><span class="_token_12v8s_92 _bold_12v8s_148 content">bold</span><span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">**</span> and <span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">__</span><span class="_token_12v8s_92 _bold_12v8s_148 content">italic</span><span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">__</span> words.
 </span></div></div></code></pre>
   </div>
 </div>
@@ -7321,18 +7319,18 @@ exports[`Repositories/Annotate Markdown 1`] = `
 `;
 
 exports[`Repositories/Annotate WithAvatars 1`] = `
-"<div class="sc-JkhKt xOCz box">
+"<div class="sc-cHzoaq eKuNEP box">
   <div class="panel-block">
     <pre
       class="language-go"
       aria-busy="false"
-    ><code><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-hZpGMz eGxSIj jRbCjM has-text-info"><div class="sc-iWVNNz sc-jKTeqw eGxSIj ieCbEU"><img class="has-rounded-border sc-cvZzPn gKljst" crossorigin="anonymous" alt="Arthur Dent" src="https://robohash.org/arthur.dent@hitchhiker.com.png">Arthur Dent</div> <div class="sc-iWVNNz sc-bUbTPt eGxSIj jUaTZq"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">1</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="1"><span class="_token_12v8s_92 _keyword_12v8s_133">package</span> main
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-cHzoaq eGxSIj eqjWLV"></div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">2</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="2">
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-hZpGMz eGxSIj jRbCjM has-text-info"><div class="sc-iWVNNz sc-jKTeqw eGxSIj ieCbEU"><img class="has-rounded-border sc-cvZzPn gKljst" crossorigin="anonymous" alt="Tricia Marie McMillan" src="https://robohash.org/trillian@hitchhiker.com.png">Tricia Marie McMillan</div> <div class="sc-iWVNNz sc-bUbTPt eGxSIj jUaTZq"><time datetime="2020-05-10 11:18:42" title="5/10/2020, 11:18:42 AM" class="sc-jrQAon ka-dNDT">5/10/2020</time></div> </div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">3</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="3"><span class="_token_12v8s_92 _keyword_12v8s_133">import</span> <span class="_token_12v8s_92 _string_12v8s_115">"fmt"</span>
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-cHzoaq eGxSIj eqjWLV"></div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">4</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="4">
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-hZpGMz eGxSIj jRbCjM has-text-info"><div class="sc-iWVNNz sc-jKTeqw eGxSIj ieCbEU"><img class="has-rounded-border sc-cvZzPn gKljst" crossorigin="anonymous" alt="Arthur Dent" src="https://robohash.org/arthur.dent@hitchhiker.com.png">Arthur Dent</div> <div class="sc-iWVNNz sc-bUbTPt eGxSIj jUaTZq"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">5</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="5"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">main</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-hZpGMz eGxSIj jRbCjM has-text-info"><div class="sc-iWVNNz sc-jKTeqw eGxSIj ieCbEU"><img class="has-rounded-border sc-cvZzPn gKljst" crossorigin="anonymous" alt="Ford Prefect" src="https://robohash.org/ford.prefect@hitchhiker.com.png">Ford Prefect</div> <div class="sc-iWVNNz sc-bUbTPt eGxSIj jUaTZq"><time datetime="2020-04-12 18:29:42" title="4/12/2020, 6:29:42 PM" class="sc-jrQAon ka-dNDT">4/12/2020</time></div> </div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">6</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="6">  fmt<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">Println</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">"Hello World"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
-</span></div></div><div class="sc-dSfbgX lcqznr"><div class="sc-iWVNNz sc-hZpGMz eGxSIj jRbCjM has-text-info"><div class="sc-iWVNNz sc-jKTeqw eGxSIj ieCbEU"><img class="has-rounded-border sc-cvZzPn gKljst" crossorigin="anonymous" alt="Arthur Dent" src="https://robohash.org/arthur.dent@hitchhiker.com.png">Arthur Dent</div> <div class="sc-iWVNNz sc-bUbTPt eGxSIj jUaTZq"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-iWVNNz sc-tACje eGxSIj jFpKtR">7</div> <div class="sc-iWVNNz eGxSIj"><span class="line" data-line-number="7"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span>
+    ><code><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU"><img class="has-rounded-border sc-kmQKqq etWAfy" crossorigin="anonymous" alt="Arthur Dent" src="https://robohash.org/arthur.dent@hitchhiker.com.png">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">1</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="1"><span class="_token_12v8s_92 _keyword_12v8s_133">package</span> main
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-hZpGMz bCUueg gHddgN"></div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">2</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="2">
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU"><img class="has-rounded-border sc-kmQKqq etWAfy" crossorigin="anonymous" alt="Tricia Marie McMillan" src="https://robohash.org/trillian@hitchhiker.com.png">Tricia Marie McMillan</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-05-10 11:18:42" title="5/10/2020, 11:18:42 AM" class="sc-jrQAon ka-dNDT">5/10/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">3</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="3"><span class="_token_12v8s_92 _keyword_12v8s_133">import</span> <span class="_token_12v8s_92 _string_12v8s_115">"fmt"</span>
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-hZpGMz bCUueg gHddgN"></div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">4</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="4">
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU"><img class="has-rounded-border sc-kmQKqq etWAfy" crossorigin="anonymous" alt="Arthur Dent" src="https://robohash.org/arthur.dent@hitchhiker.com.png">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">5</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="5"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">main</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU"><img class="has-rounded-border sc-kmQKqq etWAfy" crossorigin="anonymous" alt="Ford Prefect" src="https://robohash.org/ford.prefect@hitchhiker.com.png">Ford Prefect</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-12 18:29:42" title="4/12/2020, 6:29:42 PM" class="sc-jrQAon ka-dNDT">4/12/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">6</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="6">  fmt<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">Println</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">"Hello World"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
+</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU"><img class="has-rounded-border sc-kmQKqq etWAfy" crossorigin="anonymous" alt="Arthur Dent" src="https://robohash.org/arthur.dent@hitchhiker.com.png">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">7</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="7"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span>
 </span></div></div></code></pre>
   </div>
 </div>

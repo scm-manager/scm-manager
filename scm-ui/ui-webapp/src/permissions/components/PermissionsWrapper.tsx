@@ -17,7 +17,7 @@
 import React from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { Loading } from "@scm-manager/ui-components";
+import { Loading } from "@scm-manager/ui-core";
 import PermissionCheckbox from "./PermissionCheckbox";
 
 type Props = {
@@ -30,8 +30,7 @@ type Props = {
 };
 
 const StyledWrapper = styled.div`
-  & .field .control {
-    width: 100%;
+  & .field {
     word-wrap: break-word;
   }
 `;

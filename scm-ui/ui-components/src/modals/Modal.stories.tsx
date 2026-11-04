@@ -348,10 +348,9 @@ import styled from "styled-components";
 import type { Meta, StoryObj } from "@storybook/react";
 import { SelectValue } from "@scm-manager/ui-types";
 
+import { Checkbox, InputField, RadioGroup, TextareaField } from "@scm-manager/ui-core";
 import Modal from "./Modal";
-import Checkbox from "../forms/Checkbox";
 import ExternalLink from "../navigation/ExternalLink";
-import { InputField, Radio, Textarea } from "../forms";
 import { Button } from "../buttons";
 import Notification from "../Notification";
 import ActiveModalCountContext from "./activeModalCountContext";
@@ -361,27 +360,24 @@ import ActiveModalCountContext from "./activeModalCountContext";
 const TopAndBottomMargin = styled.div`
   margin: 0.75rem 0;
 `;
-const RadioList = styled.div`
-  display: flex;
-  flex-direction: column;
-  > label:not(:last-child) {
-    margin-bottom: 0.6em;
-  }
-`;
 
 const text = `Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly ordinary mob.`;
 const doNothing = () => {};
 
 const withFormElementsBody = (
   <>
-    <RadioList>
-      <Radio label="One" checked={true} helpText="The first one" />
-      <Radio label="Two" checked={false} helpText="The second one" />
-    </RadioList>
+    <RadioGroup
+      aria-label="Numbers"
+      defaultValue="one"
+      options={[
+        { value: "one", label: "One", helpText: "The first one" },
+        { value: "two", label: "Two", helpText: "The second one" },
+      ]}
+    />
     <hr />
     <p>{text}</p>
     <hr />
-    <Textarea label="Text" onChange={doNothing} />
+    <TextareaField label="Text" />
   </>
 );
 const withFormElementsFooter = (
@@ -514,7 +510,7 @@ export const WithInitialFocus: Story = {
         footer={withFormElementsFooter}
         initialFocusRef={ref}
       >
-        <InputField ref={ref} />
+        <InputField label="Input" ref={ref} />
       </Modal>
     );
   },
@@ -529,13 +525,13 @@ export const WithLongTooltips: Story = {
       </Notification>
       <hr />
       <TopAndBottomMargin>
-        <Checkbox label="Checkbox" checked={true} helpText={text} />
+        <Checkbox label="Checkbox" defaultChecked={true} helpText={text} />
       </TopAndBottomMargin>
       <TopAndBottomMargin>
-        <Radio label="Radio button" checked={false} helpText={text} />
+        <RadioGroup aria-label="Radio button" options={[{ value: "radio", label: "Radio button", helpText: text }]} />
       </TopAndBottomMargin>
       <TopAndBottomMargin>
-        <InputField onChange={doNothing} label="Input" helpText={text} />
+        <InputField label="Input" helpText={text} />
       </TopAndBottomMargin>
     </NonCloseableModal>
   ),

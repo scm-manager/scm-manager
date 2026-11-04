@@ -17,10 +17,11 @@
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { Checkbox, Icon, createAttributesForTesting, Help, InfoTable, MailLink } from "@scm-manager/ui-components";
+import { createAttributesForTesting, Help, InfoTable, MailLink } from "@scm-manager/ui-components";
 import PermissionOverview from "../PermissionOverview";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { DateFromNow, useDocumentTitle } from "@scm-manager/ui-core";
+import { DateFromNow, Icon, useDocumentTitle } from "@scm-manager/ui-core";
+import BooleanIcon from "../../../components/BooleanIcon";
 
 type Props = {
   user: User;
@@ -34,14 +35,11 @@ const Details: FC<Props> = ({ user }) => {
 
   let permissionOverview;
   if (user._links.permissionOverview) {
-    let icon = <Icon name="angle-right" color="inherit" alt={t("diff.showContent")} />;
-    if (!collapsed) {
-      icon = <Icon name="angle-down" color="inherit" alt={t("diff.hideContent")} />;
-    }
     permissionOverview = (
       <div className="content">
         <h3 className="is-clickable" onClick={toggleCollapse}>
-          {icon} {t("permissionOverview.title")} <Help message={t("permissionOverview.help")} />
+          <Icon>{collapsed ? "angle-right" : "angle-down"}</Icon> {t("permissionOverview.title")}{" "}
+          <Help message={t("permissionOverview.help")} />
         </h3>
         {!collapsed && <PermissionOverview user={user} />}
       </div>
@@ -69,13 +67,13 @@ const Details: FC<Props> = ({ user }) => {
           <tr>
             <th>{t("user.active")}</th>
             <td>
-              <Checkbox checked={user.active} readOnly={true} />
+              <BooleanIcon value={user.active} />
             </td>
           </tr>
           <tr>
             <th>{t("user.externalFlag")}</th>
             <td>
-              <Checkbox checked={user.external} readOnly={true} />
+              <BooleanIcon value={user.external} />
             </td>
           </tr>
           <tr>

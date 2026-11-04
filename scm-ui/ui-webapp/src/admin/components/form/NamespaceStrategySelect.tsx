@@ -17,7 +17,7 @@
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { NamespaceStrategies } from "@scm-manager/ui-types";
-import { Select } from "@scm-manager/ui-components";
+import { SelectField } from "@scm-manager/ui-core";
 
 type Props = WithTranslation & {
   namespaceStrategies?: NamespaceStrategies;
@@ -61,14 +61,13 @@ class NamespaceStrategySelect extends React.Component<Props> {
     const { label, helpText, disabled, onChange } = this.props;
     const nsOptions = this.createNamespaceOptions();
     return (
-      <Select
+      <SelectField
         label={label}
-        onChange={onChange}
+        onChange={(event) => onChange(event.target.value)}
         value={this.findSelected()}
         disabled={disabled}
         options={nsOptions}
         helpText={helpText}
-        className="is-fullwidth"
       />
     );
   }

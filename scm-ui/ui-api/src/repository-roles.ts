@@ -77,7 +77,7 @@ const createRepositoryRole = (link: string) => {
 export const useCreateRepositoryRole = () => {
   const queryClient = useQueryClient();
   const link = useRequiredIndexLink("repositoryRoles");
-  const { mutate, data, isPending, error } = useMutation<RepositoryRole, Error, RepositoryRoleCreation>({
+  const { mutateAsync, data, isPending, error } = useMutation<RepositoryRole, Error, RepositoryRoleCreation>({
     mutationFn: createRepositoryRole(link),
     onSuccess: (repositoryRole) => {
       queryClient.setQueryData(["repositoryRole", repositoryRole.name], repositoryRole);
@@ -85,7 +85,7 @@ export const useCreateRepositoryRole = () => {
     },
   });
   return {
-    create: (repositoryRole: RepositoryRoleCreation) => mutate(repositoryRole),
+    create: (repositoryRole: RepositoryRoleCreation) => mutateAsync(repositoryRole),
     isPending,
     error,
     repositoryRole: data,
@@ -94,7 +94,7 @@ export const useCreateRepositoryRole = () => {
 
 export const useUpdateRepositoryRole = () => {
   const queryClient = useQueryClient();
-  const { mutate, isPending, error, data } = useMutation<unknown, Error, RepositoryRole>({
+  const { mutateAsync, isPending, error, data } = useMutation<unknown, Error, RepositoryRole>({
     mutationFn: (repositoryRole) => {
       const updateUrl = requiredLink(repositoryRole, "update");
       return apiClient.put(updateUrl, repositoryRole, "application/vnd.scmm-repositoryRole+json;v=2");
@@ -105,7 +105,7 @@ export const useUpdateRepositoryRole = () => {
     },
   });
   return {
-    update: (repositoryRole: RepositoryRole) => mutate(repositoryRole),
+    update: (repositoryRole: RepositoryRole) => mutateAsync(repositoryRole),
     isPending,
     error,
     isUpdated: !!data,

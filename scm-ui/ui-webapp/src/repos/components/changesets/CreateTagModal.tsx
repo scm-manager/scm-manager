@@ -15,8 +15,8 @@
  */
 
 import React, { FC, useEffect, useRef, useState } from "react";
-import { Modal, InputField, Loading, ErrorNotification } from "@scm-manager/ui-components";
-import { Button } from "@scm-manager/ui-core";
+import { Modal } from "@scm-manager/ui-components";
+import { Button, ErrorNotification, InputField, Loading } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import { Changeset, Repository } from "@scm-manager/ui-types";
 import { useCreateTag, useTags } from "@scm-manager/ui-api";
@@ -58,6 +58,8 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
     }
   }
 
+  const canCreate = !isLoading && !isLoadingCreate && !validationError && newTagName.length > 0;
+
   let body;
   if (isLoading) {
     body = <Loading />;
@@ -73,10 +75,17 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
           label={t("tags.create.form.field.name.label")}
           onChange={(event) => setNewTagName(event.target.value)}
           value={newTagName}
-          validationError={!!validationError}
-          errorMessage={t(validationError)}
+          error={validationError ? t(validationError) : undefined}
           ref={initialFocusRef}
-          onReturnPressed={() => !validationError && newTagName.length > 0 && create(newTagName)}
+          onKeyDown={(event) => {
+            // an enter that confirms an input method composition must not create the tag
+            if (event.key === "Enter" && !event.nativeEvent.isComposing) {
+              event.preventDefault();
+              if (canCreate) {
+                create(newTagName);
+              }
+            }
+          }}
         />
         <div className="mt-5">{t("tags.create.hint")}</div>
       </>
@@ -94,7 +103,7 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
             variant="primary"
             onClick={() => create(newTagName)}
             isLoading={isLoadingCreate}
-            disabled={isLoading || isLoadingCreate || !!validationError || newTagName.length === 0}
+            disabled={!canCreate}
           >
             {t("tags.create.confirm")}
           </Button>

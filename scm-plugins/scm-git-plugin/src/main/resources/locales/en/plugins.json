@@ -27,7 +27,7 @@
       },
       "nonFastForwardDisallowed": {
         "label": "Disallow Non Fast-Forward",
-        "descriptionText": "Reject git pushes which are non fast-forward such as --force."
+        "helpText": "Reject git pushes which are non fast-forward such as --force."
       },
       "defaultBranch": {
         "label": "Default branch for newly initialized repositories"

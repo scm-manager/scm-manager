@@ -16,7 +16,8 @@
 
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { InputField, Subtitle, validation as validator } from "@scm-manager/ui-components";
+import { validation as validator } from "@scm-manager/ui-components";
+import { InputField, Subtitle } from "@scm-manager/ui-core";
 import { ConfigChangeHandler } from "@scm-manager/ui-types";
 
 type Props = WithTranslation & {
@@ -51,12 +52,11 @@ class LoginAttempt extends React.Component<Props, State> {
             <InputField
               type="number"
               label={t("login-attempt.login-attempt-limit")}
-              onChange={this.handleLoginAttemptLimitChange}
+              onChange={(event) => this.handleLoginAttemptLimitChange(event.target.value)}
               value={loginAttemptLimit}
               disabled={!hasUpdatePermission}
-              validationError={this.state.loginAttemptLimitError}
-              errorMessage={t("validation.login-attempt-limit-invalid")}
-              helpText={t("help.loginAttemptLimitHelpText")}
+              error={this.state.loginAttemptLimitError ? t("validation.login-attempt-limit-invalid") : undefined}
+              descriptionText={t("help.loginAttemptLimitHelpText")}
             />
           </div>
         </div>
@@ -65,12 +65,15 @@ class LoginAttempt extends React.Component<Props, State> {
             <InputField
               type="number"
               label={t("login-attempt.login-attempt-limit-timeout")}
-              onChange={this.handleLoginAttemptLimitTimeoutChange}
+              onChange={(event) => this.handleLoginAttemptLimitTimeoutChange(event.target.value)}
               value={loginAttemptLimitTimeout}
               disabled={!hasUpdatePermission}
-              validationError={this.state.loginAttemptLimitTimeoutError}
-              errorMessage={t("validation.login-attempt-limit-timeout-invalid")}
-              helpText={t("help.loginAttemptLimitTimeoutHelpText")}
+              error={
+                this.state.loginAttemptLimitTimeoutError
+                  ? t("validation.login-attempt-limit-timeout-invalid")
+                  : undefined
+              }
+              descriptionText={t("help.loginAttemptLimitTimeoutHelpText")}
             />
           </div>
         </div>

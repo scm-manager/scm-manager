@@ -22,6 +22,8 @@ import { useAriaId } from "../../helpers";
 import Combobox, { ComboboxProps } from "./Combobox";
 import classNames from "classnames";
 import RequiredMarker from "../misc/RequiredMarker";
+import FieldMessage from "../base/field-message/FieldMessage";
+import { createVariantClass } from "../variants";
 
 /**
  * @beta
@@ -30,14 +32,31 @@ import RequiredMarker from "../misc/RequiredMarker";
 const ComboboxField = function ComboboxField<T>({
   label,
   helpText,
+  descriptionText,
   error,
   className,
   isLoading,
   required,
   ref,
   ...props
-}: ComboboxProps<T> & { label: string; helpText?: string; error?: string; isLoading?: boolean; required?: boolean }) {
+}: ComboboxProps<T> & {
+  label: string;
+  /**
+   * @deprecated This property is deprecated and will be removed in future versions.
+   * Use `descriptionText` instead.
+   */
+  helpText?: string;
+  /**
+   * @since 4.0.0
+   */
+  descriptionText?: string;
+  error?: string;
+  isLoading?: boolean;
+  required?: boolean;
+}) {
   const labelId = useAriaId();
+  const descriptionId = useAriaId();
+  const errorId = useAriaId();
   return (
     <Field className={className}>
       <Label id={labelId}>
@@ -45,10 +64,28 @@ const ComboboxField = function ComboboxField<T>({
         {required ? <RequiredMarker /> : null}
         {helpText ? <Help className="ml-1" text={helpText} /> : null}
       </Label>
+      {descriptionText ? (
+        <p className="mb-2 is-size-7" id={descriptionId}>
+          {descriptionText}
+        </p>
+      ) : null}
       <div className={classNames("control", { "is-loading": isLoading })}>
         {/* @ts-ignore */}
-        <Combobox {...props} ref={ref} aria-labelledby={labelId} />
+        <Combobox
+          {...props}
+          ref={ref}
+          className={createVariantClass(error ? "danger" : undefined)}
+          aria-labelledby={labelId}
+          aria-describedby={
+            classNames(props["aria-describedby"], { [descriptionId]: descriptionText, [errorId]: error }) || undefined
+          }
+        />
       </div>
+      {error ? (
+        <FieldMessage id={errorId} variant="danger">
+          {error}
+        </FieldMessage>
+      ) : null}
     </Field>
   );
 };

@@ -48,6 +48,13 @@ type RepositoryCreatorSubFormProps = {
   onChange: (repository: RepositoryCreation) => void;
   setValid: (valid: boolean) => void;
   disabled?: boolean;
+  /**
+   * Focuses the first field of the form when it is shown. Defaults to `true`.
+   * Pass `false`, if the form appears after a user interaction, so that the focus stays where the user is.
+   *
+   * @since 4.0.0
+   */
+  autoFocus?: boolean;
 };
 
 export type RepositoryCreatorComponentProps = ComponentProps<RepositoryCreator["type"]["component"]>;

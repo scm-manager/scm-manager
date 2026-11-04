@@ -98,7 +98,7 @@
   },
   "singleUserPassword": {
     "subtitle": "Set Password",
-    "button": "Set Password",
+    "submit": "Set Password",
     "setPasswordSuccessful": "Password successfully set"
   },
   "userForm": {

@@ -16,7 +16,7 @@
 
 import React, {FC, useState} from "react";
 import { useTranslation } from "react-i18next";
-import { InputField, Subtitle } from "@scm-manager/ui-components";
+import { InputField, Subtitle } from "@scm-manager/ui-core";
 import { ConfigChangeHandler } from "@scm-manager/ui-types";
 
 type Props = {
@@ -49,10 +49,10 @@ const JwtSettings: FC<Props> = ({ jwtExpirationInH, onChange, hasUpdatePermissio
           <InputField
             type="number"
             label={t("jwtSettings.label")}
-            onChange={handleJwtTimeChange}
+            onChange={(event) => handleJwtTimeChange(event.target.value)}
             value={jwtExpirationInH}
             disabled={!hasUpdatePermission || enabledJwtEndless}
-            helpText={t("jwtSettings.help")}
+            descriptionText={t("jwtSettings.help")}
             warning={enabledJwtEndless ? jwtIsSetToEndless : warning}
           />
         </div>

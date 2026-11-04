@@ -25,20 +25,15 @@
     "password": "Proxy Password",
     "passwordHelpText": "The password for the proxy server authentication.",
     "port": "Port",
-    "portHelpText": "The proxy port",
     "server": "Proxy Server",
-    "serverHelpText": "The proxy server",
     "user": "Proxy User",
     "userHelpText": "The username for the proxy server authentication.",
     "noExcludes": "No proxy excludes found.",
     "excludesTable": {
       "label": "Proxy Excludes",
-      "helpText": "Glob patterns for hostnames, which should be excluded from proxy settings.",
-      "deleteButton": "Remove Proxy Exclude"
+      "helpText": "Enter glob patterns for hostnames which should be excluded from the proxy settings (confirm each pattern by using the enter key)."
     },
-    "addExclude": "Add Proxy Exclude",
-    "addExcludeButton": "Add Proxy Exclude",
-    "addExcludeError": "The proxy exclude you want to add is not valid."
+    "addExclude": "Add Proxy Exclude"
   },
   "base-url-settings": {
     "name": "Base URL Settings",
@@ -100,7 +95,6 @@
     "button": "Start recreation of search index"
   },
   "help": {
-    "realmDescriptionHelpText": "Enter authentication realm description.",
     "dateFormatHelpText": "Moments date format. Please have a look at the MomentJS documentation.",
     "pluginUrlHelpText": "The url of the Plugin Center API. Explanation of the placeholders: version = SCM-Manager Version; os = Operation System; arch = Architecture",
     "alertsUrlHelpText": "The url of the alerts api. This provides up-to-date alerts regarding your system. To disable this feature just leave the url blank.",
@@ -120,7 +114,6 @@
     "enabledUserConverterHelpText": "Enable User Converter. Internal users will automatically be converted to external on their first login using an external system.",
     "enabledApiKeysHelpText": "Enable API Keys. API Keys can be used as additional authentication method by every user.",
     "enabledFileSearchHelpText": "Enable file search. File paths can be searched inside a single repository on the source viewer.",
-    "nameSpaceStrategyHelpText": "The namespace strategy.",
     "loginInfoUrlHelpText": "URL to login information (plugin and feature tips at login page). If this is omitted, no login information will be displayed."
   }
 }

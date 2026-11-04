@@ -27,6 +27,7 @@ type Props = {
   onChange: (repository: RepositoryCreation) => void;
   setValid: (valid: boolean) => void;
   disabled?: boolean;
+  autoFocus?: boolean;
 };
 
 const useNamespaceStrategy = () => {
@@ -37,7 +38,7 @@ const useNamespaceStrategy = () => {
   return "";
 };
 
-const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, disabled }) => {
+const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, disabled, autoFocus = true }) => {
   const namespaceStrategy = useNamespaceStrategy();
   const [nameValidationError, setNameValidationError] = useState(false);
   const [namespaceValidationError, setNamespaceValidationError] = useState(false);
@@ -91,6 +92,7 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
         namespaceStrategy={namespaceStrategy}
         namespaceValidationError={namespaceValidationError}
         disabled={disabled}
+        autoFocus={autoFocus}
       />
       <InputField
         label={t("repository.name")}
@@ -100,7 +102,7 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
         descriptionText={t("help.nameHelpText")}
         disabled={disabled}
         required={true}
-        autoFocus={namespaceStrategy !== CUSTOM_NAMESPACE_STRATEGY}
+        autoFocus={autoFocus && namespaceStrategy !== CUSTOM_NAMESPACE_STRATEGY}
       />
     </>
   );

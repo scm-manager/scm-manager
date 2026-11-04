@@ -117,6 +117,7 @@ export default function ControlledSecretConfirmationField<T extends Record<strin
             disabled={disabled}
             {...field}
             form={formId}
+            required={rules?.required as boolean}
             label={confirmationLabelTranslation}
             helpText={confirmationHelpTextTranslation}
             error={

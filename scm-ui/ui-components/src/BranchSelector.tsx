@@ -14,11 +14,11 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Branch } from "@scm-manager/ui-types";
-import { Select } from "./forms";
+import { Select } from "@scm-manager/ui-core";
 import { createA11yId } from "./createA11yId";
 
 type Props = {
@@ -40,8 +40,21 @@ const MinWidthControl = styled.div`
 
 const BranchSelector: FC<Props> = ({ branches, onSelectBranch, selectedBranch, label, disabled }) => {
   const a11yId = createA11yId("branch-select");
+  const hasBranches = !!branches?.length;
+
+  useEffect(() => {
+    // the select shows the first branch, if none is selected
+    if (!selectedBranch && hasBranches) {
+      onSelectBranch(branches[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBranch, hasBranches]);
 
   if (branches) {
+    const options = branches.map((b) => ({ label: b.name, value: b.name }));
+    if (selectedBranch && !branches.some((b) => b.name === selectedBranch)) {
+      options.unshift({ label: selectedBranch, value: selectedBranch });
+    }
     return (
       <div className={classNames("field", "is-horizontal")}>
         <ZeroflexFieldLabel className={classNames("field-label", "is-normal")}>
@@ -54,12 +67,11 @@ const BranchSelector: FC<Props> = ({ branches, onSelectBranch, selectedBranch, l
             <MinWidthControl className="control">
               <Select
                 className="is-fullwidth"
-                options={branches.map(b => ({ label: b.name, value: b.name }))}
-                onChange={branch => onSelectBranch(branches.filter(b => b.name === branch)[0])}
+                options={options}
+                onChange={(event) => onSelectBranch(branches.filter((b) => b.name === event.target.value)[0])}
                 disabled={!!disabled}
                 value={selectedBranch}
-                addValueToOptions={true}
-                ariaLabelledby={a11yId}
+                aria-labelledby={a11yId}
               />
             </MinWidthControl>
           </div>

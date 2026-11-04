@@ -25,7 +25,7 @@ import GroupForm from "../components/GroupForm";
 const CreateGroup: FC = () => {
   const [t] = useTranslation("groups");
   useDocumentTitle(t("addGroup.title"));
-  const { isPending, create, error, group } = useCreateGroup();
+  const { create, group } = useCreateGroup();
   const location = useLocation();
 
   if (group) {
@@ -33,15 +33,12 @@ const CreateGroup: FC = () => {
   }
 
   return (
-    <Page title={t("addGroup.title")} subtitle={t("addGroup.subtitle")} error={error || undefined}>
-      <div>
-        <GroupForm
-          submitForm={create}
-          loading={isPending}
-          transmittedName={urls.getValueStringFromLocationByKey(location, "name")}
-          transmittedExternal={urls.getValueStringFromLocationByKey(location, "external") === "true"}
-        />
-      </div>
+    <Page title={t("addGroup.title")} subtitle={t("addGroup.subtitle")}>
+      <GroupForm
+        submitForm={create}
+        transmittedName={urls.getValueStringFromLocationByKey(location, "name")}
+        transmittedExternal={urls.getValueStringFromLocationByKey(location, "external") === "true"}
+      />
     </Page>
   );
 };

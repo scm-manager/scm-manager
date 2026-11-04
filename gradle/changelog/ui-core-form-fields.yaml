@@ -1,0 +1,22 @@
+- type: added
+  description: New TextareaField, Form.Textarea, FileInputField and FilterInput components and warnings for InputField in ui-core
+- type: added
+  description: Description texts for the ui-core ComboboxField and Form.Combobox
+- type: changed
+  description: Required input, textarea, file and password confirmation fields show a required marker
+- type: changed
+  description: Help texts of input fields in the repository forms and global settings are shown as descriptions instead of tooltips
+- type: fixed
+  description: The ui-core InputField passes its name to the input, so it works with react-hook-form register
+- type: fixed
+  description: Screen readers announce the right description, error and warning for each ui-core InputField
+- type: changed
+  description: The legacy form components of ui-components are deprecated (now also InputField) and name their successors in ui-core
+- type: removed
+  description: The PasswordConfirmation component of ui-components (use Form.SecretConfirmation from ui-core instead)
+- type: changed
+  description: The forms to change the own password and to set a user password use the ui-core form
+- type: added
+  description: Option for the ui-core form to submit valid default values without changes
+- type: changed
+  description: The ui-api hooks useCreateGroup, useUpdateGroup, useCreateRepositoryRole, useUpdateRepositoryRole, useSetUserPassword and useChangeUserPassword return a promise, which rejects if the request fails

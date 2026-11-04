@@ -16,7 +16,7 @@
 
 import React, { FC, Ref } from "react";
 import { useTranslation } from "react-i18next";
-import { Checkbox } from "@scm-manager/ui-components";
+import { Checkbox, Field } from "@scm-manager/ui-core";
 
 type Props = {
   name: string;
@@ -56,27 +56,20 @@ const DefaultPermissionCheckbox: FC<Props> = ({ name, entityType, checked, onCha
     ? namespaceOrRepositoryLabel(name, "description")
     : translateOrDefault("permissions." + key + ".description", t("permissions.unknown"));
 
-  const commonCheckboxProps = {
-    key: name,
-    name,
-    label,
-    helpText,
-    checked,
-    disabled,
-    testId: label,
-  };
-
-  if (ref) {
-    return (
+  return (
+    <Field>
       <Checkbox
-        {...commonCheckboxProps}
+        name={name}
+        label={label}
+        helpText={helpText}
+        checked={checked}
+        disabled={disabled}
+        testId={label}
         onChange={onChange ? (event) => onChange(event.target.checked, name) : undefined}
         ref={ref}
       />
-    );
-  }
-
-  return <Checkbox {...commonCheckboxProps} onChange={onChange ? (newValue) => onChange(newValue, name) : undefined} />;
+    </Field>
+  );
 };
 
 const PermissionCheckbox: FC<Props> = ({ ref, ...props }) => <DefaultPermissionCheckbox {...props} ref={ref} />;

@@ -140,7 +140,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
 };
 
 /**
- * @deprecated
+ * @deprecated Use Select or SelectField from ui-core instead
  */
 // @ts-ignore
 const Select: FieldType<BaseProps, HTMLSelectElement, string> = createFormFieldWrapper(InnerSelect);

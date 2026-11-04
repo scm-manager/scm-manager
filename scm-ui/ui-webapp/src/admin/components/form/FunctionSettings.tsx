@@ -16,7 +16,7 @@
 
 import React, { FC } from "react";
 import { ConfigChangeHandler } from "@scm-manager/ui-types";
-import { Checkbox, Subtitle } from "@scm-manager/ui-components";
+import { Checkbox, Field, Label, Subtitle } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -51,38 +51,44 @@ const FunctionSettings: FC<Props> = ({
       <Subtitle subtitle={t("function-settings.name")} />
       <div className="columns">
         <div className="column">
-          <Checkbox
-            label={t("general-settings.enabled-user-converter")}
-            onChange={handleEnabledUserConverterChange}
-            checked={enabledUserConverter}
-            title={t("general-settings.enabled-user-converter")}
-            disabled={!hasUpdatePermission}
-            helpText={t("help.enabledUserConverterHelpText")}
-          />
+          <Field>
+            <Label as="span">{t("general-settings.enabled-user-converter")}</Label>
+            <Checkbox
+              label={t("general-settings.enabled-user-converter")}
+              onChange={(event) => handleEnabledUserConverterChange(event.target.checked)}
+              checked={enabledUserConverter}
+              disabled={!hasUpdatePermission}
+              helpText={t("help.enabledUserConverterHelpText")}
+            />
+          </Field>
         </div>
       </div>
       <div className="columns">
         <div className="column">
-          <Checkbox
-            label={t("general-settings.enabled-api-keys")}
-            onChange={handleEnabledApiKeysChange}
-            checked={enabledApiKeys}
-            title={t("general-settings.enabled-api-keys")}
-            disabled={!hasUpdatePermission}
-            helpText={t("help.enabledApiKeysHelpText")}
-          />
+          <Field>
+            <Label as="span">{t("general-settings.enabled-api-keys")}</Label>
+            <Checkbox
+              label={t("general-settings.enabled-api-keys")}
+              onChange={(event) => handleEnabledApiKeysChange(event.target.checked)}
+              checked={enabledApiKeys}
+              disabled={!hasUpdatePermission}
+              helpText={t("help.enabledApiKeysHelpText")}
+            />
+          </Field>
         </div>
       </div>
       <div className="columns">
         <div className="column">
-          <Checkbox
-            label={t("general-settings.enabled-file-search")}
-            onChange={handleEnabledFileSearchChange}
-            checked={enabledFileSearch}
-            title={t("general-settings.enabled-file-search")}
-            disabled={!hasUpdatePermission}
-            helpText={t("help.enabledFileSearchHelpText")}
-          />
+          <Field>
+            <Label as="span">{t("general-settings.enabled-file-search")}</Label>
+            <Checkbox
+              label={t("general-settings.enabled-file-search")}
+              onChange={(event) => handleEnabledFileSearchChange(event.target.checked)}
+              checked={enabledFileSearch}
+              disabled={!hasUpdatePermission}
+              helpText={t("help.enabledFileSearchHelpText")}
+            />
+          </Field>
         </div>
       </div>
     </>

@@ -15,8 +15,7 @@
  */
 
 import React, { FC, useState } from "react";
-import { ErrorNotification, InputField, Loading, Subtitle } from "@scm-manager/ui-components";
-import { Button, Level } from "@scm-manager/ui-core";
+import { Button, ErrorNotification, InputField, Level, Loading, Subtitle } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import RoleSelector from "../../../repos/permissions/components/RoleSelector";
 import ApiKeyCreatedModal from "./ApiKeyCreatedModal";
@@ -79,9 +78,12 @@ const AddApiKey: FC<Props> = ({ user, apiKeys }) => {
       {errorAddingKey ? <ErrorNotification error={errorAddingKey} /> : null}
       <Subtitle subtitle={t("apiKey.addSubtitle")} />
       {newKeyModal}
-      <InputField label={t("apiKey.displayName")} value={displayName} onChange={setDisplayName} />
+      <InputField
+        label={t("apiKey.displayName")}
+        value={displayName}
+        onChange={(event) => setDisplayName(event.target.value)}
+      />
       <RoleSelector
-        loading={!availableRoleNames}
         availableRoles={availableRoleNames}
         label={t("apiKey.permissionRole.label")}
         helpText={t("apiKey.permissionRole.help")}

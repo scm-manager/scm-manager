@@ -137,7 +137,7 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
 };
 
 /**
- * @deprecated
+ * @deprecated Use Checkbox from ui-core instead
  */
 // @ts-ignore
 const Checkbox: FieldType<BaseProps, HTMLInputElement, boolean> = createFormFieldWrapper(InnerCheckbox);

@@ -15,7 +15,7 @@
  */
 
 import React, { FC } from "react";
-import { FileUpload, InputField, LabelWithHelpIcon } from "@scm-manager/ui-components";
+import { FileInputField, InputField } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -31,26 +31,26 @@ const ImportFullRepositoryForm: FC<Props> = ({ setFile, setValid, password, setP
   return (
     <div className="columns">
       <div className="column is-half is-vcentered">
-        <LabelWithHelpIcon
+        <FileInputField
           label={t("import.fullImport.title")}
-          helpText={t("import.fullImport.helpText")}
-          required={true}
-        />
-        <FileUpload
-          handleFile={(file: File) => {
-            setFile(file);
+          descriptionText={t("import.fullImport.helpText")}
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            if (file) {
+              setFile(file);
+            }
             setValid(!!file);
           }}
-          required={true}
+          required
         />
       </div>
       <div className="column is-half is-vcentered">
         <InputField
           value={password}
-          onChange={setPassword}
+          onChange={(event) => setPassword(event.target.value)}
           type="password"
           label={t("import.bundle.password.title")}
-          helpText={t("import.bundle.password.helpText")}
+          descriptionText={t("import.bundle.password.helpText")}
         />
       </div>
     </div>

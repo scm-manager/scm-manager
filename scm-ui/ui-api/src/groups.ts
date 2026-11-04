@@ -83,7 +83,7 @@ const createGroup = (link: string) => {
 export const useCreateGroup = () => {
   const queryClient = useQueryClient();
   const link = useRequiredIndexLink("groups");
-  const { mutate, data, isPending, error } = useMutation<Group, Error, GroupCreation>({
+  const { mutateAsync, data, isPending, error } = useMutation<Group, Error, GroupCreation>({
     mutationFn: createGroup(link),
     onSuccess: (group) => {
       queryClient.setQueryData(["group", group.name], group);
@@ -91,7 +91,7 @@ export const useCreateGroup = () => {
     },
   });
   return {
-    create: (group: GroupCreation) => mutate(group),
+    create: (group: GroupCreation) => mutateAsync(group),
     isPending,
     error,
     group: data,
@@ -100,7 +100,7 @@ export const useCreateGroup = () => {
 
 export const useUpdateGroup = () => {
   const queryClient = useQueryClient();
-  const { mutate, isPending, error, data } = useMutation<unknown, Error, Group>({
+  const { mutateAsync, isPending, error, data } = useMutation<unknown, Error, Group>({
     mutationFn: (group) => {
       const updateUrl = (group._links.update as Link).href;
       return apiClient.put(updateUrl, group, "application/vnd.scmm-group+json;v=2");
@@ -111,7 +111,7 @@ export const useUpdateGroup = () => {
     },
   });
   return {
-    update: (group: Group) => mutate(group),
+    update: (group: Group) => mutateAsync(group),
     isPending,
     error,
     isUpdated: !!data,

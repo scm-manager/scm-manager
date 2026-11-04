@@ -101,7 +101,7 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
 };
 
 /**
- * @deprecated
+ * @deprecated Use RadioGroup or RadioGroupField from ui-core instead
  */
 // @ts-ignore
 const Radio: FieldType<BaseProps, HTMLInputElement, boolean> = createFormFieldWrapper(InnerRadio);

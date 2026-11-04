@@ -156,6 +156,10 @@
     "hideContent": "Reduce navigation"
   },
   "filterEntries": "filter entries",
+  "booleanValue": {
+    "true": "Yes",
+    "false": "No"
+  },
   "autocomplete": {
     "user": {
       "label": "User",
@@ -236,7 +240,6 @@
     "label": "Password",
     "newPassword": "New Password",
     "currentPassword": "Current Password",
-    "currentPasswordHelpText": "The password currently in use",
     "confirmPassword": "Confirm Password",
     "passwordInvalid": "Password has to be between 6 and 1024 characters",
     "passwordConfirmFailed": "Passwords have to be identical",

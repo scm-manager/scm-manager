@@ -27,7 +27,7 @@
       },
       "nonFastForwardDisallowed": {
         "label": "Deaktiviere \"Non Fast-Forward\"",
-        "descriptionText": "Git Pushes ablehnen, die nicht \"fast-forward\" sind, wie \"--force\"."
+        "helpText": "Git Pushes ablehnen, die nicht \"fast-forward\" sind, wie \"--force\"."
       },
       "defaultBranch": {
         "label": "Default Branch für neu initialisierte Repositorys"

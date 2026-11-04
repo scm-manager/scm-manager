@@ -16,8 +16,8 @@
 
 import React, { FC, useRef, useState } from "react";
 import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, InputField, Loading, Modal } from "@scm-manager/ui-components";
-import { Button, Icon, Level } from "@scm-manager/ui-core";
+import { Modal } from "@scm-manager/ui-components";
+import { Button, ErrorNotification, Icon, InputField, Level, Loading } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
 import * as validator from "../components/form/repositoryValidation";
@@ -80,14 +80,21 @@ const RenameRepository: FC<Props> = ({ repository }) => {
       {renamingError ? <ErrorNotification error={renamingError} /> : null}
       <InputField
         label={t("renameRepo.modal.label.repoName")}
-        name={t("renameRepo.modal.label.repoName")}
-        errorMessage={t("validation.name-invalid")}
-        helpText={t("help.nameHelpText")}
-        validationError={nameValidationError}
+        name="name"
+        error={nameValidationError ? t("validation.name-invalid") : undefined}
+        descriptionText={t("help.nameHelpText")}
         value={name}
         onChange={(event) => handleNameChange(event.target.value)}
-        onReturnPressed={() => isValid && renameRepository(namespace, name)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && !event.nativeEvent.isComposing) {
+            event.preventDefault();
+            if (isValid && !isRenaming) {
+              renameRepository(namespace, name);
+            }
+          }
+        }}
         ref={initialFocusRef}
+        required
       />
       <NamespaceInput
         namespace={namespace}
@@ -99,8 +106,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
   );
 
   const footer = (
-    <>
-      <div className="buttons">
+    <div className="buttons">
         <Button
           variant="signal"
           disabled={!isValid}
@@ -115,7 +121,6 @@ const RenameRepository: FC<Props> = ({ repository }) => {
           {t("renameRepo.modal.button.cancel")}
         </Button>
       </div>
-    </>
   );
 
   const modal = (

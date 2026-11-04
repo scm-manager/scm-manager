@@ -18,9 +18,9 @@ import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { ConfirmAlert } from "@scm-manager/ui-components";
 import { useDeleteRepository } from "@scm-manager/ui-api";
-import { Button, Icon, InputField, Level } from "@scm-manager/ui-core";
+import { Button, Icon, InputField, Level, ErrorNotification } from "@scm-manager/ui-core";
 
 type Props = {
   repository: Repository;
@@ -37,7 +37,6 @@ const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [enteredValue, setEnteredValue] = useState("");
   const [inputError, setInputError] = useState();
-  const [errorId, setErrorId] = useState(error ? "input-error-delete" : undefined);
   const [t] = useTranslation("repos");
   useEffect(() => {
     if (isDeleted) {
@@ -53,14 +52,12 @@ const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
     setShowConfirmAlert(true);
     setEnteredValue("");
     setInputError(undefined);
-    setErrorId(undefined);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEnteredValue(e.target.value);
     if (isInvalidEnteredValue && !inputError) {
       setInputError(t("deleteRepo.confirmAlert.inputNotMatching"));
-      setErrorId("input-error-delete");
     }
   };
 
@@ -68,6 +65,7 @@ const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
 
   const confirmationText = `${repository.namespace}/${repository.name}`;
   const isInvalidEnteredValue = enteredValue !== confirmationText;
+  const shownInputError = isInvalidEnteredValue ? inputError : undefined;
 
   const confirmationDialog = (
     <>
@@ -76,9 +74,8 @@ const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
         label={t("deleteRepo.confirmAlert.confirmationText", { confirmationText: confirmationText })}
         value={enteredValue}
         onChange={handleChange}
-        error={isInvalidEnteredValue ? inputError : undefined}
-        aria-describedby={errorId}
-        aria-invalid={errorId !== undefined}
+        error={shownInputError}
+        aria-invalid={!!shownInputError}
         autoComplete="off"
       ></InputField>
     </>

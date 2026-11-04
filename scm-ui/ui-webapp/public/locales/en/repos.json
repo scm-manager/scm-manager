@@ -25,7 +25,6 @@
     "namespaceHelpText": "The namespace of the repository. This name will be part of the repository url.",
     "nameHelpText": "The name of the repository. This name will be part of the repository url.",
     "contactHelpText": "Email address of the person who is responsible for this repository.",
-    "descriptionHelpText": "A short description of the repository.",
     "initializeRepository": "Creates an initial branch and commits a basic README.md.",
     "importUrlHelpText": "Import the whole repository including all branches and tags via remote url",
     "usernameHelpText": "Username may be required to import the remote repository. Will be ignored if not provided.",
@@ -83,12 +82,10 @@
     "username": "Username",
     "password": "Password",
     "compressed": {
-      "label": "Compressed",
-      "helpText": "Check only if your dump file is compressed."
+      "label": "Compressed"
     },
     "bundle": {
       "title": "Dump File",
-      "helpText": "Select dump file from which the repository should be imported.",
       "password": {
         "title": "Password",
         "helpText": "Provide a password for encrypted dumps"
@@ -416,8 +413,7 @@
       "helpText": "The export file will be encrypted using the provided password."
     },
     "password": {
-      "label": "Password",
-      "helpText": "Enter the password for encrypted files."
+      "label": "Password"
     },
     "createExportButton": "Create new Export",
     "downloadExportButton": "Download Export",
@@ -511,7 +507,6 @@
     },
     "help": {
       "groupPermissionHelpText": "States if a permission is a group permission. If this is not checked, it is a user permission.",
-      "nameHelpText": "Manage permissions for a specific user or group.",
       "roleHelpText": "READ = read; WRITE = read and write; OWNER = read, write and also the ability to manage the properties and permissions. If nothing is selected here, use the 'Advanced' Button to see detailed permissions.",
       "permissionsHelpText": "Use this to specify your own set of permissions regardless of predefined roles."
     },

@@ -24,6 +24,7 @@ import FieldMessage from "../base/field-message/FieldMessage";
 import Input from "./Input";
 import { useAriaId } from "../../helpers";
 import ExpandableText from "../base/ExpandableText";
+import RequiredMarker from "../misc/RequiredMarker";
 
 export type InputFieldProps = {
   label: string;
@@ -35,6 +36,12 @@ export type InputFieldProps = {
   descriptionText?: string;
   extendedText?: string;
   error?: string;
+  /**
+   * Shown below the input, if there is no error.
+   *
+   * @since 4.0.0
+   */
+  warning?: string;
   icon?: string;
   ref?: Ref<HTMLInputElement>;
 } & React.ComponentProps<typeof Input>;
@@ -49,6 +56,7 @@ const InputField: FC<InputFieldProps> = ({
   descriptionText,
   extendedText,
   error,
+  warning,
   icon,
   className,
   id,
@@ -56,20 +64,21 @@ const InputField: FC<InputFieldProps> = ({
   ...props
 }) => {
   const inputId = useAriaId(id ?? props.testId);
-  const helpTextId = helpText ? `input-helptext-${name}` : undefined;
-  const descriptionId = descriptionText ? `input-description-${name}` : undefined;
-  const errorId = error ? `input-error-${name}` : undefined;
-  const variant = error ? "danger" : undefined;
+  const descriptionId = useAriaId();
+  const messageId = useAriaId();
+  const variant = error ? "danger" : warning ? "warning" : undefined;
+  const message = error || warning;
   return (
     <Field className={className}>
       <Label htmlFor={inputId}>
         {label}
+        {props.required ? <RequiredMarker /> : null}
         {helpText ? <Help className="ml-1" text={helpText} /> : null}
       </Label>
       {extendedText && descriptionText ? (
         <ExpandableText id={descriptionId} descriptionText={descriptionText} extendedDescriptionText={extendedText} />
       ) : (
-        <p className="mb-2 is-size-7" id={descriptionId}>
+        <p className="mb-2 is-size-7" id={descriptionText ? descriptionId : undefined}>
           {descriptionText}
         </p>
       )}
@@ -78,7 +87,8 @@ const InputField: FC<InputFieldProps> = ({
           variant={variant}
           ref={ref}
           id={inputId}
-          aria-describedby={descriptionId || helpTextId}
+          name={name}
+          aria-describedby={classNames({ [descriptionId]: descriptionText, [messageId]: message }) || undefined}
           {...props}
         ></Input>
         {icon ? (
@@ -87,9 +97,9 @@ const InputField: FC<InputFieldProps> = ({
           </span>
         ) : null}
       </Control>
-      {error ? (
-        <FieldMessage id={errorId} variant={variant}>
-          {error}
+      {message ? (
+        <FieldMessage id={messageId} variant={variant}>
+          {message}
         </FieldMessage>
       ) : null}
     </Field>

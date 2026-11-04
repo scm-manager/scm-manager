@@ -27,6 +27,7 @@ type Props = {
   namespaceStrategy?: string;
   namespaceValidationError?: boolean;
   disabled?: boolean;
+  autoFocus?: boolean;
 };
 
 const NamespaceInput: FC<Props> = ({
@@ -35,6 +36,7 @@ const NamespaceInput: FC<Props> = ({
   namespaceStrategy,
   namespaceValidationError,
   disabled,
+  autoFocus = true,
 }) => {
   const [t] = useTranslation("repos");
   const [query, setQuery] = useState("");
@@ -63,7 +65,8 @@ const NamespaceInput: FC<Props> = ({
       <ComboboxField
         aria-label={abc.label}
         label={abc.label}
-        helpText={abc.helpText}
+        descriptionText={abc.helpText}
+        error={abc.errorMessage || undefined}
         value={repositorySelectValue}
         onChange={(option) => handleNamespaceChange(option?.value.id ?? "")}
         onQueryChange={setQuery}
@@ -72,7 +75,7 @@ const NamespaceInput: FC<Props> = ({
         required={true}
         aria-required={true}
         nullable
-        ref={(el) => el?.focus()}
+        ref={autoFocus ? (el) => el?.focus() : undefined}
       />
     );
   }

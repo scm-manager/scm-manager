@@ -39,11 +39,7 @@
     "externalSubtitle": "Externe Gruppe bearbeiten",
     "submit": "Speichern",
     "nameError": "Name ist ungültig",
-    "descriptionError": "Beschreibung ist ungültig",
     "help": {
-      "nameHelpText": "Eindeutiger Name der Gruppe",
-      "descriptionHelpText": "Eine kurze Beschreibung der Gruppe",
-      "memberHelpText": "Benutzername des Mitglieds der Gruppe",
       "externalHelpText": "Mitglieder dieser Gruppe werden von einem externen System wie z.B.: einem LDAP-Server verwaltet"
     },
     "addMemberAutocomplete": {

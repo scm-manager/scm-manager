@@ -14,90 +14,64 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, FormEvent, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  ErrorNotification,
-  InputField,
-  Notification,
-  PasswordConfirmation,
-  Subtitle,
-} from "@scm-manager/ui-components";
-import { Button, Level, useDocumentTitle } from "@scm-manager/ui-core";
+import { Form, Subtitle, useDocumentTitle } from "@scm-manager/ui-core";
 import { useChangeUserPassword, useRequiredMe } from "@scm-manager/ui-api";
+import { isPasswordValid } from "../users/components/userValidation";
+
+type ChangePasswordForm = {
+  oldPassword: string;
+  password: string;
+  passwordConfirmation: string;
+};
+
+const createEmptyForm = (): ChangePasswordForm => ({ oldPassword: "", password: "", passwordConfirmation: "" });
 
 const ChangeUserPassword: FC = () => {
   const [t] = useTranslation("commons");
   const me = useRequiredMe();
   useDocumentTitle(t("password.subtitle"), me.displayName);
-  const { isPending, error, passwordChanged, changePassword, reset } = useChangeUserPassword(me);
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [passwordValid, setPasswordValid] = useState(false);
+  const { changePassword } = useChangeUserPassword(me);
+  // new default values reset the form, so the passwords are cleared after a successful change
+  const [defaultValues, setDefaultValues] = useState(createEmptyForm);
 
-  useEffect(() => {
-    if (passwordChanged) {
-      setOldPassword("");
-      setNewPassword("");
-      setPasswordValid(false);
-    }
-  }, [passwordChanged]);
-
-  const submit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (newPassword) {
-      changePassword(oldPassword, newPassword);
-    }
+  const submit = async ({ oldPassword, password }: ChangePasswordForm) => {
+    await changePassword(oldPassword, password);
+    setDefaultValues(createEmptyForm());
   };
-
-  const onPasswordChange = (newValue: string, valid: boolean) => {
-    setNewPassword(newValue);
-    setPasswordValid(!!newValue && valid);
-  };
-
-  let message = null;
-
-  if (passwordChanged) {
-    message = (
-      <Notification type="success" onClose={reset}>
-        {t("password.changedSuccessfully")}
-      </Notification>
-    );
-  } else if (error) {
-    message = <ErrorNotification error={error} />;
-  }
 
   return (
-    <form onSubmit={submit}>
+    <>
       <Subtitle subtitle={t("password.subtitle")} />
-      {message}
-      <div className="columns">
-        <div className="column">
-          <InputField
-            label={t("password.currentPassword")}
+      <Form
+        translationPath={["commons", "password"]}
+        defaultValues={defaultValues}
+        onSubmit={submit}
+        successMessageFallback={t("password.changedSuccessfully")}
+      >
+        <Form.Row>
+          <Form.Input
+            name="oldPassword"
             type="password"
-            onChange={setOldPassword}
-            value={oldPassword}
-            helpText={t("password.currentPasswordHelpText")}
+            label={t("password.currentPassword")}
+            rules={{ required: true }}
           />
-        </div>
-      </div>
-      <PasswordConfirmation passwordChanged={onPasswordChange} key={passwordChanged ? "changed" : "unchanged"} />
-      <Level
-        right={
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={!passwordValid || !oldPassword}
-            isLoading={isPending}
-            testId="submit-button"
-            onClick={() => window.scrollTo(0, 0)}
-          >
-            {t("password.submit")}
-          </Button>
-        }
-      />
-    </form>
+        </Form.Row>
+        <Form.Row>
+          <Form.SecretConfirmation
+            name="password"
+            label={t("password.newPassword")}
+            confirmationLabel={t("password.confirmPassword")}
+            confirmationErrorMessage={t("password.passwordConfirmFailed")}
+            rules={{
+              required: t("password.passwordInvalid"),
+              validate: (value: string) => isPasswordValid(value) || t("password.passwordInvalid"),
+            }}
+          />
+        </Form.Row>
+      </Form>
+    </>
   );
 };
 

@@ -25,7 +25,7 @@ type Props = {
 };
 
 /**
- * @deprecated
+ * @deprecated Use FileInputField from ui-core instead
  */
 const FileUpload: FC<Props> = ({ handleFile, filenamePlaceholder = "", disabled = false, required }) => {
   const [t] = useTranslation("commons");

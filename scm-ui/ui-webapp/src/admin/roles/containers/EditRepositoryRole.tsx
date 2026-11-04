@@ -17,12 +17,11 @@
 import React, { FC } from "react";
 import RepositoryRoleForm from "./RepositoryRoleForm";
 import { useTranslation } from "react-i18next";
-import { ErrorNotification, Loading, Subtitle, Title } from "@scm-manager/ui-components";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import DeleteRepositoryRole from "./DeleteRepositoryRole";
 import { useUpdateRepositoryRole } from "@scm-manager/ui-api";
 import { Navigate } from "react-router-dom";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { Subtitle, Title, useDocumentTitle } from "@scm-manager/ui-core";
 
 type Props = {
   role: RepositoryRole;
@@ -31,23 +30,17 @@ type Props = {
 const EditRepositoryRole: FC<Props> = ({ role }) => {
   const [t] = useTranslation("admin");
   useDocumentTitle(t("repositoryRole.editSubtitle"));
-  const { isUpdated, update, error, isPending: loading } = useUpdateRepositoryRole();
+  const { isUpdated, update } = useUpdateRepositoryRole();
 
   if (isUpdated) {
     return <Navigate to="/admin/roles/" />;
-  }
-
-  if (loading) {
-    return <Loading />;
-  } else if (error) {
-    return <ErrorNotification error={error} />;
   }
 
   return (
     <>
       <Title title={t("repositoryRole.detailsTitle")} />
       <Subtitle subtitle={t("repositoryRole.editSubtitle")} />
-      <RepositoryRoleForm role={role} submitForm={update} />
+      <RepositoryRoleForm role={role} submitForm={(values) => update({ ...role, ...values })} />
       <DeleteRepositoryRole role={role} />
     </>
   );

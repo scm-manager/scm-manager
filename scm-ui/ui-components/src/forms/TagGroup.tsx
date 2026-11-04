@@ -26,7 +26,7 @@ type Props = {
 };
 
 /**
- * @deprecated
+ * @deprecated Use ChipInputField from ui-core instead
  */
 export default class TagGroup extends React.Component<Props> {
   render() {

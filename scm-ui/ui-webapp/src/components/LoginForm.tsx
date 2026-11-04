@@ -16,8 +16,7 @@
 
 import React, { FormEvent } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { InputField } from "@scm-manager/ui-components";
-import { Button, ErrorNotification } from "@scm-manager/ui-core";
+import { Button, ErrorNotification, Field, Input } from "@scm-manager/ui-core";
 import { UnauthorizedError } from "@scm-manager/ui-api";
 
 type Props = WithTranslation & {
@@ -78,20 +77,30 @@ class LoginForm extends React.Component<Props, State> {
       <>
         <ErrorNotification error={this.areCredentialsInvalid()} />
         <form onSubmit={this.handleSubmit}>
-          <InputField
-            testId="username-input"
-            placeholder={t("login.username-placeholder")}
-            autofocus={true}
-            onChange={this.handleUsernameChange}
-            disabled={loading}
-          />
-          <InputField
-            testId="password-input"
-            placeholder={t("login.password-placeholder")}
-            type="password"
-            onChange={this.handlePasswordChange}
-            disabled={loading}
-          />
+          <Field>
+            <div className="control">
+              <Input
+                testId="username-input"
+                placeholder={t("login.username-placeholder")}
+                aria-label={t("login.username-placeholder")}
+                autoFocus={true}
+                onChange={(event) => this.handleUsernameChange(event.target.value)}
+                disabled={loading}
+              />
+            </div>
+          </Field>
+          <Field>
+            <div className="control">
+              <Input
+                testId="password-input"
+                placeholder={t("login.password-placeholder")}
+                aria-label={t("login.password-placeholder")}
+                type="password"
+                onChange={(event) => this.handlePasswordChange(event.target.value)}
+                disabled={loading}
+              />
+            </div>
+          </Field>
           <Button
             type="submit"
             variant="primary"

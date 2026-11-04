@@ -110,6 +110,7 @@ const SinglePermission: FC<Props> = ({
             role={permission.role || ""}
             loading={isPending}
             emptyLabel={t("permission.custom")}
+            aria-label={t("permission.role")}
           />
         </td>
       )}

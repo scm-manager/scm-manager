@@ -1,0 +1,6 @@
+- type: fixed
+  description: The repository import preselects the first import mode and shows the right mode after the repository type changes
+- type: fixed
+  description: Choosing an import mode keeps the focus on the mode selection instead of moving it to the namespace field
+- type: added
+  description: Optional autoFocus property for the sub forms of repository creator extensions

@@ -153,6 +153,10 @@
     "hideContent": "Navigation verkleinern"
   },
   "filterEntries": "Einträge filtern",
+  "booleanValue": {
+    "true": "Ja",
+    "false": "Nein"
+  },
   "autocomplete": {
     "user": {
       "label": "Benutzer",
@@ -233,7 +237,6 @@
     "label": "Passwort",
     "newPassword": "Neues Passwort",
     "currentPassword": "Aktuelles Passwort",
-    "currentPasswordHelpText": "Dieses Passwort wird momentan bereits verwendet.",
     "confirmPassword": "Passwort wiederholen",
     "passwordInvalid": "Das Passwort muss zwischen 6 und 1024 Zeichen lang sein!",
     "passwordConfirmFailed": "Passwörter müssen identisch sein!",

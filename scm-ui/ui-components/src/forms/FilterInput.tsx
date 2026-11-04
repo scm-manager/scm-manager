@@ -36,7 +36,7 @@ const FixedHeightInput = styled.input`
 `;
 
 /**
- * @deprecated
+ * @deprecated Use FilterInput from ui-core instead
  */
 const FilterInput: FC<Props> = ({ filter, value, testId, placeholder, autoFocus, className, id }) => {
   const [stateValue, setStateValue] = useState(value || "");

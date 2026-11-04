@@ -25,7 +25,7 @@
       },
       "enableHttpPostArgs": {
         "label": "Enable HttpPostArgs Protocol",
-        "descriptionText": "Enables the experimental HttpPostArgs Protocol of mercurial. The HttpPostArgs Protocol uses the body of post requests to send the meta information instead of http headers. This helps to reduce the header size of mercurial requests. HttpPostArgs is supported since mercurial 3.8."
+        "helpText": "Enables the experimental HttpPostArgs Protocol of mercurial. The HttpPostArgs Protocol uses the body of post requests to send the meta information instead of http headers. This helps to reduce the header size of mercurial requests. HttpPostArgs is supported since mercurial 3.8."
       },
       "submit": "Submit",
       "success": "Configuration changed successfully",

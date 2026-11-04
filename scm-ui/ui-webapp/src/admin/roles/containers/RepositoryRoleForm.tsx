@@ -14,87 +14,70 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, FormEvent, useState } from "react";
+import React, { FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { RepositoryRole } from "@scm-manager/ui-types";
-import { ErrorNotification, InputField } from "@scm-manager/ui-components";
-import { Button, Level } from "@scm-manager/ui-core";
+import { Controller } from "react-hook-form";
+import { RepositoryRole, RepositoryRoleCreation } from "@scm-manager/ui-types";
+import { ErrorNotification, Field, Form, Label, useScmFormContext } from "@scm-manager/ui-core";
+import { useRepositoryVerbs } from "@scm-manager/ui-api";
 import PermissionsWrapper from "../../../permissions/components/PermissionsWrapper";
-import { useRepositoryVerbs, useRequiredIndexLink } from "@scm-manager/ui-api";
 
 type Props = {
+  submitForm: (role: RepositoryRoleCreation) => Promise<unknown>;
   role?: RepositoryRole;
-  submitForm: (p: RepositoryRole) => void;
 };
 
-const RepositoryRoleForm: FC<Props> = ({ role: initialRole, submitForm }) => {
-  const { isLoading: loading, error, data } = useRepositoryVerbs();
-  const createLink = useRequiredIndexLink("repositoryRoles");
-  const [t] = useTranslation("admin");
-  const [role, setRole] = useState<RepositoryRole>(
-    initialRole || {
-      name: "",
-      verbs: [],
-      _links: {
-        create: { href: createLink },
-      },
-    }
+const VerbsField: FC<{ availableVerbs: string[] }> = ({ availableVerbs }) => {
+  const { control, readOnly } = useScmFormContext();
+  return (
+    <Controller
+      control={control}
+      name="verbs"
+      rules={{ validate: (verbs: string[]) => verbs.length > 0 }}
+      render={({ field: { value, onChange } }) => (
+        <PermissionsWrapper
+          permissions={availableVerbs.reduce((obj, verb) => ({ ...obj, [verb]: value.includes(verb) }), {})}
+          onChange={(checked, verb) =>
+            onChange(checked ? [...value, verb] : value.filter((selected: string) => selected !== verb))
+          }
+          disabled={!!readOnly}
+          role={true}
+        />
+      )}
+    />
   );
-  const availableVerbs = data?.verbs;
+};
+
+const RepositoryRoleForm: FC<Props> = ({ role, submitForm }) => {
+  const { error, data } = useRepositoryVerbs();
+  const [t] = useTranslation("admin");
+  const defaultValues = useMemo<RepositoryRoleCreation>(
+    () => ({ name: role?.name ?? "", verbs: role?.verbs ?? [] }),
+    [role],
+  );
 
   if (error) {
     return <ErrorNotification error={error} />;
   }
 
-  const isValid = !!role?.name && role.verbs.length > 0;
-  const handleNameChange = (name: string) => setRole({ ...role, name });
-
-  const handleVerbChange = (value: boolean, name: string) =>
-    setRole({
-      ...role,
-      verbs: value ? [...role.verbs, name] : role.verbs.filter((v) => v !== name),
-    });
-
-  const submit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (isValid) {
-      submitForm(role);
-    }
-  };
-
-  const selectedVerbs =
-    availableVerbs?.reduce((obj, verb) => ({ ...obj, [verb]: role?.verbs.includes(verb) }), {}) || {};
-
   return (
-    <form onSubmit={submit}>
-      <InputField
-        name="name"
-        label={t("repositoryRole.form.name")}
-        onChange={handleNameChange}
-        value={role.name || ""}
-        disabled={!!initialRole}
-        autofocus
-      />
-      <div className="field">
-        <label className="label">{t("repositoryRole.form.permissions")}</label>
-        <PermissionsWrapper permissions={selectedVerbs} onChange={handleVerbChange} disabled={false} role={true} />
-      </div>
+    <Form translationPath={["admin", "repositoryRole.form"]} defaultValues={defaultValues} onSubmit={submitForm}>
+      <Form.Row>
+        <Form.Input
+          name="name"
+          label={t("repositoryRole.form.name")}
+          rules={{ required: true }}
+          // undefined keeps the form's own read only state while it is submitting
+          readOnly={role ? true : undefined}
+          autoFocus={!role}
+        />
+      </Form.Row>
+      <Field as="fieldset">
+        <Label as="legend">{t("repositoryRole.form.permissions")}</Label>
+        <VerbsField availableVerbs={data?.verbs ?? []} />
+      </Field>
       <hr />
-      <Level
-        right={
-          <Button
-            type="submit"
-            variant="primary"
-            isLoading={loading}
-            disabled={!isValid}
-            testId="submit-button"
-            onClick={() => window.scrollTo(0, 0)}
-          >
-            {t("repositoryRole.form.submit")}
-          </Button>
-        }
-      />
-    </form>
+    </Form>
   );
 };
 

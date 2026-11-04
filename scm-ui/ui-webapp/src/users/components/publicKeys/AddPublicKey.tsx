@@ -15,8 +15,7 @@
  */
 
 import React, { FC, useState } from "react";
-import { ErrorNotification, InputField, Subtitle, Textarea } from "@scm-manager/ui-components";
-import { Button, Level } from "@scm-manager/ui-core";
+import { Button, ErrorNotification, InputField, Level, Subtitle, TextareaField } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import { Me, PublicKeysCollection, User } from "@scm-manager/ui-types";
 import { useCreatePublicKey } from "@scm-manager/ui-api";
@@ -51,8 +50,17 @@ const AddPublicKey: FC<Props> = ({ user, publicKeys }) => {
       <hr />
       {error ? <ErrorNotification error={error} /> : null}
       <Subtitle subtitle={t("publicKey.addSubtitle")} />
-      <InputField label={t("publicKey.displayName")} value={displayName} onChange={setDisplayName} />
-      <Textarea name="raw" label={t("publicKey.raw")} value={raw} onChange={setRaw} />
+      <InputField
+        label={t("publicKey.displayName")}
+        value={displayName}
+        onChange={(event) => setDisplayName(event.target.value)}
+      />
+      <TextareaField
+        name="raw"
+        label={t("publicKey.raw")}
+        value={raw}
+        onChange={(event) => setRaw(event.target.value)}
+      />
       <Level
         right={
           <Button

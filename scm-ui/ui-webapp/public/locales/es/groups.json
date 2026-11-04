@@ -35,11 +35,7 @@
     "externalSubtitle": "Editar grupo externo",
     "submit": "Guardar",
     "nameError": "El nombre del grupo es incorrecto",
-    "descriptionError": "La descripción es incorrecta",
     "help": {
-      "nameHelpText": "Nombre único del grupo",
-      "descriptionHelpText": "Descripción breve del grupo",
-      "memberHelpText": "Nombres de usuario de los miembros del grupo",
       "externalHelpText": "Los miembros son gestionados por un sistema externo como por ejemplo LDAP"
     },
     "addMemberAutocomplete": {

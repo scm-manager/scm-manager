@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, InputHTMLAttributes, Ref } from "react";
+import React, { FC, Ref, TextareaHTMLAttributes } from "react";
 import classNames from "classnames";
 import { createVariantClass, Variant } from "../variants";
 import { createAttributesForTesting } from "../../helpers";
@@ -23,7 +23,7 @@ type Props = {
   variant?: Variant;
   testId?: string;
   ref?: Ref<HTMLTextAreaElement>;
-} & InputHTMLAttributes<HTMLTextAreaElement>;
+} & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const Textarea: FC<Props> = ({ variant, className, testId, ref, ...props }) => {
   return (

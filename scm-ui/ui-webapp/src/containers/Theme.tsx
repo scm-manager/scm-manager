@@ -14,13 +14,12 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useState } from "react";
-import { createA11yId, Radio, Subtitle } from "@scm-manager/ui-components";
-import { useForm } from "react-hook-form";
+import React, { FC, KeyboardEvent, useState } from "react";
+import { useController, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { Button, useDocumentTitle } from "@scm-manager/ui-core";
+import { Button, RadioGroup, Subtitle, useDocumentTitle } from "@scm-manager/ui-core";
 import { useRequiredMe } from "@scm-manager/ui-api";
 
 const LS_KEY = "scm.theme";
@@ -53,64 +52,72 @@ const Theme: FC = () => {
   const { theme, setTheme, isLoading } = useThemeState();
   const me = useRequiredMe();
   const {
-    register,
-    setValue,
+    control,
     handleSubmit,
     formState: { isDirty },
-    watch,
   } = useForm<ThemeForm>({
     mode: "onChange",
     defaultValues: {
       theme,
     },
   });
+  const { field } = useController({ control, name: "theme" });
   const [t] = useTranslation("commons");
   useDocumentTitle(t("profile.theme.subtitle"), me.displayName);
 
   const onSubmit = (values: ThemeForm) => {
+    window.scrollTo(0, 0);
     setTheme(values.theme);
+  };
+
+  // Radix prevents the default of the enter key on radio items, which blocks the implicit submission of the form
+  const submitOnEnter = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === "Enter" && isDirty) {
+      handleSubmit(onSubmit)();
+    }
   };
 
   return (
     <>
       <Subtitle>{t("profile.theme.subtitle")}</Subtitle>
       <form className="is-flex is-flex-direction-column" onSubmit={handleSubmit(onSubmit)}>
-        {themes.map((theme) => {
-          const a11yId = createA11yId("theme");
-          return (
-            <div
-              key={theme}
-              onClick={() => setValue("theme", theme, { shouldDirty: true })}
-              className={classNames(
-                "card",
-                "ml-1",
-                "mb-5",
-                "control",
-                "columns",
-                "is-vcentered",
-                "has-cursor-pointer",
-                { "has-background-secondary-less": theme === watch().theme },
-              )}
-            >
-              <RadioColumn className="column">
-                <Radio {...register("theme")} value={theme} disabled={isLoading} ariaLabelledby={a11yId} />
-              </RadioColumn>
-              <div id={a11yId} className="column content">
-                <h3>{t(`profile.theme.${theme}.displayName`)}</h3>
-                <p>{t(`profile.theme.${theme}.description`)}</p>
+        <RadioGroup
+          name={field.name}
+          value={field.value}
+          onValueChange={field.onChange}
+          disabled={isLoading}
+          aria-label={t("profile.theme.subtitle")}
+        >
+          {themes.map((theme) => {
+            const a11yId = `theme-${theme}`;
+            return (
+              <div
+                key={theme}
+                onClick={() => field.onChange(theme)}
+                className={classNames(
+                  "card",
+                  "ml-1",
+                  "mb-5",
+                  "control",
+                  "columns",
+                  "is-vcentered",
+                  "has-cursor-pointer",
+                  { "has-background-secondary-less": theme === field.value },
+                )}
+              >
+                <RadioColumn className="column">
+                  <RadioGroup.Option value={theme} label="" aria-labelledby={a11yId} onKeyDown={submitOnEnter} />
+                </RadioColumn>
+                <div id={a11yId} className="column content">
+                  <h3>{t(`profile.theme.${theme}.displayName`)}</h3>
+                  <p>{t(`profile.theme.${theme}.description`)}</p>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </RadioGroup>
         <div className="buttons is-justify-content-flex-end">
-          <Button
-            type="submit"
-            variant="primary"
-            isLoading={isLoading}
-            disabled={!isDirty}
-            testId="submit-button"
-            onClick={() => window.scrollTo(0, 0)}
-          >
+          <Button type="submit" variant="primary" isLoading={isLoading} disabled={!isDirty} testId="submit-button">
             {t("profile.theme.submit")}
           </Button>
         </div>

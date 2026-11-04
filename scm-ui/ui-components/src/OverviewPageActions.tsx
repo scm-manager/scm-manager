@@ -18,16 +18,9 @@ import React, { FC, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import classNames from "classnames";
-import { LinkButton } from "@scm-manager/ui-core";
+import { FilterInput, LinkButton, Select } from "@scm-manager/ui-core";
 import { urls } from "./index";
-import { FilterInput, Select } from "./forms";
 import { devices } from "./devices";
-
-const StyledGroupSelector = styled.div`
-  .fieldset-is-fullwidth {
-    width: 100%;
-  }
-`;
 
 const StyledFilterWrapper = styled.div`
   .control {
@@ -108,16 +101,15 @@ const OverviewPageActions: FC<Props> = ({
   const link = createAbsoluteLink(inputLink);
 
   const groupSelector = groups && (
-    <StyledGroupSelector className="column is-flex is-align-items-center">
+    <div className="column is-flex is-align-items-center">
       <Select
-        ariaLabelledby={groupAriaLabelledby}
+        aria-labelledby={groupAriaLabelledby}
         className="is-fullwidth"
-        fieldsetClassName="fieldset-is-fullwidth"
         options={groups.map((g) => ({ value: g, label: g }))}
         value={currentGroup}
-        onChange={groupSelected}
+        onChange={(event) => groupSelected?.(event.target.value)}
       />
-    </StyledGroupSelector>
+    </div>
   );
 
   const renderCreateButton = () => {
@@ -146,7 +138,7 @@ const OverviewPageActions: FC<Props> = ({
         {groupSelector}
         <div className="column is-flex is-align-items-center">
           <FilterInput
-            placeholder={searchPlaceholder}
+            label={searchPlaceholder}
             value={urls.getQueryStringFromLocation(location)}
             filter={filter}
             testId={testId + "-filter"}

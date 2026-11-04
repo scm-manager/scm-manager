@@ -14,8 +14,8 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useState } from "react";
-import { Checkbox, ErrorNotification, Icon, Loading, Notification } from "@scm-manager/ui-components";
+import React, { FC, ReactNode, useState } from "react";
+import { Checkbox, ErrorNotification, Field, Icon, IconLinkButton, Loading, Notification } from "@scm-manager/ui-core";
 import {
   Group,
   Link as HalLink,
@@ -35,23 +35,23 @@ const NamespaceColumn = styled.th`
   width: 1rem;
 `;
 
-const EditIcon: FC = () => {
-  const [t] = useTranslation("users");
-  return <Icon alt={t("permissionOverview.edit")} name="pen" />;
-};
+const PenLinkButton: FC<{ to: string; label: string }> = ({ to, label }) => (
+  <IconLinkButton to={to} title={label} aria-label={label}>
+    <Icon>pen</Icon>
+  </IconLinkButton>
+);
 
 const EditLink: FC<{ links?: Links; to: string }> = ({ links, to }) => {
+  const [t] = useTranslation("users");
   if (!links?.permissions) {
     return null;
   }
-  return (
-    <Link to={to}>
-      <EditIcon />
-    </Link>
-  );
+  return <PenLinkButton to={to} label={t("permissionOverview.edit")} />;
 };
 
-const ElementLink: FC<{ link?: HalLink; to: string }> = ({ link, to, children }) => {
+const CheckIcon: FC = () => <Icon className="has-text-secondary">check</Icon>;
+
+const ElementLink: FC<{ link?: HalLink; to: string; children: ReactNode }> = ({ link, to, children }) => {
   if (!link) {
     return <>{children}</>;
   }
@@ -65,23 +65,27 @@ const GroupRow: FC<{ entry: PermissionOverviewGroupEntry; group?: Group }> = ({ 
         {entry.name}
       </ElementLink>
     </td>
-    <td align="center">{entry.permissions && <Icon name="check" />}</td>
+    <td align="center">{entry.permissions && <CheckIcon />}</td>
     <td align="center">
       <EditLink to={`/group/${entry.name}/settings/permissions`} links={group?._links} />
     </td>
   </tr>
 );
 
-const NotCreatedGroupRow: FC<{ entry: PermissionOverviewGroupEntry }> = ({ entry }) => (
-  <tr>
-    <td>{entry.name}</td>
-    <td align="center">
-      <Link to={`/groups/create/?name=${entry.name}&external=true`}>
-        <EditIcon />
-      </Link>
-    </td>
-  </tr>
-);
+const NotCreatedGroupRow: FC<{ entry: PermissionOverviewGroupEntry }> = ({ entry }) => {
+  const [t] = useTranslation("users");
+  return (
+    <tr>
+      <td>{entry.name}</td>
+      <td align="center">
+        <PenLinkButton
+          to={`/groups/create/?name=${entry.name}&external=true`}
+          label={t("permissionOverview.groups.createGroup")}
+        />
+      </td>
+    </tr>
+  );
+};
 
 const RepositoryNamespaceRows: FC<{
   entry: { namespace: Namespace; repositories: Repository[] };
@@ -100,7 +104,7 @@ const NamespaceRow: FC<{ namespace: Namespace; relevant: boolean }> = ({ namespa
     <td colSpan={2}>
       <Link to={`/repos/${namespace.namespace}/`}>{namespace.namespace}</Link>
     </td>
-    <td align="center">{relevant && <Icon name="check" />}</td>
+    <td align="center">{relevant && <CheckIcon />}</td>
     <td align="center">
       <EditLink links={namespace._links} to={`/namespace/${namespace.namespace}/settings/permissions`} />
     </td>
@@ -114,7 +118,7 @@ const RepositoryRow: FC<{ entry: Repository }> = ({ entry }) => (
       <Link to={`/repo/${entry.namespace}/${entry.name}/`}>{entry.name}</Link>
     </td>
     <td align="center">
-      <Icon name="check" />
+      <CheckIcon />
     </td>
     <td align="center">
       <EditLink links={entry._links} to={`/repo/${entry.namespace}/${entry.name}/settings/permissions`} />
@@ -184,11 +188,13 @@ const GroupsWithoutPermissionTable: FC<{ data: Data }> = ({ data }) => {
 
   return (
     <>
-      <Checkbox
-        label={t("permissionOverview.groups.showGroupsWithoutPermission")}
-        onChange={setExternal}
-        helpText={t("permissionOverview.groups.showGroupsWithoutPermissionHelp")}
-      />
+      <Field>
+        <Checkbox
+          label={t("permissionOverview.groups.showGroupsWithoutPermission")}
+          onChange={(event) => setExternal(event.target.checked)}
+          helpText={t("permissionOverview.groups.showGroupsWithoutPermissionHelp")}
+        />
+      </Field>
       {content}
     </>
   );
@@ -266,13 +272,6 @@ const PermissionOverview: FC<{ user: User }> = ({ user }) => {
   if (isLoading || !data) {
     return <Loading />;
   }
-
-  // To test the table with the "not created" groups, you can mock such data
-  // with the following statement and assign this in the GroupsWithoutPermissionTable:
-  // const mockedData = {
-  //   ...data,
-  //   relevantGroups: [...data.relevantGroups, { name: "hitchhiker", permissions: false, externalOnly: true }],
-  // };
 
   return (
     <>

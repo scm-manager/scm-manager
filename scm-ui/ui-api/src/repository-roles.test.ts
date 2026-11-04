@@ -122,8 +122,8 @@ describe("Test repository-roles hooks", () => {
         wrapper: createWrapper(queryClient),
       });
 
-      await act(async () => {
-        await result.current.create(role);
+      act(() => {
+        result.current.create(role);
       });
 
       await waitFor(() => {
@@ -146,7 +146,7 @@ describe("Test repository-roles hooks", () => {
       });
 
       await act(async () => {
-        await result.current.create(role);
+        await expect(result.current.create(role)).rejects.toThrow("Location header");
       });
 
       expect(result.current.error).toBeDefined();
@@ -166,12 +166,13 @@ describe("Test repository-roles hooks", () => {
         wrapper: createWrapper(queryClient),
       });
 
-      await act(async () => {
-        await result.current.remove(role);
+      act(() => {
+        result.current.remove(role);
       });
 
+      await waitFor(() => expect(result.current.isDeleted).toBe(true));
+
       expect(result.current.error).toBeFalsy();
-      expect(result.current.isDeleted).toBe(true);
       expect(result.current.isPending).toBe(false);
       expect(queryClient.getQueryData(["repositoryRole", roleName])).toBeUndefined();
     });
@@ -190,12 +191,13 @@ describe("Test repository-roles hooks", () => {
         wrapper: createWrapper(queryClient),
       });
 
-      await act(async () => {
-        await result.current.update(role);
+      act(() => {
+        result.current.update(role);
       });
 
+      await waitFor(() => expect(result.current.isUpdated).toBe(true));
+
       expect(result.current.error).toBeFalsy();
-      expect(result.current.isUpdated).toBe(true);
       expect(result.current.isPending).toBe(false);
       expect(queryClient.getQueryData(["repositoryRole", roleName])).toBeUndefined();
       expect(queryClient.getQueryData(["repositoryRole", "newname"])).toBeUndefined();

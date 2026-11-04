@@ -127,7 +127,8 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
 };
 
 /**
- * @deprecated
+ * @deprecated Use TextareaField from ui-core instead.
+ * It has no `onSubmit` and `onCancel`: handle ctrl/cmd + enter and escape with `onKeyDown`.
  */
 // @ts-ignore
 const Textarea: FieldType<BaseProps, HTMLTextAreaElement, string> = createFormFieldWrapper(InnerTextarea);

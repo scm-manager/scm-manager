@@ -36,7 +36,7 @@ type Props = {
 };
 
 /**
- * @deprecated
+ * @deprecated Use FileInputField from ui-core instead
  */
 const FileInput: FC<Props> = ({
   name,

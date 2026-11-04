@@ -48,6 +48,10 @@
     "admin": "Administración"
   },
   "filterEntries": "Filtrar entradas",
+  "booleanValue": {
+    "true": "Sí",
+    "false": "No"
+  },
   "autocomplete": {
     "group": "Grupo",
     "user": "Usuario",
@@ -83,7 +87,6 @@
     "passwordHelpText": "Contraseña del usuario en texto plano",
     "passwordConfirmHelpText": "Repita la contraseña para confirmar",
     "currentPassword": "Contraseña actual",
-    "currentPasswordHelpText": "La contraseña ya está en uso",
     "confirmPassword": "Confirme la contraseña",
     "passwordInvalid": "La contraseña debe tener entre 6 y 1024 caracteres",
     "passwordConfirmFailed": "Las contraseñas deben ser identicas",

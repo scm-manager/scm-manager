@@ -59,6 +59,14 @@ export const WithError: Story = {
   render: () => <InputField label="MyInput" error="This field is super required" />,
 };
 
+export const WithWarning: Story = {
+  render: () => <InputField label="MyInput" warning="This value is not recommended" />,
+};
+
+export const Required: Story = {
+  render: () => <InputField label="MyInput" required />,
+};
+
 export const WithWidth: Story = {
   render: () => <InputField label="MyInput" className="column is-half" />,
 };

@@ -14,13 +14,14 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { User } from "@scm-manager/ui-types";
 import { useConvertToExternal, useConvertToInternal } from "@scm-manager/ui-api";
-import { ErrorNotification, Modal, PasswordConfirmation } from "@scm-manager/ui-components";
-import { Button, Icon, Level } from "@scm-manager/ui-core";
+import { Modal } from "@scm-manager/ui-components";
+import { Button, ErrorNotification, Icon, InputField, Level } from "@scm-manager/ui-core";
+import { isPasswordValid } from "./userValidation";
 
 type Props = {
   user: User;
@@ -28,9 +29,10 @@ type Props = {
 
 const UserConverter: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
+  const [tCommons] = useTranslation("commons");
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState("");
-  const [passwordValid, setPasswordValid] = useState(false);
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const {
     isPending: isConvertingToInternal,
     error: convertingToInternalError,
@@ -44,12 +46,30 @@ const UserConverter: FC<Props> = ({ user }) => {
   const error = convertingToExternalError || convertingToInternalError || undefined;
   const isLoading = isConvertingToExternal || isConvertingToInternal;
   const initialFocusRef = useRef<HTMLInputElement>(null);
+  const passwordValid = isPasswordValid(password);
+  const passwordConfirmed = password === passwordConfirmation;
+  const canConvertToInternal = passwordValid && passwordConfirmed && !isLoading;
 
   useEffect(() => setShowPasswordModal(false), [user]);
 
-  const changePassword = (password: string, valid: boolean) => {
-    setPassword(password);
-    setPasswordValid(valid);
+  const openPasswordModal = () => {
+    setPassword("");
+    setPasswordConfirmation("");
+    setShowPasswordModal(true);
+  };
+
+  const submitPassword = () => {
+    if (canConvertToInternal) {
+      convertToInternal(user, password);
+    }
+  };
+
+  const submitOnEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+    // an enter that confirms an input method composition must not convert the user
+    if (event.key === "Enter" && !event.nativeEvent.isComposing) {
+      event.preventDefault();
+      submitPassword();
+    }
   };
 
   const getUserExternalDescription = () => {
@@ -64,7 +84,7 @@ const UserConverter: FC<Props> = ({ user }) => {
     if (user.external) {
       return (
         <Button
-          onClick={() => setShowPasswordModal(true)}
+          onClick={openPasswordModal}
           className="is-pulled-right"
           isLoading={isLoading}
           disabled={isLoading}
@@ -83,12 +103,6 @@ const UserConverter: FC<Props> = ({ user }) => {
     }
   };
 
-  const onReturnPressed = () => {
-    if (password && passwordValid) {
-      convertToInternal(user, password);
-    }
-  };
-
   const passwordModal = (
     <Modal
       closeFunction={() => setShowPasswordModal(false)}
@@ -98,16 +112,40 @@ const UserConverter: FC<Props> = ({ user }) => {
       footer={
         <Button
           variant="primary"
-          onClick={() => password && passwordValid && convertToInternal(user, password)}
+          onClick={submitPassword}
           isLoading={isLoading}
-          disabled={!password || !passwordValid || isLoading}
+          disabled={!canConvertToInternal}
           testId="submit-button"
         >
           {t("userForm.modal.convertToInternal")}
         </Button>
       }
     >
-      <PasswordConfirmation passwordChanged={changePassword} onReturnPressed={onReturnPressed} ref={initialFocusRef} />
+      <div className="columns is-multiline">
+        <div className="column is-half">
+          <InputField
+            label={tCommons("password.newPassword")}
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            onKeyDown={submitOnEnter}
+            error={password && !passwordValid ? tCommons("password.passwordInvalid") : undefined}
+            ref={initialFocusRef}
+            testId="input-password"
+          />
+        </div>
+        <div className="column is-half">
+          <InputField
+            label={tCommons("password.confirmPassword")}
+            type="password"
+            value={passwordConfirmation}
+            onChange={(event) => setPasswordConfirmation(event.target.value)}
+            onKeyDown={submitOnEnter}
+            error={passwordConfirmation && !passwordConfirmed ? tCommons("password.passwordConfirmFailed") : undefined}
+            testId="input-password-confirmation"
+          />
+        </div>
+      </div>
     </Modal>
   );
 

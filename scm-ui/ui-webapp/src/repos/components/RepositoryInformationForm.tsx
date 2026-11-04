@@ -15,7 +15,7 @@
  */
 
 import React, { FC, useState } from "react";
-import { InputField, Textarea } from "@scm-manager/ui-components";
+import { InputField, TextareaField } from "@scm-manager/ui-core";
 import { RepositoryCreation } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import * as validator from "./form/repositoryValidation";
@@ -42,18 +42,16 @@ const RepositoryInformationForm: FC<Props> = ({ repository, onChange, disabled, 
     <>
       <InputField
         label={t("repository.contact")}
-        onChange={handleContactChange}
+        onChange={(event) => handleContactChange(event.target.value)}
         value={repository ? repository.contact : ""}
-        validationError={contactValidationError}
-        errorMessage={t("validation.contact-invalid")}
-        helpText={t("help.contactHelpText")}
+        error={contactValidationError ? t("validation.contact-invalid") : undefined}
+        descriptionText={t("help.contactHelpText")}
         disabled={disabled}
       />
-      <Textarea
+      <TextareaField
         label={t("repository.description")}
-        onChange={description => onChange({ ...repository, description })}
+        onChange={(event) => onChange({ ...repository, description: event.target.value })}
         value={repository ? repository.description : ""}
-        helpText={t("help.descriptionHelpText")}
         disabled={disabled}
       />
     </>

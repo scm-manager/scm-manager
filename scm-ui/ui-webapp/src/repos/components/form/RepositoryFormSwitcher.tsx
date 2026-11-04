@@ -18,8 +18,8 @@ import React, { FC } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { Icon, urls } from "@scm-manager/ui-components";
-import { Button, LinkButton } from "@scm-manager/ui-core";
+import { urls } from "@scm-manager/ui-components";
+import { Button, Icon, LinkButton } from "@scm-manager/ui-core";
 
 type RepositoryForm = {
   path: string;
@@ -32,19 +32,25 @@ const RepositoryFormButton: FC<RepositoryForm> = ({ path, icon, label }) => {
   const href = urls.concat("/repos/create", path);
   const isSelected = href === location.pathname;
   const [t] = useTranslation(["repos", "plugins"]);
+  const translatedLabel = t(`plugins:${label}`, label);
 
+  // the gap belongs to the label, so that the icon stays centered when the label is hidden on small screens
   const content = (
     <>
-      <Icon className="pr-2" name={icon} color="inherit" alt="" />
-      <span className={classNames("is-hidden-mobile", "is-hidden-tablet-only")}>{t(`plugins:${label}`, label)}</span>
+      <Icon className="mr-0">{icon}</Icon>
+      <span className={classNames("ml-1", "is-hidden-mobile", "is-hidden-tablet-only")}>{translatedLabel}</span>
     </>
   );
 
   if (isSelected) {
-    return <Button className="is-size-6 is-link is-selected">{content}</Button>;
+    return (
+      <Button className="is-size-6 is-link is-selected" title={translatedLabel} aria-label={translatedLabel}>
+        {content}
+      </Button>
+    );
   }
   return (
-    <LinkButton className="is-size-6" to={href + location.search}>
+    <LinkButton className="is-size-6" to={href + location.search} title={translatedLabel} aria-label={translatedLabel}>
       {content}
     </LinkButton>
   );

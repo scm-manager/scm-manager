@@ -91,6 +91,7 @@ const ImportRepositoryFromUrl: FC<Props> = ({
         onChange={setRepo as React.Dispatch<React.SetStateAction<RepositoryCreation>>}
         setValid={setNamespaceAndNameValid}
         disabled={isPending}
+        autoFocus={false}
       />
       <InformationForm
         repository={repo}
