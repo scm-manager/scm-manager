@@ -17,7 +17,8 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { DangerZone, Subtitle } from "@scm-manager/ui-components";
+import { DangerZone } from "@scm-manager/ui-components";
+import { Subtitle } from "@scm-manager/ui-core";
 import RenameRepository from "./RenameRepository";
 import DeleteRepo from "./DeleteRepo";
 import ArchiveRepo from "./ArchiveRepo";

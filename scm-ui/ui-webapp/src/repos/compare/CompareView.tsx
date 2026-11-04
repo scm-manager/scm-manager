@@ -18,11 +18,16 @@ import React, { FC } from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { createDiffUrl } from "@scm-manager/ui-api";
-import { LoadingDiff, Subtitle } from "@scm-manager/ui-components";
+import { LoadingDiff } from "@scm-manager/ui-components";
 import CompareSelectBar, { CompareTypes } from "./CompareSelectBar";
 import CompareTabs from "./CompareTabs";
 import IncomingChangesets from "./IncomingChangesets";
-import { REPOSITORY_SUB_ROUTES, useCurrentRepositoryBaseUrl, useRepositoryFromParams } from "@scm-manager/ui-core";
+import {
+  REPOSITORY_SUB_ROUTES,
+  useCurrentRepositoryBaseUrl,
+  useRepositoryFromParams,
+  Subtitle,
+} from "@scm-manager/ui-core";
 
 export type CompareBranchesParams = {
   sourceType: CompareTypes;

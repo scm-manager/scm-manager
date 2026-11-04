@@ -17,13 +17,14 @@
 import React, { FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useTags } from "@scm-manager/ui-api";
-import { ErrorNotification, Loading, Notification, Subtitle } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import {
   Select,
   useDocumentTitleForRepository,
   useRepositoryFromParams,
   useCurrentRepositoryBaseUrl,
   REPOSITORY_SUB_ROUTES,
+  Subtitle,
 } from "@scm-manager/ui-core";
 import TagTable from "../components/TagTable";
 import orderTags, { SORT_OPTIONS, SortOption } from "../orderTags";

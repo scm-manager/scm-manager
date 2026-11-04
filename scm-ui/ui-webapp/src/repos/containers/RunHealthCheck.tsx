@@ -17,8 +17,8 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Subtitle } from "@scm-manager/ui-components";
-import { Button, Icon, Level } from "@scm-manager/ui-core";
+import { ErrorNotification } from "@scm-manager/ui-components";
+import { Button, Icon, Level, Subtitle } from "@scm-manager/ui-core";
 import { useRunHealthCheck } from "@scm-manager/ui-api";
 
 type Props = {

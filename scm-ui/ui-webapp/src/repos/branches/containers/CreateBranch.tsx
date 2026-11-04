@@ -19,8 +19,8 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import queryString from "query-string";
 import { useBranches, useCreateBranch } from "@scm-manager/ui-api";
-import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
-import { useDocumentTitleForRepository, useRepositoryFromParams } from "@scm-manager/ui-core";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { useDocumentTitleForRepository, useRepositoryFromParams, Subtitle } from "@scm-manager/ui-core";
 import BranchForm from "../components/BranchForm";
 
 const CreateBranch: FC = () => {

@@ -16,8 +16,8 @@
 
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ErrorNotification, Loading, Notification, Subtitle } from "@scm-manager/ui-components";
-import { Button, Level } from "@scm-manager/ui-core";
+import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
+import { Button, Level, Subtitle } from "@scm-manager/ui-core";
 import PermissionsWrapper from "./PermissionsWrapper";
 import { useAvailableGlobalPermissions } from "@scm-manager/ui-api";
 import { GlobalPermissionsCollection } from "@scm-manager/ui-types";

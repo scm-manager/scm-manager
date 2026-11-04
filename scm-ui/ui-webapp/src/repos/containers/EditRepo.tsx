@@ -17,8 +17,8 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useUpdateRepository } from "@scm-manager/ui-api";
-import { ErrorNotification, Subtitle } from "@scm-manager/ui-components";
-import { useDocumentTitleForRepository, useRepositoryFromParams } from "@scm-manager/ui-core";
+import { ErrorNotification } from "@scm-manager/ui-components";
+import { useDocumentTitleForRepository, useRepositoryFromParams, Subtitle } from "@scm-manager/ui-core";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import UpdateNotification from "../../components/UpdateNotification";
 import RepositoryForm from "../components/form";

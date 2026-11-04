@@ -16,13 +16,13 @@
 
 import { Link, Me, User } from "@scm-manager/ui-types";
 import React, { FC } from "react";
-import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import ApiKeyTable from "./ApiKeyTable";
 import AddApiKey from "./AddApiKey";
 import { useTranslation } from "react-i18next";
 import { useApiKeys, useDeleteApiKey, useRequiredMe } from "@scm-manager/ui-api";
 import { Link as RouterLink } from "react-router-dom";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { useDocumentTitle, Subtitle } from "@scm-manager/ui-core";
 
 type Props = {
   user: User | Me;

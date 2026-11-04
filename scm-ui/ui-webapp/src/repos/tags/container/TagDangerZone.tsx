@@ -16,7 +16,8 @@
 
 import React, { FC } from "react";
 import { Repository, Tag } from "@scm-manager/ui-types";
-import { DangerZone, Subtitle } from "@scm-manager/ui-components";
+import { DangerZone } from "@scm-manager/ui-components";
+import { Subtitle } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import DeleteTag from "./DeleteTag";
 

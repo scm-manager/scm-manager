@@ -15,9 +15,9 @@
  */
 
 import React, { FC } from "react";
-import { ErrorNotification, Level, Notification, Subtitle } from "@scm-manager/ui-components";
+import { ErrorNotification, Notification } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { Button, ButtonVariants } from "@scm-manager/ui-core";
+import { Button, ButtonVariants, Level, Subtitle } from "@scm-manager/ui-core";
 import { useInvalidateSearchIndices } from "@scm-manager/ui-api";
 
 const InvalidateSearchIndex: FC = () => {

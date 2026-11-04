@@ -19,9 +19,9 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import AddPublicKey from "./AddPublicKey";
 import PublicKeyTable from "./PublicKeyTable";
-import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import { useDeletePublicKey, usePublicKeys, useRequiredMe } from "@scm-manager/ui-api";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { useDocumentTitle, Subtitle } from "@scm-manager/ui-core";
 
 type Props = {
   user: User | Me;
