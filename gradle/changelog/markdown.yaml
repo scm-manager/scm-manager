@@ -1,0 +1,2 @@
+- type: fixed
+  description: Error when rendering markdown with images in non-repository routes

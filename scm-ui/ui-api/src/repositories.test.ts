@@ -15,7 +15,7 @@
  */
 
 import fetchMock from "fetch-mock";
-import { renderHook, act, waitFor } from "@testing-library/react";
+import { renderHook, act, waitFor, screen } from "@testing-library/react";
 import createWrapper from "./tests/createWrapper";
 import { setIndexLink } from "./tests/indexLinks";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
@@ -27,6 +27,7 @@ import {
   useRepositories,
   UseRepositoriesRequest,
   useRepository,
+  useOptionalRepository,
   useRepositoryTypes,
   useUnarchiveRepository,
   useUpdateRepository,
@@ -280,6 +281,50 @@ describe("Test repository hooks", () => {
       await waitFor(() => {
         return expect(result.current?.data?.type).toEqual("git");
       });
+    });
+  });
+
+  describe("useOptionalRepository tests", () => {
+    it.each([
+      [undefined, undefined],
+      ["spaceships", undefined],
+      [undefined, "heartOfGold"],
+      ["", "heartOfGold"],
+    ])("does not request a repository for incomplete parameters (%s, %s)", async (namespace, name) => {
+      const queryClient = createInfiniteCachingClient();
+      queryClient.setQueryData(["index"], { _links: {} });
+      const { result } = renderHook(() => useOptionalRepository(namespace, name), {
+        wrapper: createWrapper(queryClient),
+      });
+      await waitFor(() => expect(result.current?.data).toBeNull());
+      expect(fetchMock.calls()).toHaveLength(0);
+    });
+
+    it("propagates repository request errors to the error boundary", async () => {
+      const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+      setIndexLink(queryClient, "repositories", "/r");
+      fetchMock.get("/api/v2/r/spaceships/heartOfGold", 500);
+      const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+      try {
+        renderHook(() => useOptionalRepository("spaceships", "heartOfGold"), {
+          wrapper: createWrapper(queryClient),
+        });
+        expect(await screen.findByText("ERROR")).toBeDefined();
+      } finally {
+        consoleError.mockRestore();
+      }
+    });
+
+    it("fetches a repository and shares the strict hook's cache", async () => {
+      const queryClient = createInfiniteCachingClient();
+      setIndexLink(queryClient, "repositories", "/r");
+      fetchMock.get("/api/v2/r/spaceships/heartOfGold", heartOfGold);
+      const wrapper = createWrapper(queryClient);
+      const { result } = renderHook(() => useOptionalRepository("spaceships", "heartOfGold"), { wrapper });
+      await waitFor(() => expect(result.current?.data).toEqual(heartOfGold));
+      const strict = renderHook(() => useRepository("spaceships", "heartOfGold"), { wrapper });
+      expect(strict.result.current.data).toEqual(heartOfGold);
+      expect(fetchMock.calls()).toHaveLength(1);
     });
   });
 

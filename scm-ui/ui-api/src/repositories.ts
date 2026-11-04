@@ -26,7 +26,7 @@ import {
 } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { apiClient } from "./apiclient";
-import { ApiResult, ApiResultWithFetching, useIndexJsonResource, useRequiredIndexLink } from "./base";
+import { ApiResult, ApiResultWithFetching, useIndex, useIndexJsonResource, useRequiredIndexLink } from "./base";
 import { createQueryString } from "./utils";
 import { objectLink, requiredLink } from "./links";
 import { repoQueryKey } from "./keys";
@@ -126,12 +126,23 @@ export const useCreateRepository = () => {
 // TODO increase staleTime, infinite?
 export const useRepositoryTypes = () => useIndexJsonResource<RepositoryTypeCollection>("repositoryTypes");
 
+const repositoryQueryOptions = (link: string, namespace: string, name: string) => ({
+  queryKey: ["repository", namespace, name],
+  queryFn: (): Promise<Repository> => apiClient.get(concat(link, namespace, name)).then((response) => response.json()),
+});
+
 export const useRepository = (namespace: string, name: string): ApiResult<Repository> => {
   const link = useRequiredIndexLink("repositories");
-  return useSuspenseQuery<Repository, Error>({
-    queryKey: ["repository", namespace, name],
-    queryFn: () => apiClient.get(concat(link, namespace, name)).then((response) => response.json()),
-  });
+  return useSuspenseQuery<Repository, Error>(repositoryQueryOptions(link, namespace, name));
+};
+
+export const useOptionalRepository = (namespace?: string, name?: string): ApiResult<Repository | null> => {
+  const index = useIndex();
+  return useSuspenseQuery<Repository | null, Error>(
+    namespace && name
+      ? repositoryQueryOptions(requiredLink(index, "repositories"), namespace, name)
+      : { queryKey: ["repository", namespace, name], queryFn: () => Promise.resolve(null) },
+  );
 };
 
 export type UseDeleteRepositoryOptions = {

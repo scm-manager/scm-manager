@@ -19,7 +19,7 @@ import { useLocation } from "react-router-dom";
 import { Link } from "@scm-manager/ui-types";
 import { isExternalLink, isInternalScmRepoLink, isLinkWithProtocol, resolveInternalPath } from "./paths";
 import { useRepositoryRevisionContext } from "@scm-manager/ui-api";
-import { useRepositoryFromParams } from "@scm-manager/ui-core";
+import { useOptionalRepositoryFromParams } from "@scm-manager/ui-core";
 
 export const createLocalLink = (contentLink: string, revision: string, currentPath: string, link: string) => {
   if (isInternalScmRepoLink(link)) {
@@ -44,7 +44,7 @@ type Props = LinkProps & {
 
 const MarkdownImageRenderer: FC<Props> = ({ src = "", alt = "", base, children, permalink, ...props }) => {
   const location = useLocation();
-  const repository = useRepositoryFromParams();
+  const repository = useOptionalRepositoryFromParams();
   const revision = useRepositoryRevisionContext();
   const pathname = permalink || location.pathname;
 

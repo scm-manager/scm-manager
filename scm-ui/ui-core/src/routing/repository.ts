@@ -14,8 +14,8 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { useLocation, useParams } from "react-router-dom";
-import { useRepository } from "@scm-manager/ui-api";
+import { useParams } from "react-router-dom";
+import { useOptionalRepository, useRepository } from "@scm-manager/ui-api";
 import { Repository } from "@scm-manager/ui-types";
 
 export const REPOSITORY_COLLECTION_BASE_ROUTE = "repos";
@@ -55,6 +55,12 @@ export const REPOSITORY_SETTINGS_SUB_ROUTES = {
   GENERAL: "general",
   PERMISSIONS: "permissions",
 } as const;
+
+export const useOptionalRepositoryFromParams = (): Repository | undefined => {
+  const { namespace, name } = useParams<{ namespace: string; name: string }>();
+  const { data: repository } = useOptionalRepository(namespace, name);
+  return repository ?? undefined;
+};
 
 export const useRepositoryFromParams = () => {
   const { namespace, name } = useParams<{ namespace: string; name: string }>();
