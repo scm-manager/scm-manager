@@ -18,7 +18,8 @@ import React, { FC, ReactNode, Ref } from "react";
 import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 import { File } from "@scm-manager/ui-types";
-import { Tooltip, urls } from "@scm-manager/ui-components";
+import { urls } from "@scm-manager/ui-components";
+import { Tooltip } from "@scm-manager/ui-core";
 
 type Props = {
   baseUrl: string;
@@ -120,8 +121,8 @@ const FileLink: FC<Props> = ({ baseUrl, file, children, tabIndex, repositoryType
     } else {
       // subRepository url cannot be linked
       return (
-        <Tooltip location="top" message={t("sources.fileTree.subRepository") + ": \n" + link}>
-          {children}
+        <Tooltip message={t("sources.fileTree.subRepository") + ": \n" + link}>
+          <span className="is-inline-block">{children}</span>
         </Tooltip>
       );
     }

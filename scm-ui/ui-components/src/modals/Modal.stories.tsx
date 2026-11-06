@@ -348,11 +348,10 @@ import styled from "styled-components";
 import type { Meta, StoryObj } from "@storybook/react";
 import { SelectValue } from "@scm-manager/ui-types";
 
-import { Checkbox, InputField, RadioGroup, TextareaField } from "@scm-manager/ui-core";
+import { Checkbox, InputField, RadioGroup, TextareaField, Notification } from "@scm-manager/ui-core";
 import Modal from "./Modal";
 import ExternalLink from "../navigation/ExternalLink";
 import { Button } from "../buttons";
-import Notification from "../Notification";
 import ActiveModalCountContext from "./activeModalCountContext";
 
 // --- Helfer-Komponenten und Mock-Daten (aus der Original-Story übernommen) ---

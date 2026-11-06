@@ -27,7 +27,6 @@ import { create as createMarkdownHeadingRenderer } from "./MarkdownHeadingRender
 import { create as createMarkdownLinkRenderer } from "./MarkdownLinkRenderer";
 import { create as createMarkdownImageRenderer } from "./MarkdownImageRenderer";
 import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
-import Notification from "../Notification";
 import { createTransformer as createChangesetShortlinkParser } from "./remarkChangesetShortLinkParser";
 import { createTransformer as createValuelessTextAdapter } from "./remarkValuelessTextAdapter";
 import MarkdownCodeRenderer from "./MarkdownCodeRenderer";
@@ -42,6 +41,7 @@ import { createComponentList } from "./createComponentList";
 import { ProtocolLinkRendererExtension, ProtocolLinkRendererExtensionMap } from "./markdownExtensions";
 import styled from "styled-components";
 import classNames from "classnames";
+import { Notification } from "@scm-manager/ui-core";
 
 export type MarkdownProps = {
   content: string;

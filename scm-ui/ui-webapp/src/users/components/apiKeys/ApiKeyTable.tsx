@@ -17,9 +17,9 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import ApiKeyEntry from "./ApiKeyEntry";
-import { Notification } from "@scm-manager/ui-components";
 import { ApiKey, ApiKeysCollection } from "@scm-manager/ui-types";
 import { DeleteFunction } from "@scm-manager/ui-api";
+import { Notification } from "@scm-manager/ui-core";
 
 type Props = {
   apiKeys?: ApiKeysCollection;

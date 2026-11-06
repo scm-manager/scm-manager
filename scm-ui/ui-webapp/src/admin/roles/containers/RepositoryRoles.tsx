@@ -18,10 +18,10 @@ import React, { FC } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { RepositoryRoleCollection } from "@scm-manager/ui-types";
-import { ErrorNotification, LinkPaginator, Loading, Notification, urls } from "@scm-manager/ui-components";
+import { ErrorNotification, LinkPaginator, Loading, urls } from "@scm-manager/ui-components";
 import PermissionRoleTable from "../components/PermissionRoleTable";
 import { useRepositoryRoles } from "@scm-manager/ui-api";
-import { LinkButton, useDocumentTitle, Subtitle, Title } from "@scm-manager/ui-core";
+import { LinkButton, useDocumentTitle, Subtitle, Title, Notification } from "@scm-manager/ui-core";
 
 type RepositoryRolesPageProps = {
   data?: RepositoryRoleCollection;
@@ -58,7 +58,7 @@ const RepositoryRoles: FC<Props> = ({ baseUrl }) => {
   useDocumentTitle(
     data?.pageTotal && data.pageTotal > 1 && page
       ? t("repositoryRole.titleWithPage", { page, total: data.pageTotal })
-      : t("repositoryRole.title")
+      : t("repositoryRole.title"),
   );
   const canAddRoles = !!data?._links.create;
 

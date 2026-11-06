@@ -20,8 +20,7 @@ import { HalRepresentationWithEmbedded, PluginSet } from "@scm-manager/ui-types"
 import { apiClient, requiredLink, waitForRestartAfter } from "@scm-manager/ui-api";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { Icon } from "@scm-manager/ui-components";
-import { Button, Checkbox, ErrorNotification, Field, Label } from "@scm-manager/ui-core";
+import { Button, Checkbox, ErrorNotification, Field, Icon, Label } from "@scm-manager/ui-core";
 import styled from "styled-components";
 
 const HighlightedImg = styled.img`
@@ -89,7 +88,7 @@ const PluginSetCard: FC<PluginSetCardProps> = ({ pluginSet, children }) => {
             onClick={() => setCollapsed((value) => !value)}
           >
             <span>{t(`pluginWizardStep.pluginSet.${collapsed ? "expand" : "collapse"}`)}</span>
-            <Icon color="inherit" name={collapsed ? "angle-down" : "angle-up"} />
+            <Icon>{collapsed ? "angle-down" : "angle-up"}</Icon>
           </div>
           {!collapsed ? (
             <ul className="pt-2">

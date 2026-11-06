@@ -16,8 +16,8 @@
 
 import React, { FC } from "react";
 import { File, Link } from "@scm-manager/ui-types";
-import Notification from "./Notification";
 import { Trans, useTranslation } from "react-i18next";
+import { Notification } from "@scm-manager/ui-core";
 
 type Props = {
   src: string | File;

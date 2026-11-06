@@ -15,8 +15,8 @@
  */
 
 import React, { FC, useRef, useState } from "react";
-import { Icon, Modal } from "@scm-manager/ui-components";
-import { Button } from "@scm-manager/ui-core";
+import { Modal } from "@scm-manager/ui-components";
+import { Button, Icon, UnstyledButton } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { ApiKeyWithToken } from "@scm-manager/ui-types";
@@ -67,12 +67,14 @@ const ApiKeyCreatedModal: FC<Props> = ({ addedKey, close }) => {
           />
         </div>
         <NoLeftMargin className="column is-1">
-          <Icon
-            className="is-hidden-mobile fa-2x"
-            name={copied ? "clipboard-check" : "clipboard"}
+          <UnstyledButton
+            className="is-hidden-mobile has-text-secondary"
             title={t("apiKey.modal.clipboard")}
+            aria-label={t("apiKey.modal.clipboard")}
             onClick={copy}
-          />
+          >
+            <Icon className="is-large">{copied ? "clipboard-check" : "clipboard"}</Icon>
+          </UnstyledButton>
         </NoLeftMargin>
       </div>
     </div>

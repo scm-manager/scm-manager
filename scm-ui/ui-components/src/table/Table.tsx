@@ -17,8 +17,8 @@
 import React, { FC, ReactElement, useEffect, useState } from "react";
 import { Comparator } from "./types";
 import SortIcon from "./SortIcon";
-import Notification from "../Notification";
 import classNames from "classnames";
+import { Notification } from "@scm-manager/ui-core";
 
 type Props = {
   data: any[];

@@ -19,8 +19,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Repository } from "@scm-manager/ui-types";
-import { devices, Icon } from "@scm-manager/ui-components";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { devices } from "@scm-manager/ui-components";
+import { Icon, useDocumentTitle } from "@scm-manager/ui-core";
 import CompareSelector from "./CompareSelector";
 
 type Props = {
@@ -109,7 +109,15 @@ const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
         onSelect={handleSourceSelect}
         selected={source.name}
       />
-      <ResponsiveIcon name="arrow-right" className="fa-lg" title={t("compare.selector.with")} />
+      <ResponsiveIcon
+        className="is-medium has-text-secondary"
+        title={t("compare.selector.with")}
+        role="img"
+        aria-hidden={false}
+        aria-label={t("compare.selector.with")}
+      >
+        arrow-right
+      </ResponsiveIcon>
       <CompareSelector
         repository={repository}
         label={t("compare.selector.target")}

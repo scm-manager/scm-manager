@@ -15,7 +15,7 @@
  */
 
 import { FileDiff } from "@scm-manager/ui-types";
-import Icon from "../../Icon";
+import { Icon } from "@scm-manager/ui-core";
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -26,7 +26,11 @@ const FileTitle: FC<Props> = ({ file }) => {
   if (file.oldPath !== file.newPath && (file.type === "copy" || file.type === "rename")) {
     return (
       <>
-        {file.oldPath} <Icon name="arrow-right" color="inherit" alt={t("diff.renamedTo")} /> {file.newPath}
+        {file.oldPath}{" "}
+        <Icon role="img" aria-hidden={false} aria-label={t("diff.renamedTo")}>
+          arrow-right
+        </Icon>{" "}
+        {file.newPath}
       </>
     );
   } else if (file.type === "delete") {

@@ -18,7 +18,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Signature } from "@scm-manager/ui-types";
 import styled from "styled-components";
-import Icon from "../../Icon";
+import { Icon } from "@scm-manager/ui-core";
 import { usePopover } from "../../popover";
 import Popover from "../../popover/Popover";
 import classNames from "classnames";
@@ -29,11 +29,13 @@ type Props = {
 };
 
 const StyledIcon = styled(Icon)`
-  width: 1em;
-  height: 1em;
-  vertical-align: middle;
-  border-radius: 0.25em;
-  margin-bottom: 0.2em;
+  && {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    border-radius: 0.25em;
+    margin-bottom: 0.2em;
+  }
 `;
 
 const StyledDiv = styled.div`
@@ -127,7 +129,9 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
       </Popover>
       {/* @ts-ignore */}
       <div {...triggerProps}>
-        <StyledIcon name="key" className={className} color={getColor(signatures)} />
+        <StyledIcon className={classNames(`has-text-${getColor(signatures) ?? "secondary"}`, className)}>
+          key
+        </StyledIcon>
       </div>
     </>
   );

@@ -146,7 +146,7 @@ import { Repository } from "@scm-manager/ui-types";
 
 import RepositoryEntry from "./RepositoryEntry";
 import RepositoryFlag from "./RepositoryFlag";
-import Image from "../Image";
+import { Image } from "@scm-manager/ui-core";
 import { Color } from "../styleConstants";
 import repository from "../__resources__/repository";
 // @ts-ignore ignore unknown png

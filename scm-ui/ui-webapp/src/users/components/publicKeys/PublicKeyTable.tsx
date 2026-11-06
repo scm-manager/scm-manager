@@ -17,9 +17,9 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import PublicKeyEntry from "./PublicKeyEntry";
-import { Notification } from "@scm-manager/ui-components";
 import { DeleteFunction } from "@scm-manager/ui-api";
 import { PublicKey, PublicKeysCollection } from "@scm-manager/ui-types";
+import { Notification } from "@scm-manager/ui-core";
 
 type Props = {
   publicKeys?: PublicKeysCollection;

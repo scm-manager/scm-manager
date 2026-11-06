@@ -18,8 +18,7 @@ import React, { FC, ReactNode, useState } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { urls } from "@scm-manager/ui-api";
 import styled from "styled-components";
-import Icon from "../Icon";
-import Tooltip from "../Tooltip";
+import { Icon, Tooltip } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import copyToClipboard from "../CopyToClipboard";
 
@@ -30,17 +29,17 @@ import copyToClipboard from "../CopyToClipboard";
  */
 
 const Link = styled.a`
-  i {
+  .icon {
     font-size: 1rem;
     visibility: hidden;
     margin-left: 10px;
   }
 
-  i:hover {
+  .icon:hover {
     cursor: pointer;
   }
 
-  &:hover i {
+  &:hover .icon {
     visibility: visible;
   }
 `;
@@ -81,13 +80,23 @@ const MarkdownHeadingRenderer: FC<Props> = ({ children, level, permalink, id }) 
       .finally(() => setCopying(false));
   };
   const CopyButton = copying ? (
-    <Icon name="spinner fa-spin" alt={t("sources.content.loading")} />
+    <Icon className="has-text-secondary" role="img" aria-hidden={false} aria-label={t("sources.content.loading")}>
+      spinner fa-spin
+    </Icon>
   ) : (
     <Tooltip message={t("sources.content.copyPermalink")}>
-      <Icon name="link" onClick={copyPermalink} alt={t("sources.content.copyPermalink")} />
+      <Icon
+        className="has-text-secondary"
+        onClick={copyPermalink}
+        role="img"
+        aria-hidden={false}
+        aria-label={t("sources.content.copyPermalink")}
+      >
+        link
+      </Icon>
     </Tooltip>
   );
-  const headingElement = React.createElement("h" + level, { id: anchorId }, [...reactChildren, CopyButton]);
+  const headingElement = React.createElement("h" + level, { id: anchorId }, ...reactChildren, CopyButton);
   const href = urls.withContextPath(location.pathname + "#" + anchorId);
   const permalinkHref =
     window.location.protocol +

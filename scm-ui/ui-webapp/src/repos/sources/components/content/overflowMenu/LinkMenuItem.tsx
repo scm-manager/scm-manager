@@ -16,8 +16,7 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Icon } from "@scm-manager/ui-components";
-import { Menu } from "@scm-manager/ui-core";
+import { Icon, Menu } from "@scm-manager/ui-core";
 import { extensionPoints } from "@scm-manager/ui-extensions";
 
 const LinkMenuItem: FC<
@@ -27,7 +26,7 @@ const LinkMenuItem: FC<
 
   return (
     <Menu.Link to={link(extensionProps)} {...props}>
-      <Icon name={icon} className="pr-5 has-text-inherit" />
+      <Icon className="mr-4">{icon}</Icon>
       <span>{t(label)}</span>
     </Menu.Link>
   );

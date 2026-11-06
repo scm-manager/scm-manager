@@ -18,8 +18,8 @@ import React, { FC, Ref } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
-import { createAttributesForTesting, Icon } from "@scm-manager/ui-components";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-core";
+import { createAttributesForTesting } from "@scm-manager/ui-components";
+import { Icon, useKeyboardIteratorTarget } from "@scm-manager/ui-core";
 import { User } from "@scm-manager/ui-types";
 
 type Props = {
@@ -45,9 +45,25 @@ const UserRow: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
   const to = `/user/${user.name}`;
   const iconType = user.active ? (
-    <Icon title={t("user.active")} name="user" />
+    <Icon
+      className="has-text-secondary"
+      title={t("user.active")}
+      role="img"
+      aria-hidden={false}
+      aria-label={t("user.active")}
+    >
+      user
+    </Icon>
   ) : (
-    <Icon title={t("user.inactive")} name="user-slash" />
+    <Icon
+      className="has-text-secondary"
+      title={t("user.inactive")}
+      role="img"
+      aria-hidden={false}
+      aria-label={t("user.inactive")}
+    >
+      user-slash
+    </Icon>
   );
 
   return (

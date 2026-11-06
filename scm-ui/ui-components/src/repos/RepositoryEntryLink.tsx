@@ -16,8 +16,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import Icon from "../Icon";
-import Tooltip from "../Tooltip";
+import { Icon, Tooltip } from "@scm-manager/ui-core";
 
 type Props = {
   to: string;
@@ -29,13 +28,13 @@ class RepositoryEntryLink extends React.Component<Props> {
   render() {
     const { to, icon, tooltip } = this.props;
 
-    let content = <Icon className="fa-lg" name={icon} color="inherit" alt={`${icon} icon`} />;
+    let content = (
+      <Icon className="is-medium" role="img" aria-hidden={false} aria-label={`${icon} icon`}>
+        {icon}
+      </Icon>
+    );
     if (tooltip) {
-      content = (
-        <Tooltip message={tooltip} location="top">
-          {content}
-        </Tooltip>
-      );
+      content = <Tooltip message={tooltip}>{content}</Tooltip>;
     }
 
     return (

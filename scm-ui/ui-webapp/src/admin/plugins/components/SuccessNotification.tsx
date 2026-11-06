@@ -16,8 +16,8 @@
 
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { Notification } from "@scm-manager/ui-components";
 import { PluginAction } from "../containers/PluginsOverview";
+import { Notification } from "@scm-manager/ui-core";
 
 type Props = WithTranslation & {
   pluginAction?: string;

@@ -16,8 +16,7 @@
 
 import React, { FC, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
-import { Icon } from "@scm-manager/ui-components";
-import { Menu } from "@scm-manager/ui-core";
+import { Icon, Menu } from "@scm-manager/ui-core";
 import { extensionPoints } from "@scm-manager/ui-extensions";
 
 const ModalMenuItem: FC<
@@ -33,12 +32,16 @@ const ModalMenuItem: FC<
     <Menu.Button
       onSelect={() =>
         setSelectedModal(
-          React.createElement(modalElement, { ...extensionProps, close: () => setSelectedModal(undefined), setLoading })
+          React.createElement(modalElement, {
+            ...extensionProps,
+            close: () => setSelectedModal(undefined),
+            setLoading,
+          }),
         )
       }
       {...props}
     >
-      <Icon name={icon} className="pr-5 has-text-inherit" />
+      <Icon className="mr-4">{icon}</Icon>
       <span>{t(label)}</span>
     </Menu.Button>
   );

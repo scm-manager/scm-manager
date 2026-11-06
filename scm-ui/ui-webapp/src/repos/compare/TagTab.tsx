@@ -18,9 +18,10 @@ import React, { FC, useState } from "react";
 import CompareSelectorListEntry from "./CompareSelectorListEntry";
 import { Tag } from "@scm-manager/ui-types";
 import { CompareFunction, CompareProps, CompareTypes } from "./CompareSelectBar";
-import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
+import { Notification } from "@scm-manager/ui-core";
 
 type Props = {
   tags: Tag[];

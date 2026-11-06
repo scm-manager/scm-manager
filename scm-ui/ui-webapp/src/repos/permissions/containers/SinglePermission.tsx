@@ -18,8 +18,8 @@ import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Namespace, Permission, Repository, RepositoryRole } from "@scm-manager/ui-types";
-import { ErrorNotification, Icon } from "@scm-manager/ui-components";
-import { Button } from "@scm-manager/ui-core";
+import { ErrorNotification } from "@scm-manager/ui-components";
+import { Button, Icon } from "@scm-manager/ui-core";
 import DeletePermissionButton from "../components/DeletePermissionButton";
 import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
@@ -45,9 +45,29 @@ type Props = {
 const PermissionIcon: FC<{ permission: Permission }> = ({ permission }) => {
   const [t] = useTranslation("repos");
   if (permission.groupPermission) {
-    return <Icon title={t("permission.group")} name="user-friends" />;
+    return (
+      <Icon
+        className="has-text-secondary"
+        title={t("permission.group")}
+        role="img"
+        aria-hidden={false}
+        aria-label={t("permission.group")}
+      >
+        user-friends
+      </Icon>
+    );
   } else {
-    return <Icon title={t("permission.user")} name="user" />;
+    return (
+      <Icon
+        className="has-text-secondary"
+        title={t("permission.user")}
+        role="img"
+        aria-hidden={false}
+        aria-label={t("permission.user")}
+      >
+        user
+      </Icon>
+    );
   }
 };
 
@@ -59,7 +79,7 @@ const SinglePermission: FC<Props> = ({
   namespaceOrRepository,
   availableRoles,
   availableVerbs,
-  permission: defaultPermission
+  permission: defaultPermission,
 }) => {
   const [permission, setPermission] = useState(defaultPermission);
   const [showAdvancedDialog, setShowAdvancedDialog] = useState(false);
@@ -69,7 +89,7 @@ const SinglePermission: FC<Props> = ({
     setPermission(defaultPermission);
   }, [defaultPermission]);
 
-  const availableRoleNames = !!availableRoles && availableRoles.map(r => r.name);
+  const availableRoleNames = !!availableRoles && availableRoles.map((r) => r.name);
   const readOnly = !permission._links.update;
   const selectedVerbs = permission.role ? findVerbsForRole(availableRoles, permission.role) : permission.verbs;
 
@@ -77,7 +97,7 @@ const SinglePermission: FC<Props> = ({
     const newPermission = {
       ...permission,
       verbs: [],
-      role
+      role,
     };
     setPermission(newPermission);
     update(newPermission);
@@ -87,7 +107,7 @@ const SinglePermission: FC<Props> = ({
     const newPermission = {
       ...permission,
       role: undefined,
-      verbs
+      verbs,
     };
     setPermission(newPermission);
     update(newPermission);

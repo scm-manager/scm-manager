@@ -18,9 +18,8 @@ import React, { FC, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useLocalStorage } from "@scm-manager/ui-api";
-import { CardList, Collapsible } from "@scm-manager/ui-core";
+import { CardList, Collapsible, Icon } from "@scm-manager/ui-core";
 import { RepositoryGroup } from "@scm-manager/ui-types";
-import { Icon } from "../index";
 
 type Props = {
   elements: ReactNode[];
@@ -40,7 +39,9 @@ const DefaultGroupHeader: FC<{ group: RepositoryGroup }> = ({ group }) => {
         </h3>
       </Link>{" "}
       <Link to={`/namespace/${group.name}/info`} aria-label={t("repositoryOverview.settings.tooltip")}>
-        <Icon color="inherit" name="cog" title={t("repositoryOverview.settings.tooltip")} className="is-size-6 ml-2" />
+        <Icon title={t("repositoryOverview.settings.tooltip")} className="is-size-6 ml-2">
+          cog
+        </Icon>
       </Link>
     </>
   );

@@ -15,10 +15,10 @@
  */
 
 import React, { FC, useState } from "react";
-import { Notification } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { HealthCheckFailureDetail } from "@scm-manager/ui-components";
+import { Notification } from "@scm-manager/ui-core";
 
 type Props = {
   repository: Repository;

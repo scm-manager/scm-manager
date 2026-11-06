@@ -17,7 +17,7 @@
 import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
-import Icon from "./Icon";
+import { Icon } from "@scm-manager/ui-core";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 type Props = WithTranslation & {
@@ -60,10 +60,18 @@ class CardColumnGroup extends React.Component<Props, State> {
     const { name, url, elements, t } = this.props;
     const { collapsed } = this.state;
 
-    let icon = <Icon name="angle-right" color="inherit" alt={t("cardColumnGroup.showContent")} />;
+    let icon = (
+      <Icon role="img" aria-hidden={false} aria-label={t("cardColumnGroup.showContent")}>
+        angle-right
+      </Icon>
+    );
     let content = null;
     if (!collapsed) {
-      icon = <Icon name="angle-down" color="inherit" alt={t("cardColumnGroup.hideContent")} />;
+      icon = (
+        <Icon role="img" aria-hidden={false} aria-label={t("cardColumnGroup.hideContent")}>
+          angle-down
+        </Icon>
+      );
       content = elements.map((entry, index) => {
         const fullColumnWidth = this.isFullSize(elements, index);
         const sizeClass = fullColumnWidth ? "is-full" : "is-half";

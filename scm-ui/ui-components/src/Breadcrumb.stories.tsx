@@ -101,7 +101,7 @@ import { MemoryRouter } from "react-router-dom";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import Breadcrumb from "./Breadcrumb";
-import Icon from "./Icon";
+import { Icon } from "@scm-manager/ui-core";
 import repository from "./__resources__/repository";
 // @ts-ignore ignore unknown png
 import Git from "./__resources__/git-logo.png";
@@ -119,14 +119,23 @@ const baseUrl = "scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources";
 const sources = Git;
 const prefix = (
   <a href="#link">
-    <Icon name="heart" color="danger" alt="heart icon" />
+    <Icon className="has-text-danger" role="img" aria-hidden={false} aria-label="heart icon">
+      heart
+    </Icon>
   </a>
 );
 
 const meta: Meta<typeof Breadcrumb> = {
   title: "Components/Breadcrumb",
   component: Breadcrumb,
-  decorators: [(Story) => <MemoryRouter><Story /></MemoryRouter>, (Story) => <Wrapper>{Story()}</Wrapper>],
+  decorators: [
+    (Story) => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    ),
+    (Story) => <Wrapper>{Story()}</Wrapper>,
+  ],
   tags: ["autodocs"],
 };
 

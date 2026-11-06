@@ -16,8 +16,8 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import Notification from "../Notification";
 import { useMe } from "@scm-manager/ui-api";
+import { Notification } from "@scm-manager/ui-core";
 
 const CommitAuthor: FC = () => {
   const [t] = useTranslation("repos");

@@ -15,7 +15,7 @@
  */
 
 import React, { FC } from "react";
-import { Icon } from "@scm-manager/ui-components";
+import { Icon } from "@scm-manager/ui-core";
 
 type Props = {
   burgerMode: boolean;
@@ -28,7 +28,7 @@ export const headerButtonContentClassName =
 
 const HeaderButtonContent: FC<Props> = ({ burgerMode, icon, label }) => (
   <>
-    <Icon name={icon} color="inherit" className={burgerMode ? "is-size-5" : "is-size-4"} />
+    <Icon className={burgerMode ? "is-size-5" : "is-size-4"}>{icon}</Icon>
     <span>{" " + label}</span>
   </>
 );

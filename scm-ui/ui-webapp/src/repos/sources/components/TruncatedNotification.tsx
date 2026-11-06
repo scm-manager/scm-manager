@@ -16,8 +16,7 @@
 
 import React, { FC } from "react";
 import { File } from "@scm-manager/ui-types";
-import { Notification } from "@scm-manager/ui-components";
-import { Button } from "@scm-manager/ui-core";
+import { Button, Notification } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -32,7 +31,7 @@ const TruncatedNotification: FC<Props> = ({ directory, isFetchingNextPage, fetch
     return null;
   }
 
-  const fileCount = (directory._embedded?.children || []).filter(file => !file.directory).length;
+  const fileCount = (directory._embedded?.children || []).filter((file) => !file.directory).length;
 
   return (
     <Notification type="info">

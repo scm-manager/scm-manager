@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Member } from "@scm-manager/ui-types";
-import { Icon } from "@scm-manager/ui-components";
+import { Icon } from "@scm-manager/ui-core";
 
 type Props = {
   member: Member;
@@ -34,7 +34,7 @@ export default class GroupMember extends React.Component<Props> {
   showName(to: string, member: Member) {
     const userComponent = (
       <>
-        <Icon name="user" color="inherit" alt="" /> {member.name}
+        <Icon>user</Icon> {member.name}
       </>
     );
     if (member._links?.self) {

@@ -67,8 +67,7 @@ import styled from "styled-components";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import CardColumn from "./CardColumn";
-import Icon from "./Icon";
-import { DateFromNow } from "@scm-manager/ui-core";
+import { DateFromNow, Icon } from "@scm-manager/ui-core";
 import repository from "./__resources__/repository";
 
 const Wrapper = styled.div`
@@ -77,7 +76,11 @@ const Wrapper = styled.div`
 `;
 
 const link = "/foo/bar";
-const avatar = <Icon name="icons fa-2x fa-fw" alt="avatar" />;
+const avatar = (
+  <Icon className="is-large has-text-secondary" role="img" aria-hidden={false} aria-label="avatar">
+    icons
+  </Icon>
+);
 const title = <strong>title</strong>;
 const footerLeft = <small>left footer</small>;
 const footerRight = <small>right footer</small>;

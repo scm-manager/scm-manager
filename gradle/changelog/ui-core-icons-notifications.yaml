@@ -1,0 +1,8 @@
+- type: removed
+  description: Deprecated `Collection` type of ui-types (use `HalRepresentation` instead)
+- type: changed
+  description: Icons, tooltips, images and notifications in the web interface use the components of ui-core
+- type: fixed
+  description: Screen readers announce the meaning of status icons, for example for users, groups, permissions and files
+- type: fixed
+  description: The button to copy a new API key can be used with the keyboard

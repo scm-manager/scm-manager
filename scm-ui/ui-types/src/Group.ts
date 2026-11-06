@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Collection, Links, PagedCollection } from "./hal";
+import { HalRepresentation, Links, PagedCollection } from "./hal";
 
 export type Member = {
   name: string;
@@ -29,7 +29,7 @@ export type GroupBase = {
   members: string[];
 };
 
-export type Group = Collection &
+export type Group = HalRepresentation &
   GroupBase & {
     creationDate?: string;
     lastModified?: string;

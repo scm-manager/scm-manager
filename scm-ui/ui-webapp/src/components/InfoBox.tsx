@@ -19,7 +19,8 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { InfoItem, Link } from "@scm-manager/ui-types";
-import { devices, Icon } from "@scm-manager/ui-components";
+import { devices } from "@scm-manager/ui-components";
+import { Icon } from "@scm-manager/ui-core";
 
 type Props = WithTranslation & {
   type: "plugin" | "feature";
@@ -76,10 +77,10 @@ class InfoBox extends React.Component<Props> {
                 "is-flex",
                 "is-flex-direction-column",
                 "is-justify-content-center",
-                "is-align-items-center"
+                "is-align-items-center",
               )}
             >
-              <Icon className="mb-2 fa-2x" name={icon} color="white" alt="" />
+              <Icon className="mb-2 is-large has-text-white">{icon}</Icon>
               <div className="is-size-4 has-text-white">{t("login." + type)}</div>
               <div className="is-size-4 has-text-white">{t("login.tip")}</div>
             </FixedSizedIconWrapper>

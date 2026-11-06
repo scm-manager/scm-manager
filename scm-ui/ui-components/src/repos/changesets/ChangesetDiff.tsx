@@ -17,9 +17,9 @@
 import React from "react";
 import { Changeset, HalRepresentation, Link } from "@scm-manager/ui-types";
 import LoadingDiff from "../LoadingDiff";
-import Notification from "../../Notification";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { FileControlFactory } from "../DiffTypes";
+import { Notification } from "@scm-manager/ui-core";
 
 type Props = WithTranslation & {
   changeset: Changeset;

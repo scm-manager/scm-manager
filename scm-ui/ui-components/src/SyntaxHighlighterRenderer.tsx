@@ -15,8 +15,7 @@
  */
 
 import React, { FC, ReactNode, useEffect, useState } from "react";
-import Icon from "./Icon";
-import Tooltip from "./Tooltip";
+import { Icon, Tooltip } from "@scm-manager/ui-core";
 import styled from "styled-components";
 import copyToClipboard from "./CopyToClipboard";
 import { useTranslation } from "react-i18next";
@@ -33,13 +32,14 @@ const RowContainer = styled.div`
   &.focused > span:last-child {
     background: var(--scm-sh-focus-line-background);
   }
-  i {
+  .icon {
     visibility: hidden;
+    height: auto;
   }
-  i:hover {
+  .icon:hover {
     cursor: pointer;
   }
-  &:hover i {
+  &:hover .icon {
     visibility: visible;
   }
   // override bulma default styling of .section
@@ -112,14 +112,25 @@ const SyntaxHighlighterRenderer: FC<Props> = ({ children: rows, createLinePermaL
             {showLineNumbers && (
               <>
                 {copying ? (
-                  <Icon name="spinner fa-spin" alt={t("sources.content.loading")} />
+                  <Icon
+                    className="has-text-secondary"
+                    role="img"
+                    aria-hidden={false}
+                    aria-label={t("sources.content.loading")}
+                  >
+                    spinner fa-spin
+                  </Icon>
                 ) : (
                   <Tooltip message={t("sources.content.copyPermalink")}>
                     <Icon
-                      name="link"
+                      className="has-text-secondary"
                       onClick={() => lineNumberClick(lineNumber)}
-                      alt={t("sources.content.copyPermalink")}
-                    />
+                      role="img"
+                      aria-hidden={false}
+                      aria-label={t("sources.content.copyPermalink")}
+                    >
+                      link
+                    </Icon>
                   </Tooltip>
                 )}
                 <LineNumber

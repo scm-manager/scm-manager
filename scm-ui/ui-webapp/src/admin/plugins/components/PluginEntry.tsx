@@ -17,8 +17,8 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { CardColumn, Icon } from "@scm-manager/ui-components";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-core";
+import { CardColumn } from "@scm-manager/ui-components";
+import { Icon, useKeyboardIteratorTarget } from "@scm-manager/ui-core";
 import { Link, Plugin } from "@scm-manager/ui-types";
 import { PluginAction, PluginModalContent } from "../containers/PluginsOverview";
 import PluginAvatar from "./PluginAvatar";
@@ -70,24 +70,55 @@ const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
 
   const pendingInfo = () => (
     <>
-      <Icon className="fa-lg" name="check" color="info" alt={t("plugins.markedAsPending")} />
+      <Icon
+        className="has-text-info is-medium"
+        role="img"
+        aria-hidden={false}
+        aria-label={t("plugins.markedAsPending")}
+      >
+        check
+      </Icon>
     </>
   );
   const actionBar = () => (
     <ActionbarWrapper className="is-flex">
       {isInstallable && (
         <IconWrapper action={() => openModal({ plugin, action: PluginAction.INSTALL })}>
-          <Icon title={t("plugins.modal.install")} name="download" color="info" />
+          <Icon
+            className="has-text-info"
+            title={t("plugins.modal.install")}
+            role="img"
+            aria-hidden={false}
+            aria-label={t("plugins.modal.install")}
+          >
+            download
+          </Icon>
         </IconWrapper>
       )}
       {isUninstallable && (
         <IconWrapper action={() => openModal({ plugin, action: PluginAction.UNINSTALL })}>
-          <Icon title={t("plugins.modal.uninstall")} name="trash" color="info" />
+          <Icon
+            className="has-text-info"
+            title={t("plugins.modal.uninstall")}
+            role="img"
+            aria-hidden={false}
+            aria-label={t("plugins.modal.uninstall")}
+          >
+            trash
+          </Icon>
         </IconWrapper>
       )}
       {isUpdatable && (
         <IconWrapper action={() => openModal({ plugin, action: PluginAction.UPDATE })}>
-          <Icon title={t("plugins.modal.update")} name="sync-alt" color="info" />
+          <Icon
+            className="has-text-info"
+            title={t("plugins.modal.update")}
+            role="img"
+            aria-hidden={false}
+            aria-label={t("plugins.modal.update")}
+          >
+            sync-alt
+          </Icon>
         </IconWrapper>
       )}
     </ActionbarWrapper>

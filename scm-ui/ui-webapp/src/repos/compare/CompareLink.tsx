@@ -18,7 +18,7 @@ import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { Icon } from "@scm-manager/ui-components";
+import { Icon } from "@scm-manager/ui-core";
 import { CompareTypes } from "./CompareSelectBar";
 
 type Props = {
@@ -32,7 +32,17 @@ type Props = {
 const CompareLink: FC<Props> = ({ repository, source, sourceType = "b", target, targetType = "b" }) => {
   const [t] = useTranslation("repos");
 
-  const icon = <Icon name="retweet" title={t("compare.linkTitle")} color="inherit" className="mr-2" />;
+  const icon = (
+    <Icon
+      className="mr-2"
+      title={t("compare.linkTitle")}
+      role="img"
+      aria-hidden={false}
+      aria-label={t("compare.linkTitle")}
+    >
+      retweet
+    </Icon>
+  );
 
   const compareUrl =
     `/repo/${repository.namespace}/${repository.name}/code/compare/${sourceType}/${source}` +

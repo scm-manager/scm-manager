@@ -17,8 +17,8 @@ import React, { FC, ReactElement } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { devices, FileSize, Icon, Tooltip } from "@scm-manager/ui-components";
-import { DateFromNow, useKeyboardIteratorTarget } from "@scm-manager/ui-core";
+import { devices, FileSize } from "@scm-manager/ui-components";
+import { DateFromNow, Icon, Tooltip, useKeyboardIteratorTarget } from "@scm-manager/ui-core";
 import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { File, Repository } from "@scm-manager/ui-types";
 import FileLink from "./content/FileLink";
@@ -74,14 +74,28 @@ class FileTreeLeaf extends React.Component<Props> {
       return content(file);
     } else if (file.computationAborted) {
       return (
-        <Tooltip location="top" message={t("sources.fileTree.computationAborted")}>
-          <Icon name="question-circle" alt={t("sources.fileTree.computationAborted")} />
+        <Tooltip message={t("sources.fileTree.computationAborted")}>
+          <Icon
+            className="has-text-secondary"
+            role="img"
+            aria-hidden={false}
+            aria-label={t("sources.fileTree.computationAborted")}
+          >
+            question-circle
+          </Icon>
         </Tooltip>
       );
     } else if (file.partialResult) {
       return (
-        <Tooltip location="top" message={t("sources.fileTree.notYetComputed")}>
-          <Icon name="hourglass" alt={t("sources.fileTree.notYetComputed")} />
+        <Tooltip message={t("sources.fileTree.notYetComputed")}>
+          <Icon
+            className="has-text-secondary"
+            role="img"
+            aria-hidden={false}
+            aria-label={t("sources.fileTree.notYetComputed")}
+          >
+            hourglass
+          </Icon>
         </Tooltip>
       );
     } else {

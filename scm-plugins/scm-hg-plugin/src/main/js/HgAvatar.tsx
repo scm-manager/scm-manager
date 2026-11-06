@@ -15,7 +15,7 @@
  */
 
 import React from "react";
-import { Image } from "@scm-manager/ui-components";
+import { Image } from "@scm-manager/ui-core";
 
 type Props = {};
 

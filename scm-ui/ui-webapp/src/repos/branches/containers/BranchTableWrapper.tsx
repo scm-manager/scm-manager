@@ -17,8 +17,8 @@
 import React, { FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useBranchDetailsCollection } from "@scm-manager/ui-api";
-import { ErrorNotification, Notification } from "@scm-manager/ui-components";
-import { Collapsible, DataPageHeader, KeyboardIterator, Select, Subtitle } from "@scm-manager/ui-core";
+import { ErrorNotification } from "@scm-manager/ui-components";
+import { Collapsible, DataPageHeader, KeyboardIterator, Select, Subtitle, Notification } from "@scm-manager/ui-core";
 import { Branch, HalRepresentation, Repository } from "@scm-manager/ui-types";
 import { SORT_OPTIONS, SortOption } from "../../tags/orderTags";
 import BranchList from "../components/BranchList";
@@ -35,7 +35,7 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
   const [sort, setSort] = useState<SortOption | undefined>();
   const branches: Branch[] = useMemo(
     () => orderBranches((data?._embedded?.branches as Branch[]) || [], sort),
-    [data, sort]
+    [data, sort],
   );
   const staleBranches = branches.filter((b) => b.stale);
   const activeBranches = branches.filter((b) => !b.stale);

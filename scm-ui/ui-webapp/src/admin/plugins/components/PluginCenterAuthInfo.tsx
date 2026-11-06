@@ -15,8 +15,8 @@
  */
 
 import React, { FC, useState } from "react";
-import { ErrorNotification, Icon, Modal, SmallLoadingSpinner, Tooltip } from "@scm-manager/ui-components";
-import { UnstyledButton } from "@scm-manager/ui-core";
+import { ErrorNotification, Modal, SmallLoadingSpinner } from "@scm-manager/ui-components";
+import { Icon, Tooltip, UnstyledButton } from "@scm-manager/ui-core";
 import { PluginCenterAuthenticationInfo } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 
@@ -58,9 +58,9 @@ const AuthenticationError: FC<ErrorProps> = ({ error }) => {
   const [showModal, setShowModal] = useState(false);
   return (
     <>
-      <Tooltip message={t("plugins.cloudoguPlatform.error.info")} multiline={true}>
+      <Tooltip message={t("plugins.cloudoguPlatform.error.info")}>
         <UnstyledButton onClick={() => setShowModal(true)} aria-label={t("plugins.cloudoguPlatform.error.info")}>
-          <Icon name="exclamation-triangle" color="danger" className="is-size-5" />
+          <Icon className="has-text-danger is-size-5">exclamation-triangle</Icon>
         </UnstyledButton>
       </Tooltip>
       {showModal ? <ErrorModal error={error} onClose={() => setShowModal(false)} /> : null}
@@ -88,28 +88,28 @@ type InfoProps = {
 
 const AuthenticationFailed: FC<InfoProps> = ({ info }) => {
   const [t] = useTranslation("admin");
+  const message = t("plugins.cloudoguPlatform.failed.info", {
+    pluginCenterSubject: info.pluginCenterSubject,
+  });
   return (
-    <Tooltip
-      message={t("plugins.cloudoguPlatform.failed.info", {
-        pluginCenterSubject: info.pluginCenterSubject,
-      })}
-      multiline={true}
-    >
-      <Icon name="exclamation-triangle" color="danger" />
+    <Tooltip message={message}>
+      <Icon className="has-text-danger" role="img" aria-hidden={false} aria-label={message}>
+        exclamation-triangle
+      </Icon>
     </Tooltip>
   );
 };
 
 const Authenticated: FC<InfoProps> = ({ info }) => {
   const [t] = useTranslation("admin");
+  const message = t("plugins.cloudoguPlatform.connectionInfo", {
+    pluginCenterSubject: info.pluginCenterSubject,
+  });
   return (
-    <Tooltip
-      message={t("plugins.cloudoguPlatform.connectionInfo", {
-        pluginCenterSubject: info.pluginCenterSubject,
-      })}
-      multiline={true}
-    >
-      <Icon name="check-circle" color="info" />
+    <Tooltip message={message}>
+      <Icon className="has-text-info" role="img" aria-hidden={false} aria-label={message}>
+        check-circle
+      </Icon>
     </Tooltip>
   );
 };

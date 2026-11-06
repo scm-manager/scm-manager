@@ -16,7 +16,7 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import Image from "./Image";
+import { Image } from "@scm-manager/ui-core";
 
 type Props = {
   withText?: boolean;

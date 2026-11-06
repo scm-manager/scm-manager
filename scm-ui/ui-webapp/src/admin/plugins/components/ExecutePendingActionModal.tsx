@@ -17,9 +17,9 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { PendingPlugins } from "@scm-manager/ui-types";
-import { Notification } from "@scm-manager/ui-components";
 import PluginActionModal from "./PluginActionModal";
 import { useExecutePendingPlugins } from "@scm-manager/ui-api";
+import { Notification } from "@scm-manager/ui-core";
 
 type Props = {
   onClose: () => void;

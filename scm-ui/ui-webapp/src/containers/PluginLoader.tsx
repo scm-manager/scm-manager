@@ -17,7 +17,8 @@
 import React, { ReactNode } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { apiClient, ErrorNotification, Icon, Loading } from "@scm-manager/ui-components";
+import { apiClient, ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { Icon } from "@scm-manager/ui-core";
 import loadBundle from "../_modules/loadBundle";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
@@ -42,7 +43,11 @@ type Plugin = {
 };
 
 const BigIcon = styled(Icon)`
-  font-size: 10rem;
+  && {
+    font-size: 10rem;
+    width: auto;
+    height: auto;
+  }
 `;
 
 const withTimeout = (millis: number, promise: Promise<any>) => {
@@ -128,7 +133,7 @@ class PluginLoader extends React.Component<Props, State> {
                 "is-align-items-center",
               )}
             >
-              <BigIcon name="exclamation-triangle" color="danger" />
+              <BigIcon className="has-text-danger">exclamation-triangle</BigIcon>
               <div className={classNames("my-5", "is-size-5")}>{errorMessage}</div>
             </div>
             <ErrorNotification error={error} />

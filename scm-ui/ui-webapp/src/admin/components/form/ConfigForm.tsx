@@ -17,8 +17,7 @@
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Config, ConfigChangeHandler, Link, NamespaceStrategies } from "@scm-manager/ui-types";
-import { Notification } from "@scm-manager/ui-components";
-import { Button, Level } from "@scm-manager/ui-core";
+import { Button, Level, Notification } from "@scm-manager/ui-core";
 import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";

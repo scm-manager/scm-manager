@@ -48,8 +48,3 @@ export type UnknownTotalCollection<T extends Embedded = Embedded> = HalRepresent
   page: number;
   pageTotal: number | null;
 };
-
-/**
- * @deprecated use HalRepresentation instead
- */
-export type Collection = HalRepresentation;

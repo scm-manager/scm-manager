@@ -25,8 +25,9 @@ import {
   LinkButton,
   useDocumentTitle,
   Page,
+  Notification,
 } from "@scm-manager/ui-core";
-import { LinkPaginator, Notification, OverviewPageActions, urls } from "@scm-manager/ui-components";
+import { LinkPaginator, OverviewPageActions, urls } from "@scm-manager/ui-components";
 import { GroupTable } from "./../components/table";
 
 type GroupPageProps = {

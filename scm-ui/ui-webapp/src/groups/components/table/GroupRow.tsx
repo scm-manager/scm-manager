@@ -18,8 +18,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
-import { Icon } from "@scm-manager/ui-components";
-import { useKeyboardIteratorTarget } from "@scm-manager/ui-core";
+import { Icon, useKeyboardIteratorTarget } from "@scm-manager/ui-core";
 import { Group } from "@scm-manager/ui-types";
 
 type Props = {
@@ -31,9 +30,25 @@ const GroupRow: FC<Props> = ({ group }) => {
   const [t] = useTranslation("groups");
   const to = `/group/${group.name}`;
   const iconType = group.external ? (
-    <Icon title={t("group.external")} name="globe-americas" />
+    <Icon
+      className="has-text-secondary"
+      title={t("group.external")}
+      role="img"
+      aria-hidden={false}
+      aria-label={t("group.external")}
+    >
+      globe-americas
+    </Icon>
   ) : (
-    <Icon title={t("group.internal")} name="home" />
+    <Icon
+      className="has-text-secondary"
+      title={t("group.internal")}
+      role="img"
+      aria-hidden={false}
+      aria-label={t("group.internal")}
+    >
+      home
+    </Icon>
   );
 
   return (

@@ -15,7 +15,7 @@
  */
 
 import styled from "styled-components";
-import Image from "../../Image";
+import { Image } from "@scm-manager/ui-core";
 
 const ContributorAvatar = styled(Image)`
   width: 1em;

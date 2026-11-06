@@ -15,8 +15,8 @@
  */
 
 import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, InputField, Loading, Notification } from "@scm-manager/ui-components";
-import { Button, Level } from "@scm-manager/ui-core";
+import { ErrorNotification, InputField, Loading } from "@scm-manager/ui-components";
+import { Button, Level, Notification } from "@scm-manager/ui-core";
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { HgRepositoryConfiguration, useHgRepositoryConfiguration, useUpdateHgRepositoryConfiguration } from "./hooks";

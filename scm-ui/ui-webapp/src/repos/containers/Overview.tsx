@@ -25,7 +25,6 @@ import {
   ErrorNotification,
   LinkPaginator,
   Loading,
-  Notification,
   OverviewPageActions,
   urls,
 } from "@scm-manager/ui-components";
@@ -36,6 +35,7 @@ import {
   REPOSITORY_COLLECTION_BASE_ROUTE,
   useDocumentTitle,
   Page,
+  Notification,
 } from "@scm-manager/ui-core";
 import { binder, ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";

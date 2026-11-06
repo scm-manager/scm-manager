@@ -17,7 +17,7 @@
 import React, { FC } from "react";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Repository } from "@scm-manager/ui-types";
-import Image from "../Image";
+import { Image } from "@scm-manager/ui-core";
 import styled from "styled-components";
 
 const Avatar = styled.div`

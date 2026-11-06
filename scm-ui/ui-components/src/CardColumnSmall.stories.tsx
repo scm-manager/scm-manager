@@ -61,7 +61,7 @@ import styled from "styled-components";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import CardColumnSmall from "./CardColumnSmall";
-import Icon from "./Icon";
+import { Icon } from "@scm-manager/ui-core";
 import { MemoryRouter } from "react-router-dom";
 
 // --- Mock Data and Helpers (preserved from your original story) ---
@@ -72,7 +72,11 @@ const Wrapper = styled.div`
 `;
 
 const link = "/foo/bar";
-const avatar = <Icon name="icons fa-2x fa-fw" alt="avatar" />;
+const avatar = (
+  <Icon className="is-large has-text-secondary" role="img" aria-hidden={false} aria-label="avatar">
+    icons
+  </Icon>
+);
 const contentLeft = <strong className="m-0">main content</strong>;
 const contentRight = <small>more text</small>;
 
@@ -84,7 +88,8 @@ const meta: Meta<typeof CardColumnSmall> = {
   // The Wrapper is now a decorator in the meta object
   decorators: [
     (Story) => <MemoryRouter initialEntries={["/"]}>{Story()}</MemoryRouter>,
-    (Story) => <Wrapper>{Story()}</Wrapper>],
+    (Story) => <Wrapper>{Story()}</Wrapper>,
+  ],
   tags: ["autodocs"], // Enables automatic documentation generation
 };
 
@@ -115,7 +120,11 @@ export const Minimal: Story = {
 export const Task: Story = {
   args: {
     link: link,
-    avatar: <Icon name="exchange-alt" className="fa-fw fa-lg" color="inherit" alt="avatar" />,
+    avatar: (
+      <Icon className="is-medium" role="img" aria-hidden={false} aria-label="avatar">
+        exchange-alt
+      </Icon>
+    ),
     contentLeft: <strong>Repository created</strong>,
     contentRight: <small>over 42 years ago</small>,
     footer: "New: scmadmin/spaceship",
@@ -124,7 +133,11 @@ export const Task: Story = {
 
 export const Linkless: Story = {
   args: {
-    avatar: <Icon name="eraser" className="fa-fw fa-lg" color="inherit" alt="avatar" />,
+    avatar: (
+      <Icon className="is-medium" role="img" aria-hidden={false} aria-label="avatar">
+        eraser
+      </Icon>
+    ),
     contentLeft: <strong>Repository deleted</strong>,
     contentRight: <small>over 1337 minutes ago</small>,
     footer: "Deleted: scmadmin/spaceship",

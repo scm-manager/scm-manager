@@ -15,8 +15,8 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { Notification } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
+import { Notification } from "@scm-manager/ui-core";
 
 type Props = {
   isUpdated: boolean;

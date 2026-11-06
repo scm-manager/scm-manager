@@ -17,7 +17,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Tag } from "@scm-manager/ui-types";
-import Tooltip from "../../Tooltip";
+import { Tooltip } from "@scm-manager/ui-core";
 import ChangesetTagBase from "./ChangesetTagBase";
 
 type Props = WithTranslation & {
@@ -29,8 +29,10 @@ class ChangesetTagsCollapsed extends React.Component<Props> {
     const { tags, t } = this.props;
     const message = tags.map((tag) => tag.name).join(", ");
     return (
-      <Tooltip location="top" message={message} multiline={true}>
-        <ChangesetTagBase icon="tags" label={tags.length + " " + t("changeset.tags")} />
+      <Tooltip message={message}>
+        <span className="is-inline-block">
+          <ChangesetTagBase icon="tags" label={tags.length + " " + t("changeset.tags")} />
+        </span>
       </Tooltip>
     );
   }

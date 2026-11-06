@@ -20,7 +20,6 @@ import classNames from "classnames";
 import { NotFoundError, useDiff } from "@scm-manager/ui-api";
 import ErrorNotification from "../ErrorNotification";
 import Loading from "../Loading";
-import Notification from "../Notification";
 import Diff from "./Diff";
 import { DiffObjectProps } from "./DiffTypes";
 import DiffStatistics from "./DiffStatistics";
@@ -30,7 +29,7 @@ import { DiffContent, DiffTreeTitle, FileTreeContent, StickyFileDiffContainer } 
 import { useLocation } from "react-router-dom";
 import { getFileNameFromHash } from "./diffs";
 import LayoutRadioButtons from "./LayoutRadioButtons";
-import { Button, useAriaId, useLayoutWide } from "@scm-manager/ui-core";
+import { Button, useAriaId, useLayoutWide, Notification } from "@scm-manager/ui-core";
 import { useLayoutState } from "./diffLayout";
 
 export type WhitespaceMode = "ALL" | "NONE";
