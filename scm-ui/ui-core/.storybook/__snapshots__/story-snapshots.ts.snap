@@ -381,6 +381,114 @@ exports[`Components/StatusIcon WithTitle 1`] = `
 "
 `;
 
+exports[`Components/Table Default 1`] = `
+"<div style="margin: 2rem">
+  <table class="table content is-hoverable">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th class="is-clickable">
+          Last Name<span class="ml-1 is-invisible icon" aria-hidden="true"
+            ><i class="fas fa-fw fa-sort-amount-down"></i
+          ></span>
+        </th>
+        <th>E-Mail</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><h4>Tricia</h4></td>
+        <td class="has-background-success"><b class="has-text-danger">McMillan</b></td>
+        <td><span>tricia@hitchhiker.com</span></td>
+      </tr>
+      <tr>
+        <td><h4>Arthur</h4></td>
+        <td class="has-background-success"><b class="has-text-danger">Dent</b></td>
+        <td><span>arthur@hitchhiker.com</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+"
+`;
+
+exports[`Components/Table Empty 1`] = `
+"<div style="margin: 2rem"><div class="notification is-info">No data found.</div></div>
+"
+`;
+
+exports[`Components/Table WithTextColumn 1`] = `
+"<div style="margin: 2rem">
+  <table class="table content is-hoverable">
+    <thead>
+      <tr>
+        <th class="is-clickable">
+          Id<span class="ml-1 is-invisible icon" aria-hidden="true"><i class="fas fa-fw fa-sort-alpha-down"></i></span>
+        </th>
+        <th class="is-clickable">
+          Name<span class="ml-1 is-invisible icon" aria-hidden="true"
+            ><i class="fas fa-fw fa-sort-alpha-down"></i
+          ></span>
+        </th>
+        <th class="is-clickable">
+          Description<span class="ml-1 is-invisible icon" aria-hidden="true"
+            ><i class="fas fa-fw fa-sort-alpha-down"></i
+          ></span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>21</td>
+        <td>Pommes</td>
+        <td>Fried potato sticks</td>
+      </tr>
+      <tr>
+        <td>42</td>
+        <td>Quarter-Pounder</td>
+        <td>Big burger</td>
+      </tr>
+      <tr>
+        <td>-84</td>
+        <td>Icecream</td>
+        <td>Cold dessert</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+"
+`;
+
+exports[`Components/Table WithWordBreak 1`] = `
+"<div style="margin: 2rem">
+  <table class="table content is-hoverable sc-jrQAon jyKPWE">
+    <thead>
+      <tr>
+        <th class="is-clickable">
+          Id<span class="ml-1 is-invisible icon" aria-hidden="true"><i class="fas fa-fw fa-sort-alpha-down"></i></span>
+        </th>
+        <th class="is-clickable">
+          Name<span class="ml-1 is-invisible icon" aria-hidden="true"
+            ><i class="fas fa-fw fa-sort-alpha-down"></i
+          ></span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>42</td>
+        <td>herp_derp_schlerp_ferp_gerp_nerp_terp_ierp_perp_lerp_merp_oerp_zerp_serp_verp_herp</td>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>herp_derp_schlerp_ferp_gerp_nerp_terp_ierp_perp_lerp_merp_oerp_zerp_serp_verp</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+"
+`;
+
 exports[`Components/Tabs Default 1`] = `
 "<div style="margin: 2rem; width: 30rem">
   <div dir="ltr" data-orientation="horizontal">

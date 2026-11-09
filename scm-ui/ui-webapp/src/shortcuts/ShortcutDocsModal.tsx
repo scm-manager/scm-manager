@@ -18,8 +18,8 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { Column, Modal, Table } from "@scm-manager/ui-components";
-import { useShortcutDocs, useShortcut } from "@scm-manager/ui-core";
+import { Modal } from "@scm-manager/ui-components";
+import { Table, useShortcutDocs, useShortcut } from "@scm-manager/ui-core";
 import splitKeyCombination from "./splitKeyCombination";
 
 const keyComparator = ([a]: [string, string], [b]: [string, string]) => (a > b ? 1 : -1);
@@ -38,7 +38,7 @@ const ShortcutDocsModal = () => {
     <Modal title={t("shortcutDocsModal.title")} closeFunction={() => setOpen(false)} active={open}>
       <p className="mb-2">{t("shortcutDocsModal.description")}</p>
       <Table data={Object.entries(docs).sort(keyComparator)}>
-        <Column header={t("shortcutDocsModal.table.headers.keyCombination")}>
+        <Table.Column header={t("shortcutDocsModal.table.headers.keyCombination")}>
           {([key]: [string, string]) =>
             splitKeyCombination(key).map((k, i) => (
               <KeyDisplay
@@ -54,10 +54,10 @@ const ShortcutDocsModal = () => {
               </KeyDisplay>
             ))
           }
-        </Column>
-        <Column header={t("shortcutDocsModal.table.headers.description")}>
+        </Table.Column>
+        <Table.Column header={t("shortcutDocsModal.table.headers.description")}>
           {([, description]: [string, string]) => description}
-        </Column>
+        </Table.Column>
       </Table>
     </Modal>
   );

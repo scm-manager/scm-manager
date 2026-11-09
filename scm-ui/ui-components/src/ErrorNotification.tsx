@@ -17,8 +17,8 @@
 import React, { ComponentProps, FC } from "react";
 import { useTranslation } from "react-i18next";
 import { BackendError, ForbiddenError, UnauthorizedError, urls } from "@scm-manager/ui-api";
+import { BackendErrorNotification } from "@scm-manager/ui-core";
 import Notification from "./Notification";
-import BackendErrorNotification from "./BackendErrorNotification";
 import { useLocation } from "react-router";
 
 type Props = ComponentProps<typeof BasicErrorMessage> & {

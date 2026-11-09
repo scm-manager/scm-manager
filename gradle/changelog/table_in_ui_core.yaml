@@ -1,0 +1,6 @@
+- type: added
+  description: Table component with Table.Column and Table.TextColumn in ui-core
+- type: removed
+  description: The deprecated components Table, Column, TextColumn, SortIcon, Popover, usePopover and BackendErrorNotification of ui-components
+- type: changed
+  description: The signature popover of changesets and tags opens on click instead of on hover

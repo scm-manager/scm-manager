@@ -152,7 +152,7 @@ exports[`Components/Autocomplete UserSuggestionsWithClear 1`] = `
 `;
 
 exports[`Components/BranchSelector Default 1`] = `
-"<div class="sc-cHzoaq hZWSzL">
+"<div class="sc-dSfbgX bmCHeB">
   <div class="field is-horizontal">
     <div class="sc-clIAoS kDASPx field-label is-normal">
       <label class="label is-size-6" id="branch-select_0">Select Branch</label>
@@ -915,20 +915,6 @@ exports[`Components/PdfViewer Simple 1`] = `
 "
 `;
 
-exports[`Components/Popover Default 1`] = `
-"<div class="sc-dkPwfY khJnPU">
-  <div><button class="button">Trigger</button></div>
-</div>
-"
-`;
-
-exports[`Components/Popover WithLinkTrigger 1`] = `
-"<div class="sc-dkPwfY khJnPU">
-  <div><a href="#">Trigger</a></div>
-</div>
-"
-`;
-
 exports[`Components/PreformattedCodeBlock Combination 1`] = `
 "<div class="sc-nVikz m-6">
   <div class="content">
@@ -1222,99 +1208,6 @@ exports[`Components/SyntaxHighlighter WithoutLineNumbers 1`] = `
 "
 `;
 
-exports[`Components/Table Default 1`] = `
-"<div style="margin: 2rem">
-  <table class="table content is-hoverable">
-    <thead>
-      <tr>
-        <th>First Name</th>
-        <th class="is-clickable">
-          Last Name<i
-            class="fas fa-fw fa-sort-amount-down has-text-secondary ml-1 is-invisible"
-            aria-label="sort-amount-down icon"
-          ></i>
-        </th>
-        <th>E-Mail</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><h4>Tricia</h4></td>
-        <td class="has-background-success"><b class="has-text-danger">McMillan</b></td>
-        <td><span>tricia@hitchhiker.com</span></td>
-      </tr>
-      <tr>
-        <td><h4>Arthur</h4></td>
-        <td class="has-background-success"><b class="has-text-danger">Dent</b></td>
-        <td><span>arthur@hitchhiker.com</span></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-"
-`;
-
-exports[`Components/Table Empty 1`] = `
-"<div style="margin: 2rem"><div class="notification is-info">No data found.</div></div>
-"
-`;
-
-exports[`Components/Table WithTextColumn 1`] = `
-"<div style="margin: 2rem">
-  <table class="table content is-hoverable">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>21</td>
-        <td>Pommes</td>
-        <td>Fried potato sticks</td>
-      </tr>
-      <tr>
-        <td>42</td>
-        <td>Quarter-Pounder</td>
-        <td>Big burger</td>
-      </tr>
-      <tr>
-        <td>-84</td>
-        <td>Icecream</td>
-        <td>Cold dessert</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-"
-`;
-
-exports[`Components/Table WithWordBreak 1`] = `
-"<div style="margin: 2rem">
-  <table class="table content is-hoverable sc-AjlSJ icMLCz">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Name</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>42</td>
-        <td>herp_derp_schlerp_ferp_gerp_nerp_terp_ierp_perp_lerp_merp_oerp_zerp_serp_verp_herp</td>
-      </tr>
-      <tr>
-        <td>17</td>
-        <td>herp_derp_schlerp_ferp_gerp_nerp_terp_ierp_perp_lerp_merp_oerp_zerp_serp_verp</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-"
-`;
-
 exports[`Components/Tag Clickable 1`] = `
 "<div class="sc-bdvwhi kcJGBv"><button class="tag is-light is-normal">Click here</button></div>
 "
@@ -1574,12 +1467,12 @@ exports[`Forms/AddKeyValueEntryToTableField Disabled 1`] = `
 `;
 
 exports[`Forms/Checkbox Default 1`] = `
-"<div class="sc-cHzoaq cgdVKS">
+"<div class="sc-dSfbgX eCIMsM">
   <fieldset class="field">
     <div class="control">
-      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
+      <label class="sc-tACje etskhf checkbox is-align-items-center"
         ><input
-          class="sc-dSfbgX crnDd m-3"
+          class="sc-bUbTPt jmnPpI m-3"
           aria-labelledby="checkbox_0"
           aria-describedby="checkbox_1"
           type="checkbox"
@@ -1590,9 +1483,9 @@ exports[`Forms/Checkbox Default 1`] = `
   </fieldset>
   <fieldset class="field">
     <div class="control">
-      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
+      <label class="sc-tACje etskhf checkbox is-align-items-center"
         ><input
-          class="sc-dSfbgX crnDd m-3"
+          class="sc-bUbTPt jmnPpI m-3"
           aria-labelledby="checkbox_2"
           aria-describedby="checkbox_3"
           type="checkbox"
@@ -1604,9 +1497,9 @@ exports[`Forms/Checkbox Default 1`] = `
   </fieldset>
   <fieldset class="field">
     <div class="control">
-      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
+      <label class="sc-tACje etskhf checkbox is-align-items-center"
         ><input
-          class="sc-dSfbgX crnDd m-3"
+          class="sc-bUbTPt jmnPpI m-3"
           aria-labelledby="checkbox_4"
           aria-describedby="checkbox_5"
           type="checkbox"
@@ -1621,12 +1514,12 @@ exports[`Forms/Checkbox Default 1`] = `
 `;
 
 exports[`Forms/Checkbox Disabled 1`] = `
-"<div class="sc-cHzoaq cgdVKS">
+"<div class="sc-dSfbgX eCIMsM">
   <fieldset class="field">
     <div class="control">
-      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center" disabled=""
+      <label class="sc-tACje etskhf checkbox is-align-items-center" disabled=""
         ><input
-          class="sc-dSfbgX crnDd m-3"
+          class="sc-bUbTPt jmnPpI m-3"
           disabled=""
           aria-labelledby="checkbox_0"
           aria-describedby="checkbox_1"
@@ -1642,12 +1535,12 @@ exports[`Forms/Checkbox Disabled 1`] = `
 `;
 
 exports[`Forms/Checkbox HandlingOnChange 1`] = `
-"<div class="sc-cHzoaq cgdVKS">
+"<div class="sc-dSfbgX eCIMsM">
   <fieldset class="field">
     <div class="control">
-      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
+      <label class="sc-tACje etskhf checkbox is-align-items-center"
         ><input
-          class="sc-dSfbgX crnDd m-3"
+          class="sc-bUbTPt jmnPpI m-3"
           aria-labelledby="checkbox_0"
           aria-describedby="checkbox_1"
           type="checkbox"
@@ -1661,12 +1554,12 @@ exports[`Forms/Checkbox HandlingOnChange 1`] = `
 `;
 
 exports[`Forms/Checkbox UsingRefs 1`] = `
-"<div class="sc-cHzoaq cgdVKS">
+"<div class="sc-dSfbgX eCIMsM">
   <fieldset class="field">
     <div class="control">
-      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
+      <label class="sc-tACje etskhf checkbox is-align-items-center"
         ><input
-          class="sc-dSfbgX crnDd m-3"
+          class="sc-bUbTPt jmnPpI m-3"
           aria-labelledby="checkbox_0"
           aria-describedby="checkbox_1"
           type="checkbox"
@@ -1681,12 +1574,12 @@ exports[`Forms/Checkbox UsingRefs 1`] = `
 `;
 
 exports[`Forms/Checkbox WithHelpText 1`] = `
-"<div class="sc-cHzoaq cgdVKS">
+"<div class="sc-dSfbgX eCIMsM">
   <fieldset class="field">
     <div class="control">
-      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
+      <label class="sc-tACje etskhf checkbox is-align-items-center"
         ><input
-          class="sc-dSfbgX crnDd m-3"
+          class="sc-bUbTPt jmnPpI m-3"
           aria-labelledby="checkbox_0"
           aria-describedby="checkbox_1"
           type="checkbox" />
@@ -1698,9 +1591,9 @@ exports[`Forms/Checkbox WithHelpText 1`] = `
   </fieldset>
   <fieldset class="field">
     <div class="control">
-      <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
+      <label class="sc-tACje etskhf checkbox is-align-items-center"
         ><input
-          class="sc-dSfbgX crnDd m-3"
+          class="sc-bUbTPt jmnPpI m-3"
           aria-labelledby="checkbox_2"
           aria-describedby="checkbox_3"
           type="checkbox"
@@ -1716,13 +1609,13 @@ exports[`Forms/Checkbox WithHelpText 1`] = `
 `;
 
 exports[`Forms/Checkbox WithReactHookForm 1`] = `
-"<div class="sc-cHzoaq cgdVKS">
+"<div class="sc-dSfbgX eCIMsM">
   <form>
     <fieldset class="field">
       <div class="control">
-        <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
+        <label class="sc-tACje etskhf checkbox is-align-items-center"
           ><input
-            class="sc-dSfbgX crnDd m-3"
+            class="sc-bUbTPt jmnPpI m-3"
             aria-labelledby="checkbox_8"
             aria-describedby="checkbox_9"
             type="checkbox"
@@ -1734,9 +1627,9 @@ exports[`Forms/Checkbox WithReactHookForm 1`] = `
     </fieldset>
     <fieldset class="field">
       <div class="control">
-        <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
+        <label class="sc-tACje etskhf checkbox is-align-items-center"
           ><input
-            class="sc-dSfbgX crnDd m-3"
+            class="sc-bUbTPt jmnPpI m-3"
             aria-labelledby="checkbox_10"
             aria-describedby="checkbox_11"
             type="checkbox"
@@ -1748,9 +1641,9 @@ exports[`Forms/Checkbox WithReactHookForm 1`] = `
     </fieldset>
     <fieldset class="field">
       <div class="control">
-        <label class="sc-hZpGMz cDazQc checkbox is-align-items-center" disabled=""
+        <label class="sc-tACje etskhf checkbox is-align-items-center" disabled=""
           ><input
-            class="sc-dSfbgX crnDd m-3"
+            class="sc-bUbTPt jmnPpI m-3"
             disabled=""
             aria-labelledby="checkbox_12"
             aria-describedby="checkbox_13"
@@ -1763,9 +1656,9 @@ exports[`Forms/Checkbox WithReactHookForm 1`] = `
     </fieldset>
     <fieldset class="field" disabled="">
       <div class="control">
-        <label class="sc-hZpGMz cDazQc checkbox is-align-items-center"
+        <label class="sc-tACje etskhf checkbox is-align-items-center"
           ><input
-            class="sc-dSfbgX crnDd m-3"
+            class="sc-bUbTPt jmnPpI m-3"
             readonly=""
             aria-labelledby="checkbox_14"
             aria-describedby="checkbox_15"
@@ -1820,7 +1713,7 @@ exports[`Forms/DropDown WithDisplayValues 1`] = `
 `;
 
 exports[`Forms/FileInput Default 1`] = `
-"<div class="sc-cHzoaq gSZRKu">
+"<div class="sc-dSfbgX eWfBzs">
   <div class="field">
     <label class="label"
       ><span id="file-input_0">Default File Input</span>
@@ -1840,7 +1733,7 @@ exports[`Forms/FileInput Default 1`] = `
 `;
 
 exports[`Forms/FileInput Disabled 1`] = `
-"<div class="sc-cHzoaq gSZRKu">
+"<div class="sc-dSfbgX eWfBzs">
   <div class="field">
     <label class="label"
       ><span id="file-input_0">Disabled File Input</span>
@@ -1860,7 +1753,7 @@ exports[`Forms/FileInput Disabled 1`] = `
 `;
 
 exports[`Forms/FileInput WithReactHookForm 1`] = `
-"<div class="sc-cHzoaq gSZRKu">
+"<div class="sc-dSfbgX eWfBzs">
   <form>
     <div class="field">
       <label class="label"
@@ -2018,7 +1911,7 @@ exports[`Forms/InputField WithRef 1`] = `
 `;
 
 exports[`Forms/Radio Default 1`] = `
-"<div class="sc-cHzoaq cgdVKS">
+"<div class="sc-dSfbgX eCIMsM">
   <fieldset class="is-inline-block">
     <label class="radio mr-2"
       ><input aria-labelledby="radio_0" type="radio" name="default-group" />
@@ -2036,7 +1929,7 @@ exports[`Forms/Radio Default 1`] = `
 `;
 
 exports[`Forms/Radio Disabled 1`] = `
-"<div class="sc-cHzoaq cgdVKS">
+"<div class="sc-dSfbgX eCIMsM">
   <fieldset class="is-inline-block">
     <label class="radio mr-2" disabled=""
       ><input disabled="" aria-labelledby="radio_0" type="radio" checked="" name="disabled-group" />
@@ -2048,7 +1941,7 @@ exports[`Forms/Radio Disabled 1`] = `
 `;
 
 exports[`Forms/Radio HandlingOnChange 1`] = `
-"<div class="sc-cHzoaq cgdVKS">
+"<div class="sc-dSfbgX eCIMsM">
   <fieldset class="is-inline-block">
     <label class="radio mr-2"><input aria-labelledby="radio_0" type="radio" name="onchange-example" /> </label>
   </fieldset>
@@ -2058,7 +1951,7 @@ exports[`Forms/Radio HandlingOnChange 1`] = `
 `;
 
 exports[`Forms/Radio UsingRefs 1`] = `
-"<div class="sc-cHzoaq cgdVKS">
+"<div class="sc-dSfbgX eCIMsM">
   <fieldset class="is-inline-block">
     <label class="radio mr-2"
       ><input aria-labelledby="radio_0" type="radio" name="ref-example" />
@@ -2071,7 +1964,7 @@ exports[`Forms/Radio UsingRefs 1`] = `
 `;
 
 exports[`Forms/Radio WithHelpText 1`] = `
-"<div class="sc-JkhKt cA-dTWw">
+"<div class="sc-hZpGMz dqYCMQ">
   <fieldset class="is-inline-block">
     <label class="radio mr-2"
       ><input aria-labelledby="radio_0" aria-describedby="radio_1" type="radio" name="help-group" />
@@ -2091,9 +1984,9 @@ exports[`Forms/Radio WithHelpText 1`] = `
 `;
 
 exports[`Forms/Radio WithReactHookForm 1`] = `
-"<div class="sc-cHzoaq cgdVKS">
+"<div class="sc-dSfbgX eCIMsM">
   <form>
-    <div class="sc-JkhKt cA-dTWw">
+    <div class="sc-hZpGMz dqYCMQ">
       <fieldset class="is-inline-block">
         <label class="radio mr-2"
           ><input aria-labelledby="radio_0" type="radio" value="true" checked="" name="rememberMe" />
@@ -7774,18 +7667,18 @@ exports[`Navigation/SecondaryNavigation WithSubNavigation 1`] = `
 `;
 
 exports[`Repositories/Annotate Default 1`] = `
-"<div class="sc-cHzoaq eKuNEP box">
+"<div class="sc-dSfbgX hMXXCZ box">
   <div class="panel-block">
     <pre
       class="language-go"
       aria-busy="false"
-    ><code><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">1</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="1"><span class="_token_12v8s_92 _keyword_12v8s_133">package</span> main
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-hZpGMz bCUueg gHddgN"></div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">2</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="2">
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Tricia Marie McMillan</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-05-10 11:18:42" title="5/10/2020, 11:18:42 AM" class="sc-jrQAon ka-dNDT">5/10/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">3</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="3"><span class="_token_12v8s_92 _keyword_12v8s_133">import</span> <span class="_token_12v8s_92 _string_12v8s_115">"fmt"</span>
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-hZpGMz bCUueg gHddgN"></div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">4</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="4">
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">5</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="5"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">main</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Ford Prefect</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-12 18:29:42" title="4/12/2020, 6:29:42 PM" class="sc-jrQAon ka-dNDT">4/12/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">6</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="6">  fmt<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">Println</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">"Hello World"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">7</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="7"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span>
+    ><code><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-bUbTPt iDBVJh uqhFr has-text-info"><div class="sc-djWQsk sc-gIBpqd iDBVJh lcdRYX">Arthur Dent</div> <div class="sc-djWQsk sc-fyroPG iDBVJh cRTGQe"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">1</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="1"><span class="_token_12v8s_92 _keyword_12v8s_133">package</span> main
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-tACje iDBVJh iBOoS"></div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">2</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="2">
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-bUbTPt iDBVJh uqhFr has-text-info"><div class="sc-djWQsk sc-gIBpqd iDBVJh lcdRYX">Tricia Marie McMillan</div> <div class="sc-djWQsk sc-fyroPG iDBVJh cRTGQe"><time datetime="2020-05-10 11:18:42" title="5/10/2020, 11:18:42 AM" class="sc-jrQAon ka-dNDT">5/10/2020</time></div> </div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">3</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="3"><span class="_token_12v8s_92 _keyword_12v8s_133">import</span> <span class="_token_12v8s_92 _string_12v8s_115">"fmt"</span>
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-tACje iDBVJh iBOoS"></div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">4</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="4">
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-bUbTPt iDBVJh uqhFr has-text-info"><div class="sc-djWQsk sc-gIBpqd iDBVJh lcdRYX">Arthur Dent</div> <div class="sc-djWQsk sc-fyroPG iDBVJh cRTGQe"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">5</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="5"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">main</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-bUbTPt iDBVJh uqhFr has-text-info"><div class="sc-djWQsk sc-gIBpqd iDBVJh lcdRYX">Ford Prefect</div> <div class="sc-djWQsk sc-fyroPG iDBVJh cRTGQe"><time datetime="2020-04-12 18:29:42" title="4/12/2020, 6:29:42 PM" class="sc-jrQAon ka-dNDT">4/12/2020</time></div> </div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">6</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="6">  fmt<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">Println</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">"Hello World"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-bUbTPt iDBVJh uqhFr has-text-info"><div class="sc-djWQsk sc-gIBpqd iDBVJh lcdRYX">Arthur Dent</div> <div class="sc-djWQsk sc-fyroPG iDBVJh cRTGQe"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">7</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="7"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span>
 </span></div></div></code></pre>
   </div>
 </div>
@@ -7793,16 +7686,16 @@ exports[`Repositories/Annotate Default 1`] = `
 `;
 
 exports[`Repositories/Annotate Markdown 1`] = `
-"<div class="sc-cHzoaq eKuNEP box">
+"<div class="sc-dSfbgX hMXXCZ box">
   <div class="panel-block">
     <pre
       class="language-markdown"
       aria-busy="false"
-    ><code><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">1</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="1"><span class="_token_12v8s_92 _title_12v8s_149 _important_12v8s_142 _punctuation_12v8s_99">#</span><span class="_token_12v8s_92 _title_12v8s_149 _important_12v8s_142"> Title</span>
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-hZpGMz bCUueg gHddgN"></div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">2</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="2">
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Tricia Marie McMillan</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-05-10 11:18:42" title="5/10/2020, 11:18:42 AM" class="sc-jrQAon ka-dNDT">5/10/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">3</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="3">This is a short Markdown text.
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-hZpGMz bCUueg gHddgN"></div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">4</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="4">
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">5</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="5">With <span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">**</span><span class="_token_12v8s_92 _bold_12v8s_148 content">bold</span><span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">**</span> and <span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">__</span><span class="_token_12v8s_92 _bold_12v8s_148 content">italic</span><span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">__</span> words.
+    ><code><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-bUbTPt iDBVJh uqhFr has-text-info"><div class="sc-djWQsk sc-gIBpqd iDBVJh lcdRYX">Arthur Dent</div> <div class="sc-djWQsk sc-fyroPG iDBVJh cRTGQe"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">1</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="1"><span class="_token_12v8s_92 _title_12v8s_149 _important_12v8s_142 _punctuation_12v8s_99">#</span><span class="_token_12v8s_92 _title_12v8s_149 _important_12v8s_142"> Title</span>
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-tACje iDBVJh iBOoS"></div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">2</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="2">
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-bUbTPt iDBVJh uqhFr has-text-info"><div class="sc-djWQsk sc-gIBpqd iDBVJh lcdRYX">Tricia Marie McMillan</div> <div class="sc-djWQsk sc-fyroPG iDBVJh cRTGQe"><time datetime="2020-05-10 11:18:42" title="5/10/2020, 11:18:42 AM" class="sc-jrQAon ka-dNDT">5/10/2020</time></div> </div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">3</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="3">This is a short Markdown text.
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-tACje iDBVJh iBOoS"></div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">4</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="4">
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-bUbTPt iDBVJh uqhFr has-text-info"><div class="sc-djWQsk sc-gIBpqd iDBVJh lcdRYX">Arthur Dent</div> <div class="sc-djWQsk sc-fyroPG iDBVJh cRTGQe"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">5</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="5">With <span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">**</span><span class="_token_12v8s_92 _bold_12v8s_148 content">bold</span><span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">**</span> and <span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">__</span><span class="_token_12v8s_92 _bold_12v8s_148 content">italic</span><span class="_token_12v8s_92 _bold_12v8s_148 _punctuation_12v8s_99">__</span> words.
 </span></div></div></code></pre>
   </div>
 </div>
@@ -7810,18 +7703,18 @@ exports[`Repositories/Annotate Markdown 1`] = `
 `;
 
 exports[`Repositories/Annotate WithAvatars 1`] = `
-"<div class="sc-cHzoaq eKuNEP box">
+"<div class="sc-dSfbgX hMXXCZ box">
   <div class="panel-block">
     <pre
       class="language-go"
       aria-busy="false"
-    ><code><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU"><img class="has-rounded-border sc-kmQKqq etWAfy" crossorigin="anonymous" alt="Arthur Dent" src="https://robohash.org/arthur.dent@hitchhiker.com.png">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">1</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="1"><span class="_token_12v8s_92 _keyword_12v8s_133">package</span> main
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-hZpGMz bCUueg gHddgN"></div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">2</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="2">
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU"><img class="has-rounded-border sc-kmQKqq etWAfy" crossorigin="anonymous" alt="Tricia Marie McMillan" src="https://robohash.org/trillian@hitchhiker.com.png">Tricia Marie McMillan</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-05-10 11:18:42" title="5/10/2020, 11:18:42 AM" class="sc-jrQAon ka-dNDT">5/10/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">3</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="3"><span class="_token_12v8s_92 _keyword_12v8s_133">import</span> <span class="_token_12v8s_92 _string_12v8s_115">"fmt"</span>
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-hZpGMz bCUueg gHddgN"></div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">4</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="4">
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU"><img class="has-rounded-border sc-kmQKqq etWAfy" crossorigin="anonymous" alt="Arthur Dent" src="https://robohash.org/arthur.dent@hitchhiker.com.png">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">5</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="5"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">main</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU"><img class="has-rounded-border sc-kmQKqq etWAfy" crossorigin="anonymous" alt="Ford Prefect" src="https://robohash.org/ford.prefect@hitchhiker.com.png">Ford Prefect</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-12 18:29:42" title="4/12/2020, 6:29:42 PM" class="sc-jrQAon ka-dNDT">4/12/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">6</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="6">  fmt<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">Println</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">"Hello World"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
-</span></div></div><div class="sc-tACje kSVSGW"><div class="sc-fyroPG sc-dSfbgX bCUueg kVAOtO has-text-info"><div class="sc-fyroPG sc-iWVNNz bCUueg hWxdrU"><img class="has-rounded-border sc-kmQKqq etWAfy" crossorigin="anonymous" alt="Arthur Dent" src="https://robohash.org/arthur.dent@hitchhiker.com.png">Arthur Dent</div> <div class="sc-fyroPG sc-jKTeqw bCUueg kjagch"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-fyroPG sc-bUbTPt bCUueg eRYPh">7</div> <div class="sc-fyroPG bCUueg"><span class="line" data-line-number="7"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span>
+    ><code><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-bUbTPt iDBVJh uqhFr has-text-info"><div class="sc-djWQsk sc-gIBpqd iDBVJh lcdRYX"><img class="has-rounded-border sc-gslzsN fLGjWp" crossorigin="anonymous" alt="Arthur Dent" src="https://robohash.org/arthur.dent@hitchhiker.com.png">Arthur Dent</div> <div class="sc-djWQsk sc-fyroPG iDBVJh cRTGQe"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">1</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="1"><span class="_token_12v8s_92 _keyword_12v8s_133">package</span> main
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-tACje iDBVJh iBOoS"></div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">2</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="2">
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-bUbTPt iDBVJh uqhFr has-text-info"><div class="sc-djWQsk sc-gIBpqd iDBVJh lcdRYX"><img class="has-rounded-border sc-gslzsN fLGjWp" crossorigin="anonymous" alt="Tricia Marie McMillan" src="https://robohash.org/trillian@hitchhiker.com.png">Tricia Marie McMillan</div> <div class="sc-djWQsk sc-fyroPG iDBVJh cRTGQe"><time datetime="2020-05-10 11:18:42" title="5/10/2020, 11:18:42 AM" class="sc-jrQAon ka-dNDT">5/10/2020</time></div> </div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">3</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="3"><span class="_token_12v8s_92 _keyword_12v8s_133">import</span> <span class="_token_12v8s_92 _string_12v8s_115">"fmt"</span>
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-tACje iDBVJh iBOoS"></div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">4</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="4">
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-bUbTPt iDBVJh uqhFr has-text-info"><div class="sc-djWQsk sc-gIBpqd iDBVJh lcdRYX"><img class="has-rounded-border sc-gslzsN fLGjWp" crossorigin="anonymous" alt="Arthur Dent" src="https://robohash.org/arthur.dent@hitchhiker.com.png">Arthur Dent</div> <div class="sc-djWQsk sc-fyroPG iDBVJh cRTGQe"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">5</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="5"><span class="_token_12v8s_92 _keyword_12v8s_133">func</span> <span class="_token_12v8s_92 _function_12v8s_137">main</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span> <span class="_token_12v8s_92 _punctuation_12v8s_99">{</span>
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-bUbTPt iDBVJh uqhFr has-text-info"><div class="sc-djWQsk sc-gIBpqd iDBVJh lcdRYX"><img class="has-rounded-border sc-gslzsN fLGjWp" crossorigin="anonymous" alt="Ford Prefect" src="https://robohash.org/ford.prefect@hitchhiker.com.png">Ford Prefect</div> <div class="sc-djWQsk sc-fyroPG iDBVJh cRTGQe"><time datetime="2020-04-12 18:29:42" title="4/12/2020, 6:29:42 PM" class="sc-jrQAon ka-dNDT">4/12/2020</time></div> </div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">6</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="6">  fmt<span class="_token_12v8s_92 _punctuation_12v8s_99">.</span><span class="_token_12v8s_92 _function_12v8s_137">Println</span><span class="_token_12v8s_92 _punctuation_12v8s_99">(</span><span class="_token_12v8s_92 _string_12v8s_115">"Hello World"</span><span class="_token_12v8s_92 _punctuation_12v8s_99">)</span>
+</span></div></div><div class="sc-jKTeqw cDniPl"><div class="sc-djWQsk sc-bUbTPt iDBVJh uqhFr has-text-info"><div class="sc-djWQsk sc-gIBpqd iDBVJh lcdRYX"><img class="has-rounded-border sc-gslzsN fLGjWp" crossorigin="anonymous" alt="Arthur Dent" src="https://robohash.org/arthur.dent@hitchhiker.com.png">Arthur Dent</div> <div class="sc-djWQsk sc-fyroPG iDBVJh cRTGQe"><time datetime="2020-04-09 15:07:42" title="4/9/2020, 3:07:42 PM" class="sc-jrQAon ka-dNDT">4/9/2020</time></div> </div><div class="sc-djWQsk sc-iWVNNz iDBVJh caqlRG">7</div> <div class="sc-djWQsk iDBVJh"><span class="line" data-line-number="7"><span class="_token_12v8s_92 _punctuation_12v8s_99">}</span>
 </span></div></div></code></pre>
   </div>
 </div>
@@ -7829,15 +7722,15 @@ exports[`Repositories/Annotate WithAvatars 1`] = `
 `;
 
 exports[`Repositories/Changesets CoAuthorsWithAvatar 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
               <figure class="media-left mt-2 mr-2">
-                <div class="sc-iNGDOz iPYTEp image">
+                <div class="sc-gSQHZB gaskVh image">
                   <img
                     class="has-rounded-border"
                     crossorigin="anonymous"
@@ -7846,7 +7739,7 @@ exports[`Repositories/Changesets CoAuthorsWithAvatar 1`] = `
                   />
                 </div>
               </figure>
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">Added design docs</h4>
                 <p class="is-hidden-touch">
                   Commit
@@ -7935,15 +7828,15 @@ exports[`Repositories/Changesets CoAuthorsWithAvatar 1`] = `
 `;
 
 exports[`Repositories/Changesets CommitterAndCoAuthorsWithAvatar 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
               <figure class="media-left mt-2 mr-2">
-                <div class="sc-iNGDOz iPYTEp image">
+                <div class="sc-gSQHZB gaskVh image">
                   <img
                     class="has-rounded-border"
                     crossorigin="anonymous"
@@ -7952,7 +7845,7 @@ exports[`Repositories/Changesets CommitterAndCoAuthorsWithAvatar 1`] = `
                   />
                 </div>
               </figure>
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">
                   The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive.
                   The craft was stolen by then-President Zaphod Beeblebrox at the official launch of the ship, as he was
@@ -8041,14 +7934,14 @@ exports[`Repositories/Changesets CommitterAndCoAuthorsWithAvatar 1`] = `
 `;
 
 exports[`Repositories/Changesets Default 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">initialize repository</h4>
                 <p class="is-hidden-touch">
                   Commit
@@ -8114,14 +8007,14 @@ exports[`Repositories/Changesets Default 1`] = `
 `;
 
 exports[`Repositories/Changesets ListWithNavigation 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">
                   The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive.
                   The craft was stolen by then-President Zaphod Beeblebrox at the official launch of the ship, as he was
@@ -8197,13 +8090,13 @@ exports[`Repositories/Changesets ListWithNavigation 1`] = `
       </div>
     </div>
   </div>
-  <div class="sc-eJwVsk fWApmI">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">Change heading to "Heart Of Gold"</h4>
                 <p class="is-hidden-touch">
                   Commit
@@ -8270,13 +8163,13 @@ exports[`Repositories/Changesets ListWithNavigation 1`] = `
       </div>
     </div>
   </div>
-  <div class="sc-eJwVsk fWApmI">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">initialize repository</h4>
                 <p class="is-hidden-touch">
                   Commit
@@ -8342,14 +8235,14 @@ exports[`Repositories/Changesets ListWithNavigation 1`] = `
 `;
 
 exports[`Repositories/Changesets Replacements 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">
                   <a href="http://example.com/hog">HOG-42</a>&nbsp; Change mail to &nbsp;<a
                     href="mailto:hog@example.com"
@@ -8420,15 +8313,15 @@ exports[`Repositories/Changesets Replacements 1`] = `
 `;
 
 exports[`Repositories/Changesets WithAvatar 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
               <figure class="media-left mt-2 mr-2">
-                <div class="sc-iNGDOz iPYTEp image">
+                <div class="sc-gSQHZB gaskVh image">
                   <img
                     class="has-rounded-border"
                     crossorigin="anonymous"
@@ -8437,7 +8330,7 @@ exports[`Repositories/Changesets WithAvatar 1`] = `
                   />
                 </div>
               </figure>
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">initialize repository</h4>
                 <p class="is-hidden-touch">
                   Commit
@@ -8503,14 +8396,14 @@ exports[`Repositories/Changesets WithAvatar 1`] = `
 `;
 
 exports[`Repositories/Changesets WithCommitter 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">Change heading to "Heart Of Gold"</h4>
                 <p class="is-hidden-touch">
                   Commit
@@ -8582,14 +8475,14 @@ exports[`Repositories/Changesets WithCommitter 1`] = `
 `;
 
 exports[`Repositories/Changesets WithCommitterAndCoAuthor 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">
                   The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive.
                   The craft was stolen by then-President Zaphod Beeblebrox at the official launch of the ship, as he was
@@ -8670,14 +8563,14 @@ exports[`Repositories/Changesets WithCommitterAndCoAuthor 1`] = `
 `;
 
 exports[`Repositories/Changesets WithInvalidSignature 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">initialize repository</h4>
                 <p class="is-hidden-touch">
                   Commit
@@ -8709,11 +8602,18 @@ exports[`Repositories/Changesets WithInvalidSignature 1`] = `
                       >SCM Administrator</a
                     >
                   </p>
-                  <div>
-                    <span class="sc-gSQHZB gkbYNa has-text-danger mx-2 pt-1 icon" aria-hidden="true"
+                  <button
+                    type="button"
+                    aria-label="Signatures"
+                    aria-haspopup="dialog"
+                    aria-expanded="false"
+                    data-state="closed"
+                    class="sc-pVUti zxHzd"
+                  >
+                    <span class="sc-hUpbpP iiIqso has-text-danger mx-2 pt-1 icon" aria-hidden="true"
                       ><i class="fas fa-fw fa-key"></i
                     ></span>
-                  </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -8748,14 +8648,14 @@ exports[`Repositories/Changesets WithInvalidSignature 1`] = `
 `;
 
 exports[`Repositories/Changesets WithMultipleCoAuthors 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">Added design docs</h4>
                 <p class="is-hidden-touch">
                   Commit
@@ -8828,14 +8728,14 @@ exports[`Repositories/Changesets WithMultipleCoAuthors 1`] = `
 `;
 
 exports[`Repositories/Changesets WithMultipleSignaturesInvalid 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">initialize repository</h4>
                 <p class="is-hidden-touch">
                   Commit
@@ -8867,11 +8767,18 @@ exports[`Repositories/Changesets WithMultipleSignaturesInvalid 1`] = `
                       >SCM Administrator</a
                     >
                   </p>
-                  <div>
-                    <span class="sc-gSQHZB gkbYNa has-text-danger mx-2 pt-1 icon" aria-hidden="true"
+                  <button
+                    type="button"
+                    aria-label="Signatures"
+                    aria-haspopup="dialog"
+                    aria-expanded="false"
+                    data-state="closed"
+                    class="sc-pVUti zxHzd"
+                  >
+                    <span class="sc-hUpbpP iiIqso has-text-danger mx-2 pt-1 icon" aria-hidden="true"
                       ><i class="fas fa-fw fa-key"></i
                     ></span>
-                  </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -8906,14 +8813,14 @@ exports[`Repositories/Changesets WithMultipleSignaturesInvalid 1`] = `
 `;
 
 exports[`Repositories/Changesets WithMultipleSignaturesValid 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">initialize repository</h4>
                 <p class="is-hidden-touch">
                   Commit
@@ -8945,11 +8852,18 @@ exports[`Repositories/Changesets WithMultipleSignaturesValid 1`] = `
                       >SCM Administrator</a
                     >
                   </p>
-                  <div>
-                    <span class="sc-gSQHZB gkbYNa has-text-success mx-2 pt-1 icon" aria-hidden="true"
+                  <button
+                    type="button"
+                    aria-label="Signatures"
+                    aria-haspopup="dialog"
+                    aria-expanded="false"
+                    data-state="closed"
+                    class="sc-pVUti zxHzd"
+                  >
+                    <span class="sc-hUpbpP iiIqso has-text-success mx-2 pt-1 icon" aria-hidden="true"
                       ><i class="fas fa-fw fa-key"></i
                     ></span>
-                  </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -8984,14 +8898,14 @@ exports[`Repositories/Changesets WithMultipleSignaturesValid 1`] = `
 `;
 
 exports[`Repositories/Changesets WithUnknownSignature 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">initialize repository</h4>
                 <p class="is-hidden-touch">
                   Commit
@@ -9023,11 +8937,18 @@ exports[`Repositories/Changesets WithUnknownSignature 1`] = `
                       >SCM Administrator</a
                     >
                   </p>
-                  <div>
-                    <span class="sc-gSQHZB gkbYNa has-text-secondary mx-2 pt-1 icon" aria-hidden="true"
+                  <button
+                    type="button"
+                    aria-label="Signatures"
+                    aria-haspopup="dialog"
+                    aria-expanded="false"
+                    data-state="closed"
+                    class="sc-pVUti zxHzd"
+                  >
+                    <span class="sc-hUpbpP iiIqso has-text-secondary mx-2 pt-1 icon" aria-hidden="true"
                       ><i class="fas fa-fw fa-key"></i
                     ></span>
-                  </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -9062,14 +8983,14 @@ exports[`Repositories/Changesets WithUnknownSignature 1`] = `
 `;
 
 exports[`Repositories/Changesets WithValidSignature 1`] = `
-"<div class="sc-nVikz dHOXRL box box-link-shadow">
-  <div class="sc-eJwVsk fWApmI">
+"<div class="sc-jeqZuJ WVCFE box box-link-shadow">
+  <div class="sc-iNGDOz ceLzgD">
     <div class="columns is-variable is-1-mobile is-0-tablet">
       <div class="column is-three-fifths is-full-mobile">
         <div class="columns is-gapless">
           <div class="column is-four-fifths">
             <div class="media">
-              <div class="sc-jeqZuJ fpUUeW media-right ml-0">
+              <div class="sc-lbhHsq gpXPwV media-right ml-0">
                 <h4 class="has-text-weight-bold is-ellipsis-overflow">initialize repository</h4>
                 <p class="is-hidden-touch">
                   Commit
@@ -9101,11 +9022,18 @@ exports[`Repositories/Changesets WithValidSignature 1`] = `
                       >SCM Administrator</a
                     >
                   </p>
-                  <div>
-                    <span class="sc-gSQHZB gkbYNa has-text-success mx-2 pt-1 icon" aria-hidden="true"
+                  <button
+                    type="button"
+                    aria-label="Signatures"
+                    aria-haspopup="dialog"
+                    aria-expanded="false"
+                    data-state="closed"
+                    class="sc-pVUti zxHzd"
+                  >
+                    <span class="sc-hUpbpP iiIqso has-text-success mx-2 pt-1 icon" aria-hidden="true"
                       ><i class="fas fa-fw fa-key"></i
                     ></span>
-                  </div>
+                  </button>
                 </div>
               </div>
             </div>

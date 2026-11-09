@@ -18,9 +18,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Signature } from "@scm-manager/ui-types";
 import styled from "styled-components";
-import { Icon } from "@scm-manager/ui-core";
-import { usePopover } from "../../popover";
-import Popover from "../../popover/Popover";
+import { Icon, Popover, UnstyledButton } from "@scm-manager/ui-core";
 import classNames from "classnames";
 
 type Props = {
@@ -39,6 +37,8 @@ const StyledIcon = styled(Icon)`
 `;
 
 const StyledDiv = styled.div`
+  max-width: 500px;
+
   > *:not(:last-child) {
     margin-bottom: 24px;
   }
@@ -46,7 +46,6 @@ const StyledDiv = styled.div`
 
 const SignatureIcon: FC<Props> = ({ signatures, className }) => {
   const [t] = useTranslation("repos");
-  const { popoverProps, triggerProps } = usePopover();
 
   if (!signatures.length) {
     return null;
@@ -119,21 +118,23 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
   const signatureElements = signatures.map((signature) => createSignatureBlock(signature));
 
   return (
-    <>
-      <Popover
-        title={<h1 className="has-text-weight-bold is-size-5">{t("changeset.signatures")}</h1>}
-        width={500}
-        {...popoverProps}
-      >
-        <StyledDiv>{signatureElements}</StyledDiv>
-      </Popover>
-      {/* @ts-ignore */}
-      <div {...triggerProps}>
-        <StyledIcon className={classNames(`has-text-${getColor(signatures) ?? "secondary"}`, className)}>
-          key
-        </StyledIcon>
-      </div>
-    </>
+    <Popover
+      title={
+        <div className="px-2 pt-2">
+          <h1 className="has-text-weight-bold is-size-5">{t("changeset.signatures")}</h1>
+          <hr className="my-2" />
+        </div>
+      }
+      trigger={
+        <UnstyledButton aria-label={t("changeset.signatures")}>
+          <StyledIcon className={classNames(`has-text-${getColor(signatures) ?? "secondary"}`, className)}>
+            key
+          </StyledIcon>
+        </UnstyledButton>
+      }
+    >
+      <StyledDiv className="px-2 pb-2">{signatureElements}</StyledDiv>
+    </Popover>
   );
 };
 

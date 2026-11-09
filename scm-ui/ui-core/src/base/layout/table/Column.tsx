@@ -15,14 +15,30 @@
  */
 
 import React, { FC, ReactNode } from "react";
-import { ColumnProps } from "./types";
+import { Comparator } from "./comparators";
+
+/**
+ * Props every column of a {@link Table} accepts; `row`, `columnIndex` and `rowIndex` are set by the table.
+ */
+export type ColumnProps = {
+  header: ReactNode;
+  row?: any;
+  columnIndex?: number;
+  rowIndex?: number;
+  createComparator?: (props: any, columnIndex: number) => Comparator;
+  ascendingIcon?: string;
+  descendingIcon?: string;
+  className?: string;
+};
 
 type Props = ColumnProps & {
   children: (row: any, columnIndex: number, rowIndex: number) => ReactNode;
 };
 
 /**
- * @deprecated
+ * Column of a {@link Table}, which renders each cell with the given render function.
+ *
+ * @since 4.0.0
  */
 const Column: FC<Props> = ({ row, columnIndex, rowIndex, children }) => {
   if (row === undefined) {

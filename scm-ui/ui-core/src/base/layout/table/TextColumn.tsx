@@ -14,26 +14,23 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
-import classNames from "classnames";
-import Icon from "../Icon";
+import { FC } from "react";
+import { ColumnProps } from "./Column";
 
-type Props = {
-  name: string;
-  isVisible: boolean;
+export type TextColumnProps = ColumnProps & {
+  dataKey: string;
 };
 
 /**
- * @deprecated
+ * Column of a {@link Table}, which renders the value of `dataKey` of each row.
+ *
+ * The {@link Table} sorts it by that value unless `createComparator` is given.
+ *
+ * @beta
+ * @since 4.0.0
  */
-const SortIcon: FC<Props> = (props: Props) => {
-  return (
-    <Icon
-      className={classNames("ml-1", { "is-invisible": !props.isVisible })}
-      name={props.name}
-      alt={`${props.name} icon`}
-    />
-  );
+const TextColumn: FC<TextColumnProps> = ({ row, dataKey }) => {
+  return row[dataKey];
 };
 
-export default SortIcon;
+export default TextColumn;

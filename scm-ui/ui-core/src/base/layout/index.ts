@@ -38,8 +38,12 @@ import TabsComponent from "./tabs/Tabs";
 import TabsContent from "./tabs/TabsContent";
 import TabsList from "./tabs/TabsList";
 import TabTrigger from "./tabs/TabTrigger";
+import TableComponent from "./table/Table";
+import TableColumn from "./table/Column";
+import TableTextColumn from "./table/TextColumn";
 
 export { default as Collapsible } from "./collapsible/Collapsible";
+export { default as comparators } from "./table/comparators";
 export { default as Page } from "./templates/page/Page";
 export { useLayoutWide } from "./_helpers/layout-wide";
 
@@ -84,6 +88,11 @@ export const Tabs = Object.assign(TabsComponent, {
     Trigger: TabTrigger,
   }),
   Content: TabsContent,
+});
+
+export const Table = Object.assign(TableComponent, {
+  Column: TableColumn,
+  TextColumn: TableTextColumn,
 });
 
 export { CardVariants } from "./card/CardDetail";
