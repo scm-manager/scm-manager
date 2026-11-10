@@ -1,0 +1,2 @@
+- type: changed
+  description: Distinguish rejected updates, excluded refs and deleted refs in Git mirror logs

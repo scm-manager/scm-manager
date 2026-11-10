@@ -37,7 +37,6 @@ import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.ReceiveCommand;
-import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.transport.TransportHttp;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
@@ -64,6 +63,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -90,7 +90,7 @@ import static sonia.scm.repository.api.MirrorCommandResult.ResultType.REJECTED_U
  *   <li>Create a local working copy for the repository.</li>
  *   <li>Fetch updates from the source and override all local refs in the working copy
  *     (like <code>git fetch "refs/heads/*:refs/heads/*" "refs/tags/*:refs/tags/*"</code>).</li>
- *   <li>Iterate the updates and decide, whether to keep each single update or not. If an update is rejected,
+ *   <li>Evaluate every branch and tag, including unchanged refs, and apply the filter outcome. If an update is rejected,
  *     the reference is set to its old oid (or deleted, if this is a new reference).</li>
  *   <li>Push the changed references from the working copy to the repository.</li>
  *   <li>Release the working copy.</li>
@@ -168,6 +168,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
     private FetchResult fetchResult;
     private GitFilterContext filterContext;
+    private Collection<GitMirrorRefUpdate> references;
     private MirrorFilter.Filter filter;
 
     private ResultType result = OK;
@@ -196,21 +197,17 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       copyRemoteRefsToMain();
       Collection<ObjectId> existingRevisions = mirrorCommandRequest.isReloadLfs() ? emptyList() : gatherAllRefs();
       fetchResult = createFetchCommand().call();
+      references = gatherReferences();
       filterContext = new GitFilterContext();
       filter = mirrorCommandRequest.getFilter().getFilter(filterContext);
 
       if (fetchResult.getTrackingRefUpdates().isEmpty()) {
         LOG.trace("No updates found for mirror repository {}", repository);
         mirrorLog.add("No updates found");
-        if (!mirrorCommandRequest.isReloadLfs()) {
-          return new MirrorCommandResult(result, mirrorLog.getLog(), stopwatch.stop().elapsed(), lfsUpdateResult);
-        }
       }
       Collection<ObjectId> accepted = new HashSet<>();
-      if (!fetchResult.getTrackingRefUpdates().isEmpty()) {
-        handleBranches(accepted);
-        handleTags(accepted);
-      }
+      handleBranches(accepted);
+      handleTags(accepted);
       if (mirrorCommandRequest.isReloadLfs()) {
         gatherAllMirroredRefs(accepted);
       }
@@ -224,7 +221,9 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       if (!defaultBranchSelector.isChanged()) {
-        mirrorLog.add("No effective changes detected");
+        if (!fetchResult.getTrackingRefUpdates().isEmpty() || mirrorCommandRequest.isReloadLfs()) {
+          mirrorLog.add("No effective changes detected");
+        }
         return new MirrorCommandResult(result, mirrorLog.getLog(), stopwatch.stop().elapsed(), lfsUpdateResult);
       }
 
@@ -358,12 +357,28 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
     }
 
+    private Collection<GitMirrorRefUpdate> gatherReferences() {
+      Map<String, GitMirrorRefUpdate> refs = new LinkedHashMap<>();
+      fetchResult.getTrackingRefUpdates().forEach(update ->
+        refs.put(update.getLocalName(), new GitMirrorRefUpdate(update)));
+      try {
+        for (String prefix : List.of(Constants.R_HEADS, Constants.R_TAGS)) {
+          for (Ref ref : git.getRepository().getRefDatabase().getRefsByPrefix(prefix)) {
+            refs.putIfAbsent(ref.getName(), new GitMirrorRefUpdate(ref));
+          }
+        }
+      } catch (IOException e) {
+        throw new InternalRepositoryException(repository, "Could not gather mirror references", e);
+      }
+      return refs.values();
+    }
+
     private void handleBranches(Collection<ObjectId> accepted) {
       LoggerWithHeader logger = new LoggerWithHeader("Branches:");
       doForEachRefStartingWith("refs/heads", ref -> handleBranch(logger, ref, accepted));
     }
 
-    private void handleBranch(LoggerWithHeader logger, TrackingRefUpdate ref, Collection<ObjectId> accepted) {
+    private void handleBranch(LoggerWithHeader logger, GitMirrorRefUpdate ref, Collection<ObjectId> accepted) {
       MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, RefType.BRANCH);
       refHandler.handleRef(ref1 -> refHandler.testFilterForBranch())
         .ifPresent(accepted::add);
@@ -374,7 +389,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       doForEachRefStartingWith("refs/tags", ref -> handleTag(logger, ref, accepted));
     }
 
-    private void handleTag(LoggerWithHeader logger, TrackingRefUpdate ref, Collection<ObjectId> accepted) {
+    private void handleTag(LoggerWithHeader logger, GitMirrorRefUpdate ref, Collection<ObjectId> accepted) {
       MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, RefType.TAG);
       refHandler.handleRef(ref1 -> refHandler.testFilterForTag())
         .ifPresent(accepted::add);
@@ -382,21 +397,31 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
     private class MirrorReferenceUpdateHandler {
       private final LoggerWithHeader logger;
-      private final TrackingRefUpdate ref;
+      private final GitMirrorRefUpdate ref;
       private final RefType refType;
 
-      public MirrorReferenceUpdateHandler(LoggerWithHeader logger, TrackingRefUpdate ref, RefType refType) {
+      public MirrorReferenceUpdateHandler(LoggerWithHeader logger, GitMirrorRefUpdate ref, RefType refType) {
         this.logger = logger;
         this.ref = ref;
         this.refType = refType;
       }
 
-      private Optional<ObjectId> handleRef(Function<TrackingRefUpdate, Result> filter) {
+      private Optional<ObjectId> handleRef(Function<GitMirrorRefUpdate, Result> filter) {
         LOG.trace("Handling {}", ref.getLocalName());
         Result filterResult = filter.apply(ref);
         try {
           String referenceName = ref.getLocalName().substring("refs/".length() + refType.refPath.length());
-          if (filterResult.isAccepted()) {
+          if (filterResult.isRemovalRequested()) {
+            deleteReference(ref.getLocalName());
+            boolean existedInDestination = !ObjectId.zeroId().equals(ref.getOldObjectId());
+            if (existedInDestination) {
+              deletedRefs.add(ref.getLocalName());
+              defaultBranchSelector.deleted(refType, referenceName);
+            }
+            logger.logChange(ref, referenceName, existedInDestination ? "deleted" : "skipped", filterResult.getRemoveReason());
+          } else if (ref.isUnchanged()) {
+            return empty();
+          } else if (filterResult.isAccepted()) {
             LOG.trace("Accepted ref {}", ref.getLocalName());
             return handleAcceptedReference(referenceName);
           } else {
@@ -431,7 +456,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         } else {
           updateReference(ref.getLocalName(), ref.getOldObjectId());
         }
-        logger.logChange(ref, referenceName, filterResult.getRejectReason().orElse("rejected due to filter"));
+        logger.logChange(ref, referenceName, "update rejected", filterResult.getRejectReason());
       }
 
       private Optional<ObjectId> handleAcceptedReference(String referenceName) throws IOException {
@@ -471,7 +496,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         deleteUpdate.delete();
       }
 
-      private boolean isDeletedReference(TrackingRefUpdate ref) {
+      private boolean isDeletedReference(GitMirrorRefUpdate ref) {
         return ref.asReceiveCommand().getType() == ReceiveCommand.Type.DELETE;
       }
 
@@ -482,7 +507,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         refUpdate.forceUpdate();
       }
 
-      private String getUpdateType(TrackingRefUpdate trackingRefUpdate) {
+      private String getUpdateType(GitMirrorRefUpdate trackingRefUpdate) {
         return trackingRefUpdate.getResult().name().toLowerCase(Locale.ENGLISH);
       }
     }
@@ -495,7 +520,11 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         this.header = header;
       }
 
-      void logChange(TrackingRefUpdate ref, String branchName, String type) {
+      void logChange(GitMirrorRefUpdate ref, String branchName, String action, Optional<String> reason) {
+        logChange(ref, branchName, reason.map(cause -> action + ": " + cause).orElse(action));
+      }
+
+      void logChange(GitMirrorRefUpdate ref, String branchName, String type) {
         logLine(
           format("- %s..%s %s (%s)",
             ref.getOldObjectId().abbreviate(9).name(),
@@ -515,7 +544,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private void doForEachRefStartingWith(String prefix, RefUpdateConsumer refUpdateConsumer) {
-      fetchResult.getTrackingRefUpdates()
+      references
         .stream()
         .filter(ref -> ref.getLocalName().startsWith(prefix))
         .forEach(ref -> {
@@ -561,7 +590,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         Map<String, MirrorFilter.BranchUpdate> extractedBranchUpdates = new HashMap<>();
         Map<String, MirrorFilter.TagUpdate> extractedTagUpdates = new HashMap<>();
 
-        fetchResult.getTrackingRefUpdates().forEach(refUpdate -> {
+        references.forEach(refUpdate -> {
           if (refUpdate.getLocalName().startsWith("refs/heads")) {
             extractedBranchUpdates.put(refUpdate.getLocalName(), new GitBranchUpdate(refUpdate));
           }
@@ -595,13 +624,13 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
     private class GitBranchUpdate implements MirrorFilter.BranchUpdate {
 
-      private final TrackingRefUpdate refUpdate;
+      private final GitMirrorRefUpdate refUpdate;
 
       private final String branchName;
 
       private Changeset changeset;
 
-      public GitBranchUpdate(TrackingRefUpdate refUpdate) {
+      public GitBranchUpdate(GitMirrorRefUpdate refUpdate) {
         this.refUpdate = refUpdate;
         this.branchName = refUpdate.getLocalName().substring("refs/heads/".length());
       }
@@ -613,7 +642,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       @Override
       public Optional<Changeset> getChangeset() {
-        if (isOfTypeOrEmpty(getUpdateType(), MirrorFilter.UpdateType.DELETE)) {
+        if (getUpdateType().filter(type -> type == MirrorFilter.UpdateType.DELETE).isPresent()) {
           return empty();
         }
         if (changeset == null) {
@@ -624,7 +653,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       @Override
       public Optional<String> getNewRevision() {
-        if (isOfTypeOrEmpty(getUpdateType(), MirrorFilter.UpdateType.DELETE)) {
+        if (getUpdateType().filter(type -> type == MirrorFilter.UpdateType.DELETE).isPresent()) {
           return empty();
         }
         return of(refUpdate.getNewObjectId().name());
@@ -632,7 +661,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       @Override
       public Optional<String> getOldRevision() {
-        if (isOfTypeOrEmpty(getUpdateType(), MirrorFilter.UpdateType.CREATE)) {
+        if (getUpdateType().filter(type -> type == MirrorFilter.UpdateType.CREATE).isPresent()) {
           return empty();
         }
         return of(refUpdate.getOldObjectId().name());
@@ -640,7 +669,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       @Override
       public Optional<MirrorFilter.UpdateType> getUpdateType() {
-        return getUpdateTypeFor(refUpdate.asReceiveCommand());
+        return refUpdate.isUnchanged() ? empty() : getUpdateTypeFor(refUpdate.asReceiveCommand());
       }
 
       @Override
@@ -667,13 +696,13 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
     private class GitTagUpdate implements MirrorFilter.TagUpdate {
 
-      private final TrackingRefUpdate refUpdate;
+      private final GitMirrorRefUpdate refUpdate;
 
       private final String tagName;
 
       private Tag tag;
 
-      public GitTagUpdate(TrackingRefUpdate refUpdate) {
+      public GitTagUpdate(GitMirrorRefUpdate refUpdate) {
         this.refUpdate = refUpdate;
         this.tagName = refUpdate.getLocalName().substring("refs/tags/".length());
       }
@@ -685,7 +714,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       @Override
       public Optional<Tag> getTag() {
-        if (isOfTypeOrEmpty(getUpdateType(), MirrorFilter.UpdateType.DELETE)) {
+        if (getUpdateType().filter(type -> type == MirrorFilter.UpdateType.DELETE).isPresent()) {
           return empty();
         }
         if (tag == null) {
@@ -696,12 +725,12 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       @Override
       public Optional<String> getNewRevision() {
-        return getTag().map(Tag::getRevision);
+        return refUpdate.isUnchanged() ? of(refUpdate.getNewObjectId().name()) : getTag().map(Tag::getRevision);
       }
 
       @Override
       public Optional<String> getOldRevision() {
-        if (isOfTypeOrEmpty(getUpdateType(), MirrorFilter.UpdateType.CREATE)) {
+        if (getUpdateType().filter(type -> type == MirrorFilter.UpdateType.CREATE).isPresent()) {
           return empty();
         }
         return of(refUpdate.getOldObjectId().name());
@@ -709,7 +738,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       @Override
       public Optional<MirrorFilter.UpdateType> getUpdateType() {
-        return getUpdateTypeFor(refUpdate.asReceiveCommand());
+        return refUpdate.isUnchanged() ? empty() : getUpdateTypeFor(refUpdate.asReceiveCommand());
       }
 
       private Tag computeTag() {
@@ -729,10 +758,6 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           throw new InternalRepositoryException(context.getRepository(), "got exception while validating tag", e);
         }
       }
-    }
-
-    private boolean isOfTypeOrEmpty(Optional<MirrorFilter.UpdateType> updateType, MirrorFilter.UpdateType type) {
-      return updateType.isEmpty() || updateType.get() == type;
     }
 
     private Optional<MirrorFilter.UpdateType> getUpdateTypeFor(ReceiveCommand receiveCommand) {
@@ -779,7 +804,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   }
 
   private interface RefUpdateConsumer {
-    void accept(TrackingRefUpdate refUpdate) throws IOException;
+    void accept(GitMirrorRefUpdate refUpdate) throws IOException;
   }
 
   static class DefaultBranchSelector {

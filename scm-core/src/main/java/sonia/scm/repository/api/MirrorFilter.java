@@ -32,6 +32,11 @@ public interface MirrorFilter {
     return new Filter() {};
   }
 
+  /**
+   * Evaluated for changed and unchanged branches and tags on every successful fetch.
+   * For unchanged refs, the update type is empty, both revisions contain the current revision,
+   * and the current changeset or tag is available. Accepting or rejecting such a ref is a no-op.
+   */
   interface Filter {
 
     default Result acceptBranch(BranchUpdate branch) {
@@ -55,32 +60,59 @@ public interface MirrorFilter {
   }
 
   class Result {
-    private final boolean accepted;
-    private final String rejectReason;
+    private enum Outcome { ACCEPT, REJECT, REMOVE }
 
-    private Result(boolean accepted, String rejectReason) {
-      this.accepted = accepted;
-      this.rejectReason = rejectReason;
+    private final Outcome outcome;
+    private final String reason;
+
+    private Result(Outcome outcome, String reason) {
+      this.outcome = outcome;
+      this.reason = reason;
     }
 
+    /**
+     * Reject the incoming change while preserving the existing destination ref.
+     * The reason describes only the cause; the command adds the action to the log entry.
+     */
     public static Result reject(String rejectReason) {
-      return new Result(false, rejectReason);
+      return new Result(Outcome.REJECT, rejectReason);
     }
 
     public static Result reject() {
-      return new Result(false, null);
+      return new Result(Outcome.REJECT, null);
     }
 
     public static Result accept() {
-      return new Result(true, null);
+      return new Result(Outcome.ACCEPT, null);
+    }
+
+    /** Exclude the ref entirely, deleting it from the destination if it exists. */
+    public static Result remove() {
+      return remove(null);
+    }
+
+    /**
+     * Exclude the ref entirely, whether or not it exists in the destination.
+     * The reason describes only the cause; the command adds the action to the log entry.
+     */
+    public static Result remove(String removeReason) {
+      return new Result(Outcome.REMOVE, removeReason);
+    }
+
+    public boolean isRemovalRequested() {
+      return outcome == Outcome.REMOVE;
     }
 
     public boolean isAccepted() {
-      return accepted;
+      return outcome == Outcome.ACCEPT;
     }
 
     public Optional<String> getRejectReason() {
-      return Optional.ofNullable(rejectReason);
+      return outcome == Outcome.REJECT ? Optional.ofNullable(reason) : Optional.empty();
+    }
+
+    public Optional<String> getRemoveReason() {
+      return outcome == Outcome.REMOVE ? Optional.ofNullable(reason) : Optional.empty();
     }
   }
 

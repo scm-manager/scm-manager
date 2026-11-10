@@ -1,0 +1,2 @@
+- type: fixed
+  description: Allow mirror filters to explicitly remove excluded branches and tags, including when upstream refs are unchanged

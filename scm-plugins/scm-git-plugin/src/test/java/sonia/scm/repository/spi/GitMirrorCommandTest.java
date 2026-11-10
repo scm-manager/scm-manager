@@ -187,10 +187,10 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).contains("Branches:")
-      .contains("- 000000000..fcd0ef183 master (nothing accepted)")
-      .contains("- 000000000..3f76a12f0 test-branch (nothing accepted)")
+      .contains("- 000000000..fcd0ef183 master (update rejected: nothing accepted)")
+      .contains("- 000000000..3f76a12f0 test-branch (update rejected: nothing accepted)")
       .contains("Tags:")
-      .contains("- 000000000..86a6645ec test-tag (nothing accepted)");
+      .contains("- 000000000..86a6645ec test-tag (update rejected: nothing accepted)");
 
     try (Git createdMirror = Git.open(clone)) {
       assertThat(createdMirror.branchList().call()).isEmpty();
@@ -237,7 +237,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog())
-      .contains("- 000000000..fcd0ef183 master (master not accepted)");
+      .contains("- 000000000..fcd0ef183 master (update rejected: master not accepted)");
 
     try (Git createdMirror = Git.open(clone)) {
       assertThat(createdMirror.branchList().call().stream().filter(r -> r.getName().contains("master")).findAny())
@@ -401,6 +401,188 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldRemoveUnchangedRefsWhenFilterChanges() throws IOException, GitAPIException {
+    callMirrorCommand();
+
+    MirrorCommandResult result = callUpdate(this::removeTestRefs);
+
+    assertThat(result.getResult()).isEqualTo(OK);
+    assertThat(result.getLog()).anyMatch(line -> line.contains("test-branch (deleted)"));
+    assertThat(result.getLog()).anyMatch(line -> line.contains("test-tag (deleted)"));
+    try (Git mirror = Git.open(clone)) {
+      assertThat(findBranch(mirror, "test-branch")).isEmpty();
+      assertThat(findTag(mirror, "test-tag")).isEmpty();
+      assertThat(findBranch(mirror, "master")).isPresent();
+    }
+    MirrorCommandResult repeated = callUpdate(this::removeTestRefs);
+    assertThat(repeated.getResult()).isEqualTo(OK);
+    assertThat(repeated.getLog()).noneMatch(line -> line.contains("(deleted)"));
+  }
+
+  @Test
+  public void shouldRemoveChangedRefsWhenFilterRequestsRemoval() throws IOException, GitAPIException {
+    callMirrorCommand();
+    try (Git source = Git.open(repositoryDirectory)) {
+      source.branchCreate().setName("test-branch").setStartPoint("9e93d8631675a89615fac56b09209686146ff3c0").setForce(true).call();
+      source.tag().setName("test-tag").setObjectId(getRevObject(source, "9e93d8631675a89615fac56b09209686146ff3c0"))
+        .setAnnotated(false).setForceUpdate(true).call();
+    }
+
+    MirrorCommandResult result = callUpdate(r -> removeTestRefs(r, "excluded by name"));
+
+    assertThat(result.getResult()).isEqualTo(OK);
+    assertThat(result.getLog()).anyMatch(line -> line.contains("test-branch (deleted: excluded by name)"));
+    assertThat(result.getLog()).anyMatch(line -> line.contains("test-tag (deleted: excluded by name)"));
+
+    try (Git mirror = Git.open(clone)) {
+      assertThat(findBranch(mirror, "test-branch")).isEmpty();
+      assertThat(findTag(mirror, "test-tag")).isEmpty();
+    }
+  }
+
+  @Test
+  public void shouldNotCreateRefsExcludedByRemovalResult() throws IOException, GitAPIException {
+    MirrorCommandResult result = callMirrorCommand(repositoryDirectory.getAbsolutePath(), this::removeTestRefs);
+
+    assertThat(result.getResult()).isEqualTo(OK);
+    assertThat(result.getLog()).anyMatch(line -> line.contains("test-branch (skipped)"));
+    assertThat(result.getLog()).anyMatch(line -> line.contains("test-tag (skipped)"));
+
+    try (Git mirror = Git.open(clone)) {
+      assertThat(findBranch(mirror, "test-branch")).isEmpty();
+      assertThat(findTag(mirror, "test-tag")).isEmpty();
+      assertThat(findBranch(mirror, "master")).isPresent();
+    }
+  }
+
+  @Test
+  public void shouldLogCustomRemovalReasonForNewRefs() throws IOException, GitAPIException {
+    MirrorCommandResult result = callMirrorCommand(repositoryDirectory.getAbsolutePath(),
+      r -> removeTestRefs(r, "does not match configured patterns"));
+
+    assertThat(result.getResult()).isEqualTo(OK);
+    assertThat(result.getLog()).contains(
+      "- 000000000..3f76a12f0 test-branch (skipped: does not match configured patterns)",
+      "- 000000000..86a6645ec test-tag (skipped: does not match configured patterns)"
+    );
+    try (Git mirror = Git.open(clone)) {
+      assertThat(findBranch(mirror, "test-branch")).isEmpty();
+      assertThat(findTag(mirror, "test-tag")).isEmpty();
+    }
+  }
+
+  @Test
+  public void shouldLogCustomRemovalReasonForUnchangedRefs() throws IOException, GitAPIException {
+    callMirrorCommand();
+
+    MirrorCommandResult result = callUpdate(r -> removeTestRefs(r, "excluded by name"));
+
+    assertThat(result.getResult()).isEqualTo(OK);
+    assertThat(result.getLog()).contains(
+      "- 3f76a12f0..3f76a12f0 test-branch (deleted: excluded by name)",
+      "- 86a6645ec..86a6645ec test-tag (deleted: excluded by name)"
+    );
+    try (Git mirror = Git.open(clone)) {
+      assertThat(findBranch(mirror, "test-branch")).isEmpty();
+      assertThat(findTag(mirror, "test-tag")).isEmpty();
+    }
+  }
+
+  @Test
+  public void shouldPreserveDestinationOnlyRefsWhenRejected() throws IOException, GitAPIException {
+    callMirrorCommand();
+    try (Git mirror = Git.open(clone)) {
+      mirror.branchCreate().setName("local-work").call();
+      mirror.tag().setName("local-tag").setAnnotated(false).call();
+    }
+
+    callUpdate(REJECT_ALL);
+
+    try (Git mirror = Git.open(clone)) {
+      assertThat(findBranch(mirror, "local-work")).isPresent();
+      assertThat(findTag(mirror, "local-tag")).isPresent();
+    }
+  }
+
+  @Test
+  public void shouldExposeCurrentRevisionsForUnchangedRefs() {
+    callMirrorCommand();
+
+    Updates updates = callMirrorAndCollectUpdates();
+
+    assertThat(updates.branchUpdates).isNotEmpty().allSatisfy(update -> {
+      assertThat(update.getUpdateType()).isEmpty();
+      assertThat(update.getNewRevision()).isPresent().isEqualTo(update.getOldRevision());
+      assertThat(update.getChangeset()).isPresent();
+      assertThat(update.isForcedUpdate()).isFalse();
+    });
+    assertThat(updates.tagUpdates).isNotEmpty().allSatisfy(update -> {
+      assertThat(update.getUpdateType()).isEmpty();
+      assertThat(update.getNewRevision()).isPresent().isEqualTo(update.getOldRevision());
+      assertThat(update.getTag()).isPresent();
+    });
+  }
+
+  @Test
+  public void shouldSelectSurvivingBranchWhenFilterRemovesDefaultBranch() {
+    callMirrorCommand();
+    reset(storeProvider);
+
+    assertThat(callUpdate(r -> removeBranches(r, "master")).getResult()).isEqualTo(OK);
+
+    verify(storeProvider).setDefaultBranch(eq(repository), not(eq("master")));
+  }
+
+  @Test
+  public void shouldRefuseRemovalOfAllExistingBranches() throws IOException {
+    callMirrorCommand();
+
+    assertThrows(IllegalStateException.class, () -> callUpdate(r -> removeBranches(r)));
+
+    try (Repository mirror = GitUtil.open(clone)) {
+      assertThat(mirror.exactRef("refs/heads/master")).isNotNull();
+      assertThat(mirror.exactRef("refs/heads/test-branch")).isNotNull();
+    }
+  }
+
+  private void removeBranches(MirrorCommandRequest request, String... names) {
+    request.setFilter(new MirrorFilter() {
+      @Override
+      public Filter getFilter(FilterContext context) {
+        return new Filter() {
+          @Override
+          public Result acceptBranch(BranchUpdate branch) {
+            return (names.length == 0 || Arrays.asList(names).contains(branch.getBranchName())) ? Result.remove() : Result.accept();
+          }
+        };
+      }
+    });
+  }
+
+  private void removeTestRefs(MirrorCommandRequest request) {
+    removeTestRefs(request, null);
+  }
+
+  private void removeTestRefs(MirrorCommandRequest request, String reason) {
+    request.setFilter(new MirrorFilter() {
+      @Override
+      public Filter getFilter(FilterContext context) {
+        return new Filter() {
+          @Override
+          public Result acceptBranch(BranchUpdate branch) {
+            return "test-branch".equals(branch.getBranchName()) ? Result.remove(reason) : Result.accept();
+          }
+
+          @Override
+          public Result acceptTag(TagUpdate tag) {
+            return "test-tag".equals(tag.getTagName()) ? Result.remove(reason) : Result.accept();
+          }
+        };
+      }
+    });
+  }
+
+  @Test
   public void shouldRevertRejectedAddedBranch() throws IOException, GitAPIException {
     callMirrorCommand();
 
@@ -413,7 +595,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 000000000..fcd0ef183 added-branch (rejected due to filter)",
+      "- 000000000..fcd0ef183 added-branch (update rejected)",
       "Checking for LFS files",
       "No effective changes detected"
     );
@@ -432,12 +614,12 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       existingClone.branchCreate().setStartPoint("9e93d8631675a89615fac56b09209686146ff3c0").setName("test-branch").setForce(true).call();
     }
 
-    MirrorCommandResult result = callUpdate(REJECT_ALL);
+    MirrorCommandResult result = callUpdate(r -> r.setFilter(new DenyAllWithReasonMirrorFilter("no valid signature")));
 
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 3f76a12f0..9e93d8631 test-branch (rejected due to filter)",
+      "- 3f76a12f0..9e93d8631 test-branch (update rejected: no valid signature)",
       "Checking for LFS files",
       "No effective changes detected"
     );
@@ -461,7 +643,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 3f76a12f0..000000000 test-branch (rejected due to filter)",
+      "- 3f76a12f0..000000000 test-branch (update rejected)",
       "Checking for LFS files",
       "No effective changes detected"
     );
@@ -486,7 +668,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Tags:",
-      "- 000000000..9e93d8631 added-tag (rejected due to filter)",
+      "- 000000000..9e93d8631 added-tag (update rejected)",
       "Checking for LFS files",
       "No effective changes detected"
     );
@@ -511,7 +693,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Tags:",
-      "- 86a6645ec..9e93d8631 test-tag (rejected due to filter)",
+      "- 86a6645ec..9e93d8631 test-tag (update rejected)",
       "Checking for LFS files",
       "No effective changes detected"
     );
@@ -535,7 +717,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Tags:",
-      "- 86a6645ec..000000000 test-tag (rejected due to filter)",
+      "- 86a6645ec..000000000 test-tag (update rejected)",
       "Checking for LFS files",
       "No effective changes detected"
     );
@@ -559,7 +741,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Tags:",
-      "- 86a6645ec..000000000 test-tag (thou shalt not pass)",
+      "- 86a6645ec..000000000 test-tag (update rejected: thou shalt not pass)",
       "Checking for LFS files",
       "No effective changes detected"
     );
@@ -576,10 +758,10 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     MirrorCommandResult result = callUpdate(r -> r.setFilter(new ErroneousMirrorFilterThrowingExceptions()));
 
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
-    assertThat(result.getLog()).containsExactly(
+    assertThat(result.getLog()).contains(
       "! got error checking filter for update: this tag creates an exception",
       "Tags:",
-      "- 86a6645ec..000000000 test-tag (exception in filter)",
+      "- 86a6645ec..000000000 test-tag (update rejected: exception in filter)",
       "Checking for LFS files",
       "No effective changes detected"
     );
@@ -599,7 +781,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       @Override
       public Filter getFilter(FilterContext context) {
         filterInvokedCheck.invoked();
-        context.getBranchUpdates().forEach(branchUpdate -> {
+        context.getBranchUpdates().stream().filter(update -> update.getUpdateType().isPresent()).forEach(branchUpdate -> {
           assertThat(branchUpdate.getBranchName()).isEqualTo("test-branch");
           assertThat(branchUpdate.isForcedUpdate()).isTrue();
         });
@@ -624,7 +806,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       @Override
       public Filter getFilter(FilterContext context) {
         filterInvokedCheck.invoked();
-        context.getBranchUpdates().forEach(branchUpdate -> {
+        context.getBranchUpdates().stream().filter(update -> update.getUpdateType().isPresent()).forEach(branchUpdate -> {
           assertThat(branchUpdate.getBranchName()).isEqualTo("master");
           assertThat(branchUpdate.isForcedUpdate()).isFalse();
         });
