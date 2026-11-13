@@ -18,8 +18,8 @@ import React, { FC, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
-import { Button, Icon, Level } from "@scm-manager/ui-core";
+import { ConfirmAlert } from "@scm-manager/ui-components";
+import { Button, Icon, Level, ErrorNotification } from "@scm-manager/ui-core";
 import { useDeleteUser } from "@scm-manager/ui-api";
 
 type Props = {

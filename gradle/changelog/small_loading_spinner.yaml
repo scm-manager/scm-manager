@@ -1,0 +1,2 @@
+- type: added
+  description: SmallLoadingSpinner component in ui-core, which screen readers announce as loading

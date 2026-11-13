@@ -165,7 +165,7 @@ const RepositoryRoot: FC = () => {
       afterTitle={
         <MobileWrapped className="is-flex is-align-items-center has-gap-2">
           <ExtensionPoint name="repository.afterTitle" props={{ repository }} />
-          <RepositoryFlags className="has-text-weight-bold" repository={repository} tooltipLocation="bottom" />
+          <RepositoryFlags className="has-text-weight-bold" repository={repository} tooltipSide="bottom" />
         </MobileWrapped>
       }
     >

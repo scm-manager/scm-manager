@@ -16,8 +16,7 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import { REPOSITORY_SUB_ROUTES, useDocumentTitleForRepository } from "@scm-manager/ui-core";
+import { REPOSITORY_SUB_ROUTES, useDocumentTitleForRepository, ErrorNotification, Loading } from "@scm-manager/ui-core";
 import { useBranches } from "@scm-manager/ui-api";
 import BranchTableWrapper from "./BranchTableWrapper";
 import { useCurrentRepositoryBaseUrl, useRepositoryFromParams } from "@scm-manager/ui-core";

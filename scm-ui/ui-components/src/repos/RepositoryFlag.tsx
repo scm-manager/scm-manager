@@ -15,29 +15,21 @@
  */
 
 import React, { FC, ReactNode } from "react";
-import { Card, CardVariant, Tooltip } from "@scm-manager/ui-core";
+import { Card, CardVariant, Tooltip, TooltipSide } from "@scm-manager/ui-core";
 import { Color, Size } from "../styleConstants";
-import { TooltipLocation } from "../Tooltip";
 
 type Props = {
   color?: Color;
   title: string;
   onClick?: () => void;
   size?: Size;
-  tooltipLocation: TooltipLocation;
+  tooltipSide?: TooltipSide;
   variant?: CardVariant;
   children?: ReactNode;
 };
 
-const RepositoryFlag: FC<Props> = ({
-  children,
-  title,
-  size = "small",
-  tooltipLocation = "bottom",
-  variant,
-  ...props
-}) => (
-  <Tooltip side={tooltipLocation} message={title}>
+const RepositoryFlag: FC<Props> = ({ children, title, size = "small", tooltipSide = "bottom", variant, ...props }) => (
+  <Tooltip side={tooltipSide} message={title}>
     <Card.Details.Detail.Tag {...props} cardVariant={variant} className={`is-${size} is-relative`}>
       {children}
     </Card.Details.Detail.Tag>

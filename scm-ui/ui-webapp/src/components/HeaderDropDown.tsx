@@ -16,7 +16,8 @@
 
 import React, { FC, Ref, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import { devices, ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-core";
+import { devices } from "@scm-manager/ui-components";
 import classNames from "classnames";
 
 type DropDownMenuProps = {

@@ -17,8 +17,14 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useAvailablePermissions, usePermissions } from "@scm-manager/ui-api";
-import { ErrorPage, Loading } from "@scm-manager/ui-components";
-import { useDocumentTitle, useNamespaceFromParams, useRepositoryFromParams, Subtitle } from "@scm-manager/ui-core";
+import { ErrorPage } from "@scm-manager/ui-components";
+import {
+  useDocumentTitle,
+  useNamespaceFromParams,
+  useRepositoryFromParams,
+  Subtitle,
+  Loading,
+} from "@scm-manager/ui-core";
 import { Namespace, Repository } from "@scm-manager/ui-types";
 import CreatePermissionForm from "./CreatePermissionForm";
 import PermissionsTable from "../components/PermissionsTable";

@@ -15,7 +15,8 @@
  */
 
 import React, { FC } from "react";
-import { ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-core";
+import { SyntaxHighlighter } from "@scm-manager/ui-components";
 import { File } from "@scm-manager/ui-types";
 import { useLocation } from "react-router-dom";
 import replaceBranchWithRevision from "../../ReplaceBranchWithRevision";

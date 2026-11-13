@@ -18,7 +18,7 @@ import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Changeset } from "@scm-manager/ui-types";
-import { ErrorPage, JumpToFileButton, Loading } from "@scm-manager/ui-components";
+import { ErrorPage, JumpToFileButton } from "@scm-manager/ui-components";
 import ChangesetDetails from "../components/changesets/ChangesetDetails";
 import { FileControlFactory } from "@scm-manager/ui-components";
 import { RepositoryRevisionContextProvider, useChangeset } from "@scm-manager/ui-api";
@@ -28,6 +28,7 @@ import {
   useCurrentRepositoryBaseUrl,
   REPOSITORY_SUB_ROUTES,
   REPOSITORY_CODE_SUB_ROUTES,
+  Loading,
 } from "@scm-manager/ui-core";
 
 type Params = {

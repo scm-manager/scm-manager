@@ -17,8 +17,8 @@
 import React, { ReactNode } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { apiClient, ErrorNotification, Loading } from "@scm-manager/ui-components";
-import { Icon } from "@scm-manager/ui-core";
+import { apiClient } from "@scm-manager/ui-api";
+import { Icon, ErrorNotification, Loading } from "@scm-manager/ui-core";
 import loadBundle from "../_modules/loadBundle";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 

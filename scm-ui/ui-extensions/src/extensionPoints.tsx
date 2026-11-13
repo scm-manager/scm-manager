@@ -79,7 +79,7 @@ export type RepositoryCreator = ExtensionPointDefinition<
 
 export type RepositoryFlags = RenderableExtensionPointDefinition<
   "repository.flags",
-  { repository: Repository; tooltipLocation?: "bottom" | "right" | "top" | "left" }
+  { repository: Repository; tooltipSide?: "bottom" | "right" | "top" | "left" }
 >;
 
 export type ReposSourcesActionbar = RenderableExtensionPointDefinition<

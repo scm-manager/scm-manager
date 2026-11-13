@@ -17,8 +17,8 @@
 import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Namespace, Permission, Repository } from "@scm-manager/ui-types";
-import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
-import { Icon, IconButton } from "@scm-manager/ui-core";
+import { ConfirmAlert } from "@scm-manager/ui-components";
+import { Icon, IconButton, ErrorNotification } from "@scm-manager/ui-core";
 import { useDeletePermission } from "@scm-manager/ui-api";
 
 type Props = {

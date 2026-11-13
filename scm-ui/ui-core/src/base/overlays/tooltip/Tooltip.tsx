@@ -29,6 +29,11 @@ const StyledContent = styled(RadixTooltip.Content)`
   z-index: 1020;
 `;
 
+/**
+ * Side of the trigger element on which the tooltip is displayed.
+ */
+export type TooltipSide = NonNullable<RadixTooltip.TooltipContentProps["side"]>;
+
 const StyledArrow = styled(RadixTooltip.Arrow)`
   z-index: 1020;
 `;
@@ -50,7 +55,12 @@ type Props = {
    */
   className?: string;
   ref?: Ref<HTMLDivElement>;
-} & Pick<RadixTooltip.TooltipContentProps, "side">;
+
+  /**
+   * Side of the {@link Props#children} on which the message is displayed.
+   */
+  side?: TooltipSide;
+};
 
 /**
  * Displays the given {@link Props#message} whenever the provided {@link Props#children} is hovered or focused.

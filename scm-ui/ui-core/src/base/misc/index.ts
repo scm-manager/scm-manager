@@ -20,6 +20,7 @@ export { default as DateShort } from "./DateShort";
 export * from "./useDateFormatter";
 export { default as Image } from "./Image";
 export { default as Loading } from "./Loading";
+export { default as SmallLoadingSpinner } from "./SmallLoadingSpinner";
 export { default as Subtitle } from "./Subtitle";
 export { default as Title } from "./Title";
 export { default as SubSubtitle } from "./SubSubtitle";

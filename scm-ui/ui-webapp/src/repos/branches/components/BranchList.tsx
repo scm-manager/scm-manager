@@ -16,8 +16,7 @@
 
 import React, { FC } from "react";
 import { useDeleteBranch } from "@scm-manager/ui-api";
-import { ErrorNotification } from "@scm-manager/ui-components";
-import { CardList } from "@scm-manager/ui-core";
+import { CardList, ErrorNotification } from "@scm-manager/ui-core";
 import { Branch, BranchDetails, Repository } from "@scm-manager/ui-types";
 import BranchListItem from "./BranchListItem";
 

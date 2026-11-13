@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Repository } from "@scm-manager/ui-types";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { TooltipLocation } from "../Tooltip";
+import { TooltipSide } from "@scm-manager/ui-core";
 import RepositoryFlag from "./RepositoryFlag";
 import HealthCheckFailureDetail from "./HealthCheckFailureDetail";
 import styled from "styled-components";
@@ -27,21 +27,21 @@ import styled from "styled-components";
 type Props = {
   repository: Repository;
   className?: string;
-  tooltipLocation?: TooltipLocation;
+  tooltipSide?: TooltipSide;
 };
 
 const GapedContainer = styled.div`
   gap: 0.5rem;
 `;
 
-const RepositoryFlags: FC<Props> = ({ repository, className, tooltipLocation = "right" }) => {
+const RepositoryFlags: FC<Props> = ({ repository, className, tooltipSide = "right" }) => {
   const [t] = useTranslation("repos");
   const [showHealthCheck, setShowHealthCheck] = useState(false);
 
   const repositoryFlags = [];
   if (repository.archived) {
     repositoryFlags.push(
-      <RepositoryFlag key="archived" title={t("archive.tooltip")} tooltipLocation={tooltipLocation}>
+      <RepositoryFlag key="archived" title={t("archive.tooltip")} tooltipSide={tooltipSide}>
         {t("repository.archived")}
       </RepositoryFlag>
     );
@@ -49,7 +49,7 @@ const RepositoryFlags: FC<Props> = ({ repository, className, tooltipLocation = "
 
   if (repository.exporting) {
     repositoryFlags.push(
-      <RepositoryFlag key="exporting" title={t("exporting.tooltip")} tooltipLocation={tooltipLocation}>
+      <RepositoryFlag key="exporting" title={t("exporting.tooltip")} tooltipSide={tooltipSide}>
         {t("repository.exporting")}
       </RepositoryFlag>
     );
@@ -62,7 +62,7 @@ const RepositoryFlags: FC<Props> = ({ repository, className, tooltipLocation = "
         color="danger"
         title={t("healthCheckFailure.tooltip")}
         onClick={() => setShowHealthCheck(true)}
-        tooltipLocation={tooltipLocation}
+        tooltipSide={tooltipSide}
       >
         {t("repository.healthCheckFailure")}
       </RepositoryFlag>
@@ -82,7 +82,7 @@ const RepositoryFlags: FC<Props> = ({ repository, className, tooltipLocation = "
       {repositoryFlags}
       <ExtensionPoint<extensionPoints.RepositoryFlags>
         name="repository.flags"
-        props={{ repository, tooltipLocation }}
+        props={{ repository, tooltipSide }}
         renderAll={true}
       />
     </GapedContainer>

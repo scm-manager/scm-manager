@@ -16,7 +16,7 @@
 
 import React, { FC, Suspense } from "react";
 import type { DiffFileProps } from "./diff/types";
-import Loading from "../Loading";
+import { Loading } from "@scm-manager/ui-core";
 
 const LazyDiffFile = React.lazy(() => import("./diff/LazyDiffFile"));
 

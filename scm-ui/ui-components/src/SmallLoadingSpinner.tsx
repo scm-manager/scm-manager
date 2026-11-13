@@ -14,17 +14,9 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React, { FC } from "react";
-import classNames from "classnames";
+import { SmallLoadingSpinner } from "@scm-manager/ui-core";
 
-type Props = {
-  className?: string;
-};
-
-const SmallLoadingSpinner: FC<Props> = ({ className }) => (
-  <div className={classNames("loader-wrapper", className)}>
-    <div className="loader is-loading" />
-  </div>
-);
-
+/**
+ * @deprecated Please import SmallLoadingSpinner from "@scm-manager/ui-core"
+ */
 export default SmallLoadingSpinner;

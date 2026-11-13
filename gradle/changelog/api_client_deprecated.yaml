@@ -1,0 +1,2 @@
+- type: changed
+  description: The re-export of `apiClient` in ui-components is deprecated (use `apiClient` of ui-api instead)

@@ -18,8 +18,7 @@ import React, { FC, Ref } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
-import { createAttributesForTesting } from "@scm-manager/ui-components";
-import { Icon, useKeyboardIteratorTarget } from "@scm-manager/ui-core";
+import { Icon, useKeyboardIteratorTarget, createAttributesForTesting } from "@scm-manager/ui-core";
 import { User } from "@scm-manager/ui-types";
 
 type Props = {

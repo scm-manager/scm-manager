@@ -19,8 +19,15 @@ import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useAvailablePlugins, useInstalledPlugins, usePendingPlugins } from "@scm-manager/ui-api";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import { Button, useDocumentTitle, Subtitle, Title, Notification } from "@scm-manager/ui-core";
+import {
+  Button,
+  useDocumentTitle,
+  Subtitle,
+  Title,
+  Notification,
+  ErrorNotification,
+  Loading,
+} from "@scm-manager/ui-core";
 import { Plugin } from "@scm-manager/ui-types";
 import PluginsList from "../components/PluginList";
 import PluginTopActions from "../components/PluginTopActions";

@@ -28,7 +28,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useGeneratedId } from "@scm-manager/ui-components";
+import { useAriaId } from "@scm-manager/ui-core";
 import { SearchBoxContext } from "./SearchBoxContext";
 import { SearchBoxInput } from "./SearchBoxInput";
 import { SearchBoxOption } from "./SearchBoxOption";
@@ -46,7 +46,7 @@ const SearchBox: FC<SearchBoxProps> = ({ children, query, onQueryChange, shouldC
   const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | undefined>();
   const [options, setOptions] = useState<RefObject<HTMLAnchorElement>[]>([]);
-  const popupId = useGeneratedId();
+  const popupId = useAriaId();
   const inputRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
   const registerOption = useCallback(

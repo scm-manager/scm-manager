@@ -14,17 +14,6 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-// import { storiesOf } from "@storybook/react";
-// import React from "react";
-// import SmallLoadingSpinner from "./SmallLoadingSpinner";
-//
-// storiesOf("SmallLoading", module).add("Default", () => (
-//   <div>
-//     <SmallLoadingSpinner />
-//   </div>
-// ));
-
-import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import SmallLoadingSpinner from "./SmallLoadingSpinner";
@@ -43,3 +32,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const WithLabel: Story = {
+  args: {
+    label: "Loading branch details ...",
+  },
+};

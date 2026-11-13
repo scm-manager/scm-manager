@@ -15,7 +15,8 @@
  */
 
 import React, { FC, useEffect } from "react";
-import { apiClient, validation } from "@scm-manager/ui-components";
+import { apiClient } from "@scm-manager/ui-api";
+import { validation } from "@scm-manager/ui-components";
 import { Button, ErrorNotification, Field, Input, InputField } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";

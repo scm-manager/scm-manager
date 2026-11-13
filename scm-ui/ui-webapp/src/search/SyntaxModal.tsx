@@ -17,7 +17,8 @@
 import React, { FC, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchHelpContent } from "@scm-manager/ui-api";
-import { ErrorNotification, Loading, MarkdownView, Modal } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-core";
+import { MarkdownView, Modal } from "@scm-manager/ui-components";
 
 type Props = {
   close: () => void;

@@ -17,8 +17,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { BackendError, ForbiddenError } from "@scm-manager/ui-api";
-import { useDocumentTitle } from "@scm-manager/ui-core";
-import ErrorNotification from "./ErrorNotification";
+import { ErrorNotification, useDocumentTitle } from "@scm-manager/ui-core";
 
 type Props = {
   error: Error;

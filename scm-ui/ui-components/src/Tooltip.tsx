@@ -17,6 +17,7 @@
 import React, { FC, ReactNode, useEffect, useState } from "react";
 import styled from "styled-components";
 import classNames from "classnames";
+import { TooltipSide } from "@scm-manager/ui-core";
 
 // See for css reference: https://github.com/Wikiki/bulma-tooltip/blob/master/src/sass/index.sass
 
@@ -141,7 +142,10 @@ type Props = {
   id?: string;
 };
 
-export type TooltipLocation = "bottom" | "right" | "top" | "left";
+/**
+ * @deprecated Use TooltipSide from ui-core instead
+ */
+export type TooltipLocation = TooltipSide;
 
 /**
  * @deprecated Use Tooltip from ui-core instead

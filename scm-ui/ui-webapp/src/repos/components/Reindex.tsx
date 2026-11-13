@@ -17,8 +17,7 @@
 import { Repository } from "@scm-manager/ui-types";
 import React, { FC } from "react";
 import { useReindexRepository } from "@scm-manager/ui-api";
-import { ErrorNotification } from "@scm-manager/ui-components";
-import { Button, Icon, Level, Subtitle, Notification } from "@scm-manager/ui-core";
+import { Button, Icon, Level, Subtitle, Notification, ErrorNotification } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 
 type Props = {

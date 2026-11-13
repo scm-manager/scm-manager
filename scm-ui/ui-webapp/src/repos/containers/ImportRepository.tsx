@@ -21,13 +21,13 @@ import { useTranslation } from "react-i18next";
 import ImportRepositoryTypeSelect from "../components/ImportRepositoryTypeSelect";
 import ImportTypeSelect from "../components/ImportTypeSelect";
 import ImportRepositoryFromUrl from "../components/ImportRepositoryFromUrl";
-import { Loading, useNavigationLock } from "@scm-manager/ui-components";
+import { useNavigationLock } from "@scm-manager/ui-components";
 
 import ImportRepositoryFromBundle from "../components/ImportRepositoryFromBundle";
 import ImportFullRepository from "../components/ImportFullRepository";
 import { Navigate } from "react-router-dom";
 import { extensionPoints } from "@scm-manager/ui-extensions";
-import { Notification } from "@scm-manager/ui-core";
+import { Notification, Loading } from "@scm-manager/ui-core";
 
 /* eslint-disable react/prop-types */
 /*

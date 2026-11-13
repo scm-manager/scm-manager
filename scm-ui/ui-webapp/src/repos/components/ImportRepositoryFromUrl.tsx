@@ -17,8 +17,8 @@
 import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { Repository, RepositoryCreation, RepositoryType, RepositoryUrlImport } from "@scm-manager/ui-types";
 import ImportFromUrlForm from "./ImportFromUrlForm";
-import { ErrorNotification, urls } from "@scm-manager/ui-components";
-import { Button, Level } from "@scm-manager/ui-core";
+import { urls } from "@scm-manager/ui-components";
+import { Button, Level, ErrorNotification } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import { useImportRepositoryFromUrl } from "@scm-manager/ui-api";
 import { extensionPoints } from "@scm-manager/ui-extensions";

@@ -16,7 +16,8 @@
 
 import React, { FC } from "react";
 import { File, Link, Repository } from "@scm-manager/ui-types";
-import { Annotate, ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { Annotate } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-core";
 import { useAnnotations, useContentType } from "@scm-manager/ui-api";
 import { determineSyntaxHighlightingLanguage } from "../utils/files";
 

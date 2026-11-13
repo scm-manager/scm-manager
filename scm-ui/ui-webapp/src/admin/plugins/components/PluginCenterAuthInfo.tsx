@@ -15,8 +15,8 @@
  */
 
 import React, { FC, useState } from "react";
-import { ErrorNotification, Modal, SmallLoadingSpinner } from "@scm-manager/ui-components";
-import { Icon, Tooltip, UnstyledButton } from "@scm-manager/ui-core";
+import { Modal } from "@scm-manager/ui-components";
+import { ErrorNotification, Icon, SmallLoadingSpinner, Tooltip, UnstyledButton } from "@scm-manager/ui-core";
 import { PluginCenterAuthenticationInfo } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 

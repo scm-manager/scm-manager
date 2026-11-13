@@ -19,10 +19,9 @@ import CompareSelectorListEntry from "./CompareSelectorListEntry";
 import DefaultBranchTag from "../branches/components/DefaultBranchTag";
 import { Branch } from "@scm-manager/ui-types";
 import { CompareFunction, CompareProps, CompareTypes } from "./CompareSelectBar";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { Notification } from "@scm-manager/ui-core";
+import { Notification, ErrorNotification, Loading } from "@scm-manager/ui-core";
 
 type Props = {
   branches: Branch[];

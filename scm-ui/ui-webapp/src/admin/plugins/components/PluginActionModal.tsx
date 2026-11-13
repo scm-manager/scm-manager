@@ -18,9 +18,9 @@ import * as React from "react";
 import { FC, ReactNode, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
-import { ErrorNotification, Modal } from "@scm-manager/ui-components";
+import { Modal } from "@scm-manager/ui-components";
 import SuccessNotification from "./SuccessNotification";
-import { Button } from "@scm-manager/ui-core";
+import { Button, ErrorNotification } from "@scm-manager/ui-core";
 
 type Props = {
   onClose: () => void;

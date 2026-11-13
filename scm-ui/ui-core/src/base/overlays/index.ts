@@ -18,7 +18,7 @@ import MenuComponent, { MenuButton, MenuDialog, MenuExternalLink, MenuLink } fro
 import MenuTrigger, { DefaultMenuTrigger } from "./menu/MenuTrigger";
 import DialogComponent, { CloseButton } from "./dialog/Dialog";
 
-export { default as Tooltip } from "./tooltip/Tooltip";
+export { default as Tooltip, type TooltipSide } from "./tooltip/Tooltip";
 
 export const Menu = Object.assign(MenuComponent, {
   Button: MenuButton,

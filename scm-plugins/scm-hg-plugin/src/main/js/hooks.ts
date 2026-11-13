@@ -15,7 +15,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient } from "@scm-manager/ui-api";
 import { HalRepresentation, Link, Repository } from "@scm-manager/ui-types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

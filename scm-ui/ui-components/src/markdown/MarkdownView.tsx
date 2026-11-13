@@ -16,7 +16,7 @@
 
 import React, { FC, Suspense } from "react";
 import { MarkdownProps } from "./LazyMarkdownView";
-import Loading from "../Loading";
+import { Loading } from "@scm-manager/ui-core";
 
 const LazyMarkdownView = React.lazy(() => import("./LazyMarkdownView"));
 

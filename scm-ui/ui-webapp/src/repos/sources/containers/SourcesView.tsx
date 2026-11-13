@@ -20,12 +20,12 @@ import ImageViewer from "../components/content/ImageViewer";
 import DownloadViewer from "../components/content/DownloadViewer";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { File, Link, Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, PdfViewer } from "@scm-manager/ui-components";
+import { PdfViewer } from "@scm-manager/ui-components";
 import SwitchableMarkdownViewer from "../components/content/SwitchableMarkdownViewer";
 import styled from "styled-components";
 import { useContentType } from "@scm-manager/ui-api";
 import { determineSyntaxHighlightingLanguage } from "../utils/files";
-import { useLayoutWide } from "@scm-manager/ui-core";
+import { useLayoutWide, ErrorNotification, Loading } from "@scm-manager/ui-core";
 
 const NoSpacingSyntaxHighlighterContainer = styled.div`
   & pre {

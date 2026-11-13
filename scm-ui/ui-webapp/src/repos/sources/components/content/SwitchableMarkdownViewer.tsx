@@ -17,7 +17,8 @@
 import React, { FC, useState } from "react";
 import MarkdownViewer from "./MarkdownViewer";
 import { File, Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-core";
+import { SyntaxHighlighter } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useFileContent } from "@scm-manager/ui-api";
 import replaceBranchWithRevision from "../../ReplaceBranchWithRevision";

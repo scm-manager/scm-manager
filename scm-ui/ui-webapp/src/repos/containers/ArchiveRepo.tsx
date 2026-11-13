@@ -17,8 +17,8 @@
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
-import { Button, Icon, Level } from "@scm-manager/ui-core";
+import { ConfirmAlert } from "@scm-manager/ui-components";
+import { Button, Icon, Level, ErrorNotification } from "@scm-manager/ui-core";
 import { useArchiveRepository } from "@scm-manager/ui-api";
 
 type Props = {

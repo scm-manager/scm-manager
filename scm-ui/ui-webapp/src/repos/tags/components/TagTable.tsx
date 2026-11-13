@@ -17,8 +17,8 @@
 import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDeleteTag } from "@scm-manager/ui-api";
-import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
-import { CardListBox, KeyboardIterator } from "@scm-manager/ui-core";
+import { ConfirmAlert } from "@scm-manager/ui-components";
+import { CardListBox, KeyboardIterator, ErrorNotification } from "@scm-manager/ui-core";
 import { Repository, Tag } from "@scm-manager/ui-types";
 import TagRow from "./TagRow";
 

@@ -17,7 +17,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, ConfigurationForm, Form, Title, useDocumentTitle } from "@scm-manager/ui-core";
-import { SmallLoadingSpinner, validation } from "@scm-manager/ui-components";
+import { validation } from "@scm-manager/ui-components";
 import { HgGlobalConfigurationDto, useHgAutoConfiguration } from "./hooks";
 import { useRequiredIndexLink } from "@scm-manager/ui-api";
 
@@ -54,8 +54,12 @@ const HgGlobalConfiguration: FC = () => {
                 <Form.Checkbox name="enableHttpPostArgs" />
               </Form.Row>
               <Form.Row className="is-justify-content-flex-end">
-                <Button className="mr-2" onClick={() => triggerAutoConfiguration(getValues())}>
-                  {isAutoConfigLoading ? <SmallLoadingSpinner /> : t("scm-hg-plugin.config.autoConfigure")}
+                <Button
+                  className="mr-2"
+                  onClick={() => triggerAutoConfiguration(getValues())}
+                  isLoading={isAutoConfigLoading}
+                >
+                  {t("scm-hg-plugin.config.autoConfigure")}
                 </Button>
               </Form.Row>
             </>

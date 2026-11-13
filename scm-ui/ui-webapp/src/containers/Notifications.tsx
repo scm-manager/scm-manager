@@ -26,8 +26,15 @@ import {
   useNotificationSubscription,
 } from "@scm-manager/ui-api";
 import { Notification, NotificationCollection } from "@scm-manager/ui-types";
-import { ErrorNotification, ToastArea, ToastNotification, ToastType } from "@scm-manager/ui-components";
-import { Button, DateFromNow, Icon, IconButton, Notification as InfoNotification } from "@scm-manager/ui-core";
+import { ToastArea, ToastNotification, ToastType } from "@scm-manager/ui-components";
+import {
+  Button,
+  DateFromNow,
+  Icon,
+  IconButton,
+  Notification as InfoNotification,
+  ErrorNotification,
+} from "@scm-manager/ui-core";
 import HeaderDropDown, { Column, OnlyMobileWrappingColumn, Table } from "../components/HeaderDropDown";
 
 const DismissColumn = styled.td`

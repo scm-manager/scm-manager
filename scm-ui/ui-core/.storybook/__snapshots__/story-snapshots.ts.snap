@@ -362,6 +362,21 @@ exports[`Components/Dialog Fullscreen 1`] = `
 "
 `;
 
+exports[`Components/SmallLoadingSpinner Default 1`] = `
+"<span role="status" class="loader-wrapper"
+  ><span class="loader is-loading" aria-hidden="true"></span><span class="is-sr-only">Loading ...</span></span
+>
+"
+`;
+
+exports[`Components/SmallLoadingSpinner WithLabel 1`] = `
+"<span role="status" class="loader-wrapper"
+  ><span class="loader is-loading" aria-hidden="true"></span
+  ><span class="is-sr-only">Loading branch details ...</span></span
+>
+"
+`;
+
 exports[`Components/StatusIcon Icon 1`] = `
 "<div style="margin: 2rem">
   <div class="is-flex is-align-items-center">

@@ -16,10 +16,9 @@
 
 import React, { FC } from "react";
 import { useParams } from "react-router-dom";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import TagView from "../components/TagView";
 import { useTag } from "@scm-manager/ui-api";
-import { useRepositoryFromParams } from "@scm-manager/ui-core";
+import { useRepositoryFromParams, ErrorNotification, Loading } from "@scm-manager/ui-core";
 
 type Params = {
   tag: string;

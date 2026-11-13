@@ -16,7 +16,7 @@
 
 import React, { FC } from "react";
 import { matchPath, useLocation, NavLink } from "react-router-dom";
-import { createAttributesForTesting } from "../devBuild";
+import { createAttributesForTesting } from "@scm-manager/ui-core";
 import classNames from "classnames";
 
 type Props = {

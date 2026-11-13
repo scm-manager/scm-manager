@@ -20,14 +20,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
 import { useNamespaceAndNameContext, useNamespaces, useRepositories } from "@scm-manager/ui-api";
-import {
-  devices,
-  ErrorNotification,
-  LinkPaginator,
-  Loading,
-  OverviewPageActions,
-  urls,
-} from "@scm-manager/ui-components";
+import { devices, LinkPaginator, OverviewPageActions, urls } from "@scm-manager/ui-components";
 import {
   KeyboardIterator,
   KeyboardSubIterator,
@@ -36,6 +29,8 @@ import {
   useDocumentTitle,
   Page,
   Notification,
+  ErrorNotification,
+  Loading,
 } from "@scm-manager/ui-core";
 import { binder, ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";

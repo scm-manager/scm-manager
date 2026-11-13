@@ -17,10 +17,10 @@
 import React, { FC } from "react";
 import BranchView from "../components/BranchView";
 import { Routes, Route, Navigate, useParams, useLocation } from "react-router-dom";
-import { ErrorNotification, Loading, NotFoundError } from "@scm-manager/ui-components";
+import { NotFoundError } from "@scm-manager/ui-components";
 import queryString from "query-string";
 import { useBranch } from "@scm-manager/ui-api";
-import { useRepositoryFromParams } from "@scm-manager/ui-core";
+import { useRepositoryFromParams, ErrorNotification, Loading } from "@scm-manager/ui-core";
 
 type Params = {
   branch: string;

@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { useSecondaryNavigation } from "../useSecondaryNavigation";
 import { RoutingProps } from "./RoutingProps";
-import { createAttributesForTesting } from "../devBuild";
+import { createAttributesForTesting } from "@scm-manager/ui-core";
 import { SubNavigationContext } from "./SubNavigationContext";
 import useActiveMatch from "./useActiveMatch";
 

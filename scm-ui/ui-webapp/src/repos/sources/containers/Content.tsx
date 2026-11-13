@@ -20,14 +20,14 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { File, Link, Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, FileSize } from "@scm-manager/ui-components";
+import { FileSize } from "@scm-manager/ui-components";
 import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
 import AnnotateView from "./AnnotateView";
 import ContentActionMenu from "../components/content/overflowMenu/ContentActionMenu";
 import { useContentType } from "@scm-manager/ui-api";
-import { DateFromNow, Dialog, Icon, IconButton, useAriaId } from "@scm-manager/ui-core";
+import { DateFromNow, Dialog, Icon, IconButton, useAriaId, ErrorNotification } from "@scm-manager/ui-core";
 
 type Props = {
   file: File;

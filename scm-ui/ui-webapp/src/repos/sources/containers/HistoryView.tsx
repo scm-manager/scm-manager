@@ -16,7 +16,8 @@
 
 import React, { FC, useState } from "react";
 import { File, Repository } from "@scm-manager/ui-types";
-import { ChangesetList, ErrorNotification, Loading, StatePaginator } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-core";
+import { ChangesetList, StatePaginator } from "@scm-manager/ui-components";
 import { useHistory } from "@scm-manager/ui-api";
 
 type Props = {

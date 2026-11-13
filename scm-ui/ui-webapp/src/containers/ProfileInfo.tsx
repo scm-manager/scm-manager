@@ -16,14 +16,8 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  AvatarImage,
-  AvatarWrapper,
-  createAttributesForTesting,
-  InfoTable,
-  MailLink,
-} from "@scm-manager/ui-components";
-import { useDocumentTitle } from "@scm-manager/ui-core";
+import { AvatarImage, AvatarWrapper, InfoTable, MailLink } from "@scm-manager/ui-components";
+import { useDocumentTitle, createAttributesForTesting } from "@scm-manager/ui-core";
 import { useRequiredMe } from "@scm-manager/ui-api";
 
 const ProfileInfo: FC = () => {

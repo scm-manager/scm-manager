@@ -15,7 +15,7 @@
  */
 
 import React, { FC } from "react";
-import { ErrorNotification } from "@scm-manager/ui-components";
+import { ErrorNotification } from "@scm-manager/ui-core";
 import RepositoryForm from "../components/form";
 import { Navigate } from "react-router-dom";
 import { useCreateRepository } from "@scm-manager/ui-api";

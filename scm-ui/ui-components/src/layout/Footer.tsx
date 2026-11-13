@@ -25,7 +25,7 @@ import styled from "styled-components";
 import { EXTENSION_POINT } from "../avatar/Avatar";
 import ExternalNavLink from "../navigation/ExternalNavLink";
 import { useTranslation } from "react-i18next";
-import { createAttributesForTesting } from "../devBuild";
+import { createAttributesForTesting } from "@scm-manager/ui-core";
 
 type Props = {
   me?: Me;

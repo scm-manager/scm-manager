@@ -17,10 +17,9 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@scm-manager/ui-types";
-import { Loading } from "@scm-manager/ui-components";
 import ConfigForm from "../components/form/ConfigForm";
 import { useConfig, useIndexLinks, useNamespaceStrategies, useUpdateConfig } from "@scm-manager/ui-api";
-import { ErrorNotification, Title, useDocumentTitle } from "@scm-manager/ui-core";
+import { ErrorNotification, Title, useDocumentTitle, Loading } from "@scm-manager/ui-core";
 
 const GlobalConfig: FC = () => {
   const indexLinks = useIndexLinks();

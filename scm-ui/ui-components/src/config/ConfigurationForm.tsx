@@ -15,10 +15,8 @@
  */
 
 import React, { FC, FormEvent, ReactNode, useEffect, useState } from "react";
-import { ErrorNotification } from "../index";
-import { Button, Level } from "@scm-manager/ui-core";
+import { Button, ErrorNotification, Level, Loading } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
-import Loading from "../Loading";
 
 type Props = {
   isUpdating: boolean;
@@ -49,6 +47,9 @@ const ConfigurationChangedNotification: FC<{ configChanged: boolean }> = ({ conf
   );
 };
 
+/**
+ * @deprecated Please use ConfigurationForm from "@scm-manager/ui-core" instead
+ */
 const ConfigurationForm: FC<Props> = ({
   isLoading,
   isReadOnly,

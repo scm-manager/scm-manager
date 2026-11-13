@@ -18,10 +18,18 @@ import React, { FC } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { RepositoryRoleCollection } from "@scm-manager/ui-types";
-import { ErrorNotification, LinkPaginator, Loading, urls } from "@scm-manager/ui-components";
+import { LinkPaginator, urls } from "@scm-manager/ui-components";
 import PermissionRoleTable from "../components/PermissionRoleTable";
 import { useRepositoryRoles } from "@scm-manager/ui-api";
-import { LinkButton, useDocumentTitle, Subtitle, Title, Notification } from "@scm-manager/ui-core";
+import {
+  LinkButton,
+  useDocumentTitle,
+  Subtitle,
+  Title,
+  Notification,
+  ErrorNotification,
+  Loading,
+} from "@scm-manager/ui-core";
 
 type RepositoryRolesPageProps = {
   data?: RepositoryRoleCollection;

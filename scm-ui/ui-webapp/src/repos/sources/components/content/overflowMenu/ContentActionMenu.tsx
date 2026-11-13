@@ -17,8 +17,7 @@
 import React, { FC, ReactElement, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { SmallLoadingSpinner } from "@scm-manager/ui-components";
-import { Button, Icon, Menu } from "@scm-manager/ui-core";
+import { Button, Icon, Menu, SmallLoadingSpinner } from "@scm-manager/ui-core";
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import FallbackMenuButton from "./FallbackMenuButton";
 import MenuItem from "./MenuItem";

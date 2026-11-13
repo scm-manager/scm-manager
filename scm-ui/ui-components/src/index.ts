@@ -17,7 +17,7 @@
 import * as validation from "./validation";
 import * as repositories from "./repositories";
 
-import { urls } from "@scm-manager/ui-api";
+import { apiClient as uiApiClient, urls } from "@scm-manager/ui-api";
 
 // not sure if it is required
 import {
@@ -106,7 +106,10 @@ export type {
 };
 
 // Re-export from ui-api
-export { apiClient } from "@scm-manager/ui-api";
+/**
+ * @deprecated Please import apiClient from "@scm-manager/ui-api"
+ */
+export const apiClient = uiApiClient;
 export {
   type Violation,
   type AdditionalMessage,

@@ -19,7 +19,6 @@ import { File, Repository } from "@scm-manager/ui-types";
 import { useParams } from "react-router-dom";
 
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useBranch, useChangesets, useSources } from "@scm-manager/ui-api";
 import {
@@ -28,6 +27,8 @@ import {
   useCurrentRepositoryBaseUrl,
   useLayoutWide,
   Notification,
+  ErrorNotification,
+  Loading,
 } from "@scm-manager/ui-core";
 
 const extensionPointName = "repos.sources.extensions";

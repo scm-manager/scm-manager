@@ -1,0 +1,4 @@
+- type: added
+  description: Type TooltipSide for the side property of the Tooltip in ui-core
+- type: changed
+  description: The property tooltipLocation of RepositoryFlag and RepositoryFlags in ui-components and of the extension point repository.flags is renamed to tooltipSide and is optional

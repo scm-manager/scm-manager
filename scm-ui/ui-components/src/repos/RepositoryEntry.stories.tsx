@@ -44,7 +44,7 @@
 //
 // const bindFlag = (binder: Binder, color: Color, label: string) => {
 //   binder.bind("repository.card.flags", () => (
-//     <RepositoryFlag title={label} color={color} tooltipLocation="right">
+//     <RepositoryFlag title={label} color={color} tooltipSide="right">
 //       {label}
 //     </RepositoryFlag>
 //   ));
@@ -169,7 +169,7 @@ const bindAvatar = (binder: Binder, avatar: string) => {
 
 const bindFlag = (binder: Binder, color: Color, label: string) => {
   binder.bind("repository.card.flags", () => (
-    <RepositoryFlag title={label} color={color} tooltipLocation="right">
+    <RepositoryFlag title={label} color={color} tooltipSide="right">
       {label}
     </RepositoryFlag>
   ));
