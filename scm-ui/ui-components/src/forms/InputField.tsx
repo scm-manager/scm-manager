@@ -17,11 +17,10 @@
 import React, { ChangeEvent, FC, FocusEvent, KeyboardEvent } from "react";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
-import { createAttributesForTesting } from "../devBuild";
 import useAutofocus from "./useAutofocus";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
 import { createA11yId } from "../createA11yId";
-import { FieldMessage } from "@scm-manager/ui-core";
+import { createAttributesForTesting, FieldMessage } from "@scm-manager/ui-core";
 
 type BaseProps = {
   label?: string;

@@ -17,7 +17,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Changeset } from "@scm-manager/ui-types";
-import { Replacement, changesetShortLinkRegex } from "@scm-manager/ui-components";
+import { changesetShortLinkRegex } from "@scm-manager/ui-components";
+import { Replacement } from "@scm-manager/ui-core";
 
 const ChangesetShortLink: (changeset: Changeset, value: string) => Replacement[] = (changeset, value) => {
   const regex = new RegExp(changesetShortLinkRegex, "g");

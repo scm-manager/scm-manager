@@ -1,39 +1,39 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Buttons/Button Colors 1`] = `
-"<div class="sc-bdvwhi kGRhRV">
+"<div class="sc-AjlSJ ekuRIR">
   <div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" class="button is-primary"><span> primary </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" class="button is-link"><span> link </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" class="button is-info"><span> info </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" class="button is-success"><span> success </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" class="button is-warning"><span> warning </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" class="button is-danger"><span> danger </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" class="button is-white"><span> white </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" class="button is-light"><span> light </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" class="button is-dark"><span> dark </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" class="button is-black"><span> black </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" class="button is-text"><span> text </span></button>
     </div>
   </div>
@@ -42,39 +42,39 @@ exports[`Buttons/Button Colors 1`] = `
 `;
 
 exports[`Buttons/Button Disabled 1`] = `
-"<div class="sc-bdvwhi kGRhRV">
+"<div class="sc-AjlSJ ekuRIR">
   <div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" disabled="" class="button is-primary"><span> primary </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" disabled="" class="button is-link"><span> link </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" disabled="" class="button is-info"><span> info </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" disabled="" class="button is-success"><span> success </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" disabled="" class="button is-warning"><span> warning </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" disabled="" class="button is-danger"><span> danger </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" disabled="" class="button is-white"><span> white </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" disabled="" class="button is-light"><span> light </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" disabled="" class="button is-dark"><span> dark </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" disabled="" class="button is-black"><span> black </span></button>
     </div>
-    <div class="sc-bdvwhi kGRhRV">
+    <div class="sc-AjlSJ ekuRIR">
       <button type="button" disabled="" class="button is-text"><span> text </span></button>
     </div>
   </div>
@@ -83,14 +83,14 @@ exports[`Buttons/Button Disabled 1`] = `
 `;
 
 exports[`Buttons/Button Loading 1`] = `
-"<div class="sc-bdvwhi kGRhRV">
+"<div class="sc-AjlSJ ekuRIR">
   <button type="button" class="button is-primary is-loading"><span> Loading Button</span></button>
 </div>
 "
 `;
 
 exports[`Buttons/Button UsingRefs 1`] = `
-"<div class="sc-bdvwhi kGRhRV">
+"<div class="sc-AjlSJ ekuRIR">
   <button type="button" class="button is-default"><span> Focus me!</span></button>
 </div>
 "
@@ -714,7 +714,7 @@ exports[`Components/Help SingleLine 1`] = `
 `;
 
 exports[`Components/Icon Colors 1`] = `
-"<div class="sc-bdvwhi gaQFDy">
+"<div class="sc-AjlSJ gjDARy">
   <i title="default color" class="fas fa-fw fa-cat has-text-secondary" aria-label="default color"></i
   ><i title="primary" class="fas fa-fw fa-cat has-text-primary" aria-label="primary"></i
   ><i title="link" class="fas fa-fw fa-cat has-text-link" aria-label="link"></i
@@ -732,7 +732,7 @@ exports[`Components/Icon Colors 1`] = `
 `;
 
 exports[`Components/Icon Default 1`] = `
-"<div class="sc-bdvwhi gaQFDy">
+"<div class="sc-AjlSJ gjDARy">
   <i class="fas fa-fw fa-cat has-text-secondary"></i
   ><i title="Download" class="fas fa-fw fa-download has-text-info" aria-label="Download"></i
   ><i title="Pull Request" class="fas fa-fw fa-code-branch fa-rotate-180 has-text-warning" aria-label="Pull Request"></i
@@ -742,7 +742,7 @@ exports[`Components/Icon Default 1`] = `
 `;
 
 exports[`Components/Icon IconStyles 1`] = `
-"<div class="sc-bdvwhi gaQFDy">
+"<div class="sc-AjlSJ gjDARy">
   <i title="solid style" class="fas fa-fw fa-star has-text-inherit" aria-label="solid style"></i
   ><i title="regular style" class="far fa-fw fa-star has-text-inherit" aria-label="regular style"></i
   ><i title="brand style" class="fab fa-fw fa-react has-text-inherit" aria-label="brand style"></i>
@@ -751,7 +751,7 @@ exports[`Components/Icon IconStyles 1`] = `
 `;
 
 exports[`Components/Icon MoreOptions 1`] = `
-"<div class="sc-bdvwhi gaQFDy">
+"<div class="sc-AjlSJ gjDARy">
   <i title="rotate-270" class="fas fa-fw fa-snowboarding fa-rotate-270 has-text-secondary" aria-label="rotate-270"></i
   ><i title="spin" class="fas fa-fw fa-spinner fa-spin has-text-secondary" aria-label="spin"></i
   ><i title="custom sizing" class="fas fa-fw fa-cat has-text-secondary is-size-4" aria-label="custom sizing"></i
@@ -765,7 +765,7 @@ exports[`Components/Icon MoreOptions 1`] = `
 `;
 
 exports[`Components/Icon Sizing 1`] = `
-"<div class="sc-bdvwhi gaQFDy">
+"<div class="sc-AjlSJ gjDARy">
   <i title="default size" class="fas fa-fw fa-cat has-text-secondary" aria-label="default size"></i
   ><i title="fa-xs" class="fas fa-fw fa-cat fa-xs has-text-secondary" aria-label="fa-xs"></i
   ><i title="fa-sm" class="fas fa-fw fa-cat fa-sm has-text-secondary" aria-label="fa-sm"></i
@@ -1316,23 +1316,23 @@ exports[`Components/Toast Warning 1`] = `
 `;
 
 exports[`Components/Tooltip Default 1`] = `
-"<div class="sc-kDTkBQ cNJAmv">
-  <div class="sc-iqsgXZ dvuIMf">
+"<div class="sc-ehCMcF LqBDS">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> right </span></button>
     </div>
   </div>
-  <div class="sc-iqsgXZ dvuIMf">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> top </span></button>
     </div>
   </div>
-  <div class="sc-iqsgXZ dvuIMf">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> left </span></button>
     </div>
   </div>
-  <div class="sc-iqsgXZ dvuIMf">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> bottom </span></button>
     </div>
@@ -1342,23 +1342,23 @@ exports[`Components/Tooltip Default 1`] = `
 `;
 
 exports[`Components/Tooltip Multiline 1`] = `
-"<div class="sc-kDTkBQ cNJAmv">
-  <div class="sc-iqsgXZ dvuIMf">
+"<div class="sc-ehCMcF LqBDS">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> right </span></button>
     </div>
   </div>
-  <div class="sc-iqsgXZ dvuIMf">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> top </span></button>
     </div>
   </div>
-  <div class="sc-iqsgXZ dvuIMf">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> left </span></button>
     </div>
   </div>
-  <div class="sc-iqsgXZ dvuIMf">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> bottom </span></button>
     </div>
@@ -1368,23 +1368,23 @@ exports[`Components/Tooltip Multiline 1`] = `
 `;
 
 exports[`Components/Tooltip ShortMultiline 1`] = `
-"<div class="sc-kDTkBQ cNJAmv">
-  <div class="sc-iqsgXZ dvuIMf">
+"<div class="sc-ehCMcF LqBDS">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> right </span></button>
     </div>
   </div>
-  <div class="sc-iqsgXZ dvuIMf">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> top </span></button>
     </div>
   </div>
-  <div class="sc-iqsgXZ dvuIMf">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> left </span></button>
     </div>
   </div>
-  <div class="sc-iqsgXZ dvuIMf">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> bottom </span></button>
     </div>
@@ -1394,23 +1394,23 @@ exports[`Components/Tooltip ShortMultiline 1`] = `
 `;
 
 exports[`Components/Tooltip Styled 1`] = `
-"<div class="sc-kDTkBQ cNJAmv">
-  <div class="sc-iqsgXZ dvuIMf">
+"<div class="sc-ehCMcF LqBDS">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> right </span></button>
     </div>
   </div>
-  <div class="sc-iqsgXZ dvuIMf">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> top </span></button>
     </div>
   </div>
-  <div class="sc-iqsgXZ dvuIMf">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> left </span></button>
     </div>
   </div>
-  <div class="sc-iqsgXZ dvuIMf">
+  <div class="sc-lcerzc ljyqOY">
     <div class="sc-bdvwhi dIusSU">
       <button type="button" class="button is-info"><span> bottom </span></button>
     </div>
@@ -1712,7 +1712,7 @@ exports[`Forms/FileInput Default 1`] = `
   <div class="field">
     <label class="label"
       ><span id="file-input_0">Default File Input</span>
-      <div class="sc-bdvwhi dIusSU"><i class="fas fa-fw fa-question-circle has-text-blue-light" aria-label=""></i></div
+      <div class="sc-AjlSJ bAiCig"><i class="fas fa-fw fa-question-circle has-text-blue-light" aria-label=""></i></div
     ></label>
     <div class="file is-info has-name is-fullwidth">
       <label class="file-label"
@@ -1732,7 +1732,7 @@ exports[`Forms/FileInput Disabled 1`] = `
   <div class="field">
     <label class="label"
       ><span id="file-input_0">Disabled File Input</span>
-      <div class="sc-bdvwhi dIusSU"><i class="fas fa-fw fa-question-circle has-text-blue-light" aria-label=""></i></div
+      <div class="sc-AjlSJ bAiCig"><i class="fas fa-fw fa-question-circle has-text-blue-light" aria-label=""></i></div
     ></label>
     <div class="file is-info has-name is-fullwidth">
       <label class="file-label"
@@ -1753,8 +1753,7 @@ exports[`Forms/FileInput WithReactHookForm 1`] = `
     <div class="field">
       <label class="label"
         ><span id="file-input_1">Upload File</span>
-        <div class="sc-bdvwhi dIusSU">
-          <i class="fas fa-fw fa-question-circle has-text-blue-light" aria-label=""></i></div
+        <div class="sc-AjlSJ bAiCig"><i class="fas fa-fw fa-question-circle has-text-blue-light" aria-label=""></i></div
       ></label>
       <div class="file is-info has-name is-fullwidth">
         <label class="file-label"

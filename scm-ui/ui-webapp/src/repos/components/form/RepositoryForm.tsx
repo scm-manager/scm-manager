@@ -26,7 +26,7 @@ import {
   RepositoryCreation,
   RepositoryType
 } from "@scm-manager/ui-types";
-import { urls } from "@scm-manager/ui-components";
+import { urls } from "@scm-manager/ui-api";
 import { Button, Checkbox, Field, Level, SelectField } from "@scm-manager/ui-core";
 import NamespaceAndNameFields from "../NamespaceAndNameFields";
 import RepositoryInformationForm from "../RepositoryInformationForm";

@@ -16,7 +16,7 @@
 
 import React, { FC } from "react";
 import classNames from "classnames";
-import { createAttributesForTesting } from "./devBuild";
+import { createAttributesForTesting } from "@scm-manager/ui-core";
 
 type Props = {
   title?: string;

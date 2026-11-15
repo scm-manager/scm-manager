@@ -16,12 +16,11 @@
 
 import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { Repository, RepositoryCreation, RepositoryType } from "@scm-manager/ui-types";
-import { urls } from "@scm-manager/ui-components";
 import { Button, Level, ErrorNotification } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
 import ImportFromBundleForm from "./ImportFromBundleForm";
 import { extensionPoints } from "@scm-manager/ui-extensions";
-import { useImportRepositoryFromBundle } from "@scm-manager/ui-api";
+import { useImportRepositoryFromBundle, urls } from "@scm-manager/ui-api";
 import { useLocation } from "react-router-dom";
 
 type Props = {

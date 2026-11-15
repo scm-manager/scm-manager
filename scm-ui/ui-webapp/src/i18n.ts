@@ -18,7 +18,7 @@ import i18n from "i18next";
 import Backend from "i18next-fetch-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-import { urls } from "@scm-manager/ui-components";
+import { urls } from "@scm-manager/ui-api";
 
 const loadPath = urls.withContextPath("/locales/{{lng}}/{{ns}}.json");
 

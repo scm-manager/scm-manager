@@ -16,7 +16,7 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { BackendError } from "@scm-manager/ui-components";
+import { BackendError } from "@scm-manager/ui-api";
 import { UnstyledButton, Notification, ErrorNotification } from "@scm-manager/ui-core";
 
 type Props = {

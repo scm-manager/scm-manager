@@ -18,8 +18,8 @@ import React, { FormEvent } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch, Repository, Link } from "@scm-manager/ui-types";
 import { apiClient } from "@scm-manager/ui-api";
-import { BranchSelector, Checkbox, ErrorPage, Loading, Subtitle } from "@scm-manager/ui-components";
-import { Button, Level } from "@scm-manager/ui-core";
+import { BranchSelector, Checkbox, ErrorPage, Subtitle } from "@scm-manager/ui-components";
+import { Button, Level, Loading } from "@scm-manager/ui-core";
 
 type Props = WithTranslation & {
   repository: Repository;

@@ -18,7 +18,7 @@ import React, { FC } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { urls } from "@scm-manager/ui-components";
+import { urls } from "@scm-manager/ui-api";
 import { Button, Icon, LinkButton } from "@scm-manager/ui-core";
 
 type RepositoryForm = {

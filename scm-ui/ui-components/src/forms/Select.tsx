@@ -17,7 +17,7 @@
 import React, { ChangeEvent, FC, FocusEvent, useEffect } from "react";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
-import { createAttributesForTesting } from "../devBuild";
+import { createAttributesForTesting } from "@scm-manager/ui-core";
 import useInnerRef from "./useInnerRef";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
 import { createA11yId } from "../createA11yId";

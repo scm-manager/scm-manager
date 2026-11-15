@@ -18,7 +18,7 @@ import React, { FC } from "react";
 import { Navigate, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Group, GroupCollection } from "@scm-manager/ui-types";
-import { useGroups } from "@scm-manager/ui-api";
+import { useGroups, urls } from "@scm-manager/ui-api";
 import {
   GROUP_COLLECTION_BASE_ROUTE,
   GROUP_COLLECTION_SUB_ROUTES,
@@ -27,7 +27,7 @@ import {
   Page,
   Notification,
 } from "@scm-manager/ui-core";
-import { LinkPaginator, OverviewPageActions, urls } from "@scm-manager/ui-components";
+import { LinkPaginator, OverviewPageActions } from "@scm-manager/ui-components";
 import { GroupTable } from "./../components/table";
 
 type GroupPageProps = {

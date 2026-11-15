@@ -18,9 +18,9 @@ import React, { FC } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { RepositoryRoleCollection } from "@scm-manager/ui-types";
-import { LinkPaginator, urls } from "@scm-manager/ui-components";
+import { LinkPaginator } from "@scm-manager/ui-components";
 import PermissionRoleTable from "../components/PermissionRoleTable";
-import { useRepositoryRoles } from "@scm-manager/ui-api";
+import { useRepositoryRoles, urls } from "@scm-manager/ui-api";
 import {
   LinkButton,
   useDocumentTitle,

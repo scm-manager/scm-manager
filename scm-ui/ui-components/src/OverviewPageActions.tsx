@@ -19,7 +19,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import classNames from "classnames";
 import { FilterInput, LinkButton, Select } from "@scm-manager/ui-core";
-import { urls } from "./index";
+import { urls } from "@scm-manager/ui-api";
 import { devices } from "./devices";
 
 const StyledFilterWrapper = styled.div`

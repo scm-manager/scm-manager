@@ -17,7 +17,8 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { SubSubtitle, ErrorNotification, Loading, PreformattedCodeBlock } from "@scm-manager/ui-components";
+import { SubSubtitle, ErrorNotification, PreformattedCodeBlock } from "@scm-manager/ui-components";
+import { Loading } from "@scm-manager/ui-core";
 import { useChangesets, useDefaultBranch } from "@scm-manager/ui-api";
 
 type Props = {

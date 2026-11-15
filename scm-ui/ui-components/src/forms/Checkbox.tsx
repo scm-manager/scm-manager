@@ -15,7 +15,8 @@
  */
 
 import React, { ChangeEvent, FC, FocusEvent, useEffect } from "react";
-import { createAttributesForTesting, Help } from "../index";
+import { createAttributesForTesting } from "@scm-manager/ui-core";
+import { Help } from "../index";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import useInnerRef from "./useInnerRef";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";

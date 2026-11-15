@@ -17,9 +17,9 @@
 import React, { FC } from "react";
 import { Navigate, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useUsers } from "@scm-manager/ui-api";
+import { useUsers, urls } from "@scm-manager/ui-api";
 import { User, UserCollection } from "@scm-manager/ui-types";
-import { LinkPaginator, OverviewPageActions, urls } from "@scm-manager/ui-components";
+import { LinkPaginator, OverviewPageActions } from "@scm-manager/ui-components";
 import {
   LinkButton,
   Notification,

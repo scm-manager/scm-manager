@@ -17,7 +17,8 @@
 import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
 import { useLocation, useParams } from "react-router-dom";
-import { devices, urls } from "@scm-manager/ui-components";
+import { devices } from "@scm-manager/ui-components";
+import { urls } from "@scm-manager/ui-api";
 import CodeViewSwitcher, { SwitchViewLink } from "./CodeViewSwitcher";
 import CompareSelector from "../../compare/CompareSelector";
 import { useRepositoryFromParams } from "@scm-manager/ui-core";

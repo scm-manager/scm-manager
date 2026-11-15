@@ -17,8 +17,7 @@
 import React, { FC } from "react";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import CodeActionBar from "../codeSection/components/CodeActionBar";
-import { urls } from "@scm-manager/ui-components";
-import { RepositoryRevisionContextProvider, useBranchesIfAvailable } from "@scm-manager/ui-api";
+import { RepositoryRevisionContextProvider, useBranchesIfAvailable, urls } from "@scm-manager/ui-api";
 import { encodeFilePath } from "../sources/components/content/FileLink";
 import {
   useRepositoryFromParams,

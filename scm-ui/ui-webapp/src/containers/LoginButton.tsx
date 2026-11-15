@@ -15,7 +15,7 @@
  */
 
 import React, { FC } from "react";
-import { urls } from "@scm-manager/ui-components";
+import { urls } from "@scm-manager/ui-api";
 import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";

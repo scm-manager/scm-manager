@@ -25,7 +25,7 @@ import {
   useTagsIfAvailable,
 } from "@scm-manager/ui-api";
 import { Repository, Tag } from "@scm-manager/ui-types";
-import { Breadcrumb, useScrollToElement, useShortcut } from "@scm-manager/ui-components";
+import { Breadcrumb, useScrollToElement } from "@scm-manager/ui-components";
 import {
   ErrorNotification,
   Loading,
@@ -35,6 +35,7 @@ import {
   useCurrentRepositoryBaseUrl,
   REPOSITORY_SUB_ROUTES,
   REPOSITORY_CODE_SUB_ROUTES,
+  useShortcut,
 } from "@scm-manager/ui-core";
 import FileTree from "../components/FileTree";
 import Content from "./Content";

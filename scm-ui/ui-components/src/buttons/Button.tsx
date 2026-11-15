@@ -18,7 +18,7 @@ import React, { ButtonHTMLAttributes, FC, KeyboardEvent, MouseEvent, ReactNode, 
 import classNames from "classnames";
 import { Link } from "react-router";
 import Icon from "../Icon";
-import { createAttributesForTesting } from "../devBuild";
+import { createAttributesForTesting } from "@scm-manager/ui-core";
 
 export type ButtonProps = {
   label?: string;

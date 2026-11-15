@@ -21,11 +21,17 @@ import {
   PrimaryContentColumn,
   SecondaryNavigation,
   Tag,
-  urls,
 } from "@scm-manager/ui-components";
 import { Notification, Level, useDocumentTitle, Page } from "@scm-manager/ui-core";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { useIndex, useNamespaceAndNameContext, useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
+import {
+  useIndex,
+  useNamespaceAndNameContext,
+  useSearch,
+  useSearchCounts,
+  useSearchTypes,
+  urls,
+} from "@scm-manager/ui-api";
 import Results from "./Results";
 import { Trans, useTranslation } from "react-i18next";
 import SearchErrorNotification from "./SearchErrorNotification";

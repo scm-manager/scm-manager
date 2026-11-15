@@ -18,7 +18,7 @@ import React, { FC, ReactNode, Ref } from "react";
 import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 import { File } from "@scm-manager/ui-types";
-import { urls } from "@scm-manager/ui-components";
+import { urls } from "@scm-manager/ui-api";
 import { Tooltip } from "@scm-manager/ui-core";
 
 type Props = {

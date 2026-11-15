@@ -19,8 +19,8 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
-import { useNamespaceAndNameContext, useNamespaces, useRepositories } from "@scm-manager/ui-api";
-import { devices, LinkPaginator, OverviewPageActions, urls } from "@scm-manager/ui-components";
+import { useNamespaceAndNameContext, useNamespaces, useRepositories, urls } from "@scm-manager/ui-api";
+import { devices, LinkPaginator, OverviewPageActions } from "@scm-manager/ui-components";
 import {
   KeyboardIterator,
   KeyboardSubIterator,

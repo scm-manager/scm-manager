@@ -16,8 +16,8 @@
 
 import React, { FC } from "react";
 import { createBrowserRouter, type LoaderFunctionArgs, redirect, type RouteObject } from "react-router-dom";
-import { indexLoader } from "@scm-manager/ui-api";
-import { ErrorBoundary, urls } from "@scm-manager/ui-components";
+import { indexLoader, urls } from "@scm-manager/ui-api";
+import { ErrorBoundary } from "@scm-manager/ui-components";
 import {
   ADMIN_BASE_ROUTE,
   ADMIN_PLUGINS_SUB_ROUTES,
