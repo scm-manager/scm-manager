@@ -85,7 +85,7 @@ const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
 
   const handleSourceSelect = (type: CompareTypes, name: string) => {
     if (target.type && target.name) {
-      const newPath = `/${baseUrl}/${type}/${encodeURIComponent(name)}/${target.type}/${encodeURIComponent(
+      const newPath = `${baseUrl}/${type}/${encodeURIComponent(name)}/${target.type}/${encodeURIComponent(
         target.name,
       )}/${trailingPath}`;
       navigate(newPath);
@@ -94,7 +94,7 @@ const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
 
   const handleTargetSelect = (type: CompareTypes, name: string) => {
     if (source.type && source.name) {
-      const newPath = `/${baseUrl}/${source.type}/${encodeURIComponent(source.name)}/${type}/${encodeURIComponent(
+      const newPath = `${baseUrl}/${source.type}/${encodeURIComponent(source.name)}/${type}/${encodeURIComponent(
         name,
       )}/${trailingPath}`;
       navigate(newPath);

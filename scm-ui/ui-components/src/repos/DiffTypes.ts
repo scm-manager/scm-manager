@@ -18,10 +18,6 @@ import { FC, PropsWithChildren, ReactNode } from "react";
 import { DefaultCollapsed } from "./defaultCollapsed";
 import { Change, Hunk, FileDiff as File, FileChangeType } from "@scm-manager/ui-types";
 
-export type ChangeEvent = {
-  change: Change;
-};
-
 export type BaseContext = {
   hunk: Hunk;
   file: File;

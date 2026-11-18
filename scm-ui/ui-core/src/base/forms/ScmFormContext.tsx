@@ -30,7 +30,7 @@ export function ScmFormContextProvider<T extends FieldValues>({
   children,
   ...props
 }: PropsWithChildren<ContextType<T>>) {
-  return <ScmFormContext.Provider value={props}>{children}</ScmFormContext.Provider>;
+  return <ScmFormContext.Provider value={props as ContextType<any>}>{children}</ScmFormContext.Provider>;
 }
 
 export function useScmFormContext() {

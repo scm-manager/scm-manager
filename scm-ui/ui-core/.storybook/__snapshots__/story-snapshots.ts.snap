@@ -178,7 +178,7 @@ exports[`Components/CardList Default 1`] = `
       <button
         type="button"
         aria-label="Menu"
-        id="radix-«r0»"
+        id="radix-_r_0_"
         aria-haspopup="menu"
         aria-expanded="false"
         data-state="closed"
@@ -207,7 +207,7 @@ exports[`Components/CardList Default 1`] = `
       <button
         type="button"
         aria-label="Menu"
-        id="radix-«r2»"
+        id="radix-_r_2_"
         aria-haspopup="menu"
         aria-expanded="false"
         data-state="closed"
@@ -276,7 +276,7 @@ exports[`Components/Collapsible Default 1`] = `
       <span id="scm-id-1" class="card-header-title">This is a collapsible</span
       ><button
         type="button"
-        aria-controls="radix-«r0»"
+        aria-controls="radix-_r_0_"
         aria-expanded="true"
         data-state="open"
         aria-labelledby="scm-id-1"
@@ -287,7 +287,7 @@ exports[`Components/Collapsible Default 1`] = `
     </div>
     <div
       data-state="open"
-      id="radix-«r0»"
+      id="radix-_r_0_"
       class="card-content p-2"
       style="transition-duration: 0s; animation-name: none"
     >
@@ -521,9 +521,9 @@ exports[`Components/Tabs Default 1`] = `
             type="button"
             role="tab"
             aria-selected="false"
-            aria-controls="radix-«r0»-content-tab1"
+            aria-controls="radix-_r_0_-content-tab1"
             data-state="inactive"
-            id="radix-«r0»-trigger-tab1"
+            id="radix-_r_0_-trigger-tab1"
             class="has-background-transparent is-borderless"
             tabindex="-1"
             data-orientation="horizontal"
@@ -537,9 +537,9 @@ exports[`Components/Tabs Default 1`] = `
             type="button"
             role="tab"
             aria-selected="true"
-            aria-controls="radix-«r0»-content-tab2"
+            aria-controls="radix-_r_0_-content-tab2"
             data-state="active"
-            id="radix-«r0»-trigger-tab2"
+            id="radix-_r_0_-trigger-tab2"
             class="has-background-transparent is-borderless"
             tabindex="-1"
             data-orientation="horizontal"
@@ -554,17 +554,17 @@ exports[`Components/Tabs Default 1`] = `
       data-state="inactive"
       data-orientation="horizontal"
       role="tabpanel"
-      aria-labelledby="radix-«r0»-trigger-tab1"
+      aria-labelledby="radix-_r_0_-trigger-tab1"
       hidden=""
-      id="radix-«r0»-content-tab1"
+      id="radix-_r_0_-content-tab1"
       tabindex="0"
     ></div>
     <div
       data-state="active"
       data-orientation="horizontal"
       role="tabpanel"
-      aria-labelledby="radix-«r0»-trigger-tab2"
-      id="radix-«r0»-content-tab2"
+      aria-labelledby="radix-_r_0_-trigger-tab2"
+      id="radix-_r_0_-content-tab2"
       tabindex="0"
       style="animation-duration: 0s"
     >
@@ -1853,7 +1853,7 @@ exports[`Forms/Form RepoConfiguration 1`] = `
           class="is-full-width input is-ellipsis-overflow"
           autocomplete="off"
           data-testid="select-author"
-          id="headlessui-combobox-input-«r8»"
+          id="headlessui-combobox-input-_r_8_"
           role="combobox"
           aria-expanded="false"
           aria-autocomplete="list"
@@ -3168,7 +3168,7 @@ exports[`Overlays/Menu Default 1`] = `
   <button
     type="button"
     aria-label="Menu"
-    id="radix-«r0»"
+    id="radix-_r_0_"
     aria-haspopup="menu"
     aria-expanded="false"
     data-state="closed"

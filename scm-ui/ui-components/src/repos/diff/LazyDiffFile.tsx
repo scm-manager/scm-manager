@@ -30,9 +30,10 @@ import TokenizedDiffView from "../TokenizedDiffView";
 import ChangeTag from "./ChangeTag";
 import DiffFileHunk from "./DiffFileHunk";
 import FileTitle from "./FileTitle";
-import { getAnchorId, hasContent as determineHasContent, hoverFileTitle } from "./helpers";
+import { getAnchorId, getHunkKey, hasContent as determineHasContent, hoverFileTitle } from "./helpers";
 import { DiffFilePanel, FullWidthTitleHeader, MarginlessModalContent, PanelHeading } from "./styledElements";
 import { DiffFileProps } from "./types";
+import useDiffViewSettings from "./useDiffViewSettings";
 
 type Props = DiffFileProps;
 
@@ -63,6 +64,7 @@ const DiffFile: FC<Props> = ({
   const [sideBySide, setSideBySide] = useState(sideBySideProp);
   const [whitespace, setWhitespace] = useState(!!whitespaceProp);
   const diffExpander = useMemo(() => new DiffExpander(file), [file]);
+  const diffViewSettings = useDiffViewSettings(file, { annotationFactory, onClick, hunkClass, markConflicts });
   const [expansionError, setExpansionError] = useState<Error | null | undefined>();
   const viewType = useMemo(() => (sideBySide ? "split" : "unified"), [sideBySide]);
   const hasContent = useMemo(() => determineHasContent(file), [file]);
@@ -201,22 +203,25 @@ const DiffFile: FC<Props> = ({
       <div className="panel-block p-0">
         {fileAnnotationFactory ? fileAnnotationFactory(file) : null}
         {hasContent ? (
-          <TokenizedDiffView className={viewType} viewType={viewType} file={file} whitespace={whitespace}>
+          <TokenizedDiffView
+            className={viewType}
+            viewType={viewType}
+            file={file}
+            whitespace={whitespace}
+            hunkGutterHoverIcon={hunkGutterHoverIcon}
+            actionable={!!diffViewSettings.gutterEvents}
+            highlightLineOnHover={highlightLineOnHover}
+            {...diffViewSettings}
+          >
             {(hunks: HunkType[]) =>
               hunks?.map((hunk, n) => (
                 <DiffFileHunk
-                  key={hunk.content}
+                  key={getHunkKey(hunk)}
                   file={file}
                   expandableHunk={diffExpander.getHunk(n)}
                   i={n}
                   diffExpanded={setFile}
                   diffExpansionFailed={setExpansionError}
-                  annotationFactory={annotationFactory}
-                  onClick={onClick}
-                  hunkClass={hunkClass}
-                  hunkGutterHoverIcon={hunkGutterHoverIcon}
-                  highlightLineOnHover={highlightLineOnHover}
-                  markConflicts={markConflicts}
                 />
               ))
             }
@@ -233,20 +238,17 @@ const DiffFile: FC<Props> = ({
       </div>
     ),
     [
-      annotationFactory,
       diffExpander,
+      diffViewSettings,
       file,
       fileAnnotationFactory,
       hasContent,
       highlightLineOnHover,
-      hunkClass,
       hunkGutterHoverIcon,
-      markConflicts,
       newContentType,
       newFileLink,
       oldContentType,
       oldFileLink,
-      onClick,
       sideBySide,
       whitespace,
       viewType,

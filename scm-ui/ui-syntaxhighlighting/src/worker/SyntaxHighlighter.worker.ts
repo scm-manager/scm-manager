@@ -15,9 +15,9 @@
  */
 
 import groupByLines from "./groupByLines";
-// @ts-ignore we have no types for react-diff-view
-import { tokenize } from "react-diff-view";
+import { HunkData, tokenize } from "react-diff-view";
 import createRefractor, { RefractorAdapter } from "./refractorAdapter";
+import mergeAdjacentTokens from "./mergeAdjacentTokens";
 import type {
   FailureResponse,
   HighlightingRequest,
@@ -233,7 +233,9 @@ const runTokenize = ({ id, payload }: TokenizeRequest) => {
 
   const doTokenization = (worker: Worker) => {
     try {
-      const tokens: { old: RefractorNode[]; new: RefractorNode[] } = tokenize(hunks, options);
+      const tokens: { old: RefractorNode[]; new: RefractorNode[] } = mergeAdjacentTokens(
+        tokenize(hunks as HunkData[], options),
+      );
       const tokensCount = countAndMarkNodes(tokens.old) + countAndMarkNodes(tokens.new);
       if (tokensCount > TOKENIZE_NODE_LIMIT) {
         const response: TokenizeFailureResponse = {

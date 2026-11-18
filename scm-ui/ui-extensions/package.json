@@ -18,10 +18,10 @@
     "depcheck": "depcheck"
   },
   "dependencies": {
-    "react-router-dom": "^7.13.0"
+    "react-router-dom": "^7.18.4"
   },
   "peerDependencies": {
-    "react": "^19.1.1"
+    "react": "^19.3.0"
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.13.1",
@@ -29,13 +29,13 @@
     "@scm-manager/prettier-config": "^2.12.0",
     "@scm-manager/tsconfig": "^3.0.0-alpha1",
     "@scm-manager/ui-types": "4.0.0-SNAPSHOT",
-    "@vitest/coverage-v8": "^4.0.18",
-    "@testing-library/react": "16.3.0",
-    "@types/react": "^19.1.1",
+    "@vitest/coverage-v8": "^4.1.11",
+    "@testing-library/react": "16.3.3",
+    "@types/react": "^19.3.0",
     "ci-info": "^4.4.0",
-    "minimatch": "^10.0.3",
+    "minimatch": "^10.2.6",
     "tsup": "^5.12.6",
-    "vitest": "^4.0.18"
+    "vitest": "^4.1.11"
   },
   "babel": {
     "presets": [

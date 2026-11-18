@@ -15,45 +15,12 @@
  */
 
 import styled from "styled-components";
-// @ts-ignore react-diff-view does not provide types
-import { Hunk } from "react-diff-view";
 import { Icon } from "@scm-manager/ui-core";
 import { devices } from "../../devices";
 
 export type Collapsible = {
   collapsed?: boolean;
 };
-
-export const StyledHunk = styled(Hunk)`
-  ${(props) => {
-    let style = props.icon
-      ? `
-    .diff-gutter:hover::after {
-      font-size: inherit;
-      margin-left: 0.5em;
-      font-family: "Font Awesome 5 Free";
-      content: "${props.icon}";
-      color: var(--scm-column-selection);
-    }
-  `
-      : "";
-    if (!props.actionable) {
-      style += `
-      .diff-gutter {
-        cursor: default;
-      }
-    `;
-    }
-    if (props.highlightLineOnHover) {
-      style += `
-      tr.diff-line:hover > td {
-        background-color: var(--sh-selected-color);
-      }
-    `;
-    }
-    return style;
-  }}
-`;
 
 export const DiffFilePanel = styled.div<Collapsible>`
   /* remove bottom border for collapsed panels */

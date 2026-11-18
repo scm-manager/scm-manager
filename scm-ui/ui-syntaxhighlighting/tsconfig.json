@@ -1,6 +1,7 @@
 {
   "extends": "@scm-manager/tsconfig",
   "compilerOptions": {
+    "types": ["vitest/globals"],
     "module": "esnext",
     "moduleResolution": "bundler"
   },

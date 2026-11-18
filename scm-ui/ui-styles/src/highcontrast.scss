@@ -217,17 +217,19 @@ td button:not(.button) {
 }
 
 //diffs
-.diff-code-conflict {
-  background-color: #332900;
-}
+.diff-line-conflict {
+  > .diff-code:not(.diff-code-omit) {
+    background-color: #332900;
+  }
 
-.diff-gutter-conflict {
-  background-color: #ffd11a;
+  > .diff-gutter:not(.diff-gutter-omit) {
+    background-color: #ffd11a;
+    color: $scheme-main;
+  }
 }
 
 .diff-gutter-delete,
-.diff-gutter-insert,
-.diff-gutter-conflict {
+.diff-gutter-insert {
   color: $scheme-main;
 }
 
@@ -248,10 +250,6 @@ td:first-child.diff-gutter-insert:before {
   content: "+";
 }
 
-td:first-child.diff-gutter-conflict:before {
-  content: "!";
-}
-
 .diff-split td:nth-child(3).diff-gutter-insert:before {
   content: "+";
 }
@@ -260,7 +258,18 @@ td:first-child.diff-gutter-conflict:before {
   content: "-";
 }
 
-.diff-split td:nth-child(3).diff-gutter-conflict:before {
+// conflicts must be declared after inserts and deletes, because conflicting lines are inserts, deletes or normal lines
+.diff-line-conflict {
+  > td:first-child.diff-gutter:before {
+    content: "!";
+  }
+
+  > td:nth-child(2).diff-gutter:before {
+    content: none;
+  }
+}
+
+.diff-split .diff-line-conflict > td:nth-child(3).diff-gutter:before {
   content: "!";
 }
 

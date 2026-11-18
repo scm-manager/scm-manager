@@ -19,7 +19,7 @@
     "@scm-manager/eslint-config": "^2.18.2",
     "@scm-manager/prettier-config": "^2.12.0",
     "@scm-manager/tsconfig": "^3.0.0-alpha1",
-    "minimatch": "^10.0.3"
+    "minimatch": "^10.2.6"
   },
   "babel": {
     "presets": [

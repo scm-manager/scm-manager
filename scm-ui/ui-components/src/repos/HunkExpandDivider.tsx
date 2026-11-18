@@ -15,7 +15,6 @@
  */
 
 import React, { FC, ReactNode } from "react";
-// @ts-ignore
 import { Decoration } from "react-diff-view";
 import styled from "styled-components";
 

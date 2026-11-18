@@ -14,76 +14,23 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { Change, Hunk as HunkType } from "@scm-manager/ui-types";
 import { ExpandableHunk } from "../DiffExpander";
-import React, { FC, useCallback, useMemo } from "react";
-import { StyledHunk } from "./styledElements";
+import React, { FC } from "react";
 import LastHunkFooter from "./LastHunkFooter";
 import { DiffExpandedCallback, DiffFileProps, ErrorHandler } from "./types";
 import HunkFooter from "./HunkFooter";
-// @ts-expect-error react-diff-view does not provide types with v2
-import { Decoration, getChangeKey } from "react-diff-view";
-import { collectHunkAnnotations, markConflicts } from "./helpers";
+import { Decoration, Hunk, HunkData } from "react-diff-view";
 import HunkHeader from "./HunkHeader";
-import { ChangeEvent } from "../DiffTypes";
 
-type Props = Pick<
-  DiffFileProps,
-  | "annotationFactory"
-  | "onClick"
-  | "file"
-  | "markConflicts"
-  | "hunkClass"
-  | "hunkGutterHoverIcon"
-  | "highlightLineOnHover"
-> & {
+type Props = Pick<DiffFileProps, "file"> & {
   expandableHunk: ExpandableHunk;
   i: number;
   diffExpanded: DiffExpandedCallback;
   diffExpansionFailed: ErrorHandler;
 };
 
-const DiffFileHunk: FC<Props> = ({
-  expandableHunk,
-  file,
-  i,
-  markConflicts: shouldMarkConflicts,
-  diffExpanded,
-  diffExpansionFailed,
-  annotationFactory,
-  onClick,
-  hunkClass,
-  hunkGutterHoverIcon,
-  highlightLineOnHover,
-}) => {
-  const hunk = useMemo(() => expandableHunk.hunk, [expandableHunk]);
-
-  const handleClickEvent = useCallback(
-    (change: Change, hunk: HunkType) => {
-      const context = {
-        changeId: getChangeKey(change),
-        change,
-        hunk,
-        file,
-      };
-      if (onClick) {
-        onClick(context);
-      }
-    },
-    [file, onClick],
-  );
-
-  const gutterEvents = useMemo(
-    () =>
-      onClick && {
-        onClick: (event: ChangeEvent) => handleClickEvent(event.change, hunk),
-      },
-    [handleClickEvent, hunk, onClick],
-  );
-
-  if (shouldMarkConflicts && hunk.changes) {
-    markConflicts(hunk);
-  }
+const DiffFileHunk: FC<Props> = ({ expandableHunk, file, i, diffExpanded, diffExpansionFailed }) => {
+  const hunk = expandableHunk.hunk;
   const items: React.ReactNode[] = [];
   if (file._links?.lines) {
     items.push(
@@ -102,22 +49,7 @@ const DiffFileHunk: FC<Props> = ({
     );
   }
 
-  items.push(
-    <StyledHunk
-      key={"hunk-" + hunk.content}
-      hunk={expandableHunk.hunk}
-      widgets={collectHunkAnnotations(hunk, file, annotationFactory)}
-      gutterEvents={gutterEvents}
-      className={hunkClass ? hunkClass(hunk) : null}
-      icon={hunkGutterHoverIcon}
-      actionable={!!gutterEvents}
-      highlightLineOnHover={highlightLineOnHover}
-      selectedChanges={[]}
-      generateAnchorID={() => undefined}
-      // @ts-expect-error react-diff-view does not provide types with v2
-      renderGutter={({ renderDefault, wrapInAnchor }) => wrapInAnchor(renderDefault())}
-    />,
-  );
+  items.push(<Hunk key={"hunk-" + hunk.content} hunk={hunk as HunkData} />);
   if (file._links?.lines) {
     if (i === (file.hunks ?? []).length - 1) {
       items.push(

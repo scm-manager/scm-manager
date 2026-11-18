@@ -278,12 +278,14 @@ $danger-25: scale-color($danger, $lightness: -75%);
   }
 }
 
-.diff-code-conflict {
-  background-color: #332900;
-}
+.diff-line-conflict {
+  > .diff-code:not(.diff-code-omit) {
+    background-color: #332900;
+  }
 
-.diff-gutter-conflict {
-  background-color: #bc9f2a;
+  > .diff-gutter:not(.diff-gutter-omit) {
+    background-color: #bc9f2a;
+  }
 }
 
 .diff-decoration-content div {

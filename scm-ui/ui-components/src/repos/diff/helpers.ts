@@ -14,7 +14,7 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import { FileDiff, Hunk as HunkType } from "@scm-manager/ui-types";
+import { Change, FileDiff, Hunk as HunkType } from "@scm-manager/ui-types";
 import { escapeWhitespace } from "../diffs";
 import { AnnotationFactory } from "../DiffTypes";
 
@@ -41,6 +41,12 @@ export const getAnchorId = (file: FileDiff) => {
   return escapeWhitespace(path);
 };
 
+/**
+ * Creates a key that is unique for each hunk of a file. The content of a hunk cannot be used for this, because it is
+ * empty for every hunk that was added by expanding the diff.
+ */
+export const getHunkKey = (hunk: HunkType) => `-${hunk.oldStart},${hunk.oldLines} +${hunk.newStart},${hunk.newLines}`;
+
 export const hasContent = (file: FileDiff) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
 
 export const hoverFileTitle = (file: FileDiff): string => {
@@ -52,17 +58,19 @@ export const hoverFileTitle = (file: FileDiff): string => {
   return file.newPath;
 };
 
-export const markConflicts = (hunk: HunkType) => {
+export const findConflicts = (hunk: HunkType) => {
+  const conflicts: Change[] = [];
   let inConflict = false;
   for (let i = 0; i < hunk.changes.length; ++i) {
     if (hunk.changes[i].content === "<<<<<<< HEAD") {
       inConflict = true;
     }
     if (inConflict) {
-      hunk.changes[i].type = "conflict";
+      conflicts.push(hunk.changes[i]);
     }
     if (hunk.changes[i].content.startsWith(">>>>>>>")) {
       inConflict = false;
     }
   }
+  return conflicts;
 };
