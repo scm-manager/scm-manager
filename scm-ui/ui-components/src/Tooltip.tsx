@@ -187,7 +187,6 @@ const Tooltip: FC<Props> = ({ className, message, location = "right", multiline,
               className
             )}
             multiline={multiline}
-            aria-live="polite"
             id={id}
             role="tooltip"
           >
