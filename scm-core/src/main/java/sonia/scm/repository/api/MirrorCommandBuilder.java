@@ -70,6 +70,14 @@ public final class MirrorCommandBuilder {
     return this;
   }
 
+  /**
+   * Sets the source URL for this invocation. It may differ from previous invocations if the repository
+   * supports {@link sonia.scm.repository.Feature#MIRROR_SOURCE_URL_CHANGE}.
+   * Changing the URL uses the same synchronization and filter rules as any other update.
+   *
+   * @param sourceUrl URL of the source repository
+   * @return this builder
+   */
   public MirrorCommandBuilder setSourceUrl(String sourceUrl) {
     request.setSourceUrl(sourceUrl);
     return this;
@@ -129,12 +137,19 @@ public final class MirrorCommandBuilder {
 
   public MirrorCommandResult initialCall() {
     LOG.info("Creating mirror for {} in repository {}", request.getSourceUrl(), targetRepository);
-    return mirrorCommand.mirror(request);
+    return withSourceUrl(mirrorCommand.mirror(request));
   }
 
   public MirrorCommandResult update() {
     LOG.debug("Updating mirror for {} in repository {}", request.getSourceUrl(), targetRepository);
-    return mirrorCommand.update(request);
+    return withSourceUrl(mirrorCommand.update(request));
+  }
+
+  private MirrorCommandResult withSourceUrl(MirrorCommandResult result) {
+    List<String> log = new ArrayList<>();
+    log.add("Pulling changes from " + request.getSourceUrl());
+    log.addAll(result.getLog());
+    return new MirrorCommandResult(result.getResult(), log, result.getDuration(), result.getLfsUpdateResult());
   }
 
   /**

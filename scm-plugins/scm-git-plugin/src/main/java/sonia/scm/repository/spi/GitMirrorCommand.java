@@ -17,12 +17,12 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.base.Strings;
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.LsRemoteCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.EmptyProgressMonitor;
@@ -37,8 +37,6 @@ import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.ReceiveCommand;
-import org.eclipse.jgit.transport.TransportHttp;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
@@ -54,7 +52,6 @@ import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.MirrorCommandResult.ResultType;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.MirrorFilter.Result;
-import sonia.scm.repository.api.UsernamePasswordCredential;
 import sonia.scm.repository.spi.LfsLoader.LfsLoaderLogger;
 
 import java.io.IOException;
@@ -160,6 +157,8 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     private final Stopwatch stopwatch;
 
     private final DefaultBranchSelector defaultBranchSelector;
+    private final GitMirrorRefDeleter refDeleter;
+    private final GitMirrorTransportConfigurer transportConfigurer;
 
     private final Git git;
 
@@ -180,12 +179,14 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       this.git = git;
       stopwatch = Stopwatch.createStarted();
       defaultBranchSelector = new DefaultBranchSelector(git);
+      refDeleter = new GitMirrorRefDeleter(git.getRepository());
+      transportConfigurer = new GitMirrorTransportConfigurer(mirrorHttpConnectionProvider, mirrorCommandRequest, mirrorLog);
     }
 
     MirrorCommandResult run() {
       try {
         return doUpdate();
-      } catch (GitAPIException e) {
+      } catch (GitAPIException | IOException e) {
         result = FAILED;
         LOG.info("got exception while trying to synchronize mirror for repository {}", context.getRepository(), e);
         mirrorLog.add("failed to synchronize: " + e.getMessage());
@@ -193,7 +194,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
     }
 
-    private MirrorCommandResult doUpdate() throws GitAPIException {
+    private MirrorCommandResult doUpdate() throws GitAPIException, IOException {
       copyRemoteRefsToMain();
       Collection<ObjectId> existingRevisions = mirrorCommandRequest.isReloadLfs() ? emptyList() : gatherAllRefs();
       fetchResult = createFetchCommand().call();
@@ -208,6 +209,14 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       Collection<ObjectId> accepted = new HashSet<>();
       handleBranches(accepted);
       handleTags(accepted);
+      if (result == FAILED) {
+        return new MirrorCommandResult(result, mirrorLog.getLog(), stopwatch.stop().elapsed(), lfsUpdateResult);
+      }
+      String newDefaultBranch = defaultBranchSelector.newDefaultBranch(getSourceDefaultBranch()).orElseThrow();
+      boolean defaultBranchChanged = !StringUtils.equals(getCurrentDefaultBranch(), newDefaultBranch);
+      setWorkingCopyHead(newDefaultBranch);
+      refDeleter.deleteDeferred();
+
       if (mirrorCommandRequest.isReloadLfs()) {
         gatherAllMirroredRefs(accepted);
       }
@@ -220,19 +229,20 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         }
       }
 
-      if (!defaultBranchSelector.isChanged()) {
-        if (!fetchResult.getTrackingRefUpdates().isEmpty() || mirrorCommandRequest.isReloadLfs()) {
+      if (!defaultBranchSelector.isChanged() && !defaultBranchChanged) {
+        if (!fetchResult.getTrackingRefUpdates().isEmpty()) {
           mirrorLog.add("No effective changes detected");
         }
         return new MirrorCommandResult(result, mirrorLog.getLog(), stopwatch.stop().elapsed(), lfsUpdateResult);
       }
 
-      String currentDefaultBranchInRepository = getCurrentDefaultBranch();
-      defaultBranchSelector.newDefaultBranch(currentDefaultBranchInRepository)
-        .ifPresent(this::setNewDefaultBranch);
+      gitHeadModifier.ensure(repository, newDefaultBranch);
+      storeProvider.setDefaultBranch(repository, newDefaultBranch);
 
-      String[] pushRefSpecs = generatePushRefSpecs().toArray(new String[0]);
-      forcePush(pushRefSpecs);
+      if (defaultBranchSelector.isChanged()) {
+        String[] pushRefSpecs = generatePushRefSpecs().toArray(new String[0]);
+        forcePush(pushRefSpecs);
+      }
       ResultType finalResult = lfsUpdateResult.hasFailures()? FAILED: result;
       return new MirrorCommandResult(finalResult, mirrorLog.getLog(), stopwatch.stop().elapsed(), lfsUpdateResult);
     }
@@ -270,25 +280,38 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
     }
 
-    private void setNewDefaultBranch(String newDefaultBranch) {
+    private String getSourceDefaultBranch() throws GitAPIException {
+      Ref head = fetchResult.getAdvertisedRef(Constants.HEAD);
+      if (head == null) {
+        // Protocol v2 fetches may advertise only the requested branches and tags once local HEAD resolves.
+        LsRemoteCommand lookup = git.lsRemote().setRemote(mirrorCommandRequest.getSourceUrl());
+        transportConfigurer.configure(lookup);
+        head = lookup.call().stream().filter(ref -> Constants.HEAD.equals(ref.getName())).findFirst().orElse(null);
+      }
+      if (head != null && head.isSymbolic()) {
+        String name = head.getLeaf().getName();
+        if (name.startsWith(Constants.R_HEADS)) {
+          return name.substring(Constants.R_HEADS.length());
+        }
+      }
+      return null;
+    }
+
+    private void setWorkingCopyHead(String newDefaultBranch) {
       try {
         String oldBranch = getCurrentDefaultBranch();
         if (!StringUtils.equals(oldBranch, newDefaultBranch)) {
-          mirrorLog.add("Old default branch deleted. Setting default branch to '" + newDefaultBranch + "'.");
+          mirrorLog.add("Setting default branch to '" + newDefaultBranch + "'.");
           RefUpdate refUpdate = git.getRepository().getRefDatabase().newUpdate(Constants.HEAD, true);
           refUpdate.setForceUpdate(true);
           RefUpdate.Result result = refUpdate.link(Constants.R_HEADS + newDefaultBranch);
           if (result != RefUpdate.Result.FORCED) {
             throw new InternalRepositoryException(getRepository(), "Could not set HEAD to new default branch");
           }
-          git.branchDelete().setBranchNames(oldBranch).setForce(true).call();
         }
-      } catch (GitAPIException | IOException e) {
+      } catch (IOException e) {
         throw new InternalRepositoryException(getRepository(), "Error while switching branch to change default branch", e);
       }
-
-      gitHeadModifier.ensure(repository, newDefaultBranch);
-      storeProvider.setDefaultBranch(repository, newDefaultBranch);
     }
 
     private String getCurrentDefaultBranch() {
@@ -412,7 +435,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         try {
           String referenceName = ref.getLocalName().substring("refs/".length() + refType.refPath.length());
           if (filterResult.isRemovalRequested()) {
-            deleteReference(ref.getLocalName());
+            refDeleter.delete(ref.getLocalName());
             boolean existedInDestination = !ObjectId.zeroId().equals(ref.getOldObjectId());
             if (existedInDestination) {
               deletedRefs.add(ref.getLocalName());
@@ -443,16 +466,19 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       private void handleReferenceUpdateException(Exception e) {
+        result = FAILED;
         LOG.warn("got exception processing ref {} in repository {}", ref.getLocalName(), GitMirrorCommand.this.repository, e);
         mirrorLog.add(format("got error processing reference %s: %s", ref.getLocalName(), e.getMessage()));
         mirrorLog.add("mirror may be damaged");
       }
 
       private void handleRejectedRef(String referenceName, Result filterResult) throws IOException {
-        result = REJECTED_UPDATES;
+        if (result != FAILED) {
+          result = REJECTED_UPDATES;
+        }
         LOG.trace("{} ref rejected in {}: {}", refType.typeForLog, GitMirrorCommand.this.repository, ref.getLocalName());
         if (ref.getResult() == NEW) {
-          deleteReference(ref.getLocalName());
+          refDeleter.delete(ref.getLocalName());
         } else {
           updateReference(ref.getLocalName(), ref.getOldObjectId());
         }
@@ -465,7 +491,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           LOG.trace("deleting {} ref in {}: {}", refType.typeForLog, GitMirrorCommand.this.repository, targetRef);
           defaultBranchSelector.deleted(refType, referenceName);
           logger.logChange(ref, referenceName, "deleted");
-          deleteReference(targetRef);
+          refDeleter.delete(targetRef);
           deletedRefs.add(targetRef);
           return empty();
         } else {
@@ -488,12 +514,6 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         LOG.warn("got exception from filter for ref {} in repository {}", ref.getLocalName(), GitMirrorCommand.this.repository, e);
         mirrorLog.add("! got error checking filter for update: " + e.getMessage());
         return Result.reject("exception in filter");
-      }
-
-      private void deleteReference(String targetRef) throws IOException {
-        RefUpdate deleteUpdate = git.getRepository().getRefDatabase().newUpdate(targetRef, true);
-        deleteUpdate.setForceUpdate(true);
-        deleteUpdate.delete();
       }
 
       private boolean isDeletedReference(GitMirrorRefUpdate ref) {
@@ -562,21 +582,8 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         .setForceUpdate(true)
         .setRemoveDeletedRefs(true)
         .setRemote(mirrorCommandRequest.getSourceUrl())
-        .setProgressMonitor(new ProgressMonitorAdapter(mirrorLog.callback))
-        .setTransportConfigCallback(transport -> {
-          if (transport instanceof TransportHttp transportHttp) {
-            transportHttp.setHttpConnectionFactory(mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog));
-          }
-        });
-
-      mirrorCommandRequest.getCredential(UsernamePasswordCredential.class)
-        .ifPresent(c -> fetchCommand
-          .setCredentialsProvider(
-            new UsernamePasswordCredentialsProvider(
-              Strings.nullToEmpty(c.username()),
-              Strings.nullToEmpty(new String(c.password()))
-            ))
-        );
+        .setProgressMonitor(new ProgressMonitorAdapter(mirrorLog.callback));
+      transportConfigurer.configure(fetchCommand);
 
       return fetchCommand;
     }
@@ -809,15 +816,12 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
   static class DefaultBranchSelector {
     private final String initialDefaultBranch;
-    private final Set<String> initialBranches;
     private final Set<String> remainingBranches;
-    private final Set<String> newBranches = new HashSet<>();
 
     private boolean changed = false;
 
     DefaultBranchSelector(String initialDefaultBranch, Collection<String> initialBranches) {
       this.initialDefaultBranch = initialBranches.isEmpty() ? null : initialDefaultBranch;
-      this.initialBranches = new HashSet<>(initialBranches);
       this.remainingBranches = new HashSet<>(initialBranches);
     }
 
@@ -859,7 +863,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     public void accepted(RefType refType, String ref) {
       changed = true;
       if (refType == RefType.BRANCH) {
-        newBranches.add(ref);
+        remainingBranches.add(ref);
       }
     }
 
@@ -874,20 +878,16 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       return changed;
     }
 
-    public Optional<String> newDefaultBranch(String currentDefaultBranchInRepository) {
-      if (initialDefaultBranch == null && newBranches.contains(currentDefaultBranchInRepository) || remainingBranches.contains(initialDefaultBranch)) {
-        return of(currentDefaultBranchInRepository);
-      } else if (!newBranches.isEmpty() && initialBranches.isEmpty()) {
-        return of(newBranches.iterator().next());
-      } else if (initialDefaultBranch == null && newBranches.isEmpty()) {
-        LOG.info("Could not mirror repository with tags only.");
-        throw new IllegalStateException("No branch could be mirrored. Initial mirror without accepted branch is not supported. Make sure that at least one branch can be mirrored.");
-      } else if (remainingBranches.isEmpty()) {
-        LOG.info("Could not compute new default branch.");
-        throw new IllegalStateException("Deleting all existing branches is not supported. Please restore branch '" + initialDefaultBranch + "' or recreate the mirror.");
-      } else {
-        return of(remainingBranches.iterator().next());
+    public Optional<String> newDefaultBranch(String sourceDefaultBranch) {
+      if (remainingBranches.contains(sourceDefaultBranch)) {
+        return of(sourceDefaultBranch);
       }
+      if (remainingBranches.contains(initialDefaultBranch)) {
+        return of(initialDefaultBranch);
+      }
+      return of(remainingBranches.stream().sorted().findFirst().orElseThrow(() ->
+        new IllegalStateException("No branch could be mirrored. A mirror without an accepted branch is not supported.")
+      ));
     }
   }
 

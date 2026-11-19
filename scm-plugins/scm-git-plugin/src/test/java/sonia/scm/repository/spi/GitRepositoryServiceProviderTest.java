@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.GitRepositoryHandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,6 +51,11 @@ class GitRepositoryServiceProviderTest {
   void shouldDelegateCloseToContext() {
     createProvider().close();
     verify(context).close();
+  }
+
+  @Test
+  void shouldAdvertiseMirrorSourceUrlChanges() {
+    assertThat(createProvider().getSupportedFeatures()).contains(Feature.MIRROR_SOURCE_URL_CHANGE);
   }
 
   private GitRepositoryServiceProvider createProvider() {

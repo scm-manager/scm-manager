@@ -25,5 +25,10 @@ public interface MirrorCommand {
 
   MirrorCommandResult mirror(MirrorCommandRequest mirrorCommandRequest);
 
+  /**
+   * Synchronizes using the source URL in the request. Implementations advertising
+   * {@link sonia.scm.repository.Feature#MIRROR_SOURCE_URL_CHANGE} support different source URLs
+   * between updates, applying their ordinary synchronization and filter rules.
+   */
   MirrorCommandResult update(MirrorCommandRequest mirrorCommandRequest);
 }

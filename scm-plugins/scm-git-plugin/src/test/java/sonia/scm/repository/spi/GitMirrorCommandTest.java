@@ -40,6 +40,7 @@ import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitHeadModifier;
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.api.MirrorCommandBuilder;
 import sonia.scm.repository.api.MirrorCommandResult;
@@ -48,6 +49,7 @@ import sonia.scm.repository.api.SimpleUsernamePasswordCredential;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.security.GPG;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
@@ -55,6 +57,7 @@ import sonia.scm.util.IOUtil;
 import javax.net.ssl.TrustManager;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -100,6 +103,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   private File clone;
   private File workdirAfterClose;
   private GitMirrorCommand command;
+  private String initialWorkingCopyBranch;
+  private Repository workingCopyRepository;
 
   private final GitHeadModifier gitHeadModifier = mock(GitHeadModifier.class);
 
@@ -165,8 +170,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void shouldAcceptEmptyInitialMirror() throws IOException, GitAPIException {
-    MirrorCommandResult result = callMirrorCommand(repositoryDirectory.getAbsolutePath(), c ->
+  public void shouldRejectEmptyInitialMirror() throws IOException, GitAPIException {
+    assertThrows(IllegalStateException.class, () -> callMirrorCommand(repositoryDirectory.getAbsolutePath(), c ->
       c.setFilter(new MirrorFilter() {
         @Override
         public Filter getFilter(FilterContext context) {
@@ -183,14 +188,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
           };
         }
       })
-    );
-
-    assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
-    assertThat(result.getLog()).contains("Branches:")
-      .contains("- 000000000..fcd0ef183 master (update rejected: nothing accepted)")
-      .contains("- 000000000..3f76a12f0 test-branch (update rejected: nothing accepted)")
-      .contains("Tags:")
-      .contains("- 000000000..86a6645ec test-tag (update rejected: nothing accepted)");
+    ));
 
     try (Git createdMirror = Git.open(clone)) {
       assertThat(createdMirror.branchList().call()).isEmpty();
@@ -218,6 +216,16 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldFilterMasterBranchWhenFilteredOnInitialMirror() throws IOException, GitAPIException {
+    assertMasterIsRejectedOnInitialMirror("master");
+  }
+
+  @Test
+  public void shouldFilterMasterBranchWhenTemporaryHeadIsMain() throws IOException, GitAPIException {
+    assertMasterIsRejectedOnInitialMirror("main");
+  }
+
+  private void assertMasterIsRejectedOnInitialMirror(String initialBranch) throws IOException, GitAPIException {
+    initialWorkingCopyBranch = initialBranch;
     MirrorCommandResult result = callMirrorCommand(repositoryDirectory.getAbsolutePath(), c ->
       c.setFilter(new MirrorFilter() {
         @Override
@@ -251,6 +259,70 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldRemoveExcludedInitialHeadBeforeReloadingLfs() throws IOException, GitAPIException {
+    initialWorkingCopyBranch = "master";
+    MirrorCommandResult result = callMirrorCommand(repositoryDirectory.getAbsolutePath(), request -> {
+      request.setReloadLfs(true);
+      request.setFilter(new MirrorFilter() {
+        @Override
+        public Filter getFilter(FilterContext context) {
+          return new Filter() {
+            @Override
+            public Result acceptBranch(BranchUpdate branch) {
+              return "master".equals(branch.getBranchName()) ? Result.remove() : Result.accept();
+            }
+          };
+        }
+      });
+    });
+
+    assertThat(result.getResult()).isEqualTo(OK);
+    try (Git destination = Git.open(clone); Repository workingCopy = GitUtil.open(workdirAfterClose)) {
+      assertThat(findBranch(destination, "master")).isEmpty();
+      assertThat(workingCopy.exactRef("refs/heads/master")).isNull();
+    }
+    org.mockito.ArgumentCaptor<Collection<ObjectId>> accepted = forClass(Collection.class);
+    verify(lfsLoader).load(any(), any(), any(), any(), eq(repository), any(), accepted.capture(), any());
+    assertThat(accepted.getValue()).doesNotContain(ObjectId.fromString("fcd0ef1831e4002ac43ea539f4094334c79ea9ec"));
+  }
+
+  @Test
+  public void shouldNotPublishRefsWhenRejectedRefCannotBeDeleted() throws IOException, GitAPIException {
+    initialWorkingCopyBranch = "main";
+    MirrorCommandResult result = callMirrorCommand(repositoryDirectory.getAbsolutePath(), request ->
+      request.setFilter(new MirrorFilter() {
+        @Override
+        public Filter getFilter(FilterContext context) {
+          try {
+            Files.createFile(workingCopyRepository.getDirectory().toPath().resolve("refs/heads/master.lock"));
+          } catch (IOException e) {
+            throw new AssertionError(e);
+          }
+          return new Filter() {
+            @Override
+            public Result acceptBranch(BranchUpdate branch) {
+              return "master".equals(branch.getBranchName()) ? Result.reject() : Result.accept();
+            }
+
+            @Override
+            public Result acceptTag(TagUpdate tag) {
+              return Result.reject();
+            }
+          };
+        }
+      })
+    );
+
+    assertThat(result.getResult()).isEqualTo(FAILED);
+    try (Git destination = Git.open(clone)) {
+      assertThat(destination.branchList().call()).isEmpty();
+      assertThat(destination.tagList().call()).isEmpty();
+    }
+    verify(gitHeadModifier, never()).ensure(any(), any());
+    verify(storeProvider, never()).setDefaultBranch(any(), any());
+  }
+
+  @Test
   public void shouldCreateEmptyLogWhenNoChangesFound() {
     callMirrorCommand();
 
@@ -258,6 +330,204 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly("No updates found");
+  }
+
+  @Test
+  public void shouldSwitchSourceWithUnrelatedHistoryAndMatchingBranchAndTagNames() throws Exception {
+    callMirrorCommand();
+
+    try (Git source = createIndependentSource("master")) {
+      source.tag().setName("test-tag").setAnnotated(false).call();
+      ObjectId replacement = source.getRepository().resolve(Constants.HEAD);
+
+      MirrorCommandResult result = callUpdate(r -> r.setSourceUrl(source.getRepository().getWorkTree().getAbsolutePath()));
+
+      assertThat(result.getResult()).isEqualTo(OK);
+      try (Git destination = Git.open(clone)) {
+        assertThat(destination.getRepository().resolve("refs/heads/master")).isEqualTo(replacement);
+        assertThat(destination.getRepository().resolve("refs/tags/test-tag")).isEqualTo(replacement);
+        assertThat(findBranch(destination, "test-branch")).isEmpty();
+      }
+    }
+  }
+
+  @Test
+  public void shouldReplaceAllBranchesAndTagsWhenSwitchingSource() throws Exception {
+    callMirrorCommand();
+
+    try (Git source = createIndependentSource("replacement")) {
+      source.tag().setName("replacement-tag").setAnnotated(false).call();
+      ObjectId replacement = source.getRepository().resolve(Constants.HEAD);
+
+      MirrorCommandResult result = callUpdate(r -> r.setSourceUrl(source.getRepository().getWorkTree().getAbsolutePath()));
+
+      assertThat(result.getResult()).isEqualTo(OK);
+      try (Git destination = Git.open(clone)) {
+        assertThat(destination.branchList().call()).extracting(Ref::getName).containsExactly("refs/heads/replacement");
+        assertThat(destination.tagList().call()).extracting(Ref::getName).containsExactly("refs/tags/replacement-tag");
+        assertThat(destination.getRepository().resolve("refs/heads/replacement")).isEqualTo(replacement);
+        assertThat(destination.getRepository().resolve("refs/tags/replacement-tag")).isEqualTo(replacement);
+      }
+      verify(gitHeadModifier).ensure(repository, "replacement");
+    }
+  }
+
+  @Test
+  public void shouldUseSourceHeadOnInitialSynchronization() throws Exception {
+    try (Git source = createIndependentSource("zebra")) {
+      source.branchCreate().setName("alpha").call();
+
+      assertThat(callMirrorCommand(source.getRepository().getWorkTree().getAbsolutePath(), ACCEPT_ALL).getResult()).isEqualTo(OK);
+
+      verify(gitHeadModifier).ensure(repository, "zebra");
+    }
+  }
+
+  @Test
+  public void shouldFollowSourceHeadWithoutRefUpdates() throws Exception {
+    callMirrorCommand();
+    reset(gitHeadModifier);
+    reset(storeProvider);
+    ObjectId oldDefault;
+    try (Git source = Git.open(repositoryDirectory)) {
+      oldDefault = source.getRepository().resolve("refs/heads/master");
+      source.getRepository().updateRef(Constants.HEAD).link("refs/heads/test-branch");
+    }
+
+    assertThat(callUpdate(ACCEPT_ALL).getResult()).isEqualTo(OK);
+
+    verify(gitHeadModifier).ensure(repository, "test-branch");
+    verify(storeProvider).setDefaultBranch(repository, "test-branch");
+    try (Git destination = Git.open(clone)) {
+      assertThat(destination.getRepository().resolve("refs/heads/master")).isEqualTo(oldDefault);
+    }
+  }
+
+  @Test
+  public void shouldFollowSourceHeadWithNewBranchAndKeepFormerDefault() throws Exception {
+    callMirrorCommand();
+    reset(gitHeadModifier);
+    reset(storeProvider);
+    ObjectId oldDefault;
+    ObjectId newDefault;
+    try (Git source = Git.open(repositoryDirectory)) {
+      oldDefault = source.getRepository().resolve("refs/heads/master");
+      source.checkout().setCreateBranch(true).setName("new-default").call();
+      newDefault = source.commit().setAllowEmpty(true).setMessage("Update source default")
+        .setAuthor("Mirror Test", "mirror@example.com").setCommitter("Mirror Test", "mirror@example.com").call().getId();
+    }
+
+    assertThat(callUpdate(ACCEPT_ALL).getResult()).isEqualTo(OK);
+
+    verify(gitHeadModifier).ensure(repository, "new-default");
+    verify(storeProvider).setDefaultBranch(repository, "new-default");
+    try (Git destination = Git.open(clone)) {
+      assertThat(destination.getRepository().resolve("refs/heads/master")).isEqualTo(oldDefault);
+      assertThat(destination.getRepository().resolve("refs/heads/new-default")).isEqualTo(newDefault);
+    }
+  }
+
+  @Test
+  public void shouldKeepExistingDefaultWhenSourceHeadIsDetached() throws Exception {
+    callMirrorCommand();
+    reset(gitHeadModifier);
+    reset(storeProvider);
+    try (Git source = Git.open(repositoryDirectory)) {
+      source.checkout().setName(source.getRepository().resolve("refs/heads/test-branch").name()).call();
+    }
+
+    assertThat(callUpdate(ACCEPT_ALL).getResult()).isEqualTo(OK);
+
+    verify(gitHeadModifier, never()).ensure(any(), any());
+    verify(storeProvider, never()).setDefaultBranch(any(), any());
+    try (Git destination = Git.open(clone)) {
+      assertThat(destination.getRepository().getFullBranch()).isEqualTo("refs/heads/master");
+    }
+  }
+
+  @Test
+  public void shouldPreserveDestinationWhenSwitchingToEmptySource() throws Exception {
+    callMirrorCommand();
+    Collection<String> previousRefs = gatherMirroredRefIds();
+    reset(gitHeadModifier);
+    reset(storeProvider);
+    try (Git source = Git.init().setDirectory(tempFolder.newFolder()).setBare(true).call()) {
+      assertThrows(IllegalStateException.class, () -> callUpdate(r -> r.setSourceUrl(source.getRepository().getDirectory().getAbsolutePath())));
+    }
+
+    assertThat(gatherMirroredRefIds()).containsExactlyInAnyOrderElementsOf(previousRefs);
+    verify(gitHeadModifier, never()).ensure(any(), any());
+    verify(storeProvider, never()).setDefaultBranch(any(), any());
+  }
+
+  @Test
+  public void shouldPreserveDestinationWhenReplacementBranchesAreAllRejected() throws Exception {
+    callMirrorCommand();
+    Collection<String> previousRefs = gatherMirroredRefIds();
+    reset(gitHeadModifier);
+    reset(storeProvider);
+
+    try (Git source = createIndependentSource("replacement")) {
+      assertThrows(IllegalStateException.class, () -> callUpdate(r -> {
+        r.setSourceUrl(source.getRepository().getWorkTree().getAbsolutePath());
+        r.setFilter(new MirrorFilter() {
+          @Override
+          public Filter getFilter(FilterContext context) {
+            return new Filter() {
+              @Override
+              public Result acceptBranch(BranchUpdate branch) {
+                return branch.getBranchName().equals("replacement") ? Result.reject("excluded") : Result.accept();
+              }
+            };
+          }
+        });
+      }));
+    }
+
+    assertThat(gatherMirroredRefIds()).containsExactlyInAnyOrderElementsOf(previousRefs);
+    verify(gitHeadModifier, never()).ensure(any(), any());
+    verify(storeProvider, never()).setDefaultBranch(any(), any());
+  }
+
+  @Test
+  public void shouldKeepExistingDefaultWhenSourceHeadIsRejected() throws Exception {
+    callMirrorCommand();
+    reset(gitHeadModifier);
+    try (Git source = Git.open(repositoryDirectory)) {
+      source.checkout().setCreateBranch(true).setName("rejected-default").call();
+    }
+
+    MirrorCommandResult result = callUpdate(r -> r.setFilter(new MirrorFilter() {
+      @Override
+      public Filter getFilter(FilterContext context) {
+        return new Filter() {
+          @Override
+          public Result acceptBranch(BranchUpdate branch) {
+            return branch.getBranchName().equals("rejected-default") ? Result.reject("excluded") : Result.accept();
+          }
+        };
+      }
+    }));
+
+    assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
+    try (Git destination = Git.open(clone)) {
+      assertThat(findBranch(destination, "master")).isPresent();
+      assertThat(findBranch(destination, "rejected-default")).isEmpty();
+    }
+    verify(gitHeadModifier, never()).ensure(any(), eq("rejected-default"));
+  }
+
+  @Test
+  public void shouldKeepDestinationUnchangedWhenNewSourceCannotBeFetched() throws IOException {
+    callMirrorCommand();
+    Collection<String> previousRefs = gatherMirroredRefIds();
+    reset(gitHeadModifier);
+
+    MirrorCommandResult result = callUpdate(r -> r.setSourceUrl(new File(tempFolder.getRoot(), "missing-source").getAbsolutePath()));
+
+    assertThat(result.getResult()).isEqualTo(FAILED);
+    assertThat(gatherMirroredRefIds()).containsExactlyInAnyOrderElementsOf(previousRefs);
+    verify(gitHeadModifier, never()).ensure(any(), any());
   }
 
   @Test
@@ -818,6 +1088,177 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldFollowSourceHeadOverHttpWithoutRefUpdates() throws Exception {
+    assertSourceHeadIsFollowedOverHttp(false, false);
+  }
+
+  @Test
+  public void shouldFollowSourceHeadOverHttpWithRefUpdates() throws Exception {
+    assertSourceHeadIsFollowedOverHttp(true, false);
+  }
+
+  @Test
+  public void shouldFollowSourceHeadOverHttpWithRejectedRefUpdates() throws Exception {
+    assertSourceHeadIsFollowedOverHttp(true, true);
+  }
+
+  private void assertSourceHeadIsFollowedOverHttp(boolean updateBranch, boolean rejectUpdate) throws Exception {
+    useRealHeadModifier();
+    try (Git source = Git.open(repositoryDirectory)) {
+      SimpleHttpServer server = new SimpleHttpServer(source.getRepository());
+      server.start();
+      try {
+        Consumer<MirrorCommandRequest> credentials = createCredential(AppServer.username, AppServer.password);
+        String url = server.getUri().toASCIIString();
+        assertThat(callMirrorCommand(url, credentials).getResult()).isEqualTo(OK);
+        ObjectId originalTip = source.getRepository().resolve("refs/heads/test-branch");
+        source.checkout().setName("test-branch").call();
+        if (updateBranch) {
+          source.commit().setAllowEmpty(true).setMessage("Advance source default")
+            .setAuthor("Mirror Test", "mirror@example.com").setCommitter("Mirror Test", "mirror@example.com").call();
+        }
+
+        MirrorCommandResult result = callUpdate(request -> {
+          request.setSourceUrl(url);
+          credentials.accept(request);
+          if (rejectUpdate) {
+            REJECT_ALL.accept(request);
+          }
+        });
+
+        assertThat(result.getResult()).isEqualTo(rejectUpdate ? REJECTED_UPDATES : OK);
+        verify(storeProvider).setDefaultBranch(repository, "test-branch");
+        try (Git destination = Git.open(clone)) {
+          assertThat(destination.getRepository().getFullBranch()).isEqualTo("refs/heads/test-branch");
+          assertThat(destination.getRepository().resolve("refs/heads/test-branch"))
+            .isEqualTo(rejectUpdate ? originalTip : source.getRepository().resolve("refs/heads/test-branch"));
+          assertThat(destination.getRepository().resolve("refs/heads/master"))
+            .isEqualTo(source.getRepository().resolve("refs/heads/master"));
+        }
+      } finally {
+        server.stop();
+      }
+    }
+  }
+
+  @Test
+  public void shouldKeepExistingDefaultWhenHttpSourceHeadIsMissing() throws Exception {
+    useRealHeadModifier();
+    try (Git source = Git.open(repositoryDirectory)) {
+      SimpleHttpServer server = new SimpleHttpServer(source.getRepository());
+      server.start();
+      try {
+        Consumer<MirrorCommandRequest> credentials = createCredential(AppServer.username, AppServer.password);
+        String url = server.getUri().toASCIIString();
+        assertThat(callMirrorCommand(url, credentials).getResult()).isEqualTo(OK);
+        reset(storeProvider);
+        source.getRepository().updateRef(Constants.HEAD).link("refs/heads/missing");
+
+        assertThat(callUpdate(request -> {
+          request.setSourceUrl(url);
+          credentials.accept(request);
+        }).getResult()).isEqualTo(OK);
+
+        verify(storeProvider, never()).setDefaultBranch(any(), any());
+        try (Git destination = Git.open(clone)) {
+          assertThat(destination.getRepository().getFullBranch()).isEqualTo("refs/heads/master");
+        }
+      } finally {
+        server.stop();
+      }
+    }
+  }
+
+  private void useRealHeadModifier() {
+    GitRepositoryHandler handler = mock(GitRepositoryHandler.class);
+    when(handler.getDirectory(repository.getId())).thenReturn(clone);
+    GitHeadModifier modifier = new GitHeadModifier(handler);
+    doAnswer(invocation -> modifier.ensure(invocation.getArgument(0), invocation.getArgument(1)))
+      .when(gitHeadModifier).ensure(any(), any());
+  }
+
+  @Test
+  public void shouldKeepExistingDefaultWhenHttpSourceHeadIsExcluded() throws Exception {
+    useRealHeadModifier();
+    try (Git source = Git.open(repositoryDirectory)) {
+      SimpleHttpServer server = new SimpleHttpServer(source.getRepository());
+      server.start();
+      try {
+        Consumer<MirrorCommandRequest> credentials = createCredential(AppServer.username, AppServer.password);
+        String url = server.getUri().toASCIIString();
+        assertThat(callMirrorCommand(url, credentials).getResult()).isEqualTo(OK);
+        source.checkout().setName("test-branch").call();
+
+        MirrorCommandResult result = callUpdate(request -> {
+          request.setSourceUrl(url);
+          credentials.accept(request);
+          request.setFilter(new MirrorFilter() {
+            @Override
+            public Filter getFilter(FilterContext context) {
+              return new Filter() {
+                @Override
+                public Result acceptBranch(BranchUpdate branch) {
+                  return "test-branch".equals(branch.getBranchName()) ? Result.remove() : Result.accept();
+                }
+              };
+            }
+          });
+        });
+
+        assertThat(result.getResult()).isEqualTo(OK);
+        verify(storeProvider, never()).setDefaultBranch(repository, "test-branch");
+        try (Git destination = Git.open(clone)) {
+          assertThat(destination.getRepository().getFullBranch()).isEqualTo("refs/heads/master");
+          assertThat(destination.getRepository().resolve("refs/heads/test-branch")).isNull();
+        }
+      } finally {
+        server.stop();
+      }
+    }
+  }
+
+  @Test
+  public void shouldNotPublishWhenSourceHeadLookupFails() throws Exception {
+    try (Git source = Git.open(repositoryDirectory)) {
+      SimpleHttpServer server = new SimpleHttpServer(source.getRepository());
+      server.start();
+      try {
+        Consumer<MirrorCommandRequest> credentials = createCredential(AppServer.username, AppServer.password);
+        String url = server.getUri().toASCIIString();
+        assertThat(callMirrorCommand(url, credentials).getResult()).isEqualTo(OK);
+        Collection<String> originalRefs = gatherMirroredRefIds();
+        reset(gitHeadModifier, storeProvider);
+        source.checkout().setName("test-branch").call();
+        source.commit().setAllowEmpty(true).setMessage("Unpublished change")
+          .setAuthor("Mirror Test", "mirror@example.com").setCommitter("Mirror Test", "mirror@example.com").call();
+
+        MirrorCommandResult result = callUpdate(request -> {
+          request.setSourceUrl(url);
+          credentials.accept(request);
+          request.setFilter(new MirrorFilter() {
+            @Override
+            public Filter getFilter(FilterContext context) {
+              try {
+                server.stop();
+              } catch (Exception e) {
+                throw new AssertionError(e);
+              }
+              return MirrorFilter.super.getFilter(context);
+            }
+          });
+        });
+
+        assertThat(result.getResult()).isEqualTo(FAILED);
+        assertThat(gatherMirroredRefIds()).containsExactlyInAnyOrderElementsOf(originalRefs);
+        verify(gitHeadModifier, never()).ensure(any(), any());
+        verify(storeProvider, never()).setDefaultBranch(any(), any());
+      } finally {
+        server.stop();
+      }
+    }
+  }
+
+  @Test
   public void shouldUseCredentials() throws Exception {
     SimpleHttpServer simpleHttpServer = new SimpleHttpServer(Git.open(repositoryDirectory).getRepository());
     simpleHttpServer.start();
@@ -1265,7 +1706,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     selector.deleted(BRANCH, "master");
 
-    assertThat(selector.newDefaultBranch("master")).get().isIn("one", "two", "three");
+    assertThat(selector.newDefaultBranch("master")).get().isEqualTo("one");
   }
 
   @Test
@@ -1293,7 +1734,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void shouldFailIfAllInitialBranchesAreDeleted() {
+  public void shouldChooseReplacementIfAllInitialBranchesAreDeleted() {
     GitMirrorCommand.DefaultBranchSelector selector =
       new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
 
@@ -1303,7 +1744,43 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     selector.accepted(BRANCH, "new");
     selector.deleted(BRANCH, "three");
 
-    assertThrows(IllegalStateException.class, () -> selector.newDefaultBranch("master"));
+    assertThat(selector.newDefaultBranch("master")).get().isEqualTo("new");
+  }
+
+  @Test
+  public void shouldPreferSourceHeadOverExistingDefault() {
+    GitMirrorCommand.DefaultBranchSelector selector =
+      new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
+
+    assertThat(selector.newDefaultBranch("two")).get().isEqualTo("two");
+  }
+
+  @Test
+  public void shouldKeepExistingDefaultWhenSourceHeadCannotBeResolved() {
+    GitMirrorCommand.DefaultBranchSelector selector =
+      new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
+
+    assertThat(selector.newDefaultBranch(null)).get().isEqualTo("master");
+  }
+
+  @Test
+  public void shouldChooseAlphabeticalBranchWhenNeitherDefaultIsAvailable() {
+    GitMirrorCommand.DefaultBranchSelector selector =
+      new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
+    BRANCHES.forEach(branch -> selector.deleted(BRANCH, branch));
+    selector.accepted(BRANCH, "zebra");
+    selector.accepted(BRANCH, "alpha");
+
+    assertThat(selector.newDefaultBranch(null)).get().isEqualTo("alpha");
+  }
+
+  @Test
+  public void shouldFailIfNoBranchRemainsAfterUpdate() {
+    GitMirrorCommand.DefaultBranchSelector selector =
+      new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
+    BRANCHES.forEach(branch -> selector.deleted(BRANCH, branch));
+
+    assertThrows(IllegalStateException.class, () -> selector.newDefaultBranch(null));
   }
 
   @Test
@@ -1410,6 +1887,13 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     request.setSourceUrl(repositoryDirectory.getAbsolutePath());
     requestModifier.accept(request);
     return command.update(request);
+  }
+
+  private Git createIndependentSource(String branch) throws IOException, GitAPIException {
+    Git source = Git.init().setDirectory(tempFolder.newFolder()).setInitialBranch(branch).call();
+    source.commit().setAllowEmpty(true).setMessage("Independent source history")
+      .setAuthor("Mirror Test", "mirror@example.com").setCommitter("Mirror Test", "mirror@example.com").call();
+    return source;
   }
 
   private Collection<String> gatherMirroredRefIds() throws IOException {
@@ -1524,6 +2008,22 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     public KeepingWorkingCopyPool(WorkdirProvider workdirProvider) {
       super(workdirProvider);
+    }
+
+    @Override
+    public <R, W> WorkingCopy<R, W> getWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context) {
+      WorkingCopy<R, W> workingCopy = super.getWorkingCopy(context);
+      if (workingCopy.getWorkingRepository() instanceof Repository gitRepository) {
+        workingCopyRepository = gitRepository;
+        if (initialWorkingCopyBranch != null) {
+          try {
+            gitRepository.updateRef(Constants.HEAD, true).link(Constants.R_HEADS + initialWorkingCopyBranch);
+          } catch (IOException e) {
+            throw new AssertionError(e);
+          }
+        }
+      }
+      return workingCopy;
     }
 
     @Override

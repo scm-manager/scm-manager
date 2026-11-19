@@ -58,7 +58,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
     Feature.INCOMING_REVISION,
     Feature.MODIFICATIONS_BETWEEN_REVISIONS,
     Feature.FORCE_PUSH,
-    Feature.TAGS_FOR_REVISION
+    Feature.TAGS_FOR_REVISION,
+    Feature.MIRROR_SOURCE_URL_CHANGE
   );
 
   private final Injector injector;

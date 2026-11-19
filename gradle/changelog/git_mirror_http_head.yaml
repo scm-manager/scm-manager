@@ -1,0 +1,2 @@
+- type: fixed
+  description: Follow source default branch changes in Git mirrors when HTTP fetches omit HEAD from their advertised refs.

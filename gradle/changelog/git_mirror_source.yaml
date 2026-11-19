@@ -1,0 +1,4 @@
+- type: added
+  description: Expose support for changing Git mirror source URLs through the repository feature API.
+- type: fixed
+  description: Allow Git mirrors to replace all branches and follow the source default branch on every synchronization.

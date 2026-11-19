@@ -51,5 +51,11 @@ public enum Feature
    *
    * @since 3.1.0
    */
-  TAGS_FOR_REVISION
+  TAGS_FOR_REVISION,
+  /**
+   * The mirror command supports changing the source URL between updates.
+   *
+   * @since 4.0.0
+   */
+  MIRROR_SOURCE_URL_CHANGE
 }

@@ -11,6 +11,7 @@ ignores: [
   "@scm-manager/prettier-config",
   "@scm-manager/tsconfig",
   "@types/react",
+  "@types/react-dom",
   "@types/styled-components",
   "@types/classnames"
 ]

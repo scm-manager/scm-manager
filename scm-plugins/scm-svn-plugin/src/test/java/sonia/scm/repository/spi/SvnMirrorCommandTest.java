@@ -33,6 +33,7 @@ import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.GlobalProxyConfiguration;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.MirrorCommandBuilder;
 import sonia.scm.repository.api.MirrorCommandResult;
@@ -75,6 +76,11 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
     MirrorCommandResult result = callMirror(emptyContext, repositoryDirectory);
 
     assertThat(result.getResult()).isEqualTo(OK);
+  }
+
+  @Test
+  public void shouldNotAdvertiseMirrorSourceUrlChanges() {
+    assertThat(SvnRepositoryServiceProvider.FEATURES).doesNotContain(Feature.MIRROR_SOURCE_URL_CHANGE);
   }
 
   @Test

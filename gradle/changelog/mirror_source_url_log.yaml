@@ -1,0 +1,2 @@
+- type: added
+  description: Include the source URL at the beginning of each mirror synchronization log
