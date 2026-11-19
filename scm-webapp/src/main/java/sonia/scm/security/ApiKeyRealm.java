@@ -120,7 +120,8 @@ public class ApiKeyRealm extends AuthenticatingRealm {
     if (token instanceof BearerToken) {
       return ((BearerToken) token).getPrincipal();
     } else {
-      return SessionId.valueOf((token.getPrincipal()).toString());
+      String principal = token.getPrincipal().toString();
+      return principal.isEmpty() ? null : SessionId.valueOf(principal);
     }
   }
 }

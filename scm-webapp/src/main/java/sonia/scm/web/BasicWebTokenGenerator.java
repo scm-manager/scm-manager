@@ -93,7 +93,7 @@ public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator {
 
       int index = token.indexOf(CREDENTIAL_SEPARATOR);
 
-      if ((index > 0) && (index < token.length()))
+      if ((index >= 0) && (index < token.length()))
       {
         String username = token.substring(0, index);
         String password = token.substring(index + 1);
@@ -110,7 +110,7 @@ public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator {
   }
 
   private AuthenticationToken createTokenFromCredentials(HttpServletRequest request, String username, String password) {
-    if (Util.isNotEmpty(username) && Util.isNotEmpty(password)) {
+    if (Util.isNotEmpty(password)) {
       if (BEARER_TOKEN_IDENTIFIER.equals(username)) {
         logger.trace("create bearer token");
         return BearerToken.create(SessionId.from(request).orElse(null), password);
@@ -119,7 +119,7 @@ public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator {
         return new UsernamePasswordToken(username, password);
       }
     } else if (logger.isWarnEnabled()) {
-      logger.warn("username or password is null/empty");
+      logger.warn("password is null/empty");
     }
     return null;
   }

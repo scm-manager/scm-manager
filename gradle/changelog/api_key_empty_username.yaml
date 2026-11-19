@@ -1,0 +1,2 @@
+- type: fixed
+  description: Allow API tokens to authenticate with Basic authentication and an empty username.

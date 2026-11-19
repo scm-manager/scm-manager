@@ -79,6 +79,18 @@ class ApiKeyRealmTest {
   }
 
   @Test
+  void shouldCreateAuthenticationForUsernamePasswordTokenWithEmptyUsername() {
+    when(apiKeyService.check("dG9rZW4="))
+      .thenReturn(of(new ApiKeyService.CheckResult("ford", "*")));
+    UsernamePasswordToken token = new UsernamePasswordToken("", "dG9rZW4=");
+
+    realm.doGetAuthenticationInfo(token);
+
+    verify(helper).authenticationInfoBuilder("ford");
+    verify(authenticationInfoBuilder).withSessionId(null);
+  }
+
+  @Test
   void shouldFailWithoutBearerToken() {
     AuthenticationToken otherToken = mock(AuthenticationToken.class);
     assertThrows(IllegalArgumentException.class, () -> realm.doGetAuthenticationInfo(otherToken));

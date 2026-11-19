@@ -63,6 +63,20 @@ class BasicWebTokenGeneratorTest {
   }
 
   @Test
+  void shouldCreateUsernamePasswordTokenWithEmptyUsername() {
+    String tokenValue = Base64.encodeToString(":api-token".getBytes());
+
+    when(request.getHeader("Authorization")).thenReturn("Basic ".concat(tokenValue));
+
+    AuthenticationToken token = generator.createToken(request);
+    assertThat(token)
+      .isInstanceOfSatisfying(UsernamePasswordToken.class, usernamePasswordToken -> {
+        assertThat(usernamePasswordToken.getPrincipal()).isEqualTo("");
+        assertThat(usernamePasswordToken.getPassword()).isEqualTo("api-token".toCharArray());
+      });
+  }
+
+  @Test
   void shouldCreateBearerToken() {
     String bearerToken = Base64.encodeToString(
       (BasicWebTokenGenerator.BEARER_TOKEN_IDENTIFIER + ":awesome_access_token").getBytes()
