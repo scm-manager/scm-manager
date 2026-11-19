@@ -30,6 +30,9 @@ import java.util.Map;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlRepositoryRoleList implements Iterable<RepositoryRole> {
 
+  @XmlElement(name = "role")
+  private LinkedList<RepositoryRole> roles = new LinkedList<>();
+
   public XmlRepositoryRoleList() {}
 
   public XmlRepositoryRoleList(Map<String, RepositoryRole> roleMap) {
@@ -51,7 +54,4 @@ public class XmlRepositoryRoleList implements Iterable<RepositoryRole> {
   {
     this.roles = roles;
   }
-
-  @XmlElement(name = "role")
-  private LinkedList<RepositoryRole> roles;
 }

@@ -20,13 +20,16 @@ import java.util.function.BooleanSupplier;
 
 /**
  * Base class for {@link ConfigurationStore}.
+ * Calls to {@link #get()}, {@link #set(Object)} and {@link #delete()} on the same
+ * instance are serialized, including copying and persistence. Separate
+ * read-modify-set sequences still require coordination by the caller.
  *
  * @param <T> type of store objects
  * @since 1.16
  */
 public abstract class AbstractStore<T> implements ConfigurationStore<T> {
 
-  protected T storeObject;
+  private T storeObject;
   private boolean storeAlreadyRead = false;
   private final BooleanSupplier readOnly;
 
@@ -35,28 +38,29 @@ public abstract class AbstractStore<T> implements ConfigurationStore<T> {
   }
 
   @Override
-  public T get() {
+  public synchronized T get() {
     if (!storeAlreadyRead) {
       storeObject = readObject();
       storeAlreadyRead = true;
     }
 
-    return storeObject;
+    return storeObject == null ? null : copy(storeObject);
   }
 
   @Override
-  public void set(T object) {
+  public synchronized void set(T object) {
     if (readOnly.getAsBoolean()) {
       throw new StoreReadOnlyException(object);
     }
-    writeObject(object);
-    this.storeObject = object;
+    T snapshot = object == null ? null : copy(object);
+    writeObject(snapshot);
+    storeObject = snapshot;
     storeAlreadyRead = true;
   }
 
 
   @Override
-  public void delete() {
+  public synchronized void delete() {
     if (readOnly.getAsBoolean()) {
       throw new StoreReadOnlyException();
     }
@@ -70,6 +74,16 @@ public abstract class AbstractStore<T> implements ConfigurationStore<T> {
    * @return stored object
    */
   protected abstract T readObject();
+
+  /**
+   * Creates a deep copy of the stored state. The copy must not share mutable
+   * objects with the original. This method is only called with non-null objects.
+   *
+   * @param object object to copy
+   * @return independent copy of the stored state
+   * @since 4.0.0
+   */
+  protected abstract T copy(T object);
 
   /**
    * Write object to the store.

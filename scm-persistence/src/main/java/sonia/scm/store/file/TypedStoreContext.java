@@ -20,7 +20,9 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.ValidationEvent;
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.util.JAXBSource;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.store.StoreException;
 import sonia.scm.store.TypedStoreParameters;
@@ -76,6 +78,27 @@ final class TypedStoreContext<T> {
   void marshal(Object object, File file) {
     log.trace("marshal file {}", file);
     withMarshaller(marshaller -> marshaller.marshal(object, XmlStreams.createWriter(file)), file.getAbsoluteFile());
+  }
+
+  /**
+   * Copies the object using the XML marshaller to ensure a result that includes all persisted fields.
+   */
+  T copy(T object) {
+    AtomicReference<T> ref = new AtomicReference<>();
+    withMarshaller(
+      marshaller -> {
+        marshaller.setEventHandler(event -> event.getSeverity() == ValidationEvent.WARNING);
+        withUnmarshaller(
+          unmarshaller -> {
+            unmarshaller.setEventHandler(event -> event.getSeverity() == ValidationEvent.WARNING);
+            ref.set(parameters.getType().cast(unmarshaller.unmarshal(new JAXBSource(marshaller, object))));
+          },
+          parameters.getType()
+        );
+      },
+      parameters.getType()
+    );
+    return ref.get();
   }
 
   void withMarshaller(ThrowingConsumer<Marshaller> consumer, Object context) {

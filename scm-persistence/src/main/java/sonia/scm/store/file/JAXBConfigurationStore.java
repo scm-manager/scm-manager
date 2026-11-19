@@ -71,6 +71,11 @@ class JAXBConfigurationStore<T> extends AbstractStore<T> {
   }
 
   @Override
+  protected T copy(T object) {
+    return context.copy(object);
+  }
+
+  @Override
   protected void writeObject(T object) {
     LOG.debug("store {} to {}", object.getClass().getName(), configFile.getPath());
     CopyOnWrite.withTemporaryFile(

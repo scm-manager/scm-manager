@@ -1,0 +1,4 @@
+- type: fixed
+  description: Preserve configuration changes in audit logs by isolating configuration store reads and writes
+- type: changed
+  description: AbstractStore subclasses must implement deep copying through copy(T); the cached configuration is now private

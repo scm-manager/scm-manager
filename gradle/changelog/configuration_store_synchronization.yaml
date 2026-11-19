@@ -1,0 +1,2 @@
+- type: fixed
+  description: Keep configuration caches and audit transitions consistent during concurrent writes and deletions

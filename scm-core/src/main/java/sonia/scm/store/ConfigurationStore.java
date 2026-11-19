@@ -29,14 +29,15 @@ import static java.util.Optional.ofNullable;
 public interface ConfigurationStore<T> {
 
   /**
-   * Returns the configuration object from store.
+   * Returns an independent copy of the stored configuration. Changes to the
+   * returned object are only stored when passed to {@link #set(Object)}.
    *
    * @return configuration object from store
    */
   T get();
 
   /**
-   * Returns the configuration object from store.
+   * Returns an independent copy of the stored configuration, if present.
    *
    * @return configuration object from store
    */
@@ -45,7 +46,8 @@ public interface ConfigurationStore<T> {
   }
 
   /**
-   * Stores the given configuration object to the store.
+   * Stores an independent snapshot of the given configuration object. Later
+   * changes to the given object do not change the stored configuration.
    *
    * @param object configuration object to store
    */

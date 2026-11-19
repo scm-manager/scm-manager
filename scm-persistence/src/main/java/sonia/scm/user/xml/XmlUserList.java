@@ -33,7 +33,7 @@ import java.util.Map;
 public class XmlUserList implements Iterable<User>
 {
   @XmlElement(name = "user")
-  private LinkedList<User> users;
+  private LinkedList<User> users = new LinkedList<>();
 
   public XmlUserList() {}
 

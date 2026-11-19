@@ -33,7 +33,7 @@ import java.util.Map;
 public class XmlGroupList implements Iterable<Group>
 {
   @XmlElement(name = "group")
-  private LinkedList<Group> groups;
+  private LinkedList<Group> groups = new LinkedList<>();
 
   public XmlGroupList() {}
 

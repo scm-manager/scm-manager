@@ -32,6 +32,8 @@ The following sections introduce the most important concepts.
 
 # Important Components of the Architecture
 
+For the classic configuration store and its copying contract, see [Configuration Stores](../configuration-stores).
+
 ## Objectives
 
 The following aspects were decisive in introducing the new persistence layer:

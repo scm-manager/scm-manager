@@ -47,7 +47,7 @@ public class AuditLogConfigurationStoreDecorator<T> implements ConfigurationStor
   }
 
   @Override
-  public void set(T object) {
+  public synchronized void set(T object) {
     if (shouldAudit(object)) {
       auditors.forEach(s -> s.createEntry(createEntryCreationContext(object)));
     }
@@ -55,7 +55,7 @@ public class AuditLogConfigurationStoreDecorator<T> implements ConfigurationStor
   }
 
   @Override
-  public void delete() {
+  public synchronized void delete() {
     if (shouldAudit(get())) {
       auditors.forEach(s -> s.createEntry(createEntryDeletionContext()));
     }
