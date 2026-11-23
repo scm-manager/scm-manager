@@ -1774,7 +1774,7 @@ exports[`Storyshots Footer Default 1`] = `
           <li>
             <a
               className=""
-              href="https://platform.cloudogu.com/en/support/"
+              href="https://platform.cloudogu.com/en/support/offer/"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -1972,7 +1972,7 @@ exports[`Storyshots Footer Full 1`] = `
           <li>
             <a
               className=""
-              href="https://platform.cloudogu.com/en/support/"
+              href="https://platform.cloudogu.com/en/support/offer/"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -2151,7 +2151,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
           <li>
             <a
               className=""
-              href="https://platform.cloudogu.com/en/support/"
+              href="https://platform.cloudogu.com/en/support/offer/"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -2339,7 +2339,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
           <li>
             <a
               className=""
-              href="https://platform.cloudogu.com/en/support/"
+              href="https://platform.cloudogu.com/en/support/offer/"
               rel="noopener noreferrer"
               target="_blank"
             >
