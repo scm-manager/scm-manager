@@ -1,2 +1,0 @@
-- type: fixed
-  description: Update of Docker base images to fix CVE-2026–114938 (Java4Shell)
