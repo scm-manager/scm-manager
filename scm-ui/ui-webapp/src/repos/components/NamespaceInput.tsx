@@ -48,7 +48,7 @@ const NamespaceInput: FC<Props> = ({
   }
 
   const repositorySelectValue = namespace ? { value: { id: namespace, displayName: "" }, label: namespace } : null;
-  const props = {
+  const fieldProps = {
     label: t("repository.namespace"),
     helpText: t("help.namespaceHelpText"),
     value: namespace,
@@ -63,10 +63,10 @@ const NamespaceInput: FC<Props> = ({
     return (
       // @ts-ignore
       <ComboboxField
-        aria-label={props.label}
-        label={props.label}
-        descriptionText={props.helpText}
-        error={props.errorMessage || undefined}
+        aria-label={fieldProps.label}
+        label={fieldProps.label}
+        descriptionText={fieldProps.helpText}
+        error={fieldProps.errorMessage || undefined}
         value={repositorySelectValue}
         onChange={(option) => handleNamespaceChange(option?.value.id ?? "")}
         onQueryChange={setQuery}
@@ -83,7 +83,7 @@ const NamespaceInput: FC<Props> = ({
   return (
     <ExtensionPoint<extensionPoints.ReposCreateNamespace>
       name="repos.create.namespace"
-      props={props}
+      props={fieldProps}
       renderAll={false}
     />
   );
