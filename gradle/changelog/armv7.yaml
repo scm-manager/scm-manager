@@ -1,0 +1,2 @@
+- type: changed
+  description: Removed support for ARMv7 architecture from Docker deployments

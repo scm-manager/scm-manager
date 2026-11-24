@@ -41,7 +41,7 @@ abstract class SetupBuilder extends DefaultTask {
         commandLine = ["docker", "run", "--privileged", "--rm", "tonistiigi/binfmt", "--install", "arm64"]
       }
       execOperations.exec {
-        commandLine = ["docker", "buildx", "create", "--name", "scm-builder", "--driver", "docker-container", "--platform", "linux/arm/v7,linux/arm64/v8,linux/amd64"]
+        commandLine = ["docker", "buildx", "create", "--name", "scm-builder", "--driver", "docker-container", "--platform", "linux/arm64/v8,linux/amd64"]
       }
       execOperations.exec {
         commandLine = ["docker", "buildx", "inspect", "scm-builder"]
