@@ -81,7 +81,11 @@ const NamespaceInput: FC<Props> = ({
   }
 
   return (
-    <ExtensionPoint<extensionPoints.ReposCreateNamespace> name="repos.create.namespace" props={props} renderAll={false} />
+    <ExtensionPoint<extensionPoints.ReposCreateNamespace>
+      name="repos.create.namespace"
+      props={props}
+      renderAll={false}
+    />
   );
 };
 
