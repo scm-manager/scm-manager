@@ -61,7 +61,7 @@ const NamespaceInput: FC<Props> = ({
 
   if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY) {
     return (
-      // @ts-ignore
+      // @ts-ignore Strange typing errors in ComboboxField
       <ComboboxField
         aria-label={fieldProps.label}
         label={fieldProps.label}
