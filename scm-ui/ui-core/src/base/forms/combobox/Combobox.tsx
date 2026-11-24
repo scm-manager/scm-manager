@@ -15,13 +15,13 @@
  */
 
 import React, { Fragment, KeyboardEventHandler, ReactElement, Ref, useEffect, useRef, useState } from "react";
-import { Combobox as HeadlessCombobox } from "@headlessui/react";
+import { Combobox as HeadlessCombobox, ComboboxOptions as HeadlessComboboxOptions } from "@headlessui/react";
 import classNames from "classnames";
 import styled from "styled-components";
 import { createAttributesForTesting } from "../../helpers";
 import { Option } from "@scm-manager/ui-types";
 
-const OptionsWrapper = styled(HeadlessCombobox.Options).attrs({
+const OptionsWrapper = styled(HeadlessComboboxOptions).attrs({
   className: "is-flex is-flex-direction-column has-rounded-border has-box-shadow is-overflow-hidden",
 })`
   z-index: 400;
@@ -151,7 +151,9 @@ function ComboboxComponent<T>({ ref, ...props }: ComboboxProps<T>) {
         }}
         {...createAttributesForTesting(props.testId)}
       />
-      <OptionsWrapper className="is-absolute">{options}</OptionsWrapper>
+      <OptionsWrapper forwardedAs="ul" className="is-absolute">
+        {options}
+      </OptionsWrapper>
     </HeadlessCombobox>
   );
 }
